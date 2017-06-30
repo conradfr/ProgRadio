@@ -36,6 +36,7 @@
 
 # Node components
 /node_modules/
+/Scraper/node_modules/
 
 # Compiled assets
 /web/assets/
