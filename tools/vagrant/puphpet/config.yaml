@@ -26,7 +26,7 @@ vagrantfile:
                             private_network: 192.168.56.101
                             forwarded_port:
                                 vflmnfp_102xgtn63xuk:
-                                    host: '2222'
+                                    host: '2223'
                                     guest: '22'
                         memory: '1024'
                         cpus: '1'
@@ -422,7 +422,12 @@ postgresql:
             username: progradio
             password: '123'
             superuser: '1'
-    grants: {  }
+    grants:
+        postsqlng_7naw7v84tx8x:
+            role: progradio
+            db: progradio
+            privilege:
+                - ALL
 mongodb:
     install: '0'
     settings:

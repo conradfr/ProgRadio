@@ -3,6 +3,9 @@
 /var/logs/*
 !var/cache/.gitkeep
 !var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
 
 # Parameters
 /app/config/parameters.yml
@@ -15,6 +18,8 @@
 /bin/*
 !bin/console
 !bin/symfony_requirements
+!var/SymfonyRequirements.php
+
 /vendor/
 
 # Assets and user uploads
@@ -37,6 +42,7 @@
 # Node components
 /node_modules/
 /Scraper/node_modules/
+
 
 # Compiled assets
 /web/assets/
