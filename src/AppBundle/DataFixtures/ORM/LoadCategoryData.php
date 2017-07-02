@@ -9,8 +9,9 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\Radio;
+use AppBundle\Entity\Category;
 
-class LoadRadioData extends AbstractFixture implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
+class LoadCategoryData extends AbstractFixture implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
     /**
      * @var ContainerInterface
@@ -30,23 +31,21 @@ class LoadRadioData extends AbstractFixture implements FixtureInterface, Contain
      */
     public function load(ObjectManager $manager)
     {
-        $radios = [
-            [
-                'name' => 'rtl',
-                'category' => 'généraliste'
-            ]
+        $categories = [
+            'généraliste'
         ];
 
-        for ($i=0;$i<count($radios);$i++) {
-            $radio = new Radio();
+        for ($i=0;$i<count($categories);$i++) {
+            $category = new Category();
 
-            $radio->setId($i+1);
-            $radio->setName($radios[$i]['name']);
-            $radio->setCategory($this->getReference($radios[$i]['category']));
+            $category->setId($i+1);
+            $category->setName($categories[$i]);
 
-            $manager->persist($radio);
+            $manager->persist($category);
 
-            unset($radio);
+            $this->addReference($categories[$i], $category);
+
+            unset($category);
         }
 
         $manager->flush();
@@ -57,6 +56,6 @@ class LoadRadioData extends AbstractFixture implements FixtureInterface, Contain
      */
     public function getOrder()
     {
-        return 2;
+        return 1;
     }
 }

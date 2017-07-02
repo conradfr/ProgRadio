@@ -5,11 +5,11 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Radio
+ * Category
  *
  * @ORM\Entity
  */
-class Radio
+class Category
 {
     /**
      * @var integer
@@ -26,12 +26,6 @@ class Radio
      * @ORM\Column(type="string", length=100)
      */
     private $name;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Category")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
-     */
-    private $category;
 
     /**
      * @return int
@@ -63,21 +57,5 @@ class Radio
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return Category
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param Category $category
-     */
-    public function setCategory(Category $category)
-    {
-        $this->category = $category;
     }
 }
