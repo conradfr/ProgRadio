@@ -32,18 +32,22 @@ class LoadCategoryData extends AbstractFixture implements FixtureInterface, Cont
     public function load(ObjectManager $manager)
     {
         $categories = [
-            'généraliste'
+            [
+                'codename' => 'generaliste',
+                'name' => 'Généraliste'
+            ]
         ];
 
         for ($i=0;$i<count($categories);$i++) {
             $category = new Category();
 
             $category->setId($i+1);
-            $category->setName($categories[$i]);
+            $category->setCodeName($categories[$i]['codename']);
+            $category->setName($categories[$i]['name']);
 
             $manager->persist($category);
 
-            $this->addReference($categories[$i], $category);
+            $this->addReference($categories[$i]['codename'], $category);
 
             unset($category);
         }

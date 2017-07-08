@@ -5,7 +5,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "node-datetime": "^1.0.1",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "osmosis": "^1.1.4",
     "redis": "^2.7.1"
   }

@@ -18,7 +18,9 @@ framework:
     form: ~
     csrf_protection: ~
     validation: { enable_annotations: true }
-    #serializer: { enable_annotations: true }
+    serializer:
+        enable_annotations: true
+        name_converter: 'serializer.name_converter.camel_case_to_snake_case'
     templating:
         engines: ['twig']
     default_locale: '%locale%'
@@ -26,7 +28,8 @@ framework:
     session:
         # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id: session.handler.native_file
-        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+#        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        save_path: '/var/lib/php/sessions'
     fragments: ~
     http_method_override: true
     assets: ~
@@ -59,6 +62,33 @@ doctrine:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        dql:
+            datetime_functions:
+                date:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                time:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                timestamp:      Oro\ORM\Query\AST\Functions\SimpleFunction
+                convert_tz:     Oro\ORM\Query\AST\Functions\DateTime\ConvertTz
+            numeric_functions:
+                timestampdiff:  Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff
+                dayofyear:      Oro\ORM\Query\AST\Functions\SimpleFunction
+                dayofmonth:     Oro\ORM\Query\AST\Functions\SimpleFunction
+                dayofweek:      Oro\ORM\Query\AST\Functions\SimpleFunction
+                week:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                day:            Oro\ORM\Query\AST\Functions\SimpleFunction
+                hour:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                minute:         Oro\ORM\Query\AST\Functions\SimpleFunction
+                month:          Oro\ORM\Query\AST\Functions\SimpleFunction
+                quarter:        Oro\ORM\Query\AST\Functions\SimpleFunction
+                second:         Oro\ORM\Query\AST\Functions\SimpleFunction
+                year:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                sign:           Oro\ORM\Query\AST\Functions\Numeric\Sign
+                pow:            Oro\ORM\Query\AST\Functions\Numeric\Pow
+            string_functions:
+                md5:            Oro\ORM\Query\AST\Functions\SimpleFunction
+                group_concat:   Oro\ORM\Query\AST\Functions\String\GroupConcat
+                concat_ws:      Oro\ORM\Query\AST\Functions\String\ConcatWs
+                cast:           Oro\ORM\Query\AST\Functions\Cast
+                replace:        Oro\ORM\Query\AST\Functions\String\Replace
 
 # Swiftmailer Configuration
 swiftmailer:

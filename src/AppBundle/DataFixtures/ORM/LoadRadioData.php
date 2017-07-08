@@ -32,8 +32,9 @@ class LoadRadioData extends AbstractFixture implements FixtureInterface, Contain
     {
         $radios = [
             [
-                'name' => 'rtl',
-                'category' => 'généraliste'
+                'codename' => 'rtl',
+                'name' => 'RTL',
+                'category' => 'generaliste'
             ]
         ];
 
@@ -41,6 +42,7 @@ class LoadRadioData extends AbstractFixture implements FixtureInterface, Contain
             $radio = new Radio();
 
             $radio->setId($i+1);
+            $radio->setCodeName($radios[$i]['codename']);
             $radio->setName($radios[$i]['name']);
             $radio->setCategory($this->getReference($radios[$i]['category']));
 

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Schedule entry
@@ -29,7 +30,8 @@ class ScheduleEntry
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetimetz")
+     * @Groups({"export"})
      */
     private $dateTimeStart;
 
@@ -37,6 +39,7 @@ class ScheduleEntry
      * @var string
      *
      * @ORM\Column(type="string", length=150)
+     * @Groups({"export"})
      */
     private $title;
 
@@ -44,6 +47,7 @@ class ScheduleEntry
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups({"export"})
      */
     private $host;
 
@@ -51,6 +55,7 @@ class ScheduleEntry
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"export"})
      */
     private $description;
 
@@ -58,6 +63,7 @@ class ScheduleEntry
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"export"})
      */
     private $pictureUrl;
 

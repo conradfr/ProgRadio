@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Category
@@ -24,6 +25,15 @@ class Category
      * @var string
      *
      * @ORM\Column(type="string", length=100)
+     * @Groups({"export"})
+     */
+    private $codeName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"export"})
      */
     private $name;
 
@@ -41,6 +51,22 @@ class Category
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodeName()
+    {
+        return $this->codeName;
+    }
+
+    /**
+     * @param string $codeName
+     */
+    public function setCodeName($codeName)
+    {
+        $this->codeName = $codeName;
     }
 
     /**

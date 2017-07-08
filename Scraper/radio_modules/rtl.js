@@ -1,31 +1,42 @@
 const osmosis = require('osmosis');
-const datetime = require('node-datetime');
+var moment = require('moment-timezone');
 
 let scrapedData = [];
 
-const format = () => {
-    let cleanedData = scrapedData.map(entry => {
-        const jsDate = new Date();
-        jsDate.setTime(entry['datetime_raw']);
+const format = dateObj => {
+    const dayStr = dateObj.format('DD');
 
-        delete entry.datetime_raw;
-        entry.schedule = jsDate;
-        return entry;
-    });
+    // we use reduce instead of map to act as a map+filter in one pass
+    const cleanedData = scrapedData.reduce(function(prev, curr){
+        const date = moment(parseInt(curr['datetime_raw']));
+
+        // filter other days
+        if (date.tz('Europe/Paris').format('DD') === dayStr) {
+            delete curr.datetime_raw;
+            curr.schedule = date.toISOString();
+            curr.timezone = 'Europe/Paris';
+
+            prev.push(curr);
+        }
+
+        return prev;
+    },[]);
 
     return Promise.resolve(cleanedData);
 };
 
-const fetch = dateObj =>  {
-    let dayFormat = dateObj.format('m-d-y');
+const fetch = dateObj => {
+    let dayFormat = dateObj.format('DD-MM-YYYY');
     let url = `http://www.rtl.fr/grille/${dayFormat}`;
+
+    console.log(`fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
             .find('.timeline-schedule > .post-schedule-timeline > .post-schedule.main')
             .set({
-                'datetime_raw': 'time@datetime'
+                'datetime_raw': 'time@datetime' /* utc */
             })
             .select('.mdl-bvl')
             .set({
@@ -38,21 +49,31 @@ const fetch = dateObj =>  {
                 scrapedData.push(listing);
             })
             .done(function () {
-                resolve(scrapedData);
+                resolve(true);
             })
     });
 };
 
+const fetchAll = dateObj =>  {
+    /* radio schedule page has the format 3am -> 3am,
+       so we get the previous day as well to get the full day and the filter the list later  */
+    const previousDay = moment(dateObj);
+    previousDay.subtract(1, 'days');
+
+    return fetch(previousDay)
+        .then(() => { return fetch(dateObj); });
+};
+
 const getScrap = dateObj => {
-    return fetch(dateObj)
+    return fetchAll(dateObj)
         .then(() => {
-            return format();
+            return format(dateObj);
         });
 };
 
-const rtl = {
+const scrapModule = {
     getName: 'rtl',
     getScrap
 };
 
-module.exports = rtl;
+module.exports = scrapModule;

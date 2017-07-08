@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascript_head %}
+const schedule = {{ schedule |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
+{% endblock %}
+
+
 {% block body %}
 <div class="container-fluid">
     <!-- Example row of columns -->

@@ -3,11 +3,12 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Radio
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RadioRepository")
  */
 class Radio
 {
@@ -24,14 +25,38 @@ class Radio
      * @var string
      *
      * @ORM\Column(type="string", length=100)
+     * @Groups({"export"})
+     */
+    private $codeName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"export"})
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=50, options={"default"="Europe/Paris"})
+     * @Groups({"export"})
+     */
+    private $timezone = 'Europe/Paris';
 
     /**
      * @ORM\ManyToOne(targetEntity="Category")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     private $category;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", options={"default"=true})
+     */
+    private $active = true;
 
     /**
      * @return int
@@ -79,5 +104,53 @@ class Radio
     public function setCategory(Category $category)
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodeName()
+    {
+        return $this->codeName;
+    }
+
+    /**
+     * @param string $codeName
+     */
+    public function setCodeName($codeName)
+    {
+        $this->codeName = $codeName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param boolean $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 }
