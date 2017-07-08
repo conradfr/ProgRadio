@@ -27,7 +27,7 @@ framework:
     trusted_hosts: ~
     session:
         # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
-        handler_id: session.handler.native_file
+        handler_id: snc_redis.session.handler
 #        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         save_path: '/var/lib/php/sessions'
     fragments: ~
@@ -104,3 +104,20 @@ snc_redis:
             type: predis
             alias: default
             dsn: redis://localhost
+    session:
+        client: default
+        prefix: session_
+    doctrine:
+        metadata_cache:
+            client: default
+            entity_manager: default
+            document_manager: default
+        result_cache:
+            client: default
+            entity_manager: default
+        query_cache:
+            client: default
+            entity_manager: default
+        second_level_cache:
+            client: default
+            entity_manager: default

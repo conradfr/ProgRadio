@@ -18,9 +18,7 @@ rtl.getScrap(dateObj)
     .then(function(data) {
         console.log(`Items found: ${data.length}`);
 
-        /* random int between 0 & 1000 to avoid key collision */
-        const seed = Math.floor(Math.random() * (1000 - 1)) + 1;
-        const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}rtl:${dateObj.format('DD-MM-YYYY')}:${seed}`;
+        const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}rtl:${dateObj.format('DD-MM-YYYY')}`;
 
         const dataExport = {
                 'radio': rtl.getName,

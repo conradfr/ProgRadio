@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityRepository;
  */
 class RadioRepository extends EntityRepository
 {
+    const CACHE_RADIO_TTL = 43200; // half-day
+    const CACHE_CATEGORY_TTL = 86400; // day
+
     /**
      * @return array
      */
@@ -21,6 +24,7 @@ class RadioRepository extends EntityRepository
             '
         );
 
+        $query->setResultCacheLifetime(self::CACHE_RADIO_TTL);
         $result = $query->getResult();
 
         return array_column($result, 'codeName');
@@ -41,57 +45,9 @@ class RadioRepository extends EntityRepository
             $queryString
         );
 
+        $query->setResultCacheLifetime(self::CACHE_RADIO_TTL);
         $result = $query->getResult();
 
        return array_column($result, 'codeName');
-    }
-
-    /**
-     * @param \DateTime $dateTime
-     * @param array $radios array of radio codename, if null get all radios
-     *
-     * @return array
-     */
-    public function getDaySchedule(\DateTime $dateTime, array $radios=null)
-    {
-        $dateTime->setTime('00', '00', '00');
-        $dateTimeEnd = clone $dateTime;
-        $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
-
-
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url, se.dateTimeStart as start_at')
-            ->from('AppBundle:ScheduleEntry', 'se')
-            ->innerJoin('se.radio', 'r')
-            ->where('se.dateTimeStart >= :datetime_start')
-            ->andWhere('se.dateTimeStart < :datetime_end ')
-            ->andWhere('r.active = :active')
-            ->orderBy('se.dateTimeStart', 'ASC')
-        ;
-
-        $qb->setParameters([
-            'datetime_start' => $dateTime,
-            'datetime_end' => $dateTimeEnd,
-            'active' => true
-        ]);
-
-
-        if (!empty($radios)) {
-            $qb->andWhere('r.codeName IN (:radios)');
-            $qb->setParameter('radios', $radios);
-        }
-
-
-        $result = $qb->getQuery()->getResult();
-
-        $export = [];
-        foreach ($result as $row) {
-            $radio = $row['codeName'];
-            unset($row['codeName']);
-
-            $export[$radio][] = $row;
-        }
-
-        return $export;
     }
 }
