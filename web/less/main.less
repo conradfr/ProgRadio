@@ -2,33 +2,24 @@
 @import "bootswatch/paper/variables";
 @import "bootswatch/paper/bootswatch";
 
-html {
+@import "variables";
 
-}
+@import "components/navbar";
+@import "components/ribbon";
 
 body {
-  margin-top: 60px;
+  margin-top: 50px;
+  background-color: @background-color;
 }
 
-/* bootstrap overloading */
-.navbar {
-  min-height: 50px;
+#app {
+  overflow-x: hidden;
+}
 
-  .navbar-brand {
-    height: 50px;
-    padding-top: 13.5px;
-  }
+@import "components/timeline";
 
-  .navbar-brand-name > {
-    display: inline-block;
-    float: left;
-
-  }
-
-  .navbar-brand-name > img {
-    display: inline-block;
-    float: left;
-    margin: -1px 10px 0;
-    //padding: 0 15px 0 0;
-  }
+.schedule-container {
+  overflow: hidden;
+  @import "components/schedule-radiolist";
+  @import "components/schedule-grid";
 }

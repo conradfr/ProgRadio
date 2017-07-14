@@ -9,7 +9,7 @@ use AppBundle\Entity\Radio;
 use AppBundle\Entity\ScheduleEntry;
 use AppBundle\Service\Cache\Config as CacheConfig;
 
-class ScheduleBuilder
+class ScheduleImporter
 {
     /** @var EntityManager */
     protected $em;
@@ -21,7 +21,7 @@ class ScheduleBuilder
     protected $serializer;
 
     /**
-     * ScheduleBuilder constructor.
+     * ScheduleImporter constructor.
      *
      * @param EntityManager $entityManager
      * @param Client $redis
@@ -56,21 +56,46 @@ class ScheduleBuilder
             $timeZone = new \DateTimeZone($timeZoneValue);
             $dateTime->setTimezone($timeZone);
 
-
             $entry = new ScheduleEntry();
             $entry->setTitle($item->title)
-                  ->setHost($item->host)
-                  ->setDescription($item->description ?: null)
-                  ->setPictureUrl($item->img ?: null)
+                  ->setHost($this->getOrDefault($item, 'host'))
+                  ->setDescription($this->getOrDefault($item, 'description'))
+                  ->setPictureUrl($this->getOrDefault($item, 'img'))
                   ->setDateTimeStart($dateTime)
+                  ->setDuration($this->getOrDefault($item, 'duration'))
                   ->setRadio($radio)
             ;
 
-            $this->em->persist($entry);
+//            $this->em->persist($entry);
 
             $collection[] = $entry;
 
             unset($dateTime, $timeZoneValue, $timeZone);
+        }
+
+        // Calculate duration
+        for($i=0;$i<count($collection);$i++) {
+            if (empty($collection[$i]->getDuration())) {
+/*                if ($i === 0) {
+
+                }*/
+
+                // If last of the day assume for now it will end at midnight
+                if ($i === (count($collection) - 1)) {
+                    $dateTimeEnd = clone $collection[$i]->getDateTimestart();
+                    $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
+                    $dateTimeEnd->setTime('00', '00', '00');
+
+                    $duration = ($dateTimeEnd->getTimestamp() - $collection[$i]->getDateTimeStart()->getTimestamp()) / 60;
+                    $collection[$i]->setDuration($duration);
+                }
+                else {
+                    $duration = ($collection[$i+1]->getDateTimeStart()->getTimestamp() - $collection[$i]->getDateTimeStart()->getTimestamp()) / 60;
+                    $collection[$i]->setDuration($duration);
+                }
+            }
+
+            $this->em->persist($collection[$i]);
         }
 
         $this->em->flush();
@@ -81,6 +106,21 @@ class ScheduleBuilder
         $this->redis->EXPIRE($cacheKey, CacheConfig::CACHE_SCHEDULE_TTL);
 
         return true;
+    }
+
+    /**
+     * @param \StdClass $object
+     * @param string $name
+     * @param mixed $default default is null
+     *
+     * @return mixed|null
+     */
+    protected function getOrDefault($object, $name, $default=null) {
+        if (property_exists($object , $name)) {
+            return $object->{$name};
+        }
+
+        return $default;
     }
 
     /**

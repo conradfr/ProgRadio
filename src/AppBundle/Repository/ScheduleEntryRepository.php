@@ -5,7 +5,7 @@ namespace AppBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * cheduleEntryRepository
+ * ScheduleEntryRepository
  */
 class ScheduleEntryRepository extends EntityRepository
 {
@@ -21,9 +21,8 @@ class ScheduleEntryRepository extends EntityRepository
         $dateTimeEnd = clone $dateTime;
         $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
 
-
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url, se.dateTimeStart as start_at')
+        $qb->select('r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url, se.dateTimeStart as start_at, se.duration')
             ->from('AppBundle:ScheduleEntry', 'se')
             ->innerJoin('se.radio', 'r')
             ->where('se.dateTimeStart >= :datetime_start')

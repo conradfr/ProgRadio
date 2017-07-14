@@ -6,9 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Predis\Client;
-use AppBundle\Service\ScheduleBuilder;
+use AppBundle\Service\ScheduleImporter;
 
-class SchedulerBuilderCommand extends ContainerAwareCommand
+class SchedulerImporterCommand extends ContainerAwareCommand
 {
     const QUEUE_LIST = 'schedule_input:queue';
     const QUEUE_PROCESSING = 'schedule_input:processing';
@@ -18,8 +18,8 @@ class SchedulerBuilderCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('app:scheduler:build')
-             ->setDescription("(daemon) Process the scrapper queue and build radios' schedule");
+        $this->setName('app:scheduler:import')
+             ->setDescription("(daemon) Process the scrapper queue and import radios' schedule");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -27,7 +27,7 @@ class SchedulerBuilderCommand extends ContainerAwareCommand
         $output->write('Starting daemon ...' . PHP_EOL);
 
         $this->redis = $this->getContainer()->get('snc_redis.default');
-        $builder = $this->getContainer()->get(ScheduleBuilder::class);
+        $builder = $this->getContainer()->get(ScheduleImporter::class);
 
         /*
          * If daemon previously quit without finishing processed payload,

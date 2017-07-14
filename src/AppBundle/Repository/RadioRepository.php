@@ -20,14 +20,16 @@ class RadioRepository extends EntityRepository
             'SELECT r.codeName as code_name, r.name, c.name as category
                 FROM AppBundle:Radio r
                   INNER JOIN r.category c
-                WHERE r.active = TRUE
+                WHERE r.active = :active
             '
         );
+
+        $query->setParameter('active', true);
 
         $query->setResultCacheLifetime(self::CACHE_RADIO_TTL);
         $result = $query->getResult();
 
-        return array_column($result, 'codeName');
+        return $result;
     }
 
     /**

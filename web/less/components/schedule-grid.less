@@ -1,0 +1,89 @@
+@import "../variables";
+
+.schedule-radio-grid {
+  margin-left: @margin-from-radio-list;
+  padding-bottom: 25px;
+
+  position: relative;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  cursor: move;
+
+  width: @viewport-width;
+
+  transition: left 0.05s ease-out 0s;
+
+  .schedule-radio-grid-row {
+    display: flex;
+    align-items: stretch;
+
+    overflow: hidden;
+    white-space: nowrap;
+
+    box-sizing: border-box;
+    height: 64px;
+    padding: 2px 0;
+
+    .program {
+      height: 100%;
+      box-sizing: border-box;
+
+      margin-right: 5px;
+      background-color: white;
+      border: none;
+      border-left: 3px solid darken(@background-color, 20%);
+
+      transition: box-shadow 0.2s ease-in-out;
+
+      &.none {
+        position: fixed;
+        height: 64px;
+
+        @width: 350px;
+        width: @width;
+        min-width: @width;
+        max-width: @width;
+
+        background-color: lighten(@background-color, 3%);
+
+        .program-inner {
+          user-select: none;
+        }
+      }
+
+      &:hover {
+        z-index: 3 !important;
+        box-shadow: 0 0 10px -3px rgba(0,0,0,.35);
+      }
+
+      .program-inner {
+        height: 100%;
+        width: 100%;
+
+        padding: 7px 0 0 10px;
+        border: 1px solid #e8e8e8;
+        border-left: 0;
+
+        .program-title {
+          font-weight: bold;
+          color: #262b2f;
+          line-height: 1;
+          user-select: none;
+          margin-bottom: 0;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+
+        .program-host {
+          color: lighten(#262b2f, 10%);
+          font-size: 11px;
+          user-select: none;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}

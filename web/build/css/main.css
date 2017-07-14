@@ -7395,9 +7395,6 @@ input[type="checkbox"]:disabled:checked:after,
 .carousel-caption h6 {
   color: inherit;
 }
-body {
-  margin-top: 60px;
-}
 /* bootstrap overloading */
 .navbar {
   min-height: 50px;
@@ -7414,4 +7411,249 @@ body {
   display: inline-block;
   float: left;
   margin: -1px 10px 0;
+}
+/*
+  Beta ribbon
+  Don't show on mobile as it hide the hamburger menu
+  https://github.com/twbs/bootstrap/issues/5550
+*/
+.ribbon-wrapper {
+  width: 75px;
+  height: 77px;
+  overflow: hidden;
+  position: absolute;
+  top: -3px;
+  right: 0;
+  z-index: 9999;
+}
+@media (max-width: 767px) {
+  .ribbon-wrapper {
+    display: none;
+  }
+}
+.ribbon {
+  font: bold 13px Sans-Serif;
+  text-align: center;
+  text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  position: relative;
+  padding: 7px 0;
+  left: -5px;
+  top: 15px;
+  width: 120px;
+  background-color: #BFDC7A;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8EBF45));
+  background-image: -webkit-linear-gradient(top, #BFDC7A, #8EBF45);
+  background-image: -moz-linear-gradient(top, #BFDC7A, #8EBF45);
+  background-image: -ms-linear-gradient(top, #BFDC7A, #8EBF45);
+  background-image: -o-linear-gradient(top, #BFDC7A, #8EBF45);
+  color: #6a6340;
+  -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+}
+.ribbon:before,
+.ribbon:after {
+  content: "";
+  border-top: 3px solid #6e8900;
+  /*  border-left:  3px solid transparent;
+    border-right: 3px solid transparent;*/
+  position: absolute;
+  bottom: -3px;
+}
+.ribbon:before {
+  left: 0;
+}
+.ribbon:after {
+  right: 0;
+}
+body {
+  margin-top: 50px;
+  background-color: #f3f3f3;
+}
+#app {
+  overflow-x: hidden;
+}
+.timeline {
+  box-sizing: border-box;
+  position: relative;
+  height: 40px;
+  line-height: 40px;
+  display: flex;
+  align-items: stretch;
+  width: calc(8640px);
+  overflow: hidden;
+  white-space: nowrap;
+  color: #969696;
+  font-size: 0;
+  padding-left: calc(76px);
+  transition: left 0.06s ease-out 0s;
+}
+.timeline .timeline-control {
+  display: block;
+  position: fixed;
+  top: 50px;
+  box-sizing: border-box;
+  background-color: #a6a6a6;
+  opacity: 0.8;
+  transition: opacity 0.07s ease-out 0s;
+  height: 41px;
+  padding-top: 1px;
+  color: #676767;
+  font-size: 18px;
+  cursor: pointer;
+}
+.timeline .timeline-control:hover {
+  opacity: 0.95;
+}
+.timeline .timeline-control.timeline-control-left {
+  left: 0;
+  text-align: right;
+  box-shadow: 2px 0 6px -3px rgba(0, 0, 0, 0.4);
+  width: 71px;
+  min-width: 71px;
+  max-width: 71px;
+  padding-right: 8px;
+  margin-right: 6px;
+}
+.timeline .timeline-control.timeline-control-right {
+  right: 0;
+  text-align: center;
+  box-shadow: -2px 2px 6px -3px rgba(0, 0, 0, 0.4);
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  padding-left: -1px;
+  margin-left: 5px;
+}
+.timeline .time {
+  box-sizing: border-box;
+  width: calc(364px);
+  min-width: calc(364px);
+  max-width: calc(364px);
+  margin-top: 11px;
+  margin-left: 1px;
+  height: 20px;
+  line-height: 160%;
+  font-size: 1.3rem;
+  user-select: none;
+  padding-left: 11px;
+  border-left: 1px solid #969696;
+}
+.timeline-cursor {
+  z-index: 5;
+  position: absolute;
+  top: 35px;
+  left: 0;
+  height: 100%;
+  width: 2px;
+  opacity: 0.8;
+  transition: left 0.05s ease-out;
+  margin-left: calc(76px);
+  background-color: #2196f3;
+}
+.timeline-cursor:after {
+  position: absolute;
+  top: -7px;
+  left: 1px;
+  display: block;
+  width: 0;
+  height: 0;
+  content: '';
+  -webkit-transform: translate3d(-50%, 0, 0);
+  transform: translate3d(-50%, 0, 0);
+  border: 8px solid transparent;
+  border-top-color: #2196f3;
+}
+.schedule-container {
+  overflow: hidden;
+}
+.schedule-container .schedule-radio-list {
+  position: absolute;
+  z-index: 5;
+  top: 41px;
+  left: 0;
+  width: 71px;
+  background-color: #343434;
+  opacity: 0.95;
+}
+.schedule-container .schedule-radio-list .radio-logo {
+  display: block;
+  box-sizing: border-box;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-bottom: 1px solid black;
+  box-shadow: 3px 0px 8px -3px rgba(0, 0, 0, 0.4);
+}
+.schedule-container .schedule-radio-grid {
+  margin-left: calc(76px);
+  padding-bottom: 25px;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: move;
+  width: calc(8640px);
+  transition: left 0.05s ease-out 0s;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  height: 64px;
+  padding: 2px 0;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program {
+  height: 100%;
+  box-sizing: border-box;
+  margin-right: 5px;
+  background-color: white;
+  border: none;
+  border-left: 3px solid #c0c0c0;
+  transition: box-shadow 0.2s ease-in-out;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program.none {
+  position: fixed;
+  height: 64px;
+  width: 350px;
+  min-width: 350px;
+  max-width: 350px;
+  background-color: #fbfbfb;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program.none .program-inner {
+  user-select: none;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program:hover {
+  z-index: 3 !important;
+  box-shadow: 0 0 10px -3px rgba(0, 0, 0, 0.35);
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program .program-inner {
+  height: 100%;
+  width: 100%;
+  padding: 7px 0 0 10px;
+  border: 1px solid #e8e8e8;
+  border-left: 0;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program .program-inner .program-title {
+  font-weight: bold;
+  color: #262b2f;
+  line-height: 1;
+  user-select: none;
+  margin-bottom: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program .program-inner .program-host {
+  color: #3d454b;
+  font-size: 11px;
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
 }

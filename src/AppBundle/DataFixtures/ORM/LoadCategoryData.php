@@ -33,8 +33,11 @@ class LoadCategoryData extends AbstractFixture implements FixtureInterface, Cont
     {
         $categories = [
             [
-                'codename' => 'generaliste',
-                'name' => 'Généraliste'
+                    'codename' => 'news_talk',
+                    'name' => 'Généraliste'
+            ], [
+                    'codename' => 'music',
+                    'name' => 'Musicale'
             ]
         ];
 

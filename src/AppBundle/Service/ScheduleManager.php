@@ -39,13 +39,11 @@ class ScheduleManager
      */
     public function getDaySchedule(\DateTime $dateTime)
     {
-        $repository = $this->em->getRepository('AppBundle:Radio');
-
         $dateFormat = $dateTime->format('Y-m-d');
         $cacheKey = CacheConfig::CACHE_SCHEDULE_PREFIX . $dateFormat;
 
         /* active radios */
-        $radios = $repository->getAllCodename();
+        $radios = $this->em->getRepository('AppBundle:Radio')->getAllCodename();
         $radiosInCache = $this->redis->HKEYS($cacheKey);
 
         $radiosNotInCache = array_diff($radios, $radiosInCache);
@@ -58,7 +56,7 @@ class ScheduleManager
 
         // Add any new radio schedule for that day in cache
         if (count($radiosNotInCache) > 0) {
-            $radioNewSchedule = $repository->getDaySchedule($dateTime, $radiosNotInCache);
+            $radioNewSchedule = $this->em->getRepository('AppBundle:ScheduleEntry')->getDaySchedule($dateTime, $radiosNotInCache);
             if (count($radioNewSchedule) > 0) {
                 $this->redis->HMSET($cacheKey, array_map(function ($entry) {
                     return $this->serializer->serialize($entry, 'json');
@@ -78,5 +76,10 @@ class ScheduleManager
         }
 
         return $cachedSchedule;
+    }
+
+    protected function buildSchedule()
+    {
+
     }
 }

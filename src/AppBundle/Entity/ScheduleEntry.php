@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Schedule entry
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ScheduleEntryRepository")
  */
 class ScheduleEntry
 {
@@ -34,6 +34,14 @@ class ScheduleEntry
      * @Groups({"export"})
      */
     private $dateTimeStart;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint")
+     * @Groups({"export"})
+     */
+    private $duration;
 
     /**
      * @var string
@@ -120,6 +128,25 @@ class ScheduleEntry
     public function setDateTimeStart($dateTimeStart)
     {
         $this->dateTimeStart = $dateTimeStart;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param int $duration
+     * @return ScheduleEntry
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
 
         return $this;
     }
