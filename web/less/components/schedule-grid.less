@@ -5,11 +5,10 @@
   padding-bottom: 25px;
 
   position: relative;
-
-  overflow: hidden;
+  //overflow: hidden;
   white-space: nowrap;
-
   cursor: move;
+  z-index: 3;
 
   width: @viewport-width;
 
@@ -26,20 +25,13 @@
     height: 64px;
     padding: 2px 0;
 
-    .program {
+    .program-container {
       height: 100%;
       box-sizing: border-box;
 
-      margin-right: 5px;
-      background-color: white;
-      border: none;
-      border-left: 3px solid darken(@background-color, 20%);
-
-      transition: box-shadow 0.2s ease-in-out;
-
       &.none {
-        position: fixed;
-        height: 64px;
+        //position: fixed; seems to work only on FF
+        position: relative;
 
         @width: 350px;
         width: @width;
@@ -48,42 +40,62 @@
 
         background-color: lighten(@background-color, 3%);
 
-        .program-inner {
-          user-select: none;
+        transition: left 0.2s ease-in-out 0.3s;
+
+        .program {
+          margin-right: 0 !important;
+
+          .program-inner {
+            user-select: none;
+          }
         }
       }
 
-      &:hover {
-        z-index: 3 !important;
-        box-shadow: 0 0 10px -3px rgba(0,0,0,.35);
-      }
-
-      .program-inner {
+      .program {
         height: 100%;
-        width: 100%;
+        box-sizing: border-box;
 
-        padding: 7px 0 0 10px;
-        border: 1px solid #e8e8e8;
-        border-left: 0;
+        margin-right: 5px;
+        background-color: white;
+        border: none;
+        border-left: 3px solid darken(@background-color, 20%);
 
-        .program-title {
-          font-weight: bold;
-          color: #262b2f;
-          line-height: 1;
-          user-select: none;
-          margin-bottom: 0;
-          overflow: hidden;
-          white-space: nowrap;
+        transition: box-shadow 0.2s ease-in-out;
+
+        &:hover {
+          z-index: 3 !important;
+          box-shadow: 0 0 10px -3px rgba(0,0,0,.35);
         }
 
-        .program-host {
-          color: lighten(#262b2f, 10%);
-          font-size: 11px;
-          user-select: none;
-          overflow: hidden;
-          white-space: nowrap;
+        .program-inner {
+          height: 100%;
+          width: 100%;
+
+          padding: 7px 0 0 10px;
+          border: 1px solid #e8e8e8;
+          border-left: 0;
+
+          .program-title {
+            font-weight: bold;
+            color: #262b2f;
+            line-height: 1;
+            user-select: none;
+            margin-bottom: 0;
+            overflow: hidden;
+            white-space: nowrap;
+          }
+
+          .program-host {
+            color: lighten(#262b2f, 10%);
+            font-size: 11px;
+            user-select: none;
+            overflow: hidden;
+            white-space: nowrap;
+          }
         }
       }
     }
   }
 }
+
+

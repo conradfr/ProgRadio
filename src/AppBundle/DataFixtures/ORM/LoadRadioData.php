@@ -39,6 +39,11 @@ class LoadRadioData extends AbstractFixture implements FixtureInterface, Contain
                     'codename' => 'rtl2',
                     'name' => 'RTL2',
                     'category' => 'music'
+            ],
+            [
+                'codename' => 'test',
+                'name' => 'Test',
+                'category' => 'music'
             ]
         ];
 

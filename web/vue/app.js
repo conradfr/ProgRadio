@@ -46,10 +46,10 @@ const store = new Vuex.Store({
     getters: {
         cursorIndex: state => {
             const startDay = moment().startOf('day');
-            return state.cursorTime.diff(startDay, 'minutes') * MINUTE_PIXEL - state.scrollIndex;
+            return state.cursorTime.diff(startDay, 'minutes') * MINUTE_PIXEL + 1;
         },
         gridIndex: state => {
-            return state.scrollIndex;
+            return {left: `-${state.scrollIndex}px`};
         }
     },
     mutations: {
@@ -58,7 +58,13 @@ const store = new Vuex.Store({
             const gridWidth = window.innerWidth - 71;
 
             // cancel move if outside current day
-            if (newIndex < 0 || newIndex >= ((MINUTE_PIXEL * 1440 * DAYS) - gridWidth + GRID_VIEW_EXTRA)) { return; }
+            if (newIndex < 0) {
+                state.scrollIndex = 0;
+                return;
+            } else if (newIndex >= ((MINUTE_PIXEL * 1440 * DAYS) - gridWidth + GRID_VIEW_EXTRA)) {
+                state.scrollIndex = ((MINUTE_PIXEL * 1440 * DAYS) - gridWidth + GRID_VIEW_EXTRA);
+                return;
+            }
             state.scrollIndex = state.scrollIndex + x;
         },
         updateCursor(state) {
@@ -97,7 +103,7 @@ const timeline = Vue.component('timeline', {
         }
     },
     computed: Vuex.mapState({
-        styleObject: function() { return {left: `-${this.$store.getters.gridIndex}px`}; }
+        styleObject: function() { return this.$store.getters.gridIndex; }
     }),
     methods: {
         clickBackward: function () {
@@ -160,7 +166,7 @@ const scheduleRadioGrid = Vue.component('scheduleRadioGrid', {
     computed: Vuex.mapState({
         radios: state => state.radios,
         styleObject: function() {
-            const styleObject = {left: `-${this.$store.getters.gridIndex}px`};
+            const styleObject = this.$store.getters.gridIndex;
             if (this.mousedown === true) { styleObject['transition'] = 'none'; }
 
             return styleObject;
@@ -189,12 +195,15 @@ const scheduleRadioGridRow = Vue.component('scheduleRadioGridRow', {
     template: '#scheduleRadioGridRowTpl',
     props: ['radio'],
     computed: Vuex.mapState({
+        noProgramStyleObject(state) {
+            return {left: `${state.scrollIndex}px`};
+        },
         schedule(state) {
             return state.schedule[this.radio];
         },
         hasSchedule(state) {
             return (state.schedule[this.radio] && state.schedule[this.radio].length > 0) || false;
-        },
+        }
     })
 });
 
@@ -202,12 +211,12 @@ const scheduleRadioGridProgram = Vue.component('scheduleRadioGridProgram', {
     template: '#scheduleRadioGridProgramTpl',
     props: ['program'],
     data: function () {
+        const width = `${this.program.duration * MINUTE_PIXEL}px`;
+
         return {
             styleObject: {
-/*                minWidth: `calc(${this.program.duration * MINUTE_PIXEL}px - 5px)`,
-                maxWidth: `calc(${this.program.duration * MINUTE_PIXEL}px - 5px)`*/
-                minWidth: `${this.program.duration * MINUTE_PIXEL}px`,
-                maxWidth: `${this.program.duration * MINUTE_PIXEL}px`
+                minWidth: width,
+                maxWidth: width
             }
         }
     }

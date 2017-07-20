@@ -12,7 +12,6 @@ const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or co
         <div class="col-md-12" style="padding-right: 0 !important; padding-left: 0 !important">
             <div id="app">
                 <timeline></timeline>
-                <timeline-cursor></timeline-cursor>
                 <schedule-container></schedule-container>
             </div>
         </div>
@@ -72,6 +71,7 @@ const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or co
 <script type="text/x-template" id="scheduleRadioGridTpl">
 {% verbatim %}
     <div class="schedule-radio-grid" id="schedule-radio-grid" v-on:mousedown="dragClick" v-on:mousemove="dragMove" v-on:mouseup="dragOff" :style="styleObject">
+ <timeline-cursor></timeline-cursor>
         <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name" :radio="entry.code_name"></schedule-radio-grid-row>
     </div>
 {% endverbatim %}
@@ -80,8 +80,10 @@ const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or co
 <script type="text/x-template" id="scheduleRadioGridRowTpl">
 {% verbatim %}
     <div class="schedule-radio-grid-row">
-        <div v-if="!hasSchedule" class="program none" >
-            <div class="program-inner">Programmes non disponible :(</div>
+        <div v-if="!hasSchedule" class="program-container none" :style="noProgramStyleObject">
+            <div class="program">
+                <div class="program-inner">Programmes non disponible :(</div>
+            </div>
         </div>
         <template v-if="hasSchedule" v-for="(entry, key) in schedule">
             <schedule-radio-grid-program :program="entry"></schedule-radio-grid-program>
@@ -92,10 +94,12 @@ const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or co
 
 <script type="text/x-template" id="scheduleRadioGridProgramTpl">
 {% verbatim %}
-    <div class="program" :style="styleObject">
-        <div class="program-inner">
-            <div class="program-title">{{ program.title }}</div>
-            <div class="program-host">{{ program.host  }}</div>
+    <div class="program-container" :style="styleObject">
+        <div class="program">
+            <div class="program-inner">
+                <div class="program-title">{{ program.title }}</div>
+                <div class="program-host">{{ program.host  }}</div>
+            </div>
         </div>
     </div>
 {% endverbatim %}

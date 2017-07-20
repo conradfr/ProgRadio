@@ -41,7 +41,6 @@
       opacity: 0.95;
     }
 
-
     &.timeline-control-left {
       left: 0;
       text-align: right;
@@ -73,7 +72,7 @@
 
   .time {
     box-sizing: border-box;
-    @width: calc(@one-hour-pixel + 4px);
+    @width: calc(@one-hour-pixel - 1px);
     width: @width;
     min-width: @width;
     max-width: @width;
@@ -95,7 +94,7 @@
 .timeline-cursor {
   z-index: 5;
   position: absolute;
-  top: 35px;
+  top: -5px;
   left: 0;
 
   height: 100%;
@@ -103,7 +102,6 @@
   opacity: 0.8;
   transition: left .05s ease-out;
 
-  margin-left: @margin-from-radio-list;
   background-color: #2196f3;
 
   &:after {
