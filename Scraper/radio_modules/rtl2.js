@@ -1,5 +1,5 @@
 const osmosis = require('osmosis');
-var moment = require('moment-timezone');
+let moment = require('moment-timezone');
 
 let scrapedData = [];
 

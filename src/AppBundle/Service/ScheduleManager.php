@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Serializer\SerializerInterface;
 use Predis\Client;
 use AppBundle\Entity\Radio;
-use AppBundle\Service\Cache\Config as CacheConfig;
+use AppBundle\Service\Cache;
 
 class ScheduleManager
 {
@@ -40,9 +40,9 @@ class ScheduleManager
     public function getDaySchedule(\DateTime $dateTime)
     {
         $dateFormat = $dateTime->format('Y-m-d');
-        $cacheKey = CacheConfig::CACHE_SCHEDULE_PREFIX . $dateFormat;
+        $cacheKey = Cache::CACHE_SCHEDULE_PREFIX . $dateFormat;
 
-        /* active radios */
+        // Active radios
         $radios = $this->em->getRepository('AppBundle:Radio')->getAllCodename();
         $radiosInCache = $this->redis->HKEYS($cacheKey);
 
@@ -65,7 +65,7 @@ class ScheduleManager
 
             // Set TTL if none (new key)
             if ($this->redis->TTL($cacheKey) === -1) {
-                $this->redis->EXPIRE($cacheKey, CacheConfig::CACHE_SCHEDULE_TTL);
+                $this->redis->EXPIRE($cacheKey, Cache::CACHE_SCHEDULE_TTL);
             }
         }
 

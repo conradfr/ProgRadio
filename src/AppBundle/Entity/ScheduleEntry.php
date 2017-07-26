@@ -36,9 +36,16 @@ class ScheduleEntry
     private $dateTimeStart;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetimetz")
+     * @Groups({"export"})
+     */
+    private $dateTimeEnd;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(type="smallint")
      * @Groups({"export"})
      */
     private $duration;
@@ -128,6 +135,25 @@ class ScheduleEntry
     public function setDateTimeStart($dateTimeStart)
     {
         $this->dateTimeStart = $dateTimeStart;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateTimeEnd()
+    {
+        return $this->dateTimeEnd;
+    }
+
+    /**
+     * @param \DateTime $dateTimeEnd
+     * @return ScheduleEntry
+     */
+    public function setDateTimeEnd($dateTimeEnd)
+    {
+        $this->dateTimeEnd = $dateTimeEnd;
 
         return $this;
     }

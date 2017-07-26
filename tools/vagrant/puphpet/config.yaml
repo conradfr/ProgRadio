@@ -43,7 +43,7 @@ vagrantfile:
             vflsf_swj1fq3ccwyf:
                 owner: www-data
                 group: www-data
-                source: 'D:\\Developpement\\Projets\\ProgRadio'
+                source: 'C:\\Users\\Lionel\\Documents\\dev\\progradio'
                 target: /var/www/progradio
                 sync_type: default
                 smb:

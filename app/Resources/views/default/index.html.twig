@@ -94,7 +94,15 @@ const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or co
 
 <script type="text/x-template" id="scheduleRadioGridProgramTpl">
 {% verbatim %}
-    <div class="program-container" :style="styleObject">
+    <div class="program-container" :style="styleObject" v-on:mouseup="detailClick">
+        <div class="program program-full" :style="styleObjectDetail">
+            <div class="program-inner">
+                <div class="program-title">{{ program.title }}</div>
+                <div class="program-host">{{ program.host  }}</div>
+                <div class="program-description">{{ program.description }}</div>
+            </div>
+        </div>
+
         <div class="program">
             <div class="program-inner">
                 <div class="program-title">{{ program.title }}</div>

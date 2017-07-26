@@ -32,10 +32,16 @@ class LoadRadioData extends AbstractFixture implements FixtureInterface, Contain
     {
         $radios = [
             [
-                    'codename' => 'rtl',
-                    'name' => 'RTL',
-                    'category' => 'news_talk'
-            ], [
+                'codename' => 'rtl',
+                'name' => 'RTL',
+                'category' => 'news_talk'
+            ],
+            [
+                'codename' => 'europe1',
+                'name' => 'Europe 1',
+                'category' => 'news_talk'
+            ],
+            [
                     'codename' => 'rtl2',
                     'name' => 'RTL2',
                     'category' => 'music'

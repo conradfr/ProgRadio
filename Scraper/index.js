@@ -8,11 +8,13 @@ const QUEUE_LIST = 'schedule_input:queue';
 
 /* radios */
 const rtl = require('./radio_modules/rtl.js');
+const europe1 = require('./radio_modules/europe1.js');
 const rtl2 = require('./radio_modules/rtl2.js');
 
 const radios = [
-    rtl,
-    rtl2
+    // rtl,
+    europe1/*,
+    rtl2*/
 ];
 
 const redisClient = redis.createClient();

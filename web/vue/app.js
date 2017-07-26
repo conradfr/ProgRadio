@@ -18,22 +18,22 @@ const TICK_INTERVAL = 60000; /*one minute in  ms */
 
 /* ----- STORE ----- */
 
-const initialScrollIndex = () => {
-    const currentHour = moment().hour();
-    let initIndex = 0;
+const enforceScrollIndex = (scrollIndex) => {
+    const gridWidth = window.innerWidth - 71;
 
-    if (currentHour > 3) {
-        initIndex = (currentHour - 2) * 60 * MINUTE_PIXEL;
-
-        const gridScreenWidth = window.innerWidth - 71;
-        const gridFullWidth = ((MINUTE_PIXEL * 1440 * DAYS) + GRID_VIEW_EXTRA);
-
-        if (initIndex + gridScreenWidth >= gridFullWidth) {
-            initIndex = gridFullWidth - gridScreenWidth;
-        }
+    if (scrollIndex < 0) { scrollIndex = 0; }
+    else if (scrollIndex >= ((MINUTE_PIXEL * 1440 * DAYS) - gridWidth + GRID_VIEW_EXTRA)) {
+        scrollIndex = ((MINUTE_PIXEL * 1440 * DAYS) - gridWidth + GRID_VIEW_EXTRA);
     }
 
-    return initIndex;
+    return scrollIndex;
+};
+
+const initialScrollIndex = () => {
+    const initCursor = moment().diff(moment().startOf('day'), 'minutes') * MINUTE_PIXEL + 1;
+    let initIndex = initCursor - Math.floor(window.innerWidth / 3);
+
+    return enforceScrollIndex(initIndex);
 };
 
 const store = new Vuex.Store({
@@ -55,17 +55,7 @@ const store = new Vuex.Store({
     mutations: {
         scroll (state, x) {
             const newIndex = state.scrollIndex + x;
-            const gridWidth = window.innerWidth - 71;
-
-            // cancel move if outside current day
-            if (newIndex < 0) {
-                state.scrollIndex = 0;
-                return;
-            } else if (newIndex >= ((MINUTE_PIXEL * 1440 * DAYS) - gridWidth + GRID_VIEW_EXTRA)) {
-                state.scrollIndex = ((MINUTE_PIXEL * 1440 * DAYS) - gridWidth + GRID_VIEW_EXTRA);
-                return;
-            }
-            state.scrollIndex = state.scrollIndex + x;
+            state.scrollIndex = enforceScrollIndex(newIndex);
         },
         updateCursor(state) {
             state.cursorTime = moment();
@@ -214,11 +204,27 @@ const scheduleRadioGridProgram = Vue.component('scheduleRadioGridProgram', {
         const width = `${this.program.duration * MINUTE_PIXEL}px`;
 
         return {
+            displayDetail: false,
+            divData: null,
             styleObject: {
                 minWidth: width,
                 maxWidth: width
             }
         }
+    },
+    computed: {
+        styleObjectDetail: function() {
+            if (this.displayDetail === false) { return {}; }
+
+            return {
+                visibility: 'visible'
+            };
+        }
+    },
+    methods: {
+        detailClick: function (event) {
+            // this.displayDetail = !this.displayDetail;
+        },
     }
 });
 
