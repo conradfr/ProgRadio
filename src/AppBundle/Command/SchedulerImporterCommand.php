@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Service\Queue;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,13 +18,10 @@ use AppBundle\Service\ScheduleImporter;
  */
 class SchedulerImporterCommand extends ContainerAwareCommand
 {
-    const QUEUE_LIST = 'schedule_input:queue';
-    const QUEUE_PROCESSING = 'schedule_input:processing';
-    const QUEUE_CLEANING_INTERVAL = 30; /* minutes, can't be more than 59 */
     const DAEMON_SLEEP = 1; /* seconds */
 
-    /** @var \Predis\Client */
-    private $redis;
+    /** @var Queue */
+    private $queue;
 
     /** @var  \Monolog\Logger */
     private $logger;
@@ -39,47 +37,39 @@ class SchedulerImporterCommand extends ContainerAwareCommand
         $this->logger = $this->getContainer()->get('logger');
         $this->logger->notice('Starting daemon ...');
 
-        $this->redis = $this->getContainer()->get('snc_redis.default');
+        $this->queue = $this->getContainer()->get(Queue::class);
         $builder = $this->getContainer()->get(ScheduleImporter::class);
 
         /*
          * If daemon previously quit without finishing processed payload,
          * put them back in the queue
          */
-        $this->cleanProcessingQueue();
-        $lastQueueCleaning = new \DateTime();
+        $this->logger->notice('Cleaning processing queue (init)');
+        $this->queue->cleanProcessingQueue();
 
         while(true) {
-
-            // Clean queue at interval
-            $currentDateTime = new \DateTime();
-            $diff = $currentDateTime->diff($lastQueueCleaning)->i;
-
-            if ($diff > self::QUEUE_CLEANING_INTERVAL) {
-                $lastQueueCleaning = $currentDateTime;
-                $this->cleanProcessingQueue();
-                unset($diff);
+            if ($this->queue->cleanProcessingQueue() === true) {
+                $this->logger->notice('Cleaning processing queue');
             }
 
             // Manage queues & process keys
-            $scheduleKey = $this->redis->RPOPLPUSH(self::QUEUE_LIST, self::QUEUE_PROCESSING);
+            $scheduleKey = $this->queue->getNextKey();
             if ($scheduleKey) {
                 $this->logger->notice(print_r($scheduleKey, 1));
 
-                $payload = $this->redis->GET($scheduleKey);
+                $payload = $this->queue->getPayload($scheduleKey);
 
                 if ($payload) {
                     $payloadDecoded = json_decode($payload);
 
                     $buildStatus = $builder->build($payloadDecoded);
                     if ($buildStatus === true) {
-                        $this->redis->LREM(self::QUEUE_PROCESSING, 1, $scheduleKey);
-                        $this->redis->DEL($scheduleKey);
+                        $this->queue->hasBeenProcessed($scheduleKey);
                     }
                 }
                 else {
                     // Stall list entry, delete it
-                    $this->redis->LREM(self::QUEUE_PROCESSING, 1, $scheduleKey);
+                    $this->queue->hasBeenProcessed($scheduleKey);
                 }
             }
 
@@ -88,18 +78,4 @@ class SchedulerImporterCommand extends ContainerAwareCommand
 
         $this->logger->notice('Stopping daemon ...');
     }
-
-    /**
-     * @return void
-     */
-    protected function cleanProcessingQueue() {
-        $this->logger->notice('Cleaning processing queue');
-
-        while($this->redis->RPOPLPUSH(self::QUEUE_PROCESSING, self::QUEUE_LIST) !== null) {
-            /* continue */
-        }
-
-        return;
-    }
-
 }

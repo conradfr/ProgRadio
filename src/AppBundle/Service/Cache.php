@@ -24,8 +24,6 @@ class Cache
     protected $serializer;
 
     /**
-     * Cache constructor.
-     *
      * @param EntityManager $entityManager
      * @param Client $redis
      * @param SerializerInterface $serializer
