@@ -7635,7 +7635,9 @@ body {
   padding: 2px 0;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container {
-  height: 100%;
+  position: absolute;
+  margin-top: 2px;
+  height: 60px;
   box-sizing: border-box;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container.none {

@@ -203,10 +203,15 @@ const scheduleRadioGridProgram = Vue.component('scheduleRadioGridProgram', {
     data: function () {
         const width = `${this.program.duration * MINUTE_PIXEL}px`;
 
+        const startDay = moment(this.program.start_at).startOf('day');
+        const left = moment(this.program.start_at).diff(startDay, 'minutes') * MINUTE_PIXEL;
+
         return {
             displayDetail: false,
             divData: null,
             styleObject: {
+                left: `${left}px`,
+                width: width,
                 minWidth: width,
                 maxWidth: width
             }

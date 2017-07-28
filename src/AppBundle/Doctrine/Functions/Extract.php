@@ -33,9 +33,9 @@ class Extract extends FunctionNode
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
         return "EXTRACT('epoch' FROM "
-            . $this->firstDateExpression->dispatch($sqlWalker) . '::time'
+            . $this->firstDateExpression->dispatch($sqlWalker)
             . ' - '
-            . $this->secondDateExpression->dispatch($sqlWalker) .'::time'
+            . $this->secondDateExpression->dispatch($sqlWalker)
             . ')';
     }
 }
