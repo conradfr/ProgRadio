@@ -47,6 +47,11 @@ class LoadRadioData extends AbstractFixture implements FixtureInterface, Contain
                     'category' => 'music'
             ],
             [
+                'codename' => 'funradio',
+                'name' => 'Fun Radio',
+                'category' => 'music'
+            ],
+            [
                 'codename' => 'test',
                 'name' => 'Test',
                 'category' => 'music'

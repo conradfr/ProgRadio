@@ -24,15 +24,18 @@ const format = dateObj => {
         }
         else {
             regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2}) DU LUNDI AU JEUDI - ([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2}) LE VENDREDI/);
-            entry.datetime_raw.match(regexp);
+            match = entry.datetime_raw.match(regexp);
 
             if (match !== null) {
+
                 const index = (dateObj.isoWeekday() === 5) ? 5 : 1;
 
                 startDateTime.hour(match[index]);
                 startDateTime.minute(match[index+1]);
                 endDateTime.hour(match[index+2]);
                 endDateTime.minute(match[index+3]);
+
+                endDateTime.add(1, 'days');
             } else {
                 return prev;
             }
@@ -42,8 +45,6 @@ const format = dateObj => {
         entry.schedule_start = startDateTime.toISOString();
         entry.schedule_end = endDateTime.toISOString();
         entry.timezone = 'Europe/Paris';
-
-        console.log(entry);
 
         prev.push(entry);
         return prev;

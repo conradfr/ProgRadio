@@ -10,11 +10,13 @@ const QUEUE_LIST = 'schedule_input:queue';
 const rtl = require('./radio_modules/rtl.js');
 const europe1 = require('./radio_modules/europe1.js');
 const rtl2 = require('./radio_modules/rtl2.js');
+const funradio = require('./radio_modules/funradio.js');
 
 const radios = [
     rtl,
-    europe1,
-    rtl2
+    rtl2,
+    funradio,
+    europe1
 ];
 
 const redisClient = redis.createClient();
@@ -37,6 +39,7 @@ radios.forEach(function(radio) {
             };
 
             redisClient.setex(redisKey, QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
+            redisClient.LREM(QUEUE_LIST, 1, redisKey);
             redisClient.RPUSH(QUEUE_LIST, redisKey);
 
 
