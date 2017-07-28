@@ -7412,14 +7412,44 @@ input[type="checkbox"]:disabled:checked:after,
   float: left;
   margin: -1px 10px 0;
 }
+.navbar .navbar-brand-name > img:hover {
+  animation: Rotate 2000ms linear 50ms 5;
+  /* from https://codepen.io/justcode/pen/AFLqr */
+}
+@keyframes Rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  4% {
+    transform: rotate(-30deg);
+  }
+  8% {
+    transform: rotate(0deg);
+  }
+  12% {
+    transform: rotate(-30deg);
+  }
+  16% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(-30deg);
+  }
+  24% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
 /*
   Beta ribbon
   Don't show on mobile as it hide the hamburger menu
   https://github.com/twbs/bootstrap/issues/5550
 */
 .ribbon-wrapper {
-  width: 75px;
-  height: 77px;
+  width: 67px;
+  height: 67px;
   overflow: hidden;
   position: absolute;
   top: -3px;
@@ -7432,15 +7462,13 @@ input[type="checkbox"]:disabled:checked:after,
   }
 }
 .ribbon {
-  font: bold 13px Sans-Serif;
-  text-align: center;
+  font: bold 11px Sans-Serif;
+  color: #333;
+  text-align: left;
   text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
   position: relative;
-  padding: 7px 0;
+  padding: 7px 0 7px 32px;
   left: -5px;
   top: 15px;
   width: 120px;

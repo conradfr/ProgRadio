@@ -4,33 +4,27 @@ namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Serializer\SerializerInterface;
-use Predis\Client;
-use AppBundle\Entity\Radio;
 use AppBundle\Service\Cache;
+use AppBundle\Entity\Radio;
 
 class ScheduleManager
 {
     /** @var EntityManager */
     protected $em;
 
-    /** @var Client */
-    protected $redis;
-
-    /** @var SerializerInterface */
-    protected $serializer;
+    /** @var  Cache */
+    protected $cache;
 
     /**
      * ScheduleManager constructor.
      *
      * @param EntityManager $entityManager
-     * @param Client $redis
-     * @param SerializerInterface $serializer
+     * @param Cache $cache
      */
-    public function __construct(EntityManager $entityManager, \Predis\Client $redis, SerializerInterface $serializer)
+    public function __construct(EntityManager $entityManager, Cache $cache)
     {
         $this->em = $entityManager;
-        $this->redis = $redis;
-        $this->serializer = $serializer;
+        $this->cache = $cache;
     }
 
     /**
@@ -39,47 +33,32 @@ class ScheduleManager
      */
     public function getDaySchedule(\DateTime $dateTime)
     {
-        $dateFormat = $dateTime->format('Y-m-d');
-        $cacheKey = Cache::CACHE_SCHEDULE_PREFIX . $dateFormat;
-
         // Active radios
         $radios = $this->em->getRepository('AppBundle:Radio')->getAllCodename();
-        $radiosInCache = $this->redis->HKEYS($cacheKey);
+        $radiosInCache = $this->cache->getRadiosForDay($dateTime);
 
         $radiosNotInCache = array_diff($radios, $radiosInCache);
         $radiosToRemoveFromCache = array_diff($radiosInCache, $radios);
 
         // Remove any radio that are not active anymore but in cache
         if (count($radiosToRemoveFromCache) > 0) {
-            $this->redis->HDEL($cacheKey, $radiosToRemoveFromCache);
+            $this->cache->removeRadiosFromDay($dateTime, $radiosToRemoveFromCache);
         }
 
         // Add any new radio schedule for that day in cache
         if (count($radiosNotInCache) > 0) {
             $radioNewSchedule = $this->em->getRepository('AppBundle:ScheduleEntry')->getDaySchedule($dateTime, $radiosNotInCache);
             if (count($radioNewSchedule) > 0) {
-                $this->redis->HMSET($cacheKey, array_map(function ($entry) {
-                    return $this->serializer->serialize($entry, 'json');
-                }, $radioNewSchedule));
-            }
-
-            // Set TTL if none (new key)
-            if ($this->redis->TTL($cacheKey) === -1) {
-                $this->redis->EXPIRE($cacheKey, Cache::CACHE_SCHEDULE_TTL);
+                $this->cache->addSchedulesToDay($dateTime, $radioNewSchedule);
             }
         }
 
         // Get cache & decode values
-        $cachedSchedule = $this->redis->HGETALL($cacheKey);
+        $cachedSchedule = $this->cache->getScheduleForDay($dateTime);
         foreach ($cachedSchedule as $radio => $radioSchedule) {
-            $cachedSchedule[$radio] = json_decode($radioSchedule);
+            $cachedSchedule[$radio] = json_decode($radioSchedule); // @todo to be improved as we encode and decode in the same function
         }
 
         return $cachedSchedule;
-    }
-
-    protected function buildSchedule()
-    {
-
     }
 }

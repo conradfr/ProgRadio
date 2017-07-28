@@ -2,36 +2,30 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\EventSubscriber\ScheduleModifiedEvent;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Serializer\SerializerInterface;
-use Predis\Client;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use AppBundle\Entity\Radio;
 use AppBundle\Entity\ScheduleEntry;
-use AppBundle\Service\Cache;
 
 class ScheduleImporter
 {
     /** @var EntityManager */
     protected $em;
 
-    /** @var Client */
-    protected $redis;
-
-    /** @var SerializerInterface */
-    protected $serializer;
+    /** @var EventDispatcher */
+    protected $dispatcher;
 
     /**
      * ScheduleImporter constructor.
      *
      * @param EntityManager $entityManager
-     * @param Client $redis
-     * @param SerializerInterface $serializer
+     * @param EventDispatcher $dispatcher
      */
-    public function __construct(EntityManager $entityManager, \Predis\Client $redis, SerializerInterface $serializer)
+    public function __construct(EntityManager $entityManager, EventDispatcher $dispatcher)
     {
         $this->em = $entityManager;
-        $this->redis = $redis;
-        $this->serializer = $serializer;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -46,13 +40,16 @@ class ScheduleImporter
 
         if (!$radio) { return false; }
 
+        // Use transaction to cancel day schedule delete if new schedule generates error
+        $this->em->getConnection()->beginTransaction();
+
         // Clean data for this radio & day
         $this->deleteRadioSchedule(new \DateTime($payload->date), $radio);
 
         $collection = [];
 
         foreach ($payload->items as $item) {
-            $dateTimeStart = new \DateTime($item->schedule);
+            $dateTimeStart = new \DateTime($item->schedule_start);
             $timeZoneValue = $item->timezone ?: $radio->getTimezone();
             $timeZone = new \DateTimeZone($timeZoneValue);
             $dateTimeStart->setTimezone($timeZone);
@@ -80,53 +77,37 @@ class ScheduleImporter
             unset($dateTimeStart, $dateTimeEnd, $dateTimeEndRaw, $timeZoneValue, $timeZone);
         }
 
-        // Calculate duration
+        /* Set end time
+           Done after first loop as we sometimes need to use the n+1 start time.
+        */
         for($i=0;$i<count($collection);$i++) {
-            if (!empty($collection[$i]->getDateTimeEnd())) {
-               $duration = floor(($collection[$i+1]->getDateTimeEnd()->getTimestamp() - $collection[$i]->getDateTimeStart()->getTimestamp()) / 60);
-               $collection[$i]->setDuration($duration);
-            }
-            elseif (!empty($collection[$i]->getDuration())) {
-                $dateTimeEnd = clone $collection[$i]->getDateTimeStart();
-
-                $duration = $collection[$i]->getDuratin();
-                $days = floor($duration / 1440);
-                $hours = floor(($duration % 1440) / 60);
-                $minutes = floor($hours % 60);
-
-                $dateTimeEnd->add(\DateInterval::createfromdatestring(sprintf('+%d day', $days)));
-                $dateTimeEnd->add(\DateInterval::createfromdatestring(sprintf('+d hour', $hours)));
-                $dateTimeEnd->add(\DateInterval::createfromdatestring(sprinf('+d minute', $minutes)));
+            if (empty($collection[$i]->getDateTimeEnd())) {
+                // If last of the day assume for now it will end at midnight
+                if ($i === (count($collection) - 1)) {
+                    $dateTimeEnd = clone $collection[$i]->getDateTimeStart();
+                    $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
+                    $dateTimeEnd->setTime('00', '00', '00');
+                }
+                else {
+                    $dateTimeEnd = clone $collection[$i+1]->getDateTimeStart();
+                }
 
                 $collection[$i]->setDateTimeEnd($dateTimeEnd);
-            }
-            else {
-                if (empty($collection[$i]->getDuration())) {
-                    // If last of the day assume for now it will end at midnight
-                    if ($i === (count($collection) - 1)) {
-                        $dateTimeEnd = clone $collection[$i]->getDateTimeStart();
-                        $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
-                        $dateTimeEnd->setTime('00', '00', '00');
-
-                        $duration = floor(($dateTimeEnd->getTimestamp() - $collection[$i]->getDateTimeStart()->getTimestamp()) / 60);
-                        $collection[$i]->setDuration($duration);
-                    }
-                    else {
-                        $duration = ($collection[$i+1]->getDateTimeStart()->getTimestamp() - $collection[$i]->getDateTimeStart()->getTimestamp()) / 60;
-                        $collection[$i]->setDuration($duration);
-                    }
-                }
             }
 
             $this->em->persist($collection[$i]);
         }
 
-        $this->em->flush();
+        try {
+            $this->em->flush();
+            $this->em->getConnection()->commit();
+         } catch (\Exception $e) {
+            $this->em->getConnection()->rollBack();
+            return false;
+        }
 
-        /* preemptive cache */
-        $cacheKey = Cache::CACHE_SCHEDULE_PREFIX . $payload->date;
-        $this->redis->HSET($cacheKey, $radio->getCodeName(), $this->serializer->serialize($collection, 'json', ['groups' => array('export')]));
-        $this->redis->EXPIRE($cacheKey, Cache::CACHE_SCHEDULE_TTL);
+        $this->dispatcher->dispatch(ScheduleModifiedEvent::NAME,
+                                new ScheduleModifiedEvent($collection[0]->getDateTimeStart(), $radio->getCodeName()));
 
         return true;
     }

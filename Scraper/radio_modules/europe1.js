@@ -6,7 +6,6 @@ let scrapedData = [];
 
 const format = dateObj => {
     const cleanedData = scrapedData.reduce(function(prev, entry){
-        console.log(entry);
         if (util.isNullOrUndefined(entry.datetime_raw)) {
             return prev;
         }
@@ -14,7 +13,7 @@ const format = dateObj => {
         const startDateTime = moment(dateObj);
         const endDateTime = moment(dateObj);
 
-        let regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2}) - ([0-9]{1,2})[h|H]([0-9]{2})/g);
+        let regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2}) - ([0-9]{1,2})[h|H]([0-9]{2})/);
         let match = entry.datetime_raw.match(regexp);
 
         if (match !== null) {
@@ -24,7 +23,7 @@ const format = dateObj => {
             endDateTime.minute(match[4]);
         }
         else {
-            regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2}) DU LUNDI AU JEUDI - ([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2}) LE VENDREDI/g);
+            regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2}) DU LUNDI AU JEUDI - ([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2}) LE VENDREDI/);
             entry.datetime_raw.match(regexp);
 
             if (match !== null) {
@@ -40,9 +39,11 @@ const format = dateObj => {
         }
 
         delete entry.datetime_raw;
-        entry.schedule = startDateTime.toISOString();
+        entry.schedule_start = startDateTime.toISOString();
         entry.schedule_end = endDateTime.toISOString();
         entry.timezone = 'Europe/Paris';
+
+        console.log(entry);
 
         prev.push(entry);
         return prev;
@@ -68,10 +69,10 @@ const fetch = dateObj => {
         return osmosis
             .get(url)
             .find(`#${tab}Tab > .programmes > .bloc.clearfix`)
-/*            .select('.wrap-img')
+            // .select('.wrap-img')
             .set({
-                'img': 'img@src'
-            })*/
+                'img': '.wrap-img img@src'
+            })
             .select('.bloc_texte')
             .set({
                 'host': '.titre',

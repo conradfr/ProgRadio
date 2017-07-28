@@ -22,7 +22,8 @@ class ScheduleEntryRepository extends EntityRepository
         $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url, se.dateTimeStart as start_at, se.duration')
+        $qb->select('r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
+                . 'se.dateTimeStart as start_at, se.dateTimeEnd as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration')
             ->from('AppBundle:ScheduleEntry', 'se')
             ->innerJoin('se.radio', 'r')
             ->where('se.dateTimeStart >= :datetime_start')

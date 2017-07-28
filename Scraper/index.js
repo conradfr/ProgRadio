@@ -12,9 +12,9 @@ const europe1 = require('./radio_modules/europe1.js');
 const rtl2 = require('./radio_modules/rtl2.js');
 
 const radios = [
-    // rtl,
-    europe1/*,
-    rtl2*/
+    rtl,
+    europe1,
+    rtl2
 ];
 
 const redisClient = redis.createClient();
