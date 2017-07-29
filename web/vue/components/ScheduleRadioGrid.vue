@@ -22,8 +22,11 @@ export default {
     computed: mapState({
         radios: state => state.radios,
         styleObject: function() {
-            const styleObject = this.$store.getters.gridIndex;
-            if (this.mousedown === true) { styleObject['transition'] = 'none'; }
+            const styleObject = {
+                left: this.$store.getters.gridIndex.left
+            };
+
+            if (this.mousedown === true) { styleObject.transition = 'none'; }
 
             return styleObject;
         }
@@ -40,8 +43,7 @@ export default {
         dragMove: function (event) {
             if (this.mousedown === false) { return; }
 
-            const xDiff = this.clickX - event.pageX;
-            this.$store.dispatch('scroll', xDiff);
+            this.$store.dispatch('scroll', (this.clickX - event.pageX));
             this.clickX = event.pageX;
         }
     }
