@@ -6,7 +6,6 @@ module.exports = {
     entry: path.join(__dirname, '/web/vue/app.js'),
     output: {
         path: __dirname + '/web/build/js',
-
         filename: 'app.js'
     },
     module: {

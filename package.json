@@ -6,16 +6,17 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --watch"
+    "dev": "webpack --watch",
+    "build": "node buildjs/build.js"
   },
   "dependencies": {
-    "bootstrap-material-design": "^0.5.10",
+    "bootstrap-material-design": "^0.5.10"
+  },
+  "devDependencies": {
     "moment": "^2.18.1",
     "vue": "^2.3.4",
     "vue-cookie": "^1.1.4",
-    "vuex": "^2.3.1"
-  },
-  "devDependencies": {
+    "vuex": "^2.3.1",
     "babel": "^6.23.0",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.0.0",
