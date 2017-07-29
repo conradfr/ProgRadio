@@ -201,13 +201,12 @@ const scheduleRadioGridProgram = Vue.component('scheduleRadioGridProgram', {
     template: '#scheduleRadioGridProgramTpl',
     props: ['program'],
     data: function () {
+        // Style
         const width = `${this.program.duration * MINUTE_PIXEL}px`;
-
         const startDay = moment(this.program.start_at).startOf('day');
         const left = moment(this.program.start_at).diff(startDay, 'minutes') * MINUTE_PIXEL;
 
         return {
-            displayDetail: false,
             divData: null,
             styleObject: {
                 left: `${left}px`,
@@ -224,6 +223,13 @@ const scheduleRadioGridProgram = Vue.component('scheduleRadioGridProgram', {
             return {
                 visibility: 'visible'
             };
+        },
+        scheduleDisplay: function() {
+            const format = 'HH[h]mm';
+            const start = moment(this.program.start_at).format(format);
+            const end = moment(this.program.end_at).format(format);
+
+            return `${start}-${end}`;
         }
     },
     methods: {

@@ -3,12 +3,14 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Schedule entry
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ScheduleEntryRepository")
+ * @ORM\Table(indexes={@ORM\Index(name="starttime_idx", columns={"date_time_start"})})
  */
 class ScheduleEntry
 {

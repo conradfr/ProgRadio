@@ -34,11 +34,13 @@ const format = dateObj => {
                 startDateTime.minute(match[index+1]);
                 endDateTime.hour(match[index+2]);
                 endDateTime.minute(match[index+3]);
-
-                endDateTime.add(1, 'days');
             } else {
                 return prev;
             }
+        }
+
+        if (startDateTime.hour() > endDateTime.hour()) {
+            endDateTime.add(1, 'days');
         }
 
         delete entry.datetime_raw;

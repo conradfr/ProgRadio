@@ -85,8 +85,8 @@ const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or co
                 <div class="program-inner">Programmes non disponible :(</div>
             </div>
         </div>
-        <template v-if="hasSchedule" v-for="(entry, key) in schedule">
-            <schedule-radio-grid-program :program="entry"></schedule-radio-grid-program>
+        <template v-if="hasSchedule">
+            <schedule-radio-grid-program v-for="(entry, key) in schedule" :key="entry.hash" :program="entry"></schedule-radio-grid-program>
         </template>
     </div>
 {% endverbatim %}
@@ -95,17 +95,17 @@ const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or co
 <script type="text/x-template" id="scheduleRadioGridProgramTpl">
 {% verbatim %}
     <div class="program-container" :style="styleObject" v-on:mouseup="detailClick">
-        <div class="program program-full" :style="styleObjectDetail">
+<!--        <div class="program program-full" :style="styleObjectDetail">
             <div class="program-inner">
                 <div class="program-title">{{ program.title }}</div>
                 <div class="program-host">{{ program.host  }}</div>
                 <div class="program-description">{{ program.description }}</div>
             </div>
-        </div>
+        </div>-->
 
         <div class="program">
             <div class="program-inner">
-                <div class="program-title">{{ program.title }}</div>
+                <div class="program-title"><span class="schedule-display">{{ scheduleDisplay}}</span>{{ program.title }}</div>
                 <div class="program-host">{{ program.host  }}</div>
             </div>
         </div>

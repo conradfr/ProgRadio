@@ -77,32 +77,56 @@
         &:hover {
           z-index: 3 !important;
           box-shadow: 0 0 10px -3px rgba(0,0,0,.35);
+
+          .schedule-display {
+            visibility: visible !important;
+            opacity: 1 !important;
+          }
         }
 
         .program-inner {
           height: 100%;
           width: 100%;
 
-          padding: 7px 0 0 10px;
+          padding: 7px 10px 0 10px;
           border: 1px solid #e8e8e8;
           border-left: 0;
 
           user-select: none;
+          -moz-user-select: none;
 
           .program-title {
             font-weight: bold;
             color: #262b2f;
             line-height: 1;
+
             user-select: none;
+            -moz-user-select: none;
+
             margin-bottom: 0;
             overflow: hidden;
             white-space: nowrap;
+
+            .schedule-display {
+              .pull-right();
+
+              visibility: hidden;
+              opacity: 0;
+              transition: opacity 0.3s ease-out 0s;
+
+              color: darken(@background-color, 25%);
+              font-weight: normal;
+              font-size: @font-size-small;
+            }
           }
 
           .program-host {
             color: lighten(#262b2f, 10%);
             font-size: 11px;
+
             user-select: none;
+            -moz-user-select: none;
+
             overflow: hidden;
             white-space: nowrap;
           }

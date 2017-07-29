@@ -1,12 +1,12 @@
 const moment = require('moment');
 const redis = require("redis");
 
-/* queue constants */
+// queue constants
 const QUEUE_SCHEDULE_ONE_PREFIX = 'schedule_input:one:';
 const QUEUE_SCHEDULE_ONE_TTL = 172800;
 const QUEUE_LIST = 'schedule_input:queue';
 
-/* radios */
+// radios
 const rtl = require('./radio_modules/rtl.js');
 const europe1 = require('./radio_modules/europe1.js');
 const rtl2 = require('./radio_modules/rtl2.js');
@@ -20,31 +20,37 @@ const radios = [
 ];
 
 const redisClient = redis.createClient();
-let dateObj = moment();
+const dateObj = moment();
 
 console.log('Starting ...');
 
-// TODO parallelize
-radios.forEach(function(radio) {
-    radio.getScrap(dateObj)
+const results = radios.map(function (radio) {
+    return radio.getScrap(dateObj)
         .then(function(data) {
+            const dateFormat = 'DD-MM-YYYY';
+
             console.log(`${radio.getName} - items found: ${data.length}`);
 
-            const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}${radio.getName}:${dateObj.format('DD-MM-YYYY')}`;
+            const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}${radio.getName}:${dateObj.format(dateFormat)}`;
 
             const dataExport = {
                 'radio': radio.getName,
-                'date': dateObj.format('DD-MM-YYYY'),
+                'date': dateObj.format(dateFormat),
                 'items': data
             };
 
             redisClient.setex(redisKey, QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
             redisClient.LREM(QUEUE_LIST, 1, redisKey);
             redisClient.RPUSH(QUEUE_LIST, redisKey);
-
-
         })
         .catch(error => {
             console.log(error);
         });
+});
+
+const schedule = Promise.all(results);
+
+schedule.then(() => {
+    console.log('All done, exiting ...');
+    process.exit(1);
 });
