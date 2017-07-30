@@ -50,12 +50,12 @@ class LoadRadioData extends AbstractFixture implements FixtureInterface, Contain
                 'codename' => 'funradio',
                 'name' => 'Fun Radio',
                 'category' => 'music'
-            ],
+            ]/*,
             [
                 'codename' => 'test',
                 'name' => 'Test',
                 'category' => 'music'
-            ]
+            ]*/
         ];
 
         for ($i=0;$i<count($radios);$i++) {
