@@ -1,5 +1,5 @@
 {
-    "name": "lionel/progradio",
+    "name": "conradfr/progradio",
     "license": "proprietary",
     "type": "project",
     "autoload": {
@@ -23,6 +23,7 @@
         "php": ">=5.5.9",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-fixtures-bundle": "2.3.0",
+        "doctrine/doctrine-migrations-bundle": "^1.0",
         "doctrine/orm": "^2.5",
         "incenteev/composer-parameter-handler": "^2.0",
         "jms/serializer-bundle": "2.0.0",

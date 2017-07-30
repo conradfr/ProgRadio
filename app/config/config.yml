@@ -1,5 +1,6 @@
 imports:
     - { resource: parameters.yml }
+    - { resource: app_parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
 
@@ -104,7 +105,7 @@ snc_redis:
         default:
             type: predis
             alias: default
-            dsn: redis://localhost
+            dsn: "%redis_dsn%"
     session:
         client: default
         prefix: session_
