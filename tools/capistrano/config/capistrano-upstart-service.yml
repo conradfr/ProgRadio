@@ -1,0 +1,3 @@
+upstart_services:
+  - name: progradio_importer
+    roles: :app

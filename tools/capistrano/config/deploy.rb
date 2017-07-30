@@ -57,6 +57,11 @@ namespace :deploy do
   before "deploy:updated", "myproject:scraper_node"
   before "deploy:updated", "myproject:buildjs"
   before "deploy:updated", "myproject:migrations"
+  before "deploy:updated", "myproject:clean"
+  # before "deploy:updated", "myproject:daemon"
+
+  after :publishing, 'progradio_importer:stop'
+  after :publishing, 'progradio_importer:start'
 end
 
 namespace :myproject do
@@ -87,4 +92,22 @@ namespace :myproject do
     end
   end
 
+  # update db fixtures
+  task :clean do
+    on roles(:app) do
+      within release_path do
+        execute "rm", "-rf", "web/vue/"
+        execute "rm", "-rf", "web/less/"
+      end
+    end
+  end
+
+  # restart daemon
+  task :daemon do
+    on roles(:app) do
+      within release_path do
+        execute "restart", "progradio_importer"
+      end
+    end
+  end
 end

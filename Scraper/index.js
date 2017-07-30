@@ -1,5 +1,17 @@
 const moment = require('moment');
 const redis = require("redis");
+const yaml = require('js-yaml');
+const fs = require('fs');
+
+// Config
+let config = {};
+try {
+   config = yaml.safeLoad(fs.readFileSync('../app/config/app_parameters.yml', 'utf8'));
+} catch (e) {
+    process.exit(1);
+}
+
+console.log(config);
 
 // queue constants
 const QUEUE_SCHEDULE_ONE_PREFIX = 'schedule_input:one:';
@@ -19,7 +31,7 @@ const radios = [
     europe1
 ];
 
-const redisClient = redis.createClient();
+const redisClient = redis.createClient(config.parameters.redis_dsn);
 const dateObj = moment();
 
 console.log('Starting ...');

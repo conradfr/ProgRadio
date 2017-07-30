@@ -5,6 +5,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "js-yaml": "^3.9.1",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
     "osmosis": "^1.1.4",
