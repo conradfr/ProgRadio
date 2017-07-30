@@ -10,7 +10,7 @@
     "build": "node buildjs/build.js"
   },
   "dependencies": {
-    "bootstrap-material-design": "^0.5.10"
+    "bootstrap": "^3.3.7"
   },
   "devDependencies": {
     "babel": "^6.23.0",
