@@ -53,7 +53,7 @@
 # Tools
 
 # Vagrant
-/tools/vagrant/puphpet/config.yaml
+
 # generated during provisionning
 /tools/vagrant/.vagrant/
 /tools/vagrant/puphpet/files/dot/ssh/root_id_rsa.ppk
