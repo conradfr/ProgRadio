@@ -3,15 +3,13 @@ const redis = require("redis");
 const yaml = require('js-yaml');
 const fs = require('fs');
 
-// Config
+// config
 let config = {};
 try {
    config = yaml.safeLoad(fs.readFileSync('../app/config/app_parameters.yml', 'utf8'));
 } catch (e) {
     process.exit(1);
 }
-
-console.log(config);
 
 // queue constants
 const QUEUE_SCHEDULE_ONE_PREFIX = 'schedule_input:one:';

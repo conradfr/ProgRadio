@@ -7639,7 +7639,7 @@ body {
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container {
   position: absolute;
-  margin-top: 2px;
+  margin-top: 1px;
   height: 60px;
   box-sizing: border-box;
   user-select: none;
