@@ -41,28 +41,39 @@ set :composer_install_flags, '--no-dev --no-interaction --optimize-autoloader'
 
 # File permissions
 set :file_permissions_groups, ["www-data"]
-set :file_permissions_users, ["www-data"]
+set :file_permissions_users, ["www-data", "deployer"]
 set :file_permissions_chmod_mode, "0774"
+set :file_permissions_paths, ["var"]
 
 set :permission_method, :acl
 set :use_set_permissions, true
 
 # npm options
-set :npm_flags, '--silent --no-spin'
+# set :npm_flags, '--silent --no-spin'
 
 namespace :deploy do
   after :starting, 'composer:install_executable'
   before "deploy:updated", "deploy:set_permissions:acl"
   before "deploy:updated", "myproject:scraper_node"
+  before "deploy:updated", "myproject:buildjs"
   before "deploy:updated", "myproject:migrations"
 end
 
 namespace :myproject do
-  # update db fixtures
+  # scraper deps
   task :scraper_node do
     on roles(:app) do
         within release_path + "Scraper" do
             execute "npm", "install"
+        end
+    end
+  end
+
+  # build app js
+  task :buildjs do
+    on roles(:app) do
+        within release_path do
+            execute "npm", "run", "build"
         end
     end
   end
@@ -72,7 +83,6 @@ namespace :myproject do
     on roles(:app) do
       within release_path do
         execute "php", "bin/console", "d:m:m", "--no-interaction"
-        execute "php", "bin/console", "doctrine:fixtures:load", "--append"
       end
     end
   end
