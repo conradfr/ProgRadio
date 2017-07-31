@@ -3,8 +3,6 @@ lock '3.9.0'
 
 set :application, 'progradio'
 
-set :repo_url, 'git@bitbucket.org:yoyolebatteur/progradio.git'
-
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
@@ -49,7 +47,7 @@ set :permission_method, :acl
 set :use_set_permissions, true
 
 # npm options
-# set :npm_flags, '--silent --no-spin'
+set :npm_flags, '--no-spin'
 
 namespace :deploy do
   after :starting, 'composer:install_executable'

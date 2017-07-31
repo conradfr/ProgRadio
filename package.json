@@ -1,6 +1,8 @@
 {
   "name": "progradio",
   "main": "index.js",
+  "license": "NPOSL 3.0",
+  "description": "frontend",
   "directories": {
     "test": "tests"
   },
