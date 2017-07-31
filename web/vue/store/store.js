@@ -6,7 +6,7 @@ import * as config from '../config/config.js';
 
 Vue.use(Vuex);
 
-const enforceScrollIndex = function(scrollIndex) {
+const enforceScrollIndex = (scrollIndex) => {
     if (scrollIndex < 0) { scrollIndex = 0; }
     else {
         const maxScroll = (config.MINUTE_PIXEL * 1440 * config.DAYS) - (window.innerWidth - 71) + config.GRID_VIEW_EXTRA;
@@ -42,6 +42,9 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        setScroll(state, x) {
+            state.scrollIndex = x;
+        },
         scroll (state, x) {
             const newIndex = state.scrollIndex + x;
              state.scrollIndex = enforceScrollIndex(newIndex);
@@ -51,6 +54,9 @@ const store = new Vuex.Store({
         }
     },
     actions: {
+        scrollToCursor: ({commit}) => {
+            commit('scroll', initialScrollIndex());
+        },
         scroll: ({commit}, x) => {
             commit('scroll', x);
         },

@@ -53,8 +53,10 @@ export default {
             this.clickX = event.pageX;
         },
         onSwipe: function (event) {
+            // avoid ghost click
+            if (this.clickX !== null) { return; }
+
             this.$store.dispatch('scroll', -event.deltaX);
-            console.log(event);
         }
     }
 }
