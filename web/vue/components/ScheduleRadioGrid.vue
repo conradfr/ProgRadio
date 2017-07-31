@@ -1,12 +1,19 @@
 <template>
-    <div class="schedule-radio-grid" id="schedule-radio-grid" v-on:mousedown="dragClick" v-on:mousemove="dragMove" v-on:mouseup="dragOff" :style="styleObject">
+    <div class="schedule-radio-grid" id="schedule-radio-grid" :style="styleObject"
+         v-on:mousedown="dragClick" v-on:mousemove="dragMove" v-on:mouseup="dragOff">
         <timeline-cursor></timeline-cursor>
-        <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name" :radio="entry.code_name"></schedule-radio-grid-row>
+        <v-touch v-on:swipe="onSwipe">
+            <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name" :radio="entry.code_name"></schedule-radio-grid-row>
+        </v-touch>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
 import { mapState } from 'vuex'
+
+const VueTouch = require('vue-touch');
+Vue.use(VueTouch, {name: 'v-touch'});
 
 import TimelineCursor from './TimelineCursor.vue'
 import ScheduleRadioGridRow from './ScheduleRadioGridRow.vue'
@@ -27,7 +34,6 @@ export default {
             };
 
             if (this.mousedown === true) { styleObject.transition = 'none'; }
-
             return styleObject;
         }
     }),
@@ -37,7 +43,7 @@ export default {
             this.clickX = event.pageX;
             this.mousedown = true;
         },
-        dragOff: function (event) {
+        dragOff: function () {
             this.mousedown = false;
         },
         dragMove: function (event) {
@@ -45,6 +51,10 @@ export default {
 
             this.$store.dispatch('scroll', (this.clickX - event.pageX));
             this.clickX = event.pageX;
+        },
+        onSwipe: function (event) {
+            this.$store.dispatch('scroll', -event.deltaX);
+            console.log(event);
         }
     }
 }
