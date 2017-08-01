@@ -8,8 +8,36 @@
 @import "components/ribbon";
 
 body {
-  margin-top: 50px;
+  margin-top: @navbar-height;
   background-color: @background-color;
+
+  .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 40px;
+
+    font-size: 12px;
+    small {
+      color: @timeline-color;
+      font-size: 11px;
+    }
+
+    p {
+      color: @timeline-color;
+      margin: 8px 0;
+    }
+
+    a {
+      color: @timeline-color;
+
+      &:hover,
+      &:focus {
+        color: @timeline-color;
+      }
+    }
+  }
 }
 
 #app {

@@ -7499,6 +7499,29 @@ body {
   margin-top: 50px;
   background-color: #f3f3f3;
 }
+body .footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 40px;
+  font-size: 12px;
+}
+body .footer small {
+  color: #969696;
+  font-size: 11px;
+}
+body .footer p {
+  color: #969696;
+  margin: 8px 0;
+}
+body .footer a {
+  color: #969696;
+}
+body .footer a:hover,
+body .footer a:focus {
+  color: #969696;
+}
 #app {
   overflow-x: hidden;
 }

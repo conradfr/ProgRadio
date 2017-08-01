@@ -55,6 +55,18 @@
 </nav>
 
 {% block body %}{% endblock %}
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            {% block footer %}
+                <div class="col-md-12 col-xs-12"><p class="text-center">©{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a>&nbsp;&nbsp;{#<small>(<a href="https://github.com/conradfr/progradio">sources</a>)</small>#}</p></div>
+            {% endblock %}
+        </div>
+        {#dsfd#}
+    </div>
+</footer>
+
 {% block javascripts %}{% endblock %}
 {% if app.environment == 'prod' %}
 <script>

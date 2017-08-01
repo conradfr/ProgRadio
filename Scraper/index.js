@@ -21,12 +21,16 @@ const rtl = require('./radio_modules/rtl.js');
 const europe1 = require('./radio_modules/europe1.js');
 const rtl2 = require('./radio_modules/rtl2.js');
 const funradio = require('./radio_modules/funradio.js');
+const franceinter = require('./radio_modules/franceinter.js');
+const franceinfo = require('./radio_modules/franceinfo.js');
 
 const radios = [
     rtl,
     rtl2,
     funradio,
-    europe1
+    europe1,
+    franceinter,
+    franceinfo
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);
