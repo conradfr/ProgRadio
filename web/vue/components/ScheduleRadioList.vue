@@ -5,14 +5,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import ScheduleRadioListOne from './ScheduleRadioListOne.vue'
 
 export default {
     components: { ScheduleRadioListOne },
-    computed: mapState({
-        radios: state => state.radios
-    })
+    computed: {
+        ...mapGetters({
+            radios: 'radiosRanked'
+        })
+    }
 }
 </script>

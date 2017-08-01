@@ -33,7 +33,7 @@ class Version20170730135623 extends AbstractMigration implements ContainerAwareI
 
     public function postUp(Schema $schema)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
 
         // CATEGORIES
 
@@ -48,18 +48,10 @@ class Version20170730135623 extends AbstractMigration implements ContainerAwareI
         ];
 
         for ($i=0;$i<count($categories);$i++) {
-            $category = new Category();
-
-            $category->setId($i+1);
-            $category->setCodeName($categories[$i]['codename']);
-            $category->setName($categories[$i]['name']);
-
-            $em->persist($category);
-
-            unset($category);
+            $connection->exec(
+                'INSERT INTO category (id, code_name, name) VALUES ('.($i+1).",'".$categories[$i]['codename']."','".$categories[$i]['name']."');"
+            );
         }
-
-        $em->flush();
 
         // RADIOS
 
@@ -67,22 +59,22 @@ class Version20170730135623 extends AbstractMigration implements ContainerAwareI
             [
                 'codename' => 'rtl',
                 'name' => 'RTL',
-                'category' => 'news_talk'
+                'category' => 1
             ],
             [
                 'codename' => 'europe1',
                 'name' => 'Europe 1',
-                'category' => 'news_talk'
+                'category' => 1
             ],
             [
                 'codename' => 'rtl2',
                 'name' => 'RTL2',
-                'category' => 'music'
+                'category' => 2
             ],
             [
                 'codename' => 'funradio',
                 'name' => 'Fun Radio',
-                'category' => 'music'
+                'category' => 2
             ]/*,
             [
                 'codename' => 'test',
@@ -92,19 +84,11 @@ class Version20170730135623 extends AbstractMigration implements ContainerAwareI
         ];
 
         for ($i=0;$i<count($radios);$i++) {
-            $radio = new Radio();
-
-            $radio->setId($i+1);
-            $radio->setCodeName($radios[$i]['codename']);
-            $radio->setName($radios[$i]['name']);
-            $radio->setCategory($em->getRepository('AppBundle\Entity\Category')->findOneByCodeName($radios[$i]['category']));
-
-            $em->persist($radio);
-
-            unset($radio);
+            $connection->exec(
+                'INSERT INTO radio (id, category_id, code_name, name) VALUES ('
+                    .($i+1).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['name']."');"
+            );
         }
-
-        $em->flush();
     }
 
     /**

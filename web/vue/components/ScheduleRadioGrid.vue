@@ -10,7 +10,7 @@
 
 <script>
 import Vue from 'vue';
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 const VueTouch = require('vue-touch');
 Vue.use(VueTouch, {name: 'v-touch'});
@@ -26,17 +26,20 @@ export default {
             clickX: null
         }
     },
-    computed: mapState({
-        radios: state => state.radios,
+    computed: {
         styleObject: function() {
             const styleObject = {
                 left: this.$store.getters.gridIndex.left
             };
 
+            // disable grid transition while manually scrolling, avoid lag effect
             if (this.mousedown === true) { styleObject.transition = 'none'; }
             return styleObject;
-        }
-    }),
+        },
+        ...mapGetters({
+            radios: 'radiosRanked'
+        })
+    },
     /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
     methods: {
         dragClick: function (event) {

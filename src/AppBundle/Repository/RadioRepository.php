@@ -17,7 +17,7 @@ class RadioRepository extends EntityRepository
      */
     public function getActiveRadios() {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, c.name as category
+            'SELECT r.codeName as code_name, r.name, r.share, c.name as category
                 FROM AppBundle:Radio r
                   INNER JOIN r.category c
                 WHERE r.active = :active

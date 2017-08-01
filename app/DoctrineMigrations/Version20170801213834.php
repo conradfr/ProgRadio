@@ -12,7 +12,7 @@ use AppBundle\Entity\Radio;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20170801125803 extends AbstractMigration implements ContainerAwareInterface
+class Version20170801213834 extends AbstractMigration implements ContainerAwareInterface
 {
     private $container;
 
@@ -38,22 +38,37 @@ class Version20170801125803 extends AbstractMigration implements ContainerAwareI
 
         $radios = [
             [
+                'codename' => 'rtl',
+                'share' => 12.3
+            ],
+            [
+                'codename' => 'rtl2',
+                'share' => 2.5
+
+            ],
+            [
+                'codename' => 'europe1',
+                'share' => 6.1
+            ],
+            [
+                'codename' => 'funradio',
+                'share' => 4.1
+
+            ],
+            [
                 'codename' => 'franceinter',
-                'name' => 'France Inter',
-                'category' => 1
+                'share' =>  10.6
             ],
             [
                 'codename' => 'franceinfo',
-                'name' => 'France Info',
-                'category' => 1
+                'share' => 4.2
             ]
         ];
 
         for ($i=0;$i<count($radios);$i++) {
             for ($i=0;$i<count($radios);$i++) {
                 $connection->exec(
-                    'INSERT INTO radio (id, category_id, code_name, name) VALUES ('
-                    .($i+5).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['name']."');"
+                    "UPDATE radio SET share = ".$radios[$i]['share']." WHERE code_name = '".$radios[$i]['codename']."';"
                 );
             }
         }

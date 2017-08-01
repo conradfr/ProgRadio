@@ -39,6 +39,19 @@ const store = new Vuex.Store({
         },
         gridIndex: state => {
             return {left: `-${state.scrollIndex}px`};
+        },
+        // sort by share, desc
+        radiosRanked: state => {
+            return  state.radios.sort(function(a, b) {
+                if (a.share < b.share) {
+                    return 1;
+                }
+                if (a.share > b.share) {
+                    return -1;
+                }
+                // must be equal
+                return 0;
+            });
         }
     },
     mutations: {

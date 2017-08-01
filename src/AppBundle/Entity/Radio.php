@@ -52,6 +52,13 @@ class Radio
     private $category;
 
     /**
+     * @var double
+     *
+     * @ORM\Column(type="decimal", scale=2, options={"default"=0})
+     */
+    private $share;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(type="boolean", options={"default"=true})
@@ -104,6 +111,22 @@ class Radio
     public function setCategory(Category $category)
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return double
+     */
+    public function getShare()
+    {
+        return $this->share;
+    }
+
+    /**
+     * @param double $share
+     */
+    public function setShare($share)
+    {
+        $this->share = $share;
     }
 
     /**
