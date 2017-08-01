@@ -42,10 +42,10 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
-        setScroll(state, x) {
+        scrollSet(state, x) {
             state.scrollIndex = x;
         },
-        scroll (state, x) {
+        scrollTo (state, x) {
             const newIndex = state.scrollIndex + x;
              state.scrollIndex = enforceScrollIndex(newIndex);
         },
@@ -55,10 +55,10 @@ const store = new Vuex.Store({
     },
     actions: {
         scrollToCursor: ({commit}) => {
-            commit('scroll', initialScrollIndex());
+            commit('scrollSet', initialScrollIndex());
         },
         scroll: ({commit}, x) => {
-            commit('scroll', x);
+            commit('scrollTo', x);
         },
         tick: ({commit}) => {
             commit('updateCursor');

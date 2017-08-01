@@ -7526,8 +7526,10 @@ body .footer a:focus {
   overflow-x: hidden;
 }
 .timeline {
+  z-index: 6;
   box-sizing: border-box;
-  position: relative;
+  position: fixed;
+  top: 50px;
   height: 40px;
   line-height: 40px;
   display: flex;
@@ -7538,9 +7540,11 @@ body .footer a:focus {
   color: #969696;
   font-size: 0;
   padding-left: calc(76px);
+  background-color: #f3f3f3;
   transition: left 0.06s ease-out 0s;
 }
 .timeline .timeline-control {
+  z-index: 7;
   display: block;
   position: fixed;
   top: 50px;
@@ -7592,7 +7596,7 @@ body .footer a:focus {
   border-left: 1px solid #969696;
 }
 .timeline-cursor {
-  z-index: 5;
+  z-index: 8;
   position: absolute;
   top: -5px;
   left: 0;
@@ -7639,6 +7643,7 @@ body .footer a:focus {
   opacity: 0.9;
 }
 .schedule-container .schedule-radio-grid {
+  margin-top: 40px;
   margin-left: calc(76px);
   padding-bottom: 25px;
   position: relative;

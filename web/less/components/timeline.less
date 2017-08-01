@@ -1,8 +1,11 @@
 @import "../variables";
 
 .timeline {
+  z-index: 6;
   box-sizing: border-box;
-  position: relative;
+  position: fixed;
+  top: 50px; // what
+
   height: @timeline-height;
   line-height: @timeline-height;
   display: flex;
@@ -16,16 +19,19 @@
   font-size: 0;
 
   padding-left: @margin-from-radio-list;
+  background-color: @background-color;
+  //.box-shadow(0 1px 2px rgba(0,0,0,.3));
 
   transition: left 0.06s ease-out 0s;
 
   .timeline-control {
+    z-index: 7;
     display: block;
     position: fixed;
     top: 50px;
 
     box-sizing: border-box;
-    background-color: darken(#f3f3f3, 30%);
+    background-color: darken(@background-color, 30%);
 
     opacity: 0.8;
     transition: opacity 0.07s ease-out 0s;
@@ -33,7 +39,7 @@
     height: 41px;
     padding-top: 1px;
 
-    color: darken(#f3f3f3, 55%);
+    color: darken(@background-color, 55%);
     font-size: 18px;
     cursor: pointer;
 
@@ -92,7 +98,7 @@
 }
 
 .timeline-cursor {
-  z-index: 5;
+  z-index: 8;
   position: absolute;
   top: -5px;
   left: 0;
@@ -102,7 +108,7 @@
   opacity: 0.8;
   transition: left .05s ease-out;
 
-  background-color: #2196f3;
+  background-color: @timeline-cursor-color;
 
   &:after {
     position: absolute;
@@ -115,6 +121,6 @@
     -webkit-transform: translate3d(-50%,0,0);
     transform: translate3d(-50%,0,0);
     border: 8px solid transparent;
-    border-top-color: #2196f3;
+    border-top-color: @timeline-cursor-color;
   }
 }
