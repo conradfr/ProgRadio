@@ -52,7 +52,7 @@ class Version20170801125803 extends AbstractMigration implements ContainerAwareI
         for ($i=0;$i<count($radios);$i++) {
             $radio = new Radio();
 
-            $radio->setId($i+1);
+            $radio->setId($i+5);
             $radio->setCodeName($radios[$i]['codename']);
             $radio->setName($radios[$i]['name']);
             $radio->setCategory($em->getRepository('AppBundle\Entity\Category')->findOneByCodeName($radios[$i]['category']));
