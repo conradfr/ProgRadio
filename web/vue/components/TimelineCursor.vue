@@ -8,7 +8,7 @@ import { TICK_INTERVAL } from '../config/config.js';
 export default {
     computed: {
         styleObject: function() {
-            return {left: `${this.$store.getters.cursorIndex}px`};
+            return {left: this.$store.getters.cursorIndex};
         }
     },
     methods: {

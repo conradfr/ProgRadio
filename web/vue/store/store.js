@@ -35,7 +35,8 @@ const store = new Vuex.Store({
     getters: {
         cursorIndex: state => {
             const startDay = moment().startOf('day');
-            return state.cursorTime.diff(startDay, 'minutes') * config.MINUTE_PIXEL + 1;
+            const newIndex = state.cursorTime.diff(startDay, 'minutes') * config.MINUTE_PIXEL + 1;
+            return `${newIndex}px`;
         },
         gridIndex: state => {
             return {left: `-${state.scrollIndex}px`};

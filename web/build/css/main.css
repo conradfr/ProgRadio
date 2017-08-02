@@ -7596,17 +7596,39 @@ body .footer a:focus {
   border-left: 1px solid #969696;
 }
 .timeline-cursor {
-  z-index: 8;
+  z-index: 5;
   position: absolute;
-  top: -5px;
+  top: 0px;
   left: 0;
   height: 100%;
   width: 2px;
   opacity: 0.8;
-  transition: left 0.05s ease-out;
+  background-color: #2196f3;
+  /*  &:after {
+    position: absolute;
+    top: -7px;
+    left: 1px;
+    display: block;
+    width: 0;
+    height: 0;
+    content: '';
+    -webkit-transform: translate3d(-50%,0,0);
+    transform: translate3d(-50%,0,0);
+    border: 8px solid transparent;
+    border-top-color: #2196f3;
+  }*/
+}
+.timeline-cursor-head {
+  z-index: 8;
+  position: fixed;
+  top: calc(87px);
+  left: 0;
+  height: 3px;
+  width: 2px;
+  opacity: 0.8;
   background-color: #2196f3;
 }
-.timeline-cursor:after {
+.timeline-cursor-head:after {
   position: absolute;
   top: -7px;
   left: 1px;
@@ -7649,7 +7671,7 @@ body .footer a:focus {
   position: relative;
   white-space: nowrap;
   cursor: move;
-  z-index: 3;
+  z-index: 1;
   width: calc(8640px);
   transition: left 0.05s ease-out 0s;
 }
