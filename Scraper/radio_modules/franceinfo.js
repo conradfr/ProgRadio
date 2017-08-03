@@ -22,6 +22,7 @@ const format = dateObj => {
         const startDateTime = moment(dateObj);
         startDateTime.hour(match[1]);
         startDateTime.minute(match[2]);
+        startDateTime.second(0);
 
         // filter other days (i.e last line is midnight next day)
         if (prev.length > 0 && startDateTime.isBefore(moment(prev[prev.length - 1].schedule_start))) {

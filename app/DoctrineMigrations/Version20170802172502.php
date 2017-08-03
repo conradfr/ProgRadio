@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20170801125803 extends AbstractMigration implements ContainerAwareInterface
+class Version20170802172502 extends AbstractMigration implements ContainerAwareInterface
 {
     private $container;
 
@@ -36,22 +36,24 @@ class Version20170801125803 extends AbstractMigration implements ContainerAwareI
 
         $radios = [
             [
-                'codename' => 'franceinter',
-                'name' => 'France Inter',
-                'category' => 1
+                'codename' => 'nrj',
+                'name' => 'NRJ',
+                'category' => 2,
+                'share' => 6.4
             ],
             [
-                'codename' => 'franceinfo',
-                'name' => 'France Info',
-                'category' => 1
+                'codename' => 'skyrock',
+                'name' => 'Skyrock',
+                'category' => 2,
+                'share' => 3.5
             ]
         ];
 
         for ($i=0;$i<count($radios);$i++) {
             for ($i=0;$i<count($radios);$i++) {
                 $connection->exec(
-                    'INSERT INTO radio (id, category_id, code_name, name) VALUES ('
-                    .($i+5).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['name']."');"
+                    'INSERT INTO radio (id, category_id, code_name, name, share) VALUES ('
+                    .($i+7).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['name']."',".$radios[$i]['share'].");"
                 );
             }
         }

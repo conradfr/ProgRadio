@@ -17,20 +17,14 @@ const QUEUE_SCHEDULE_ONE_TTL = 172800;
 const QUEUE_LIST = 'schedule_input:queue';
 
 // radios
-const rtl = require('./radio_modules/rtl.js');
-const europe1 = require('./radio_modules/europe1.js');
-const rtl2 = require('./radio_modules/rtl2.js');
-const funradio = require('./radio_modules/funradio.js');
-const franceinter = require('./radio_modules/franceinter.js');
-const franceinfo = require('./radio_modules/franceinfo.js');
-
 const radios = [
-    rtl,
-    rtl2,
-    funradio,
-    europe1,
-    franceinter,
-    franceinfo
+/*    'rtl',
+    'rtl2',
+    'funradio',
+    'europe1',
+    'franceinter',
+    'franceinfo',*/
+    'nrj'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);
@@ -39,23 +33,27 @@ const dateObj = moment();
 console.log('Starting ...');
 
 const results = radios.map(function (radio) {
-    return radio.getScrap(dateObj)
+    const radio_module = require(`./radio_modules/${radio}.js`);
+
+    return radio_module.getScrap(dateObj)
         .then(function(data) {
             const dateFormat = 'DD-MM-YYYY';
 
-            console.log(`${radio.getName} - items found: ${data.length}`);
+            console.log(`${radio_module.getName} - items found: ${data.length}`);
 
-            const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}${radio.getName}:${dateObj.format(dateFormat)}`;
+            if (data.length > 0) {
+                const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}${radio_module.getName}:${dateObj.format(dateFormat)}`;
 
-            const dataExport = {
-                'radio': radio.getName,
-                'date': dateObj.format(dateFormat),
-                'items': data
-            };
+                const dataExport = {
+                    'radio': radio_module.getName,
+                    'date': dateObj.format(dateFormat),
+                    'items': data
+                };
 
-            redisClient.setex(redisKey, QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
-            redisClient.LREM(QUEUE_LIST, 1, redisKey);
-            redisClient.RPUSH(QUEUE_LIST, redisKey);
+                redisClient.setex(redisKey, QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
+                redisClient.LREM(QUEUE_LIST, 1, redisKey);
+                redisClient.RPUSH(QUEUE_LIST, redisKey);
+            }
         })
         .catch(error => {
             console.log(error);

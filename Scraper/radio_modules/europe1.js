@@ -19,8 +19,10 @@ const format = dateObj => {
         if (match !== null) {
             startDateTime.hour(match[1]);
             startDateTime.minute(match[2]);
+            startDateTime.second(0);
             endDateTime.hour(match[3]);
             endDateTime.minute(match[4]);
+            endDateTime.second(0);
         }
         else {
             regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2}) DU LUNDI AU JEUDI - ([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2}) LE VENDREDI/);
@@ -32,8 +34,10 @@ const format = dateObj => {
 
                 startDateTime.hour(match[index]);
                 startDateTime.minute(match[index+1]);
+                startDateTime.second(0);
                 endDateTime.hour(match[index+2]);
                 endDateTime.minute(match[index+3]);
+                endDateTime.second(0);
             } else {
                 return prev;
             }
