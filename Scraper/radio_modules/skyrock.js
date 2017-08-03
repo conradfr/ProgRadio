@@ -77,8 +77,6 @@ const format = dateObj => {
             newEntry.title = match[2];
         }
 
-console.log(newEntry);
-
         prev.push(newEntry);
         return prev;
     },[]);

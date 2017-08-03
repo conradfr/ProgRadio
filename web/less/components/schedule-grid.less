@@ -83,6 +83,11 @@
             visibility: visible !important;
             opacity: 1 !important;
           }
+
+          .program-description-short {
+            visibility: visible !important;
+            opacity: 1 !important;
+          }
         }
 
         .program-inner {
@@ -131,6 +136,36 @@
             overflow: hidden;
             white-space: nowrap;
           }
+
+          .program-description-short {
+            visibility: hidden;
+            margin-top: -3px;
+
+            .program-description-short-inner {
+              position: relative;
+
+              &:before {
+                content: '';
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background: linear-gradient(to right, rgba(255,255,255,0) 90%,rgba(255,255,255,0.88) 95%,rgba(255,255,255,1) 99%);
+              }
+
+              color: darken(@background-color, 25%);
+              font-weight: normal;
+              font-size: 11px;
+
+              user-select: none;
+              -moz-user-select: none;
+
+              overflow: hidden;
+              white-space: nowrap;
+            }
+          }
+
         }
       }
     }

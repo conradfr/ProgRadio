@@ -7541,7 +7541,7 @@ body .footer a:focus {
   font-size: 0;
   padding-left: calc(76px);
   background-color: #f3f3f3;
-  transition: left 0.08s ease-in-out 0s;
+  transition: left 0.35s cubic-bezier(0.21, 1.12, 0.67, 0.99);
 }
 .timeline .timeline-control {
   z-index: 7;
@@ -7727,6 +7727,10 @@ body .footer a:focus {
   visibility: visible !important;
   opacity: 1 !important;
 }
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .program-description-short {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner {
   height: 100%;
   width: 100%;
@@ -7762,4 +7766,27 @@ body .footer a:focus {
   -moz-user-select: none;
   overflow: hidden;
   white-space: nowrap;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-description-short {
+  visibility: hidden;
+  margin-top: -3px;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-description-short .program-description-short-inner {
+  position: relative;
+  color: #b3b3b3;
+  font-weight: normal;
+  font-size: 11px;
+  user-select: none;
+  -moz-user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-description-short .program-description-short-inner:before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.88) 95%, #ffffff 99%);
 }

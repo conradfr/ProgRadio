@@ -12,6 +12,7 @@
             <div class="program-inner">
                 <div class="program-title"><span class="schedule-display">{{ scheduleDisplay}}</span>{{ program.title }}</div>
                 <div class="program-host">{{ program.host  }}</div>
+                <div class="program-description-short"><div class="program-description-short-inner">{{ program.description | shorten(program.duration) }}</div></div>
             </div>
         </div>
     </div>
@@ -60,6 +61,25 @@ export default {
         detailClick: function (event) {
             // this.displayDetail = !this.displayDetail;
         },
-    }
+    },
+    filters: {
+        shorten: function (value, duration) {
+            if (value === null) { return ''; }
+            if (duration < 15) { return ''; }
+
+            const firstLine = value.split('\n')[0];
+
+            return firstLine;
+
+/*            let shortString = firstLine;
+
+            if (firstLine.length > duration) {
+                const shorten = firstLine.substr(0, duration);
+                shortString = `${shorten} (...)`;
+            }
+
+            return shortString;*/
+        }
+    },
 }
 </script>
