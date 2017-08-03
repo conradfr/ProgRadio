@@ -7400,16 +7400,7 @@ input[type="checkbox"]:disabled:checked:after,
   height: 50px;
   padding-top: 13.5px;
 }
-.navbar .navbar-brand-name {
-  display: inline-block;
-  float: left;
-}
-.navbar .navbar-brand-name > img {
-  display: inline-block;
-  float: left;
-  margin: -1px 10px 0;
-}
-.navbar .navbar-brand-name > img:hover {
+.navbar .navbar-brand:hover img {
   animation: Rotate 2000ms linear 50ms 5;
   /* from https://codepen.io/justcode/pen/AFLqr */
 }
@@ -7438,6 +7429,15 @@ input[type="checkbox"]:disabled:checked:after,
   100% {
     transform: rotate(0deg);
   }
+}
+.navbar .navbar-brand-name {
+  display: inline-block;
+  float: left;
+}
+.navbar .navbar-brand-name > img {
+  display: inline-block;
+  float: left;
+  margin: -1px 10px 0;
 }
 /*
   Beta ribbon
@@ -7541,7 +7541,7 @@ body .footer a:focus {
   font-size: 0;
   padding-left: calc(76px);
   background-color: #f3f3f3;
-  transition: left 0.06s ease-out 0s;
+  transition: left 0.08s ease-in-out 0s;
 }
 .timeline .timeline-control {
   z-index: 7;
@@ -7673,7 +7673,7 @@ body .footer a:focus {
   cursor: move;
   z-index: 1;
   width: calc(8640px);
-  transition: left 0.05s ease-out 0s;
+  transition: left 0.85s cubic-bezier(0.21, 1.12, 0.67, 0.99);
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row {
   display: flex;

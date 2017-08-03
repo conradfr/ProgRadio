@@ -24,7 +24,8 @@ const radios = [
     'europe1',
     'franceinter',
     'franceinfo',
-    'nrj'
+    'nrj',
+    'skyrock'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);

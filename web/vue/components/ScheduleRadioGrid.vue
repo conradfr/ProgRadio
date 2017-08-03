@@ -15,6 +15,7 @@ import { mapGetters } from 'vuex'
 const VueTouch = require('vue-touch');
 Vue.use(VueTouch, {name: 'v-touch'});
 
+import { NAV_MOVE_BY } from '../config/config.js';
 import TimelineCursor from './TimelineCursor.vue'
 import ScheduleRadioGridRow from './ScheduleRadioGridRow.vue'
 
@@ -57,9 +58,10 @@ export default {
         },
         onSwipe: function (event) {
             // avoid ghost click
-            if (this.clickX !== null) { return; }
+            if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
 
-            this.$store.dispatch('scroll', -event.deltaX);
+            const amount = (NAV_MOVE_BY / 2.2) * event.velocityX * -1;
+            this.$store.dispatch('scroll', amount);
         }
     }
 }
