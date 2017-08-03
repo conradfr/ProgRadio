@@ -18,12 +18,12 @@ const QUEUE_LIST = 'schedule_input:queue';
 
 // radios
 const radios = [
-/*    'rtl',
+    'rtl',
     'rtl2',
     'funradio',
     'europe1',
     'franceinter',
-    'franceinfo',*/
+    'franceinfo',
     'nrj'
 ];
 
