@@ -30,7 +30,8 @@ const store = new Vuex.Store({
         radios: radios ,
         schedule: schedule,
         cursorTime: moment(),
-        scrollIndex: initialScrollIndex()
+        scrollIndex: initialScrollIndex(),
+        scrollClick: false
     },
     getters: {
         cursorIndex: state => {
@@ -65,6 +66,9 @@ const store = new Vuex.Store({
         },
         updateCursor(state) {
             state.cursorTime = moment();
+        },
+        scrollClickSet: (state, value) => {
+            state.scrollClick = value;
         }
     },
     actions: {
@@ -73,6 +77,9 @@ const store = new Vuex.Store({
         },
         scroll: ({commit}, x) => {
             commit('scrollTo', x);
+        },
+        scrollClick: ({commit}, value) => {
+            commit('scrollClickSet', value)
         },
         tick: ({commit}) => {
             commit('updateCursor');

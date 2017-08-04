@@ -46,9 +46,11 @@ export default {
         dragClick: function (event) {
             this.clickX = event.pageX;
             this.mousedown = true;
+            this.$store.dispatch('scrollClick', true);
         },
         dragOff: function () {
             this.mousedown = false;
+            this.$store.dispatch('scrollClick', false);
         },
         dragMove: function (event) {
             if (this.mousedown === false) { return; }

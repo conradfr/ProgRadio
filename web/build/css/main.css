@@ -7626,6 +7626,7 @@ body .footer a:focus {
   height: 3px;
   width: 2px;
   opacity: 0.8;
+  transition: left 0.85s cubic-bezier(0.21, 1.12, 0.67, 0.99);
   background-color: #2196f3;
 }
 .timeline-cursor-head:after {
