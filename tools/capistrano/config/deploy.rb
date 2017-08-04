@@ -47,7 +47,7 @@ set :permission_method, :acl
 set :use_set_permissions, true
 
 # npm options
-set :npm_flags, '--no-spin'
+# set :npm_flags, '--no-spin'
 
 namespace :deploy do
   after :starting, 'composer:install_executable'
@@ -67,7 +67,7 @@ namespace :myproject do
   task :scraper_node do
     on roles(:app) do
         within release_path + "Scraper" do
-            execute "npm", "install"
+            execute "yarn", "install"
         end
     end
   end

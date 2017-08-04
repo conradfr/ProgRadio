@@ -29,7 +29,8 @@ install_plugin Capistrano::SCM::Git
 
 
 require 'capistrano/symfony'
-require 'capistrano/npm'
+# require 'capistrano/npm'
+require 'capistrano/yarn'
 
 require 'capistrano/upstart/service'
 
