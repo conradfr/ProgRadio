@@ -48,6 +48,7 @@ set :use_set_permissions, true
 
 # npm options
 # set :npm_flags, '--no-spin'
+set :yarn_flags, ''
 
 namespace :deploy do
   after :starting, 'composer:install_executable'
@@ -56,7 +57,6 @@ namespace :deploy do
   before "deploy:updated", "myproject:buildjs"
   before "deploy:updated", "myproject:migrations"
   before "deploy:updated", "myproject:clean"
-  # before "deploy:updated", "myproject:daemon"
 
   after :publishing, 'progradio_importer:stop'
   after :publishing, 'progradio_importer:start'
@@ -68,6 +68,7 @@ namespace :myproject do
     on roles(:app) do
         within release_path + "Scraper" do
             execute "yarn", "install"
+            execute "chmod", "+x", "cron.sh"
         end
     end
   end
@@ -100,12 +101,4 @@ namespace :myproject do
     end
   end
 
-  # restart daemon
-  task :daemon do
-    on roles(:app) do
-      within release_path do
-        execute "restart", "progradio_importer"
-      end
-    end
-  end
 end

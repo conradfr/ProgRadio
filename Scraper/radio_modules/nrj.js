@@ -62,7 +62,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    let dayFormat = dateObj.day();
+    let dayFormat = dateObj.day() - 1; // not sure why week start on monday this time
     let url = 'http://www.nrj.fr/emissions/jour';
 
     console.log(`fetching ${url}`);
