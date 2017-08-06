@@ -1,12 +1,12 @@
 <template>
     <div class="program-container" :style="styleObject" v-on:mouseup="detailClick">
-<!--        <div class="program program-full" :style="styleObjectDetail">
+        <div class="program program-full" :style="styleObjectDetail">
             <div class="program-inner">
-                <div class="program-title">{{ program.title }}</div>
+                <div class="program-title"><span class="schedule-display">{{ scheduleDisplay}}</span>{{ program.title }}</div>
                 <div class="program-host">{{ program.host  }}</div>
                 <div class="program-description">{{ program.description }}</div>
             </div>
-        </div> -->
+        </div>
 
         <div class="program">
             <div class="program-inner">
@@ -32,6 +32,7 @@ export default {
         const left = moment(this.program.start_at).diff(startDay, 'minutes') * MINUTE_PIXEL;
 
         return {
+            displayDetail: false,
             divData: null,
             styleObject: {
                 left: `${left}px`,
@@ -45,8 +46,14 @@ export default {
         styleObjectDetail: function() {
             if (this.displayDetail === false) { return {}; }
 
+            const width = `${this.program.duration * MINUTE_PIXEL}px`;
+
             return {
-                visibility: 'visible'
+                zIndex: 4,
+                visibility: 'visible',
+                minWidth: `${60 * MINUTE_PIXEL}px`,
+                width: width,
+                height: '150px'
             };
         },
         scheduleDisplay: function() {
@@ -59,7 +66,7 @@ export default {
     },
     methods: {
         detailClick: function (event) {
-            // this.displayDetail = !this.displayDetail;
+//             this.displayDetail = !this.displayDetail;
         },
     },
     filters: {

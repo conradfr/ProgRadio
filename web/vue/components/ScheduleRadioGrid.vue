@@ -1,8 +1,8 @@
 <template>
-    <div class="schedule-radio-grid" id="schedule-radio-grid" :style="styleObject"
-         v-on:mousedown="dragClick" v-on:mousemove="dragMove" v-on:mouseup="dragOff">
+    <div class="schedule-radio-grid" id="schedule-radio-grid" :style="styleObject">
         <timeline-cursor></timeline-cursor>
-        <v-touch v-on:swipe="onSwipe">
+        <v-touch v-on:swipe="onSwipe"
+                 v-on:panleft="onPan" v-on:panright="onPan" v-on:panstart="onPanStart" v-on:panend="onPanEnd">
             <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name" :radio="entry.code_name"></schedule-radio-grid-row>
         </v-touch>
     </div>
@@ -24,7 +24,8 @@ export default {
     data: function () {
         return {
             mousedown: false,
-            clickX: null
+            clickX: null,
+            swipeActive: false
         }
     },
     computed: {
@@ -34,7 +35,8 @@ export default {
             };
 
             // disable grid transition while manually scrolling, avoid lag effect
-            if (this.mousedown === true) { styleObject.transition = 'none'; }
+            if (this.$store.state.scrollClick) { styleObject.transition = 'none'; }
+
             return styleObject;
         },
         ...mapGetters({
@@ -43,27 +45,35 @@ export default {
     },
     /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
     methods: {
-        dragClick: function (event) {
-            this.clickX = event.pageX;
-            this.mousedown = true;
-            this.$store.dispatch('scrollClick', true);
-        },
-        dragOff: function () {
-            this.mousedown = false;
-            this.$store.dispatch('scrollClick', false);
-        },
-        dragMove: function (event) {
-            if (this.mousedown === false) { return; }
-
-            this.$store.dispatch('scroll', (this.clickX - event.pageX));
-            this.clickX = event.pageX;
-        },
         onSwipe: function (event) {
+            this.swipeActive = true;
+            setInterval(this.swipeEnd, 1000);
+
             // avoid ghost click
-            if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
+//            if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
 
             const amount = (NAV_MOVE_BY / 2.2) * event.velocityX * -1;
             this.$store.dispatch('scroll', amount);
+        },
+        swipeEnd: function () {
+            this.swipeActive = false;
+        },
+        onPanStart: function () {
+            if (this.swipeActive === true) { return; }
+
+            this.$store.dispatch('scrollClick', true);
+            this.clickX = 0;
+        },
+        onPanEnd: function () {
+            if (this.swipeActive === true) { return; }
+
+            this.$store.dispatch('scrollClick', false);
+        },
+        onPan: function (event) {
+            if (this.swipeActive === true) { return; }
+
+            this.$store.dispatch('scroll', (-1 * (event.deltaX - (this.clickX + event.overallVelocityX))));
+            this.clickX = event.deltaX;
         }
     }
 }

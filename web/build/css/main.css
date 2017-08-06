@@ -7719,6 +7719,7 @@ body .footer a:focus {
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-full {
   visibility: hidden;
   position: absolute;
+  transition: height 0.3s ease-in-out 0.4s, width 0.5s ease-in-out, min-width 0.5s ease-in-out;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover {
   z-index: 3 !important;
@@ -7770,7 +7771,9 @@ body .footer a:focus {
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-description-short {
   visibility: hidden;
+  opacity: 0;
   margin-top: -3px;
+  transition: opacity 0.3s ease-out 0s;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-description-short .program-description-short-inner {
   position: relative;

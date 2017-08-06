@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}Tous les programmes radio !{% endblock %}</title>
+    <meta name="description" content="{% block description %}Les programmes en France.{% endblock %}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
 
@@ -45,7 +46,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-                <a class="navbar-brand" href="#" onclick="scrollToCursor()">
+                <a class="navbar-brand" href="{{ path('homepage') }}" onclick="scrollToCursor(event)">
                     <div class="navbar-brand-name">
                         <img alt="" src="img/logo.png"> Programmes Radio
                     </div>
