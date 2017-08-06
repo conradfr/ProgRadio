@@ -48,7 +48,8 @@ const format = dateObj => {
         }
         else {
             newEntry.title = match[1];
-            newEntry.host = match[2];
+            if (match[2] === ' Minuit') { newEntry.title = newEntry.title + ' |' + match[2]; } // quick hack ...
+            else { newEntry.host = match[2]; }
         }
 
         prev.push(newEntry);
