@@ -34,7 +34,7 @@ const format = dateObj => {
 
         // Title & host
 
-        regexp = new RegExp(/^([\w\s\A-zÀ-ÿ\|]+):([\w\s\A-zÀ-ÿ]+)/);
+        regexp = new RegExp(/^([\w\s\A-zÀ-ÿ\|]+):([\w\s\A-zÀ-ÿ]*)/);
         match = curr.title_host.match(regexp);
 
         if (match === null) {
@@ -49,7 +49,7 @@ const format = dateObj => {
         else {
             newEntry.title = match[1];
             if (match[2] === ' Minuit') { newEntry.title = newEntry.title + ' |' + match[2]; } // quick hack ...
-            else { newEntry.host = match[2]; }
+            else { newEntry.host = match[2] || ''; }
         }
 
         prev.push(newEntry);
