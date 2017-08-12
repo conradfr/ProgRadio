@@ -48,6 +48,16 @@ class ScheduleImporter
 
         $collection = [];
 
+        // Sort by datetime (needed for duration / end date calc)
+        usort($payload->items, function ($a, $b)
+        {
+            $dateTime1 = new \DateTime($a->schedule_start);
+            $dateTime2 = new \DateTime($b->schedule_start);
+
+            if ($dateTime1 == $dateTime2) { return 0; }
+            return ($dateTime1 > $dateTime2) ? 1 : -1;
+        });
+
         foreach ($payload->items as $item) {
             $dateTimeStart = new \DateTime($item->schedule_start);
             $timeZoneValue = $item->timezone ?: $radio->getTimezone();
