@@ -11,8 +11,13 @@ const format = dateObj => {
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
 
         // Time
-        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s+([0-9]{1,2})[h|H]([0-9]{2})/);
-        let match = curr.datetime_raw.match(regexp);
+        let regexp = new RegExp(/de\s([0-9]{1,2})h\sà\s(([0-9]{1,2})h|minuit)/);
+        let match = curr.description.match(regexp);
+
+        if (match === null) {
+            regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
+            match = curr.datetime_raw.match(regexp);
+        }
 
         // no time, exit
         if (match === null) { return prev; }
@@ -87,19 +92,20 @@ const format = dateObj => {
 const fetch = dateObj => {
     dateObj.locale('fr');
     let day = dateObj.format('dddd').toLowerCase();
-    let url = 'http://skyrock.fm/emissions';
+    let url = 'http://www.nostalgie.fr/grille-des-emissions';
 
-    console.log(`fetching ${url} (${day})`);
+    console.log(`fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
             .find(`#${day}`)
-            .select('.b-list__item--cat3 > a')
+            .select('.item-program > .card-program')
             .set({
-                'datetime_raw': '.b-list__item__number__infos',
-                'img': 'img.picture@src',
-                'host_title': '.heading-3',
+                'datetime_raw': 'time@datetime',
+                'img': 'img.card-img@src',
+                'title': '.card-title',
+                'description': '.program-duration',
             })
             .data(function (listing) {
                 listing.dateObj = dateObj;
@@ -129,7 +135,7 @@ const getScrap = dateObj => {
 };
 
 const scrapModule = {
-    getName: 'skyrock',
+    getName: 'nostalgie',
     getScrap
 };
 

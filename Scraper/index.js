@@ -18,14 +18,16 @@ const QUEUE_LIST = 'schedule_input:queue';
 
 // radios
 const radios = [
-    'rtl',
+/*    'rtl',
     'rtl2',
     'funradio',
     'europe1',
     'franceinter',
     'franceinfo',
     'nrj',
-    'skyrock'
+    'skyrock',*/
+    // 'nostalgie'
+    'rireetchansons'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);
