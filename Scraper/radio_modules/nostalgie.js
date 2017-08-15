@@ -9,34 +9,96 @@ const format = dateObj => {
 
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
+        let newEntry = {
+            'title': null,
+            'timezone': 'Europe/Paris',
+            'img': curr.img
 
-        // Time
-        let regexp = new RegExp(/de\s([0-9]{1,2})h\sà\s(([0-9]{1,2})h|minuit)/);
-        let match = curr.description.match(regexp);
+        };
 
-        if (match === null) {
-            regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-            match = curr.datetime_raw.match(regexp);
-        }
-
-        // no time, exit
-        if (match === null) { return prev; }
+        // TIME
 
         const startDateTime = moment(curr.dateObj);
-        const endDateTime = moment(curr.dateObj);
+        let endDateTime = moment(curr.dateObj);
 
-        startDateTime.hour(match[1]);
-        startDateTime.minute(match[2]);
-        startDateTime.second(0);
-        endDateTime.hour(match[3]);
-        endDateTime.minute(match[4]);
-        endDateTime.second(0);
+        // 1st try in title
+        let regexp = new RegExp(/([\'\w\s\A-zÀ-ÿ\|]+)\s:\s(([0-9]{1,2}[H|h])|MINUIT)\s{0,1}-\s{0,1}(([0-9]{1,2}[H|h])|MINUIT)/);
+        let match = curr.title.match(regexp);
+
+        if (match !== null) {
+            if (match[2] === 'MINUIT') {
+                startDateTime.hour(0);
+            } else {
+                startDateTime.hour(match[2].substr(0, match[2].length - 1));
+            }
+            startDateTime.minute(0);
+            startDateTime.second(0);
+
+            if (match[4] === 'MINUIT') {
+                endDateTime.hour(0);
+            } else {
+                startDateTime.hour(match[4].substr(0, match[4].length - 1));
+            }
+
+            endDateTime.minute(0);
+            endDateTime.second(0);
+
+            newEntry.title =  match[1];
+        }
+        // 2nd try in the description
+        else {
+            newEntry.title =  curr.title;
+
+            regexp = new RegExp(/de\s(([0-9]{1,2}h)|minuit)\sà\s(([0-9]{1,2}h)|minuit)/);
+            match = curr.description.match(regexp);
+
+            if (match !== null) {
+                if (match[1] === 'minuit') {
+                    startDateTime.hour(0);
+                } else {
+                    startDateTime.hour(match[1].substr(0, match[1].length - 1));
+                }
+                startDateTime.minute(0);
+                startDateTime.second(0);
+
+                if (match[3] === 'minuit') {
+                    endDateTime.hour(0);
+                } else {
+                    startDateTime.hour(match[3].substr(0, match[3].length - 1));
+                }
+
+                endDateTime.minute(0);
+                endDateTime.second(0);
+            }
+            else {
+                regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
+                match = curr.datetime_raw.match(regexp);
+
+                // no time, exit
+                if (match === null) { return prev; }
+
+                startDateTime.hour(match[1]);
+                startDateTime.minute(match[2]);
+                startDateTime.second(0);
+
+                endDateTime = null;
+            }
+        }
+
+        newEntry.schedule_start = startDateTime;
+        newEntry.schedule_end = endDateTime;
+
+        // sometimes two programs starts at same time, filtering the second one for now ...
+        if (index > 0 && prev.length > 0 && startDateTime.isSame(moment(prev[prev.length -1].schedule_start), 'minute')) {
+            return prev;
+        }
 
         let prevMatch = null;
         // keep only relevant time from previous day page
         if (startDateTime.isBefore(dateObj, 'day')) {
             if (index === 0) { return prev; }
 
+            regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
             prevMatch = array[0].datetime_raw.match(regexp);
             array[0].dateObj.hour(prevMatch[1]);
 
@@ -44,42 +106,29 @@ const format = dateObj => {
 
             // update day
             startDateTime.add(1, 'days');
-            endDateTime.add(1, 'days');
+            if (endDateTime !== null) {
+                endDateTime.add(1, 'days');
+            }
         }
         // remove next day schedule from day page
         else {
             if (curr.dateObj !== array[index-1].dateObj) {
                 referenceIndex = index;
             } else {
+                regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
                 prevMatch = array[referenceIndex].datetime_raw.match(regexp);
+
+                if (prevMatch === null) { return prev; }
+
                 let prevDate = moment(array[referenceIndex].dateObj);
                 prevDate.hour(prevMatch[1]);
 
                 if (prevDate.isAfter(startDateTime)) { return prev; }
             }
 
-            if (startDateTime.hour() > endDateTime.hour()) {
+            if (endDateTime !== null && startDateTime.hour() > endDateTime.hour()) {
                 endDateTime.add(1, 'days');
             }
-        }
-
-        newEntry = {
-            'schedule_start': startDateTime.toISOString(),
-            'schedule_end': endDateTime.toISOString(),
-            'timezone': 'Europe/Paris',
-            'img': curr.img
-
-        };
-
-        // Title - host
-        regexp = new RegExp(/^([\'\w\s\A-zÀ-ÿ\|]+)\s–\s([\w\s\A-zÀ-ÿ\|\']+)/);
-        match = curr.host_title.match(regexp);
-
-        if (match === null) {
-            newEntry.title = curr.host_title;
-        } else {
-            newEntry.host = match[1];
-            newEntry.title = match[2];
         }
 
         prev.push(newEntry);

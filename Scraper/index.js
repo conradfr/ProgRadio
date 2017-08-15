@@ -26,8 +26,8 @@ const radios = [
     'franceinfo',
     'nrj',
     'skyrock',*/
-    // 'nostalgie'
-    'rireetchansons'
+    'nostalgie'/*,
+    'rireetchansons'*/
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);

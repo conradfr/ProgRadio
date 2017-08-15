@@ -21,6 +21,11 @@ const format = dateObj => {
         startDateTime.minute(match[2]);
         startDateTime.second(0);
 
+        // sometimes two programs starts at same time, filtering the second one for now ...
+        if (index > 0 && typeof prev[index -1] !== 'undefined' && startDateTime.isSame(moment(prev[index -1].schedule_start), 'minute')) {
+            return prev;
+        }
+
         // keep only relevant time from previous day page
         if (startDateTime.isBefore(dateObj, 'day')) {
             // We want only the last
