@@ -1,81 +1,56 @@
 const osmosis = require('osmosis');
-let moment = require('moment-timezone');
+const moment = require('moment-timezone');
+const striptags = require('striptags');
 
 let scrapedData = [];
 let referenceIndex = 0;
 
 // gonna be messy
 const format = dateObj => {
-
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
-
         // Time
-        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s+([0-9]{1,2})[h|H]([0-9]{2})/);
+        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
         let match = curr.datetime_raw.match(regexp);
 
         // no time, exit
         if (match === null) { return prev; }
 
-        const startDateTime = moment(curr.dateObj);
-        const endDateTime = moment(curr.dateObj);
-
+        let startDateTime = moment(curr.dateObj);
         startDateTime.hour(match[1]);
         startDateTime.minute(match[2]);
         startDateTime.second(0);
-        endDateTime.hour(match[3]);
-        endDateTime.minute(match[4]);
-        endDateTime.second(0);
 
-        let prevMatch = null;
+        // sometimes two programs starts at same time, filtering the second one for now ...
+        if (index > 0 && typeof prev[index -1] !== 'undefined' && startDateTime.isSame(moment(prev[index -1].schedule_start), 'minute')) {
+            return prev;
+        }
+
         // keep only relevant time from previous day page
         if (startDateTime.isBefore(dateObj, 'day')) {
-            if (index === 0) { return prev; }
+            // We want only the last
+            if (index !== (array.length - 1)) { return prev; }
 
-            prevMatch = array[0].datetime_raw.match(regexp);
-            array[0].dateObj.hour(prevMatch[1]);
+            // Check if current schedule starts at midnight (probably not)
+            firstentryTime = moment(prev[0].schedule_start);
+            if (firstentryTime.hour() === 0) { return prev; }
 
-            if (array[0].dateObj.isBefore(startDateTime)) { return prev; }
+            startDateTime = firstentryTime;
+            startDateTime.hour(0);
+            startDateTime.minute(0);
+            startDateTime.subtract(1, 'days');
 
             // update day
             startDateTime.add(1, 'days');
-            endDateTime.add(1, 'days');
-        }
-        // remove next day schedule from day page
-        else {
-            if (curr.dateObj !== array[index-1].dateObj) {
-                referenceIndex = index;
-            } else {
-                prevMatch = array[referenceIndex].datetime_raw.match(regexp);
-                let prevDate = moment(array[referenceIndex].dateObj);
-                prevDate.hour(prevMatch[1]);
-
-                if (prevDate.isAfter(startDateTime)) { return prev; }
-            }
-
-            if (startDateTime.hour() > endDateTime.hour()) {
-                endDateTime.add(1, 'days');
-            }
         }
 
         newEntry = {
             'schedule_start': startDateTime.toISOString(),
-            'schedule_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',
+            'title': striptags(curr.title),
+            'description': striptags(curr.description),
             'img': curr.img
-
         };
-
-        // Title - host
-        regexp = new RegExp(/^([\'\w\s\A-zÀ-ÿ\|]+)\s–\s([\w\s\A-zÀ-ÿ\|\']+)/);
-        match = curr.host_title.match(regexp);
-
-        if (match === null) {
-            newEntry.title = curr.host_title;
-        } else {
-            newEntry.host = match[1];
-            newEntry.title = match[2];
-        }
 
         prev.push(newEntry);
         return prev;
@@ -87,7 +62,8 @@ const format = dateObj => {
 const fetch = dateObj => {
     dateObj.locale('fr');
     let day = dateObj.format('dddd').toLowerCase();
-    let url = 'http://skyrock.fm/emissions';
+
+    let url = 'http://www.rireetchansons.fr/grille-des-emissions';
 
     console.log(`fetching ${url} (${day})`);
 
@@ -95,11 +71,12 @@ const fetch = dateObj => {
         return osmosis
             .get(url)
             .find(`#${day}`)
-            .select('.b-list__item--cat3 > a')
+            .select('.cardProgram')
             .set({
-                'datetime_raw': '.b-list__item__number__infos',
-                'img': 'img.picture@src',
-                'host_title': '.heading-3',
+                'datetime_raw': 'time@datetime',
+                'img': 'img.cardProgram-img@src',
+                'title': 'h2.cardProgram-title',
+                'description': '.cardProgram-desc',
             })
             .data(function (listing) {
                 listing.dateObj = dateObj;
@@ -117,8 +94,8 @@ const fetchAll = dateObj =>  {
     const previousDay = moment(dateObj);
     previousDay.subtract(1, 'days');
 
-    return fetch(previousDay)
-        .then(() => { return fetch(dateObj); });
+    return fetch(dateObj)
+        .then(() => { return fetch(previousDay); });
 };
 
 const getScrap = dateObj => {
@@ -129,7 +106,7 @@ const getScrap = dateObj => {
 };
 
 const scrapModule = {
-    getName: 'skyrock',
+    getName: 'rireetchansons',
     getScrap
 };
 
