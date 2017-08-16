@@ -27,7 +27,9 @@ const radios = [
     'nrj',
     'skyrock',
     'nostalgie',
-    'rireetchansons'
+    'rireetchansons',
+    'virgin',
+    'rfm'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);

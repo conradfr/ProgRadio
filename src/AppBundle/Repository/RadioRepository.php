@@ -26,7 +26,7 @@ class RadioRepository extends EntityRepository
 
         $query->setParameter('active', true);
 
-        $query->setResultCacheLifetime(self::CACHE_RADIO_TTL);
+        $query->useResultCache(true, self::CACHE_RADIO_TTL, 'active_radios');
         $result = $query->getResult();
 
         return $result;
