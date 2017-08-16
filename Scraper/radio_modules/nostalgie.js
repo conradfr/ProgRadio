@@ -1,4 +1,5 @@
 const osmosis = require('osmosis');
+const utils = require('../utils');
 let moment = require('moment-timezone');
 
 let scrapedData = [];
@@ -10,10 +11,10 @@ const format = dateObj => {
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
         let newEntry = {
-            'title': null,
+            'title': utils.upperCaseWords(curr.title),
             'timezone': 'Europe/Paris',
-            'img': curr.img
-
+            'img': curr.img,
+            'description': curr.description
         };
 
         // TIME
@@ -37,18 +38,14 @@ const format = dateObj => {
             if (match[4] === 'MINUIT') {
                 endDateTime.hour(0);
             } else {
-                startDateTime.hour(match[4].substr(0, match[4].length - 1));
+                endDateTime.hour(match[4].substr(0, match[4].length - 1));
             }
 
             endDateTime.minute(0);
             endDateTime.second(0);
-
-            newEntry.title =  match[1];
         }
         // 2nd try in the description
         else {
-            newEntry.title =  curr.title;
-
             regexp = new RegExp(/de\s(([0-9]{1,2}h)|minuit)\sà\s(([0-9]{1,2}h)|minuit)/);
             match = curr.description.match(regexp);
 
@@ -64,7 +61,7 @@ const format = dateObj => {
                 if (match[3] === 'minuit') {
                     endDateTime.hour(0);
                 } else {
-                    startDateTime.hour(match[3].substr(0, match[3].length - 1));
+                    endDateTime.hour(match[3].substr(0, match[3].length - 1));
                 }
 
                 endDateTime.minute(0);

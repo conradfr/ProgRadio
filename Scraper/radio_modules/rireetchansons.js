@@ -1,5 +1,6 @@
 const osmosis = require('osmosis');
 const moment = require('moment-timezone');
+const utils = require('../utils');
 const striptags = require('striptags');
 
 let scrapedData = [];
@@ -47,7 +48,7 @@ const format = dateObj => {
         newEntry = {
             'schedule_start': startDateTime.toISOString(),
             'timezone': 'Europe/Paris',
-            'title': striptags(curr.title),
+            'title': utils.upperCaseWords(striptags(curr.title)),
             'description': striptags(curr.description),
             'img': curr.img
         };
