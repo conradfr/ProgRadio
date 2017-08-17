@@ -8,11 +8,11 @@
             </div>
         </div>
 
-        <div class="program">
+        <div class="program" v-bind:class="{ 'program-current': isCurrent }">
             <div class="program-inner">
                 <div class="program-title"><span class="schedule-display">{{ scheduleDisplay}}</span>{{ program.title }}</div>
-                <div class="program-host">{{ program.host  }}</div>
-                <div class="program-description-short"><div class="program-description-short-inner">{{ program.description | shorten(program.duration) }}</div></div>
+                <div class="program-host">{{ program.host }}</div>
+                <div class="program-description-short" v-bind:class="{ 'program-description-nohost': !program.host }"><div class="program-description-short-inner">{{ program.description | shorten(program.duration) }}</div></div>
             </div>
         </div>
     </div>
@@ -62,12 +62,15 @@ export default {
             const end = moment(this.program.end_at).format(format);
 
             return `${start}-${end}`;
+        },
+        isCurrent: function () {
+            return moment().isBetween(moment(this.program.start_at), moment(this.program.end_at));
         }
     },
     methods: {
         detailClick: function (event) {
 //             this.displayDetail = !this.displayDetail;
-        },
+        }
     },
     filters: {
         shorten: function (value, duration) {
@@ -77,15 +80,6 @@ export default {
             const firstLine = value.split('\n')[0];
 
             return firstLine;
-
-/*            let shortString = firstLine;
-
-            if (firstLine.length > duration) {
-                const shorten = firstLine.substr(0, duration);
-                shortString = `${shorten} (...)`;
-            }
-
-            return shortString;*/
         }
     },
 }

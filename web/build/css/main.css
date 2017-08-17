@@ -7717,6 +7717,10 @@ body .footer a:focus {
   transition: box-shadow 0.2s ease-in-out;
   user-select: none;
 }
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current {
+  background-color: #f9fcff;
+  border-left: 3px solid #a8bac8;
+}
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-full {
   visibility: hidden;
   position: absolute;
@@ -7775,6 +7779,9 @@ body .footer a:focus {
   opacity: 0;
   margin-top: -3px;
   transition: opacity 0.3s ease-out 0s;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-description-short.program-description-nohost {
+  margin-top: 8px;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-description-short .program-description-short-inner {
   position: relative;

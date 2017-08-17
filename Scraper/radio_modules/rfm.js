@@ -64,7 +64,6 @@ const fetch = dateObj => {
                 'datetime_raw': '.horaire',
                 'title': 'a'
             })
-            // .find('.texte_cnt > a')
             .follow('a@href')
             .set({
                 'description':  '.chapo'
