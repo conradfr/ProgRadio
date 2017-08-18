@@ -8,8 +8,6 @@ const format = dateObj => {
 
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr){
-        const date = moment(parseInt(curr['datetime_raw']));
-
         // Time
         let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s—\s([0-9]{1,2})[h|H]([0-9]{2})/);
         let match = curr.datetime_raw.match(regexp);
@@ -56,6 +54,7 @@ const fetch = dateObj => {
         return osmosis
             .get(url)
             .find(`#${day}`)
+            .select('.row')
             .set({
                 'img': 'img@src'
             })
