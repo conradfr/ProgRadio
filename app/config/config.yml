@@ -111,3 +111,20 @@ snc_redis:
     session:
         client: default
         prefix: session_
+
+liip_imagine:
+    resolvers:
+        default:
+#            web_path: '%kernel.project_dir%/web/img/program/'
+            web_path:
+                web_root: "%kernel.root_dir%/../web"
+                cache_prefix: "img/program/thumb"
+
+    # your filter sets are defined here
+    filter_sets:
+        # use the default cache configuration
+        cache: ~
+        program_thumb:
+            filters:
+                relative_resize:
+                    heighten: 58

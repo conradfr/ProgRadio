@@ -4,7 +4,8 @@ namespace AppBundle\Service;
 
 use AppBundle\EventSubscriber\ScheduleModifiedEvent;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use GuzzleHttp\Client;
 use AppBundle\Entity\Radio;
 use AppBundle\Entity\ScheduleEntry;
 
@@ -13,23 +14,30 @@ class ScheduleImporter
     /** @var EntityManager */
     protected $em;
 
-    /** @var EventDispatcher */
+    /** @var EventDispatcherInterface */
     protected $dispatcher;
 
+    /** @var ImageImporter */
+    protected $imgImporter;
+
+    /** @var string */
+    protected $imgPath;
+
     /**
-     * ScheduleImporter constructor.
-     *
      * @param EntityManager $entityManager
-     * @param EventDispatcher $dispatcher
+     * @param EventDispatcherInterface $dispatcher
+     * @param Client $imgImporter
      */
-    public function __construct(EntityManager $entityManager, EventDispatcher $dispatcher)
+    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher, ImageImporter $imgImporter)
     {
         $this->em = $entityManager;
         $this->dispatcher = $dispatcher;
+        $this->imgImporter = $imgImporter;
     }
 
     /**
      * @param \stdClass $payload
+     *
      * @return bool
      */
     public function build(\stdClass $payload)
@@ -72,15 +80,34 @@ class ScheduleImporter
             }
 
             $entry = new ScheduleEntry();
+
+            $imgUrl = $this->getOrDefault($item, 'img');
+
+            if (!is_null($imgUrl)) {
+                $promise = $this->imgImporter->import($imgUrl);
+                $promise->then(
+                    function ($value) use ($entry) {
+                        $entry->setPictureUrl($value);
+                    },
+                    function ($message) { }
+                );
+            }
+
             $entry->setTitle($item->title)
                   ->setHost($this->getOrDefault($item, 'host'))
                   ->setDescription($this->getOrDefault($item, 'description'))
-                  ->setPictureUrl($this->getOrDefault($item, 'img'))
                   ->setDateTimeStart($dateTimeStart)
                   ->setDateTimeEnd($dateTimeEnd)
                   ->setDuration($this->getOrDefault($item, 'duration'))
                   ->setRadio($radio)
             ;
+
+            if (isset($promise)) {
+                while ($promise->getState() === 'pending') {
+                    sleep(1);
+                    echo 'wait' . PHP_EOL;
+                }
+            }
 
             $collection[] = $entry;
 

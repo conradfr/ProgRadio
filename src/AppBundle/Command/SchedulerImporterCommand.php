@@ -7,7 +7,6 @@ use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Predis\Client;
 use AppBundle\Service\ScheduleImporter;
 
 /**
@@ -23,7 +22,7 @@ class SchedulerImporterCommand extends ContainerAwareCommand
     /** @var Queue */
     private $queue;
 
-    /** @var  \Monolog\Logger */
+    /** @var Logger */
     private $logger;
 
     protected function configure()
@@ -34,11 +33,13 @@ class SchedulerImporterCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logger = $this->getContainer()->get('logger');
+        $container = $this->getContainer();
+
+        $this->logger = $container->get('logger');
         $this->logger->notice('Starting daemon ...');
 
-        $this->queue = $this->getContainer()->get(Queue::class);
-        $builder = $this->getContainer()->get(ScheduleImporter::class);
+        $this->queue = $container->get(Queue::class);
+        $builder = $container->get(ScheduleImporter::class);
 
         /*
          * If daemon previously quit without finishing processed payload,

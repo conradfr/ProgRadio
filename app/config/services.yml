@@ -29,7 +29,8 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    # add more services, or override services that need manual wiring
-    # AppBundle\Service\ExampleService:
-    #     arguments:
-    #         $someArgument: 'some_value'
+    AppBundle\Service\ImageImporter:
+        arguments:
+            - "@snc_redis.default"
+            - "@liip_imagine.cache.manager"
+            - '%kernel.project_dir%'
