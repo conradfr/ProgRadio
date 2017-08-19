@@ -10,6 +10,9 @@
 
         <div class="program" v-bind:class="{ 'program-current': isCurrent }">
             <div class="program-inner">
+                <div class="program-img" v-if="program.picture_url">
+                    <img v-bind:src="program.picture_url | picture" alt="">
+                </div>
                 <div class="program-title"><span class="schedule-display">{{ scheduleDisplay}}</span>{{ program.title }}</div>
                 <div class="program-host">{{ program.host }}</div>
                 <div class="program-description-short" v-bind:class="{ 'program-description-nohost': !program.host }"><div class="program-description-short-inner">{{ program.description | shorten(program.duration) }}</div></div>
@@ -17,11 +20,12 @@
         </div>
     </div>
 </template>
+img/thumb/program_thumb/img/program/00bd39e5aabdc3d570fae4771c72bc71_7783905547_miguel-derennes.jpg
 
 <script>
 const moment = require('moment');
 
-import { MINUTE_PIXEL } from '../config/config.js';
+import { MINUTE_PIXEL, DEV_PATH, THUMBNAIL_PATH } from '../config/config.js';
 
 export default {
     props: ['program'],
@@ -80,6 +84,12 @@ export default {
             const firstLine = value.split('\n')[0];
 
             return firstLine;
+        },
+        picture: (value) => {
+            /* @todo Currently ask the picture through a php route that generates the thumbnail (if not exists) and/or redirect to it
+               In the future investigate asking the final path and use .htaccess 404 to redirect to the php route then */
+            const path = process.env === 'development' ? DEV_PATH : '/';
+            return `${path}${THUMBNAIL_PATH}${value}`;
         }
     },
 }

@@ -84,7 +84,7 @@ class ScheduleImporter
             $imgUrl = $this->getOrDefault($item, 'img');
 
             if (!is_null($imgUrl)) {
-                $promise = $this->imgImporter->import($imgUrl);
+                $promise = $this->imgImporter->import($imgUrl, $radio->getCodeName());
                 $promise->then(
                     function ($value) use ($entry) {
                         $entry->setPictureUrl($value);

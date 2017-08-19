@@ -30,6 +30,11 @@
 /app/phpunit.xml
 /phpunit.xml
 
+/web/media/program/*
+/web/media/thumb/program_thumb/media/program/*
+!/web/media/program/.gitkeep
+!/web/media/thumb/program_thumb/media/program/.gitkeep
+
 # Composer PHAR
 /composer.phar
 

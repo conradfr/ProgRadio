@@ -1,5 +1,6 @@
 'use strict';
 
+var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
@@ -8,6 +9,11 @@ module.exports = {
         path: __dirname + '/web/build/js',
         filename: 'app.js'
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': '"development"'
+        })
+    ],
     module: {
         rules: [
             {

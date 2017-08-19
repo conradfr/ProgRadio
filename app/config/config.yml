@@ -118,7 +118,7 @@ liip_imagine:
 #            web_path: '%kernel.project_dir%/web/img/program/'
             web_path:
                 web_root: "%kernel.root_dir%/../web"
-                cache_prefix: "img/program/thumb"
+                cache_prefix: "media/thumb"
 
     # your filter sets are defined here
     filter_sets:

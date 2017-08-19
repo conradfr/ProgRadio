@@ -16,7 +16,7 @@ use Doctrine\Common\Cache\PredisCache;
 
 class ImageImporter
 {
-    CONST IMAGE_PATH = 'web/img/program/';
+    CONST IMAGE_PATH = 'web/media/program/';
 
     /** @var Redis */
     protected $redis;
@@ -69,13 +69,14 @@ class ImageImporter
      * (avoid collision in case of same filename but different radio)
      *
      * @param string $url
+     * @param string $radio
      *
      * @return string
      */
-    protected function getImageName($url)
+    protected function getImageName($url, $radio)
     {
         $urlParts = parse_url($url);
-        return md5($url) . '_' . basename($urlParts['path']);
+        return $radio . '_' . basename(urldecode($urlParts['path']));
     }
 
     /**
@@ -90,21 +91,22 @@ class ImageImporter
 
     /**
      * @param string $url
+     * @param string $radio
      *
      * @return Promise|false
      */
-    public function import ($url)
+    public function import ($url, $radio)
     {
         if ($url === null) { return false; }
 
-        // generate a name for the saved file
-        $imageName = $this->getImageName($url);
+        $imageName = $this->getImageName($url, $radio);
 
         $promise = $this->getClient()->getAsync($url, ['save_to' => $this->getSavePath($imageName)]);
         $promiseReturn = new Promise();
 
         $promise->then(
             function (ResponseInterface $res) use (&$promiseReturn, $imageName) {
+                echo "hooo";
                 $promiseReturn->resolve($imageName);
             },
             function (RequestException $e) use (&$promiseReturn) {

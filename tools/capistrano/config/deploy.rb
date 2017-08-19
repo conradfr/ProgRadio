@@ -25,7 +25,7 @@ set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 set :linked_files, fetch(:linked_files, []).push("app/config/parameters.yml", "app/config/app_parameters.yml")
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('vendor', 'node_modules', 'Scraper/node_modules');
+set :linked_dirs, fetch(:linked_dirs, []).push('vendor', 'node_modules', 'Scraper/node_modules', 'web/media/program','web/media/thumb/program_thumb/media/program');
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
