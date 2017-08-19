@@ -25,7 +25,7 @@ set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 set :linked_files, fetch(:linked_files, []).push("app/config/parameters.yml", "app/config/app_parameters.yml")
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('vendor', 'node_modules', 'Scraper/node_modules',"web/media/program", "web/media/thumb/program_thumb/media/program");
+set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "web/media/program", "web/media/cache/program_thumb/media/program");
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -41,7 +41,7 @@ set :composer_install_flags, '--no-dev --no-interaction --optimize-autoloader'
 set :file_permissions_groups, ["www-data"]
 set :file_permissions_users, ["www-data", "deployer"]
 set :file_permissions_chmod_mode, "0777"
-set :file_permissions_paths, ["var", "web/media/program","web/media/thumb/program_thumb/media/program"]
+set :file_permissions_paths, ["var", "web/media/program","web/media/cache/program_thumb/media/program"]
 
 # set :permission_method, :acl
 # set :use_set_permissions, true

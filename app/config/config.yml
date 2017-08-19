@@ -115,8 +115,7 @@ snc_redis:
 liip_imagine:
     resolvers:
         default:
-            web_path:
-                web_root: ~
+            web_path: ~
 
     # your filter sets are defined here
     filter_sets:
