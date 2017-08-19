@@ -106,7 +106,6 @@ class ImageImporter
 
         $promise->then(
             function (ResponseInterface $res) use (&$promiseReturn, $imageName) {
-                echo "hooo";
                 $promiseReturn->resolve($imageName);
             },
             function (RequestException $e) use (&$promiseReturn) {

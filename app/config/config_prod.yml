@@ -36,3 +36,11 @@ snc_redis:
         second_level_cache:
             client: default
             entity_manager: default
+
+liip_imagine:
+  loaders:
+    default:
+      filesystem:
+        data_root:
+            - "/var/www/progradio_prod/shared/web"
+            - "%kernel.root_dir%/../web"

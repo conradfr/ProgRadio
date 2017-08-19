@@ -7757,7 +7757,7 @@ body .footer a:focus {
   opacity: 0;
   width: 0;
   transition: opacity 0.3s ease-in-out;
-  margin: -7px 5px 0 -10px;
+  margin: -7px 10px 0 -10px;
   background-repeat: no-repeat;
   background-position: left;
   background-size: contain;

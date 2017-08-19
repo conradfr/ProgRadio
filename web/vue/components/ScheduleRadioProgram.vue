@@ -8,9 +8,9 @@
             </div>
         </div>
 
-        <div class="program" v-bind:class="{ 'program-current': isCurrent }">
+        <div class="program" v-bind:class="{ 'program-current': isCurrent }" v-on:mouseover.once="hover = !hover">
             <div class="program-inner">
-                <div class="program-img" v-if="program.picture_url">
+                <div class="program-img" v-if="program.picture_url && hover">
                     <img v-bind:src="program.picture_url | picture" alt="">
                 </div>
                 <div class="program-title"><span class="schedule-display">{{ scheduleDisplay}}</span>{{ program.title }}</div>
@@ -20,12 +20,11 @@
         </div>
     </div>
 </template>
-img/thumb/program_thumb/img/program/00bd39e5aabdc3d570fae4771c72bc71_7783905547_miguel-derennes.jpg
 
 <script>
 const moment = require('moment');
 
-import { MINUTE_PIXEL, DEV_PATH, THUMBNAIL_PATH } from '../config/config.js';
+import { MINUTE_PIXEL, THUMBNAIL_PATH } from '../config/config.js';
 
 export default {
     props: ['program'],
@@ -36,6 +35,7 @@ export default {
         const left = moment(this.program.start_at).diff(startDay, 'minutes') * MINUTE_PIXEL;
 
         return {
+            hover:false,
             displayDetail: false,
             divData: null,
             styleObject: {
@@ -86,10 +86,7 @@ export default {
             return firstLine;
         },
         picture: (value) => {
-            /* @todo Currently ask the picture through a php route that generates the thumbnail (if not exists) and/or redirect to it
-               In the future investigate asking the final path and use .htaccess 404 to redirect to the php route then */
-            const path = process.env === 'development' ? DEV_PATH : '/';
-            return `${path}${THUMBNAIL_PATH}${value}`;
+            return `${THUMBNAIL_PATH}${value}`;
         }
     },
 }

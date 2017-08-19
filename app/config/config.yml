@@ -115,10 +115,8 @@ snc_redis:
 liip_imagine:
     resolvers:
         default:
-#            web_path: '%kernel.project_dir%/web/img/program/'
             web_path:
-                web_root: "%kernel.root_dir%/../web"
-                cache_prefix: "media/thumb"
+                web_root: ~
 
     # your filter sets are defined here
     filter_sets:
