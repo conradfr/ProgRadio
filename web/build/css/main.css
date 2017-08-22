@@ -4611,7 +4611,7 @@ fieldset[disabled] .navbar-default .btn-link:focus {
   background-color: transparent;
 }
 .navbar-inverse .navbar-toggle .icon-bar {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #fff;
 }
 .navbar-inverse .navbar-collapse,
 .navbar-inverse .navbar-form {
@@ -7499,6 +7499,9 @@ body {
   margin-top: 50px;
   background-color: #f3f3f3;
 }
+body .navbar .navbar-right {
+  margin-right: 25px;
+}
 body .footer {
   position: absolute;
   bottom: 0;
@@ -7641,6 +7644,17 @@ body .footer a:focus {
   transform: translate3d(-50%, 0, 0);
   border: 8px solid transparent;
   border-top-color: #2196f3;
+}
+.content {
+  padding: 10px 25px 25px;
+  background-color: white;
+}
+.content h3 {
+  margin-top: 10px;
+  margin-bottom: 17px;
+}
+.content dl {
+  margin-bottom: 15px;
 }
 .schedule-container .schedule-radio-list {
   position: absolute;

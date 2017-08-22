@@ -37,6 +37,21 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/faq",
+     *     name="faq",
+     *     defaults={
+     *      "priority": "0.2",
+     *      "changefreq": "monthly"
+     *      }
+     * )
+     */
+    public function faqAction(Request $request)
+    {
+        return $this->render('default/faq.html.twig', []);
+    }
+
+    /**
      * Simple sitemap generator
      *
      * Doesn't use the serializer.

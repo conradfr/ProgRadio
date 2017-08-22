@@ -13,7 +13,6 @@ const scrollToCursor = function(e) {
 
 {% block body %}
 <div class="container-fluid" style="padding: 0 !important;">
-    <!-- Example row of columns -->
     <div class="row" style="margin-right: 0 !important; margin-left: 0 !important">
         <div class="col-md-12" style="padding-right: 0 !important; padding-left: 0 !important">
             <div id="app">
@@ -25,5 +24,6 @@ const scrollToCursor = function(e) {
 {% endblock %}
 
 {% block javascripts %}
-    <script src="/build/js/app.js"></script>
+    {{ parent() }}
+    <script src="{{ asset('build/js/app.js') }}"></script>
 {% endblock %}

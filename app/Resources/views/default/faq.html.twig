@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% set faq= [
+    {   'question': "Qu'est-ce que Programmes-radio.io ?",
+        'answer': [
+            "Programmes-radio.io est un site indépendant et personnel centralisant les programmes des radios françaises.",
+            "Les données sont réactualisées chaque jour en provenance des sites des radios."
+        ]
+    },
+    {   'question': "Comment sont classées les radios ?",
+        'answer': [
+            "Le classement est basé sur la part d'audience de la dernière vague médiamétrie.",
+            "A terme un système de favoris permettra d'avoir ses radios favorites en haut de la liste."
+        ]
+    },
+    {   'question': "Il n'y a pas ma radio favorite.",
+        'answer': [
+            "Le site est très récent et en phase de test. Des radios sont ajoutées au fur et à mesure."
+        ]
+    },
+    {   'question': "Pourquoi n'y a-t-il pas RMC ?",
+        'answer': [
+            "Malheureusement la page de la grille des programmes de RMC est <a href=\"http://rmc.bfmtv.com/grille-radio/\">actuellement vide</a>."
+        ]
+    }
+]
+%}
+
+{% block body %}
+    <div class="container">
+    <div class="row" style="margin-right: 0 !important; margin-left: 0 !important">
+        <div class="col-md-12">
+            <div class="content">
+                <h3>Foire aux questions</h3>
+                {% for entry in faq %}
+                    <dl>
+                        <dt>{{ entry.question }}</dt>
+                        {% for line in entry.answer %}
+                            <dd>{{ line  | raw }}</dd>
+                        {% endfor %}
+                    </dl>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
 
-    <link href="build/css/main.css" rel="stylesheet">
+    <link href="{{ asset('build/css/main.css') }}" rel="stylesheet">
     <style>
         {% block stylesheets %}
         {% endblock %}
@@ -48,9 +48,14 @@
             </button>
                 <a class="navbar-brand" href="{{ path('homepage') }}" onclick="scrollToCursor(event)">
                     <div class="navbar-brand-name">
-                        <img src="/img/logo.png"  srcset="/img/logo.svg" alt="Programmes radios" height="24px" width="30px">Programmes Radio
+                        <img src="{{ asset('img/logo.png') }}"  srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios" height="24px" width="30px">Programmes Radio
                     </div>
                 </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ path('faq') }}">Faq</a></li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -61,13 +66,15 @@
     <div class="container">
         <div class="row">
             {% block footer %}
-                <div class="col-md-12 col-xs-12"><p class="text-center">©{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a>&nbsp;&nbsp;{#<small>(<a href="https://github.com/conradfr/progradio">sources</a>)</small>#}</p></div>
+                <div class="col-md-12 col-xs-12"><p class="text-center">©{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a>{#&nbsp;&nbsp;<small>(<a href="https://github.com/conradfr/progradio">sources</a>)</small>#}</p></div>
             {% endblock %}
         </div>
         {#dsfd#}
     </div>
 </footer>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
 {% block javascripts %}{% endblock %}
 {% if app.environment == 'prod' %}
 <script>
@@ -78,7 +85,6 @@
 
     ga('create', '{{ analytics }}', 'auto');
     ga('send', 'pageview');
-
 </script>
 {% endif %}
 </body>
