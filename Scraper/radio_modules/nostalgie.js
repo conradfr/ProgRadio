@@ -1,6 +1,7 @@
 const osmosis = require('osmosis');
-const utils = require('../utils');
+const utils = require('../lib/utils');
 let moment = require('moment-timezone');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;
@@ -140,7 +141,7 @@ const fetch = dateObj => {
     let day = dateObj.format('dddd').toLowerCase();
     let url = 'http://www.nostalgie.fr/grille-des-emissions';
 
-    console.log(`fetching ${url}`);
+    logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis

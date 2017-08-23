@@ -1,5 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;
@@ -83,7 +84,7 @@ const fetch = dateObj => {
 
     let url = `https://www.virginradio.fr/programmes-${dayUrl}/`;
 
-    console.log(`fetching ${url}`);
+    logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis

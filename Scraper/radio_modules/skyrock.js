@@ -1,5 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;
@@ -89,7 +90,7 @@ const fetch = dateObj => {
     let day = dateObj.format('dddd').toLowerCase();
     let url = 'http://skyrock.fm/emissions';
 
-    console.log(`fetching ${url} (${day})`);
+    logger.log('info', `fetching ${url} (${day})`);
 
     return new Promise(function(resolve, reject) {
         return osmosis

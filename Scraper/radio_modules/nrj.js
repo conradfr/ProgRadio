@@ -1,5 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;
@@ -65,7 +66,7 @@ const fetch = dateObj => {
     let dayFormat = dateObj.day() - 1; // not sure why week start on monday this time
     let url = 'http://www.nrj.fr/emissions/jour';
 
-    console.log(`fetching ${url}`);
+    logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis

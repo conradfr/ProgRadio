@@ -1,7 +1,8 @@
 const osmosis = require('osmosis');
 const moment = require('moment-timezone');
-const utils = require('../utils');
+const utils = require('../lib/utils');
 const striptags = require('striptags');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;
@@ -66,7 +67,7 @@ const fetch = dateObj => {
 
     let url = 'http://www.rireetchansons.fr/grille-des-emissions';
 
-    console.log(`fetching ${url} (${day})`);
+    logger.log('info', `fetching ${url} (${day})`);
 
     return new Promise(function(resolve, reject) {
         return osmosis

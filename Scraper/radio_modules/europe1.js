@@ -1,6 +1,7 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 let util = require('util');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 
@@ -70,7 +71,7 @@ const fetch = dateObj => {
         tab = 'sunday';
     }
 
-    console.log(`fetching ${url}`);
+    logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis

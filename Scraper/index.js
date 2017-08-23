@@ -11,6 +11,9 @@ try {
     process.exit(1);
 }
 
+const logger = require('./lib/logger.js');
+logger.init(config.parameters.logmail);
+
 // queue constants
 const QUEUE_SCHEDULE_ONE_PREFIX = 'schedule_input:one:';
 const QUEUE_SCHEDULE_ONE_TTL = 172800;
@@ -35,7 +38,7 @@ const radios = [
 const redisClient = redis.createClient(config.parameters.redis_dsn);
 const dateObj = moment();
 
-console.log('Starting ...');
+logger.log('info', 'Starting ...');
 
 const results = radios.map(function (radio) {
     const radio_module = require(`./radio_modules/${radio}.js`);
@@ -44,7 +47,7 @@ const results = radios.map(function (radio) {
         .then(function(data) {
             const dateFormat = 'DD-MM-YYYY';
 
-            console.log(`${radio_module.getName} - items found: ${data.length}`);
+            logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
 
             if (data.length > 0) {
                 const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}${radio_module.getName}:${dateObj.format(dateFormat)}`;
@@ -59,15 +62,19 @@ const results = radios.map(function (radio) {
                 redisClient.LREM(QUEUE_LIST, 1, redisKey);
                 redisClient.RPUSH(QUEUE_LIST, redisKey);
             }
+            else {
+                // Log specifically when no data is found, in case of website change etc
+                logger.log('warn', `${radio_module.getName} - NO DATA`);
+            }
         })
         .catch(error => {
-            console.log(error);
+            logger.log('error', error);
         });
 });
 
 const schedule = Promise.all(results);
 
 schedule.then(() => {
-    console.log('All done, exiting ...');
+    logger.log('info', 'All done, exiting ...');
     process.exit(1);
 });

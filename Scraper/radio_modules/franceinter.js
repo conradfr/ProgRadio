@@ -1,5 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 
@@ -35,7 +36,7 @@ const fetch = dateObj => {
     let dayFormat = dateObj.format('YYYY-MM-DD');
     let url = `https://www.franceinter.fr/programmes/${dayFormat}/`;
 
-    console.log(`fetching ${url}`);
+    logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis

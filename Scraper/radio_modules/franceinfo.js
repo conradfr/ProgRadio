@@ -1,5 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 
@@ -63,7 +64,7 @@ const format = dateObj => {
 const fetch = dateObj => {
     let url = 'http://www.francetvinfo.fr/replay-radio/grille-des-emissions';
 
-    console.log(`fetching ${url}`);
+    logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis

@@ -1,5 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
+const logger = require('../lib/logger.js');
 
 let scrapedData = [];
 
@@ -48,7 +49,7 @@ const fetch = dateObj => {
     let day = dateObj.format('dddd').toLowerCase();
     let url = `http://www.rfm.fr/programmes`;
 
-    console.log(`fetching ${url} (${day})`);
+    logger.log('info', `fetching ${url} (${day})`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
@@ -63,10 +64,12 @@ const fetch = dateObj => {
                 'datetime_raw': '.horaire',
                 'title': 'a'
             })
-            .follow('a@href')
-            .set({
-                'description':  '.chapo'
-            })
+            .do(
+                osmosis.follow('a@href')
+                .set({
+                    'description':  '.chapo'
+                })
+            )
             .data(function (listing) {
                 scrapedData.push(listing);
             })
