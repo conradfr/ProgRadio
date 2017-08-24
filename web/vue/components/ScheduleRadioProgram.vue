@@ -8,7 +8,7 @@
             </div>
         </div>
 
-        <div class="program" v-bind:class="{ 'program-current': isCurrent }" v-on:mouseover.once="hover = !hover">
+        <div class="program" v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }" v-on:mouseover.once="hover = !hover">
             <div class="program-inner">
                 <div class="program-img" v-if="program.picture_url && hover">
                     <img v-bind:src="program.picture_url | picture" alt="">
@@ -24,7 +24,7 @@
 <script>
 const moment = require('moment');
 
-import { MINUTE_PIXEL, THUMBNAIL_PATH } from '../config/config.js';
+import { MINUTE_PIXEL, THUMBNAIL_PATH, PROGRAM_LONGENOUGH } from '../config/config.js';
 
 export default {
     props: ['program'],
@@ -69,6 +69,9 @@ export default {
         },
         isCurrent: function () {
             return moment().isBetween(moment(this.program.start_at), moment(this.program.end_at));
+        },
+        isLongEnough: function () {
+            return this.program.duration >= PROGRAM_LONGENOUGH;
         }
     },
     methods: {

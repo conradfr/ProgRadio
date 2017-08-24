@@ -58,6 +58,15 @@
           transition: height 0.3s ease-in-out 0.4s, width 0.5s ease-in-out, min-width 0.5s ease-in-out;
         }
 
+        &.long-enough {
+          @media (max-width: @screen-xs-max) {
+            .schedule-display {
+              visibility: visible !important;
+              opacity: 1 !important;
+            }
+          }
+        }
+
         &:hover {
           z-index: 3 !important;
           box-shadow: 0 0 10px -3px rgba(0,0,0,.35);
