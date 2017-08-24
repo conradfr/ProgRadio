@@ -96,7 +96,7 @@ const fetch = dateObj => {
         return osmosis
             .get(url)
             .find(`#${day}`)
-            .select('.b-list__item--cat3 > a')
+            .select('.b-list__item > a')
             .set({
                 'datetime_raw': '.b-list__item__number__infos',
                 'img': 'img.picture@src',
