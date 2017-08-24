@@ -78,6 +78,12 @@ const store = new Vuex.Store({
         scroll: ({commit}, x) => {
             commit('scrollTo', x);
         },
+        scrollBackward: ({commit}) => {
+            commit('scrollTo', (-1 * config.NAV_MOVE_BY));
+        },
+        scrollForward: ({commit}) => {
+            commit('scrollTo', config.NAV_MOVE_BY);
+        },
         scrollClick: ({commit}, value) => {
             commit('scrollClickSet', value)
         },

@@ -1,5 +1,5 @@
 <template>
-    <div class="schedule-container">
+    <div class="schedule-container" tabindex="-1" v-on:keyup.left.prevent="keyLeft()" v-on:keyup.right.prevent="keyRight()">
         <schedule-radio-list></schedule-radio-list>
         <schedule-radio-grid></schedule-radio-grid>
     </div>
@@ -16,6 +16,14 @@ export default {
     computed: mapState({
         radios: state => state.radios,
         schedule: state => state.schedule
-    })
+    }),
+    methods: {
+        keyLeft: function () {
+            this.$store.dispatch('scrollBackward');
+        },
+        keyRight: function () {
+            this.$store.dispatch('scrollForward');
+        }
+    }
 }
 </script>

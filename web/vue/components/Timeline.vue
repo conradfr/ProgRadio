@@ -11,8 +11,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import { NAV_MOVE_BY } from '../config/config.js';
-
 export default {
     filters: {
         toTime: function (value) {
@@ -24,10 +22,10 @@ export default {
     }),
     methods: {
         clickBackward: function () {
-            this.$store.dispatch('scroll', (-1 * NAV_MOVE_BY));
+            this.$store.dispatch('scrollBackward');
         },
         clickForward: function () {
-            this.$store.dispatch('scroll', NAV_MOVE_BY);
+            this.$store.dispatch('scrollForward');
         }
     }
 }

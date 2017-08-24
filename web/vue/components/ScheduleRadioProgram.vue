@@ -77,6 +77,9 @@ export default {
     methods: {
         detailClick: function (event) {
 //             this.displayDetail = !this.displayDetail;
+        },
+        left: function () {
+            console.log('heee');
         }
     },
     filters: {
