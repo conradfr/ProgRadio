@@ -32,7 +32,8 @@ const radios = [
     'nostalgie',
     'rireetchansons',
     'virgin',
-    'rfm'
+    'rfm',
+    'franceculture'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);
