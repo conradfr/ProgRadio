@@ -38,7 +38,7 @@ class ScheduleImporter
     /**
      * @param \stdClass $payload
      *
-     * @return bool
+     * @return int|false Number of items imported, false if error
      */
     public function build(\stdClass $payload)
     {
@@ -84,13 +84,19 @@ class ScheduleImporter
             $imgUrl = $this->getOrDefault($item, 'img');
 
             if (!is_null($imgUrl)) {
-                $promise = $this->imgImporter->import($imgUrl, $radio->getCodeName());
-                $promise->then(
-                    function ($value) use ($entry) {
-                        $entry->setPictureUrl($value);
-                    },
-                    function ($message) { }
-                );
+                try {
+                    $promise = $this->imgImporter->import($imgUrl, $radio->getCodeName());
+                    $promise->then(
+                        function ($value) use ($entry, $imgUrl) {
+                            $entry->setPictureUrl($value);
+                        },
+                        function ($message) use ($imgUrl) { }
+                    );
+                } catch (\Exception $e) {
+                    // ho noes
+                } finally {
+                    unset($promise);
+                }
             }
 
             $entry->setTitle($item->title)
@@ -146,7 +152,7 @@ class ScheduleImporter
         $this->dispatcher->dispatch(ScheduleModifiedEvent::NAME,
                                 new ScheduleModifiedEvent($collection[0]->getDateTimeStart(), $radio->getCodeName()));
 
-        return true;
+        return count($collection);
     }
 
     /**

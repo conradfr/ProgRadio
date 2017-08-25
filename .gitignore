@@ -51,7 +51,9 @@
 
 
 # Compiled assets
-/web/assets/
+/web/build/js/*
+
+/web/phpinfo.php
 
 # Websocker server dev log
 /websocket/nohup.out
@@ -71,6 +73,6 @@
 
 # Capistrano
 /tools/capistrano/config/deploy/*.rb
-/tools/capistrano/ssh/deployer
-/tools/capistrano/ssh/deployer.pub
 /tools/capistrano/ssh/deployer*
+/tools/capistrano/log/capistrano.log
+

@@ -66,13 +66,14 @@ class SchedulerImporterCommand extends ContainerAwareCommand
                     try {
                         $buildStatus = $builder->build($payloadDecoded);
                     } catch (\Exception $e) {
-                        $this->logger->notice('ERROR: ' . print_r($scheduleKey, 1) . ' - ' . $e->getMessage());
+                        $this->logger->warn(sprintf('ERROR: %s - %s', $scheduleKey, $e->getMessage()));
                         $buildStatus = false;
                     }
 
 
-                    if ($buildStatus === true) {
+                    if ($buildStatus !== false) {
                         $this->queue->hasBeenProcessed($scheduleKey);
+                        $this->logger->notice(sprintf('%s - imported: %d items', $payloadDecoded->radio, $buildStatus));
                     }
                 }
                 else {
