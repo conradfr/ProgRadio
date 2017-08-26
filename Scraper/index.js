@@ -33,7 +33,8 @@ const radios = [
     'rireetchansons',
     'virgin',
     'rfm',
-    'franceculture'
+    'franceculture',
+    'radioclassique'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);
