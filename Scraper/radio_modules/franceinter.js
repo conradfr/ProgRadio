@@ -32,9 +32,8 @@ const format = dateObj => {
     return Promise.resolve(cleanedData);
 };
 
-const fetch = dateObj => {
-    let dayFormat = dateObj.format('YYYY-MM-DD');
-    let url = `https://www.franceinter.fr/programmes/${dayFormat}/`;
+const fetch = dayFormat => {
+    let url = `https://www.franceinter.fr/programmes/${dayFormat}`;
 
     logger.log('info', `fetching ${url}`);
 
@@ -68,12 +67,23 @@ const fetch = dateObj => {
 
 const fetchAll = dateObj =>  {
     /* radio schedule page has the format 3am -> 3am,
-       so we get the previous day as well to get the full day and the filter the list later  */
+        so we get the previous day as well to get the full day and the filter the list later  */
+
+    /* page of the day doesn't go online before 5am (maybe) so only get previous day page
+        if scraper is run before that */
+
+    const now = new moment();
+    now.tz('Europe/Paris');
+
+    if (now.hour() < 5) {
+        return fetch('');
+    }
+
     const previousDay = moment(dateObj);
     previousDay.subtract(1, 'days');
 
-    return fetch(previousDay)
-        .then(() => { return fetch(dateObj); });
+    return fetch(previousDay.format('YYYY-MM-DD'))
+        .then(() => { return fetch(''); });
 };
 
 const getScrap = dateObj => {
