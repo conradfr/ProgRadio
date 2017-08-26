@@ -7503,11 +7503,8 @@ body .navbar .navbar-right {
   margin-right: 25px;
 }
 body .footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
-  height: 40px;
   font-size: 12px;
 }
 body .footer small {
@@ -7682,7 +7679,6 @@ body .footer a:focus {
 .schedule-container .schedule-radio-grid {
   margin-top: 40px;
   margin-left: calc(76px);
-  padding-bottom: 25px;
   position: relative;
   white-space: nowrap;
   cursor: move;
