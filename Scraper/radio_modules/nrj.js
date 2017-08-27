@@ -51,7 +51,8 @@ const format = dateObj => {
             'schedule_start': startDateTime.toISOString(),
             'timezone': 'Europe/Paris',
             'title': curr.title,
-            'img': curr.img
+            'img': curr.img,
+            'description': curr.description
 
         };
 
