@@ -34,7 +34,8 @@ const radios = [
     'virgin',
     'rfm',
     'franceculture',
-    'radioclassique'
+    'radioclassique',
+    'ouifm'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);

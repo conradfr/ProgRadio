@@ -53,22 +53,32 @@ set :yarn_flags, ''
 namespace :deploy do
   after :starting, 'composer:install_executable'
   before "deploy:updated", "deploy:set_permissions:acl"
-  before "deploy:updated", "myproject:scraper_node"
+  before "deploy:updated", "myproject:scraper_yarn"
   before "deploy:updated", "myproject:buildjs"
   before "deploy:updated", "myproject:migrations"
   before "deploy:updated", "myproject:clean"
 
   # after :publishing, 'progradio_importer:stop'
   # after :publishing, 'progradio_importer:start'
+  # after :publishing, "myproject:scraper_run"
 end
 
 namespace :myproject do
   # scraper deps
-  task :scraper_node do
+  task :scraper_yarn do
     on roles(:app) do
         within release_path + "Scraper" do
             execute "yarn", "install"
             execute "chmod", "+x", "cron.sh"
+        end
+    end
+  end
+
+  # scraper deps
+  task :scraper_run do
+    on roles(:app) do
+        within release_path + "Scraper" do
+            execute "node", "index.js"
         end
     end
   end
