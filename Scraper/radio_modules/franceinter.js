@@ -16,8 +16,15 @@ const format = dateObj => {
             delete curr.datetime_raw;
 
             // filtering weird base64 for now
-            if (typeof curr.img !== 'undefined' && curr.img.substring(0, 3) !== 'http') {
+            if (typeof curr.img !== 'undefined' && curr.img.substring(0, 4) !== 'http') {
                 delete curr.img;
+                if (typeof curr.img_alt !== 'undefined' && curr.img_alt.substring(0, 4) === 'http') {
+                    curr.img = curr.img_alt;
+                }
+            }
+
+            if (typeof curr.img_alt !== 'undefined') {
+                delete curr.img_alt;
             }
 
             curr.schedule_start = date.toISOString();
@@ -40,12 +47,13 @@ const fetch = dayFormat => {
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-            .find('.rich-section-list-gdp-item')
+            .find('.rich-section-list-gdp > article.rich-section-list-gdp-item')
             .set({
                 'datetime_raw': '@data-start-time' /* utc */
             })
             .set({
                 'img': '.simple-visual > img@src',
+                'img_alt': '.simple-visual > img@data-dejavu-src',
             })
             .select('.rich-section-list-gdp-item-content > .rich-section-list-gdp-item-content-show')
             .set({
