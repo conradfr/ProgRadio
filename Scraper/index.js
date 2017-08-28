@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require('moment-timezone');
 const redis = require("redis");
 const yaml = require('js-yaml');
 const fs = require('fs');
@@ -35,11 +35,13 @@ const radios = [
     'rfm',
     'franceculture',
     'radioclassique',
-    'ouifm'
+    'ouifm',
+    'radionova'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);
 const dateObj = moment();
+dateObj.tz("Europe/Paris");
 
 logger.log('info', 'Starting ...');
 
