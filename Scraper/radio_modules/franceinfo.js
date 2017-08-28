@@ -35,11 +35,11 @@ const format = dateObj => {
 
         // Title & host
 
-        regexp = new RegExp(/^([\w\s\A-zÀ-ÿ\|]+):([\w\s\A-zÀ-ÿ]*)/);
+        regexp = new RegExp(/^([\w\s\A-zÀ-ÿ\|]+):([\w\s\A-zÀ-ÿ\-]*)/);
         match = curr.title_host.match(regexp);
 
         if (match === null) {
-            regexp = new RegExp(/^([\w\s\A-zÀ-ÿ]+)\|([\w\s\A-zÀ-ÿ]+)/);
+            regexp = new RegExp(/^([\w\s\A-zÀ-ÿ]+)\|([\w\s\A-zÀ-ÿ\-]+)/);
             match = curr.title_host.match(regexp);
         }
 
