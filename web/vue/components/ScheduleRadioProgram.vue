@@ -24,6 +24,7 @@
 <script>
 const moment = require('moment');
 
+import { mapState } from 'vuex'
 import { MINUTE_PIXEL, THUMBNAIL_PATH, PROGRAM_LONGENOUGH } from '../config/config.js';
 
 export default {
@@ -47,6 +48,9 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            cursorTime: state => state.cursorTime
+        }),
         styleObjectDetail: function() {
             if (this.displayDetail === false) { return {}; }
 
@@ -68,7 +72,7 @@ export default {
             return `${start}-${end}`;
         },
         isCurrent: function () {
-            return moment().isBetween(moment(this.program.start_at), moment(this.program.end_at));
+            return this.cursorTime.isBetween(moment(this.program.start_at), moment(this.program.end_at));
         },
         isLongEnough: function () {
             return this.program.duration >= PROGRAM_LONGENOUGH;
@@ -77,9 +81,6 @@ export default {
     methods: {
         detailClick: function (event) {
 //             this.displayDetail = !this.displayDetail;
-        },
-        left: function () {
-            console.log('heee');
         }
     },
     filters: {
