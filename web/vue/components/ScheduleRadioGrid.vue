@@ -1,7 +1,9 @@
 <template>
     <div class="schedule-radio-grid" id="schedule-radio-grid" :style="styleObject">
         <timeline-cursor></timeline-cursor>
-        <v-touch v-on:swipe="onSwipe"
+        <v-touch
+                 v-bind:pan-options="{ direction: 'horizontal' }" v-bind:swipe-options="{ direction: 'horizontal' }"
+                 v-on:swipe="onSwipe"
                  v-on:panleft="onPan" v-on:panright="onPan" v-on:panstart="onPanStart" v-on:panend="onPanEnd">
             <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name" :radio="entry.code_name"></schedule-radio-grid-row>
         </v-touch>
