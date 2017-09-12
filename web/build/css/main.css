@@ -7439,6 +7439,13 @@ input[type="checkbox"]:disabled:checked:after,
   float: left;
   margin: -1px 10px 0;
 }
+.navbar #navbar a > img {
+  display: block;
+  opacity: 0.8;
+}
+.navbar #navbar a > img:hover {
+  opacity: 1;
+}
 /*
   Beta ribbon
   Don't show on mobile as it hide the hamburger menu
