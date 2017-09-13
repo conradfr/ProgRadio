@@ -13,7 +13,7 @@ const format = dateObj => {
 
         // filter other days
         if (dateStart.tz('Europe/Paris').format('DD') === dayStr) {
-            delete curr.datetime_raw;
+            delete curr.datetime_start_raw;
 
             // filtering weird base64 for now
             if (typeof curr.img !== 'undefined' && curr.img.substring(0, 3) !== 'http') {
@@ -21,6 +21,7 @@ const format = dateObj => {
             }
 
             const dateEnd = moment.unix(parseInt(curr['datetime_end_raw']));
+            delete curr.datetime_end_raw;
 
             curr.schedule_start = dateStart.toISOString();
             curr.schedule_end = dateEnd.toISOString();

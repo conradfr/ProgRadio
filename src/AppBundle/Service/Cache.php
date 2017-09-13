@@ -75,6 +75,26 @@ class Cache
 
     /**
      * @param \DateTime $day
+     * @param $radioCodeName
+     *
+     * @return 1|0
+     */
+    public function hasScheduleForDayAndRadio(\DateTime $day, $radioCodeName) {
+        return $this->redis->HEXISTS(self::getKey($day), $radioCodeName);
+    }
+
+    /**
+     * @param \DateTime $day
+     * @param $radioCodeName
+     *
+     * @return string|null
+     */
+    public function getScheduleForDayAndRadio(\DateTime $day, $radioCodeName) {
+        return $this->redis->HGET(self::getKey($day), $radioCodeName);
+    }
+
+    /**
+     * @param \DateTime $day
      * @param $schedules
      *
      * @return void

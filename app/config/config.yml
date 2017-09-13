@@ -125,3 +125,7 @@ liip_imagine:
             filters:
                 relative_resize:
                     heighten: 58
+        page_thumb:
+            filters:
+                relative_resize:
+                    widen: 64

@@ -29,11 +29,39 @@ class ScheduleManager
 
     /**
      * @param \DateTime $dateTime
+     * @param array $radios
+     */
+    protected function getScheduleAndPutInCache(\DateTime $dateTime, array $radios)
+    {
+        $radioNewSchedule = $this->em->getRepository('AppBundle:ScheduleEntry')->getDaySchedule($dateTime, $radios);
+
+        if (count($radioNewSchedule) > 0) {
+            $this->cache->addSchedulesToDay($dateTime, $radioNewSchedule);
+        }
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     * @param $radioCodeName
+     *
+     * @return null|string
+     */
+    public function getRadioDaySchedule(\DateTime $dateTime, $radioCodeName)
+    {
+        if ($this->cache->hasScheduleForDayAndRadio($dateTime, $radioCodeName) === 0) {
+            $this->getScheduleAndPutInCache($dateTime, [$radioCodeName]);
+        }
+
+        return json_decode($this->cache->getScheduleForDayAndRadio($dateTime, $radioCodeName));
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     *
      * @return array
      */
     public function getDaySchedule(\DateTime $dateTime)
     {
-        // Active radios
         $radios = $this->em->getRepository('AppBundle:Radio')->getAllCodename();
         $radiosInCache = $this->cache->getRadiosForDay($dateTime);
 
@@ -47,10 +75,7 @@ class ScheduleManager
 
         // Add any new radio schedule for that day in cache
         if (count($radiosNotInCache) > 0) {
-            $radioNewSchedule = $this->em->getRepository('AppBundle:ScheduleEntry')->getDaySchedule($dateTime, $radiosNotInCache);
-            if (count($radioNewSchedule) > 0) {
-                $this->cache->addSchedulesToDay($dateTime, $radioNewSchedule);
-            }
+            $this->getScheduleAndPutInCache($dateTime, $radiosNotInCache);
         }
 
         // Get cache & decode values

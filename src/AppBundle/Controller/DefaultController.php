@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DefaultController extends Controller
@@ -38,63 +39,32 @@ class DefaultController extends Controller
 
     /**
      * @Route(
-     *     "/faq",
-     *     name="faq",
+     *     "/radio/{codename}",
+     *     name="radio",
      *     defaults={
-     *      "priority": "0.2",
-     *      "changefreq": "monthly"
+     *      "priority": "0.8",
+     *      "changefreq": "daily"
      *      }
      * )
      */
-    public function faqAction(Request $request)
+    public function radioAction($codename, Request $request)
     {
-        return $this->render('default/faq.html.twig', []);
-    }
+        $em = $this->get('doctrine')->getManager();
+        $dateTime = new \DateTime();
 
-    /**
-     * Simple sitemap generator
-     *
-     * Doesn't use the serializer.
-     * While it would have looked cleaner it seems too much work to override full xml output.
-     *
-     * @Route(
-     *     "/sitemap.{_format}",
-     *     defaults={"_format": "xml"},
-     *     requirements={
-     *         "_format": "xml"
-     *     }
-     * )
-     */
-    public function sitemapAction(Request $request)
-    {
-        // @todo if route list grows, get collection & filter
-        $routesToExport = ['homepage'];
-        $routes = [];
-        foreach ($routesToExport as $entry) {
-            $routes[$entry] = $this->get('router')->getRouteCollection()->get($entry);
+        // @todo check cache
+        $radio = $em->getRepository('AppBundle:Radio')->findOneBy(['codeName' => $codename, 'active' => true]);
+        if (!$radio) {
+            throw new NotFoundHttpException('Radio not found');
         }
 
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL
-             . '<?xml-stylesheet type="text/xsl" href="/user/plugins/sitemap/sitemap.xsl"?>' . PHP_EOL
-             . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
+        $scheduleManager = $this->get(ScheduleManager::class);
+        $schedule = $scheduleManager->getRadioDaySchedule($dateTime, $codename);
 
-        foreach ($routes as $name => $route) {
-            $lastMod = new \DateTime();
-            $lastModFormat = $lastMod->format('Y-m-d');
-
-            $xml .= '<url>' . PHP_EOL
-                . '<loc>' . $this->generateUrl($name, [], UrlGeneratorInterface::ABSOLUTE_URL) . '</loc>' . PHP_EOL
-                . '<lastmod>' . $lastModFormat . '</lastmod>' . PHP_EOL
-                . '<changefreq>' . $route->getDefaults()['changefreq'] . ' </changefreq>' . PHP_EOL
-                . '<priority>' . $route->getDefaults()['priority'] . '</priority>' . PHP_EOL
-                . '</url>' . PHP_EOL;
-        }
-
-        $xml .= '</urlset>';
-
-        $response = new Response($xml);
-        $response->headers->set('Content-Type', 'xml');
-
-        return $response;
+        return $this->render('default/radio.html.twig', [
+            'schedule' => $schedule,
+            'radio' => $radio,
+            'date' => $dateTime
+        ]);
     }
 }

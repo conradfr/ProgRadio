@@ -1,0 +1,12 @@
+# For some reason env variables are not available before mod_rewrite ...
+SetEnvIf Host \.local SYMFONY_ENV=dev
+
+Options +FollowSymLinks
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{ENV:SYMFONY_ENV} dev
+RewriteRule ^(.+)$  /app_dev.php/media/cache/resolve/page_thumb/$1 [R=302,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$  /media/cache/resolve/page_thumb/$1 [R=302,L]

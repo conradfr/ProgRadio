@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container" id="schedule-day">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="schedule-day-radio center-block">
+                <img alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <h5>{{ date | localizeddate('full', 'none', 'fr_FR') | capitalize }}</h5>
+
+            <div class="schedule-day-shows">
+            {% for show in schedule %}
+                <div class="media">
+                {% if show.picture_url %}
+                    <div class="media-left">
+                        <img alt="{{ show.title }}" class="media-object" style="width: 64px"
+                             src="{{ asset('media/cache/page_thumb/media/program/' ~ show.picture_url) }}">
+                    </div>
+                {% endif %}
+                <div class="media-body">
+                    <h6 class="media-heading show-title">{{ show.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }}-{{ show.end_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ show.title }}</h6>
+                    {% if show.host %}
+                        <div class="show-host"> {{ show.host }}</div>
+                    {% endif %}
+                    {% if show.description %}
+                        <p class="show-description">{{ show.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

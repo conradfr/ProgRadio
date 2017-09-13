@@ -7504,7 +7504,7 @@ input[type="checkbox"]:disabled:checked:after,
 }
 body {
   margin-top: 50px;
-  background-color: #f3f3f3;
+  background-color: white;
 }
 body .navbar .navbar-right {
   margin-right: 25px;
@@ -7649,16 +7649,34 @@ body .footer a:focus {
   border: 8px solid transparent;
   border-top-color: #2196f3;
 }
-.content {
-  padding: 10px 25px 25px;
-  background-color: white;
-}
-.content h3 {
+#faq .content h3 {
   margin-top: 10px;
   margin-bottom: 17px;
 }
-.content dl {
+#faq .content dl {
   margin-bottom: 15px;
+}
+#schedule-day {
+  margin-top: 70px;
+}
+#schedule-day h5 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+#schedule-day .schedule-day-shows .media {
+  margin-bottom: 20px;
+}
+#schedule-day .schedule-day-shows .show-title {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+#schedule-day .schedule-day-shows .show-host {
+  line-height: 1.56;
+  color: #444;
+}
+#schedule-day .schedule-day-shows .media-body p {
+  margin: 3px 0 0;
+  line-height: 1.5;
 }
 .schedule-container .schedule-radio-list {
   position: absolute;

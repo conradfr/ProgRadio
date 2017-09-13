@@ -1,5 +1,5 @@
 <template>
-    <div class="radio-logo" v-bind:title="radio.name" :style="styleObject"></div>
+    <a v-bind:href="'/radio/' + radio.code_name"><div class="radio-logo" v-bind:title="radio.name" :style="styleObject"></div></a>
 </template>
 
 <script>

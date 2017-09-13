@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'capistrano'
-gem 'capistrano-symfony', :github => 'capistrano/symfony', :branch => 'master'
+gem 'capistrano-symfony', '~> 1.0.0.rc1'
 gem 'capistrano-npm'
 gem 'capistrano-upstart-service'
 gem 'capistrano-yarn'
