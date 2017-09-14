@@ -34,7 +34,7 @@ const radios = [
     'virgin',
     'rfm',
     'franceculture',
-    // 'radioclassique',
+    'radioclassique',
     'ouifm',
     'radionova'
 ];
