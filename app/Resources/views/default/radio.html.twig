@@ -3,12 +3,12 @@
 {% block body %}
 <div class="container" id="schedule-day">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2 col-xs-12">
             <div class="schedule-day-radio center-block">
-                <img alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
+                <img class="center-block" alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
             </div>
         </div>
-        <div class="col-md-10 content">
+        <div class="col-md-10 col-xs-12 content">
             <h5>{{ date | localizeddate('full', 'none', 'fr_FR') | capitalize }}</h5>
 
             <div class="schedule-day-shows">

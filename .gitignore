@@ -31,10 +31,14 @@
 /phpunit.xml
 
 /web/media/program/*
+/web/media/cache/page_thumb/media/program/*
 /web/media/cache/program_thumb/media/program/*
 !/web/media/program/.gitkeep
 !/web/media/cache/program_thumb/media/.gitkeep
 !/web/media/cache/program_thumb/.gitkeep
+!/web/media/program/.gitkeep
+!/web/media/cache/page_thumb/media/.gitkeep
+!/web/media/cache/page_thumb/.gitkeep
 
 # Composer PHAR
 /composer.phar

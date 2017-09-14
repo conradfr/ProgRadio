@@ -7663,6 +7663,12 @@ body .footer a:focus {
   margin-top: 0;
   margin-bottom: 20px;
 }
+@media (max-width: 767px) {
+  #schedule-day h5 {
+    text-align: center;
+    margin: 25px 0;
+  }
+}
 #schedule-day .schedule-day-shows .media {
   margin-bottom: 20px;
 }
