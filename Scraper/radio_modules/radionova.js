@@ -13,7 +13,7 @@ const format = dateObj => {
 
         // TIME
 
-        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})-([0-9]{1,2})[h|H]([0-9]{0,2})/);
+        let regexp = new RegExp(/([0-9]{1,2}):([0-9]{0,2})/);
         let match = curr.datetime_raw.match(regexp);
 
         // should not happen
@@ -27,33 +27,19 @@ const format = dateObj => {
         else { startDateTime.minute(0); }
         startDateTime.second(0);
 
-        const endDateTime = moment(curr.dateObj);
-        endDateTime.hour(match[3]);
-        if (match[4].length > 0) { endDateTime.minute(match[4]); }
-        else { endDateTime.minute(0); }
-        endDateTime.second(0);
+        // Export
 
-        delete curr.datetime_raw;
+        newEntry = {
+            'schedule_start': startDateTime.toISOString(),
+            'timezone': 'Europe/Paris',
+            'img': 'https://www.nova.fr' + curr.img.split('?')[0],
+            'host': curr.host.substr(4),
+            'title': curr.title.substr(6),
+            'description': curr.description.join("\n\n").replace(/\<br>/, "\n")
 
-        if (endDateTime !== null) {
-            curr.schedule_end = endDateTime.toISOString();
-        }
+        };
 
-        if (startDateTime.hour() > endDateTime.hour()) {
-            endDateTime.add(1, 'days');
-        }
-
-        curr.schedule_start = startDateTime.toISOString();
-        curr.schedule_end = endDateTime.toISOString();
-        curr.timezone = 'Europe/Paris';
-
-        // HOST
-
-        if (curr.host.length > 0) {
-            curr.host = curr.host.substr(13) // remove 'Présenté par '
-        }
-
-        prev.push(curr);
+        prev.push(newEntry);
         return prev;
     },[]);
 
@@ -61,28 +47,26 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    const day = dateObj.day();
-    let url = `http://www.novaplanet.com/radionova/programmes/${day}`;
+    dateObj.locale('fr');
+    const day = dateObj.format('dddd').toLowerCase();
+    const url = `http://www.nova.fr/grille/${day}`;
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-            .find('.views-row')
+            .find('.flexbox-container.row-picture-grille')
             .set({
-                'datetime_raw': '.views-field-field-emission-diff-texte-value > span.field-content',
-                'title': '.views-field-title > h3 > a',
-                // 'img': 'a.imagecache > img@src',  give base64 ...
-                'host': '.views-field-field-emission-generique-value > span.field-content'
+                'img': 'picture > img@src'
             })
-            .do(
-                osmosis.follow('.views-field-view-node > span.field-content > a@href')
-                    .find('.image-emission')
-                    .set({
-                        'img':  'img.imagecache-emission_image_page@src',
-                    })
-            )
+            .select('.entry')
+            .set({
+                'datetime_raw': 'h2.post-title > time',
+                'title': 'h2.post-title',
+                'host': 'span.after-title',
+                'description': ['p']
+            })
             .data(function (listing) {
                 scrapedData.push(listing);
             })

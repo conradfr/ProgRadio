@@ -58,8 +58,8 @@ namespace :deploy do
   before "deploy:updated", "myproject:migrations"
   before "deploy:updated", "myproject:clean"
 
-  # after :publishing, 'progradio_importer:stop'
-  # after :publishing, 'progradio_importer:start'
+  after :publishing, 'progradio_importer:stop'
+  after :publishing, 'progradio_importer:start'
   # after :publishing, "myproject:scraper_run"
 end
 
