@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Grille des programmes - {{ radio.name }}{% endblock %}
+{% block description %}Les programmes du jour de la radio {{ radio.name }} !{% endblock %}
+
 {% block body %}
 <div class="container" id="schedule-day">
     <div class="row">
@@ -26,7 +29,7 @@
                         <div class="show-host"> {{ show.host }}</div>
                     {% endif %}
                     {% if show.description %}
-                        <p class="show-description">{{ show.description }}</p>
+                        <p class="show-description">{{ show.description | nl2br  }}</p>
                     {% endif %}
                 </div>
             </div>
