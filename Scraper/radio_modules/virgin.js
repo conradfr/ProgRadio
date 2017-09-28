@@ -62,12 +62,13 @@ const format = dateObj => {
             'schedule_start': startDateTime.toISOString(),
             'schedule_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',
-            'img': 'https:' + curr.img,
             'host': curr.host.join(", "),
             'title': curr.title
         };
 
-        console.log(newEntry);
+        if (typeof curr.img !== 'undefined') {
+            newEntry.img = 'https:' + curr.img;
+        }
 
         prev.push(newEntry);
         return prev;
