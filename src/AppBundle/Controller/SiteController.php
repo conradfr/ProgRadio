@@ -2,12 +2,14 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Service\ScheduleManager;
+use AppBundle\Entity\Contact;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+use AppBundle\Form\ContactType;
 
 class SiteController extends Controller
 {
@@ -27,6 +29,51 @@ class SiteController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/contact",
+     *     name="contact",
+     *     defaults={
+     *      "priority": "0.1",
+     *      "changefreq": "monthly"
+     *      }
+     * )
+     */
+    public function contactAction(Request $request)
+    {
+        $contact = new Contact();
+        $form = $this->createForm(ContactType::class, $contact);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contact = $form->getData();
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Contact page')
+                ->setFrom('noreply@programmes-radio.io')
+                ->setTo('logs@programmes-radio.io')
+                ->setBody($this->renderView('default/contactmail.html.twig',
+                    [
+                        'name' => $contact->getName(),
+                        'email' => $contact->getEmail(),
+                        'message' => $contact->getMessage()
+                    ]
+                ),'text/html');
+
+            $this->get('mailer')->send($message);
+
+            $this->addFlash(
+                'success',
+                'Votre message a bien été envoyé.'
+            );
+
+            return $this->redirectToRoute('contact');
+        }
+
+        return $this->render('default/contact.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
      * Simple sitemap generator
      *
      * Doesn't use the serializer.
@@ -43,7 +90,7 @@ class SiteController extends Controller
     public function sitemapAction(Request $request)
     {
         // @todo if route list grows, get collection & filter
-        $routesToExport = ['homepage', 'faq'];
+        $routesToExport = ['homepage', 'faq', 'contact'];
         $routes = [];
         foreach ($routesToExport as $entry) {
             $routes[$entry] = $this->get('router')->getRouteCollection()->get($entry);

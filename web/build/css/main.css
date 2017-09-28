@@ -2617,7 +2617,7 @@ input[type="search"] {
   }
 }
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 .radio,
 .checkbox {
@@ -7531,6 +7531,7 @@ body .footer a:focus {
 }
 #app {
   overflow-x: hidden;
+  background-color: #f3f3f3;
 }
 .timeline {
   z-index: 6;
@@ -7541,7 +7542,6 @@ body .footer a:focus {
   line-height: 40px;
   display: flex;
   align-items: stretch;
-  width: calc(8640px);
   overflow: hidden;
   white-space: nowrap;
   color: #969696;

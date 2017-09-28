@@ -101,6 +101,9 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+    encryption: ssl
+    auth_mode: login
+    port: 465
 
 snc_redis:
     clients:

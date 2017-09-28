@@ -1,0 +1,10 @@
+<h3>Contact form</h3>
+
+<p><strong>Name:</strong> {{ name }}</p>
+{% if email %}
+<p><strong>Email:</strong> {{ email }}</p>
+{%  endif %}
+<p><strong>Message:</strong>
+    <br>
+    {{ message | nl2br }}
+</p>
