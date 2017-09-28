@@ -62,11 +62,12 @@ const format = dateObj => {
             'schedule_start': startDateTime.toISOString(),
             'schedule_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',
-            'img': curr.img,
-            'host': curr.host,
+            'img': 'https:' + curr.img,
+            'host': curr.host.join(", "),
             'title': curr.title
-
         };
+
+        console.log(newEntry);
 
         prev.push(newEntry);
         return prev;
@@ -92,9 +93,9 @@ const fetch = dateObj => {
             .find('.programme_container')
             .set({
                 'datetime_raw': '.diffused_at',
-                'img': '.avatar > div.presentator > span.img > img@sec',
+                'img': '.avatar > div.presentator span.img > img@src',
                 'title': '.h2',
-                'host': 'span.presentator',
+                'host': ['span.presentator'],
             })
             .data(function (listing) {
                 listing.dateObj = dateObj;

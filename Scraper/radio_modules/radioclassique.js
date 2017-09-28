@@ -29,6 +29,7 @@ const format = dateObj => {
             curr.img = 'https://www.radioclassique.fr' + curr.img;
         }
 
+        // console.log(curr);
         prev.push(curr);
 
         return prev;
@@ -50,11 +51,11 @@ const fetch = dateObj => {
             .set({
                 'datetime_raw': 'time@data-time' /* utc */
             })
-            .select('.timeline__block__content > .timeline__block__content__item')
+            .select('.timeline__block__content > .timeline__block__content__item > p')
             .set({
-                'title': 'p > a',
-                'host_raw': 'p > em',
-                'description':  '.timeline__guest > .media > p'
+                'title': 'a',
+                'host_raw': 'em'/*,
+                'description':  '.timeline__guest > .media > p'*/
             })
             .do(
                 osmosis.follow('a@href')
