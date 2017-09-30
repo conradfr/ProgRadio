@@ -68,10 +68,14 @@ const format = dateObj => {
             'schedule_start': startDateTime.toISOString(),
             'schedule_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',
-            'img': 'https://www.sudradio.fr' + curr.img.split('?')[0],
             'host': curr.host,
             'title': curr.title
         };
+
+        if (typeof curr.img !== 'undefined') {
+            newEntry.img = 'https://www.sudradio.fr' + curr.img.split('?')[0];
+        }
+
 
         prev.push(newEntry);
         return prev;
