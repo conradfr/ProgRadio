@@ -3,9 +3,8 @@
 namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Serializer\SerializerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Service\Cache;
-use AppBundle\Entity\Radio;
 
 class ScheduleManager
 {
@@ -21,7 +20,7 @@ class ScheduleManager
      * @param EntityManager $entityManager
      * @param Cache $cache
      */
-    public function __construct(EntityManager $entityManager, Cache $cache)
+    public function __construct(EntityManagerInterface $entityManager, Cache $cache)
     {
         $this->em = $entityManager;
         $this->cache = $cache;

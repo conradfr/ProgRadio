@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Predis\Client;
 
@@ -24,11 +25,11 @@ class Cache
     protected $serializer;
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param Client $redis
      * @param SerializerInterface $serializer
      */
-    public function __construct(EntityManager $entityManager, \Predis\Client $redis, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $entityManager, \Predis\Client $redis, SerializerInterface $serializer)
     {
         $this->em = $entityManager;
         $this->redis = $redis;

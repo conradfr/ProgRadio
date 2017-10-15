@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\EventSubscriber\ScheduleModifiedEvent;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use GuzzleHttp\Client;
 use AppBundle\Entity\Radio;
@@ -28,7 +29,7 @@ class ScheduleImporter
      * @param EventDispatcherInterface $dispatcher
      * @param Client $imgImporter
      */
-    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher, ImageImporter $imgImporter)
+    public function __construct(EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher, ImageImporter $imgImporter)
     {
         $this->em = $entityManager;
         $this->dispatcher = $dispatcher;
