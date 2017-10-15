@@ -71,7 +71,7 @@ class SchedulerImporterCommand extends ContainerAwareCommand
                     }
 
 
-                    if ($buildStatus !== false) {
+                    if ($buildStatus !== null) {
                         $this->queue->hasBeenProcessed($scheduleKey);
                         $this->logger->notice(sprintf('%s - imported: %d items', $payloadDecoded->radio, $buildStatus));
                     }

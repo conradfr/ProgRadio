@@ -16,7 +16,7 @@ use Doctrine\Common\Cache\PredisCache;
 
 class ImageImporter
 {
-    CONST IMAGE_PATH = 'web/media/program/';
+    protected const IMAGE_PATH = 'web/media/program/';
 
     /** @var Redis */
     protected $redis;
@@ -38,13 +38,13 @@ class ImageImporter
     {
         $this->redis = $redis;
         $this->imagineCacheManager = $imagineCacheManager;
-        $this->basePath = $basePath . '/';
+        $this->basePath = "$basePath/";
     }
 
     /**
      * @return Client
      */
-    protected function getClient()
+    protected function getClient(): Client
     {
         if (isset($this->client)) { return $this->client; }
 
@@ -73,31 +73,31 @@ class ImageImporter
      *
      * @return string
      */
-    protected function getImageName($url, $radio)
+    protected function getImageName(string $url, string $radio): string
     {
-        $urlParts = parse_url($url);
-        return $radio . '_' . basename(urldecode($urlParts['path']));
+        $urlParts = basename(urldecode(parse_url($url)['path']));
+        return "$radio\_$urlParts";
     }
 
     /**
-     * @param $imageName
+     * @param string $imageName
      *
      * @return string
      */
-    protected function getSavePath($imageName)
+    protected function getSavePath(string $imageName): string
     {
         return $this->basePath . self::IMAGE_PATH . $imageName;
     }
 
     /**
-     * @param string $url
+     * @param null|string $url
      * @param string $radio
      *
-     * @return Promise|false
+     * @return Promise|null
      */
-    public function import ($url, $radio)
+    public function import (?string $url, string $radio): Promise
     {
-        if ($url === null) { return false; }
+        if ($url === null) { return null; }
 
         $imageName = $this->getImageName($url, $radio);
 

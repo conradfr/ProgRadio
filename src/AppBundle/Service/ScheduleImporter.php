@@ -38,9 +38,9 @@ class ScheduleImporter
     /**
      * @param \stdClass $payload
      *
-     * @return int|false Number of items imported, false if error
+     * @return int|null Number of items imported, null if error
      */
-    public function build(\stdClass $payload)
+    public function build(\stdClass $payload): ?int
     {
         /** @var Radio $radio */
         $radio = $this->em->getRepository('AppBundle:Radio')
@@ -175,8 +175,10 @@ class ScheduleImporter
      *
      * @param \DateTime $date
      * @param Radio $radio
+     *
+     * @return void
      */
-    protected function deleteRadioSchedule(\DateTime $date, Radio $radio) {
+    protected function deleteRadioSchedule(\DateTime $date, Radio $radio): void {
         $dateToDeleteFormat = $date->format('Y-m-d');
 
         $deleteQuery =  $this->em->createQuery('delete from AppBundle:ScheduleEntry se where se.radio = :radio AND DATE(se.dateTimeStart) = :date');

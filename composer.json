@@ -1,6 +1,6 @@
 {
     "name": "conradfr/progradio",
-    "license": "proprietary",
+    "license": "Non-Profit OSL 3.0",
     "type": "project",
     "autoload": {
         "psr-4": {
@@ -20,7 +20,7 @@
         ]
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.1",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-fixtures-bundle": "2.3.0",
         "doctrine/doctrine-migrations-bundle": "^1.0",

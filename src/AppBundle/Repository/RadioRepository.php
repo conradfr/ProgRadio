@@ -9,8 +9,8 @@ use Doctrine\ORM\EntityRepository;
  */
 class RadioRepository extends EntityRepository
 {
-    const CACHE_RADIO_TTL = 43200; // half-day
-    const CACHE_CATEGORY_TTL = 86400; // day
+    protected const CACHE_RADIO_TTL = 43200; // half-day
+    protected const CACHE_CATEGORY_TTL = 86400; // day
 
     /**
      * @return array

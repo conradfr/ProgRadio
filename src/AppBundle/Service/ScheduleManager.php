@@ -30,8 +30,10 @@ class ScheduleManager
     /**
      * @param \DateTime $dateTime
      * @param array $radios
+     *
+     * @return void
      */
-    protected function getScheduleAndPutInCache(\DateTime $dateTime, array $radios)
+    protected function getScheduleAndPutInCache(\DateTime $dateTime, array $radios): void
     {
         $radioNewSchedule = $this->em->getRepository('AppBundle:ScheduleEntry')->getDaySchedule($dateTime, $radios);
 
@@ -42,11 +44,11 @@ class ScheduleManager
 
     /**
      * @param \DateTime $dateTime
-     * @param $radioCodeName
+     * @param string $radioCodeName
      *
      * @return null|string
      */
-    public function getRadioDaySchedule(\DateTime $dateTime, $radioCodeName)
+    public function getRadioDaySchedule(\DateTime $dateTime, string $radioCodeName): ?string
     {
         if ($this->cache->hasScheduleForDayAndRadio($dateTime, $radioCodeName) === 0) {
             $this->getScheduleAndPutInCache($dateTime, [$radioCodeName]);
@@ -60,7 +62,7 @@ class ScheduleManager
      *
      * @return array
      */
-    public function getDaySchedule(\DateTime $dateTime)
+    public function getDaySchedule(\DateTime $dateTime): array
     {
         $radios = $this->em->getRepository('AppBundle:Radio')->getAllCodename();
         $radiosInCache = $this->cache->getRadiosForDay($dateTime);

@@ -126,7 +126,7 @@ class SiteController extends Controller
 
         return '<url>' . PHP_EOL
             . '<loc>' . $this->generateUrl($name, $parameters, UrlGeneratorInterface::ABSOLUTE_URL) . '</loc>' . PHP_EOL
-            . '<lastmod>' . $lastModFormat . '</lastmod>' . PHP_EOL
+            . "<lastmod>$lastModFormat</lastmod>" . PHP_EOL
             . '<changefreq>' . $route->getDefaults()['changefreq'] . ' </changefreq>' . PHP_EOL
             . '<priority>' . $route->getDefaults()['priority'] . '</priority>' . PHP_EOL
             . '</url>' . PHP_EOL;

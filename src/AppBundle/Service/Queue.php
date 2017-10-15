@@ -7,9 +7,9 @@ use Monolog\Logger;
 
 class Queue
 {
-    const QUEUE_LIST = 'schedule_input:queue';
-    const QUEUE_PROCESSING = 'schedule_input:processing';
-    const QUEUE_CLEANING_INTERVAL = 30; /* minutes, can't be more than 59 */
+    protected const QUEUE_LIST = 'schedule_input:queue';
+    protected const QUEUE_PROCESSING = 'schedule_input:processing';
+    protected const QUEUE_CLEANING_INTERVAL = 30; /* minutes, can't be more than 59 */
 
     /** @var Client */
     protected $redis;
@@ -30,23 +30,27 @@ class Queue
     /**
      * @return string
      */
-    public function getNextKey() {
+    public function getNextKey(): string
+    {
         return $this->redis->RPOPLPUSH(self::QUEUE_LIST, self::QUEUE_PROCESSING);
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return string Json encoded payload
      */
-    public function getPayload($key) {
+    public function getPayload(string $key): string
+    {
         return $this->redis->GET($key);
     }
 
     /**
-     * @param $key
+     * @param string $key
+     *
+     * @return void
      */
-    public function hasBeenProcessed($key)
+    public function hasBeenProcessed(string $key): void
     {
         $this->redis->LREM(self::QUEUE_PROCESSING, 1, $key);
         $this->redis->DEL($key);
@@ -54,7 +58,10 @@ class Queue
 
     // ---------- CLEAN ----------
 
-    protected function shouldClean()
+    /**
+     * @return bool
+     */
+    protected function shouldClean(): bool
     {
         if ($this->lastCleaning === null) {
             return true;
@@ -73,7 +80,7 @@ class Queue
     /**
      * @return bool True if cleaning happened, false otherwise
      */
-    public function cleanProcessingQueue()
+    public function cleanProcessingQueue(): bool
     {
         if (!$this->shouldClean()) { return false; }
 

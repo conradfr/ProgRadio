@@ -8,11 +8,11 @@ use Predis\Client;
 
 class Cache
 {
-    const CACHE_SCHEDULE_PREFIX = 'cache:schedule:';
-    const CACHE_SCHEDULE_TTL = 604800; // in seconds = one week
+    protected const CACHE_SCHEDULE_PREFIX = 'cache:schedule:';
+    protected const CACHE_SCHEDULE_TTL = 604800; // in seconds = one week
 
-    const CACHE_KEY_DAY_FORMAT = 'Y-m-d';
-    const CACHE_KEY_SERIALIZER_FORMAT = 'json';
+    protected const CACHE_KEY_DAY_FORMAT = 'Y-m-d';
+    protected const CACHE_KEY_SERIALIZER_FORMAT = 'json';
 
     /** @var EntityManager */
     protected $em;
@@ -40,7 +40,7 @@ class Cache
      *
      * @return string
      */
-    public static function getKey(\DateTime $day) {
+    public static function getKey(\DateTime $day): string {
         return self::CACHE_SCHEDULE_PREFIX . $day->format(self::CACHE_KEY_DAY_FORMAT);
     }
 
@@ -49,7 +49,7 @@ class Cache
      *
      * @return void
      */
-    protected function setTtlIfNone($key) {
+    protected function setTtlIfNone(string $key): void {
         if ($this->redis->TTL($key) === -1) {
             $this->redis->EXPIRE($key, self::CACHE_SCHEDULE_TTL);
         }
@@ -60,7 +60,7 @@ class Cache
      *
      * @return array
      */
-    public function getRadiosForDay(\DateTime $day) {
+    public function getRadiosForDay(\DateTime $day): array {
         return $this->redis->HKEYS(self::getKey($day));
     }
 
@@ -69,37 +69,37 @@ class Cache
      *
      * @return array
      */
-    public function getScheduleForDay(\DateTime $day) {
+    public function getScheduleForDay(\DateTime $day): array {
         return $this->redis->HGETALL(self::getKey($day));
     }
 
     /**
      * @param \DateTime $day
-     * @param $radioCodeName
+     * @param string $radioCodeName
      *
      * @return 1|0
      */
-    public function hasScheduleForDayAndRadio(\DateTime $day, $radioCodeName) {
+    public function hasScheduleForDayAndRadio(\DateTime $day, string $radioCodeName): int {
         return $this->redis->HEXISTS(self::getKey($day), $radioCodeName);
     }
 
     /**
      * @param \DateTime $day
-     * @param $radioCodeName
+     * @param string $radioCodeName
      *
      * @return string|null
      */
-    public function getScheduleForDayAndRadio(\DateTime $day, $radioCodeName) {
+    public function getScheduleForDayAndRadio(\DateTime $day, string $radioCodeName): ?string {
         return $this->redis->HGET(self::getKey($day), $radioCodeName);
     }
 
     /**
      * @param \DateTime $day
-     * @param $schedules
+     * @param array $schedules
      *
      * @return void
      */
-    public function addSchedulesToDay(\DateTime $day, $schedules) {
+    public function addSchedulesToDay(\DateTime $day, array $schedules): void {
         $cacheKey = self::getKey($day);
 
         $this->redis->HMSET($cacheKey, array_map(function ($entry) {
@@ -116,7 +116,7 @@ class Cache
      *
      * @return integer Number of fields that were removed
      */
-    public function removeRadiosFromDay(\DateTime $day, $radioCodeName)
+    public function removeRadiosFromDay(\DateTime $day, string $radioCodeName): int
     {
         if (!is_array($radioCodeName)) {
             $radioCodeName = [$radioCodeName];

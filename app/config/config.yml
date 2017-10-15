@@ -8,6 +8,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    media_folder: '%kernel.project_dir%/web/media'
 
 framework:
     #esi: ~
