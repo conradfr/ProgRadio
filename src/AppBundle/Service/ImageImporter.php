@@ -75,8 +75,8 @@ class ImageImporter
      */
     protected function getImageName(string $url, string $radio): string
     {
-        $urlParts = basename(urldecode(parse_url($url)['path']));
-        return "$radio\_$urlParts";
+        $urlParts = parse_url($url);
+        return $radio . '_' . basename(urldecode($urlParts['path']));
     }
 
     /**
@@ -95,7 +95,7 @@ class ImageImporter
      *
      * @return Promise|null
      */
-    public function import (?string $url, string $radio): Promise
+    public function import (?string $url, string $radio): ?Promise
     {
         if ($url === null) { return null; }
 

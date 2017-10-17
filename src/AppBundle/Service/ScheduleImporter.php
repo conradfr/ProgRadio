@@ -84,16 +84,19 @@ class ScheduleImporter
 
             $imgUrl = $this->getOrDefault($item, 'img');
 
+            echo $imgUrl . PHP_EOL;
             if (!is_null($imgUrl)) {
                 try {
                     $promise = $this->imgImporter->import($imgUrl, $radio->getCodeName());
                     $promise->then(
                         function ($value) use ($entry, $imgUrl) {
+                            echo 'o';
                             $entry->setPictureUrl($value);
                         },
                         function ($message) use ($imgUrl) { }
                     );
                 } catch (\Exception $e) {
+                    echo $e->getMessage() . PHP_EOL;
                     // ho noes
                 } finally {
                     unset($promise);

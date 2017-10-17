@@ -45,9 +45,9 @@ class ScheduleManager
      * @param \DateTime $dateTime
      * @param string $radioCodeName
      *
-     * @return null|string
+     * @return null|array
      */
-    public function getRadioDaySchedule(\DateTime $dateTime, string $radioCodeName): ?string
+    public function getRadioDaySchedule(\DateTime $dateTime, string $radioCodeName): ?array
     {
         if ($this->cache->hasScheduleForDayAndRadio($dateTime, $radioCodeName) === 0) {
             $this->getScheduleAndPutInCache($dateTime, [$radioCodeName]);

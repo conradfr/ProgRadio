@@ -28,9 +28,9 @@ class Queue
     // ---------- PROCESS ----------
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNextKey(): string
+    public function getNextKey(): ?string
     {
         return $this->redis->RPOPLPUSH(self::QUEUE_LIST, self::QUEUE_PROCESSING);
     }
@@ -38,9 +38,9 @@ class Queue
     /**
      * @param string $key
      *
-     * @return string Json encoded payload
+     * @return string|null Json encoded payload
      */
-    public function getPayload(string $key): string
+    public function getPayload(string $key): ?string
     {
         return $this->redis->GET($key);
     }
