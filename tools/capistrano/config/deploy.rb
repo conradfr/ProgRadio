@@ -53,6 +53,9 @@ set :yarn_flags, ''
 namespace :deploy do
   after :starting, 'composer:install_executable'
   before "deploy:updated", "deploy:set_permissions:acl"
+  # before "deploy:updated", "deploy:set_permissions:chmod"
+  # before "deploy:updated", "deploy:set_permissions:chgrp"
+  # before "deploy:updated", "deploy:set_permissions:chown"
   before "deploy:updated", "myproject:scraper_yarn"
   before "deploy:updated", "myproject:buildjs"
   before "deploy:updated", "myproject:migrations"
