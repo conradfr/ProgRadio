@@ -7506,6 +7506,9 @@ body {
   margin-top: 50px;
   background-color: white;
 }
+body.body-app {
+  background-color: #f3f3f3 !important;
+}
 body .navbar .navbar-right {
   margin-right: 25px;
 }

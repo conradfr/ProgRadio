@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block bodysupp %} class="body-app"{% endblock %}
+
 {% block javascript_head %}
 const schedule = {{ schedule |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
 const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};

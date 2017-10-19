@@ -30,7 +30,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body>
+<body{% block bodysupp %}{% endblock %}>
 
 {#Temp beta ribbon#}
 <div class="ribbon-wrapper">
@@ -68,7 +68,7 @@
     <div class="container">
         <div class="row">
             {% block footer %}
-                <div class="col-md-12 col-xs-12"><p class="text-center">©{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a>{#&nbsp;&nbsp;<small>(<a href="https://github.com/conradfr/progradio">sources</a>)</small>#}</p></div>
+                <div class="col-md-12 col-xs-12"><p class="text-center">©{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a>&nbsp;&nbsp;<small>(<a href="https://github.com/conradfr/progradio">sources</a>)</small></p></div>
             {% endblock %}
         </div>
         {#dsfd#}
