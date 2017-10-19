@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Predis\Client;
 
-class Cache
+class ScheduleCache
 {
     protected const CACHE_SCHEDULE_PREFIX = 'cache:schedule:';
     protected const CACHE_SCHEDULE_TTL = 604800; // in seconds = one week

@@ -2,7 +2,7 @@
 
 namespace AppBundle\EventSubscriber;
 
-use AppBundle\Service\Cache;
+use AppBundle\Service\ScheduleCache;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -10,10 +10,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ScheduleModifiedSubscriber implements EventSubscriberInterface
 {
-    /** @var Cache */
+    /** @var ScheduleCache */
     protected $cache;
 
-    public function __construct(Cache $cache)
+    public function __construct(ScheduleCache $cache)
     {
         $this->cache = $cache;
     }
@@ -21,11 +21,11 @@ class ScheduleModifiedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ScheduleModifiedEvent::NAME => 'onCacheModified',
+            ScheduleModifiedEvent::NAME => 'onModifiedSchedule',
         );
     }
 
-    public function onCacheModified(ScheduleModifiedEvent $event)
+    public function onModifiedSchedule(ScheduleModifiedEvent $event)
     {
         $this->cache->removeRadiosFromDay($event->getDateTime(), $event->getRadioCodeName());
     }

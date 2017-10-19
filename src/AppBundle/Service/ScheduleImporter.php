@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\EventSubscriber\ImageNewEvent;
 use AppBundle\EventSubscriber\ScheduleModifiedEvent;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,9 +46,11 @@ class ScheduleImporter
     {
         /** @var Radio $radio */
         $radio = $this->em->getRepository('AppBundle:Radio')
-            ->findOneByCodeName($payload->radio);
+                    ->findOneByCodeName($payload->radio);
 
         if (!$radio) { return false; }
+
+        $dispatcher = $this->dispatcher;
 
         // Use transaction to cancel day schedule delete if new schedule generates error
         $this->em->getConnection()->beginTransaction();
@@ -84,20 +87,20 @@ class ScheduleImporter
 
             $imgUrl = $this->getOrDefault($item, 'img');
 
-            echo $imgUrl . PHP_EOL;
             if (!is_null($imgUrl)) {
                 try {
                     $promise = $this->imgImporter->import($imgUrl, $radio->getCodeName());
                     $promise->then(
-                        function ($value) use ($entry, $imgUrl) {
-                            echo 'o';
+                        function ($value) use ($entry, $imgUrl, $dispatcher) {
+                            $dispatcher->dispatch(ImageNewEvent::NAME,
+                                new ImageNewEvent($value));
+
                             $entry->setPictureUrl($value);
                         },
                         function ($message) use ($imgUrl) { }
                     );
                 } catch (\Exception $e) {
                     echo $e->getMessage() . PHP_EOL;
-                    // ho noes
                 } finally {
                     unset($promise);
                 }
@@ -153,7 +156,7 @@ class ScheduleImporter
             return false;
         }
 
-        $this->dispatcher->dispatch(ScheduleModifiedEvent::NAME,
+        $dispatcher->dispatch(ScheduleModifiedEvent::NAME,
                                 new ScheduleModifiedEvent($collection[0]->getDateTimeStart(), $radio->getCodeName()));
 
         return count($collection);

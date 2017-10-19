@@ -34,8 +34,6 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    AppBundle\Service\ImageImporter:
+    AppBundle\Service\ImageCache:
         arguments:
-            - "@snc_redis.default"
-            - "@liip_imagine.cache.manager"
             - '%kernel.project_dir%'

@@ -4,23 +4,23 @@ namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use AppBundle\Service\Cache;
+use AppBundle\Service\ScheduleCache;
 
 class ScheduleManager
 {
     /** @var EntityManager */
     protected $em;
 
-    /** @var  Cache */
+    /** @var  ScheduleCache */
     protected $cache;
 
     /**
      * ScheduleManager constructor.
      *
      * @param EntityManager $entityManager
-     * @param Cache $cache
+     * @param ScheduleCache $cache
      */
-    public function __construct(EntityManagerInterface $entityManager, Cache $cache)
+    public function __construct(EntityManagerInterface $entityManager, ScheduleCache $cache)
     {
         $this->em = $entityManager;
         $this->cache = $cache;
