@@ -11,8 +11,16 @@ try {
     process.exit(1);
 }
 
+// logger
 const logger = require('./lib/logger.js');
 logger.init(config.parameters.logmail);
+
+// command line
+const commandLineArgs = require('command-line-args');
+const optionDefinitions = [
+    { name: 'radios', alias: 'r', type: String, multiple: true }
+];
+const options = commandLineArgs(optionDefinitions);
 
 // queue constants
 const QUEUE_SCHEDULE_ONE_PREFIX = 'schedule_input:one:';
@@ -20,7 +28,7 @@ const QUEUE_SCHEDULE_ONE_TTL = 172800;
 const QUEUE_LIST = 'schedule_input:queue';
 
 // radios
-const radios = [
+const radios = options['radios'] || [
     'rtl',
     'rtl2',
     'funradio',
