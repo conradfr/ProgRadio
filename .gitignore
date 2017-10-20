@@ -75,6 +75,15 @@
 /tools/vagrant/puphpet/files/dot/ssh/root_id_rsa
 /tools/vagrant/puphpet/files/dot/ssh/id_rsa
 
+# generated during provisionning
+/tools/vagrant2/.vagrant/
+/tools/vagrant2/puphpet/files/dot/ssh/root_id_rsa.ppk
+/tools/vagrant2/puphpet/files/dot/ssh/root_id_rsa.pub
+/tools/vagrant2/puphpet/files/dot/ssh/id_rsa.ppk
+/tools/vagrant2/puphpet/files/dot/ssh/id_rsa.pub
+/tools/vagrant2/puphpet/files/dot/ssh/root_id_rsa
+/tools/vagrant2/puphpet/files/dot/ssh/id_rsa
+
 # Capistrano
 /tools/capistrano/config/deploy/*.rb
 /tools/capistrano/ssh/deployer*

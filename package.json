@@ -1,7 +1,7 @@
 {
   "name": "progradio",
   "main": "index.js",
-  "license": "NPOSL 3.0",
+  "license": "NPOSL-3.0",
   "description": "frontend",
   "directories": {
     "test": "tests"
@@ -30,13 +30,13 @@
     "rimraf": "^2.6.1",
     "semver": "^5.4.1",
     "shelljs": "^0.7.8",
-    "vue": "^2.3.4",
+    "vue": "^2.5.2",
     "vue-cookie": "^1.1.4",
-    "vue-loader": "^12.2.1",
-    "vue-template-compiler": "^2.3.4",
+    "vue-loader": "^13.3.0",
+    "vue-template-compiler": "^2.5.2",
     "vue-touch": "^2.0.0-beta.4",
-    "vue2-filters": "^0.1.9",
-    "vuex": "^2.3.1",
+    "vue2-filters": "^0.2.2",
+    "vuex": "^2.5.0",
     "webpack": "^2.6.1",
     "webpack-bundle-analyzer": "^2.8.3",
     "webpack-merge": "^4.1.0"
