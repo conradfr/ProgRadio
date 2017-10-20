@@ -48,8 +48,10 @@ class ImageImporter
     {
         if ($url === null) { return null; }
 
-        $promiseReturn = new Promise();
         $imageName = $this->cache->getImageName($url, $radio);
+        $promiseReturn = new Promise(function () use (&$promise) {
+            if (isset($promise)) { $promise->wait(); }
+        });
 
         if ($this->cache->hasCache($imageName) === true) {
             $promiseReturn->resolve($imageName);
@@ -58,20 +60,20 @@ class ImageImporter
             $promise = $this->getClient()->getAsync($url, ['sink' => $this->cache->getCachePath($imageName)]);
             $promise->then(
                 function (ResponseInterface $res) use (&$promiseReturn, $imageName) {
-                    if ($res->getReasonPhrase() !== 'OK') { $promiseReturn->reject($res->getStatusCode() . ' / ' . $res->getReasonPhrase()); }
+                    if ($res->getReasonPhrase() !== 'OK') {
+                        $promiseReturn->reject($res->getStatusCode() . ' / ' . $res->getReasonPhrase());
+                    }
                     elseif ($res->getHeader('Content-Length') === 0) {
                         @unlink($this->cache->getCachePath($imageName)); // delete useless files
-                        $promiseReturn->reject('No data');
+                        $promiseReturn->reject('no data');
                     }
 
-                    $promiseReturn->resolve($imageName);
+                   $promiseReturn->resolve($imageName);
                 },
                 function (RequestException $e) use (&$promiseReturn) {
                     $promiseReturn->reject($e->getMessage());
                 }
             );
-
-            $promise->wait();
         }
 
         return $promiseReturn;

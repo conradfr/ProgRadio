@@ -84,8 +84,9 @@ class ScheduleImporter
             }
 
             $entry = new ScheduleEntry();
-
             $imgUrl = $this->getOrDefault($item, 'img');
+            $queue = \GuzzleHttp\Promise\queue();
+            $promise = null;
 
             if (!is_null($imgUrl)) {
                 try {
@@ -97,12 +98,12 @@ class ScheduleImporter
 
                             $entry->setPictureUrl($value);
                         },
-                        function ($message) use ($imgUrl) { }
+                        function ($message) use ($imgUrl) {
+                            // echo $message;
+                        }
                     );
                 } catch (\Exception $e) {
                     echo $e->getMessage() . PHP_EOL;
-                } finally {
-                    unset($promise);
                 }
             }
 
@@ -116,15 +117,12 @@ class ScheduleImporter
             ;
 
             if (isset($promise)) {
-                while ($promise->getState() === 'pending') {
-                    sleep(1);
-                    echo 'wait' . PHP_EOL;
-                }
+                $promise->wait();
             }
-
+            $queue->run();
             $collection[] = $entry;
 
-            unset($dateTimeStart, $dateTimeEnd, $dateTimeEndRaw, $timeZoneValue, $timeZone);
+            unset($dateTimeStart, $dateTimeEnd, $dateTimeEndRaw, $timeZoneValue, $timeZone, $queue, $promise);
         }
 
         /* Set end time
