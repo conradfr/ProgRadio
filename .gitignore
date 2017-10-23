@@ -10,10 +10,8 @@
 # Parameters
 /app/config/parameters.yml
 /app/config/app_parameters.yml
-/app/config/parameters.ini
 
 # Managed by Composer
-/app/bootstrap.php.cache
 /var/bootstrap.php.cache
 /bin/*
 !bin/console
@@ -36,7 +34,6 @@
 !/web/media/program/.gitkeep
 !/web/media/cache/program_thumb/media/.gitkeep
 !/web/media/cache/program_thumb/.gitkeep
-!/web/media/program/.gitkeep
 !/web/media/cache/page_thumb/media/.gitkeep
 !/web/media/cache/page_thumb/.gitkeep
 
@@ -53,14 +50,10 @@
 /node_modules/
 /Scraper/node_modules/
 
-
 # Compiled assets
 /web/build/js/*
 
 /web/phpinfo.php
-
-# Websocker server dev log
-/websocket/nohup.out
 
 # Tools
 
@@ -74,15 +67,6 @@
 /tools/vagrant/puphpet/files/dot/ssh/id_rsa.pub
 /tools/vagrant/puphpet/files/dot/ssh/root_id_rsa
 /tools/vagrant/puphpet/files/dot/ssh/id_rsa
-
-# generated during provisionning
-/tools/vagrant2/.vagrant/
-/tools/vagrant2/puphpet/files/dot/ssh/root_id_rsa.ppk
-/tools/vagrant2/puphpet/files/dot/ssh/root_id_rsa.pub
-/tools/vagrant2/puphpet/files/dot/ssh/id_rsa.ppk
-/tools/vagrant2/puphpet/files/dot/ssh/id_rsa.pub
-/tools/vagrant2/puphpet/files/dot/ssh/root_id_rsa
-/tools/vagrant2/puphpet/files/dot/ssh/id_rsa
 
 # Capistrano
 /tools/capistrano/config/deploy/*.rb
