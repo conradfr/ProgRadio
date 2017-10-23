@@ -29,9 +29,13 @@ class ImageCache
     /**
      * @param string $basePath
      */
-    public function __construct($basePath)
+    public function __construct(string $basePath)
     {
-        $this->basePath = "$basePath/";
+        if (substr($basePath, -1) !== '/') {
+            $basePath .= '/';
+        }
+
+        $this->basePath = $basePath;
     }
 
     /**
