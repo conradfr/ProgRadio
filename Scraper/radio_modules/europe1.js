@@ -49,7 +49,7 @@ const format = dateObj => {
 
         // LE VENDREDI DE 18H00 - 20H00
         if(match === null && dateObj.isoWeekday() === 5) {
-            regexp = new RegExp(/^LE VENDREDI DE ([0-9]{1,2})[h|H]([0-9]{2})-([0-9]{1,2})[h|H]([0-9]{2})/);
+            regexp = new RegExp(/^LE VENDREDI DE ([0-9]{1,2})[h|H]([0-9]{2}) - ([0-9]{1,2})[h|H]([0-9]{2})/);
             match = entry.datetime_raw.match(regexp);
 
             if (match !== null) {
