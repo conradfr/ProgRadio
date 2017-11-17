@@ -2,7 +2,8 @@
     <div class="schedule-radio-grid" id="schedule-radio-grid" :style="styleObject">
         <timeline-cursor></timeline-cursor>
         <v-touch
-                 v-bind:pan-options="{ direction: 'horizontal' }" v-bind:swipe-options="{ direction: 'horizontal' }"
+                v-bind:enabled="{ pan: true, swipe: true }"
+                v-bind:pan-options="{ direction: 'horizontal' }" v-bind:swipe-options="{ direction: 'horizontal' }"
                  v-on:swipe="onSwipe"
                  v-on:panleft="onPan" v-on:panright="onPan" v-on:panstart="onPanStart" v-on:panend="onPanEnd">
             <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name" :radio="entry.code_name"></schedule-radio-grid-row>
@@ -15,7 +16,12 @@ import Vue from 'vue';
 import { mapGetters } from 'vuex'
 
 const VueTouch = require('vue-touch');
+VueTouch.config.pan = {
+    direction: 'horizontal'
+};
+
 Vue.use(VueTouch, {name: 'v-touch'});
+
 
 import { NAV_MOVE_BY } from '../config/config.js';
 import TimelineCursor from './TimelineCursor.vue'
@@ -48,11 +54,12 @@ export default {
     /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
     methods: {
         onSwipe: function (event) {
+            console.log('swipe');
             this.swipeActive = true;
             setInterval(this.swipeEnd, 1000);
 
             // avoid ghost click
-//            if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
+            //  if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
 
             const amount = (NAV_MOVE_BY / 2.2) * event.velocityX * -1;
             this.$store.dispatch('scroll', amount);
@@ -73,6 +80,10 @@ export default {
         },
         onPan: function (event) {
             if (this.swipeActive === true) { return; }
+
+            // preventing vertical scrolling to generate horizontal panning
+            if ((event.angle <= -25 && event.angle >= -135) || (event.angle > 15 && event.angle <= 135)
+                || event.overallVelocityX > 5 || event.overallVelocityX < -5 ) { return; }
 
             this.$store.dispatch('scroll', (-1 * (event.deltaX - (this.clickX + event.overallVelocityX))));
             this.clickX = event.deltaX;
