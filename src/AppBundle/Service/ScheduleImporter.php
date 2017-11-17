@@ -99,11 +99,13 @@ class ScheduleImporter
                             $entry->setPictureUrl($value);
                         },
                         function ($message) use ($imgUrl) {
-                            // echo $message;
+                            // echo "($imgUrl) $message " . PHP_EOL;
                         }
                     );
+
+                    $promise->wait();
                 } catch (\Exception $e) {
-                    echo $e->getMessage() . PHP_EOL;
+                    // echo $e->getMessage() . PHP_EOL;
                 }
             }
 
@@ -116,9 +118,6 @@ class ScheduleImporter
                   ->setRadio($radio)
             ;
 
-            if (isset($promise)) {
-                $promise->wait();
-            }
             $queue->run();
             $collection[] = $entry;
 
