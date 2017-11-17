@@ -105,6 +105,11 @@ const format = dateObj => {
         entry.schedule_end = endDateTime.toISOString();
         entry.timezone = 'Europe/Paris';
 
+        // not sure why I got an object that looks like an array here but well ...
+        if (typeof entry.description === 'object') {
+            entry.description = entry.description[0];
+        }
+
         prev.push(entry);
         return prev;
     },[]);
@@ -128,18 +133,24 @@ const fetch = dateObj => {
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-            .find(`#${tab}Tab > .programmes > .bloc.clearfix`)
+            .find(`#${tab}Tab > .programmes`)
             // .select('.wrap-img')
             .set({
-                'img': '.wrap-img img@src'
+                'img': '.bloc.clearfix .wrap-img img@src'
             })
-            .select('.bloc_texte')
             .set({
-                'host': '.titre',
-                'description': 'p',
-                'title': 'span.heure > span',
-                'datetime_raw': 'span.heure'
+                'host': '.bloc.clearfix .bloc_texte .titre',
+                'title': '.bloc.clearfix .bloc_texte span.heure > span',
+                'datetime_raw': '.bloc.clearfix .bloc_texte span.heure'
             })
+            .select('.bloc_programmes > li[1]')
+            .do(
+                osmosis.follow('a@href')
+                    .find('div[itemprop=articleBody]')
+                    .set({
+                        'description':  'p[1]'
+                    })
+            )
             .data(function (listing) {
                 scrapedData.push(listing);
             })
