@@ -22,11 +22,17 @@ const initialScrollIndex = () => {
     const hourPixels = config.MINUTE_PIXEL * 60;
     let reduceToHour = 0;
 
-    if (window.innerWidth > hourPixels) {
+    if (window.innerWidth > (hourPixels + (config.MINUTE_PIXEL * 30))) {
         reduceToHour = Math.abs(Math.floor(window.innerWidth / config.GRID_INDEX_BREAK));
     }
-    else if (moment().minute() > 45) {
-        reduceToHour = 0.5;
+    else {
+        const minutes = moment().minute();
+        if (minutes < 15) {
+            reduceToHour = 0.25;
+        }
+        else if (minutes > 45) {
+            reduceToHour = -0.5;
+        }
     }
 
     return enforceScrollIndex((moment().hours() - reduceToHour) * hourPixels + 1);
