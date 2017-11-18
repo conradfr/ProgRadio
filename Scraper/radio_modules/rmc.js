@@ -36,19 +36,19 @@ const format = dateObj => {
             let match_time = null;
 
             if (match !== null) {
-                if (dateObj.weekday() >= dayFr[match[1]] && dateObj.weekday() <= dayFr[match[2]]) {
+                if (dateObj.isoWeekday() >= dayFr[match[1]] && dateObj.isoWeekday() <= dayFr[match[2]]) {
                    matched = true;
                 }
             }
             else {
                 match = curr.datetime_date[i].split(', ');
 
-                if (match.length > 0 && match.indexOf(dateObj.weekday()) > -1) {
+                if (match.length > 0 && match.indexOf(dateObj.isoWeekday()) > -1) {
                     matched = true;
                 }
                 else {
                     // This show has no time infos so specify it there ...
-                    if (dateObj.weekday() === 'Lundi' && curr.title === 'RMC Poker Show') {
+                    if (dateObj.isoWeekday() === 'Lundi' && curr.title === 'RMC Poker Show') {
                         matched = true;
                         match = ['empty', '0', '0', '1', '0'];
                     }
