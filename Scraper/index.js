@@ -30,23 +30,23 @@ const QUEUE_LIST = 'schedule_input:queue';
 // radios
 const radios = options['radios'] || [
     'rtl',
-    'rtl2',
-    'funradio',
-    'europe1',
     'franceinter',
-    'franceinfo',
+    'rmc',
     'nrj',
-    'skyrock',
+    'europe1',
+    'franceinfo',
     'nostalgie',
-    'rireetchansons',
-    'virgin',
+    'funradio',
     'rfm',
+    'skyrock',
+    'rtl2',
+    'virgin',
     'franceculture',
     'radioclassique',
-    'ouifm',
+    'rireetchansons',
     'radionova',
     'sudradio',
-    'rmc'
+    'ouifm'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);
