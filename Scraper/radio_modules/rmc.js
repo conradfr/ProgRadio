@@ -15,6 +15,7 @@ const dayFr = {
 };
 
 const format = dateObj => {
+    dateObj.tz("Europe/Paris");
     dateObj.locale('fr');
 
     // we use reduce instead of map to act as a map+filter in one pass
@@ -42,8 +43,9 @@ const format = dateObj => {
             }
             else {
                 match = curr.datetime_date[i].split(', ');
+                const currentDayUpperCase = dateObj.format('dddd').charAt(0).toUpperCase() + dateObj.format('dddd').slice(1);
 
-                if (match.length > 0 && match.indexOf(dateObj.isoWeekday()) > -1) {
+                if (match.length > 0 && match.indexOf(currentDayUpperCase) > -1) {
                     matched = true;
                 }
                 else {
@@ -96,8 +98,6 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     let url = 'http://rmc.bfmtv.com/emission/';
-    dateObj.tz("Europe/Paris");
-    const day = dateObj.isoWeekday();
 
     logger.log('info', `fetching ${url}`);
 
