@@ -19,10 +19,17 @@ const enforceScrollIndex = (scrollIndex) => {
 };
 
 const initialScrollIndex = () => {
-    const initCursor = moment().diff(moment().startOf('day'), 'minutes') * config.MINUTE_PIXEL + 1;
-    let initIndex = initCursor - Math.floor(window.innerWidth / 3);
+    const hourPixels = config.MINUTE_PIXEL * 60;
+    let reduceToHour = 0;
 
-    return enforceScrollIndex(initIndex);
+    if (window.innerWidth > hourPixels) {
+        reduceToHour = Math.abs(Math.floor(window.innerWidth / config.GRID_INDEX_BREAK));
+    }
+    else if (moment().minute() > 45) {
+        reduceToHour = 0.5;
+    }
+
+    return enforceScrollIndex((moment().hours() - reduceToHour) * hourPixels + 1);
 };
 
 const store = new Vuex.Store({
