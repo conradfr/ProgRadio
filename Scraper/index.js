@@ -105,5 +105,3 @@ redisClient.on("ready", function () {
         process.exit(1);
     });
 });
-
-
