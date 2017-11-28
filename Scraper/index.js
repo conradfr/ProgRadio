@@ -55,41 +55,55 @@ dateObj.tz("Europe/Paris");
 
 logger.log('info', 'Starting ...');
 
-const results = radios.map(function (radio) {
-    const radio_module = require(`./radio_modules/${radio}.js`);
+const getResults = radios => {
 
-    return radio_module.getScrap(dateObj)
-        .then(function(data) {
-            const dateFormat = 'DD-MM-YYYY';
+    return radios.map(function (radio) {
+        const radio_module = require(`./radio_modules/${radio}.js`);
 
-            logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
+        return radio_module.getScrap(dateObj)
+            .then(function(data) {
+                const dateFormat = 'DD-MM-YYYY';
 
-            if (data.length > 0) {
-                const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}${radio_module.getName}:${dateObj.format(dateFormat)}`;
+                logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
 
-                const dataExport = {
-                    'radio': radio_module.getName,
-                    'date': dateObj.format(dateFormat),
-                    'items': data
-                };
+                if (data.length > 0) {
+                    const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}${radio_module.getName}:${dateObj.format(dateFormat)}`;
 
-                redisClient.setex(redisKey, QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
-                redisClient.LREM(QUEUE_LIST, 1, redisKey);
-                redisClient.RPUSH(QUEUE_LIST, redisKey);
-            }
-            else {
-                // Log specifically when no data is found, in case of website change etc
-                logger.log('warn', `${radio_module.getName} - NO DATA`);
-            }
-        })
-        .catch(error => {
-            logger.log('error', error);
-        });
-});
+                    const dataExport = {
+                        'radio': radio_module.getName,
+                        'date': dateObj.format(dateFormat),
+                        'items': data
+                    };
 
-const schedule = Promise.all(results);
+                    redisClient.setex(redisKey, QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
+                    redisClient.LREM(QUEUE_LIST, 1, redisKey);
+                    redisClient.RPUSH(QUEUE_LIST, redisKey);
+                }
+                else {
+                    // Log specifically when no data is found, in case of website change etc
+                    logger.log('warn', `${radio_module.getName} - NO DATA`);
+                }
+            })
+            .catch(error => {
+                logger.log('error', error);
+            });
+    });
+};
 
-schedule.then(() => {
-    logger.log('info', 'All done, exiting ...');
+redisClient.on("error", function (err) {
+    logger.log('error', err);
     process.exit(1);
 });
+
+redisClient.on("ready", function () {
+    const results = getResults(radios);
+    const schedule = Promise.all(results);
+
+    schedule.then(() => {
+        redisClient.quit();
+        logger.log('info', 'All done, exiting ...');
+        process.exit(1);
+    });
+});
+
+
