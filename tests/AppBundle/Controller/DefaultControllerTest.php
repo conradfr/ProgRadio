@@ -13,6 +13,6 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Toutes les grilles de programmes radio !', $crawler->filter('title')->text());
+        $this->assertContains('Toutes les grilles de programmes radio et écoute en ligne', $crawler->filter('title')->text());
     }
 }

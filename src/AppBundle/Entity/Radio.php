@@ -55,8 +55,17 @@ class Radio
      * @var double
      *
      * @ORM\Column(type="decimal", scale=2, options={"default"=0})
+     * @Groups({"export"})
      */
     private $share;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"export"})
+     */
+    private $streamUrl;
 
     /**
      * @var boolean
@@ -127,6 +136,22 @@ class Radio
     public function setShare($share)
     {
         $this->share = $share;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreamUrl(): string
+    {
+        return $this->streamUrl;
+    }
+
+    /**
+     * @param string $streamUrl
+     */
+    public function setStreamUrl(string $streamUrl): void
+    {
+        $this->streamUrl = $streamUrl;
     }
 
     /**

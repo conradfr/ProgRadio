@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}Toutes les grilles de programmes radio !{% endblock %}</title>
-    <meta name="description" content="{% block description %}Les programmes en France.{% endblock %}" />
+    <title>{% block title %}Toutes les grilles de programmes radio et écoute en ligne{% endblock %}</title>
+    <meta name="description" content="{% block description %}Ecoute en ligne et les programmes en France.{% endblock %}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
 
@@ -32,11 +32,6 @@
 </head>
 <body{% block bodysupp %}{% endblock %}>
 
-{#Temp beta ribbon#}
-<div class="ribbon-wrapper">
-    <div class="ribbon success">Alpha!</div>
-</div>
-
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -48,10 +43,11 @@
             </button>
                 <a class="navbar-brand" href="{{ path('homepage') }}" onclick="scrollToCursor(event)">
                     <div class="navbar-brand-name">
-                        <img src="{{ asset('img/logo.png') }}"  srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios" height="24px" width="30px">Programmes Radio
+                        <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios" height="24px" width="30px">Programmes Radio
                     </div>
                 </a>
         </div>
+
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ path('faq') }}">Faq</a></li>
@@ -59,6 +55,7 @@
                 <li><a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="Android app"></a></li>
             </ul>
         </div>
+
     </div>
 </nav>
 

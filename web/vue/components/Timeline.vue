@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
     filters: {
@@ -17,8 +17,8 @@ export default {
             return `${("0" + (value - 1)).slice(-2)}h00`
         }
     },
-    computed: mapState({
-        styleObject: function() { return this.$store.getters.gridIndex; }
+    computed: mapGetters({
+        styleObject: 'gridIndex'
     }),
     methods: {
         clickBackward: function () {

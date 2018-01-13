@@ -54,7 +54,6 @@ export default {
     /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
     methods: {
         onSwipe: function (event) {
-            console.log('swipe');
             this.swipeActive = true;
             setInterval(this.swipeEnd, 1000);
 

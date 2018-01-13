@@ -14,8 +14,8 @@ import ScheduleRadioGrid from './ScheduleRadioGrid.vue'
 export default {
     components: { ScheduleRadioList, ScheduleRadioGrid },
     computed: mapState({
-        radios: state => state.radios,
-        schedule: state => state.schedule
+        radios: state => state.schedule.radios,
+        schedule: state => state.schedule.schedule
     }),
     methods: {
         keyLeft: function () {

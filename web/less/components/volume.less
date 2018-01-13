@@ -1,0 +1,77 @@
+@import "../bootswatch/paper/variables";
+
+// grays for slider channel and disabled states
+@fader-gray-1: #BEBEBE;
+@fader-gray-2: #DFDFDF;
+@fader-gray-3: #E5E5E5;
+@fader-gray-4: #E9E9E9;
+@fader-gray-5: #F5F5F5;
+@fader-gray-6: #F9F9F9;
+
+@fader-line-height: 18px;
+@fader-height: 110px;
+
+@fader-primary: #337ab7;
+@fader-primary-top: @fader-primary;
+@fader-primary-bottom: darken(@fader-primary, 5%);
+
+#volume-fader {
+  width: 24px;
+  height: 114px;
+
+  margin-top: -10px;
+  margin-left: 30px;
+
+  /* on mobile, put player at the bottom */
+  @media (max-width: @screen-xs-max) {
+    margin-top: -145px;
+  }
+
+  background-color: @player-background;
+  border-radius: 5px;
+
+  .fader {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+
+    height: (@fader-height - 10px);
+    width: @fader-line-height;
+
+    margin: 7px 0 7px 3px;
+
+    .fader-track {
+      position: absolute;
+      cursor: pointer;
+      #gradient > .vertical(@fader-gray-5, @fader-gray-6);
+      .box-shadow(inset 0 1px 2px rgba(0, 0, 0, .1));
+      border-radius: @border-radius-base;
+
+      width: 8px;
+      height: 100%;
+      left: 25%;
+      top: 0;
+    }
+
+    /* webkit only */
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      .fader-track { margin-left: 1px; }
+    }
+
+    .fader-handle {
+      margin-top: (-@fader-line-height/2);
+
+      position: absolute;
+      top: 0;
+      width: @fader-line-height;
+      height: @fader-line-height;
+      background-color: @fader-primary;
+      #gradient > .vertical(@fader-primary-top, @fader-primary-bottom);
+      filter: none;
+      .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
+      border: 0 solid transparent;
+      // round
+      border-radius: 50%;
+    }
+  }
+}

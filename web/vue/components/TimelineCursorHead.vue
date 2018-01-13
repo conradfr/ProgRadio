@@ -12,7 +12,7 @@ export default {
                 left: `calc(${this.$store.getters.cursorIndex} + ${this.$store.getters.gridIndex.left} + ${GRID_VIEW_EXTRA_LEFT}px)`
             };
 
-            if (this.$store.state.scrollClick === true) { style.transition = 'none'; }
+            if (this.$store.state.schedule.scrollClick === true) { style.transition = 'none'; }
 
             return style;
         }

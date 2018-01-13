@@ -21,13 +21,13 @@ export default {
     props: ['radio'],
     computed: mapState({
         noProgramStyleObject(state) {
-            return {left: `${state.scrollIndex}px`};
+            return {left: `${state.schedule.scrollIndex}px`};
         },
         schedule(state) {
-            return state.schedule[this.radio];
+            return state.schedule.schedule[this.radio];
         },
         hasSchedule(state) {
-            return (state.schedule[this.radio] && state.schedule[this.radio].length > 0) || false;
+            return (state.schedule.schedule[this.radio] && state.schedule.schedule[this.radio].length > 0) || false;
         }
     })
 }

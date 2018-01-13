@@ -1,0 +1,104 @@
+@import "../bootswatch/paper/variables";
+
+@import "volume";
+
+@player-background: lighten(@brand-primary, 5%);
+
+.navbar-player {
+  z-index: 1200; /* to get over navbar */
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translatex(-50%);
+
+  /* on mobile, put player at the bottom */
+  @media (max-width: @screen-xs-max) {
+    top: auto;
+    bottom: 10px;
+  }
+
+  height: 41px;
+  width: 210px;
+
+  margin-top: 5px;
+  background-color: @player-background;
+  border-radius: 5px;
+
+  .player-wrap {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .player-sound {
+    width: 28px;
+
+    padding-top: 3px;
+
+    &:first-child {
+      padding-left: 9px;
+    }
+
+    color: white;
+    text-align: center;
+    cursor: pointer;
+
+    .player-muted {
+      color: @brand-danger;
+    }
+  }
+
+  .player-playpause {
+    width: 36px;
+
+    font-size:  11px;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+
+    margin-top: -2px;
+
+    &.player-playpause-disabled {
+      opacity: 0.7;
+      cursor: auto;
+    }
+
+    .icon-round{
+      height: 24px;
+      width: 24px;
+
+      text-align: center;
+
+      border-radius: 50%;
+      border: 3px solid #fff;
+
+      padding-top: 3px;
+      padding-left: 2px;
+    }
+
+    @-moz-document url-prefix() {
+      .icon-round {
+        padding-top: 4px;
+        padding-left: 1px;
+      }
+    }
+  }
+
+  .player-name {
+    flex: 1;
+
+    padding-left: 0;
+    padding-right: 5px;
+
+    color: white;
+    text-align: center;
+  }
+
+  .player-name-help {
+    font-size: 10px;
+    line-height: 1.5em;
+  }
+}

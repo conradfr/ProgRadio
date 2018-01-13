@@ -1,12 +1,12 @@
 <template>
     <div class="program-container" :style="styleObject" v-on:mouseup="detailClick">
-        <div class="program program-full" :style="styleObjectDetail">
+<!--        <div class="program program-full" :style="styleObjectDetail">
             <div class="program-inner">
                 <div class="program-title"><span class="schedule-display">{{ scheduleDisplay}}</span>{{ program.title }}</div>
                 <div class="program-host">{{ program.host  }}</div>
                 <div class="program-description">{{ program.description }}</div>
             </div>
-        </div>
+        </div>-->
 
         <div class="program" v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }" v-on:mouseover.once="hover = !hover">
             <div class="program-inner">
@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         ...mapState({
-            cursorTime: state => state.cursorTime
+            cursorTime: state => state.schedule.cursorTime
         }),
         styleObjectDetail: function() {
             if (this.displayDetail === false) { return {}; }
@@ -88,9 +88,7 @@ export default {
             if (value === null) { return ''; }
             if (duration < 15) { return ''; }
 
-            const firstLine = value.split('\n')[0];
-
-            return firstLine;
+            return value.split('\n')[0];
         },
         picture: (value) => {
             return `${THUMBNAIL_PATH}${value}`;
