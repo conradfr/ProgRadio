@@ -7648,7 +7648,9 @@ body .footer a:focus {
   height: 114px;
   margin-top: -10px;
   margin-left: 30px;
-  /* on mobile, put player at the bottom */
+  /* on mobile, put volume fader above player
+      update: should be hidden anyway now
+   */
   background-color: #39a1f4;
   border-radius: 5px;
 }
@@ -7723,6 +7725,7 @@ body .footer a:focus {
   .navbar-player {
     top: auto;
     bottom: 10px;
+    width: 182px;
   }
 }
 .navbar-player .player-wrap {
@@ -7737,12 +7740,18 @@ body .footer a:focus {
   color: white;
   text-align: center;
   cursor: pointer;
+  /* on mobile, hide volume (managed by phone usually) */
 }
 .navbar-player .player-sound:first-child {
   padding-left: 9px;
 }
 .navbar-player .player-sound .player-muted {
   color: #e51c23;
+}
+@media (max-width: 767px) {
+  .navbar-player .player-sound.player-sound-fader {
+    display: none;
+  }
 }
 .navbar-player .player-playpause {
   width: 36px;

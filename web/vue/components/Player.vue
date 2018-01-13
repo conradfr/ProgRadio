@@ -4,7 +4,7 @@
             <div class="player-sound" v-on:click="toggleMute">
                 <span class="glyphicon glyphicon-volume-off"  v-bind:class="{ 'player-muted': player.muted }" aria-hidden="true"></span>
             </div>
-            <div class="player-sound" v-on:mouseover="volumeFocus(true)" v-on:mouseleave="volumeFocus(false)" v-on:click="volumeClick">
+            <div class="player-sound player-sound-fader" v-on:mouseover="volumeFocus(true)" v-on:mouseleave="volumeFocus(false)" v-on:click="volumeClick">
                 <span class="glyphicon" v-bind:class="{ 'glyphicon-volume-up': player.volume > 4, 'glyphicon-volume-down': player.volume <= 4 }" aria-hidden="true"></span>
             </div>
             <div class="player-playpause" v-bind:class="{ 'player-playpause-disabled': player.radio === null }" v-on:click="togglePlay">

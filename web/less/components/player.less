@@ -15,6 +15,8 @@
   @media (max-width: @screen-xs-max) {
     top: auto;
     bottom: 10px;
+    width: 182px;
+    //left: ~"calc(50% - @{radio-list-width})";
   }
 
   height: 41px;
@@ -47,6 +49,13 @@
 
     .player-muted {
       color: @brand-danger;
+    }
+
+    /* on mobile, hide volume (managed by phone usually) */
+    @media (max-width: @screen-xs-max) {
+      &.player-sound-fader {
+        display: none;
+      }
     }
   }
 
