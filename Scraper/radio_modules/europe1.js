@@ -39,7 +39,6 @@ const format = dateObj => {
         entry.host = host;
 
         prev.push(entry);
-        console.log(entry);
         return prev;
     },[]);
 
