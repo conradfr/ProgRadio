@@ -53,7 +53,8 @@ export default {
         },
         onPan: function (event) {
             const deltaY = Math.round(event.deltaY / 10);
-			let newVolume = initVolume + (deltaY * -1);
+
+			let newVolume = +initVolume + (deltaY * -1);
 
 			if (newVolume === this.volume) { return; }
             else if (newVolume < 0) {
@@ -65,7 +66,7 @@ export default {
                 else { return; }
             }
 
-            this.$store.dispatch('setVolume', newVolume);
+            this.$store.dispatch('setVolume', newVolume.toString());
         },
         volumeFocus: function (status) {
             this.$store.dispatch('volumeFocus', {element:'fader', status: status});

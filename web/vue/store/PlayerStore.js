@@ -13,7 +13,7 @@ const PlayerStore = {
     state: {
         playing: false,
         radio: null,
-        volume: Vue.cookie.get(COOKIE_VOLUME) || config.DEFAULT_VOLUME,
+        volume: Vue.cookie.get(COOKIE_VOLUME) ? parseInt(Vue.cookie.get(COOKIE_VOLUME)) : config.DEFAULT_VOLUME,
         muted: Vue.cookie.get(COOKIE_MUTED) === 'true' || false,
         focus: {
             icon: false,
