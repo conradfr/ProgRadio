@@ -43,7 +43,7 @@ export default {
             };
 
             // disable grid transition while manually scrolling, avoid lag effect
-            if (this.$store.state.scrollClick) { styleObject.transition = 'none'; }
+            if (this.$store.state.schedule.scrollClick) { styleObject.transition = 'none'; }
 
             return styleObject;
         },

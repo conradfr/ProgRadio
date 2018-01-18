@@ -7555,7 +7555,7 @@ body .footer a:focus {
   font-size: 0;
   padding-left: calc(76px);
   background-color: #f3f3f3;
-  transition: left 0.35s cubic-bezier(0.21, 1.12, 0.67, 0.99);
+  transition: left 0.2s cubic-bezier(0.21, 1.12, 0.67, 0.99);
 }
 .timeline .timeline-control {
   z-index: 7;
