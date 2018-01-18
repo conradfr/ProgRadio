@@ -150,7 +150,7 @@ const fetch = dateObj => {
             .select('.item-program > .card-program')
             .set({
                 'datetime_raw': 'time@datetime',
-                'img': 'img.card-img@src',
+                'img': 'img.card-img@data-src',
                 'title': '.card-title',
                 'description': '.program-duration',
             })
