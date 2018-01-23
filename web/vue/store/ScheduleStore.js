@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 import * as config from '../config/config.js';
 
@@ -22,7 +22,7 @@ const initialScrollIndex = () => {
         reduceToHour = Math.abs(Math.floor(window.innerWidth / config.GRID_INDEX_BREAK));
     }
     else {
-        const minutes = moment().minute();
+        const minutes = moment().tz(config.TIMEZONE).minute();
         if (minutes < 15) {
             reduceToHour = 0.25;
         }
@@ -31,20 +31,20 @@ const initialScrollIndex = () => {
         }
     }
 
-    return enforceScrollIndex((moment().hours() - reduceToHour) * hourPixels + 1);
+    return enforceScrollIndex((moment().tz(config.TIMEZONE).hours() - reduceToHour) * hourPixels + 1);
 };
 
 const ScheduleStore = {
     state: {
         radios: radios ,
         schedule: schedule,
-        cursorTime: moment(),
+        cursorTime: moment().tz(config.TIMEZONE),
         scrollIndex: initialScrollIndex(),
         scrollClick: false
     },
     getters: {
         cursorIndex: state => {
-            const startDay = moment().startOf('day');
+            const startDay = moment().tz(config.TIMEZONE).startOf('day');
             const newIndex = state.cursorTime.diff(startDay, 'minutes') * config.MINUTE_PIXEL + 1;
             return `${newIndex}px`;
         },
@@ -74,7 +74,7 @@ const ScheduleStore = {
              state.scrollIndex = enforceScrollIndex(newIndex);
         },
         updateCursor(state) {
-            state.cursorTime = moment();
+            state.cursorTime = moment().tz(config.TIMEZONE);
         },
         scrollClickSet: (state, value) => {
             state.scrollClick = value;

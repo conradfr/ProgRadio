@@ -13,7 +13,7 @@
                 <div class="program-img" v-if="program.picture_url && hover">
                     <img v-bind:src="program.picture_url | picture" alt="">
                 </div>
-                <div class="program-title"><span class="schedule-display">{{ scheduleDisplay}}</span>{{ program.title }}</div>
+                <div class="program-title"><span class="schedule-display">{{ scheduleDisplay }}</span>{{ program.title }}</div>
                 <div class="program-host">{{ program.host }}</div>
                 <div class="program-description-short" v-bind:class="{ 'program-description-nohost': !program.host }"><div class="program-description-short-inner">{{ program.description | shorten(program.duration) }}</div></div>
             </div>
