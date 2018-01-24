@@ -12,6 +12,7 @@
     "build": "node buildjs/build.js"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "bootstrap": "^3.3.7",
     "remove": "^0.1.5"
   },

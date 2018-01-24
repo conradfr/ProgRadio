@@ -1,3 +1,4 @@
+import axios from 'axios';
 const moment = require('moment-timezone');
 
 import * as config from '../config/config.js';
@@ -78,6 +79,9 @@ const ScheduleStore = {
         },
         scrollClickSet: (state, value) => {
             state.scrollClick = value;
+        },
+        updateSchedule: (state, value) => {
+            state.schedule = value;
         }
     },
     actions: {
@@ -97,6 +101,14 @@ const ScheduleStore = {
             commit('scrollClickSet', value)
         },
         tick: ({commit}) => {
+            const now = moment().tz(config.TIMEZONE);
+
+            if (now.hour() === 0 && now.minutes() === 5) {
+                axios.get(`${base_url}schedule`).then((response) => {
+                    commit('updateSchedule', response.data.schedule);
+                });
+            }
+
             commit('updateCursor');
         }
     }

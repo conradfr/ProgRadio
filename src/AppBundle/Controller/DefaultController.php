@@ -39,6 +39,28 @@ class DefaultController extends Controller
 
     /**
      * @Route(
+     *     "/schedule",
+     *     name="schedule"
+     * )
+     */
+    public function scheduleAction(Request $request)
+    {
+        $scheduleManager = $this->get(ScheduleManager::class);
+        $schedule = $scheduleManager->getDaySchedule(new \DateTime());
+
+        $response = new Response();
+
+        $response->setContent(json_encode([
+            'schedule' => $schedule
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
+
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * @Route(
      *     "/radio/{codename}",
      *     name="radio",
      *     defaults={
