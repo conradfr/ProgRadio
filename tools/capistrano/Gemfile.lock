@@ -37,9 +37,9 @@ PLATFORMS
 DEPENDENCIES
   capistrano
   capistrano-npm
-  capistrano-symfony (~> 1.0.0.rc1)
+  capistrano-symfony (~> 1.0.0.rc2)
   capistrano-upstart-service
   capistrano-yarn
 
 BUNDLED WITH
-   1.15.1
+   1.16.1

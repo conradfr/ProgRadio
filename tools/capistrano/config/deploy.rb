@@ -22,13 +22,15 @@ set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 # set :pty, true
 
 # Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push("app/config/parameters.yml", "app/config/app_parameters.yml")
+set :linked_files, fetch(:linked_files, []).push("app/config/parameters.yml", "app/config/app_parameters.yml", "Importer/config/prod.exs")
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "web/media/program", "web/media/cache/program_thumb/media/program", "web/media/cache/page_thumb/media/program");
+set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "web/media/program", "web/media/cache/program_thumb/media/program", "web/media/cache/page_thumb/media/program", "Importer/deps");
 
 # Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+set :default_env, {
+      'MIX_ENV' => 'prod'
+}
 
 # Default value for keep_releases is 5
 set :keep_releases, 3
@@ -56,18 +58,37 @@ namespace :deploy do
   # before "deploy:updated", "deploy:set_permissions:chmod"
   # before "deploy:updated", "deploy:set_permissions:chgrp"
   # before "deploy:updated", "deploy:set_permissions:chown"
+
   before "deploy:updated", "myproject:scraper_yarn"
   before "deploy:updated", "myproject:buildjs"
-  before "deploy:updated", "myproject:migrations"
   before "deploy:updated", "myproject:clean"
 
-  after :publishing, 'progradio_importer:stop'
-  after :publishing, 'progradio_importer:start'
+  before "deploy:updated", "myproject:migrations"
+
+  before "deploy:updated", "myproject:importerdeps"
+  before "deploy:updated", "myproject:importerbuild"
+
+  # after :publishing, 'progradio_importer:stop'
+  # after :publishing, 'progradio_importer:start'
   # after :publishing, "myproject:scraper_run"
 end
 
 namespace :myproject do
-  # scraper deps
+
+  # -------------------- APP JS --------------------
+
+  desc "Build app js"
+  task :buildjs do
+    on roles(:app) do
+        within release_path do
+            execute "npm", "run", "build"
+        end
+    end
+  end
+
+  # -------------------- NODE SCRAPER --------------------
+
+  desc "Scraper deps"
   task :scraper_yarn do
     on roles(:app) do
         within release_path + "Scraper" do
@@ -77,7 +98,7 @@ namespace :myproject do
     end
   end
 
-  # scraper deps
+  desc "Scraper run"
   task :scraper_run do
     on roles(:app) do
         within release_path + "Scraper" do
@@ -86,25 +107,40 @@ namespace :myproject do
     end
   end
 
-  # build app js
-  task :buildjs do
+  # -------------------- ELIXIR IMPORTER --------------------
+
+  desc "Elixir Importer deps"
+  task :importerdeps do
     on roles(:app) do
-        within release_path do
-            execute "npm", "run", "build"
+        within release_path + "Importer" do
+            execute "mix", "deps.get"
         end
     end
   end
 
-  # update db fixtures
+  desc "Elixir Importer build"
+  task :importerbuild do
+    on roles(:app) do
+        within release_path + "Importer" do
+            execute "mix", "release", "--env=prod"
+        end
+    end
+  end
+
+  # -------------------- DATABASE --------------------
+
+  desc "Update db fixtures"
   task :migrations do
     on roles(:app) do
       within release_path do
-        execute "php", "bin/console", "d:m:m", "--no-interaction"
+        symfony_console('doctrine:migrations:migrate', '--no-interaction')
       end
     end
   end
 
-  # update db fixtures
+  # -------------------- CLEAN --------------------
+
+  desc "Remove dev files in web dir"
   task :clean do
     on roles(:app) do
       within release_path do

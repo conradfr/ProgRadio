@@ -23,13 +23,13 @@ class ScheduleEntryRepository extends EntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
-                . 'se.dateTimeStart as start_at, se.dateTimeEnd as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'
+                . 'AT_TIME_ZONE(AT_TIME_ZONE(se.dateTimeStart,\'UTC\'), \'Europe/Paris\') as start_at, AT_TIME_ZONE(AT_TIME_ZONE(se.dateTimeEnd,\'UTC\'), \'Europe/Paris\') as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'
                 . 'MD5(CONCAT(r.codeName, se.title,se.dateTimeStart)) as hash'
             )
             ->from('AppBundle:ScheduleEntry', 'se')
             ->innerJoin('se.radio', 'r')
-            ->where('se.dateTimeStart >= :datetime_start')
-            ->andWhere('se.dateTimeStart < :datetime_end ')
+            ->where('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') >= :datetime_start')
+            ->andWhere('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') < :datetime_end ')
             ->andWhere('r.active = :active')
             ->orderBy('se.dateTimeStart', 'ASC')
         ;

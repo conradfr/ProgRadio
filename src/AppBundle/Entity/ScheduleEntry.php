@@ -17,9 +17,9 @@ class ScheduleEntry
     /**
      * @var integer
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="bigint")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
@@ -32,7 +32,7 @@ class ScheduleEntry
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetimetz")
+     * @ORM\Column(type="datetime")
      * @Groups({"export"})
      */
     private $dateTimeStart;
@@ -40,7 +40,7 @@ class ScheduleEntry
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetimetz")
+     * @ORM\Column(type="datetime")
      * @Groups({"export"})
      */
     private $dateTimeEnd;

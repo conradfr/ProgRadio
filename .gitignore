@@ -55,6 +55,26 @@
 
 /web/phpinfo.php
 
+# Elixir
+
+# The directory Mix will write compiled artifacts to.
+/Importer/_build/
+# If you run "mix test --cover", coverage assets end up here.
+/Importer/cover/
+# The directory Mix downloads your dependencies sources to.
+/Importer/deps/
+# Where 3rd-party dependencies like ExDoc output generated docs.
+/Importer/doc/
+# Ignore .fetch files in case you like to edit your project deps locally.
+/Importer/.fetch
+# If the VM crashes, it generates a dump, let's ignore it too.
+/Importer/erl_crash.dump
+# Also ignore archive artifacts (built via "mix archive.build").
+/Importer/*.ez
+#Config
+/Importer/config/dev.exs
+/Importer/config/prod.exs
+
 # Tools
 
 # Vagrant

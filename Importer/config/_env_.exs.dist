@@ -1,0 +1,14 @@
+use Mix.Config
+
+# Configure your database
+config :importer, Importer.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "",
+  password: "",
+  database: "progradio",
+  hostname: ""
+
+# Configure redis
+config :importer,
+  image_path: "/web/media/",
+  redis: "redis://127.0.0.1/0"

@@ -62,6 +62,29 @@ vagrantfile:
                         - .vagrant/
                         - .git/
                     auto: 'true'
+
+            blabla_bbzlifyd83hc:
+                owner: www-data
+                group: www-data
+                source: 'D:\\Developpement\\tests\\phoenix\\importer'
+                target: /var/www/importer
+                sync_type: default
+                smb:
+                    smb_host: ''
+                    smb_username: ''
+                    smb_password: ''
+                    mount_options:
+                        dir_mode: '0775'
+                        file_mode: '0775'
+                rsync:
+                    args:
+                        - '--verbose'
+                        - '--archive'
+                        - '-z'
+                    exclude:
+                        - .vagrant/
+                        - .git/
+                    auto: 'true'
         usable_port_range:
             start: 10200
             stop: 10500
