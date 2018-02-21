@@ -1,0 +1,7 @@
+tools/* linguist-vendored
+bin/* linguist-vendored
+Importer/_build/* linguist-generated=true
+docs/* linguist-documentation
+buildjs/* linguist-generated=true
+web/build/* linguist-generated=true
+work/* linguist-vendored
