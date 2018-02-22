@@ -65,6 +65,9 @@ defmodule Importer.ImageImporter do
            |> URI.decode
            |> Path.basename
 
-    "#{radio.code_name}_#{name}"
+    hash = :erlang.md5(url)
+           |> Base.encode16()
+
+    "#{radio.code_name}_#{hash}_#{name}"
   end
 end
