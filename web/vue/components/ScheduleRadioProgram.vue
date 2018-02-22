@@ -10,7 +10,7 @@
 
         <div class="program" v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }" v-on:mouseover.once="hover = !hover">
             <div class="program-inner">
-                <div class="program-img" v-if="program.picture_url && hover">
+                <div class="program-img" v-if="program.picture_url && (hover || isCurrent)">
                     <img v-bind:src="program.picture_url | picture" alt="">
                 </div>
                 <div class="program-title"><span class="schedule-display">{{ scheduleDisplay }}</span>{{ program.title }}</div>

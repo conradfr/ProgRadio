@@ -71,11 +71,6 @@
           z-index: 3 !important;
           box-shadow: 0 0 10px -3px rgba(0,0,0,.35);
 
-          .program-img {
-            opacity: 1 !important;
-            width: auto !important;
-          }
-
           .schedule-display {
             visibility: visible !important;
             opacity: 1 !important;
@@ -84,6 +79,13 @@
           .program-description-short {
             visibility: visible !important;
             opacity: 1 !important;
+          }
+        }
+
+        &.program-current, &:hover {
+          .program-img {
+            opacity: 1 !important;
+            width: auto !important;
           }
         }
 

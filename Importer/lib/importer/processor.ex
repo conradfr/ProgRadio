@@ -7,7 +7,6 @@ defmodule Importer.Processor do
   use Timex
 
   @date_format "{0D}-{0M}-{YYYY}"
-  @timezone "Europe/Paris"
 
   def process(key) do
     payload_raw = Redix.command!(:redix, ["GET", key])
@@ -121,7 +120,7 @@ defmodule Importer.Processor do
     # will need to be improved if the app spans multiple countries/timezone in the future
     q = from se in "schedule_entry",
           where: se.radio_id ==  type(^radio_id, :integer) and
-            fragment("DATE(? at time zone 'UTC' at time zone '#{@timezone}')", se.date_time_start) == ^date
+            fragment("DATE(? at time zone 'UTC' at time zone 'Europe/Paris')", se.date_time_start) == ^date
 
     multi = Multi.new
             |> Multi.delete_all(:delete, q, [])

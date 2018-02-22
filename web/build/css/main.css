@@ -7952,10 +7952,6 @@ body .footer a:focus {
   z-index: 3 !important;
   box-shadow: 0 0 10px -3px rgba(0, 0, 0, 0.35);
 }
-.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .program-img {
-  opacity: 1 !important;
-  width: auto !important;
-}
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .schedule-display {
   visibility: visible !important;
   opacity: 1 !important;
@@ -7963,6 +7959,11 @@ body .footer a:focus {
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .program-description-short {
   visibility: visible !important;
   opacity: 1 !important;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current .program-img,
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .program-img {
+  opacity: 1 !important;
+  width: auto !important;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner {
   height: 100%;
