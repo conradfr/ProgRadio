@@ -38,7 +38,7 @@ defmodule Importer.Processor do
             |> Enum.map(&build(&1, radio))
 
     commit(shows, radio.id, date)
-    {:ok, date, radio.id}
+    {:ok, date, radio.code_name}
   end
 
   defp cast_schedules(item) do

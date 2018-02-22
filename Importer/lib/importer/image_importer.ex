@@ -62,6 +62,7 @@ defmodule Importer.ImageImporter do
   defp get_name(url, radio) do
     name = URI.parse(url)
            |> Map.fetch!(:path)
+           |> URI.decode
            |> Path.basename
 
     "#{radio.code_name}_#{name}"
