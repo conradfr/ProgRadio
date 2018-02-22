@@ -25,7 +25,7 @@ set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 set :linked_files, fetch(:linked_files, []).push("app/config/parameters.yml", "app/config/app_parameters.yml", "Importer/config/prod.exs")
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "web/media/program", "web/media/cache/program_thumb/media/program", "web/media/cache/page_thumb/media/program", "Importer/deps");
+set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "web/media/program", "web/media/cache/program_thumb/media/program", "web/media/cache/page_thumb/media/program", "Importer/deps", "Importer/_build/prod/rel/importer/var");
 
 # Default value for default_env is {}
 set :default_env, {
@@ -68,8 +68,9 @@ namespace :deploy do
   before "deploy:updated", "myproject:importerdeps"
   before "deploy:updated", "myproject:importerbuild"
 
-  # after :publishing, 'progradio_importer:stop'
-  # after :publishing, 'progradio_importer:start'
+  # after "deploy:starting", 'progradio_importer_ex:stop'
+  # after "deploy:publishing", 'progradio_importer_ex:start'
+
   # after :publishing, "myproject:scraper_run"
 end
 

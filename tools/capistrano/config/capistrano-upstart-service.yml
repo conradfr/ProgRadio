@@ -1,5 +1,5 @@
 upstart_services:
-  - name: progradio_importer
-    roles: :app
-#  - name: progradio_importer_ex
-#    roles: app
+#  - name: progradio_importer
+#    roles: :app
+  - name: progradio_importer_ex
+    roles: app
