@@ -31,7 +31,7 @@ defmodule Importer.ImageImporter do
 
     unless Importer.ImageCache.is_cached(full_path) do
       try do
-        case full_url(url) |> HTTPoison.get() do
+        case full_url(url) |> HTTPoison.get([], [follow_redirect: true]) do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
             case File.write(full_path, body) do
               :ok -> {:reply, filename, nil}
