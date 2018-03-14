@@ -34,6 +34,8 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    AppBundle\Service\ImageCache:
+    AppBundle\Service\ScheduleCache:
         arguments:
-            - '%kernel.project_dir%'
+            - "@doctrine.orm.entity_manager"
+            - "@snc_redis.default"
+            - "@serializer"

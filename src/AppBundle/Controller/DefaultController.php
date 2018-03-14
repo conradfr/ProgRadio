@@ -3,12 +3,12 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\ScheduleManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DefaultController extends Controller
 {
@@ -22,13 +22,10 @@ class DefaultController extends Controller
      *      }
      * )
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, EntityManagerInterface $em, ScheduleManager $scheduleManager)
     {
-        $em = $this->get('doctrine')->getManager();
-
         $radios = $em->getRepository('AppBundle:Radio')->getActiveRadios();
 
-        $scheduleManager = $this->get(ScheduleManager::class);
         $schedule = $scheduleManager->getDaySchedule(new \DateTime());
 
         return $this->render('default/index.html.twig', [
@@ -43,9 +40,8 @@ class DefaultController extends Controller
      *     name="schedule"
      * )
      */
-    public function scheduleAction(Request $request)
+    public function scheduleAction(Request $request, ScheduleManager $scheduleManager)
     {
-        $scheduleManager = $this->get(ScheduleManager::class);
         $schedule = $scheduleManager->getDaySchedule(new \DateTime());
 
         $response = new Response();
@@ -69,9 +65,8 @@ class DefaultController extends Controller
      *      }
      * )
      */
-    public function radioAction($codename, Request $request)
+    public function radioAction($codename, Request $request, EntityManagerInterface $em, ScheduleManager $scheduleManager)
     {
-        $em = $this->get('doctrine')->getManager();
         $dateTime = new \DateTime();
 
         // @todo check cache
@@ -80,7 +75,6 @@ class DefaultController extends Controller
             throw new NotFoundHttpException('Radio not found');
         }
 
-        $scheduleManager = $this->get(ScheduleManager::class);
         $schedule = $scheduleManager->getRadioDaySchedule($dateTime, $codename);
 
         return $this->render('default/radio.html.twig', [

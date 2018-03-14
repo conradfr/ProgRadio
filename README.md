@@ -5,8 +5,8 @@ http://www.programmes-radio.io
 
 Dependencies
 --------------
-- VueJs2
-- PHP 7.1 / Symfony 3.3
+- VueJs 2
+- PHP 7.1 / Symfony 3.4
 - NodeJS
 - Elixir 1.5+
 - PosgreSQL / Redis

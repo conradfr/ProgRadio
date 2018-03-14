@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Contact;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +24,8 @@ class SiteController extends Controller
      *      }
      * )
      */
-    public function faqAction(Request $request)
+    public function faqAction(Request $request, EntityManagerInterface $em)
     {
-        $em = $this->get('doctrine')->getManager();
-
         $radios = $em->getRepository('AppBundle:Radio')->getActiveRadios();
 
         return $this->render('default/faq.html.twig', ['radios' => $radios]);
@@ -42,7 +41,7 @@ class SiteController extends Controller
      *      }
      * )
      */
-    public function contactAction(Request $request)
+    public function contactAction(Request $request, \Swift_Mailer $mailer)
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -64,7 +63,7 @@ class SiteController extends Controller
                     ]
                 ),'text/html');
 
-            $this->get('mailer')->send($message);
+            $mailer->send($message);
 
             $this->addFlash(
                 'success',
@@ -91,7 +90,7 @@ class SiteController extends Controller
      *     }
      * )
      */
-    public function sitemapAction(Request $request)
+    public function sitemapAction(Request $request, EntityManagerInterface $em)
     {
         // @todo if route list grows, get collection & filter
         $routesToExport = ['homepage', 'faq', 'contact'];
@@ -109,7 +108,6 @@ class SiteController extends Controller
         }
 
         // radio/schedule page
-        $em = $this->get('doctrine')->getManager();
         $radios = $em->getRepository('AppBundle:Radio')->getAllCodename();
 
         foreach ($radios as $radio) {
