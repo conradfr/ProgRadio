@@ -11,12 +11,12 @@ defmodule Importer.ImageImporter do
   # ----- Client Interface -----
 
   def start_link(_arg) do
-    Logger.info "Starting the image importer ..."
+    Logger.info("Starting the image importer ...")
     GenServer.start_link(__MODULE__, :ok, name: @name)
   end
 
   def import(url, radio) do
-    GenServer.call @name, {:import, url, radio}
+    GenServer.call(@name, {:import, url, radio})
   end
 
   # ----- Server callbacks -----
@@ -31,17 +31,19 @@ defmodule Importer.ImageImporter do
 
     unless Importer.ImageCache.is_cached(full_path) do
       try do
-        case full_url(url) |> HTTPoison.get([], [follow_redirect: true]) do
+        case full_url(url) |> HTTPoison.get([], follow_redirect: true) do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
             case File.write(full_path, body) do
               :ok -> {:reply, filename, nil}
               _ -> {:reply, nil, nil}
             end
-          _ -> {:reply, nil, nil}
+
+          _ ->
+            {:reply, nil, nil}
         end
       rescue
         _ ->
-          Logger.warn "Error importing image #{url}"
+          Logger.warn("Error importing image #{url}")
           {:reply, nil, nil}
       catch
         _ -> {:reply, nil, nil}
@@ -52,7 +54,7 @@ defmodule Importer.ImageImporter do
   end
 
   defp full_url(url) do
-    if (String.slice(url, 0, 4) != "http") do
+    if String.slice(url, 0, 4) != "http" do
       "http:" <> url
     else
       url
@@ -60,13 +62,15 @@ defmodule Importer.ImageImporter do
   end
 
   defp get_name(url, radio) do
-    name = URI.parse(url)
-           |> Map.fetch!(:path)
-           |> URI.decode
-           |> Path.basename
+    name =
+      URI.parse(url)
+      |> Map.fetch!(:path)
+      |> URI.decode()
+      |> Path.basename()
 
-    hash = :erlang.md5(url)
-           |> Base.encode16()
+    hash =
+      :erlang.md5(url)
+      |> Base.encode16()
 
     "#{radio.code_name}_#{hash}_#{name}"
   end

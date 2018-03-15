@@ -8,8 +8,7 @@ defmodule Importer do
   """
 
   def start(_type, _args) do
-    Logger.info "Starting Importer ..."
+    Logger.info("Starting Importer ...")
     Importer.Supervisor.start_link()
   end
-
 end

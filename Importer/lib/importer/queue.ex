@@ -6,25 +6,27 @@ defmodule Importer.Queue do
   @name :queue_server
 
   @queue_list "schedule_input:queue"
-  @queue_processing  "schedule_input:processing"
-  @queue_cleaning_interval 30 * 60 * 1000 # in ms
-  @queue_polling_interval 5000 # in ms
+  @queue_processing "schedule_input:processing"
+  # in ms
+  @queue_cleaning_interval 30 * 60 * 1000
+  # in ms
+  @queue_polling_interval 5000
 
   # ----- Client Interface -----
 
   def start_link(_arg) do
-    Logger.info "Starting the queue ..."
+    Logger.info("Starting the queue ...")
     GenServer.start_link(__MODULE__, :ok, name: @name)
   end
 
   def key_processed(key, date, radio) do
-    GenServer.cast @name, {:key_processed, key, date, radio}
+    GenServer.cast(@name, {:key_processed, key, date, radio})
   end
 
   # ----- Server callbacks -----
 
   def init(:ok) do
-    Logger.info "Cleaning processing queue (init)"
+    Logger.info("Cleaning processing queue (init)")
     clean()
     query_queue()
     schedule_clean()
@@ -39,7 +41,7 @@ defmodule Importer.Queue do
   end
 
   def handle_info(:clean, _state) do
-    Logger.info "Cleaning processing queue"
+    Logger.info("Cleaning processing queue")
     clean()
     schedule_clean()
     {:noreply, nil}
@@ -50,7 +52,7 @@ defmodule Importer.Queue do
 
     case Redix.command(:redix, ["LREM", @queue_processing, 1, key]) do
       {:ok, _} -> Redix.command(:redix, ["DEL", key])
-      {:error, reason} -> Logger.warn "#{inspect(reason)}"
+      {:error, reason} -> Logger.warn("#{inspect(reason)}")
       _ -> nil
     end
 
@@ -66,12 +68,15 @@ defmodule Importer.Queue do
   def query_queue() do
     case Redix.command(:redix, ["RPOPLPUSH", @queue_list, @queue_processing]) do
       {:ok, key} when is_binary(key) ->
-        Logger.info key
+        Logger.info(key)
         Importer.ProcessorMonitor.process_entry(key)
         query_queue()
 
-      {:error, reason} -> Logger.warn "#{inspect(reason)}"
-      _ -> nil
+      {:error, reason} ->
+        Logger.warn("#{inspect(reason)}")
+
+      _ ->
+        nil
     end
 
     {:ok, nil}
@@ -86,11 +91,10 @@ defmodule Importer.Queue do
   defp clean do
     case Redix.command(:redix, ["RPOPLPUSH", @queue_processing, @queue_list]) do
       {:ok, key} when is_binary(key) -> clean()
-      {:error, reason} -> Logger.warn "#{inspect(reason)}"
+      {:error, reason} -> Logger.warn("#{inspect(reason)}")
       _ -> nil
     end
 
     {:ok, nil}
   end
-
 end

@@ -1,8 +1,8 @@
 defmodule Importer.ImageCache do
-
   require Application
 
-  @ttl 604800 # 7 days
+  # 7 days
+  @ttl 604_800
 
   @thumbnails [
     "cache/page_thumb/media/program/",
@@ -18,14 +18,20 @@ defmodule Importer.ImageCache do
               true ->
                 delete_cached_files(filepath)
                 false
+
               false ->
                 true
 
-          _ -> false
+              _ ->
+                false
+            end
+
+          false ->
+            false
         end
-        false -> false
-      end
-    false -> false
+
+      false ->
+        false
     end
   end
 
@@ -35,6 +41,7 @@ defmodule Importer.ImageCache do
 
     # thumbnails
     filename = Path.basename(filepath)
+
     for path <- @thumbnails do
       File.rm(Application.get_env(:importer, :image_path) <> path <> filename)
     end
@@ -43,7 +50,6 @@ defmodule Importer.ImageCache do
   end
 
   defp is_ttl_over(datetime) do
-    (DateTime.to_unix(DateTime.utc_now) - @ttl) > datetime
+    DateTime.to_unix(DateTime.utc_now()) - @ttl > datetime
   end
-
 end

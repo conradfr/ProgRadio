@@ -12,12 +12,12 @@ defmodule Importer.ScheduleCache do
   # ----- Client Interface -----
 
   def start_link(_arg) do
-    Logger.info "Starting the schedule cache ..."
+    Logger.info("Starting the schedule cache ...")
     GenServer.start_link(__MODULE__, :ok, name: @name)
   end
 
   def remove(date, radio) do
-    GenServer.cast @name, {:remove, date, radio}
+    GenServer.cast(@name, {:remove, date, radio})
   end
 
   # ----- Server callbacks -----
@@ -32,7 +32,7 @@ defmodule Importer.ScheduleCache do
 
   def handle_cast({:remove, date, radio}, _state) do
     case Redix.command(:redix, ["HDEL", get_key(date), [radio]]) do
-      {:error, reason} -> Logger.warn "#{inspect(reason)}"
+      {:error, reason} -> Logger.warn("#{inspect(reason)}")
       _ -> :ok
     end
 
