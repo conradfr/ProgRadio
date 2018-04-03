@@ -47,13 +47,13 @@ defmodule Importer.Queue do
     {:noreply, nil}
   end
 
+  @spec handle_cast(tuple, any) :: no_return
   def handle_cast({:key_processed, key, date, radio}, _state) do
     Importer.ScheduleCache.remove(date, radio)
 
     case Redix.command(:redix, ["LREM", @queue_processing, 1, key]) do
       {:ok, _} -> Redix.command(:redix, ["DEL", key])
       {:error, reason} -> Logger.warn("#{inspect(reason)}")
-      _ -> nil
     end
 
     {:noreply, nil}

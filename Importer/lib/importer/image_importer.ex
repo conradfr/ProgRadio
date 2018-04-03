@@ -15,6 +15,7 @@ defmodule Importer.ImageImporter do
     GenServer.start_link(__MODULE__, :ok, name: @name)
   end
 
+  @spec import(binary, any) :: tuple
   def import(url, radio) do
     GenServer.call(@name, {:import, url, radio})
   end
@@ -53,6 +54,7 @@ defmodule Importer.ImageImporter do
     end
   end
 
+  @spec full_url(binary) :: binary
   defp full_url(url) do
     if String.slice(url, 0, 4) != "http" do
       "http:" <> url
@@ -61,6 +63,7 @@ defmodule Importer.ImageImporter do
     end
   end
 
+  @spec get_name(binary, any) :: binary
   defp get_name(url, radio) do
     name =
       URI.parse(url)

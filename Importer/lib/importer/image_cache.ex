@@ -9,6 +9,7 @@ defmodule Importer.ImageCache do
     "cache/program_thumb/media/program/"
   ]
 
+  @spec is_cached(binary) :: boolean
   def is_cached(filepath) do
     case File.exists?(filepath) do
       true ->
@@ -22,11 +23,9 @@ defmodule Importer.ImageCache do
               false ->
                 true
 
-              _ ->
-                false
             end
 
-          false ->
+          _ ->
             false
         end
 
@@ -35,6 +34,7 @@ defmodule Importer.ImageCache do
     end
   end
 
+  @spec delete_cached_files(binary) :: atom
   defp delete_cached_files(filepath) do
     # original image
     File.rm(filepath)

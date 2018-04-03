@@ -28,9 +28,10 @@ defmodule Importer.Mixfile do
       {:poison, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 2.2"},
-      {:timex, "~> 3.1"},
+      {:timex, "~> 3.2"},
       {:httpoison, "~> 1.0.0"},
-      {:distillery, "~> 1.5", runtime: false}
+      {:distillery, "~> 1.5", runtime: false},
+       {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
     ]
   end
 end
