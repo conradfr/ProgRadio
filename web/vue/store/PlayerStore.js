@@ -2,7 +2,7 @@ import Vue from 'vue';
 const VueCookie = require('vue-cookie');
 Vue.use(VueCookie);
 
-import collection from 'lodash/collection';
+import find from 'lodash/find';
 
 import * as config from '../config/config.js';
 
@@ -63,7 +63,7 @@ const PlayerStore = {
         play: ({state, commit, rootState}, radio_id) => {
             commit('stop');
 
-            const radio = collection.find(rootState.schedule.radios, {'code_name': radio_id});
+            const radio = find(rootState.schedule.radios, {'code_name': radio_id});
             if (radio !== undefined) {
                 commit('switchRadio', radio);
                 // Otherwise will be ignored

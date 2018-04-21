@@ -9,6 +9,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Category
  *
  * @ORM\Entity
+ *
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
  */
 class Category
 {

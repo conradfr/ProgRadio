@@ -7572,8 +7572,9 @@ body .footer a:focus {
   font-size: 18px;
   cursor: pointer;
 }
-.timeline .timeline-control:hover {
-  opacity: 0.95;
+.timeline .timeline-control:hover,
+.timeline .timeline-control.filter-icon-active {
+  opacity: 0.97;
 }
 .timeline .timeline-control.timeline-control-left {
   left: 0;
@@ -7584,6 +7585,20 @@ body .footer a:focus {
   max-width: 71px;
   padding-right: 8px;
   margin-right: 6px;
+}
+.timeline .timeline-control.timeline-control-left .filter-icon {
+  font-size: 17px;
+  text-align: center;
+  float: left;
+  height: 40px;
+  width: 32px;
+  padding-top: 1px;
+  margin-left: 6px;
+}
+.timeline .timeline-control.timeline-control-left .filter-icon:hover,
+.timeline .timeline-control.timeline-control-left .filter-icon.filter-icon-active {
+  color: white;
+  background-color: #0a6ebd;
 }
 .timeline .timeline-control.timeline-control-right {
   right: 0;
@@ -7791,6 +7806,30 @@ body .footer a:focus {
 .navbar-player .player-name-help {
   font-size: 10px;
   line-height: 1.5em;
+}
+#category-filter {
+  z-index: 1250;
+  /* to get over radio list*/
+  opacity: 0.97;
+  position: fixed;
+  top: 91px;
+  left: 6px;
+  width: 135px;
+  background-color: #0a6ebd;
+}
+#category-filter .category-one {
+  padding: 4px 10px;
+  color: white;
+  cursor: pointer;
+}
+#category-filter .category-one.category-one-excluded {
+  opacity: 0.3;
+}
+#category-filter .category-one:hover {
+  background-color: #0960a5;
+}
+#category-filter .category-one span {
+  margin-right: 10px;
 }
 #faq .content h3 {
   margin-top: 10px;

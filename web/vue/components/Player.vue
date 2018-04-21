@@ -8,7 +8,7 @@
                 <span class="glyphicon" v-bind:class="{ 'glyphicon-volume-up': player.volume > 4, 'glyphicon-volume-down': player.volume <= 4 }" aria-hidden="true"></span>
             </div>
             <div class="player-playpause" v-bind:class="{ 'player-playpause-disabled': player.radio === null }" v-on:click="togglePlay">
-                <span class="glyphicon icon-round"  v-bind:class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }" aria-hidden="true"></span>
+                <span class="glyphicon icon-round" v-bind:class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }" aria-hidden="true"></span>
             </div>
             <div v-if="player.radio" class="player-name">{{ player.radio.name }}</div>
             <div v-if="!player.radio" class="player-name player-name-help">Cliquer sur un logo pour lancer la lecture</div>

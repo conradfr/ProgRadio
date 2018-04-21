@@ -1,7 +1,19 @@
+import Vue from "vue";
+
+const VueCookie = require('vue-cookie');
+Vue.use(VueCookie);
+
 import axios from 'axios';
 const moment = require('moment-timezone');
 
+import orderBy from 'lodash/fp/orderBy';
+import filter from 'lodash/fp/filter'
+import compose from 'lodash/fp/compose';
+import without from 'lodash/without';
+
 import * as config from '../config/config.js';
+
+const COOKIE_EXCLUDE = `${config.COOKIE_PREFIX}-exclude`;
 
 const enforceScrollIndex = (scrollIndex) => {
     if (scrollIndex < 0) { scrollIndex = 0; }
@@ -37,11 +49,17 @@ const initialScrollIndex = () => {
 
 const ScheduleStore = {
     state: {
-        radios: radios ,
+        radios: radios,
+        categories: categories,
         schedule: schedule,
         cursorTime: moment().tz(config.TIMEZONE),
         scrollIndex: initialScrollIndex(),
-        scrollClick: false
+        scrollClick: false,
+        categoriesExcluded: Vue.cookie.get(COOKIE_EXCLUDE) ? Vue.cookie.get(COOKIE_EXCLUDE).split('|') :  [],
+        categoryFilterFocus: {
+            icon: false,
+            list: false
+        }
     },
     getters: {
         cursorIndex: state => {
@@ -54,16 +72,13 @@ const ScheduleStore = {
         },
         // sort by share, desc
         radiosRanked: state => {
-            return  state.radios.sort(function(a, b) {
-                if (a.share < b.share) {
-                    return 1;
-                }
-                if (a.share > b.share) {
-                    return -1;
-                }
-                // must be equal
-                return 0;
-            });
+            return compose(
+                orderBy(['share'], ['desc']),
+                filter(function(entry) { return state.categoriesExcluded.indexOf(entry.category) === -1; })
+            )(state.radios);
+        },
+        displayCategoryFilter: state => {
+            return state.categoryFilterFocus.icon || state.categoryFilterFocus.list || false;
         }
     },
     mutations: {
@@ -79,6 +94,19 @@ const ScheduleStore = {
         },
         scrollClickSet: (state, value) => {
             state.scrollClick = value;
+        },
+        setCategoryFilterFocus(state, params) {
+            state.categoryFilterFocus[params.element] = params.status;
+        },
+        toggleExcludeCategory(state, category) {
+            if (state.categoriesExcluded.indexOf(category) === -1) {
+                state.categoriesExcluded.push(category);
+            }
+            else {
+                state.categoriesExcluded = without(state.categoriesExcluded, category);
+            }
+
+            Vue.cookie.set(COOKIE_EXCLUDE, state.categoriesExcluded.join('|') , {expires: config.COOKIE_TTL});
         },
         updateSchedule: (state, value) => {
             state.schedule = value;
@@ -99,6 +127,12 @@ const ScheduleStore = {
         },
         scrollClick: ({commit}, value) => {
             commit('scrollClickSet', value)
+        },
+        categoryFilterFocus: ({commit}, params) => {
+            commit('setCategoryFilterFocus', params);
+        },
+        toggleExcludeCategory: ({commit}, category) => {
+            commit('toggleExcludeCategory', category);
         },
         tick: ({commit}) => {
             const now = moment().tz(config.TIMEZONE);

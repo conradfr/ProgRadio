@@ -10,14 +10,13 @@ use Doctrine\ORM\EntityRepository;
 class RadioRepository extends EntityRepository
 {
     protected const CACHE_RADIO_TTL = 43200; // half-day
-    protected const CACHE_CATEGORY_TTL = 86400; // day
 
     /**
      * @return array
      */
     public function getRadio($codeName) {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, c.name as category
+            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, c.codeName as category
                 FROM AppBundle:Radio r
                   INNER JOIN r.category c
                 WHERE r.active = :active
@@ -40,7 +39,7 @@ class RadioRepository extends EntityRepository
      */
     public function getActiveRadios() {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, c.name as category
+            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, c.codeName as category
                 FROM AppBundle:Radio r
                   INNER JOIN r.category c
                 WHERE r.active = :active

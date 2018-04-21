@@ -25,12 +25,14 @@ class DefaultController extends Controller
     public function indexAction(Request $request, EntityManagerInterface $em, ScheduleManager $scheduleManager)
     {
         $radios = $em->getRepository('AppBundle:Radio')->getActiveRadios();
+        $categories = $em->getRepository('AppBundle:Category')->getCategories();
 
         $schedule = $scheduleManager->getDaySchedule(new \DateTime());
 
         return $this->render('default/index.html.twig', [
             'schedule' => $schedule,
-            'radios' => $radios
+            'radios' => $radios,
+            'categories' => $categories,
         ]);
     }
 
