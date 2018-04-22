@@ -29,11 +29,6 @@ Vue.use(VueTouch, {name: 'v-touch'});
 let initVolume = null;
 
 export default {
-    data: function () {
-        return {
-
-        }
-    },
     computed: {
         styleObject: function() {
 			// values are reversed as 0% = a volume of 10

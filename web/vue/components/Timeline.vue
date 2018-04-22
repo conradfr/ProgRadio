@@ -1,8 +1,8 @@
 <template>
     <div class="timeline" :style="styleObject">
         <div class="timeline-control timeline-control-left" v-on:click="clickBackward" v-bind:class="{ 'filter-icon-active': displayFilter }">
-            <div class="filter-icon" v-bind:class="{ 'filter-icon-active': displayFilter }" v-on:mouseover="filterFocus(true)"
-                 v-on:mouseleave="filterFocus(false)" v-on:click.stop="filterClick">
+            <div class="filter-icon" v-bind:class="{ 'filter-icon-active': displayFilter, 'filter-icon-enabled': (filterEnabled && !displayFilter) }"
+                 v-on:click.stop="filterClick" v-on:mouseover="filterFocus(true)" v-on:mouseleave="filterFocus(false)">
                 <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
             </div>
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
     filters: {
@@ -23,10 +23,20 @@ export default {
             return `${("0" + (value - 1)).slice(-2)}h00`
         }
     },
-    computed: mapGetters({
-        styleObject: 'gridIndex',
-        displayFilter: 'displayCategoryFilter'
-    }),
+    data: function () {
+        return {
+            debounce: false
+        }
+    },
+    computed: {
+        ...mapState({
+            'filterEnabled': state => state.schedule.categoriesExcluded.length > 0
+        }),
+        ...mapGetters({
+            styleObject: 'gridIndex',
+            displayFilter: 'displayCategoryFilter'
+        })
+    },
     methods: {
         clickBackward: function () {
             this.$store.dispatch('scrollBackward');
@@ -35,11 +45,20 @@ export default {
             this.$store.dispatch('scrollForward');
         },
         filterFocus: function (status) {
+            if (status === true) {
+                this.debounce = true;
+                setTimeout(
+                    _ => this.debounce = false,
+                    500
+                );
+            }
+
             this.$store.dispatch('categoryFilterFocus', {element:'icon', status: status});
         },
-        // for mobiles users
         filterClick: function () {
-            this.$store.dispatch('categoryFilterFocus', {element:'icon', status: !this.displayFilter});
+            if (this.debounce === false) {
+                this.$store.dispatch('categoryFilterFocus', {element: 'icon', status: !this.displayFilter});
+            }
         }
     }
 }

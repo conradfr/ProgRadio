@@ -7600,6 +7600,9 @@ body .footer a:focus {
   color: white;
   background-color: #0a6ebd;
 }
+.timeline .timeline-control.timeline-control-left .filter-icon.filter-icon-enabled {
+  color: #0a6ebd;
+}
 .timeline .timeline-control.timeline-control-right {
   right: 0;
   text-align: center;
