@@ -30,8 +30,9 @@ defmodule Importer.Mixfile do
       {:ecto, "~> 2.2"},
       {:timex, "~> 3.2"},
       {:httpoison, "~> 1.0.0"},
+      {:gen_stage, "~> 0.13"},
       {:distillery, "~> 1.5", runtime: false},
-       {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
     ]
   end
 end

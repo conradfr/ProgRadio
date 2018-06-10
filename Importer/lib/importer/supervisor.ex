@@ -11,18 +11,20 @@ defmodule Importer.Supervisor do
   end
 
   def init(:ok) do
+#    children = [
+#      {Redix, [Application.get_env(:importer, :redis), [name: :redix]]},
+#      Importer.Repo,
+#      {Task.Supervisor, name: Importer.TaskSupervisor},
+#      Importer.ImageImporter,
+#      Importer.ScheduleCache,
+#      Importer.ProcessorMonitor,
+#      Importer.Queue
+#    ]
+
     children = [
-      #      %{
-      #        id: Redix,
-      #        start: {Redix, :start_link, [[Application.get_env(:importer, :redis)], [name: :redix]]}
-      #      },
       {Redix, [Application.get_env(:importer, :redis), [name: :redix]]},
-      Importer.Repo,
-      {Task.Supervisor, name: Importer.TaskSupervisor},
-      Importer.ImageImporter,
-      Importer.ScheduleCache,
-      Importer.ProcessorMonitor,
-      Importer.Queue
+      worker(Importer.QueueProducer, [0]),
+      worker(Importer.QueueConsumer, [])
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
