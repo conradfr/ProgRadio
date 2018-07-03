@@ -23,12 +23,21 @@ export default {
     },
     methods: {
         hoverOn: function (event) {
-            // @todo improve
+            // @todo improve / refactor
+
+            function popoverTitle(title, startAt) {
+                const format = 'HH[h]mm';
+                const start = moment(startAt).format(format);
+
+                return `${title} - ${start}`;
+            }
+
             function popoverContent(presenter, description) {
                 let content = '';
                 if (presenter !== undefined && presenter !== null) {
                     content += `<p class="section-presenter">${presenter}</p>`;
                 }
+
                 if (description !== undefined && description !== null) {
                     content += `<p class="section-description">${description}</p>`;
                 }
@@ -37,7 +46,7 @@ export default {
 
             $(`#${this.section.hash}`).popover({
                 content: popoverContent(this.section.presenter, this.section.description),
-                title: this.section.title,
+                title: popoverTitle(this.section.title, this.section.start_at),
                 container: 'body',
                 html: true
             }).popover('show');

@@ -7835,6 +7835,9 @@ body .footer a:focus {
   margin-right: 10px;
 }
 /* section popover */
+.popover .section-time {
+  padding-left: 10px;
+}
 .popover .popover-content {
   padding-top: 5px;
   padding-bottom: 5px;
