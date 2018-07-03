@@ -6,7 +6,7 @@
             </div>
         </div>
         <template v-if="hasSchedule">
-            <schedule-radio-program v-for="(entry, key) in schedule" :key="entry.hash" :program="entry"></schedule-radio-program>
+            <schedule-radio-program v-for="(entry, key) in schedule" :key="key" :program="entry"></schedule-radio-program>
         </template>
     </div>
 </template>
@@ -27,7 +27,7 @@ export default {
             return state.schedule.schedule[this.radio];
         },
         hasSchedule(state) {
-            return (state.schedule.schedule[this.radio] && state.schedule.schedule[this.radio].length > 0) || false;
+            return (state.schedule.schedule[this.radio] && Object.keys(state.schedule.schedule[this.radio]).length > 0) || false;
         }
     })
 }

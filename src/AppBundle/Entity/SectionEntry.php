@@ -2,18 +2,16 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Index;
 use Symfony\Component\Serializer\Annotation\Groups;
+use AppBundle\Entity\ScheduleEntry;
 
 /**
- * Schedule entry
+ * Section entry
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ScheduleEntryRepository")
- * @ORM\Table(indexes={@ORM\Index(name="starttime_idx", columns={"date_time_start"})})
  */
-class ScheduleEntry
+class SectionEntry
 {
     /**
      * @var integer
@@ -25,15 +23,12 @@ class ScheduleEntry
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Radio")
-     * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
+     * @var ScheduleEntry
+     *
+     * @ORM\ManyToOne(targetEntity="ScheduleEntry", inversedBy="sectionEntries")
+     * @ORM\JoinColumn(name="schedule_entry_id", referencedColumnName="id")
      */
-    private $radio;
-
-    /**
-     * @ORM\OneToMany(targetEntity="SectionEntry", mappedBy="scheduleEntry")
-     */
-    private $sectionEntries;
+    private $scheduleEntry;
 
     /**
      * @var \DateTime
@@ -42,21 +37,6 @@ class ScheduleEntry
      * @Groups({"export"})
      */
     private $dateTimeStart;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     * @Groups({"export"})
-     */
-    private $dateTimeEnd;
-
-    /**
-     * @var integer
-     *
-     * @Groups({"export"})
-     */
-    private $duration;
 
     /**
      * @var string
@@ -72,7 +52,7 @@ class ScheduleEntry
      * @ORM\Column(type="string", length=100, nullable=true)
      * @Groups({"export"})
      */
-    private $host;
+    private $presenter;
 
     /**
      * @var string
@@ -90,10 +70,6 @@ class ScheduleEntry
      */
     private $pictureUrl;
 
-    public function __construct() {
-        $this->sectionEntries = new ArrayCollection();
-    }
-
     /**
      * @return int
      */
@@ -104,7 +80,7 @@ class ScheduleEntry
 
     /**
      * @param int $id
-     * @return ScheduleEntry
+     * @return SectionEntry
      */
     public function setId($id)
     {
@@ -114,20 +90,20 @@ class ScheduleEntry
     }
 
     /**
-     * @return mixed
+     * @return ScheduleEntry
      */
-    public function getRadio()
+    public function getScheduleEntry()
     {
-        return $this->radio;
+        return $this->scheduleEntry;
     }
 
     /**
-     * @param mixed $radio
-     * @return ScheduleEntry
+     * @param ScheduleEntry $scheduleEntry
+     * @return SectionEntry
      */
-    public function setRadio($radio)
+    public function setScheduleEntry($scheduleEntry)
     {
-        $this->radio = $radio;
+        $this->scheduleEntry = $scheduleEntry;
 
         return $this;
     }
@@ -142,49 +118,11 @@ class ScheduleEntry
 
     /**
      * @param \DateTime $ateTimeStart
-     * @return ScheduleEntry
+     * @return SectionEntry
      */
     public function setDateTimeStart($dateTimeStart)
     {
         $this->dateTimeStart = $dateTimeStart;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateTimeEnd()
-    {
-        return $this->dateTimeEnd;
-    }
-
-    /**
-     * @param \DateTime $dateTimeEnd
-     * @return ScheduleEntry
-     */
-    public function setDateTimeEnd($dateTimeEnd)
-    {
-        $this->dateTimeEnd = $dateTimeEnd;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    /**
-     * @param int $duration
-     * @return ScheduleEntry
-     */
-    public function setDuration($duration)
-    {
-        $this->duration = $duration;
 
         return $this;
     }
@@ -199,7 +137,7 @@ class ScheduleEntry
 
     /**
      * @param string $title
-     * @return ScheduleEntry
+     * @return SectionEntry
      */
     public function setTitle($title)
     {
@@ -211,18 +149,18 @@ class ScheduleEntry
     /**
      * @return string
      */
-    public function getHost()
+    public function getPresenter(): string
     {
-        return $this->host;
+        return $this->presenter;
     }
 
     /**
-     * @param string $host
-     * @return ScheduleEntry
+     * @param string $presenter
+     * @return SectionEntry
      */
-    public function setHost($host)
+    public function setPresenter(string $presenter): SectionEntry
     {
-        $this->host = $host;
+        $this->presenter = $presenter;
 
         return $this;
     }
@@ -237,7 +175,7 @@ class ScheduleEntry
 
     /**
      * @param string $description
-     * @return ScheduleEntry
+     * @return SectionEntry
      */
     public function setDescription($description)
     {
@@ -256,30 +194,11 @@ class ScheduleEntry
 
     /**
      * @param string $pictureUrl
-     * @return ScheduleEntry
+     * @return SectionEntry
      */
     public function setPictureUrl($pictureUrl)
     {
         $this->pictureUrl = $pictureUrl;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSectionEntries()
-    {
-        return $this->sectionEntries;
-    }
-
-    /**
-     * @param mixed $sectionEntries
-     * @return ScheduleEntry
-     */
-    public function setSectionEntries($sectionEntries)
-    {
-        $this->sectionEntries = $sectionEntries;
 
         return $this;
     }

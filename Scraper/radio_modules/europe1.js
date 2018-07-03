@@ -11,7 +11,7 @@ const format = dateObj => {
             return prev;
         }
 
-        const startDateTime = moment(dateObj);
+        let startDateTime = moment(dateObj);
         const endDateTime = moment(dateObj);
 
         let regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2}) - ([0-9]{1,2})[h|H]([0-9]{2})/);
@@ -35,8 +35,33 @@ const format = dateObj => {
         entry.schedule_end = endDateTime.toISOString();
         entry.timezone = 'Europe/Paris';
 
-        const host = entry.host.split('\n')[0];
-        entry.host = host;
+        entry.host = entry.host.split('\n')[0];
+        entry.sections = [];
+
+        if (typeof entry.sub === 'object' && typeof entry.sub.length === 'number') {
+              entry.sub.forEach(function(element) {
+                regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{1,2})\s:\s(.*)/);
+                let match = element.title.match(regexp);
+
+                if (match !== null) {
+                    startDateTime = moment(dateObj);
+                    startDateTime.hour(match[1]);
+                    startDateTime.minute(match[2]);
+                    startDateTime.second(0);
+
+                    let title = match[3];
+
+                    entry.sections.push({
+                        'title': title,
+                        'datetime_start': startDateTime.toISOString(),
+                        'presenter': element.presenter,
+                        'img': element.img
+                    })
+                }
+            });
+        }
+
+        delete entry.sub;
 
         prev.push(entry);
         return prev;
@@ -47,7 +72,6 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     const url = 'http://www.europe1.fr/grille-des-programmes';
-    // const url = 'http://progradio.local/europe1.html';
 
     dateObj.locale('fr');
     const tab = dateObj.format('dddd').toLowerCase();
@@ -66,7 +90,18 @@ const fetch = dateObj => {
                 'title': '.bloc .bloc_texte .titre > span > a',
                 'datetime_raw': '.bloc .bloc_texte span.heure'
             })
-            // .select('.bloc_programmes > li[1]')
+            // can't seem to make description + sections work in the same call :/
+            .do(
+                osmosis.follow('.bloc .bloc_texte .titre > span > a@href')
+                .find('.block_generique > .footer-article > div[itemprop=author] > div')
+                .set({
+                    'sub': {
+                        'title': '.titre',
+                        'presenter': '.description',
+                        'img': 'img.img-circle@src'
+                    }
+                })
+            )
             .do(
                 osmosis.follow('.bloc .bloc_texte .titre > span > a@href')
                     .find('div[itemprop=articleBody]')

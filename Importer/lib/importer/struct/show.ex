@@ -7,6 +7,7 @@ defmodule Importer.Struct.Show do
     :title,
     :img,
     :host,
-    :description
+    :description,
+    :sections
   ]
 end

@@ -2,7 +2,7 @@ defmodule Importer.Processor do
   require Logger
   import Ecto.Query, only: [from: 2]
   alias Ecto.Multi
-  alias Importer.{Radio, ScheduleEntry}
+  alias Importer.{Radio, ScheduleEntry, SectionEntry}
   use Timex
 
   @date_format "{0D}-{0M}-{YYYY}"
@@ -15,14 +15,14 @@ defmodule Importer.Processor do
     :ok
   end
 
-  # If it was a stall entry in queue, do nothing and let it get being cleaned off
+  # If it was a stalled entry in queue, do nothing and let it get being cleaned off
   defp process_payload(payload_raw) when payload_raw === nil do
     {:ok, nil, nil}
   end
 
   defp process_payload(payload_raw) do
     payload =
-      Poison.decode!(payload_raw, as: %Importer.Struct.Payload{items: [%Importer.Struct.Show{}]})
+      Poison.decode!(payload_raw, as: %Importer.Struct.Payload{items: [%Importer.Struct.Show{sections: [%Importer.Struct.Section{}]}]})
 
     radio =
       Radio
@@ -35,18 +35,18 @@ defmodule Importer.Processor do
       |> Timex.to_date()
 
     shows =
-      Enum.map(payload.items, &cast_schedules/1)
+      Enum.map(payload.items, &cast_schedule/1)
       |> Enum.sort(fn item1, item2 ->
         :gt === DateTime.compare(item2.schedule_start, item1.schedule_start)
       end)
       |> build_schedule_end()
-      |> Enum.map(&build(&1, radio))
+      |> Enum.map(&build_schedule(&1, radio))
 
     commit(shows, radio.id, date)
     {:ok, date, radio.code_name}
   end
 
-  defp cast_schedules(item) do
+  defp cast_schedule(item) do
     {:ok, schedule_start, _} = DateTime.from_iso8601(item.schedule_start)
     updated = %{item | schedule_start: schedule_start}
 
@@ -58,6 +58,11 @@ defmodule Importer.Processor do
         {:ok, schedule_end, _} = DateTime.from_iso8601(item.schedule_end)
         %{updated | schedule_end: schedule_end}
     end
+  end
+
+  defp cast_section(item) do
+    {:ok, section_start, _} = DateTime.from_iso8601(item.datetime_start)
+    %{item | datetime_start: section_start}
   end
 
   # Filling schedule_end
@@ -102,7 +107,7 @@ defmodule Importer.Processor do
     build_schedule_end(tail, acc)
   end
 
-  defp build(item, radio) do
+  defp build_schedule(item, radio) do
     schedule = %ScheduleEntry{
       date_time_start: item.schedule_start,
       date_time_end: item.schedule_end,
@@ -110,6 +115,18 @@ defmodule Importer.Processor do
       host: item.host,
       description: item.description
     }
+
+    schedule =
+      with sections when not(sections === nil) <- Map.get(item, :sections) do
+          Enum.map(item.sections, &cast_section/1)
+          |> Enum.sort(fn item1, item2 ->
+            :gt === DateTime.compare(item2.datetime_start, item1.datetime_start)
+          end)
+          |> Enum.map(&build_section(&1, schedule, radio))
+          |> (&Map.put(schedule, :section_entries, &1)).()
+      else
+        _ -> schedule
+      end
 
     # Image import
     schedule =
@@ -122,6 +139,7 @@ defmodule Importer.Processor do
             _ -> schedule
           catch
             _ -> schedule
+            :exit, _ -> schedule
           end
 
         _ ->
@@ -131,10 +149,40 @@ defmodule Importer.Processor do
     Ecto.build_assoc(radio, :schedule_entry, schedule)
   end
 
+  defp build_section(item, schedule, radio) do
+    section = %SectionEntry{
+      date_time_start: item.datetime_start,
+      title: item.title,
+      presenter: item.presenter,
+      description: item.description,
+    }
+
+    # Image import
+    section =
+      case item.img do
+        url when is_binary(url) ->
+          try do
+            Importer.ImageImporter.import(item.img, radio)
+            |> (&Map.put(section, :picture_url, &1)).()
+          rescue
+            _ -> section
+          catch
+            _ -> section
+            :exit, _ -> section
+          end
+
+        _ ->
+          section
+      end
+
+    Ecto.build_assoc(schedule, :section_entries, section)
+  end
+
   # Database
 
   defp commit(shows, radio_id, date) do
     # will need to be improved if the app spans multiple countries/timezone in the future
+    # delete all shows of sae radio/day, associated sections deletion is automatically cascaded by the db
     q =
       from(
         se in "schedule_entry",

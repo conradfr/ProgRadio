@@ -1,12 +1,14 @@
 @import "../variables";
 
+@program-height: 60px;
+
 .schedule-radio-grid {
   .schedule-radio-grid-row {
     .program-container {
       position: absolute;
 
       margin-top: 1px;
-      height: 60px;
+      height: @program-height;
       box-sizing: border-box;
 
       user-select: none;
@@ -192,10 +194,24 @@
             }
           }
 
+          .program-section {
+            position: absolute;
+            top: calc(@program-height - 3px);
+
+            height: 5px;
+            width: 5px;
+            background-color: darken(@background-color, 20%);
+            border-radius: 50%;
+            display: inline-block;
+
+            cursor: pointer;
+
+            &:hover {
+             background-color: lighten(@brand-primary, 10%);
+            }
+          }
         }
       }
     }
   }
 }
-
-

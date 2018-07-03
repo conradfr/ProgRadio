@@ -8,6 +8,7 @@ defmodule Importer.ScheduleEntry do
     field(:host, :string)
     field(:description, :string)
     field(:picture_url, :string)
+    has_many :section_entries, Importer.SectionEntry
     belongs_to(:radio, Importer.Radio)
   end
 end
