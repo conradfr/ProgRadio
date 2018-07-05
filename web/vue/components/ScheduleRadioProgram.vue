@@ -8,7 +8,7 @@
             </div>
         </div>-->
 
-        <div class="program" v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }" av-on:mouseover.once="hover = !hover">
+        <div class="program" v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }" v-on:mouseover.once="hover = !hover">
             <div class="program-inner">
                 <div class="program-img" v-if="program.picture_url && (hover || isCurrent)">
                     <img v-bind:src="program.picture_url | picture" alt="">
