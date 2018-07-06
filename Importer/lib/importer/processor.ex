@@ -182,7 +182,7 @@ defmodule Importer.Processor do
 
   defp commit(shows, radio_id, date) do
     # will need to be improved if the app spans multiple countries/timezone in the future
-    # delete all shows of sae radio/day, associated sections deletion is automatically cascaded by the db
+    # delete all shows of a radio/day, associated sections deletion is automatically cascaded by the db
     q =
       from(
         se in "schedule_entry",
