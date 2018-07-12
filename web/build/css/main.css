@@ -6118,8 +6118,8 @@ button.close {
   margin: 0;
   padding: 8px 14px;
   font-size: 13px;
-  background-color: #f7f7f7;
-  border-bottom: 1px solid #ebebeb;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #e6e6e6;
   border-radius: 2px 2px 0 0;
 }
 .popover-content {
@@ -7834,6 +7834,21 @@ body .footer a:focus {
 #category-filter .category-one span {
   margin-right: 10px;
 }
+/* section popover */
+.popover .section-time {
+  padding-left: 10px;
+}
+.popover .popover-content {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 12px;
+}
+.popover .popover-content p {
+  margin: 0;
+}
+.popover .popover-content p.section-presenter {
+  font-style: italic;
+}
 #faq .content h3 {
   margin-top: 10px;
   margin-bottom: 17px;
@@ -7868,6 +7883,18 @@ body .footer a:focus {
 #schedule-day .schedule-day-shows .media-body p {
   margin: 3px 0 0;
   line-height: 1.5;
+}
+#schedule-day .schedule-day-shows .sections {
+  margin-top: 25px;
+  margin-left: 40px;
+  font-size: 12px;
+}
+#schedule-day .schedule-day-shows .sections h6 {
+  font-size: 13px;
+}
+#schedule-day .schedule-day-shows .sections .media {
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 .schedule-container .schedule-radio-list {
   position: absolute;
@@ -8084,4 +8111,17 @@ body .footer a:focus {
   left: 0;
   top: 0;
   background: linear-gradient(to right, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.88) 95%, #ffffff 99%);
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-section {
+  position: absolute;
+  top: calc(57px);
+  height: 5px;
+  width: 5px;
+  background-color: #c0c0c0;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+}
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-section:hover {
+  background-color: #51adf6;
 }

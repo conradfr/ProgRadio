@@ -65,8 +65,8 @@ namespace :deploy do
 
   before "deploy:updated", "myproject:migrations"
 
-  before "deploy:updated", "myproject:importerdeps"
-  before "deploy:updated", "myproject:importerbuild"
+  # before "deploy:updated", "myproject:importerdeps"
+  # before "deploy:updated", "myproject:importerbuild"
 
   # before "deploy:starting", 'progradio_importer_ex:stop'
   # after "deploy:publishing", 'progradio_importer_ex:start'

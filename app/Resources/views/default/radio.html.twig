@@ -32,6 +32,27 @@
                         <p class="show-description">{{ show.description | nl2br  }}</p>
                     {% endif %}
                 </div>
+
+                {% if show.sections is defined %}
+                    <div class="sections">
+                    {% for section in show.sections %}
+                        <div class="media">
+                            {% if section.picture_url %}
+                                <div class="media-left">
+                                    <img alt="" class="media-object" style="width: 48px"
+                                         src="{{ asset('media/cache/page_thumb/media/program/' ~ section.picture_url) }}">
+                                </div>
+                            {% endif %}
+                            <div class="media-body">
+                                <h6 class="media-heading show-title">{{ section.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ show.title }}</h6>
+                                {% if section.presenter %}
+                                    <div class="show-host">{{ section.presenter }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
             </div>
             {% endfor %}
             </div>

@@ -53,7 +53,7 @@ class ScheduleManager
             $this->getScheduleAndPutInCache($dateTime, [$radioCodeName]);
         }
 
-        return json_decode($this->cache->getScheduleForDayAndRadio($dateTime, $radioCodeName));
+        return json_decode($this->cache->getScheduleForDayAndRadio($dateTime, $radioCodeName), true);
     }
 
     /**

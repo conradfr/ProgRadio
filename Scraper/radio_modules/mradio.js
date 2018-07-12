@@ -22,7 +22,6 @@ const format = dateObj => {
 
         let matched = false;
         let match_time = null;
-        let startDateTime = null;
 
         let regexp = new RegExp(/^Du\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\sau\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
         let match = entry.datetime_raw.match(regexp);
@@ -32,7 +31,17 @@ const format = dateObj => {
                 matched = true;
             }
         }
-        else {
+
+        if (matched === false) {
+            regexp = new RegExp(/^Toute la semaine/);
+            match = entry.datetime_raw.match(regexp);
+
+            if (match !== null) {
+                matched = true;
+            }
+        }
+
+        if (matched === false) {
             regexp = new RegExp(/^Le week-end/);
             match = entry.datetime_raw.match(regexp);
 
@@ -56,7 +65,7 @@ const format = dateObj => {
             return prev;
         }
 
-        startDateTime = moment(entry.dateObj);
+        let startDateTime = moment(entry.dateObj);
         startDateTime.hour(match_time[1]);
         startDateTime.minute(match_time[2]);
         startDateTime.second(0);
@@ -67,7 +76,7 @@ const format = dateObj => {
         endDateTime.second(0);
 
         // midnight etc
-        if (startDateTime.hour() > endDateTime.hour()) {
+        if (startDateTime.hour() > endDateTime.hour() || (endDateTime.hour() === 0 && endDateTime.minute() === 0)) {
             endDateTime.add(1, 'days');
         }
 

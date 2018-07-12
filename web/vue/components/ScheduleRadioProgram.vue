@@ -16,6 +16,8 @@
                 <div class="program-title"><span class="schedule-display">{{ scheduleDisplay }}</span>{{ program.title }}</div>
                 <div class="program-host">{{ program.host }}</div>
                 <div class="program-description-short" v-bind:class="{ 'program-description-nohost': !program.host }"><div class="program-description-short-inner">{{ program.description | shorten(program.duration) }}</div></div>
+                <schedule-radio-section v-if="program.sections" v-for="(entry, key) in program.sections" :key="entry.hash"
+                    :program_start="program.start_at" :section="entry"></schedule-radio-section>
             </div>
         </div>
     </div>
@@ -24,10 +26,13 @@
 <script>
 const moment = require('moment');
 
+import ScheduleRadioSection from './ScheduleRadioSection.vue'
+
 import { mapState } from 'vuex'
 import { MINUTE_PIXEL, THUMBNAIL_PATH, PROGRAM_LONGENOUGH } from '../config/config.js';
 
 export default {
+    components: { ScheduleRadioSection },
     props: ['program'],
     data: function () {
         // Style
@@ -36,7 +41,7 @@ export default {
         const left = moment(this.program.start_at).diff(startDay, 'minutes') * MINUTE_PIXEL;
 
         return {
-            hover:false,
+            hover: false,
             displayDetail: false,
             divData: null,
             styleObject: {
@@ -51,7 +56,7 @@ export default {
         ...mapState({
             cursorTime: state => state.schedule.cursorTime
         }),
-        styleObjectDetail: function() {
+/*        styleObjectDetail: function() {
             if (this.displayDetail === false) { return {}; }
 
             const width = `${this.program.duration * MINUTE_PIXEL}px`;
@@ -63,7 +68,7 @@ export default {
                 width: width,
                 height: '150px'
             };
-        },
+        },*/
         scheduleDisplay: function() {
             const format = 'HH[h]mm';
             const start = moment(this.program.start_at).format(format);

@@ -46,12 +46,31 @@ const format = dateObj => {
             startDateTime.add(1, 'days');
         }
 
+        // subs
+        const sections = [];
+        regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s:\s([A-Za-zÀ-ÿ\s’'&]*)*/, 'gm');
+
+        while ((match = regexp.exec(curr.description)) !== null) {
+            sectionStartDateTime = moment(dateObj);
+            sectionStartDateTime.hour(match[1]);
+            sectionStartDateTime.minute(match[2]);
+            sectionStartDateTime.second(0);
+
+            let title = match[3];
+
+            sections.push({
+                'title': title,
+                'datetime_start': sectionStartDateTime.toISOString(),
+            });
+         }
+
         newEntry = {
             'schedule_start': startDateTime.toISOString(),
             'timezone': 'Europe/Paris',
             'title': utils.upperCaseWords(striptags(curr.title)),
             'description': striptags(curr.description),
-            'img': curr.img
+            'img': curr.img,
+            'sections': sections
         };
 
         prev.push(newEntry);

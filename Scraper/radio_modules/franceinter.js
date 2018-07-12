@@ -7,8 +7,11 @@ let scrapedData = [];
 const format = dateObj => {
     const dayStr = dateObj.format('DD');
 
+    const mains = [];
+    const sections = [];
+
     // we use reduce instead of map to act as a map+filter in one pass
-    const cleanedData = scrapedData.reduce(function(prev, curr){
+    scrapedData.forEach(function(curr) {
         const date = moment.unix(parseInt(curr['datetime_raw']));
 
         // filter other days
@@ -27,30 +30,86 @@ const format = dateObj => {
                 delete curr.img_alt;
             }
 
-            curr.schedule_start = date.toISOString();
-            curr.timezone = 'Europe/Paris';
+            if (typeof curr.main !== 'undefined'){
+                curr.schedule_start = date.toISOString();
+                curr.timezone = 'Europe/Paris';
 
-            prev.push(curr);
+                delete curr.main;
+                curr.sections = [];
+                mains.push(curr);
+            } else {
+                curr.datetime_start = date.toISOString();
+                delete curr.schedule_start;
+
+                if (curr.host !== undefined && curr.host !== null) {
+                    curr.presenter = curr.host;
+                    delete curr.host;
+                }
+
+                sections.push(curr);
+            }
+        }
+    });
+
+    if (sections.length > 0) {
+        // sort mains
+        function compare(a,b) {
+            momentA = moment(a.schedule_start);
+            momentB = moment(b.schedule_start);
+
+            if (momentA.isBefore(momentB))
+                return -1;
+            if (momentA.isAfter(momentB))
+                return 1;
+            return 0;
         }
 
-        return prev;
-    },[]);
+        mains.sort(compare);
 
-    return Promise.resolve(cleanedData);
+        sections.forEach(function(entry) {
+            for (i=0;i<mains.length;i++){
+                entryMoment = moment(entry.datetime_start);
+                mainMoment = moment(mains[i].schedule_start);
+
+                let toAdd = false;
+                if (i === (mains.length - 1)) {
+                    if (entryMoment.isAfter(mainMoment)) {
+                        toAdd = true;
+                    }
+                }
+                else if (entryMoment.isBetween(mainMoment, moment(mains[i + 1].schedule_start))) {
+                    toAdd = true;
+                }
+
+                if (toAdd === true) {
+                    mains[i].sections.push(entry);
+                    break;
+                }
+            }
+        });
+    }
+
+    return Promise.resolve(mains);
 };
 
 const fetch = dayFormat => {
-    let url = `https://www.franceinter.fr/programmes/${dayFormat}`;
+    let url = `https://www.franceinter.fr/programmes${dayFormat}`;
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-            .find('.rich-section-list-gdp > article.rich-section-list-gdp-item')
+            .find('article.rich-section-list-gdp-item')
             .set({
                 'datetime_raw': '@data-start-time' /* utc */
             })
+            .do(
+                osmosis.select('.rich-section-list-gdp-item-podcast > .replay-links-podcasts')
+                    .set({
+                        'main': 'label@title'
+                    })
+            )
             .set({
                 'img': '.simple-visual > img@src',
                 'img_alt': '.simple-visual > img@data-dejavu-src',
@@ -60,10 +119,13 @@ const fetch = dayFormat => {
                 'title': 'a@title',
                 'description': 'a.rich-section-list-gdp-item-content-title@title',
             })
-            .select('.rich-section-list-gdp-item-content-infos-author')
-            .set({
-                'host': 'a@title',
-            })
+            .do (
+                osmosis.select('.rich-section-list-gdp-item-content-infos-author')
+                .set({
+                        'host': 'a@title',
+                    }
+                )
+            )
             .data(function (listing) {
                 scrapedData.push(listing);
             })
@@ -90,7 +152,7 @@ const fetchAll = dateObj =>  {
     const previousDay = moment(dateObj);
     previousDay.subtract(1, 'days');
 
-    return fetch(previousDay.format('YYYY-MM-DD'))
+    return fetch('/' + previousDay.format('YYYY-MM-DD'))
         .then(() => { return fetch(''); });
 };
 
