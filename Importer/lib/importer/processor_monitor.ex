@@ -12,6 +12,7 @@ defmodule Importer.ProcessorMonitor do
     GenServer.start_link(__MODULE__, :ok, name: @name)
   end
 
+  @spec process_entry(binary) :: atom
   def process_entry(key) do
     GenServer.cast(@name, {:entry, key})
     :ok

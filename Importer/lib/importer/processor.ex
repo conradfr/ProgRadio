@@ -21,29 +21,29 @@ defmodule Importer.Processor do
   end
 
   defp process_payload(payload_raw) do
-    payload =
-      Poison.decode!(payload_raw, as: %Importer.Struct.Payload{items: [%Importer.Struct.Show{sections: [%Importer.Struct.Section{}]}]})
+    with {:ok, payload} <- Poison.decode(payload_raw,
+            as: %Importer.Struct.Payload{items: [%Importer.Struct.Show{sections: [%Importer.Struct.Section{}]}]}),
+         radio when not is_nil(radio) <- Radio
+                                         |> Importer.Repo.get_by(code_name: payload.radio)
+    do
+      date =
+        Timex.parse!(payload.date, @date_format)
+        |> Timex.to_date()
 
-    radio =
-      Radio
-      |> Importer.Repo.get_by(code_name: payload.radio)
+      shows =
+        Enum.map(payload.items, &cast_schedule/1)
+        |> Enum.sort(fn item1, item2 ->
+          :gt === DateTime.compare(item2.schedule_start, item1.schedule_start)
+        end)
+        |> build_schedule_end()
+        |> Enum.map(&build_schedule(&1, radio))
 
-    if radio === nil, do: raise("Radio not found")
+      commit(shows, radio.id, date)
+      {:ok, date, radio.code_name}
 
-    date =
-      Timex.parse!(payload.date, @date_format)
-      |> Timex.to_date()
-
-    shows =
-      Enum.map(payload.items, &cast_schedule/1)
-      |> Enum.sort(fn item1, item2 ->
-        :gt === DateTime.compare(item2.schedule_start, item1.schedule_start)
-      end)
-      |> build_schedule_end()
-      |> Enum.map(&build_schedule(&1, radio))
-
-    commit(shows, radio.id, date)
-    {:ok, date, radio.code_name}
+    else
+      _ -> raise("Error")
+    end
   end
 
   defp cast_schedule(item) do

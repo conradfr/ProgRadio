@@ -1,42 +1,28 @@
 defmodule Importer.ScheduleCache do
-  use GenServer
 
   require Logger
   use Timex
 
-  @name :schedule_cache
-
   @cache_schedule_prefix "cache:schedule:"
   @cache_schedule_day_format "%Y-%m-%d"
 
-  # ----- Client Interface -----
+  @spec remove(any, any) :: tuple
+  def remove(date, radio)
 
-  def start_link(_arg) do
-    Logger.info("Starting the schedule cache ...")
-    GenServer.start_link(__MODULE__, :ok, name: @name)
+  def remove(date, radio) when date == nil or radio == nil do
+    {:ok, 0}
   end
 
   def remove(date, radio) do
-    GenServer.cast(@name, {:remove, date, radio})
-  end
+    del_num =
+      case Redix.command(:redix, ["HDEL", get_key(date), [radio]]) do
+        {:ok, num} -> num
+        {:error, reason} ->
+            Logger.warn("#{inspect(reason)}")
+            0
+      end
 
-  # ----- Server callbacks -----
-
-  def init(:ok) do
-    {:ok, nil}
-  end
-
-  def handle_cast({:remove, date, radio}, _state) when date == nil or radio == nil do
-    {:noreply, nil}
-  end
-
-  def handle_cast({:remove, date, radio}, _state) do
-    case Redix.command(:redix, ["HDEL", get_key(date), [radio]]) do
-      {:error, reason} -> Logger.warn("#{inspect(reason)}")
-      _ -> :ok
-    end
-
-    {:noreply, nil}
+    {:ok, del_num}
   end
 
   defp get_key(date) do
