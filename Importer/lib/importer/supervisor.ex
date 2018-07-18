@@ -16,7 +16,6 @@ defmodule Importer.Supervisor do
 #      Importer.Repo,
 #      {Task.Supervisor, name: Importer.TaskSupervisor},
 #      Importer.ImageImporter,
-#      Importer.ScheduleCache,
 #      Importer.ProcessorMonitor,
 #      Importer.Queue
 #    ]
