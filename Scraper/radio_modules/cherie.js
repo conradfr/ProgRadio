@@ -141,12 +141,12 @@ const fetch = dateObj => {
         return osmosis
             .get(url)
             .find(`#${tab}`)
-            .select('.item-program > .card-program')
+            .select('.programsGrid-listItem')
             .set({
-                'datetime_raw': 'time@datetime',
+                'datetime_raw': 'time.cardProgram-hour',
                 'img': 'img.card-img@data-src',
-                'title': '.card-title',
-                'description': '.program-duration',
+                'title': '.cardProgram-title',
+                'description': '.cardProgram-duration',
             })
             .data(function (listing) {
                 listing.dateObj = dateObj;
