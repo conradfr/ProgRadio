@@ -7395,14 +7395,13 @@ input[type="checkbox"]:disabled:checked:after,
 .carousel-caption h6 {
   color: inherit;
 }
-@program-hover-color : mix(variables.less, @timeline-cursor-color, 97.5%);
 /* bootstrap overloading */
 .navbar .navbar-brand {
   height: 50px;
   padding-top: 13.5px;
 }
 .navbar .navbar-brand:hover img {
-  animation: Rotate 2000ms linear 50ms 5;
+  animation: Rotate 2s linear 50ms 5;
   /* from https://codepen.io/justcode/pen/AFLqr */
 }
 @keyframes Rotate {
@@ -7446,62 +7445,6 @@ input[type="checkbox"]:disabled:checked:after,
 }
 .navbar #navbar a > img:hover {
   opacity: 1;
-}
-/*
-  Beta ribbon
-  Don't show on mobile as it hide the hamburger menu
-  https://github.com/twbs/bootstrap/issues/5550
-*/
-.ribbon-wrapper {
-  width: 67px;
-  height: 67px;
-  overflow: hidden;
-  position: absolute;
-  top: -3px;
-  right: 0;
-  z-index: 9999;
-}
-@media (max-width: 767px) {
-  .ribbon-wrapper {
-    display: none;
-  }
-}
-.ribbon {
-  font: bold 11px Sans-Serif;
-  color: #333;
-  text-align: left;
-  text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px;
-  transform: rotate(45deg);
-  position: relative;
-  padding: 7px 0 7px 32px;
-  left: -5px;
-  top: 15px;
-  width: 120px;
-  background-color: #BFDC7A;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8EBF45));
-  background-image: -webkit-linear-gradient(top, #BFDC7A, #8EBF45);
-  background-image: -moz-linear-gradient(top, #BFDC7A, #8EBF45);
-  background-image: -ms-linear-gradient(top, #BFDC7A, #8EBF45);
-  background-image: -o-linear-gradient(top, #BFDC7A, #8EBF45);
-  color: #6a6340;
-  -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
-}
-.ribbon:before,
-.ribbon:after {
-  content: "";
-  border-top: 3px solid #6e8900;
-  /*  border-left:  3px solid transparent;
-    border-right: 3px solid transparent;*/
-  position: absolute;
-  bottom: -3px;
-}
-.ribbon:before {
-  left: 0;
-}
-.ribbon:after {
-  right: 0;
 }
 body {
   margin-top: 50px;
@@ -7556,6 +7499,7 @@ body .footer a:focus {
   font-size: 0;
   padding-left: calc(76px);
   background-color: #f3f3f3;
+  backface-visibility: hidden;
   transition: left 200ms cubic-bezier(0.21, 1.12, 0.67, 0.99);
 }
 .timeline .timeline-control {
@@ -7646,6 +7590,7 @@ body .footer a:focus {
   height: 3px;
   width: 2px;
   opacity: 0.8;
+  backface-visibility: hidden;
   transition: left 850ms cubic-bezier(0.21, 1.12, 0.67, 0.99);
   background-color: #2196f3;
 }
@@ -7732,7 +7677,7 @@ body .footer a:focus {
   position: fixed;
   top: 0;
   left: 50%;
-  transform: translatex(-50%);
+  transform: translateX(-50%);
   /* on mobile, put player at the bottom */
   height: 41px;
   width: 210px;
@@ -7961,6 +7906,7 @@ body .footer a:focus {
   z-index: 1;
   width: calc(8640px);
   background-color: #f3f3f3;
+  backface-visibility: hidden;
   transition: left 850ms cubic-bezier(0.21, 1.12, 0.67, 0.99);
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row {
@@ -8035,6 +7981,10 @@ body .footer a:focus {
   opacity: 1 !important;
   width: auto !important;
 }
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current .program-description-short-inner:before,
+.schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .program-description-short-inner:before {
+  background: linear-gradient(to right, rgba(249, 252, 255, 0) 90%, rgba(249, 252, 255, 0.88) 95%, rgba(249, 252, 255, 0.999) 99%) !important;
+}
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner {
   height: 100%;
   width: 100%;
@@ -8059,7 +8009,7 @@ body .footer a:focus {
   height: 58px;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-infos {
-  transition: margin-left 200ms cubic-bezier(0.21, 1.12, 0.67, 0.99);
+  transition: margin-left 200ms cubic-bezier(0.21, 1.12, 0.67, 0.99) 200ms;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner .program-title {
   z-index: 1;

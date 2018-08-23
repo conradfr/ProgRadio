@@ -5,46 +5,16 @@
 @import "variables";
 
 @import "components/navbar";
-@import "components/ribbon";
 
 body {
-  margin-top: 50px;
+  margin-top: @navbar-height;
   background-color: white;
 
   &.body-app {
     background-color: @background-color !important;
   }
 
-  .footer {
-    width: 100%;
-
-    &.footer-sticky{
-      position: absolute;
-      bottom: 0;
-      height: 60px; /* Set the fixed height of the footer here */
-      line-height: 60px; /* Vertically center the text there */
-    }
-
-    font-size: 12px;
-    small {
-      color: @timeline-color;
-      font-size: 11px;
-    }
-
-    p {
-      color: @timeline-color;
-      margin: 8px 0;
-    }
-
-    a {
-      color: lighten(@timeline-color, 5%);
-
-      &:hover,
-      &:focus {
-        color: @timeline-color;
-      }
-    }
-  }
+  @import "components/footer";
 }
 
 #app {

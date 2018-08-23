@@ -60,7 +60,8 @@ export default {
     computed: {
         ...mapState({
             cursorTime: state => state.schedule.cursorTime,
-            scrollIndex: state => state.schedule.scrollIndex
+            scrollIndex: state => state.schedule.scrollIndex,
+            scrollClick: state => state.schedule.scrollClick
         }),
 /*        styleObjectDetail: function() {
             if (this.displayDetail === false) { return {}; }
@@ -77,7 +78,8 @@ export default {
         },*/
         styleText: function() {
             let left = 0;
-            if ((this.left + this.width) > this.scrollIndex && this.left < this.scrollIndex) {
+
+            if (this.scrollClick === false && (this.left + this.width) > this.scrollIndex && this.left < this.scrollIndex) {
                 left = this.scrollIndex - this.left;
             }
 

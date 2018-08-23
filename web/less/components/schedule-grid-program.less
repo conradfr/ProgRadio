@@ -92,12 +92,14 @@
 
           .program-description-short-inner {
             &:before {
-             // background: linear-gradient(to right, fade(red, 97.5% 0) 90%, fade(red, 0.88) 95%, fade(red, 1) 99%) !important;
+              background: linear-gradient(to right, fade(@program-hover-color, 0%) 90%, fade(@program-hover-color, 88%) 95%, fade(@program-hover-color, 99.9%) 99%) !important;
             }
           }
         }
 
         .program-inner {
+          @img-height: 58px;
+
           height: 100%;
           width: 100%;
 
@@ -110,7 +112,7 @@
 
           .program-img {
             float: left;
-            height: 58px;
+            height: @img-height;
 
             opacity: 0;
             width: 0;
@@ -123,14 +125,13 @@
             background-size: contain;
 
             img {
-              height: 58px;
-              //width: 77px;
+              height: @img-height;
             }
 
           }
 
           .program-infos {
-            transition: margin-left 200ms cubic-bezier(.21,1.12,.67,.99);
+            transition: margin-left 200ms cubic-bezier(.21, 1.12, .67, .99) 200ms;
           }
 
           .program-title {

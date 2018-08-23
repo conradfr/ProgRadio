@@ -4,7 +4,7 @@
   z-index: 3;
   box-sizing: border-box;
   position: fixed;
-  top: 50px;
+  top: @navbar-height;
 
   height: @timeline-height;
   line-height: @timeline-height;
@@ -21,14 +21,15 @@
   padding-left: @margin-from-radio-list;
   background-color: @background-color;
 
-   transition: left 200ms cubic-bezier(.21,1.12,.67,.99);
+  backface-visibility: hidden;
+  transition: left 200ms cubic-bezier(.21,1.12,.67,.99);
 
 
   .timeline-control {
     z-index: 7;
     display: block;
     position: fixed;
-    top: 50px;
+    top: @navbar-height;
 
     box-sizing: border-box;
     background-color: darken(#f3f3f3, 30%);
@@ -141,6 +142,7 @@
   width: 2px;
   opacity: 0.8;
 
+  backface-visibility: hidden;
   transition: left 850ms cubic-bezier(.21,1.12,.67,.99);
   background-color: #2196f3;
 
