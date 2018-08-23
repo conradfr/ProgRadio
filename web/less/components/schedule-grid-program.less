@@ -24,7 +24,7 @@
 
         background-color: lighten(@background-color, 3%);
 
-        transition: left 0.2s ease-in-out 0.3s;
+        transition: left 200ms ease-in-out 300ms;
 
         .program {
           margin-right: 0 !important;
@@ -44,11 +44,11 @@
         border: none;
         border-left: 3px solid darken(@background-color, 20%);
 
-        transition: box-shadow 0.2s ease-in-out;
+        transition: box-shadow 20ms ease-in-out;
         user-select: none;
 
         &.program-current {
-          background-color: mix(white, @timeline-cursor-color, 97.5%);
+          background-color: @program-hover-color;
           border-left: 3px solid mix(darken(@background-color, 20%), @timeline-cursor-color, 85%);
         }
 
@@ -57,7 +57,7 @@
           position: absolute;
           //overflow-y: scroll;
 
-          transition: height 0.3s ease-in-out 0.4s, width 0.5s ease-in-out, min-width 0.5s ease-in-out;
+          transition: height 300ms ease-in-out 400ms, width 500ms ease-in-out, min-width 500ms ease-in-out;
         }
 
         &.long-enough {
@@ -89,6 +89,12 @@
             opacity: 1 !important;
             width: auto !important;
           }
+
+          .program-description-short-inner {
+            &:before {
+             // background: linear-gradient(to right, fade(red, 97.5% 0) 90%, fade(red, 0.88) 95%, fade(red, 1) 99%) !important;
+            }
+          }
         }
 
         .program-inner {
@@ -108,7 +114,7 @@
 
             opacity: 0;
             width: 0;
-            transition: opacity 0.3s ease-in-out;
+            transition: opacity 300ms ease-in-out;
 
             margin: -7px 10px 0 -10px;
 
@@ -123,7 +129,12 @@
 
           }
 
+          .program-infos {
+            transition: margin-left 200ms cubic-bezier(.21,1.12,.67,.99);
+          }
+
           .program-title {
+            z-index: 1;
             font-weight: bold;
             color: #262b2f;
             line-height: 1;
@@ -138,9 +149,11 @@
             .schedule-display {
               .pull-right();
 
+              z-index: 2;
               visibility: hidden;
               opacity: 0;
-              transition: opacity 0.3s ease-out 0s;
+              transition: opacity 300ms ease-out;
+              background-color: white;
 
               color: darken(@background-color, 25%);
               font-weight: normal;
@@ -163,7 +176,7 @@
             visibility: hidden;
             opacity: 0;
             margin-top: -3px;
-            transition: opacity 0.3s ease-out 0s;
+            transition: opacity 300ms ease-out;
 
             &.program-description-nohost {
               margin-top: 8px;
