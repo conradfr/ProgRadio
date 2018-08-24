@@ -16,20 +16,33 @@ module.exports = {
     ],
     module: {
         rules: [
-            {
+/*            {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
                 query: {
                     presets: ['es2015', 'stage-0']
                 }
+            },*/
+            {
+              enforce: 'pre',
+              test: /\.(js|vue)$/,
+              loader: 'eslint-loader',
+              exclude: /node_modules/
             },
             {
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                        js: [
+                            // { loader: 'cache-loader' },
+                            { loader: 'babel-loader', options: { presets: ['env', 'stage-0'] } }
+                        ]
+                    }
+                }
             }
         ]
-
     },
     resolve: {
         alias: {

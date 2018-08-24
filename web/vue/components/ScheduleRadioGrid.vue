@@ -1,92 +1,107 @@
 <template>
-    <div class="schedule-radio-grid" id="schedule-radio-grid" :style="styleObject">
-        <timeline-cursor></timeline-cursor>
-        <v-touch
-                v-bind:enabled="{ pan: true, swipe: true }"
-                v-bind:pan-options="{ direction: 'horizontal' }" v-bind:swipe-options="{ direction: 'horizontal' }"
-                 v-on:swipe="onSwipe"
-                 v-on:panleft="onPan" v-on:panright="onPan" v-on:panstart="onPanStart" v-on:panend="onPanEnd">
-            <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name" :radio="entry.code_name"></schedule-radio-grid-row>
-        </v-touch>
-    </div>
+  <div class="schedule-radio-grid" id="schedule-radio-grid" :style="styleObject">
+    <timeline-cursor></timeline-cursor>
+    <v-touch
+        v-bind:enabled="{ pan: true, swipe: true }"
+        v-bind:pan-options="{ direction: 'horizontal' }"
+        v-bind:swipe-options="{ direction: 'horizontal' }"
+        v-on:swipe="onSwipe"
+        v-on:panleft="onPan" v-on:panright="onPan"
+        v-on:panstart="onPanStart" v-on:panend="onPanEnd">
+      <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name"
+        :radio="entry.code_name"></schedule-radio-grid-row>
+    </v-touch>
+  </div>
 </template>
 
 <script>
 import Vue from 'vue';
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
+
+import { NAV_MOVE_BY } from '../config/config';
+
+import TimelineCursor from './TimelineCursor.vue';
+import ScheduleRadioGridRow from './ScheduleRadioGridRow.vue';
 
 const VueTouch = require('vue-touch');
+
 VueTouch.config.pan = {
-    direction: 'horizontal'
+  direction: 'horizontal'
 };
 
-Vue.use(VueTouch, {name: 'v-touch'});
-
-
-import { NAV_MOVE_BY } from '../config/config.js';
-import TimelineCursor from './TimelineCursor.vue'
-import ScheduleRadioGridRow from './ScheduleRadioGridRow.vue'
+Vue.use(VueTouch, { name: 'v-touch' });
 
 export default {
-    components: { TimelineCursor, ScheduleRadioGridRow },
-    data: function () {
-        return {
-            mousedown: false,
-            clickX: null,
-            swipeActive: false
-        }
+  components: { TimelineCursor, ScheduleRadioGridRow },
+  data() {
+    return {
+      mousedown: false,
+      clickX: null,
+      swipeActive: false
+    };
+  },
+  computed: {
+    styleObject() {
+      const styleObject = {
+        left: this.$store.getters.gridIndex.left
+      };
+
+      // disable grid transition while manually scrolling, avoid lag effect
+      if (this.$store.state.schedule.scrollClick) {
+        styleObject.transition = 'none';
+      }
+
+      return styleObject;
     },
-    computed: {
-        styleObject: function() {
-            const styleObject = {
-                left: this.$store.getters.gridIndex.left
-            };
+    ...mapGetters({
+      radios: 'radiosRanked'
+    })
+  },
+  /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
+  methods: {
+    onSwipe(event) {
+      this.swipeActive = true;
+      setInterval(this.swipeEnd, 1000);
 
-            // disable grid transition while manually scrolling, avoid lag effect
-            if (this.$store.state.schedule.scrollClick) { styleObject.transition = 'none'; }
+      // avoid ghost click
+      //  if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
 
-            return styleObject;
-        },
-        ...mapGetters({
-            radios: 'radiosRanked'
-        })
+      const amount = (NAV_MOVE_BY / 2.2) * event.velocityX * -1;
+      this.$store.dispatch('scroll', amount);
     },
-    /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
-    methods: {
-        onSwipe: function (event) {
-            this.swipeActive = true;
-            setInterval(this.swipeEnd, 1000);
+    swipeEnd() {
+      this.swipeActive = false;
+    },
+    onPanStart() {
+      if (this.swipeActive === true) {
+        return;
+      }
 
-            // avoid ghost click
-            //  if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
+      this.$store.dispatch('scrollClick', true);
+      this.clickX = 0;
+    },
+    onPanEnd() {
+      if (this.swipeActive === true) {
+        return;
+      }
 
-            const amount = (NAV_MOVE_BY / 2.2) * event.velocityX * -1;
-            this.$store.dispatch('scroll', amount);
-        },
-        swipeEnd: function () {
-            this.swipeActive = false;
-        },
-        onPanStart: function () {
-            if (this.swipeActive === true) { return; }
+      this.$store.dispatch('scrollClick', false);
+    },
+    onPan(event) {
+      if (this.swipeActive === true) {
+        return;
+      }
 
-            this.$store.dispatch('scrollClick', true);
-            this.clickX = 0;
-        },
-        onPanEnd: function () {
-            if (this.swipeActive === true) { return; }
+      // preventing vertical scrolling to generate horizontal panning
+      if ((event.angle <= -25 && event.angle >= -135) || (event.angle > 15 && event.angle <= 135)
+        || event.overallVelocityX > 5 || event.overallVelocityX < -5) {
+        return;
+      }
 
-            this.$store.dispatch('scrollClick', false);
-        },
-        onPan: function (event) {
-            if (this.swipeActive === true) { return; }
-
-            // preventing vertical scrolling to generate horizontal panning
-            if ((event.angle <= -25 && event.angle >= -135) || (event.angle > 15 && event.angle <= 135)
-                || event.overallVelocityX > 5 || event.overallVelocityX < -5 ) { return; }
-
-            this.$store.dispatch('scroll', (-1 * (event.deltaX - (this.clickX + event.overallVelocityX))));
-            this.clickX = event.deltaX;
-        }
+      const scroll = -1 * (event.deltaX - (this.clickX + event.overallVelocityX));
+      this.$store.dispatch('scroll', scroll);
+      this.clickX = event.deltaX;
     }
-}
+  }
+};
 </script>

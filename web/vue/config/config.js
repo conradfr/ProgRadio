@@ -1,5 +1,3 @@
-'use strict';
-
 export const MINUTE_PIXEL = 6;
 export const DAYS = 1;
 export const GRID_VIEW_EXTRA = 50;
