@@ -1,15 +1,17 @@
 <template>
-  <div class="schedule-radio-grid" id="schedule-radio-grid" :style="styleObject">
+  <div id="schedule-radio-grid" class="schedule-radio-grid" :style="styleObject">
     <timeline-cursor></timeline-cursor>
     <v-touch
-        v-bind:enabled="{ pan: true, swipe: true }"
-        v-bind:pan-options="{ direction: 'horizontal' }"
-        v-bind:swipe-options="{ direction: 'horizontal' }"
-        v-on:swipe="onSwipe"
-        v-on:panleft="onPan" v-on:panright="onPan"
-        v-on:panstart="onPanStart" v-on:panend="onPanEnd">
-      <schedule-radio-grid-row v-for="entry in radios" :key="entry.code_name"
-        :radio="entry.code_name"></schedule-radio-grid-row>
+      :enabled="{ pan: true, swipe: true }"
+      :pan-options="{ direction: 'horizontal' }"
+      :swipe-options="{ direction: 'horizontal' }"
+      v-on:swipe="onSwipe"
+      v-on:panleft="onPan" v-on:panright="onPan"
+      v-on:panstart="onPanStart" v-on:panend="onPanEnd">
+      <schedule-radio-grid-row
+        v-for="entry in radios" :key="entry.code_name"
+        :radio="entry.code_name">
+      </schedule-radio-grid-row>
     </v-touch>
   </div>
 </template>
@@ -32,10 +34,12 @@ VueTouch.config.pan = {
 Vue.use(VueTouch, { name: 'v-touch' });
 
 export default {
-  components: { TimelineCursor, ScheduleRadioGridRow },
+  components: {
+    TimelineCursor,
+    ScheduleRadioGridRow
+  },
   data() {
     return {
-      mousedown: false,
       clickX: null,
       swipeActive: false
     };
@@ -43,7 +47,8 @@ export default {
   computed: {
     styleObject() {
       const styleObject = {
-        left: this.$store.getters.gridIndex.left
+        // left: this.$store.getters.gridIndexLeft.left
+        transform: this.$store.getters.gridIndexTransform.transform
       };
 
       // disable grid transition while manually scrolling, avoid lag effect

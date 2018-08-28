@@ -1,10 +1,11 @@
 <template>
   <div class="timeline" :style="styleObject">
-    <div class="timeline-control timeline-control-left" v-on:click="clickBackward"
-         v-bind:class="{ 'filter-icon-active': displayFilter }">
+    <div class="timeline-control timeline-control-left"
+         v-on:click="clickBackward"
+         :class="{ 'filter-icon-active': displayFilter }">
       <div class="filter-icon"
-           v-bind:class="{ 'filter-icon-active': displayFilter,
-                           'filter-icon-enabled': (filterEnabled && !displayFilter) }"
+           :class="{ 'filter-icon-active': displayFilter,
+                     'filter-icon-enabled': (filterEnabled && !displayFilter) }"
            v-on:click.stop="filterClick"
            v-on:mouseover="filterFocus(true)"
            v-on:mouseleave="filterFocus(false)"
@@ -13,8 +14,9 @@
       </div>
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
     </div>
-    <div class="timeline-control timeline-control-right" v-on:click="clickForward"><span
-        class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+    <div class="timeline-control timeline-control-right" v-on:click="clickForward">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </div>
     <div v-for="hour in 24" :key="hour" class="time">
       {{ hour | toTime }}
     </div>
@@ -42,7 +44,7 @@ export default {
       filterEnabled: state => state.schedule.categoriesExcluded.length > 0
     }),
     ...mapGetters({
-      styleObject: 'gridIndex',
+      styleObject: 'gridIndexLeft',
       displayFilter: 'displayCategoryFilter'
     })
   },

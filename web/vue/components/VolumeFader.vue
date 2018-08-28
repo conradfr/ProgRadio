@@ -4,8 +4,8 @@
   <div id="volume-fader" v-on:mouseover="volumeFocus(true)" v-on:mouseleave="volumeFocus(false)">
     <div class="fader">
       <v-touch
-          v-bind:enabled="{ pan: true }"
-          v-bind:pan-options="{ direction: 'vertical', threshold: '5' }"
+          :enabled="{ pan: true }"
+          :pan-options="{ direction: 'vertical', threshold: '5' }"
           v-on:panup="onPan" v-on:pandown="onPan" v-on:panstart="onPanStart">
         <div class="fader-track"></div>
         <div class="fader-handle" :style="styleObject"></div>

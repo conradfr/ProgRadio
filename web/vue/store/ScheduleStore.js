@@ -72,7 +72,8 @@ const ScheduleStore = {
       const newIndex = state.cursorTime.diff(startDay, 'minutes') * config.MINUTE_PIXEL + 1;
       return `${newIndex}px`;
     },
-    gridIndex: state => ({ left: `-${state.scrollIndex}px` }),
+    gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
+    gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
     // sort by share, desc
     radiosRanked: state => compose(
       orderBy(['share'], ['desc']),

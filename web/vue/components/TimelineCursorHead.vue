@@ -10,7 +10,7 @@ export default {
     styleObject() {
       const style = {
         left: `calc(${this.$store.getters.cursorIndex}
-                    + ${this.$store.getters.gridIndex.left}
+                    + ${this.$store.getters.gridIndexLeft.left}
                     + ${GRID_VIEW_EXTRA_LEFT}px)`
       };
 

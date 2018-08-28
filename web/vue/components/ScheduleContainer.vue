@@ -1,5 +1,6 @@
 <template>
-  <div class="schedule-container" tabindex="-1" v-on:keyup.left.prevent="keyLeft()"
+  <div class="schedule-container" tabindex="-1"
+       v-on:keyup.left.prevent="keyLeft()"
        v-on:keyup.right.prevent="keyRight()">
     <schedule-radio-list></schedule-radio-list>
     <schedule-radio-grid></schedule-radio-grid>
@@ -7,17 +8,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 import ScheduleRadioList from './ScheduleRadioList.vue';
 import ScheduleRadioGrid from './ScheduleRadioGrid.vue';
 
 export default {
-  components: { ScheduleRadioList, ScheduleRadioGrid },
-  computed: mapState({
-    radios: state => state.schedule.radios,
-    schedule: state => state.schedule.schedule
-  }),
+  components: {
+    ScheduleRadioList,
+    ScheduleRadioGrid
+  },
   methods: {
     keyLeft() {
       this.$store.dispatch('scrollBackward');

@@ -7907,7 +7907,7 @@ body .footer a:focus {
   width: calc(8640px);
   background-color: #f3f3f3;
   backface-visibility: hidden;
-  transition: left 850ms cubic-bezier(0.21, 1.12, 0.67, 0.99);
+  transition: transform 850ms cubic-bezier(0.21, 1.12, 0.67, 0.99);
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row {
   display: flex;

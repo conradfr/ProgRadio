@@ -2,10 +2,10 @@
   <!--<a v-bind:href="'/radio/' + radio.code_name">
     <div class="radio-logo" v-bind:title="radio.name" :style="styleObject"></div>
     </a>-->
-  <a v-on:click="play" v-bind:title="radio.name" :style="styleObject">
-    <div class="radio-logo" v-bind:title="radio.name" :style="styleObject">
+  <a v-on:click="play" :title="radio.name" :style="styleObject">
+    <div class="radio-logo" :title="radio.name" :style="styleObject">
       <div class="radio-logo-play"
-           v-bind:class="{ 'radio-logo-play-active': (radio.code_name === radioPlayingCodeName) }">
+           :class="{ 'radio-logo-play-active': (radio.code_name === radioPlayingCodeName) }">
       </div>
     </div>
   </a>

@@ -60,6 +60,7 @@ export default {
       width,
       styleObject: {
         left: `${left}px`,
+        // transform: `translateX(${left}px)`,
         width: widthStr,
         minWidth: widthStr,
         maxWidth: widthStr
@@ -90,8 +91,8 @@ export default {
     styleText() {
       let left = 0;
 
-      if (this.scrollClick === false && (this.left + this.width) > this.scrollIndex
-        && this.left < this.scrollIndex) {
+      if (this.scrollClick === false && this.left < this.scrollIndex
+        && (this.left + this.width) > this.scrollIndex) {
         left = this.scrollIndex - this.left;
       }
 

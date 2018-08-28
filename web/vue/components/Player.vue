@@ -2,20 +2,22 @@
   <div class="navbar-player">
     <div class="player-wrap">
       <div class="player-sound" v-on:click="toggleMute">
-        <span class="glyphicon glyphicon-volume-off" v-bind:class="{ 'player-muted': player.muted }"
+        <span class="glyphicon glyphicon-volume-off" :class="{ 'player-muted': player.muted }"
               aria-hidden="true"></span>
       </div>
-      <div class="player-sound player-sound-fader" v-on:mouseover="volumeFocus(true)"
-           v-on:mouseleave="volumeFocus(false)" v-on:click="volumeClick">
+      <div class="player-sound player-sound-fader"
+           v-on:mouseover="volumeFocus(true)"
+           v-on:mouseleave="volumeFocus(false)"
+           v-on:click="volumeClick">
         <span class="glyphicon"
-          v-bind:class="{ 'glyphicon-volume-up': player.volume > 4,
+          :class="{ 'glyphicon-volume-up': player.volume > 4,
                           'glyphicon-volume-down': player.volume <= 4 }"
           aria-hidden="true"></span>
       </div>
       <div class="player-playpause" v-on:click="togglePlay"
-         v-bind:class="{ 'player-playpause-disabled': player.radio === null }">
+         :class="{ 'player-playpause-disabled': player.radio === null }">
         <span class="glyphicon icon-round"
-          v-bind:class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }"
+          :class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }"
           aria-hidden="true"></span>
       </div>
       <div v-if="player.radio" class="player-name">{{ player.radio.name }}</div>
