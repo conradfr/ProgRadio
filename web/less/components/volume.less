@@ -19,7 +19,7 @@
   height: 114px;
 
   margin-top: -10px;
-  margin-left: 30px;
+  margin-left: 5px;
 
   /* on mobile, put volume fader above player
       update: should be hidden anyway now
@@ -43,7 +43,6 @@
 
     .fader-track {
       position: absolute;
-      cursor: pointer;
       #gradient > .vertical(@fader-gray-5, @fader-gray-6);
       .box-shadow(inset 0 1px 2px rgba(0, 0, 0, .1));
       border-radius: @border-radius-base;
@@ -60,6 +59,8 @@
     }
 
     .fader-handle {
+      cursor: pointer;
+
       margin-top: (-@fader-line-height/2);
 
       position: absolute;

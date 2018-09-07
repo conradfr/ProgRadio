@@ -38,10 +38,7 @@
     width: 28px;
 
     padding-top: 3px;
-
-    &:first-child {
-      padding-left: 9px;
-    }
+    padding-left: 11px;
 
     color: white;
     text-align: center;
@@ -52,8 +49,15 @@
     }
 
     /* on mobile, hide volume (managed by phone usually) */
-    @media (max-width: @screen-xs-max) {
+    @media (max-width: @screen-sm-max) {
       &.player-sound-fader {
+        display: none;
+      }
+    }
+
+    /* on non-mobile, hide mute (done by volume icon click) */
+    @media (min-width: @screen-md-min) {
+      &.player-sound-mute {
         display: none;
       }
     }

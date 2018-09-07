@@ -7611,7 +7611,7 @@ body .footer a:focus {
   width: 24px;
   height: 114px;
   margin-top: -10px;
-  margin-left: 30px;
+  margin-left: 5px;
   /* on mobile, put volume fader above player
       update: should be hidden anyway now
    */
@@ -7634,7 +7634,6 @@ body .footer a:focus {
 }
 #volume-fader .fader .fader-track {
   position: absolute;
-  cursor: pointer;
   background-image: -webkit-linear-gradient(top, #F5F5F5 0%, #F9F9F9 100%);
   background-image: -o-linear-gradient(top, #F5F5F5 0%, #F9F9F9 100%);
   background-image: linear-gradient(to bottom, #F5F5F5 0%, #F9F9F9 100%);
@@ -7654,6 +7653,7 @@ body .footer a:focus {
   }
 }
 #volume-fader .fader .fader-handle {
+  cursor: pointer;
   margin-top: -9px;
   position: absolute;
   top: 0;
@@ -7701,19 +7701,23 @@ body .footer a:focus {
 .navbar-player .player-sound {
   width: 28px;
   padding-top: 3px;
+  padding-left: 11px;
   color: white;
   text-align: center;
   cursor: pointer;
   /* on mobile, hide volume (managed by phone usually) */
-}
-.navbar-player .player-sound:first-child {
-  padding-left: 9px;
+  /* on non-mobile, hide mute (done by volume icon click) */
 }
 .navbar-player .player-sound .player-muted {
   color: #e51c23;
 }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .navbar-player .player-sound.player-sound-fader {
+    display: none;
+  }
+}
+@media (min-width: 992px) {
+  .navbar-player .player-sound.player-sound-mute {
     display: none;
   }
 }

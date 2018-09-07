@@ -1,17 +1,21 @@
 <template>
   <div class="navbar-player">
     <div class="player-wrap">
-      <div class="player-sound" v-on:click="toggleMute">
-        <span class="glyphicon glyphicon-volume-off" :class="{ 'player-muted': player.muted }"
-              aria-hidden="true"></span>
+      <div class="player-sound player-sound-mute" v-on:click="toggleMute">
+        <span class="glyphicon glyphicon-volume-off" aria-hidden="true"
+              :class="{ 'player-muted': player.muted }"></span>
       </div>
       <div class="player-sound player-sound-fader"
            v-on:mouseover="volumeFocus(true)"
            v-on:mouseleave="volumeFocus(false)"
-           v-on:click="volumeClick">
+           v-on:click.stop="toggleMute">
         <span class="glyphicon"
-          :class="{ 'glyphicon-volume-up': player.volume > 4,
-                          'glyphicon-volume-down': player.volume <= 4 }"
+          :class="{
+            'glyphicon-volume-off': player.muted || player.focus.icon,
+            'player-muted': player.muted,
+            'glyphicon-volume-up': !(player.muted || player.focus.icon) && player.volume > 4,
+            'glyphicon-volume-down': !(player.muted || player.focus.icon) && player.volume <= 4
+                  }"
           aria-hidden="true"></span>
       </div>
       <div class="player-playpause" v-on:click="togglePlay"
@@ -39,7 +43,12 @@ export default {
   data() {
     return {
       audio: null,
-      volume: 5,
+      /*
+        As the volume icon may be shown instead of the mute icon on tablets and a click event
+        also triggers a mouseover event before it, we avoid showing the volume fader if a mouseover
+        is immediately followed by a click
+      */
+      debounce: false
     };
   },
   computed: {
@@ -73,6 +82,14 @@ export default {
   methods: {
     toggleMute() {
       this.$store.dispatch('toggleMute');
+
+      this.debounce = true;
+      setTimeout(
+        () => {
+          this.debounce = false;
+        },
+        300
+      );
     },
     togglePlay() {
       this.$store.dispatch('togglePlay');
@@ -88,12 +105,15 @@ export default {
       this.audio = null;
     },
     volumeFocus(status) {
-      this.$store.dispatch('volumeFocus', { element: 'icon', status });
-    },
-    // for mobiles users
-    volumeClick() {
-      this.$store.dispatch('volumeFocus', { element: 'icon', status: !this.displayVolume });
-    },
+      setTimeout(
+        () => {
+          if (this.debounce === false) {
+            this.$store.dispatch('volumeFocus', { element: 'icon', status });
+          }
+        },
+        200
+      );
+    }
   }
 };
 </script>
