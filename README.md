@@ -7,8 +7,8 @@ Dependencies
 --------------
 - VueJs 2
 - PHP 7.1 / Symfony 3.4
-- NodeJS
-- Elixir 1.5+
+- NodeJS (Scraper)
+- Elixir 1.7+ (Importer)
 - PosgreSQL / Redis
 - Nginx or Apache
 - Capistrano (deployment)
@@ -17,7 +17,7 @@ Run
 --------------
 **Scraper**: cd Scraper && node index.js
 
-**Daemon**: cd Importer && iex -S mix (dev)
+*Importer**: cd Importer && iex -S mix (dev)
 
 Architecture
 --------------
