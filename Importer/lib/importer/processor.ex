@@ -131,7 +131,7 @@ defmodule Importer.Processor do
     # Image import
     schedule =
       case item.img do
-        url when is_binary(url) ->
+        url when is_binary(url) and url !== "" ->
           try do
             Importer.ImageImporter.import(item.img, radio)
             |> (&Map.put(schedule, :picture_url, &1)).()
