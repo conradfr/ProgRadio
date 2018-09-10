@@ -7805,14 +7805,18 @@ body .footer a:focus {
 .schedule-page {
   margin-top: 70px;
 }
+@media (max-width: 767px) {
+  .schedule-page .title {
+    text-align: center;
+  }
+}
 .schedule-page h5 {
   margin-top: 0;
   margin-bottom: 5px;
 }
 @media (max-width: 767px) {
   .schedule-page h5 {
-    text-align: center;
-    margin: 25px 0;
+    margin: 25px 0 5px;
   }
 }
 .schedule-page .schedule-day-shows .media {
@@ -7847,6 +7851,11 @@ body .footer a:focus {
 }
 #schedule-day .schedule-day-shows {
   margin-top: 25px;
+}
+@media (max-width: 767px) {
+  #schedule-now .title h5 {
+    margin-top: 0;
+  }
 }
 #schedule-now .radio-schedule-row {
   margin-top: 25px;

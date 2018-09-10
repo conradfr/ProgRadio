@@ -11,9 +11,11 @@
                 <img class="center-block" alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
             </div>
         </div>
-        <div class="col-md-10 col-xs-12 content">
-            <h5>{{ date | localizeddate('full', 'none', 'fr_FR') | capitalize }}</h5>
-            <a href="{{ path('homepage') }}">← Retourner à la grille complète</a>
+        <div class="col-md-10 col-xs-12">
+            <div class="title">
+                <h5>{{ date | localizeddate('full', 'none', 'fr_FR') | capitalize }}</h5>
+                <a href="{{ path('homepage') }}">← Retourner à la grille complète</a>
+            </div>
 
             <div class="schedule-day-shows">
             {% for show in schedule %}

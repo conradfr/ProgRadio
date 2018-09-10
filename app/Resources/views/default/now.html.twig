@@ -6,17 +6,17 @@
 {% block body %}
 <div class="container schedule-page" id="schedule-now">
     <div class="row">
-        <div class="col-md-12 content">
+        <div class="col-md-12 title">
             <h5>En ce moment à la radio</h5>
             <a href="{{ path('homepage') }}">← Retourner à la grille complète</a>
         </div>
     </div>
     {% for entry in schedule %}
     <div class="row radio-schedule-row">
-        <div class="col-md-1 schedule-day-radio">
+        <div class="col-md-1 col-xs-2 schedule-day-radio">
             <img class="center-block img-responsive" alt="{{ entry.radio.name }}" src="{{ asset('img/radio/page/' ~ entry.radio.codeName ~ '.png') }}">
         </div>
-        <div class="col-md-10 schedule-day-shows">
+        <div class="col-md-10 col-xs-10 schedule-day-shows">
             <div class="media">
                 {% if entry.show.picture_url %}
                     <div class="media-left">

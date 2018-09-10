@@ -1,13 +1,18 @@
 .schedule-page {
   margin-top: 70px;
 
+  .title {
+    @media (max-width: @screen-xs-max) {
+      text-align: center;
+    }
+  }
+
   h5 {
     margin-top: 0;
     margin-bottom: 5px;
 
     @media (max-width: @screen-xs-max) {
-      text-align: center;
-      margin: 25px 0;
+      margin: 25px 0 5px;
     }
   }
 
@@ -63,6 +68,12 @@
 }
 
 #schedule-now {
+  .title h5 {
+    @media (max-width: @screen-xs-max) {
+      margin-top: 0;
+    }
+  }
+
   .radio-schedule-row {
     margin-top: 25px;
     border-bottom: 1px dotted darken(@background-color, 20%);
