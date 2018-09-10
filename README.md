@@ -17,7 +17,7 @@ Run
 --------------
 **Scraper**: cd Scraper && node index.js
 
-*Importer**: cd Importer && iex -S mix (dev)
+**Importer**: cd Importer && iex -S mix (dev)
 
 Architecture
 --------------
