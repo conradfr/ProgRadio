@@ -1,17 +1,9 @@
-#schedule-day {
+.schedule-page {
   margin-top: 70px;
-
-  .content {
-
-  }
-
-  .schedule-day-radio {
-
-  }
 
   h5 {
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 
     @media (max-width: @screen-xs-max) {
       text-align: center;
@@ -56,5 +48,34 @@
         margin-top: 10px;
       }
     }
+  }
+
+  .alert {
+    margin-top: 25px;
+  }
+
+}
+
+#schedule-day {
+  .schedule-day-shows {
+    margin-top: 25px;
+  }
+}
+
+#schedule-now {
+  .radio-schedule-row {
+    margin-top: 25px;
+    border-bottom: 1px dotted darken(@background-color, 20%);
+
+    &:last-child {
+      border: none;
+      padding-bottom: 50px;
+    }
+
+
+    .schedule-day-radio {
+      margin-bottom: 20px; /* for shows without enough text */
+    }
+
   }
 }

@@ -37,7 +37,7 @@ class SiteController extends Controller
      *     name="contact",
      *     defaults={
      *      "priority": "0.1",
-     *      "changefreq": "monthly"
+     *      "changefreq": "yearly"
      *      }
      * )
      */
@@ -93,7 +93,7 @@ class SiteController extends Controller
     public function sitemapAction(Request $request, EntityManagerInterface $em)
     {
         // @todo if route list grows, get collection & filter
-        $routesToExport = ['homepage', 'faq', 'contact'];
+        $routesToExport = ['homepage', 'now', 'faq', 'contact'];
         $routes = [];
         foreach ($routesToExport as $entry) {
             $routes[$entry] = $this->get('router')->getRouteCollection()->get($entry);

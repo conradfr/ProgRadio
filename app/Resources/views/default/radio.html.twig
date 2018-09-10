@@ -4,7 +4,7 @@
 {% block description %}Le programme du jour de la radio {{ radio.name }} !{% endblock %}
 
 {% block body %}
-<div class="container" id="schedule-day">
+<div class="container schedule-page" id="schedule-day">
     <div class="row">
         <div class="col-md-2 col-xs-12">
             <div class="schedule-day-radio center-block">
@@ -13,6 +13,7 @@
         </div>
         <div class="col-md-10 col-xs-12 content">
             <h5>{{ date | localizeddate('full', 'none', 'fr_FR') | capitalize }}</h5>
+            <a href="{{ path('homepage') }}">← Retourner à la grille complète</a>
 
             <div class="schedule-day-shows">
             {% for show in schedule %}
@@ -44,7 +45,7 @@
                                 </div>
                             {% endif %}
                             <div class="media-body">
-                                <h6 class="media-heading show-title">{{ section.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ show.title }}</h6>
+                                <h6 class="media-heading show-title">{{ section.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ section.title }}</h6>
                                 {% if section.presenter %}
                                     <div class="show-host">{{ section.presenter }}</div>
                                 {% endif %}

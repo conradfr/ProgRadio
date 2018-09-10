@@ -7460,10 +7460,6 @@ body .footer {
 body .footer.footer-sticky {
   position: absolute;
   bottom: 0;
-  height: 60px;
-  /* Set the fixed height of the footer here */
-  line-height: 60px;
-  /* Vertically center the text there */
 }
 body .footer small {
   color: #969696;
@@ -7806,45 +7802,63 @@ body .footer a:focus {
 #faq .content dl {
   margin-bottom: 15px;
 }
-#schedule-day {
+.schedule-page {
   margin-top: 70px;
 }
-#schedule-day h5 {
+.schedule-page h5 {
   margin-top: 0;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 @media (max-width: 767px) {
-  #schedule-day h5 {
+  .schedule-page h5 {
     text-align: center;
     margin: 25px 0;
   }
 }
-#schedule-day .schedule-day-shows .media {
+.schedule-page .schedule-day-shows .media {
   margin-bottom: 20px;
 }
-#schedule-day .schedule-day-shows .show-title {
+.schedule-page .schedule-day-shows .show-title {
   font-weight: bold;
   margin-bottom: 0;
 }
-#schedule-day .schedule-day-shows .show-host {
+.schedule-page .schedule-day-shows .show-host {
   line-height: 1.56;
   color: #444;
 }
-#schedule-day .schedule-day-shows .media-body p {
+.schedule-page .schedule-day-shows .media-body p {
   margin: 3px 0 0;
   line-height: 1.5;
 }
-#schedule-day .schedule-day-shows .sections {
+.schedule-page .schedule-day-shows .sections {
   margin-top: 25px;
   margin-left: 40px;
   font-size: 12px;
 }
-#schedule-day .schedule-day-shows .sections h6 {
+.schedule-page .schedule-day-shows .sections h6 {
   font-size: 13px;
 }
-#schedule-day .schedule-day-shows .sections .media {
+.schedule-page .schedule-day-shows .sections .media {
   margin-bottom: 10px;
   margin-top: 10px;
+}
+.schedule-page .alert {
+  margin-top: 25px;
+}
+#schedule-day .schedule-day-shows {
+  margin-top: 25px;
+}
+#schedule-now .radio-schedule-row {
+  margin-top: 25px;
+  border-bottom: 1px dotted #c0c0c0;
+}
+#schedule-now .radio-schedule-row:last-child {
+  border: none;
+  padding-bottom: 50px;
+}
+#schedule-now .radio-schedule-row .schedule-day-radio {
+  margin-bottom: 20px;
+  /* for shows without enough text */
 }
 .schedule-container .schedule-radio-list {
   position: absolute;

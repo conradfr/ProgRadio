@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Programmes en ce moment à la radio{% endblock %}
+{% block description %}Quoi écouter maintenant ?{% endblock %}
+
+{% block body %}
+<div class="container schedule-page" id="schedule-now">
+    <div class="row">
+        <div class="col-md-12 content">
+            <h5>En ce moment à la radio</h5>
+            <a href="{{ path('homepage') }}">← Retourner à la grille complète</a>
+        </div>
+    </div>
+    {% for entry in schedule %}
+    <div class="row radio-schedule-row">
+        <div class="col-md-1 schedule-day-radio">
+            <img class="center-block img-responsive" alt="{{ entry.radio.name }}" src="{{ asset('img/radio/page/' ~ entry.radio.codeName ~ '.png') }}">
+        </div>
+        <div class="col-md-10 schedule-day-shows">
+            <div class="media">
+                {% if entry.show.picture_url %}
+                    <div class="media-left">
+                        <img alt="" class="media-object" style="width: 64px"
+                             src="{{ asset('media/cache/page_thumb/media/program/' ~ entry.show.picture_url) }}">
+                    </div>
+                {% endif %}
+                <div class="media-body">
+                    <h6 class="media-heading show-title">{{ entry.show.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }}-{{ entry.show.end_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ entry.show.title }}</h6>
+                    {% if entry.show.host %}
+                        <div class="show-host"> {{ entry.show.host }}</div>
+                    {% endif %}
+                    {% if entry.show.description %}
+                        <p class="show-description">{{ entry.show.description | nl2br  }}</p>
+                    {% endif %}
+                </div>
+
+                {% if entry.show.sections is defined %}
+                    <div class="sections">
+                        {% for section in entry.show.sections %}
+                            <div class="media">
+                                {% if section.picture_url %}
+                                    <div class="media-left">
+                                        <img alt="" class="media-object" style="width: 48px"
+                                             src="{{ asset('media/cache/page_thumb/media/program/' ~ section.picture_url) }}">
+                                    </div>
+                                {% endif %}
+                                <div class="media-body">
+                                    <h6 class="media-heading show-title">{{ section.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ section.title }}</h6>
+                                    {% if section.presenter %}
+                                        <div class="show-host">{{ section.presenter }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert"><strong>Oups ...</strong> aucunes données disponibles !</div>
+    {% endfor %}
+</div>
+{% endblock %}

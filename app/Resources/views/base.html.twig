@@ -50,6 +50,8 @@
 
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ path('homepage') }}" onclick="scrollToCursor(event)">Grille</a></li>
+                <li><a href="{{ path('now') }}">En ce moment</a></li>
                 <li><a href="{{ path('faq') }}">Faq</a></li>
                 <li><a href="{{ path('contact') }}">Contact</a></li>
                 <li><a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="Android app"></a></li>
@@ -61,7 +63,7 @@
 
 {% block body %}{% endblock %}
 
-<footer class="footer">
+<footer class="footer{% block footerclasssupp %} footer-sticky{% endblock %}">
     <div class="container">
         <div class="row">
             {% block footer %}

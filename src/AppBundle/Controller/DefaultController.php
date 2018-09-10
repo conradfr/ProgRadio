@@ -22,7 +22,7 @@ class DefaultController extends Controller
      *      }
      * )
      */
-    public function indexAction(Request $request, EntityManagerInterface $em, ScheduleManager $scheduleManager)
+    public function indexAction(EntityManagerInterface $em, ScheduleManager $scheduleManager)
     {
         $radios = $em->getRepository('AppBundle:Radio')->getActiveRadios();
         $categories = $em->getRepository('AppBundle:Category')->getCategories();
@@ -32,7 +32,7 @@ class DefaultController extends Controller
         return $this->render('default/index.html.twig', [
             'schedule' => $schedule,
             'radios' => $radios,
-            'categories' => $categories,
+            'categories' => $categories
         ]);
     }
 
@@ -42,7 +42,7 @@ class DefaultController extends Controller
      *     name="schedule"
      * )
      */
-    public function scheduleAction(Request $request, ScheduleManager $scheduleManager)
+    public function scheduleAction(ScheduleManager $scheduleManager)
     {
         $schedule = $scheduleManager->getDaySchedule(new \DateTime());
 
@@ -67,7 +67,7 @@ class DefaultController extends Controller
      *      }
      * )
      */
-    public function radioAction($codename, Request $request, EntityManagerInterface $em, ScheduleManager $scheduleManager)
+    public function radioAction($codename, EntityManagerInterface $em, ScheduleManager $scheduleManager)
     {
         $dateTime = new \DateTime();
 
@@ -82,6 +82,28 @@ class DefaultController extends Controller
         return $this->render('default/radio.html.twig', [
             'schedule' => $schedule,
             'radio' => $radio,
+            'date' => $dateTime
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/now",
+     *     name="now",
+     *     defaults={
+     *      "priority": "0.9",
+     *      "changefreq": "hourly"
+     *      }
+     * )
+     */
+    public function nowAction(EntityManagerInterface $em)
+    {
+        $dateTime = new \DateTime();
+
+        $schedule = $em->getRepository('AppBundle:ScheduleEntry')->getTimeSpecificSchedule($dateTime);
+
+        return $this->render('default/now.html.twig', [
+            'schedule' => $schedule,
             'date' => $dateTime
         ]);
     }
