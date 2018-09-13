@@ -6,7 +6,10 @@
       </div>
     </div>
     <template v-if="hasSchedule">
-      <schedule-radio-program v-for="(entry, key) in schedule" :key="key" :program="entry">
+      <schedule-radio-program
+        v-for="(entry, key) in schedule"
+        :key="key"
+        :program="entry">
       </schedule-radio-program>
     </template>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="program-container" :style="styleObject" v-on:mouseup="detailClick">
+  <div class="program-container" :style="containerStyle" v-on:mouseup="detailClick">
     <!--        <div class="program program-full" :style="styleObjectDetail">
                 <div class="program-inner">
                     <div class="program-title"><span class="schedule-display">
@@ -13,9 +13,9 @@
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
       <div class="program-inner">
         <div class="program-img" v-if="program.picture_url && (hover || isCurrent)">
-          <img v-bind:src="program.picture_url | picture" alt="">
+          <img v-bind:src="program.picture_url | picture" alt="" @mousedown.prevent="">
         </div>
-        <div class="program-infos" :style="styleText">
+        <div class="program-infos" :style="infosStyle">
           <div class="program-title">
             <span class="schedule-display">{{ scheduleDisplay }}</span>{{ program.title }}
           </div>
@@ -36,7 +36,7 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import { MINUTE_PIXEL, THUMBNAIL_PATH, PROGRAM_LONGENOUGH } from '../config/config';
+import { THUMBNAIL_PATH, PROGRAM_LONG_ENOUGH } from '../config/config';
 
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
 
@@ -46,60 +46,35 @@ export default {
   components: { ScheduleRadioSection },
   props: ['program'],
   data() {
-    // Style
-    const width = this.program.duration * MINUTE_PIXEL;
-    const widthStr = `${this.program.duration * MINUTE_PIXEL}px`;
-    const startDay = moment(this.program.start_at).startOf('day');
-    const left = moment(this.program.start_at).diff(startDay, 'minutes') * MINUTE_PIXEL;
-
     return {
       hover: false,
-      displayDetail: false,
-      divData: null,
-      left,
-      width,
-      styleObject: {
-        left: `${left}px`,
-        // transform: `translateX(${left}px)`,
-        width: widthStr,
-        minWidth: widthStr,
-        maxWidth: widthStr
-      }
+      displayDetail: false
     };
   },
   computed: {
     ...mapState({
       cursorTime: state => state.schedule.cursorTime,
-      scrollIndex: state => state.schedule.scrollIndex,
-      scrollClick: state => state.schedule.scrollClick
-    }),
-    /*
-      styleObjectDetail: function() {
-        if (this.displayDetail === false) { return {}; }
-
-        const width = `${this.program.duration * MINUTE_PIXEL}px`;
+      containerStyle(state) {
+        const data = state.schedule.scheduleDisplay[this.program.hash].container;
+        const width = `${data.width}px`;
 
         return {
-            zIndex: 4,
-            visibility: 'visible',
-            minWidth: `${60 * MINUTE_PIXEL}px`,
-            width: width,
-            height: '150px'
+          left: `${data.left}px`,
+          width,
+          minWidth: width,
+          maxWidth: width
         };
-    },
-    */
-    styleText() {
-      let left = 0;
+      },
+      infosStyle(state) {
+        const left = state.schedule.scheduleDisplay[this.program.hash].textLeft;
 
-      if (this.scrollClick === false && this.left < this.scrollIndex
-        && (this.left + this.width) > this.scrollIndex) {
-        left = this.scrollIndex - this.left;
+        return {
+          // position: 'relative',
+          // transform: `translateX(${left}px)`
+          marginLeft: `${left}px`
+        };
       }
-
-      return {
-        marginLeft: `${left}px`,
-      };
-    },
+    }),
     scheduleDisplay() {
       const format = 'HH[h]mm';
       const start = moment(this.program.start_at).format(format);
@@ -111,7 +86,7 @@ export default {
       return this.cursorTime.isBetween(moment(this.program.start_at), moment(this.program.end_at));
     },
     isLongEnough() {
-      return this.program.duration >= PROGRAM_LONGENOUGH;
+      return this.program.duration >= PROGRAM_LONG_ENOUGH;
     }
   },
   methods: {
