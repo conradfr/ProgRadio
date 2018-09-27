@@ -189,7 +189,7 @@ const ScheduleStore = {
         { expires: config.COOKIE_TTL });
     },
     updateSchedule: (state, value) => {
-      state.schedule = value;
+      Vue.set(state, 'schedule', value);
     }
   },
   actions: {

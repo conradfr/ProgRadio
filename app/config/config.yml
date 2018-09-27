@@ -9,6 +9,8 @@ imports:
 parameters:
     locale: en
     media_folder: '%kernel.project_dir%/web/media'
+    liip_imagine.jpegoptim.tempDir: /run/shm/progradio
+    liip_imagine.optipng.tempDir: /run/shm/progradio
 
 framework:
     #esi: ~
@@ -130,7 +132,13 @@ liip_imagine:
             filters:
                 relative_resize:
                     heighten: 58
+            post_processors:
+                jpegoptim: { strip_all: true, max: 85, progressive: true }
+                # optipng: { strip_all: true, level: 6 }
         page_thumb:
             filters:
                 relative_resize:
                     widen: 64
+            post_processors:
+                jpegoptim: { strip_all: true, max: 95, progressive: true }
+                # optipng: { strip_all: true, level: 5 }
