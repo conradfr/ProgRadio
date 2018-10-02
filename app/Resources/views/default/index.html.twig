@@ -5,7 +5,6 @@
 
 {% block javascript_head %}
 const baseUrl = "{{ app.request.schemeAndHttpHost }}{{ app.environment == 'prod' ? '/' : '/app_dev.php/' }}";
-const schedule = {{ schedule |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
 const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
 const categories = {{ categories |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
 

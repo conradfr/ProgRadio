@@ -10,7 +10,9 @@
       v-on:panstart="onPanStart" v-on:panend="onPanEnd">
       <schedule-radio-grid-row
         v-for="entry in radios" :key="entry.code_name"
-        :radio="entry.code_name">
+        :radio="entry.code_name"
+        :displayNoSchedule="displayNoSchedule"
+      >
       </schedule-radio-grid-row>
     </v-touch>
   </div>
@@ -59,7 +61,8 @@ export default {
       return styleObject;
     },
     ...mapGetters({
-      radios: 'radiosRanked'
+      radios: 'radiosRanked',
+      displayNoSchedule: 'hasSchedule'
     })
   },
   /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */

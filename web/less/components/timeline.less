@@ -31,7 +31,7 @@
     top: @navbar-height;
 
     box-sizing: border-box;
-    background-color: darken(#f3f3f3, 30%);
+    background-color: darken(@background-color, 30%);
 
     opacity: 0.8;
     transition: opacity 70ms ease-out;
@@ -39,7 +39,7 @@
     height: 41px;
     padding-top: 1px;
 
-    color: darken(#f3f3f3, 55%);
+    color: darken(@background-color, 55%);
     font-size: 18px;
     cursor: pointer;
 
@@ -121,7 +121,7 @@
 .timeline-cursor {
   z-index: 5;
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 0;
 
   height: 100%;

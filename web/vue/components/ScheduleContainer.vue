@@ -2,6 +2,7 @@
   <div class="schedule-container" tabindex="-1"
        v-on:keyup.left.prevent="keyLeft()"
        v-on:keyup.right.prevent="keyRight()">
+    <schedule-radio-grid-loading></schedule-radio-grid-loading>
     <schedule-radio-list></schedule-radio-list>
     <schedule-radio-grid></schedule-radio-grid>
   </div>
@@ -10,11 +11,13 @@
 <script>
 import ScheduleRadioList from './ScheduleRadioList.vue';
 import ScheduleRadioGrid from './ScheduleRadioGrid.vue';
+import ScheduleRadioGridLoading from './ScheduleRadioGridLoading.vue';
 
 export default {
   components: {
     ScheduleRadioList,
-    ScheduleRadioGrid
+    ScheduleRadioGrid,
+    ScheduleRadioGridLoading
   },
   methods: {
     keyLeft() {
@@ -23,6 +26,9 @@ export default {
     keyRight() {
       this.$store.dispatch('scrollForward');
     }
+  },
+  created() {
+    this.$store.dispatch('getSchedule');
   }
 };
 </script>

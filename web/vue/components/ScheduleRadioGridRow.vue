@@ -1,6 +1,7 @@
 <template>
   <div class="schedule-radio-grid-row">
-    <div v-if="!hasSchedule" class="program-container none" :style="noProgramStyleObject">
+    <div v-if="!hasSchedule && displayNoSchedule"
+         class="program-container none" :style="noProgramStyleObject">
       <div class="program">
         <div class="program-inner">Programmes non disponibles :(</div>
       </div>
@@ -22,7 +23,7 @@ import ScheduleRadioProgram from './ScheduleRadioProgram.vue';
 
 export default {
   components: { ScheduleRadioProgram },
-  props: ['radio'],
+  props: ['radio', 'displayNoSchedule'],
   computed: mapState({
     noProgramStyleObject(state) {
       return { left: `${state.schedule.scrollIndex}px` };

@@ -1,7 +1,5 @@
 import Vue from 'vue';
 
-import axios from 'axios';
-
 import orderBy from 'lodash/fp/orderBy';
 import filter from 'lodash/fp/filter';
 import compose from 'lodash/fp/compose';
@@ -9,6 +7,8 @@ import without from 'lodash/without';
 import forEach from 'lodash/forEach';
 
 import * as config from '../config/config';
+
+import scheduleApi from '../api/scheduleApi';
 
 const moment = require('moment-timezone');
 
@@ -89,7 +89,7 @@ const getUpdatedProgramText = (state) => {
 };
 
 /* eslint-disable no-undef */
-const getScheduleDisplay = () => {
+const getScheduleDisplay = (schedule) => {
   const startDay = moment().startOf('day');
   const result = {};
 
@@ -117,120 +117,140 @@ const getScheduleDisplay = () => {
   return result;
 };
 
-/* eslint-disable no-undef */
-const ScheduleStore = {
-  state: {
-    radios,
-    categories,
-    schedule,
-    scheduleDisplay: getScheduleDisplay(),
-    cursorTime,
-    scrollIndex: initialScrollIndex,
-    scrollClick: false,
-    categoriesExcluded: Vue.cookie.get(COOKIE_EXCLUDE)
-      ? Vue.cookie.get(COOKIE_EXCLUDE).split('|') : [],
-    categoryFilterFocus: {
-      icon: false,
-      list: false
-    }
-  },
-  getters: {
-    cursorIndex: (state) => {
-      const startDay = moment().tz(config.TIMEZONE).startOf('day');
-      const newIndex = state.cursorTime.diff(startDay, 'minutes') * config.MINUTE_PIXEL + 1;
-      return `${newIndex}px`;
-    },
-    gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
-    gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
-    // sort by share, desc
-    radiosRanked: state => compose(
-      orderBy(['share'], ['desc']),
-      filter(entry => state.categoriesExcluded.indexOf(entry.category) === -1)
-    )(state.radios),
-    displayCategoryFilter: state => state.categoryFilterFocus.icon
-      || state.categoryFilterFocus.list || false
-  },
-  mutations: {
-    updateDisplayData(state) {
-      if (state.scrollClick === true) {
-        return;
-      }
-
-      const update = getUpdatedProgramText(state);
-
-      forEach(update, (data, key) => {
-        state.scheduleDisplay[key].textLeft = data;
-      });
-    },
-    scrollSet(state, x) {
-      state.scrollIndex = x;
-    },
-    scrollTo(state, x) {
-      const newIndex = state.scrollIndex + x;
-      state.scrollIndex = enforceScrollIndex(newIndex);
-    },
-    updateCursor(state) {
-      state.cursorTime = moment().tz(config.TIMEZONE);
-    },
-    scrollClickSet: (state, value) => {
-      state.scrollClick = value;
-    },
-    setCategoryFilterFocus(state, params) {
-      state.categoryFilterFocus[params.element] = params.status;
-    },
-    toggleExcludeCategory(state, category) {
-      if (state.categoriesExcluded.indexOf(category) === -1) {
-        state.categoriesExcluded.push(category);
-      } else {
-        state.categoriesExcluded = without(state.categoriesExcluded, category);
-      }
-
-      Vue.cookie.set(COOKIE_EXCLUDE, state.categoriesExcluded.join('|'),
-        { expires: config.COOKIE_TTL });
-    },
-    updateSchedule: (state, value) => {
-      Vue.set(state, 'schedule', value);
-    }
-  },
-  actions: {
-    scrollToCursor: ({ commit }) => {
-      commit('scrollSet', initialScrollIndexFunction());
-      commit('updateDisplayData');
-    },
-    scroll: ({ commit }, x) => {
-      commit('scrollTo', x);
-      commit('updateDisplayData');
-    },
-    scrollBackward: ({ commit }) => {
-      commit('scrollTo', (-1 * config.NAV_MOVE_BY));
-      commit('updateDisplayData');
-    },
-    scrollForward: ({ commit }) => {
-      commit('scrollTo', config.NAV_MOVE_BY);
-      commit('updateDisplayData');
-    },
-    scrollClick: ({ commit }, value) => {
-      commit('scrollClickSet', value);
-      commit('updateDisplayData');
-    },
-    categoryFilterFocus: ({ commit }, params) => {
-      commit('setCategoryFilterFocus', params);
-    },
-    toggleExcludeCategory: ({ commit }, category) => {
-      commit('toggleExcludeCategory', category);
-    },
-    tick: ({ commit }) => {
-      const now = moment().tz(config.TIMEZONE);
-
-      if (now.hour() === 0 && now.minutes() === 5) {
-        axios.get(`${baseUrl}schedule`).then((response) => {
-          commit('updateSchedule', response.data.schedule);
-        });
-      }
-
-      commit('updateCursor');
-    }
+// initial state
+const initState = {
+  radios,
+  categories,
+  schedule: {},
+  scheduleDisplay: {},
+  cursorTime,
+  scrollIndex: initialScrollIndex,
+  scrollClick: false,
+  loading: false,
+  categoriesExcluded: Vue.cookie.get(COOKIE_EXCLUDE)
+    ? Vue.cookie.get(COOKIE_EXCLUDE).split('|') : [],
+  categoryFilterFocus: {
+    icon: false,
+    list: false
   }
 };
 
-export default ScheduleStore;
+// getters
+const getters = {
+  hasSchedule: state => Object.keys(state.schedule).length > 0,
+  cursorIndex: (state) => {
+    const startDay = moment().tz(config.TIMEZONE).startOf('day');
+    const newIndex = state.cursorTime.diff(startDay, 'minutes') * config.MINUTE_PIXEL + 1;
+    return `${newIndex}px`;
+  },
+  gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
+  gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
+  // sort by share, desc
+  radiosRanked: state => compose(
+    orderBy(['share'], ['desc']),
+    filter(entry => state.categoriesExcluded.indexOf(entry.category) === -1)
+  )(state.radios),
+  displayCategoryFilter: state => state.categoryFilterFocus.icon
+    || state.categoryFilterFocus.list || false
+};
+
+// actions
+const actions = {
+  scrollToCursor: ({ commit }) => {
+    commit('scrollSet', initialScrollIndexFunction());
+    commit('updateDisplayData');
+  },
+  scroll: ({ commit }, x) => {
+    commit('scrollTo', x);
+    commit('updateDisplayData');
+  },
+  scrollBackward: ({ commit }) => {
+    commit('scrollTo', (-1 * config.NAV_MOVE_BY));
+    commit('updateDisplayData');
+  },
+  scrollForward: ({ commit }) => {
+    commit('scrollTo', config.NAV_MOVE_BY);
+    commit('updateDisplayData');
+  },
+  scrollClick: ({ commit }, value) => {
+    commit('scrollClickSet', value);
+    commit('updateDisplayData');
+  },
+  categoryFilterFocus: ({ commit }, params) => {
+    commit('setCategoryFilterFocus', params);
+  },
+  toggleExcludeCategory: ({ commit }, category) => {
+    commit('toggleExcludeCategory', category);
+  },
+  getSchedule: ({ commit }) => {
+    commit('setLoading', true);
+    scheduleApi.getSchedule()
+      .then(schedule => commit('updateSchedule', schedule))
+      .then(() => commit('setLoading', false));
+  },
+  tick: ({ commit, dispatch }) => {
+    const now = moment().tz(config.TIMEZONE);
+
+    if (now.hour() === 0 && now.minutes() === 5) {
+      dispatch('getSchedule');
+    }
+
+    commit('updateCursor');
+  }
+};
+
+// mutations
+const mutations = {
+  updateDisplayData(state) {
+    if (state.scrollClick === true) {
+      return;
+    }
+
+    const update = getUpdatedProgramText(state);
+
+    forEach(update, (data, key) => {
+      state.scheduleDisplay[key].textLeft = data;
+    });
+  },
+  scrollSet(state, x) {
+    state.scrollIndex = x;
+  },
+  scrollTo(state, x) {
+    const newIndex = state.scrollIndex + x;
+    state.scrollIndex = enforceScrollIndex(newIndex);
+  },
+  updateCursor(state) {
+    state.cursorTime = moment().tz(config.TIMEZONE);
+  },
+  scrollClickSet: (state, value) => {
+    state.scrollClick = value;
+  },
+  setCategoryFilterFocus(state, params) {
+    state.categoryFilterFocus[params.element] = params.status;
+  },
+  toggleExcludeCategory(state, category) {
+    if (state.categoriesExcluded.indexOf(category) === -1) {
+      state.categoriesExcluded.push(category);
+    } else {
+      state.categoriesExcluded = without(state.categoriesExcluded, category);
+    }
+
+    Vue.cookie.set(COOKIE_EXCLUDE, state.categoriesExcluded.join('|'),
+      { expires: config.COOKIE_TTL });
+  },
+  setLoading: (state, value) => {
+    state.loading = value;
+  },
+  updateSchedule: (state, value) => {
+    const scheduleDisplay = getScheduleDisplay(value);
+    Vue.set(state, 'schedule', value);
+    Vue.set(state, 'scheduleDisplay', scheduleDisplay);
+  }
+};
+
+export default {
+  state: initState,
+  getters,
+  actions,
+  mutations
+};

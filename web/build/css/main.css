@@ -7571,7 +7571,7 @@ body .footer a:focus {
 .timeline-cursor {
   z-index: 5;
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 0;
   height: 100%;
   width: 2px;
@@ -7794,6 +7794,49 @@ body .footer a:focus {
 }
 .popover .popover-content p.section-presenter {
   font-style: italic;
+}
+.loading {
+  position: fixed;
+  /* or absolute */
+  top: 50%;
+  left: 50%;
+  z-index: 6;
+  opacity: 0.9;
+}
+.loading .alert-progradio {
+  background-color: #cdcdcd;
+  color: #676767;
+}
+.loading .glyphicon {
+  margin-right: 5px;
+}
+.loading .glyphicon-refresh-animate {
+  -animation: spin .7s infinite linear;
+  -webkit-animation: spin2 .7s infinite linear;
+}
+@-webkit-keyframes spin2 {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    transform: scale(1) rotate(360deg);
+  }
+}
+.loading.v-enter-active,
+.loading.v-leave-active {
+  transition: opacity 300ms;
+}
+.loading.v-enter,
+.loading.v-leave-to {
+  opacity: 0;
 }
 #faq .content h3 {
   margin-top: 10px;
