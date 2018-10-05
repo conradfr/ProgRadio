@@ -107,11 +107,13 @@ class ScheduleEntryRepository extends EntityRepository
             select r.id as radio_id, r.code_name as radio_code_name,
                date_trunc('day', se.date_time_start at time zone 'UTC' at time zone 'Europe/Paris') as se_day,
                date_trunc('day', se.date_time_start at time zone 'UTC' at time zone 'Europe/Paris') + INTERVAL '7 day' as se_day_next,
-               count(se.id) as total
+           count(distinct se.id) as total,
+           count(e.id) as sub_total
         
             from schedule_entry se
                 inner join radio r on r.id = se.radio_id
-        
+                left join section_entry e on se.id = e.schedule_entry_id
+                
             where se.date_time_start <= :todayTime AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris'
                 and se.date_time_start >= :twoWeeksTime AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris'
         
@@ -121,9 +123,12 @@ class ScheduleEntryRepository extends EntityRepository
         SELECT date_trunc('day', dayrange)::date as day,
                r.code_name,
                COALESCE(da.total, 0) as total,
+               COALESCE(da.sub_total, 0) as sub_total,
                COALESCE(pda.total, 0) prev_total,
-               (COALESCE(da.total, 0) - COALESCE(pda.total, 0)) as diff
-    
+               COALESCE(pda.sub_total, 0) prev_sub_total,
+               (COALESCE(da.total, 0) - COALESCE(pda.total, 0)) as diff,
+               (COALESCE(da.sub_total, 0) - COALESCE(pda.sub_total, 0)) as sub_diff
+           
         FROM generate_series (:week::timestamp, :today::timestamp, '1 day'::interval) dayrange
                CROSS JOIN radio as r
                LEFT JOIN day_agg as da on da.se_day = dayrange and da.radio_id = r.id
@@ -133,7 +138,7 @@ class ScheduleEntryRepository extends EntityRepository
                 and dayrange >= :week
                 and r.active = true
     
-        ORDER BY r.id asc, day asc;
+        ORDER BY r.id asc, day desc;
 EOT;
 
         $rsm = new ResultSetMapping();
@@ -141,7 +146,10 @@ EOT;
             ->addScalarResult('code_name', 'radio_code_name', 'string')
             ->addScalarResult('total', 'total', 'integer')
             ->addScalarResult('prev_total', 'prev_total', 'integer')
-            ->addScalarResult('diff', 'diff', 'integer');
+            ->addScalarResult('diff', 'diff', 'integer')
+            ->addScalarResult('sub_total', 'section_total', 'integer')
+            ->addScalarResult('prev_sub_section', 'prev_section_total', 'integer')
+            ->addScalarResult('sub_diff', 'section_diff', 'integer');
 
         $query = $this->getEntityManager()->createNativeQuery($queryStr, $rsm);
         $query->setParameters([
