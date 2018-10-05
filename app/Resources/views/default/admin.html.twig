@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+{% block footerclasssupp %}{% endblock %}
+
+{% import _self as self %}
+
+{% macro trend(value) %}
+    {% set class = '' %}
+    {% set sign = '' %}
+    {% if value > 0 %}
+        {% set class = 'trend-up' %}
+        {% set sign = '+' %}
+    {% elseif value < 0 %}
+        {% set class = 'trend-down' %}
+    {% endif %}
+
+    <span class="trend {{ class }}">{{ sign }}{{ value }}</span>
+{% endmacro %}
+
+{% macro nbshows(value) %}
+    {% set class = '' %}
+    {% if value == 0 %}
+        {% set class = 'trend-zero' %}
+    {% endif %}
+
+    <span class="trend {{ class }}">{{ value }}</span>
+{% endmacro %}
+
+{% block body %}
+<div id="admin" class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table schedule-stats table-striped table-bordered">
+            {% for radio, entries in stats %}
+                {% if loop.index == 1 %}
+                <tr>
+                    <th></th>
+                    {% for entry in entries %}
+                        <th>{{ entry.day | date('D d/m/Y') }}</th>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+            <tr>
+                <td class="radio-header">
+                    <img src="{{ asset('img/radio/' ~ radio ~ '_icon.png') }}">
+                </td>
+                {% for entry in entries %}
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-4">{{ self.nbshows(entry.total) }}</div>
+                        <div class="col-md-4">{{ self.trend(entry.diff) }}</div>
+                    </div>
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7912,6 +7912,40 @@ body .footer a:focus {
   margin-bottom: 20px;
   /* for shows without enough text */
 }
+#admin {
+  padding-top: 10px;
+}
+#admin .schedule-stats {
+  width: 100%;
+}
+#admin .schedule-stats th {
+  vertical-align: middle;
+  text-align: center;
+}
+#admin .schedule-stats td {
+  height: 48px;
+  width: 13%;
+  vertical-align: middle;
+  text-align: center;
+}
+#admin .schedule-stats td .trend.trend-up {
+  color: #2d682f;
+}
+#admin .schedule-stats td .trend.trend-down {
+  color: #ff9800;
+  font-weight: bold;
+}
+#admin .schedule-stats td .trend.trend-zero {
+  color: #e51c23;
+  font-weight: bold;
+}
+#admin .schedule-stats td.radio-header {
+  width: auto;
+}
+#admin .schedule-stats td.radio-header img {
+  max-height: 32px;
+  max-width: 32px;
+}
 .schedule-container .schedule-radio-list {
   position: absolute;
   z-index: 2;

@@ -1,0 +1,45 @@
+#admin {
+  padding-top: 10px;
+
+  .schedule-stats {
+    width: 100%;
+
+    th {
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    td {
+      height: 48px;
+      width: 13%;
+
+      vertical-align: middle;
+      text-align: center;
+
+      .trend {
+        &.trend-up {
+          color: darken(@brand-success, 20%);
+        }
+
+        &.trend-down {
+          color: @brand-warning;
+          font-weight: bold;
+        }
+
+        &.trend-zero {
+          color: @brand-danger;
+          font-weight: bold;
+        }
+      }
+
+      &.radio-header {
+        width: auto;
+
+        img {
+          max-height: 32px;
+          max-width: 32px;
+        }
+      }
+    }
+  }
+}

@@ -3,12 +3,15 @@
 namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * ScheduleEntryRepository
  */
 class ScheduleEntryRepository extends EntityRepository
 {
+    const DAY_FORMAT = 'Y-m-d';
+
     /**
      * @param \DateTime $dateTime
      * @param array $radios array of radio codename, if null get all radios
@@ -17,7 +20,7 @@ class ScheduleEntryRepository extends EntityRepository
      */
     public function getDaySchedule(\DateTime $dateTime, array $radios=null)
     {
-        $result = $this->getSchedulesAndSections( $dateTime, $radios);
+        $result = $this->getSchedulesAndSections($dateTime, $radios);
 
         // array of radios, to be filled with schedules
         $export = array_fill_keys(array_column($result, 'codeName'), []);
@@ -86,11 +89,86 @@ class ScheduleEntryRepository extends EntityRepository
     }
 
     /**
+     * Get stats for each day of the last 7 days with total shows per radio
+     * and the difference with the same day the week before
+     *
+     * @return array
+     */
+    public function getStatsByDayAndRadio()
+    {
+        $dateTime = new \DateTime();
+        $dateTimeOneWeek = clone $dateTime;
+        $dateTimeOneWeek->add(\DateInterval::createfromdatestring('-6 day'));
+        $dateTimeTwoWeeks = clone $dateTime;
+        $dateTimeTwoWeeks->add(\DateInterval::createfromdatestring('-13 day'));
+
+        $queryStr = <<<EOT
+        WITH day_agg AS (
+            select r.id as radio_id, r.code_name as radio_code_name,
+               date_trunc('day', se.date_time_start at time zone 'UTC' at time zone 'Europe/Paris') as se_day,
+               date_trunc('day', se.date_time_start at time zone 'UTC' at time zone 'Europe/Paris') + INTERVAL '7 day' as se_day_next,
+               count(se.id) as total
+        
+            from schedule_entry se
+                inner join radio r on r.id = se.radio_id
+        
+            where se.date_time_start <= :todayTime AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris'
+                and se.date_time_start >= :twoWeeksTime AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris'
+        
+            GROUP BY r.id, 3
+        )
+    
+        SELECT date_trunc('day', dayrange)::date as day,
+               r.code_name,
+               COALESCE(da.total, 0) as total,
+               COALESCE(pda.total, 0) prev_total,
+               (COALESCE(da.total, 0) - COALESCE(pda.total, 0)) as diff
+    
+        FROM generate_series (:week::timestamp, :today::timestamp, '1 day'::interval) dayrange
+               CROSS JOIN radio as r
+               LEFT JOIN day_agg as da on da.se_day = dayrange and da.radio_id = r.id
+               LEFT join day_agg pda on pda.se_day_next = da.se_day and pda.radio_id = da.radio_id
+    
+        where dayrange <= :today
+                and dayrange >= :week
+                and r.active = true
+    
+        ORDER BY r.id asc, day asc;
+EOT;
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('day', 'day', 'string')
+            ->addScalarResult('code_name', 'radio_code_name', 'string')
+            ->addScalarResult('total', 'total', 'integer')
+            ->addScalarResult('prev_total', 'prev_total', 'integer')
+            ->addScalarResult('diff', 'diff', 'integer');
+
+        $query = $this->getEntityManager()->createNativeQuery($queryStr, $rsm);
+        $query->setParameters([
+           ':today' => $dateTime->format(self::DAY_FORMAT),
+           ':week' => $dateTimeOneWeek->format(self::DAY_FORMAT),
+           ':todayTime' => $dateTime->format(self::DAY_FORMAT) . ' 23:29:59',
+           ':twoWeeksTime' => $dateTimeTwoWeeks->format(self::DAY_FORMAT) . ' 00:00:00'
+        ]);
+
+        $result = $query->getResult();
+
+        $return = [];
+
+        foreach ($result as $item) {
+            $return[$item['radio_code_name']][] = $item;
+        }
+
+        return $return;
+    }
+
+    /**
      * @param array $row
      *
      * @return array|null
      */
-    protected function hydrateSection(&$row) {
+    protected function hydrateSection(&$row)
+    {
         if (!isset($row['section_title'])) {
             return null;
         }
@@ -112,7 +190,8 @@ class ScheduleEntryRepository extends EntityRepository
     /**
      * @return string
      */
-    protected function getScheduleSelectString() {
+    protected function getScheduleSelectString()
+    {
         return 'r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
                 . 'AT_TIME_ZONE(AT_TIME_ZONE(se.dateTimeStart,\'UTC\'), \'Europe/Paris\') as start_at,'
                 . 'AT_TIME_ZONE(AT_TIME_ZONE(se.dateTimeEnd,\'UTC\'), \'Europe/Paris\') as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'

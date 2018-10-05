@@ -4,3 +4,6 @@ app:
 
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.yaml"
+
+logout:
+    path: /logout
