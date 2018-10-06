@@ -5,12 +5,10 @@ const logger = require('../lib/logger.js');
 let scrapedData = [];
 
 const format = dateObj => {
-    const dayStr = dateObj.format('DD');
-
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr){
         // Time
-        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s—\s([0-9]{1,2})[h|H]([0-9]{2})/);
+        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s{0,1}[—|-]\s{0,1}([0-9]{1,2})[h|H]([0-9]{2})/);
         let match = curr.datetime_raw.match(regexp);
 
         // no time, exit
