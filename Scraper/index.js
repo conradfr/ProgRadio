@@ -48,7 +48,8 @@ const radios = options['radios'] || [
     'sudradio',
     'ouifm',
     'cherie',
-    'mradio'
+    'mradio',
+    'mouv'
 ];
 
 const redisClient = redis.createClient(config.parameters.redis_dsn);
