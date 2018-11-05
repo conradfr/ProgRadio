@@ -39,10 +39,10 @@ const format = dateObj => {
         delete curr.datetime_raw;
 
         if (endDateTime !== null) {
-            curr.schedule_end = endDateTime.toISOString();
+            curr.date_time_end = endDateTime.toISOString();
         }
 
-        curr.schedule_start = startDateTime.toISOString();
+        curr.date_time_start = startDateTime.toISOString();
         curr.timezone = 'Europe/Paris';
 
         prev.push(curr);

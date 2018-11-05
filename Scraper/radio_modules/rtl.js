@@ -22,12 +22,12 @@ const format = dateObj => {
                 delete element['class'];
 
                 if (isMain) {
-                    element.schedule_start = date.toISOString();
+                    element.date_time_start = date.toISOString();
                     element.timezone = 'Europe/Paris';
 
                     main = element;
                 } else {
-                    element.datetime_start = date.toISOString();
+                    element.date_time_start = date.toISOString();
 
                     element.presenter = element.host;
                     delete element.host;

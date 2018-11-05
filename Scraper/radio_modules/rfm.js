@@ -30,8 +30,8 @@ const format = dateObj => {
         }
 
         delete curr.datetime_raw;
-        curr.schedule_start = startDateTime.toISOString();
-        curr.schedule_end = endDateTime.toISOString();
+        curr.date_time_start = startDateTime.toISOString();
+        curr.date_time_end = endDateTime.toISOString();
         curr.timezone = 'Europe/Paris';
 
         prev.push(curr);

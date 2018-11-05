@@ -83,11 +83,11 @@ const format = dateObj => {
             }
         }
 
-        newEntry.schedule_start = startDateTime;
-        newEntry.schedule_end = endDateTime;
+        newEntry.date_time_start = startDateTime;
+        newEntry.date_time_end = endDateTime;
 
         // sometimes two programs starts at same time, filtering the second one for now ...
-        if (index > 0 && prev.length > 0 && startDateTime.isSame(moment(prev[prev.length -1].schedule_start), 'minute')) {
+        if (index > 0 && prev.length > 0 && startDateTime.isSame(moment(prev[prev.length -1].date_time_start), 'minute')) {
             return prev;
         }
 

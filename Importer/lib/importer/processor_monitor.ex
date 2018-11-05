@@ -12,14 +12,15 @@ defmodule Importer.ProcessorMonitor do
     GenServer.start_link(__MODULE__, :ok, name: @name)
   end
 
-  @spec process_entry(binary) :: atom
+  @spec process_entry(String.t()) :: atom
   def process_entry(key) do
     GenServer.cast(@name, {:entry, key})
     :ok
   end
 
-  def processed_entry(key, date, radio) do
-    Importer.Queue.key_processed(key, date, radio)
+  @spec processed_entry(String.t(), Date.t() | nil, String.t() | nil) :: any
+  def processed_entry(key, date, radio_name) do
+    Importer.Queue.key_processed(key, date, radio_name)
   end
 
   # ----- Server callbacks -----
@@ -29,7 +30,9 @@ defmodule Importer.ProcessorMonitor do
   end
 
   def handle_cast({:entry, key}, _state) do
-    Task.Supervisor.start_child(Importer.TaskSupervisor, fn -> Importer.Processor.process(key) end)
+    Task.Supervisor.start_child(Importer.TaskSupervisor, fn ->
+      Importer.Processor.Processor.process(key)
+    end)
 
     {:noreply, nil}
   end

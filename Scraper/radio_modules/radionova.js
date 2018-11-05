@@ -30,7 +30,7 @@ const format = dateObj => {
         // Export
 
         newEntry = {
-            'schedule_start': startDateTime.toISOString(),
+            'date_time_start': startDateTime.toISOString(),
             'timezone': 'Europe/Paris',
             'img': 'https://www.nova.fr' + curr.img.split('?')[0],
             'host': curr.host.substr(4),

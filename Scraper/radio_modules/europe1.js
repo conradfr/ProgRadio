@@ -31,8 +31,8 @@ const format = dateObj => {
         }
 
         delete entry.datetime_raw;
-        entry.schedule_start = startDateTime.toISOString();
-        entry.schedule_end = endDateTime.toISOString();
+        entry.date_time_start = startDateTime.toISOString();
+        entry.date_time_end = endDateTime.toISOString();
         entry.timezone = 'Europe/Paris';
 
         entry.host = entry.host.split('\n')[0];
@@ -53,7 +53,7 @@ const format = dateObj => {
 
                     entry.sections.push({
                         'title': title,
-                        'datetime_start': startDateTime.toISOString(),
+                        'date_time_start': startDateTime.toISOString(),
                         'presenter': element.presenter,
                         'img': element.img
                     })

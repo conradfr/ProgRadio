@@ -24,7 +24,7 @@ const format = dateObj => {
         startDateTime.second(0);
 
         // sometimes two programs starts at same time, filtering the second one for now ...
-        if (index > 0 && typeof prev[index -1] !== 'undefined' && startDateTime.isSame(moment(prev[index -1].schedule_start), 'minute')) {
+        if (index > 0 && typeof prev[index -1] !== 'undefined' && startDateTime.isSame(moment(prev[index -1].date_time_start), 'minute')) {
             return prev;
         }
 
@@ -34,7 +34,7 @@ const format = dateObj => {
             if (index !== (array.length - 1)) { return prev; }
 
             // Check if current schedule starts at midnight (probably not)
-            firstentryTime = moment(prev[0].schedule_start);
+            firstentryTime = moment(prev[0].date_time_start);
             if (firstentryTime.hour() === 0) { return prev; }
 
             startDateTime = firstentryTime;
@@ -60,12 +60,12 @@ const format = dateObj => {
 
             sections.push({
                 'title': title,
-                'datetime_start': sectionStartDateTime.toISOString(),
+                'date_time_start': sectionStartDateTime.toISOString(),
             });
          }
 
         newEntry = {
-            'schedule_start': startDateTime.toISOString(),
+            'date_time_start': startDateTime.toISOString(),
             'timezone': 'Europe/Paris',
             'title': utils.upperCaseWords(striptags(curr.title)),
             'description': striptags(curr.description),

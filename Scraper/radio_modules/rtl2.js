@@ -14,7 +14,7 @@ const format = dateObj => {
         // filter other days
         if (date.tz('Europe/Paris').format('DD') === dayStr) {
             delete curr.datetime_raw;
-            curr.schedule_start = date.toISOString();
+            curr.date_time_start = date.toISOString();
             curr.timezone = 'Europe/Paris';
 
             prev.push(curr);

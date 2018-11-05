@@ -85,7 +85,7 @@ const format = dateObj => {
             // }
         // }
 
-        newEntry.schedule_start = startDateTime;
+        newEntry.date_time_start = startDateTime;
 
         let prevMatch = null;
         // keep only relevant time from previous day page

@@ -5,7 +5,7 @@ defmodule Importer.Mixfile do
     [
       app: :importer,
       description: "Importer daemon",
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -25,9 +25,9 @@ defmodule Importer.Mixfile do
   defp deps do
     [
       {:redix, ">= 0.0.0"},
-      {:poison, "~> 3.1"},
+      {:jason, "~> 1.1"},
       {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 2.2"},
+      {:ecto_sql, "~> 3.0"},
       {:timex, "~> 3.2"},
       {:httpoison, "~> 1.0.0"},
       {:gen_stage, "~> 0.13"},

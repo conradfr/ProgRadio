@@ -19,8 +19,8 @@ defmodule Importer.Queue do
     GenServer.start_link(__MODULE__, :ok, name: @name)
   end
 
-  def key_processed(key, date, radio) do
-    GenServer.cast(@name, {:key_processed, key, date, radio})
+  def key_processed(key, date, radio_name) do
+    GenServer.cast(@name, {:key_processed, key, date, radio_name})
   end
 
   # ----- Server callbacks -----
@@ -48,8 +48,12 @@ defmodule Importer.Queue do
   end
 
   @spec handle_cast(tuple, any) :: no_return
-  def handle_cast({:key_processed, key, date, radio}, _state) do
-    Importer.ScheduleCache.remove(date, radio)
+  def handle_cast({:key_processed, key, date, radio_name}, _state) do
+    Logger.info("Processed: " <> key)
+
+    if date !== nil and radio_name !== nil do
+      Importer.ScheduleCache.remove(date, radio_name)
+    end
 
     case Redix.command(:redix, ["LREM", @queue_processing, 1, key]) do
       {:ok, _} -> Redix.command(:redix, ["DEL", key])
@@ -68,7 +72,7 @@ defmodule Importer.Queue do
   def query_queue() do
     case Redix.command(:redix, ["RPOPLPUSH", @queue_list, @queue_processing]) do
       {:ok, key} when is_binary(key) ->
-        Logger.info(key)
+        Logger.info("Entry: " <> key)
         Importer.ProcessorMonitor.process_entry(key)
         query_queue()
 

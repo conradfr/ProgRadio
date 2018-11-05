@@ -26,11 +26,11 @@ const format = dateObj => {
         startDateTime.second(0);
 
         // filter other days (i.e last line is midnight next day)
-        if (prev.length > 0 && startDateTime.isBefore(moment(prev[prev.length - 1].schedule_start))) {
+        if (prev.length > 0 && startDateTime.isBefore(moment(prev[prev.length - 1].date_time_start))) {
             return prev;
         }
 
-        newEntry.schedule_start = startDateTime.toISOString();
+        newEntry.date_time_start = startDateTime.toISOString();
         newEntry.timezone = 'Europe/Paris';
 
         // Title & host

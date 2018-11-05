@@ -12,7 +12,7 @@ const format = dateObj => {
         date.second(0);
 
         delete curr.datetime_raw;
-        curr.schedule_start = date.toISOString();
+        curr.date_time_start = date.toISOString();
         curr.timezone = 'Europe/Paris';
 
         // host is string as "par <host>"

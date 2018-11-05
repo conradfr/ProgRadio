@@ -28,7 +28,7 @@ const format = (dateObj) => {
 
         delete curr.time;
 
-        curr.schedule_start = startDateTime.toISOString();
+        curr.date_time_start = startDateTime.toISOString();
         curr.timezone = 'Europe/Paris';
 
         // host ?

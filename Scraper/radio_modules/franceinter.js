@@ -10,7 +10,6 @@ const format = dateObj => {
     const mains = [];
     const sections = [];
 
-    // we use reduce instead of map to act as a map+filter in one pass
     scrapedData.forEach(function(curr) {
         const date = moment.unix(parseInt(curr['datetime_raw']));
 
@@ -31,15 +30,14 @@ const format = dateObj => {
             }
 
             if (typeof curr.main !== 'undefined'){
-                curr.schedule_start = date.toISOString();
+                curr.date_time_start = date.toISOString();
                 curr.timezone = 'Europe/Paris';
 
                 delete curr.main;
                 curr.sections = [];
                 mains.push(curr);
             } else {
-                curr.datetime_start = date.toISOString();
-                delete curr.schedule_start;
+                curr.date_time_start = date.toISOString();
 
                 if (curr.host !== undefined && curr.host !== null) {
                     curr.presenter = curr.host;
@@ -54,8 +52,8 @@ const format = dateObj => {
     if (sections.length > 0) {
         // sort mains
         function compare(a,b) {
-            momentA = moment(a.schedule_start);
-            momentB = moment(b.schedule_start);
+            momentA = moment(a.date_time_start);
+            momentB = moment(b.date_time_start);
 
             if (momentA.isBefore(momentB))
                 return -1;
@@ -68,8 +66,8 @@ const format = dateObj => {
 
         sections.forEach(function(entry) {
             for (i=0;i<mains.length;i++){
-                entryMoment = moment(entry.datetime_start);
-                mainMoment = moment(mains[i].schedule_start);
+                entryMoment = moment(entry.date_time_start);
+                mainMoment = moment(mains[i].date_time_start);
 
                 let toAdd = false;
                 if (i === (mains.length - 1)) {
@@ -77,7 +75,7 @@ const format = dateObj => {
                         toAdd = true;
                     }
                 }
-                else if (entryMoment.isBetween(mainMoment, moment(mains[i + 1].schedule_start))) {
+                else if (entryMoment.isBetween(mainMoment, moment(mains[i + 1].date_time_start))) {
                     toAdd = true;
                 }
 

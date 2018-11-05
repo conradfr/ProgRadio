@@ -1,6 +1,5 @@
 defmodule Importer.ImageImporter do
   use GenServer
-
   require Application
   require Logger
 
@@ -15,7 +14,7 @@ defmodule Importer.ImageImporter do
     GenServer.start_link(__MODULE__, :ok, name: @name)
   end
 
-  @spec import(binary, any) :: tuple
+  @spec import(String.t(), struct) :: tuple
   def import(url, radio) do
     GenServer.call(@name, {:import, url, radio})
   end
@@ -54,7 +53,7 @@ defmodule Importer.ImageImporter do
     end
   end
 
-  @spec full_url(binary) :: binary
+  @spec full_url(String.t()) :: String.t()
   defp full_url(url) do
     if String.slice(url, 0, 4) != "http" do
       "http:" <> url
@@ -63,7 +62,7 @@ defmodule Importer.ImageImporter do
     end
   end
 
-  @spec get_name(binary, any) :: binary
+  @spec get_name(String.t(), struct) :: String.t()
   defp get_name(url, radio) do
     name =
       URI.parse(url)

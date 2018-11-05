@@ -23,7 +23,7 @@ const format = dateObj => {
         startDateTime.second(0);
 
         delete curr.datetime_raw;
-        curr.schedule_start = startDateTime.toISOString();
+        curr.date_time_start = startDateTime.toISOString();
         curr.timezone = 'Europe/Paris';
 
         prev.push(curr);

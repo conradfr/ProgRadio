@@ -9,22 +9,22 @@ const format = dateObj => {
 
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr){
-        const dateStart = moment.unix(parseInt(curr['datetime_start_raw']));
+        const dateStart = moment.unix(parseInt(curr['date_time_start_raw']));
 
         // filter other days
         if (dateStart.tz('Europe/Paris').format('DD') === dayStr) {
-            delete curr.datetime_start_raw;
+            delete curr.date_time_start_raw;
 
             // filtering weird base64 for now
             if (typeof curr.img !== 'undefined' && curr.img.substring(0, 3) !== 'http') {
                 delete curr.img;
             }
 
-            const dateEnd = moment.unix(parseInt(curr['datetime_end_raw']));
-            delete curr.datetime_end_raw;
+            const dateEnd = moment.unix(parseInt(curr['date_time_end_raw']));
+            delete curr.date_time_end_raw;
 
-            curr.schedule_start = dateStart.toISOString();
-            curr.schedule_end = dateEnd.toISOString();
+            curr.date_time_start = dateStart.toISOString();
+            curr.date_time_end = dateEnd.toISOString();
             curr.timezone = 'Europe/Paris';
 
             prev.push(curr);
@@ -47,8 +47,8 @@ const fetch = dateObj => {
             .get(url)
             .find('.program-item')
             .set({
-                'datetime_start_raw': '@data-start-time', /* utc */
-                'datetime_end_raw': '@data-end-time'
+                'date_time_start_raw': '@data-start-time', /* utc */
+                'date_time_end_raw': '@data-end-time'
             })
             .select('.level1')
             .set({

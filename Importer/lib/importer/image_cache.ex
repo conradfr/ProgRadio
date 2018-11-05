@@ -9,15 +9,15 @@ defmodule Importer.ImageCache do
     "cache/program_thumb/media/program/"
   ]
 
-  @spec is_cached(binary) :: boolean
+  @spec is_cached(String.t()) :: boolean
   def is_cached(filepath) do
     with file_exists when file_exists == true <- File.exists?(filepath),
-         {:ok, stat} <- File.lstat(filepath, [{:time, :posix}])
-    do
+         {:ok, stat} <- File.lstat(filepath, [{:time, :posix}]) do
       case is_ttl_over(stat.mtime) do
         true ->
           delete_cached_files(filepath)
           false
+
         false ->
           true
       end
@@ -31,7 +31,7 @@ defmodule Importer.ImageCache do
     DateTime.to_unix(DateTime.utc_now()) - @ttl > datetime
   end
 
-  @spec delete_cached_files(binary) :: atom
+  @spec delete_cached_files(String.t()) :: atom
   defp delete_cached_files(filepath) do
     # original image
     File.rm(filepath)

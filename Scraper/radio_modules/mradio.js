@@ -83,8 +83,8 @@ const format = dateObj => {
         entry.description = entry.description.join(' ');
 
         delete entry.datetime_raw;
-        entry.schedule_start = startDateTime.toISOString();
-        entry.schedule_end = endDateTime.toISOString();
+        entry.date_time_start = startDateTime.toISOString();
+        entry.date_time_end = endDateTime.toISOString();
         entry.timezone = 'Europe/Paris';
 
         prev.push(entry);

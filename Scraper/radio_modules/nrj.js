@@ -48,7 +48,7 @@ const format = dateObj => {
         }
 
         newEntry = {
-            'schedule_start': startDateTime.toISOString(),
+            'date_time_start': startDateTime.toISOString(),
             'timezone': 'Europe/Paris',
             'title': curr.title,
             'img': curr.img,
