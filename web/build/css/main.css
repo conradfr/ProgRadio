@@ -8004,6 +8004,8 @@ body .footer a:focus {
 .schedule-container .schedule-radio-grid {
   margin-top: 40px;
   margin-left: calc(76px);
+  padding-bottom: 1px;
+  /* prevents vertical scroll bar due to sections */
   position: relative;
   white-space: nowrap;
   cursor: ew-resize;
