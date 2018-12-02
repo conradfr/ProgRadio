@@ -27,9 +27,12 @@ const format = dateObj => {
     let newEntry = {
       'title': content.contentReducer.title,
       'timezone': 'Europe/Paris',
-      'img': content.contentReducer.visual.url,
-      'description': content.contentReducer.body.children[0].children[0].value
+      'img': content.contentReducer.visual.url
     };
+
+    if (content.contentReducer.body !== null) {
+      newEntry.description = content.contentReducer.body.children[0].children[0].value;
+    }
 
     let matched = false;
     let match_time = null;
