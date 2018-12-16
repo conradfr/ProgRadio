@@ -7508,7 +7508,7 @@ body .footer a:focus {
   opacity: 0.8;
   transition: opacity 70ms ease-out;
   height: 41px;
-  padding-top: 1px;
+  padding-top: 2px;
   color: #676767;
   font-size: 18px;
   cursor: pointer;
@@ -7516,6 +7516,29 @@ body .footer a:focus {
 .timeline .timeline-control:hover,
 .timeline .timeline-control.filter-icon-active {
   opacity: 0.97;
+}
+.timeline .timeline-control.timeline-calendar {
+  right: 40px;
+  min-width: 110px;
+  font-size: 12px;
+  text-align: center;
+  cursor: default;
+  box-shadow: -2px 2px 6px -3px rgba(0, 0, 0, 0.4);
+  background-color: #cdcdcd;
+  padding: 1px 6px 0;
+}
+.timeline .timeline-control.timeline-calendar span {
+  cursor: pointer;
+}
+.timeline .timeline-control.timeline-calendar span.timeline-calendar-no-click {
+  cursor: default;
+}
+.timeline .timeline-control.timeline-calendar span.glyphicon {
+  color: #8d8d8d;
+  vertical-align: text-top;
+}
+.timeline .timeline-control.timeline-calendar span.glyphicon:first-child {
+  text-align: left;
 }
 .timeline .timeline-control.timeline-control-left {
   left: 0;
@@ -7576,6 +7599,9 @@ body .footer a:focus {
   height: 100%;
   width: 2px;
   opacity: 0.8;
+  background-color: #898989;
+}
+.timeline-cursor.timeline-cursor-today {
   background-color: #2196f3;
 }
 .timeline-cursor-head {
@@ -7585,10 +7611,9 @@ body .footer a:focus {
   left: 0;
   height: 3px;
   width: 2px;
-  opacity: 0.8;
   backface-visibility: hidden;
   transition: left 850ms cubic-bezier(0.21, 1.12, 0.67, 0.99);
-  background-color: #2196f3;
+  background-color: #898989;
 }
 .timeline-cursor-head:after {
   position: absolute;
@@ -7601,6 +7626,13 @@ body .footer a:focus {
   -webkit-transform: translate3d(-50%, 0, 0);
   transform: translate3d(-50%, 0, 0);
   border: 8px solid transparent;
+  opacity: 0.8;
+  border-top-color: #898989;
+}
+.timeline-cursor-head.timeline-cursor-head-today {
+  background-color: #2196f3;
+}
+.timeline-cursor-head.timeline-cursor-head-today:after {
   border-top-color: #2196f3;
 }
 #volume-fader {
@@ -8056,8 +8088,8 @@ body .footer a:focus {
   user-select: none;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current {
-  background-color: #f9fcff;
-  border-left: 3px solid #a8bac8;
+  background-color: #fcfcfc;
+  border-left: 3px solid #b8b8b8;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-full {
   visibility: hidden;
@@ -8089,7 +8121,7 @@ body .footer a:focus {
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current .program-description-short-inner:before,
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .program-description-short-inner:before {
-  background: linear-gradient(to right, rgba(249, 252, 255, 0) 90%, rgba(249, 252, 255, 0.88) 95%, rgba(249, 252, 255, 0.999) 99%) !important;
+  background: linear-gradient(to right, rgba(252, 252, 252, 0) 90%, rgba(252, 252, 252, 0.88) 95%, rgba(252, 252, 252, 0.999) 99%) !important;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner {
   height: 100%;

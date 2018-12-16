@@ -1,12 +1,18 @@
 <template>
-  <div class="timeline-cursor-head" :style="styleObject"></div>
+  <div class="timeline-cursor-head"
+       v-bind:class="{ 'timeline-cursor-head-today': isToday }"
+       :style="styleObject"></div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { GRID_VIEW_EXTRA_LEFT } from '../config/config';
 
 export default {
   computed: {
+    ...mapGetters([
+      'isToday'
+    ]),
     styleObject() {
       const style = {
         left: `calc(${this.$store.getters.cursorIndex}

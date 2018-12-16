@@ -5,10 +5,11 @@ import filter from 'lodash/fp/filter';
 import compose from 'lodash/fp/compose';
 import without from 'lodash/without';
 import forEach from 'lodash/forEach';
+import find from 'lodash/find';
 
 import * as config from '../config/config';
 
-import scheduleApi from '../api/scheduleApi';
+import ScheduleApi from '../api/ScheduleApi';
 
 const moment = require('moment-timezone');
 
@@ -33,15 +34,14 @@ const enforceScrollIndex = (rawScrollIndex) => {
   return scrollIndex;
 };
 
-const initialScrollIndexFunction = () => {
+const initialScrollIndexFunction = (currentDateTime) => {
   const hourPixels = config.MINUTE_PIXEL * 60;
   let reduceToHour = 0;
-  const now = moment().tz(config.TIMEZONE);
 
   if (window.innerWidth > (hourPixels + (config.MINUTE_PIXEL * 30))) {
     reduceToHour = Math.abs(Math.floor(window.innerWidth / config.GRID_INDEX_BREAK));
   } else {
-    const minutes = now.minute();
+    const minutes = currentDateTime.minute();
     if (minutes < 15) {
       reduceToHour = 0.25;
     } else if (minutes > 45) {
@@ -49,12 +49,13 @@ const initialScrollIndexFunction = () => {
     }
   }
 
-  return enforceScrollIndex((now.hours() - reduceToHour) * hourPixels + 1);
+  return enforceScrollIndex((currentDateTime.hours() - reduceToHour) * hourPixels + 1);
 };
 
-const initialScrollIndex = initialScrollIndexFunction();
-
 const cursorTime = moment().tz(config.TIMEZONE);
+// cursorTime.subtract(1, 'days');
+
+const initialScrollIndex = initialScrollIndexFunction(cursorTime);
 
 const updatedProgramTextCalc = (schedule, scheduleDisplay, scrollIndex) => {
   const update = {};
@@ -89,8 +90,8 @@ const getUpdatedProgramText = (state) => {
 };
 
 /* eslint-disable no-undef */
-const getScheduleDisplay = (schedule) => {
-  const startDay = moment().startOf('day');
+const getScheduleDisplay = (schedule, currentTime) => {
+  const startDay = moment(currentTime).startOf('day');
   const result = {};
 
   forEach(schedule, (programs) => {
@@ -136,12 +137,17 @@ const initState = {
 };
 
 // getters
-const getters = {
+const storeGetters = {
   hasSchedule: state => Object.keys(state.schedule).length > 0,
   cursorIndex: (state) => {
-    const startDay = moment().tz(config.TIMEZONE).startOf('day');
+    const startDay = moment(state.cursorTime).startOf('day');
     const newIndex = state.cursorTime.diff(startDay, 'minutes') * config.MINUTE_PIXEL + 1;
+
     return `${newIndex}px`;
+  },
+  isToday: (state) => {
+    const now = moment().tz(config.TIMEZONE);
+    return state.cursorTime.isSame(now, 'day');
   },
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
@@ -151,13 +157,24 @@ const getters = {
     filter(entry => state.categoriesExcluded.indexOf(entry.category) === -1)
   )(state.radios),
   displayCategoryFilter: state => state.categoryFilterFocus.icon
-    || state.categoryFilterFocus.list || false
+    || state.categoryFilterFocus.list || false,
+  currentShowOnRadio: state => (radioCodename) => {
+    const currentShow = find(state.schedule[radioCodename], (show) => {
+      if (state.cursorTime.isBetween(moment(show.start_at), moment(show.end_at))) {
+        return true;
+      }
+
+      return false;
+    });
+
+    return typeof currentShow === 'undefined' ? null : currentShow;
+  }
 };
 
 // actions
-const actions = {
-  scrollToCursor: ({ commit }) => {
-    commit('scrollSet', initialScrollIndexFunction());
+const storeActions = {
+  scrollToCursor: ({ state, commit }) => {
+    commit('scrollSet', initialScrollIndexFunction(state.cursorTime));
     commit('updateDisplayData');
   },
   scroll: ({ commit }, x) => {
@@ -182,25 +199,67 @@ const actions = {
   toggleExcludeCategory: ({ commit }, category) => {
     commit('toggleExcludeCategory', category);
   },
-  getSchedule: ({ commit }) => {
-    commit('setLoading', true);
-    scheduleApi.getSchedule()
-      .then(schedule => commit('updateSchedule', schedule))
-      .then(() => commit('setLoading', false));
+  calendarToday: ({ commit, dispatch }) => {
+    const newDate = moment().tz(config.TIMEZONE);
+    commit('updateCursor', newDate);
+
+    Vue.nextTick(() => {
+      dispatch('getSchedule');
+    });
   },
-  tick: ({ commit, dispatch }) => {
+  // calendarBackward: ({ state, commit, dispatch }) => {
+  calendarBackward: ({ state, commit, dispatch }) => {
+    const newDate = moment(state.cursorTime).subtract(1, 'days');
+    commit('updateCursor', newDate);
+
+    Vue.nextTick(() => {
+      dispatch('getSchedule');
+    });
+  },
+  calendarForward: ({ state, commit, dispatch }) => {
+    const newDate = moment(state.cursorTime).add(1, 'days');
+    commit('updateCursor', newDate);
+
+    Vue.nextTick(() => {
+      dispatch('getSchedule');
+    });
+  },
+  getSchedule: ({ state, commit }) => {
+    const dateStr = state.cursorTime.format('YYYY-MM-DD');
+
+    // If we have cache we display it immediately and then fetch an update silently
+    if (ScheduleApi.hasCache(dateStr)) {
+      commit('updateSchedule', ScheduleApi.getCache(dateStr));
+    } else {
+      commit('setLoading', true);
+    }
+
+    Vue.nextTick(() => {
+      ScheduleApi.getSchedule(dateStr)
+        .then(schedule => commit('updateSchedule', schedule))
+        .then(() => commit('setLoading', false));
+    });
+  },
+  /* eslint-disable object-curly-newline */
+  tick: ({ commit, getters, rootState, dispatch }) => {
     const now = moment().tz(config.TIMEZONE);
 
-    if (now.hour() === 0 && now.minutes() === 5) {
+    if (now.hour() === 0 && now.minutes() === 3) {
       dispatch('getSchedule');
     }
 
-    commit('updateCursor');
+    if (rootState.player.playing === true) {
+      const { radio } = rootState.player;
+      const show = getters.currentShowOnRadio(radio.code_name);
+      commit('switchRadio', { radio, show });
+    }
+
+    commit('updateCursor', now);
   }
 };
 
 // mutations
-const mutations = {
+const storeMutations = {
   updateDisplayData(state) {
     if (state.scrollClick === true) {
       return;
@@ -219,8 +278,8 @@ const mutations = {
     const newIndex = state.scrollIndex + x;
     state.scrollIndex = enforceScrollIndex(newIndex);
   },
-  updateCursor(state) {
-    state.cursorTime = moment().tz(config.TIMEZONE);
+  updateCursor(state, value) {
+    Vue.set(state, 'cursorTime', value);
   },
   scrollClickSet: (state, value) => {
     state.scrollClick = value;
@@ -242,7 +301,7 @@ const mutations = {
     state.loading = value;
   },
   updateSchedule: (state, value) => {
-    const scheduleDisplay = getScheduleDisplay(value);
+    const scheduleDisplay = getScheduleDisplay(value, state.cursorTime);
     Vue.set(state, 'schedule', value);
     Vue.set(state, 'scheduleDisplay', scheduleDisplay);
   }
@@ -250,7 +309,7 @@ const mutations = {
 
 export default {
   state: initState,
-  getters,
-  actions,
-  mutations
+  getters: storeGetters,
+  actions: storeActions,
+  mutations: storeMutations
 };

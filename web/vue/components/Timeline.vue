@@ -14,6 +14,16 @@
       </div>
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
     </div>
+    <div class="timeline-control timeline-calendar hidden-xs hidden-sm">
+      <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"
+            v-on:click="clickCalendarBackward"></span>
+      <span
+          v-bind:class="{ 'timeline-calendar-no-click': isToday }"
+          v-on:click="clickCalendarToday">{{ scheduleDate }}</span>
+      <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"
+            v-if="!isToday"
+            v-on:click="clickCalendarForward"></span>
+    </div>
     <div class="timeline-control timeline-control-right" v-on:click="clickForward">
       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </div>
@@ -41,12 +51,18 @@ export default {
   },
   computed: {
     ...mapState({
-      filterEnabled: state => state.schedule.categoriesExcluded.length > 0
+      filterEnabled: state => state.schedule.categoriesExcluded.length > 0,
+      cursorTime: state => state.schedule.cursorTime,
     }),
     ...mapGetters({
       styleObject: 'gridIndexLeft',
-      displayFilter: 'displayCategoryFilter'
-    })
+      displayFilter: 'displayCategoryFilter',
+      isToday: 'isToday'
+    }),
+    scheduleDate() {
+      if (this.isToday === true) { return "Aujourd'hui"; }
+      return this.cursorTime.format('DD/MM/YYYY');
+    }
   },
   methods: {
     clickBackward() {
@@ -54,6 +70,15 @@ export default {
     },
     clickForward() {
       this.$store.dispatch('scrollForward');
+    },
+    clickCalendarToday() {
+      this.$store.dispatch('calendarToday');
+    },
+    clickCalendarBackward() {
+      this.$store.dispatch('calendarBackward');
+    },
+    clickCalendarForward() {
+      this.$store.dispatch('calendarForward');
     },
     filterFocus(status) {
       if (status === true) {

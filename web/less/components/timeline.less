@@ -37,7 +37,7 @@
     transition: opacity 70ms ease-out;
 
     height: 41px;
-    padding-top: 1px;
+    padding-top: 2px;
 
     color: darken(@background-color, 55%);
     font-size: 18px;
@@ -45,6 +45,41 @@
 
     &:hover, &.filter-icon-active {
       opacity: 0.97;
+    }
+
+    &.timeline-calendar {
+      right: @timeline-height;
+      min-width: 110px;
+
+      font-size: 12px;
+      text-align: center;
+      cursor: default;
+
+      box-shadow: -2px 2px 6px -3px rgba(0,0,0,0.4);
+      background-color: darken(@background-color, 15%);
+      padding: 1px 6px 0;
+
+      span {
+        cursor: pointer;
+
+        &.timeline-calendar-no-click {
+          cursor: default;
+        }
+      }
+
+      span.glyphicon {
+        color: darken(@background-color, 40%);
+        vertical-align: text-top;
+
+        &:first-child {
+          text-align: left;
+          // margin-right: 3px;
+        }
+
+        &:nth-child(2) {
+          // margin-left: 3px;
+        }
+      }
     }
 
     &.timeline-control-left {
@@ -126,9 +161,13 @@
 
   height: 100%;
   width: 2px;
-  opacity: 0.8;
 
-  background-color: #2196f3;
+  opacity: 0.8;
+  background-color: @timeline-cursor-color;
+
+  &.timeline-cursor-today {
+    background-color: @timeline-cursor-color-today;
+  }
 }
 
 .timeline-cursor-head {
@@ -139,23 +178,32 @@
 
   height: 3px;
   width: 2px;
-  opacity: 0.8;
 
   backface-visibility: hidden;
   transition: left 850ms cubic-bezier(.21,1.12,.67,.99);
-  background-color: #2196f3;
+
+  background-color: @timeline-cursor-color;
+
+  &:after {
+    position: absolute;
+    top: -7px;
+    left: 1px;
+    display: block;
+    width: 0;
+    height: 0;
+    content: '';
+    -webkit-transform: translate3d(-50%,0,0);
+    transform: translate3d(-50%,0,0);
+    border: 8px solid transparent;
+    opacity: 0.8;
+    border-top-color: @timeline-cursor-color;
+  }
+
+  &.timeline-cursor-head-today {
+    background-color: @timeline-cursor-color-today;
 
     &:after {
-      position: absolute;
-      top: -7px;
-      left: 1px;
-      display: block;
-      width: 0;
-      height: 0;
-      content: '';
-      -webkit-transform: translate3d(-50%,0,0);
-      transform: translate3d(-50%,0,0);
-      border: 8px solid transparent;
-      border-top-color: #2196f3;
+      border-top-color: @timeline-cursor-color-today;
     }
+  }
 }

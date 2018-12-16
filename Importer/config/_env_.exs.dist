@@ -2,7 +2,6 @@ use Mix.Config
 
 # Configure your database
 config :importer, Importer.Repo,
-  adapter: Ecto.Adapters.Postgres,
   username: "",
   password: "",
   database: "progradio",

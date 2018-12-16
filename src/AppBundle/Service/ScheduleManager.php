@@ -61,7 +61,7 @@ class ScheduleManager
      *
      * @return array
      */
-    public function getDaySchedule(\DateTime $dateTime): array
+    public function getDaySchedule(\DateTime $dateTime, $decode = false): array
     {
         $radios = $this->em->getRepository('AppBundle:Radio')->getAllCodename();
         $radiosInCache = $this->cache->getRadiosForDay($dateTime);
@@ -81,8 +81,11 @@ class ScheduleManager
 
         // Get cache & decode values
         $cachedSchedule = $this->cache->getScheduleForDay($dateTime);
-        foreach ($cachedSchedule as $radio => $radioSchedule) {
-            $cachedSchedule[$radio] = json_decode($radioSchedule); // @todo to be improved as we encode and decode in the same function
+
+        if ($decode === true) {
+            foreach ($cachedSchedule as $radio => $radioSchedule) {
+                $cachedSchedule[$radio] = json_decode($radioSchedule);
+            }
         }
 
         return $cachedSchedule;
