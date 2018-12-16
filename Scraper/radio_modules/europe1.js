@@ -14,7 +14,7 @@ const format = dateObj => {
         let startDateTime = moment(dateObj);
         const endDateTime = moment(dateObj);
 
-        let regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2}) - ([0-9]{1,2})[h|H]([0-9]{2})/);
+        let regexp = new RegExp(/^([0-9]{1,2})[h|H]([0-9]{2})\n{0,1}\s{1,}- ([0-9]{1,2})[h|H]([0-9]{2})/);
         let match = entry.datetime_raw.match(regexp);
 
         if (match !== null) {
@@ -24,6 +24,8 @@ const format = dateObj => {
             endDateTime.hour(match[3]);
             endDateTime.minute(match[4]);
             endDateTime.second(0);
+        } else {
+            return prev;
         }
 
         if (startDateTime.hour() > endDateTime.hour()) {
@@ -49,7 +51,7 @@ const format = dateObj => {
                     startDateTime.minute(match[2]);
                     startDateTime.second(0);
 
-                    let title = match[3];
+                    let title = element.title2;
 
                     entry.sections.push({
                         'title': title,
@@ -67,6 +69,7 @@ const format = dateObj => {
         return prev;
     },[]);
 
+    console.log(cleanedData);
     return Promise.resolve(cleanedData);
 };
 
@@ -97,8 +100,9 @@ const fetch = dateObj => {
                 .set({
                     'sub': {
                         'title': '.titre',
+                        'title2': '.titre a',
                         'presenter': '.description',
-                        'img': 'img.img-circle@src'
+                        'img': 'img.img-circle@data-src'
                     }
                 })
             )
@@ -110,6 +114,7 @@ const fetch = dateObj => {
                     })
             )
             .data(function (listing) {
+                console.log(listing);
                 scrapedData.push(listing);
             })
             .done(function () {
