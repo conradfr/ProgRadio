@@ -69,7 +69,6 @@ const format = dateObj => {
         return prev;
     },[]);
 
-    console.log(cleanedData);
     return Promise.resolve(cleanedData);
 };
 
@@ -114,7 +113,6 @@ const fetch = dateObj => {
                     })
             )
             .data(function (listing) {
-                console.log(listing);
                 scrapedData.push(listing);
             })
             .done(function () {

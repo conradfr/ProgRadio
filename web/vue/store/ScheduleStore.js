@@ -53,7 +53,6 @@ const initialScrollIndexFunction = (currentDateTime) => {
 };
 
 const cursorTime = moment().tz(config.TIMEZONE);
-// cursorTime.subtract(1, 'days');
 
 const initialScrollIndex = initialScrollIndexFunction(cursorTime);
 
