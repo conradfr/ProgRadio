@@ -39,6 +39,10 @@ const format = dateObj => {
 
     const datetime_raw = content.contentReducer.airtime;
 
+    if (datetime_raw === null) {
+      return;
+    }
+
     let regexp = new RegExp(/^Du\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\sau\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
     let match = datetime_raw.match(regexp);
 
