@@ -50,34 +50,59 @@
     &.timeline-calendar {
       right: @timeline-height;
       min-width: 110px;
+      max-width: 110px;
 
-      font-size: 12px;
-      text-align: center;
-      cursor: default;
-
-      box-shadow: -2px 2px 6px -3px rgba(0,0,0,0.4);
+      box-shadow: -1px 2px 4px -3px rgba(0,0,0,0.4);
       background-color: darken(@background-color, 15%);
-      padding: 1px 6px 0;
 
-      span {
-        cursor: pointer;
+      & .timeline-calendar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
 
-        &.timeline-calendar-no-click {
-          cursor: default;
+        font-size: 12px;
+        text-align: center;
+        cursor: default;
+
+        & div  {
+          &.timeline-calendar-date {
+            flex: 1;
+          }
+
+          &.timeline-calendar-action {
+            min-width: 24px;
+            max-width: 24px;
+
+            &.timeline-calendar-backward {
+              align-self: flex-start;
+            }
+
+            &.timeline-calendar-forward {
+              align-self: flex-end;
+            }
+          }
         }
-      }
 
-      span.glyphicon {
-        color: darken(@background-color, 40%);
-        vertical-align: text-top;
+        span {
+          cursor: pointer;
 
-        &:first-child {
-          text-align: left;
-          // margin-right: 3px;
+          &.timeline-calendar-no-click, &.timeline-calendar-disabled {
+            cursor: default;
+          }
+
+          &.timeline-calendar-disabled {
+            opacity: 0.3;
+          }
         }
 
-        &:nth-child(2) {
-          // margin-left: 3px;
+        span.glyphicon {
+          color: darken(@background-color, 40%);
+          vertical-align: text-top;
+
+          &:first-child {
+            text-align: left;
+          }
         }
       }
     }
@@ -85,7 +110,7 @@
     &.timeline-control-left {
       left: 0;
       text-align: right;
-      box-shadow: 2px 0 6px -3px rgba(0,0,0,0.4);
+      box-shadow: 2px 0 5px -3px rgba(0,0,0,0.4);
 
       @width: 71px;
       width: @width;
@@ -120,7 +145,7 @@
     &.timeline-control-right {
       right: 0;
       text-align: center;
-      box-shadow: -2px 2px 6px -3px rgba(0,0,0,0.4);
+      box-shadow: 0 2px 4px -3px rgba(0,0,0,0.4);
 
       @width: @timeline-height;
       width: @width;

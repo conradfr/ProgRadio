@@ -14,15 +14,23 @@
       </div>
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
     </div>
-    <div class="timeline-control timeline-calendar hidden-xs hidden-sm">
-      <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"
-            v-on:click="clickCalendarBackward"></span>
-      <span
-          v-bind:class="{ 'timeline-calendar-no-click': isToday }"
-          v-on:click="clickCalendarToday">{{ scheduleDate }}</span>
-      <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"
-            v-if="!isToday"
-            v-on:click="clickCalendarForward"></span>
+    <div class="timeline-control timeline-calendar  hidden-xs hidden-sm">
+      <div class="timeline-calendar-inner">
+        <div class="timeline-calendar-action timeline-calendar-backward">
+          <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"
+                v-on:click="clickCalendarBackward"></span>
+        </div>
+        <div class="timeline-calendar-date">
+          <span
+              v-bind:class="{ 'timeline-calendar-no-click': isToday }"
+              v-on:click="clickCalendarToday">{{ scheduleDate }}</span>
+        </div>
+        <div class="timeline-calendar-action timeline-calendar-forward">
+          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"
+                v-bind:class="{ 'timeline-calendar-disabled': isToday }"
+                v-on:click="clickCalendarForward"></span>
+        </div>
+      </div>
     </div>
     <div class="timeline-control timeline-control-right" v-on:click="clickForward">
       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
@@ -78,7 +86,9 @@ export default {
       this.$store.dispatch('calendarBackward');
     },
     clickCalendarForward() {
-      this.$store.dispatch('calendarForward');
+      if (!this.isToday) {
+        this.$store.dispatch('calendarForward');
+      }
     },
     filterFocus(status) {
       if (status === true) {
