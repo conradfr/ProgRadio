@@ -26,8 +26,8 @@ vagrantfile:
                             private_network: 192.168.56.101
                             forwarded_port:
                                 vflmnfp_r3y30z7bmce9:
-                                    host: '2223'
-                                    guest: '22'
+                                    host: '8080'
+                                    guest: '80'
                         memory: '1024'
                         cpus: '1'
         provision:
@@ -131,6 +131,8 @@ nginx:
     vhosts:
         nxv_n2b27n5zbs6d:
             server_name: progradio.local
+            server_aliases:
+            - local.programmes-radio.io
             www_root: /var/www/progradio/web
             listen_port: '80'
             client_max_body_size: 1m

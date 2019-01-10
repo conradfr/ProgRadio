@@ -1,0 +1,16 @@
+redis_dsn: redis://127.0.0.1/0
+
+logmail:
+    enable: false
+    username: 'noreply@programmes-radio.io'
+    password: 'WalkPHard55'
+    host: 'mail.gandi.net'
+    port: 465
+    ssl: true
+    tls: false
+    authentication: ['LOGIN']
+    to: 'logs@programmes-radio.io'
+    from: 'noreply@programmes-radio.io'
+    level: 'info'
+    unique: false
+    html: true

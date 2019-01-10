@@ -22,14 +22,15 @@ set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 # set :pty, true
 
 # Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push("app/config/parameters.yml", "app/config/app_parameters.yml", "Importer/config/prod.exs")
+set :linked_files, ["Importer/config/prod.exs", "config/scraper_parameters.yml", ".env.prod.local"]
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "web/media/program", "web/media/cache/program_thumb/media/program", "web/media/cache/page_thumb/media/program", "Importer/deps", "Importer/_build/prod/rel/importer/var");
+set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "public/media/program", "public/media/cache/program_thumb/media/program", "public/media/cache/page_thumb/media/program", "Importer/deps", "Importer/_build/prod/rel/importer/var");
 
 # Default value for default_env is {}
 set :default_env, {
-      'MIX_ENV' => 'prod'
+      'MIX_ENV' => 'prod',
+      'APP_ENV' => 'prod'
 }
 
 # Default value for keep_releases is 5
@@ -43,7 +44,7 @@ set :composer_install_flags, '--no-dev --no-interaction --optimize-autoloader'
 set :file_permissions_groups, ["www-data"]
 set :file_permissions_users, ["www-data", "deployer"]
 set :file_permissions_chmod_mode, "0777"
-set :file_permissions_paths, ["var", "web/media/program","web/media/cache/program_thumb/media/program","web/media/cache/page_thumb/media/program"]
+set :file_permissions_paths, ["var", "public/media/program","public/media/cache/program_thumb/media/program","public/media/cache/page_thumb/media/program"]
 
 # set :permission_method, :acl
 # set :use_set_permissions, true
@@ -145,8 +146,8 @@ namespace :myproject do
   task :clean do
     on roles(:app) do
       within release_path do
-        execute "rm", "-rf", "web/vue/"
-        execute "rm", "-rf", "web/less/"
+        execute "rm", "-rf", "public/vue/"
+        execute "rm", "-rf", "public/less/"
       end
     end
   end

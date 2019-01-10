@@ -14,7 +14,7 @@ GEM
       capistrano (~> 3.0)
     capistrano-npm (1.0.2)
       capistrano (>= 3.0.0)
-    capistrano-symfony (1.0.0.rc2)
+    capistrano-symfony (2.0.0.pre.alfa2)
       capistrano (~> 3.1)
       capistrano-composer (~> 0.0.3)
       capistrano-file-permissions (~> 1.0)
@@ -37,7 +37,7 @@ PLATFORMS
 DEPENDENCIES
   capistrano
   capistrano-npm
-  capistrano-symfony (~> 1.0.0.rc2)
+  capistrano-symfony (~> 2.0.0.pre.alfa2)
   capistrano-upstart-service
   capistrano-yarn
 

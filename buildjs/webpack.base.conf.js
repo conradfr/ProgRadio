@@ -9,7 +9,7 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
-    app: './web/vue/app.js'
+    app: './public/vue/app.js'
   },
   output: {
     path: config.build.assetsRoot,

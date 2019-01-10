@@ -4,9 +4,9 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-    entry: path.join(__dirname, '/web/vue/app.js'),
+    entry: path.join(__dirname, '/public/vue/app.js'),
     output: {
-        path: __dirname + '/web/build/js',
+        path: __dirname + '/public/build/js',
         filename: 'app.js'
     },
     plugins: [
