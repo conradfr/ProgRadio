@@ -5,7 +5,6 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fr'
-    analytics: testtest
     liip_imagine.jpegoptim.tempDir: /run/shm/progradio
 
 services:

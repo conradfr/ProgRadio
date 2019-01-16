@@ -3,4 +3,4 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        analytics: "%analytics%"
+        analytics: "%env(analytics)%"
