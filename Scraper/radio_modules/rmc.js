@@ -45,7 +45,7 @@ const format = (dateObj) => {
 
 // to get hosts (they're not on the schedule page)
 const fetchShows = () => {
-    const url = 'http://rmc.bfmtv.com/emission/';
+    const url = 'https://rmc.bfmtv.com/emission/';
 
     logger.log('info', `fetching ${url} (shows)`);
 

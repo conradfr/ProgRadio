@@ -166,7 +166,7 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     dateObj.locale('fr');
-    let url = `http://www.mouv.fr/emissions`;
+    let url = `https://www.mouv.fr/emissions`;
 
     logger.log('info', `fetching ${url}`);
 

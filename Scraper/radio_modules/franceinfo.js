@@ -62,7 +62,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    let url = 'http://www.francetvinfo.fr/replay-radio/grille-des-emissions';
+    let url = 'https://www.francetvinfo.fr/replay-radio/grille-des-emissions';
 
     logger.log('info', `fetching ${url}`);
 

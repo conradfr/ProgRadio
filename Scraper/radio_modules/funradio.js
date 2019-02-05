@@ -28,13 +28,14 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     let dayFormat = dateObj.format('DD-MM-YYYY');
-    let url = `http://www.funradio.fr/grille/${dayFormat}`;
+    let url = `https://www.funradio.fr/grille/${dayFormat}`;
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
+          .log(console.log)
             .find('.timeline-schedule > .post-schedule-timeline > .post-schedule.main')
             .set({
                 'datetime_raw': 'time@datetime' /* utc */

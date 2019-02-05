@@ -88,7 +88,7 @@ const format = dateObj => {
 const fetch = dateObj => {
     dateObj.locale('fr');
     let day = dateObj.format('dddd').toLowerCase();
-    let url = 'http://skyrock.fm/emissions';
+    let url = 'https://skyrock.fm/emissions';
 
     logger.log('info', `fetching ${url} (${day})`);
 

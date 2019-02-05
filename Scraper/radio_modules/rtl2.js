@@ -28,7 +28,7 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     let dayFormat = dateObj.format('DD-MM-YYYY');
-    let url = `http://www.rtl2.fr/grille/${dayFormat}`;
+    let url = `https://www.rtl2.fr/grille/${dayFormat}`;
 
     logger.log('info', `fetching ${url}`);
 

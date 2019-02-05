@@ -50,13 +50,14 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     let dayFormat = dateObj.format('DD-MM-YYYY');
-    let url = `http://www.rtl.fr/grille/${dayFormat}`;
+    let url = `https://www.rtl.fr/grille/${dayFormat}`;
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
+          .log(console.log)
             // .find('.timeline-schedule > .post-schedule-timeline > .post-schedule')
             .find('.timeline-schedule > .post-schedule-timeline')
             .set(

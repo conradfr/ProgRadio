@@ -127,7 +127,7 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     dateObj.locale('fr');
-    let url = 'http://www.cheriefm.fr/grille-des-emissions';
+    let url = 'https://www.cheriefm.fr/grille-des-emissions';
 
     const dayOfWeek = dateObj.isoWeekday();
     let tab = 'week';

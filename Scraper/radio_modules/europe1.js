@@ -73,7 +73,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    const url = 'http://www.europe1.fr/grille-des-programmes';
+    const url = 'https://www.europe1.fr/Grille-des-programmes';
 
     dateObj.locale('fr');
     const tab = dateObj.format('dddd').toLowerCase();
@@ -95,7 +95,7 @@ const fetch = dateObj => {
             // can't seem to make description + sections work in the same call :/
             .do(
                 osmosis.follow('.bloc .bloc_texte .titre > span > a@href')
-                .find('.block_generique > .footer-article > div[itemprop=author] > div')
+                .find('.block_generique > .footer-article > div.author > div')
                 .set({
                     'sub': {
                         'title': '.titre',
@@ -107,7 +107,7 @@ const fetch = dateObj => {
             )
             .do(
                 osmosis.follow('.bloc .bloc_texte .titre > span > a@href')
-                    .find('div[itemprop=articleBody]')
+                    .find('section.content')
                     .set({
                         'description':  'p[1]'
                     })
