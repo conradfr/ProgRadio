@@ -149,13 +149,13 @@
 define nginx::resource::vhost (
   $ensure                 = 'present',
   $listen_ip              = '*',
-  $listen_port            = '80',
+  $listen_port            = 80,
   $listen_options         = undef,
   $location_allow         = [],
   $location_deny          = [],
   $ipv6_enable            = false,
   $ipv6_listen_ip         = '::',
-  $ipv6_listen_port       = '80',
+  $ipv6_listen_port       = 80,
   $ipv6_listen_options    = 'default ipv6only=on',
   $add_header             = undef,
   $ssl                    = false,
@@ -163,7 +163,7 @@ define nginx::resource::vhost (
   $ssl_cert               = undef,
   $ssl_dhparam            = undef,
   $ssl_key                = undef,
-  $ssl_port               = '443',
+  $ssl_port               = 443,
   $ssl_protocols          = 'SSLv3 TLSv1 TLSv1.1 TLSv1.2',
   $ssl_ciphers            = 'HIGH:!aNULL:!MD5',
   $ssl_cache              = 'shared:SSL:10m',
@@ -233,187 +233,187 @@ define nginx::resource::vhost (
   $rewrites               = {},
 ) {
 
-  validate_re($ensure, '^(present|absent)$',
-    "${ensure} is not supported for ensure. Allowed values are 'present' and 'absent'.")
-  validate_string($listen_ip)
-  if !is_integer($listen_port) {
+  validate_legacy('Optional[String]', 'validate_re', $ensure, ['^(present|absent)$'])
+  validate_legacy(String, 'validate_string', $listen_ip)
+  if $listen_port !~ Integer {
     fail('$listen_port must be an integer.')
   }
   if ($listen_options != undef) {
-    validate_string($listen_options)
+    validate_legacy(String, 'validate_string', $listen_options)
   }
-  validate_array($location_allow)
-  validate_array($location_deny)
-  validate_bool($ipv6_enable)
-  validate_string($ipv6_listen_ip)
-  if !is_integer($ipv6_listen_port) {
+  validate_legacy(Array, 'validate_array', $location_allow)
+  validate_legacy(Array, 'validate_array', $location_deny)
+  validate_legacy(Boolean, 'validate_bool', $ipv6_enable)
+  validate_legacy(String, 'validate_string', $ipv6_listen_ip)
+  if $ipv6_listen_port !~ Integer {
     fail('$ipv6_listen_port must be an integer.')
   }
-  validate_string($ipv6_listen_options)
+  validate_legacy(String, 'validate_string', $ipv6_listen_options)
   if ($add_header != undef) {
-    validate_hash($add_header)
+    validate_legacy(Hash, 'validate_hash', $add_header)
   }
-  validate_bool($ssl)
+  validate_legacy(Boolean, 'validate_bool', $ssl)
   if ($ssl_cert != undef) {
-    validate_string($ssl_cert)
+    validate_legacy(String, 'validate_string', $ssl_cert)
   }
-  validate_bool($ssl_listen_option)
+  validate_legacy(Boolean, 'validate_bool', $ssl_listen_option)
   if ($ssl_dhparam != undef) {
-    validate_string($ssl_dhparam)
+    validate_legacy(String, 'validate_string', $ssl_dhparam)
   }
   if ($ssl_key != undef) {
-    validate_string($ssl_key)
+    validate_legacy(String, 'validate_string', $ssl_key)
   }
-  if !is_integer($ssl_port) {
+  if $ssl_port !~ Integer {
     fail('$ssl_port must be an integer.')
   }
-  validate_string($ssl_protocols)
-  validate_string($ssl_ciphers)
-  validate_string($ssl_cache)
-  validate_bool($ssl_stapling)
+  validate_legacy(String, 'validate_string', $ssl_protocols)
+  validate_legacy(String, 'validate_string', $ssl_ciphers)
+  validate_legacy(String, 'validate_string', $ssl_cache)
+  validate_legacy(Boolean, 'validate_bool', $ssl_stapling)
   if ($ssl_stapling_file != undef) {
-    validate_string($ssl_stapling_file)
+    validate_legacy(String, 'validate_string', $ssl_stapling_file)
   }
   if ($ssl_stapling_responder != undef) {
-    validate_string($ssl_stapling_responder)
+    validate_legacy(String, 'validate_string', $ssl_stapling_responder)
   }
-  validate_bool($ssl_stapling_verify)
+  validate_legacy(Boolean, 'validate_bool', $ssl_stapling_verify)
   if ($ssl_trusted_cert != undef) {
-    validate_string($ssl_trusted_cert)
+    validate_legacy(String, 'validate_string', $ssl_trusted_cert)
   }
-  validate_string($spdy)
+  validate_legacy(String, 'validate_string', $spdy)
   if ($proxy != undef) {
-    validate_string($proxy)
+    validate_legacy(String, 'validate_string', $proxy)
   }
-  validate_string($proxy_read_timeout)
-  validate_string($proxy_redirect)
-  validate_array($proxy_set_header)
+  validate_legacy(String, 'validate_string', $proxy_read_timeout)
+  if ($proxy_redirect != undef) {
+    validate_legacy(String, 'validate_string', $proxy_redirect)
+  }
+  validate_legacy(Array, 'validate_array', $proxy_set_header)
   if ($proxy_cache != false) {
-    validate_string($proxy_cache)
+    validate_legacy(String, 'validate_string', $proxy_cache)
   }
   if ($proxy_cache_valid != false) {
-    validate_string($proxy_cache_valid)
+    validate_legacy(String, 'validate_string', $proxy_cache_valid)
   }
   if ($proxy_method != undef) {
-    validate_string($proxy_method)
+    validate_legacy(String, 'validate_string', $proxy_method)
   }
   if ($proxy_set_body != undef) {
-    validate_string($proxy_set_body)
+    validate_legacy(String, 'validate_string', $proxy_set_body)
   }
-  validate_array($resolver)
+  validate_legacy(Array, 'validate_array', $resolver)
   if ($fastcgi != undef) {
-    validate_string($fastcgi)
+    validate_legacy(String, 'validate_string', $fastcgi)
   }
-  validate_string($fastcgi_params)
+  validate_legacy(String, 'validate_string', $fastcgi_params)
   if ($fastcgi_script != undef) {
-    validate_string($fastcgi_script)
+    validate_legacy(String, 'validate_string', $fastcgi_script)
   }
-  validate_array($index_files)
+  validate_legacy(Array, 'validate_array', $index_files)
   if ($autoindex != undef) {
-    validate_string($autoindex)
+    validate_legacy(String, 'validate_string', $autoindex)
   }
-  validate_array($server_name)
+  validate_legacy(Array, 'validate_array', $server_name)
   if ($www_root != undef) {
-    validate_string($www_root)
+    validate_legacy(String, 'validate_string', $www_root)
   }
-  validate_bool($rewrite_www_to_non_www)
+  validate_legacy(Boolean, 'validate_bool', $rewrite_www_to_non_www)
   if ($rewrite_to_https != undef) {
-    validate_bool($rewrite_to_https)
+    validate_legacy(Boolean, 'validate_bool', $rewrite_to_https)
   }
   if ($raw_prepend != undef) {
-    if (is_array($raw_prepend)) {
-      validate_array($raw_prepend)
+    if ($raw_prepend =~ Array) {
+      validate_legacy(Array, 'validate_array', $raw_prepend)
     } else {
-      validate_string($raw_prepend)
+      validate_legacy(String, 'validate_string', $raw_prepend)
     }
   }
   if ($raw_append != undef) {
-    if (is_array($raw_append)) {
-      validate_array($raw_append)
+    if ($raw_append =~ Array) {
+      validate_legacy(Array, 'validate_array', $raw_append)
     } else {
-      validate_string($raw_append)
+      validate_legacy(String, 'validate_string', $raw_append)
     }
   }
   if ($location_raw_prepend != undef) {
-    if (is_array($location_raw_prepend)) {
-      validate_array($location_raw_prepend)
+    if ($location_raw_prepend =~ Array) {
+      validate_legacy(Array, 'validate_array', $location_raw_prepend)
     } else {
-      validate_string($location_raw_prepend)
+      validate_legacy(String, 'validate_string', $location_raw_prepend)
     }
   }
   if ($location_raw_append != undef) {
-    if (is_array($location_raw_append)) {
-      validate_array($location_raw_append)
+    if ($location_raw_append =~ Array) {
+      validate_legacy(Array, 'validate_array', $location_raw_append)
     } else {
-      validate_string($location_raw_append)
+      validate_legacy(String, 'validate_string', $location_raw_append)
     }
   }
   if ($location_custom_cfg != undef) {
-    validate_hash($location_custom_cfg)
+    validate_legacy(Hash, 'validate_hash', $location_custom_cfg)
   }
   if ($location_cfg_prepend != undef) {
-    validate_hash($location_cfg_prepend)
+    validate_legacy(Hash, 'validate_hash', $location_cfg_prepend)
   }
   if ($location_cfg_append != undef) {
-    validate_hash($location_cfg_append)
+    validate_legacy(Hash, 'validate_hash', $location_cfg_append)
   }
   if ($try_files != undef) {
-    validate_array($try_files)
+    validate_legacy(Array, 'validate_array', $try_files)
   }
   if ($auth_basic != undef) {
-    validate_string($auth_basic)
+    validate_legacy(String, 'validate_string', $auth_basic)
   }
   if ($auth_basic_user_file != undef) {
-    validate_string($auth_basic_user_file)
+    validate_legacy(String, 'validate_string', $auth_basic_user_file)
   }
   if ($vhost_cfg_prepend != undef) {
-    validate_hash($vhost_cfg_prepend)
+    validate_legacy(Hash, 'validate_hash', $vhost_cfg_prepend)
   }
   if ($vhost_cfg_append != undef) {
-    validate_hash($vhost_cfg_append)
+    validate_legacy(Hash, 'validate_hash', $vhost_cfg_append)
   }
   if ($vhost_cfg_ssl_prepend != undef) {
-    validate_hash($vhost_cfg_ssl_prepend)
+    validate_legacy(Hash, 'validate_hash', $vhost_cfg_ssl_prepend)
   }
   if ($vhost_cfg_ssl_append != undef) {
-    validate_hash($vhost_cfg_ssl_append)
+    validate_legacy(Hash, 'validate_hash', $vhost_cfg_ssl_append)
   }
   if ($include_files != undef) {
-    validate_array($include_files)
+    validate_legacy(Array, 'validate_array', $include_files)
   }
   if ($access_log != undef) {
-    validate_string($access_log)
+    validate_legacy(String, 'validate_string', $access_log)
   }
   if ($error_log != undef) {
-    validate_string($error_log)
+    validate_legacy(String, 'validate_string', $error_log)
   }
   if ($passenger_cgi_param != undef) {
-    validate_hash($passenger_cgi_param)
+    validate_legacy(Hash, 'validate_hash', $passenger_cgi_param)
   }
   if ($log_by_lua != undef) {
-    validate_string($log_by_lua)
+    validate_legacy(String, 'validate_string', $log_by_lua)
   }
   if ($log_by_lua_file != undef) {
-    validate_string($log_by_lua_file)
+    validate_legacy(String, 'validate_string', $log_by_lua_file)
   }
   if ($client_body_timeout != undef) {
-    validate_string($client_body_timeout)
+    validate_legacy(String, 'validate_string', $client_body_timeout)
   }
   if ($client_header_timeout != undef) {
-    validate_string($client_header_timeout)
+    validate_legacy(String, 'validate_string', $client_header_timeout)
   }
   if ($gzip_types != undef) {
-    validate_string($gzip_types)
+    validate_legacy(String, 'validate_string', $gzip_types)
   }
-  validate_bool($use_default_location)
-  validate_array($rewrite_rules)
-  validate_hash($string_mappings)
-  validate_hash($geo_mappings)
+  validate_legacy(Boolean, 'validate_bool', $use_default_location)
+  validate_legacy(Array, 'validate_array', $rewrite_rules)
+  validate_legacy(Hash, 'validate_hash', $string_mappings)
+  validate_legacy(Hash, 'validate_hash', $geo_mappings)
 
-  validate_string($owner)
-  validate_string($group)
-  validate_re($mode, '^\d{4}$',
-    "${mode} is not valid. It should be 4 digits (0644 by default).")
+  validate_legacy(String, 'validate_string', $owner)
+  validate_legacy(String, 'validate_string', $group)
+  validate_legacy('Optional[String]', 'validate_re', $mode, ['^\d{4}$'])
 
   # Variables
   $vhost_dir = "${nginx::config::conf_dir}/sites-available"
@@ -425,7 +425,7 @@ define nginx::resource::vhost (
 
   $name_sanitized = regsubst($name, ' ', '_', 'G')
   $config_file = "${vhost_dir}/${name_sanitized}.conf"
-  validate_hash($rewrites)
+  validate_legacy(Hash, 'validate_hash', $rewrites)
 
   File {
     ensure => $ensure ? {
@@ -546,7 +546,6 @@ define nginx::resource::vhost (
 
   if ($listen_port != $ssl_port) {
     concat::fragment { "${name_sanitized}-header":
-      ensure  => present,
       target  => $config_file,
       content => template('nginx/vhost/vhost_header.erb'),
       order   => '001',
@@ -556,7 +555,6 @@ define nginx::resource::vhost (
   # Create a proper file close stub.
   if ($listen_port != $ssl_port) {
     concat::fragment { "${name_sanitized}-footer":
-      ensure  => present,
       target  => $config_file,
       content => template('nginx/vhost/vhost_footer.erb'),
       order   => '699',

@@ -245,6 +245,14 @@ describe 'apache::vhost', :type => :define do
                 },
               ],
             },
+            { 'path'         => '/var/www/files',
+              'provider'     => 'location',
+              'limit_except' => [
+                { 'methods' => 'GET HEAD',
+                  'require' => ['valid-user']
+                },
+              ],
+            },
             { 'path'               => '/var/www/dav',
               'dav'                => 'filesystem',
               'dav_depth_infinity' => true,
@@ -384,10 +392,12 @@ describe 'apache::vhost', :type => :define do
           'use_optional_includes'       => true,
           'suexec_user_group'           => 'root root',
           'allow_encoded_slashes'       => 'nodecode',
+          'passenger_spawn_method'      => 'direct',
           'passenger_app_root'          => '/usr/share/myapp',
           'passenger_app_env'           => 'test',
           'passenger_ruby'              => '/usr/bin/ruby1.9.1',
           'passenger_min_instances'     => '1',
+          'passenger_max_requests'      => '1000',
           'passenger_start_timeout'     => '600',
           'passenger_pre_start'         => 'http://localhost/myapp',
           'passenger_high_performance'  => true,
@@ -407,6 +417,7 @@ describe 'apache::vhost', :type => :define do
           'krb_auth_realms'             => ['EXAMPLE.ORG','EXAMPLE.NET'],
           'krb_5keytab'                 => '/tmp/keytab5',
           'krb_local_user_mapping'      => 'off',
+	  'http_protocol_options'       => 'Strict LenientMethods Allow0.9',
           'keepalive'                   => 'on',
           'keepalive_timeout'           => '100',
           'max_keepalive_requests'      => '1000',
@@ -525,6 +536,10 @@ describe 'apache::vhost', :type => :define do
       it { is_expected.to contain_concat__fragment('rspec.example.com-directories').with(
         :content => /\s+<Limit GET HEAD>\s*Require valid-user\s*<\/Limit>/m ) }
       it { is_expected.to contain_concat__fragment('rspec.example.com-directories').with(
+        :content => /^\s+<LimitExcept GET HEAD>$/ ) }
+      it { is_expected.to contain_concat__fragment('rspec.example.com-directories').with(
+        :content => /\s+<LimitExcept GET HEAD>\s*Require valid-user\s*<\/LimitExcept>/m ) }
+      it { is_expected.to contain_concat__fragment('rspec.example.com-directories').with(
         :content => /^\s+Dav\sfilesystem$/ ) }
       it { is_expected.to contain_concat__fragment('rspec.example.com-directories').with(
         :content => /^\s+DavDepthInfinity\sOn$/ ) }
@@ -617,6 +632,8 @@ describe 'apache::vhost', :type => :define do
         :content => /^\s+KrbSaveCredentials\soff$/)}
       it { is_expected.to contain_concat__fragment('rspec.example.com-auth_kerb').with(
         :content => /^\s+KrbVerifyKDC\son$/)}
+      it { is_expected.to contain_concat__fragment('rspec.example.com-http_protocol_options').with(
+        :content => /^\s*HttpProtocolOptions\s+Strict\s+LenientMethods\s+Allow0\.9$/)}
       it { is_expected.to contain_concat__fragment('rspec.example.com-keepalive_options').with(
         :content => /^\s+KeepAlive\son$/)}
       it { is_expected.to contain_concat__fragment('rspec.example.com-keepalive_options').with(
@@ -657,6 +674,80 @@ describe 'apache::vhost', :type => :define do
       it { is_expected.to contain_concat__fragment('Listen [::1]:80') }
       it { is_expected.to_not contain_concat__fragment('NameVirtualHost 127.0.0.1:80') }
       it { is_expected.to_not contain_concat__fragment('NameVirtualHost [::1]:80') }
+    end
+
+    context 'vhost with multiple ports' do
+      let :params do
+        {
+          'port'                        => ['80', '8080'],
+          'ip'                          => '127.0.0.1',
+          'ip_based'                    => true,
+          'servername'                  => 'example.com',
+          'docroot'                     => '/var/www/html',
+          'add_listen'                  => true,
+          'ensure'                      => 'present'
+        }
+      end
+      let :facts do
+        {
+          :osfamily               => 'RedHat',
+          :operatingsystemrelease => '7',
+          :concat_basedir         => '/dne',
+          :operatingsystem        => 'RedHat',
+          :id                     => 'root',
+          :kernel                 => 'Linux',
+          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+          :kernelversion          => '3.6.2',
+          :is_pe                  => false,
+        }
+      end
+
+      it { is_expected.to compile }
+      it { is_expected.to contain_concat__fragment('rspec.example.com-apache-header').with(
+        :content => /[.\/m]*<VirtualHost 127.0.0.1:80 127.0.0.1:8080>[.\/m]*$/ ) }
+      it { is_expected.to contain_concat__fragment('Listen 127.0.0.1:80') }
+      it { is_expected.to contain_concat__fragment('Listen 127.0.0.1:8080') }
+      it { is_expected.to_not contain_concat__fragment('NameVirtualHost 127.0.0.1:80') }
+      it { is_expected.to_not contain_concat__fragment('NameVirtualHost 127.0.0.1:8080') }
+    end
+
+    context 'vhost with multiple ip addresses, multiple ports' do
+      let :params do
+        {
+          'port'                        => ['80', '8080'],
+          'ip'                          => ['127.0.0.1','::1'],
+          'ip_based'                    => true,
+          'servername'                  => 'example.com',
+          'docroot'                     => '/var/www/html',
+          'add_listen'                  => true,
+          'ensure'                      => 'present'
+        }
+      end
+      let :facts do
+        {
+          :osfamily               => 'RedHat',
+          :operatingsystemrelease => '7',
+          :concat_basedir         => '/dne',
+          :operatingsystem        => 'RedHat',
+          :id                     => 'root',
+          :kernel                 => 'Linux',
+          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+          :kernelversion          => '3.6.2',
+          :is_pe                  => false,
+        }
+      end
+
+      it { is_expected.to compile }
+      it { is_expected.to contain_concat__fragment('rspec.example.com-apache-header').with(
+        :content => /[.\/m]*<VirtualHost 127.0.0.1:80 127.0.0.1:8080 \[::1\]:80 \[::1\]:8080>[.\/m]*$/ ) }
+      it { is_expected.to contain_concat__fragment('Listen 127.0.0.1:80') }
+      it { is_expected.to contain_concat__fragment('Listen 127.0.0.1:8080') }
+      it { is_expected.to contain_concat__fragment('Listen [::1]:80') }
+      it { is_expected.to contain_concat__fragment('Listen [::1]:8080') }
+      it { is_expected.to_not contain_concat__fragment('NameVirtualHost 127.0.0.1:80') }
+      it { is_expected.to_not contain_concat__fragment('NameVirtualHost 127.0.0.1:8080') }
+      it { is_expected.to_not contain_concat__fragment('NameVirtualHost [::1]:80') }
+      it { is_expected.to_not contain_concat__fragment('NameVirtualHost [::1]:8080') }
     end
 
     context 'vhost with ipv6 address' do
@@ -900,6 +991,96 @@ describe 'apache::vhost', :type => :define do
       it { is_expected.to_not contain_concat__fragment('rspec.example.com-charsets') }
       it { is_expected.to_not contain_concat__fragment('rspec.example.com-limits') }
       it { is_expected.to contain_concat__fragment('rspec.example.com-file_footer') }
+    end
+    context 'wsgi_application_group should set apache::mod::wsgi' do
+      let :params do
+        {
+            'docroot'                    => '/rspec/docroot',
+            'wsgi_application_group'     => '%{GLOBAL}',
+        }
+      end
+      it { is_expected.to contain_class("apache::mod::wsgi") }
+    end
+    context 'wsgi_daemon_process should set apache::mod::wsgi' do
+      let :params do
+        {
+           'docroot'                    => '/rspec/docroot',
+           'wsgi_daemon_process'        => 'wsgi',
+        }
+      end
+      it { is_expected.to contain_class("apache::mod::wsgi") }
+    end
+    context 'wsgi_import_script on its own should not set apache::mod::wsgi' do
+      let :params do
+        {
+            'docroot'                    => '/rspec/docroot',
+            'wsgi_import_script'         => '/var/www/demo.wsgi',
+        }
+      end
+      it { is_expected.not_to contain_class("apache::mod::wsgi") }
+    end
+    context 'wsgi_import_script_options on its own should not set apache::mod::wsgi' do
+      let :params do
+        {
+            'docroot'                     => '/rspec/docroot',
+            'wsgi_import_script_options'  => {
+                'process-group'           => 'wsgi',
+                'application-group'       => '%{GLOBAL}'
+            },
+        }
+      end
+      it { is_expected.not_to contain_class("apache::mod::wsgi") }
+    end
+    context 'wsgi_import_script and wsgi_import_script_options should set apache::mod::wsgi' do
+      let :params do
+        {
+            'docroot'                     => '/rspec/docroot',
+            'wsgi_import_script'          => '/var/www/demo.wsgi',
+            'wsgi_import_script_options'  => {
+                'process-group'           => 'wsgi',
+                'application-group'       => '%{GLOBAL}'
+            },
+        }
+      end
+      it { is_expected.to contain_class("apache::mod::wsgi") }
+    end
+    context 'wsgi_process_group should set apache::mod::wsgi' do
+      let :params do
+        {
+            'docroot'                    => '/rspec/docroot',
+            'wsgi_daemon_process'        => 'wsgi',
+        }
+      end
+      it { is_expected.to contain_class("apache::mod::wsgi") }
+    end
+    context 'wsgi_script_aliases with non-empty aliases should set apache::mod::wsgi' do
+      let :params do
+        {
+            'docroot'                    => '/rspec/docroot',
+            'wsgi_script_aliases'        => {
+                '/' => '/var/www/demo.wsgi'
+            },
+        }
+      end
+      it { is_expected.to contain_class("apache::mod::wsgi") }
+    end
+    context 'wsgi_script_aliases with empty aliases should set apache::mod::wsgi' do
+      let :params do
+        {
+            'docroot'                    => '/rspec/docroot',
+            'wsgi_script_aliases'        => { },
+        }
+      end
+      it { is_expected.not_to contain_class("apache::mod::wsgi") }
+    end
+    context 'wsgi_pass_authorization should set apache::mod::wsgi' do
+      let :params do
+        {
+            'docroot'                    => '/rspec/docroot',
+            'wsgi_pass_authorization'    => 'On',
+        }
+      end
+      it { is_expected.to contain_class("apache::mod::wsgi") }
     end
     context 'when not setting nor managing the docroot' do
       let :params do
@@ -1306,6 +1487,42 @@ describe 'apache::vhost', :type => :define do
       it { is_expected.to_not contain_concat__fragment('rspec.example.com-directories').with(
         :content => /^\s+Require all granted$/ )
       }
+    end
+    describe "redirectmatch_*" do
+      let :facts do
+        {
+          :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6',
+          :concat_basedir         => '/dne',
+          :operatingsystem        => 'RedHat',
+          :id                     => 'root',
+          :kernel                 => 'Linux',
+          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+          :is_pe                  => false,
+        }
+      end
+      let :dparams do
+        {
+          :docroot => '/rspec/docroot',
+          :port    => '84',
+        }
+      end
+      context "status" do
+        let (:params) { dparams.merge({:redirectmatch_status => "404"}) }
+        it { is_expected.to contain_class("apache::mod::alias")}
+      end
+      context "dest" do
+        let (:params) { dparams.merge({:redirectmatch_dest => "http://other.example.com$1.jpg"}) }
+        it { is_expected.to contain_class("apache::mod::alias")}
+      end
+      context "regexp" do
+        let (:params) { dparams.merge({:redirectmatch_regexp => "(.*)\.gif$"}) }
+        it { is_expected.to contain_class("apache::mod::alias")}
+      end
+      context "none" do
+        let (:params) { dparams }
+        it { is_expected.to_not contain_class("apache::mod::alias") }
+      end
     end
   end
 end

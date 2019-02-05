@@ -121,12 +121,14 @@ const getScheduleDisplay = (schedule, currentTime) => {
 const initState = {
   radios,
   categories,
+  collections,
   schedule: {},
   scheduleDisplay: {},
   cursorTime,
   scrollIndex: initialScrollIndex,
   scrollClick: false,
   loading: false,
+  currentCollection: 'nationwide',
   categoriesExcluded: Vue.cookie.get(COOKIE_EXCLUDE)
     ? Vue.cookie.get(COOKIE_EXCLUDE).split('|') : [],
   categoryFilterFocus: {
@@ -152,8 +154,9 @@ const storeGetters = {
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
   // sort by share, desc
   radiosRanked: state => compose(
-    orderBy(['share'], ['desc']),
-    filter(entry => state.categoriesExcluded.indexOf(entry.category) === -1)
+    filter(entry => state.currentCollection === entry.collection),
+    filter(entry => state.categoriesExcluded.indexOf(entry.category) === -1),
+    orderBy(['share'], ['desc'])
   )(state.radios),
   displayCategoryFilter: state => state.categoryFilterFocus.icon
     || state.categoryFilterFocus.list || false,

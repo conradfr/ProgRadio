@@ -70,41 +70,39 @@ define nginx::resource::mailhost (
     mode  => '0644',
   }
 
-  if !is_integer($listen_port) {
+  if $listen_port !~ Integer {
     fail('$listen_port must be an integer.')
   }
-  validate_re($ensure, '^(present|absent)$',
-    "${ensure} is not supported for ensure. Allowed values are 'present' and 'absent'.")
-  validate_string($listen_ip)
+  validate_legacy('Optional[String]', 'validate_re', $ensure, ['^(present|absent)$'])
+  validate_legacy(String, 'validate_string', $listen_ip)
   if ($listen_options != undef) {
-    validate_string($listen_options)
+    validate_legacy(String, 'validate_string', $listen_options)
   }
-  validate_bool($ipv6_enable)
-  validate_string($ipv6_listen_ip)
-  if !is_integer($ipv6_listen_port) {
+  validate_legacy(Boolean, 'validate_bool', $ipv6_enable)
+  validate_legacy(String, 'validate_string', $ipv6_listen_ip)
+  if $ipv6_listen_port !~ Integer {
     fail('$ipv6_listen_port must be an integer.')
   }
-  validate_string($ipv6_listen_options)
-  validate_bool($ssl)
+  validate_legacy(String, 'validate_string', $ipv6_listen_options)
+  validate_legacy(Boolean, 'validate_bool', $ssl)
   if ($ssl_cert != undef) {
-    validate_string($ssl_cert)
+    validate_legacy(String, 'validate_string', $ssl_cert)
   }
   if ($ssl_key != undef) {
-    validate_string($ssl_key)
+    validate_legacy(String, 'validate_string', $ssl_key)
   }
-  if ($ssl_port != undef) and (!is_integer($ssl_port)) {
+  if ($ssl_port != undef) and ($ssl_port !~ Integer) {
     fail('$ssl_port must be an integer.')
   }
-  validate_re($starttls, '^(on|only|off)$',
-    "${starttls} is not supported for starttls. Allowed values are 'on', 'only' and 'off'.")
+  validate_legacy('Optional[String]', 'validate_re', $starttls, ['^(on|only|off)$'])
   if ($protocol != undef) {
-    validate_string($protocol)
+    validate_legacy(String, 'validate_string', $protocol)
   }
   if ($auth_http != undef) {
-    validate_string($auth_http)
+    validate_legacy(String, 'validate_string', $auth_http)
   }
-  validate_string($xclient)
-  validate_array($server_name)
+  validate_legacy(String, 'validate_string', $xclient)
+  validate_legacy(Array, 'validate_array', $server_name)
 
   $config_file = "${nginx::config::conf_dir}/conf.mail.d/${name}.conf"
 
@@ -130,7 +128,6 @@ define nginx::resource::mailhost (
 
   if ($listen_port != $ssl_port) {
     concat::fragment { "${name}-header":
-      ensure  => present,
       target  => $config_file,
       content => template('nginx/mailhost/mailhost.erb'),
       order   => '001',
@@ -140,7 +137,6 @@ define nginx::resource::mailhost (
   # Create SSL File Stubs if SSL is enabled
   if ($ssl) {
     concat::fragment { "${name}-ssl":
-      ensure  => present,
       target  => $config_file,
       content => template('nginx/mailhost/mailhost_ssl.erb'),
       order   => '700',

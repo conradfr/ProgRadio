@@ -4,7 +4,11 @@ describe 'redis', :type => :class do
 
   on_supported_os.each do |os, facts|
     context "on #{os}" do
-      let(:facts) { facts }
+      let(:facts) {
+        facts.merge({
+          :redis_server_version => '3.2.3',
+        })
+      }
 
       let(:package_name) { manifest_vars[:package_name] }
       let(:service_name) { manifest_vars[:service_name] }
@@ -19,7 +23,7 @@ describe 'redis', :type => :class do
 
         it { is_expected.to contain_package(package_name).with_ensure('present') }
 
-        it { is_expected.to contain_file(config_file_orig).with_ensure('present') }
+        it { is_expected.to contain_file(config_file_orig).with_ensure('file') }
 
         it { is_expected.to contain_file(config_file_orig).without_content(/undef/) }
 
@@ -42,7 +46,7 @@ describe 'redis', :type => :class do
                 :ensure => 'directory',
                 :owner  => 'redis',
                 :group  => 'root',
-                :mode   => '0755',
+                :mode   => '2775',
               })
             end
 
@@ -54,7 +58,7 @@ describe 'redis', :type => :class do
             is_expected.to contain_file('/var/run/redis').with({
               :ensure => 'directory',
               :owner  => 'redis',
-              :group  => 'root',
+              :group  => 'redis',
               :mode   => '0755',
             })
           end
@@ -150,6 +154,26 @@ describe 'redis', :type => :class do
         }
 
         it { is_expected.to contain_file(config_file_orig).with_content(/bind.*_VALUE_/) }
+      end
+
+      describe 'with parameter output_buffer_limit_slave' do
+        let (:params) {
+          {
+              :output_buffer_limit_slave => '_VALUE_'
+          }
+        }
+
+        it { is_expected.to contain_file(config_file_orig).with_content(/client-output-buffer-limit slave.*_VALUE_/) }
+      end
+
+      describe 'with parameter output_buffer_limit_pubsub' do
+        let (:params) {
+          {
+              :output_buffer_limit_pubsub => '_VALUE_'
+          }
+        }
+
+        it { is_expected.to contain_file(config_file_orig).with_content(/client-output-buffer-limit pubsub.*_VALUE_/) }
       end
 
       describe 'with parameter: config_dir' do
@@ -568,6 +592,19 @@ describe 'redis', :type => :class do
         }
       end
 
+      describe 'with parameter protected-mode' do
+              let (:params) {
+                {
+                  :protected_mode => '_VALUE_'
+                }
+              }
+
+              it { is_expected.to contain_file(config_file_orig).with(
+                  'content' => /protected-mode.*_VALUE_/
+                )
+              }
+            end
+
       describe 'with parameter hll_sparse_max_bytes' do
         let (:params) {
           {
@@ -887,11 +924,9 @@ describe 'redis', :type => :class do
             }
           }
 
-          it do
-            expect {
-              is_expected.to create_class('redis')
-            }.to raise_error(Puppet::Error, /Replication is not possible/)
-          end
+          it { is_expected.to contain_file(config_file_orig).with(
+            'content' => /^slaveof _VALUE_/
+          )}
         end
 
         context 'binding to external ip' do

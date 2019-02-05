@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'archive::artifactory' do
-  let(:facts) { { osfamily: 'RedHat', puppetversion: '3.7.3' } }
+  let(:facts) { { os: { family: 'RedHat' }, puppetversion: '4.4.0' } }
 
   before do
     MockFunction.new('artifactory_sha1') do |f|
@@ -18,7 +18,7 @@ describe 'archive::artifactory' do
     end
 
     it do
-      should contain_archive('/opt/app/example.zip').with(
+      is_expected.to contain_archive('/opt/app/example.zip').with(
         path: '/opt/app/example.zip',
         source: 'http://home.lan:8081/artifactory/path/example.zip',
         checksum: '0d4f4b4b039c10917cfc49f6f6be71e4',
@@ -27,7 +27,7 @@ describe 'archive::artifactory' do
     end
 
     it do
-      should contain_file('/opt/app/example.zip').with(
+      is_expected.to contain_file('/opt/app/example.zip').with(
         owner: '0',
         group: '0',
         mode: '0640',
@@ -49,7 +49,7 @@ describe 'archive::artifactory' do
     end
 
     it do
-      should contain_archive('/opt/app/example.zip').with(
+      is_expected.to contain_archive('/opt/app/example.zip').with(
         path: '/opt/app/example.zip',
         source: 'http://home.lan:8081/artifactory/path/example.zip',
         checksum: '0d4f4b4b039c10917cfc49f6f6be71e4',
@@ -58,7 +58,7 @@ describe 'archive::artifactory' do
     end
 
     it do
-      should contain_file('/opt/app/example.zip').with(
+      is_expected.to contain_file('/opt/app/example.zip').with(
         owner: 'app',
         group: 'app',
         mode: '0400',

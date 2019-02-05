@@ -1,5 +1,6 @@
 define puphpet::php::module::package (
-  $service_autorestart
+  $service_autorestart,
+  $prefix = $puphpet::php::params::package_prefix
 ){
 
   include puphpet::php::params
@@ -9,7 +10,7 @@ define puphpet::php::module::package (
   if ! defined(Php::Module[$package_name]) {
     ::php::module { $package_name:
       service_autorestart => $service_autorestart,
-      module_prefix       => $puphpet::php::params::package_prefix,
+      module_prefix       => $prefix,
     }
   }
 

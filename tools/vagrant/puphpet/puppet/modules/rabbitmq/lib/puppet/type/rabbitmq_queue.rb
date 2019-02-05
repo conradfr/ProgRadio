@@ -1,5 +1,20 @@
 Puppet::Type.newtype(:rabbitmq_queue) do
-  desc 'Native type for managing rabbitmq queue'
+  desc <<-DESC
+Native type for managing rabbitmq queue
+
+@example Create a rabbitmq_queue
+ rabbitmq_queue { 'myqueue@myvhost':
+   ensure      => present,
+   user        => 'dan',
+   password    => 'bar',
+   durable     => true,
+   auto_delete => false,
+   arguments   => {
+     x-message-ttl          => 123,
+     x-dead-letter-exchange => 'other'
+   },
+ }
+DESC
 
   ensurable do
     defaultto(:present)
@@ -11,20 +26,20 @@ Puppet::Type.newtype(:rabbitmq_queue) do
     end
   end
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'Name of queue'
-    newvalues(/^\S*@\S+$/)
+    newvalues(%r{^\S*@\S+$})
   end
 
   newparam(:durable) do
     desc 'Queue is durable'
-    newvalues(/true|false/)
+    newvalues(%r{true|false})
     defaultto('true')
   end
-  
+
   newparam(:auto_delete) do
     desc 'Queue will be auto deleted'
-    newvalues(/true|false/)
+    newvalues(%r{true|false})
     defaultto('false')
   end
 
@@ -39,13 +54,13 @@ Puppet::Type.newtype(:rabbitmq_queue) do
   newparam(:user) do
     desc 'The user to use to connect to rabbitmq'
     defaultto('guest')
-    newvalues(/^\S+$/)
+    newvalues(%r{^\S+$})
   end
 
   newparam(:password) do
     desc 'The password to use to connect to rabbitmq'
     defaultto('guest')
-    newvalues(/\S+/)
+    newvalues(%r{\S+})
   end
 
   autorequire(:rabbitmq_vhost) do
@@ -61,8 +76,6 @@ Puppet::Type.newtype(:rabbitmq_queue) do
   end
 
   def validate_argument(argument)
-    unless [Hash].include?(argument.class)
-      raise ArgumentError, "Invalid argument"
-    end
+    raise ArgumentError, 'Invalid argument' unless [Hash].include?(argument.class)
   end
 end

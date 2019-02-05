@@ -25,11 +25,42 @@ class puphpet::elasticsearch::install
     }
   }
 
-  $merged = merge($settings, {
-    'java_install' => false,
+  if array_true($settings, 'version') {
+    $version = "${settings['version']}"
+  } else {
+    $version      = false
+    $repo_version = '6.x'
+  }
+
+  if $version {
+    if versioncmp($version, '6') >= 0 {
+      $repo_version = '6.x'
+    }
+    elsif versioncmp($version, '5') >= 0 {
+      $repo_version = '5.x'
+    }
+    elsif versioncmp($version, '2.4') >= 0 {
+      $repo_version = '2.4'
+    }
+    elsif versioncmp($version, '2.3') >= 0 {
+      $repo_version = '2.3'
+    }
+    elsif versioncmp($version, '2.2') >= 0 {
+      $repo_version = '2.2'
+    }
+    elsif versioncmp($version, '2.1') >= 0 {
+      $repo_version = '2.1'
+    }
+    elsif versioncmp($version, '2.0') >= 0 {
+      $repo_version = '2.0'
+    }
+  }
+
+  $merged = delete(merge($settings, {
     'manage_repo'  => true,
-    'repo_version' => '2.x',
-  })
+    'version'      => $version,
+    'repo_version' => $repo_version,
+  }), ['java_install'])
 
   create_resources('class', { 'elasticsearch' => $merged })
 

@@ -14,6 +14,15 @@ class puphpet::mongodb::install
   $mongodb = $puphpet::params::hiera['mongodb']
   $php     = $puphpet::params::hiera['php']
 
+  if $::operatingsystem == 'ubuntu' {
+    if ! defined(Apt::Key['2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5']) {
+      ::apt::key { '2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5':
+        server => 'hkp://keyserver.ubuntu.com:80',
+        before => Class['mongodb::globals'],
+      }
+    }
+  }
+
   $settings = $mongodb['settings']
 
   file { ['/data', '/data/db']:
@@ -26,12 +35,21 @@ class puphpet::mongodb::install
   -> Class['mongodb::server']
   -> Class['mongodb::client']
 
-  create_resources('class', {
-    'mongodb::globals' => $puphpet::mongodb::params::merged_globals
+  $global_settings = deep_merge($puphpet::mongodb::params::merged_globals, {
+    'version' => "${puphpet::mongodb::params::merged_globals['version']}",
   })
 
   create_resources('class', {
-    'mongodb::server' => $mongodb['settings']
+    'mongodb::globals' => $global_settings
+  })
+
+  $server_settings = deep_merge($mongodb['settings'], {
+    'bind_ip' => any2array($mongodb['settings']['bind_ip']),
+    'port'    => Integer($mongodb['settings']['port']),
+  })
+
+  create_resources('class', {
+    'mongodb::server' => $server_settings
   })
 
   class { 'mongodb::client': }
@@ -56,7 +74,7 @@ class puphpet::mongodb::install
   }
 
   if array_true($php, 'install') and ! defined(Puphpet::Php::Module::Pecl['mongo']) {
-    $php_version_int = 0 + $puphpet::php::params::version_int
+    $php_version_int = Integer($puphpet::php::params::version_int)
 
     if $php_version_int >= 70 {
       $php_package = 'mongodb'

@@ -66,6 +66,12 @@ def manifest_vars
     vars[:service_name] = 'redis-server'
     vars[:config_file_orig] = '/etc/redis/redis.conf.puppet'
     vars[:ppa_repo] = 'ppa:chris-lea/redis-server'
+  when 'Archlinux'
+    vars[:package_name] = 'redis'
+    vars[:service_name] = 'redis'
+    vars[:config_file] = '/etc/redis/redis.conf'
+    vars[:config_file_orig] = '/etc/redis/redis.conf.puppet'
+    vars[:ppa_repo] = nil
   end
 
   vars
@@ -75,13 +81,17 @@ def centos_facts
   {
     :operatingsystem => 'CentOS',
     :osfamily        => 'RedHat',
+    :puppetversion   => '4.5.2',
   }
 end
 
 def debian_facts
   {
-    :operatingsystem => 'Debian',
-    :osfamily        => 'Debian',
+    :operatingsystem           => 'Debian',
+    :osfamily                  => 'Debian',
+    :operatingsystemmajrelease => '8',
+    :puppetversion             => '4.5.2',
+    :lsbdistcodename           => 'jessie',
   }
 end
 
@@ -89,6 +99,63 @@ def freebsd_facts
   {
     :operatingsystem => 'FreeBSD',
     :osfamily        => 'FreeBSD',
+    :puppetversion   => '4.5.2',
+  }
+end
+
+def centos_6_facts
+  {
+    :operatingsystem => 'CentOS',
+    :osfamily        => 'RedHat',
+    :operatingsystemmajrelease => '6',
+    :puppetversion   => '4.5.2',
+  }
+end
+
+def centos_7_facts
+  {
+    :operatingsystem => 'CentOS',
+    :osfamily        => 'RedHat',
+    :operatingsystemmajrelease => '7',
+    :puppetversion   => '4.5.2',
+  }
+end
+
+def debian_wheezy_facts
+  {
+    :operatingsystem           => 'Debian',
+    :osfamily                  => 'Debian',
+    :operatingsystemmajrelease => '8',
+    :puppetversion             => '4.5.2',
+    :lsbdistcodename           => 'wheezy',
+  }
+end
+
+def ubuntu_1404_facts
+  {
+    :operatingsystem           => 'Ubuntu',
+    :osfamily                  => 'Debian',
+    :operatingsystemmajrelease => '14.04',
+    :puppetversion             => '4.5.2',
+    :lsbdistcodename           => 'trusty',
+  }
+end
+
+def ubuntu_1604_facts
+  {
+    :operatingsystem           => 'Ubuntu',
+    :osfamily                  => 'Debian',
+    :operatingsystemmajrelease => '16.04',
+    :puppetversion             => '4.5.2',
+    :lsbdistcodename           => 'xenial',
+  }
+end
+
+def archlinux_facts
+  {
+    :operatingsystem => 'Archlinux',
+    :osfamily        => 'Archlinux',
+    :puppetversion   => '4.5.2',
   }
 end
 

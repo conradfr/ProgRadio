@@ -30,9 +30,15 @@ class puphpet::locale {
       default => ['en_US.UTF-8', 'en_GB.UTF-8']
     }
 
+    $lc_all = array_true($settings, 'lc_all') ? {
+      true    => $settings['lc_all'],
+      default => 'en_US.UTF-8',
+    }
+
     $merged = delete(merge($settings, {
       'default_locale' => $default_locale,
       'locales'        => suffix($user_locale, ' UTF-8'),
+      'lc_all'         => $lc_all,
     }), 'timezone')
 
     create_resources('class', { 'locales' => $merged })

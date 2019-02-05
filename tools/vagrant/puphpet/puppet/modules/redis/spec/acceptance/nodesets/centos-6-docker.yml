@@ -3,13 +3,11 @@ HOSTS:
     roles:
       - master
     platform: el-6-x86_64
-    image: centos:6.7
-    hypervisor: docker
-    docker_cmd: ["/sbin/init"]
+    hypervisor : docker
+    image: petems/docker-centos-6-ssh-locale:centos-6
     docker_preserve_image: true
-    docker_image_commands:
-      - yum install -y wget tar which
-      - rm /etc/init/tty.conf
+    docker_cmd: '["/sbin/init"]'
+    docker_preserve_image: true
 CONFIG:
   type: foss
   log_level: debug

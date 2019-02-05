@@ -4,40 +4,33 @@ puppet-beanstalkd
 
 puppet module for managing beanstalkd, a simple and fast work queue - https://github.com/kr/beanstalkd
 
-## Maintainer status
-
-Currently looking for new maintainers (or someone to take this over entirely) - I hate abandonware, but I dont have the time to keep it up (since it's stretching into years since I worked with puppet).  
-
 ## Supported OSes
 
-redhat/centos and debian/ubuntu currently.  Please PR updates for others!  
+redhat/centos and debian/ubuntu currently. Please PR updates for others!
 
-Requires packages (rpm, etc) with traditional init scripts supported by service{} for your OS.
+init used for RHEL/CentOS <= 6, Debian <= 7 and Ubuntu < 16.04.
 
+systemd used for RHEL/CentOS >= 7, Debian <= 8 and Ubuntu >= 16.04.
 
 ## Basic Usage
 
 Drop the beanstalkd directory into your modules tree and realize the define:
 
-	beanstalkd::config{"my beanstalk install": }
+    beanstalkd::config{ "my beanstalk install": }
 
 ## Optional parameters
-	
-	listenaddress => '0.0.0.0',
-	listenport => '13000',
-	maxjobsize => '65535',
-	maxconnections => '1024',
-	binlogdir => '/var/lib/beanstalkd/binlog',	# set empty ( '' ) to disable binlog
-	binlogfsync => undef,							
-	binlogsize => '10485760',
-	ensure => 'running',		# running, stopped, absent
-	packageversion => 'latest',	# latest, present, or specific version
-	packagename => undef,		# override package name						
-	servicename => undef		# override service name
-
-
-
-
+    
+    listenaddress   => '0.0.0.0',
+    listenport      => '13000',
+    maxjobsize      => '65535',
+    maxconnections  => '1024',
+    binlogdir       => '/var/lib/beanstalkd/binlog',    # set empty ( '' ) to disable binlog
+    binlogfsync     => undef,
+    binlogsize      => '10485760',
+    ensure          => 'running',                       # running, stopped, absent
+    packageversion  => 'latest',                        # latest, present, or specific version
+    packagename     => undef,                           # override package name
+    servicename     => undef                            # override service name
 
 ## Tests
 
@@ -46,7 +39,7 @@ To run unit tests, cd into beanstalkd and execute "run-tests.sh"
 Requires ruby and bundler, everything else should get installed by the test.
 
 ```
-$$ puppet-beanstalkd/beanstalkd# ./run-tests.sh 
+$ puppet-beanstalkd/beanstalkd# ./run-tests.sh
 Using rake (10.0.4) 
 Using diff-lcs (1.2.4) 
 Using facter (1.7.0) 

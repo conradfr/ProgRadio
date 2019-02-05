@@ -10,21 +10,15 @@ if [[ -d /vagrant ]]; then
     if [[ ! -L ${PUPHPET_CORE_DIR} ]]; then
         ln -s /vagrant/puphpet ${PUPHPET_CORE_DIR}
     fi
-
-    # Run on local VM
-    if [[ -d /.puphpet-stuff ]] && [[ ! -L ${PUPHPET_STATE_DIR} ]]; then
-        ln -s /.puphpet-stuff ${PUPHPET_STATE_DIR}
-    elif [[ ! -d ${PUPHPET_STATE_DIR} ]]; then
-        mkdir ${PUPHPET_STATE_DIR}
-    fi
+# Run as stand-alone Puppet
 else
     if [[ ! -d ${PUPHPET_CORE_DIR} ]]; then
         mkdir ${PUPHPET_CORE_DIR}
     fi
+fi
 
-    if [[ ! -d ${PUPHPET_STATE_DIR} ]]; then
-        mkdir ${PUPHPET_STATE_DIR}
-    fi
+if [[ ! -d ${PUPHPET_STATE_DIR} ]]; then
+    mkdir ${PUPHPET_STATE_DIR}
 fi
 
 OS=$(/bin/bash ${PUPHPET_CORE_DIR}/shell/os-detect.sh ID)
@@ -42,23 +36,10 @@ if [[ -f ${PUPHPET_STATE_DIR}/initial-setup ]]; then
 fi
 
 if [[ "${OS}" == 'debian' || "${OS}" == 'ubuntu' ]]; then
-    wget --quiet --tries=5 --connect-timeout=10 \
-        -O ${PUPHPET_STATE_DIR}/puppetlabs.gpg \
-        https://apt.puppetlabs.com/pubkey.gpg
-    apt-key add ${PUPHPET_STATE_DIR}/puppetlabs.gpg
-
     apt-get update
 
-    apt-get -y install anacron iptables-persistent software-properties-common \
+    apt-get -y install iptables-persistent software-properties-common \
         python-software-properties curl git-core build-essential
-
-    # Anacron configuration
-    cat >/etc/cron.weekly/autoupdt << 'EOL'
-#!/bin/bash
-
-apt-get update
-apt-get autoclean
-EOL
 
     # Fixes https://github.com/mitchellh/vagrant/issues/1673
     # Fixes https://github.com/mitchellh/vagrant/issues/7368
@@ -69,17 +50,22 @@ EOL
 fi
 
 if [[ "${OS}" == 'centos' ]]; then
-    perl -p -i -e 's@enabled=1@enabled=0@gi' /etc/yum/pluginconf.d/fastestmirror.conf
-
     if [ "${RELEASE}" == 6 ]; then
-        EL_REPO='http://www.elrepo.org/elrepo-release-6-6.el6.elrepo.noarch.rpm'
+        if [[ ! -f /etc/sysconfig/iptables ]]; then
+            cat >/etc/sysconfig/iptables << 'EOL'
+*filter
+:INPUT ACCEPT [0:0]
+COMMIT
+EOL
+            chmod 600 /etc/sysconfig/iptables
+            cp /etc/sysconfig/iptables /etc/sysconfig/ip6tables
+        fi
+
         EPEL='http://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm'
     else
-        EL_REPO='http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm'
         EPEL='http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
     fi
 
-    yum -y --nogpgcheck install "${EL_REPO}"
     yum -y --nogpgcheck install "${EPEL}"
     yum -y install centos-release-scl
     yum clean all

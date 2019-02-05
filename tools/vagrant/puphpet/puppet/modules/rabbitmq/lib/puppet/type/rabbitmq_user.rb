@@ -1,5 +1,24 @@
 Puppet::Type.newtype(:rabbitmq_user) do
-  desc 'Native type for managing rabbitmq users'
+  desc <<-DESC
+Native type for managing rabbitmq users
+
+@example query all current users
+ $ puppet resource rabbitmq_user
+
+@example Configure a user, dan
+ rabbitmq_user { 'dan':
+   admin    => true,
+   password => 'bar',
+ }
+
+@example Optional parameter tags will set further rabbitmq tags like monitoring, policymaker, etc.
+ To set the administrator tag use admin-flag.
+ rabbitmq_user { 'dan':
+   admin    => true,
+   password => 'bar',
+   tags     => ['monitoring', 'tag1'],
+ }
+DESC
 
   ensurable do
     defaultto(:present)
@@ -13,30 +32,25 @@ Puppet::Type.newtype(:rabbitmq_user) do
 
   autorequire(:service) { 'rabbitmq-server' }
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'Name of user'
-    newvalues(/^\S+$/)
+    newvalues(%r{^\S+$})
   end
 
   newproperty(:password) do
     desc 'User password to be set *on creation* and validated each run'
-    def insync?(is)
-      provider.check_password
+    def insync?(_is)
+      provider.check_password(should)
     end
-    def set(value)
-      provider.change_password
-    end
-    def change_to_s(current, desired)
-      "password has been changed"
-    end
-    def should_to_s(newvalue = @should)
-      '<new password>'
+
+    def change_to_s(_current, _desired)
+      'password has been changed'
     end
   end
 
   newproperty(:admin) do
     desc 'whether or not user should be an admin'
-    newvalues(/true|false/)
+    newvalues(%r{true|false})
     munge do |value|
       # converting to_s in case its a boolean
       value.to_s.to_sym
@@ -44,45 +58,25 @@ Puppet::Type.newtype(:rabbitmq_user) do
     defaultto :false
   end
 
-  newproperty(:tags, :array_matching => :all) do
+  newproperty(:tags, array_matching: :all) do
     desc 'additional tags for the user'
     validate do |value|
-      unless value =~ /^\S+$/
+      unless value =~ %r{^\S+$}
         raise ArgumentError, "Invalid tag: #{value.inspect}"
       end
 
-      if value == "administrator"
-        raise ArgumentError, "must use admin property instead of administrator tag"
+      if value == 'administrator'
+        raise ArgumentError, 'must use admin property instead of administrator tag'
       end
     end
     defaultto []
 
     def insync?(is)
-      self.is_to_s(is) == self.should_to_s
+      is.sort == should.sort
     end
 
-    def is_to_s(currentvalue = @is)
-      if currentvalue
-        "[#{currentvalue.sort.join(', ')}]"
-      else
-        '[]'
-      end
-    end
-
-    def should_to_s(newvalue = @should)
-      if newvalue
-        "[#{newvalue.sort.join(', ')}]"
-      else
-        '[]'
-      end
-    end
-
-  end
-
-  validate do
-    if self[:ensure] == :present and ! self[:password]
-      raise ArgumentError, 'must set password when creating user' unless self[:password]
+    def should_to_s(value)
+      Array(value)
     end
   end
-
 end

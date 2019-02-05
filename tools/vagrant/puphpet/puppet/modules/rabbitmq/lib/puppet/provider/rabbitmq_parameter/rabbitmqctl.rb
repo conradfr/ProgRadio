@@ -2,26 +2,23 @@ require 'json'
 require 'puppet/util/package'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'rabbitmqctl'))
-Puppet::Type.type(:rabbitmq_parameter).provide(:rabbitmqctl, :parent => Puppet::Provider::Rabbitmqctl) do
-
-  defaultfor :feature => :posix
+Puppet::Type.type(:rabbitmq_parameter).provide(:rabbitmqctl, parent: Puppet::Provider::Rabbitmqctl) do
+  confine feature: :posix
 
   # cache parameters
   def self.parameters(name, vhost)
     @parameters = {} unless @parameters
     unless @parameters[vhost]
       @parameters[vhost] = {}
-      self.run_with_retries {
+      parameter_list = run_with_retries do
         rabbitmqctl('list_parameters', '-q', '-p', vhost)
-      }.split(/\n/).each do |line|
-        if line =~ /^(\S+)\s+(\S+)\s+(\S+)$/
-          @parameters[vhost][$2] = {
-            :component_name    => $1,
-            :value => JSON.parse($3),
-          }
-        else
-          raise Puppet::Error, "cannot parse line from list_parameter:#{line}"
-        end
+      end
+      parameter_list.split(%r{\n}).each do |line|
+        raise Puppet::Error, "cannot parse line from list_parameter:#{line}" unless line =~ %r{^(\S+)\s+(\S+)\s+(\S+)$}
+        @parameters[vhost][Regexp.last_match(2)] = {
+          component_name: Regexp.last_match(1),
+          value: JSON.parse(Regexp.last_match(3))
+        }
       end
     end
     @parameters[vhost][name]
@@ -55,7 +52,7 @@ Puppet::Type.type(:rabbitmq_parameter).provide(:rabbitmqctl, :parent => Puppet::
     parameters(should_vhost, should_parameter)[:component_name]
   end
 
-  def component_name=(component_name)
+  def component_name=(_component_name)
     set_parameter
   end
 
@@ -63,22 +60,22 @@ Puppet::Type.type(:rabbitmq_parameter).provide(:rabbitmqctl, :parent => Puppet::
     parameters(should_vhost, should_parameter)[:value]
   end
 
-  def value=(value)
+  def value=(_value)
     set_parameter
   end
 
   def set_parameter
-    unless @set_parameter
-      @set_parameter = true
-      resource[:value] ||= value
-      resource[:component_name]    ||= component_name
-      rabbitmqctl('set_parameter',
-        '-p', should_vhost,
-        resource[:component_name],
-        should_parameter,
-        resource[:value].to_json
-      )
-    end
-  end
+    return if @set_parameter
 
+    @set_parameter = true
+    resource[:value] ||= value
+    resource[:component_name] ||= component_name
+    rabbitmqctl(
+      'set_parameter',
+      '-p', should_vhost,
+      resource[:component_name],
+      should_parameter,
+      resource[:value].to_json
+    )
+  end
 end

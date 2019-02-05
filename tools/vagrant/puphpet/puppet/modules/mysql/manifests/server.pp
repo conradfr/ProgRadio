@@ -45,7 +45,7 @@ class mysql::server (
     $real_service_manage = $service_manage
   }
   if $old_root_password {
-    warning('old_root_password is no longer used and will be removed in a future release')
+    warning(translate('The `old_root_password` attribute is no longer used and will be removed in a future release.'))
   }
 
   # Create a merged together set of options.  Rightmost hashes win over left.
@@ -71,19 +71,19 @@ class mysql::server (
   anchor { 'mysql::server::end': }
 
   if $restart {
-    Class['mysql::server::config'] ~>
-    Class['mysql::server::service']
+    Class['mysql::server::config']
+    ~> Class['mysql::server::service']
   }
 
-  Anchor['mysql::server::start'] ->
-  Class['mysql::server::config'] ->
-  Class['mysql::server::install'] ->
-  Class['mysql::server::binarylog'] ->
-  Class['mysql::server::installdb'] ->
-  Class['mysql::server::service'] ->
-  Class['mysql::server::root_password'] ->
-  Class['mysql::server::providers'] ->
-  Anchor['mysql::server::end']
+  Anchor['mysql::server::start']
+  -> Class['mysql::server::config']
+  -> Class['mysql::server::install']
+  -> Class['mysql::server::binarylog']
+  -> Class['mysql::server::installdb']
+  -> Class['mysql::server::service']
+  -> Class['mysql::server::root_password']
+  -> Class['mysql::server::providers']
+  -> Anchor['mysql::server::end']
 
 
 }

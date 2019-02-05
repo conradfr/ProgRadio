@@ -1,59 +1,52 @@
-# Class: timezone
-#
 # This module manages timezone settings
 #
-# Parameters:
-#   [*timezone*]
+# @param timezone
 #     The name of the timezone.
-#     Default: UTC
 #
-#   [*ensure*]
+# @param ensure
 #     Ensure if present or absent.
-#     Default: present
 #
-#   [*autoupgrade*]
+# @param autoupgrade
 #     Upgrade package automatically, if there is a newer version.
-#     Default: false
 #
-#   [*package*]
+# @param package
 #     Name of the package.
 #     Only set this, if your platform is not supported or you know, what you're doing.
-#     Default: auto-set, platform specific
 #
-#   [*config_file*]
+# @param config_file
 #     Main configuration file.
 #     Only set this, if your platform is not supported or you know, what you're doing.
-#     Default: auto-set, platform specific
 #
-#   [*zoneinfo_dir*]
+# @param zoneinfo_dir
 #     Source directory of zoneinfo files.
 #     Only set this, if your platform is not supported or you know, what you're doing.
 #     Default: auto-set, platform specific
 #
-#   [*hwutc*]
+# @param hwutc
 #     Is the hardware clock set to UTC? (true or false)
-#     Default: undefined
 #
-# Actions:
-#   Installs tzdata and configures timezone
+# @param notify_services
+#     List of services to notify
 #
-# Requires:
-#   Nothing
-#
-# Sample Usage:
+# @example
 #   class { 'timezone':
 #     timezone => 'Europe/Berlin',
 #   }
 #
-# [Remember: No empty lines between comments and class definition]
 class timezone (
-  $ensure = 'present',
-  $timezone = 'UTC',
-  $hwutc = '',
-  $autoupgrade = false
-) inherits timezone::params {
-
-  validate_bool($autoupgrade)
+  String                   $timezone                       = 'Etc/UTC',
+  Enum['present','absent'] $ensure                         = 'present',
+  Optional[Boolean]        $hwutc                          = undef,
+  Boolean                  $autoupgrade                    = false,
+  Optional[Array[String]]  $notify_services                = undef,
+  Optional[String]         $package                        = undef,
+  String                   $zoneinfo_dir                   = '/usr/share/zoneinfo/',
+  String                   $localtime_file                 = '/etc/localtime',
+  Optional[String]         $timezone_file                  = undef,
+  Optional[String]         $timezone_file_template         = 'timezone/clock.erb',
+  Optional[Boolean]        $timezone_file_supports_comment = undef,
+  Optional[String]         $timezone_update                = undef
+) {
 
   case $ensure {
     /(present)/: {
@@ -62,7 +55,7 @@ class timezone (
       } else {
         $package_ensure = 'present'
       }
-      $localtime_ensure = 'link'
+      $localtime_ensure = 'file'
       $timezone_ensure = 'file'
     }
     /(absent)/: {
@@ -76,34 +69,58 @@ class timezone (
     }
   }
 
-  if $timezone::params::package {
-    package { $timezone::params::package:
+  if $package {
+    if $package_ensure == 'present' and $facts['os']['family'] == 'Debian' {
+      $_tz = split($timezone, '/')
+      $area = $_tz[0]
+      $zone = $_tz[1]
+
+      debconf {
+        'tzdata/Areas':
+          package => 'tzdata',
+          item    => 'tzdata/Areas',
+          type    => 'select',
+          value   => $area;
+        "tzdata/Zones/${area}":
+          package => 'tzdata',
+          item    => "tzdata/Zones/${area}",
+          type    => 'select',
+          value   => $zone;
+      }
+      -> Package[$package]
+    }
+
+    package { $package:
       ensure => $package_ensure,
-      before => File[$timezone::params::localtime_file],
+      before => File[$localtime_file],
     }
   }
 
-  if $timezone::params::timezone_file != false {
-    file { $timezone::params::timezone_file:
+  if $timezone_file {
+    file { $timezone_file:
       ensure  => $timezone_ensure,
-      content => template($timezone::params::timezone_file_template),
+      content => template($timezone_file_template),
+      notify  => $notify_services,
     }
-    if $ensure == 'present' and $timezone::params::timezone_update {
-      $e_command = $::osfamily ? {
-        /(Suse|Archlinux)/ => "${timezone::params::timezone_update} ${timezone}",
-        default            => $timezone::params::timezone_update
+    if $ensure == 'present' and $timezone_update {
+      $e_command = $facts['os']['family'] ? {
+        /(Suse|Archlinux)/ => "${timezone_update} ${timezone}",
+        default            => $timezone_update,
       }
       exec { 'update_timezone':
         command     => $e_command,
         path        => '/usr/bin:/usr/sbin:/bin:/sbin',
-        subscribe   => File[$timezone::params::timezone_file],
+        subscribe   => File[$timezone_file],
         refreshonly => true,
       }
     }
   }
 
-  file { $timezone::params::localtime_file:
+  file { $localtime_file:
     ensure => $localtime_ensure,
-    target => "${timezone::params::zoneinfo_dir}${timezone}",
+    source => "file://${zoneinfo_dir}/${timezone}",
+    links  => follow,
+    notify => $notify_services,
   }
+
 }

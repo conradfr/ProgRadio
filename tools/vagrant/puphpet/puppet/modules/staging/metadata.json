@@ -1,4 +1,16 @@
 {
+  "name": "puppet-staging",
+  "version": "2.2.0",
+  "author": "Vox Pupuli",
+  "summary": "Compressed file staging and deployment",
+  "license": "Apache-2.0",
+  "source": "https://github.com/voxpupuli/puppet-staging",
+  "project_page": "https://github.com/voxpupuli/puppet-staging",
+  "issues_url": "https://github.com/voxpupuli/puppet-staging/issues",
+  "dependencies": [
+  
+  ],
+  "data_provider": null,
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
@@ -95,24 +107,9 @@
   ],
   "requirements": [
     {
-      "name": "pe",
-      "version_requirement": "3.x"
-    },
-    {
       "name": "puppet",
-      "version_requirement": ">=2.7.0"
+      "version_requirement": ">= 3.8.7 < 5.0.0"
     }
   ],
-  "name": "puppet-staging",
-  "description": "Manages compressed file staging and deployment.",
-  "version": "1.0.7",
-  "author": "voxpupuli",
-  "summary": "Compressed file staging and deployment",
-  "license": "Apache-2.0",
-  "source": "https://github.com/voxpupuli/puppet-staging",
-  "project_page": "https://github.com/voxpupuli/puppet-staging",
-  "issues_url": "https://github.com/voxpupuli/puppet-staging/issues",
-  "dependencies": [
-
-  ]
+  "description": "Manages compressed file staging and deployment."
 }

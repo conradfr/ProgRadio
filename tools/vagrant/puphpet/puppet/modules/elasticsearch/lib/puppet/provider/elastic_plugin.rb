@@ -1,8 +1,16 @@
-require 'uri'
-require 'puppet_x/elastic/plugin_name'
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..'))
 
+require 'uri'
+require 'puppet_x/elastic/es_versioning'
+require 'puppet_x/elastic/plugin_parsing'
+
+# Generalized parent class for providers that behave like Elasticsearch's plugin
+# command line tool.
 class Puppet::Provider::ElasticPlugin < Puppet::Provider
 
+  # Elasticsearch's home directory.
+  #
+  # @return String
   def homedir
     case Facter.value('osfamily')
     when 'OpenBSD'
@@ -13,7 +21,6 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
   end
 
   def exists?
-    es_version
     if !File.exists?(pluginfile)
       debug "Plugin file #{pluginfile} does not exist"
       return false
@@ -27,6 +34,9 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
     end
   end
 
+  # Returns the content that should be written to the pluginfile.
+  #
+  # @return String
   def pluginfile_content
     return @resource[:name] if is1x?
 
@@ -38,6 +48,10 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
     end
   end
 
+  # Get the path for the `.name` file for the provider helper.
+  #
+  # @return String
+  #   path for the pluginfile
   def pluginfile
     if @resource[:plugin_path]
       File.join(
@@ -54,17 +68,26 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
     end
   end
 
+  # Write plugfile file `.name` contents to disk.
   def writepluginfile
     File.open(pluginfile, 'w') do |file|
       file.write pluginfile_content
     end
   end
 
+  # Get pluginfile contents.
+  #
+  # @return String
   def readpluginfile
     f = File.open(pluginfile)
     f.readline
   end
 
+  # Intelligently returns the correct installation arguments for version 1
+  # version of Elasticsearch.
+  #
+  # @return [Array<String>]
+  #   arguments to pass to the plugin installation utility
   def install1x
     if !@resource[:url].nil?
       [
@@ -85,6 +108,11 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
     end
   end
 
+  # Intelligently returns the correct installation arguments for version 2
+  # version of Elasticsearch.
+  #
+  # @return [Array<String>]
+  #   arguments to pass to the plugin installation utility
   def install2x
     if !@resource[:url].nil?
       [
@@ -101,6 +129,11 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
     end
   end
 
+  # Format proxy arguments for consumption by the elasticsearch plugin
+  # management tool (i.e., Java properties).
+  #
+  # @return Array
+  #   of flags for command-line tools
   def proxy_args url
     parsed = URI(url)
     ['http', 'https'].map do |schema|
@@ -113,10 +146,10 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
     end.flatten.compact
   end
 
+  # Install this plugin on the host.
   def create
-    es_version
     commands = []
-    commands << "-Des.path.conf=#{homedir}" if is2x?
+    commands += proxy_args(@resource[:proxy]) if is2x? and @resource[:proxy]
     commands << 'install'
     commands << '--batch' if batch_capable?
     commands += is1x? ? install1x : install2x
@@ -139,63 +172,53 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
     writepluginfile
   end
 
+  # Remove this plugin from the host.
   def destroy
     with_environment do
-      plugin(['remove', @resource[:name]])
+      plugin(['remove', Puppet_X::Elastic::plugin_name(@resource[:name])])
     end
   end
 
+  # Determine the installed version of Elasticsearch on this host.
   def es_version
-    return @es_version if @es_version
-    es_save = ENV['ES_INCLUDE']
-    java_save = ENV['JAVA_HOME']
-
-    os = Facter.value('osfamily')
-    if os == 'OpenBSD'
-      ENV['JAVA_HOME'] = javapathhelper('-h', 'elasticsearch').chomp
-      ENV['ES_INCLUDE'] = '/etc/elasticsearch/elasticsearch.in.sh'
-    end
-    begin
-      version = es('-version')
-    rescue
-      ENV['ES_INCLUDE'] = es_save if es_save
-      ENV['JAVA_HOME'] = java_save if java_save
-      raise "Unknown ES version. Got #{version.inspect}"
-    ensure
-      ENV['ES_INCLUDE'] = es_save if es_save
-      ENV['JAVA_HOME'] = java_save if java_save
-      @es_version = version.scan(/\d+\.\d+\.\d+(?:\-\S+)?/).first
-      debug "Found ES version #{@es_version}"
-    end
+    Puppet_X::Elastic::EsVersioning.version(
+      resource[:elasticsearch_package_name], resource.catalog
+    )
   end
 
   def is1x?
-    Puppet::Util::Package.versioncmp(@es_version, '2.0.0') < 0
+    Puppet::Util::Package.versioncmp(es_version, '2.0.0') < 0
   end
 
   def is2x?
-    (Puppet::Util::Package.versioncmp(@es_version, '2.0.0') >= 0) && (Puppet::Util::Package.versioncmp(@es_version, '3.0.0') < 0)
+    (Puppet::Util::Package.versioncmp(es_version, '2.0.0') >= 0) && (Puppet::Util::Package.versioncmp(es_version, '3.0.0') < 0)
   end
 
   def batch_capable?
-    Puppet::Util::Package.versioncmp(@es_version, '2.2.0') >= 0
+    Puppet::Util::Package.versioncmp(es_version, '2.2.0') >= 0
   end
 
+  # Determine the plugin version.
   def plugin_version(plugin_name)
     _vendor, _plugin, version = plugin_name.split('/')
-    return @es_version if is2x? && version.nil?
+    return es_version if is2x? && version.nil?
     return version.scan(/\d+\.\d+\.\d+(?:\-\S+)?/).first unless version.nil?
-    return false
+    false
   end
 
   # Run a command wrapped in necessary env vars
   def with_environment(&block)
     env_vars = {
-      'ES_JAVA_OPTS' => ["-Des.path.conf=#{homedir}"],
+      'ES_JAVA_OPTS' => @resource[:java_opts],
+      'ES_PATH_CONF' => @resource[:configdir],
     }
     saved_vars = {}
 
-    if @resource[:proxy]
+    unless @resource[:java_home].nil? or @resource[:java_home] == ''
+      env_vars['JAVA_HOME'] = @resource[:java_home]
+    end
+
+    if !is2x? and @resource[:proxy]
       env_vars['ES_JAVA_OPTS'] += proxy_args(@resource[:proxy])
     end
 
@@ -212,7 +235,6 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
       ENV[env_var] = value
     end
 
-    return ret
+    ret
   end
-
 end

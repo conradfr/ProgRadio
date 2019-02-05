@@ -1,18 +1,22 @@
 require 'uri'
 
 module Puppet::Parser::Functions
-  newfunction(:staging_parse, :type => :rvalue, :doc => <<-EOS
+  newfunction(:staging_parse, type: :rvalue, doc: <<-EOS
 Parse filepath to retrieve information about the file.
     EOS
              ) do |arguments|
-    raise(Puppet::ParseError, 'staging_parse(): Wrong number of arguments ' \
-      "given (#{arguments.size} for 1, 2, 3)") if arguments.empty? || arguments.size > 3
+    if arguments.empty? || arguments.size > 3
+      raise(Puppet::ParseError, 'staging_parse(): Wrong number of arguments ' \
+        "given (#{arguments.size} for 1, 2, 3)")
+    end
 
     source    = arguments[0]
     path      = URI.parse(source.tr('\\', '/')).path
 
-    raise Puppet::ParseError, "staging_parse(): #{source.inspect} has no URI " \
-                              "'path' component" if path.nil?
+    if path.nil?
+      raise Puppet::ParseError, "staging_parse(): #{source.inspect} has no URI " \
+                                "'path' component"
+    end
 
     info      = arguments[1] ? arguments[1] : 'filename'
     extension = arguments[2] ? arguments[2] : File.extname(path)

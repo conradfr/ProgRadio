@@ -3,6 +3,14 @@ require 'spec_helper'
 describe 'postgresql::server', :type => :class do
   let :facts do
     {
+      :os => {
+        :family  => 'Debian',
+        :name => 'Debian',
+        :release => {
+          :full => '6.0',
+          :major => '6'
+        }
+      },
       :osfamily => 'Debian',
       :operatingsystem => 'Debian',
       :lsbdistid => 'Debian',
@@ -23,7 +31,7 @@ describe 'postgresql::server', :type => :class do
     })
     }
     it 'should validate connection' do
-      is_expected.to contain_postgresql__validate_db_connection('validate_service_is_running')
+      is_expected.to contain_postgresql_conn_validator('validate_service_is_running')
     end
   end
 
@@ -38,7 +46,7 @@ describe 'postgresql::server', :type => :class do
     it { is_expected.to contain_class("postgresql::server") }
     it { is_expected.to contain_class("postgresql::server::passwd") }
     it 'should validate connection' do
-      is_expected.to contain_postgresql__validate_db_connection('validate_service_is_running')
+      is_expected.to contain_postgresql_conn_validator('validate_service_is_running')
     end
     it 'should set postgres password' do
       is_expected.to contain_exec('set_postgres_postgrespw').with({
@@ -59,7 +67,7 @@ describe 'postgresql::server', :type => :class do
     it { is_expected.to contain_class("postgresql::params") }
     it { is_expected.to contain_class("postgresql::server") }
     it 'shouldnt validate connection' do
-      is_expected.not_to contain_postgresql__validate_db_connection('validate_service_is_running')
+      is_expected.not_to contain_postgresql_conn_validator('validate_service_is_running')
     end
   end
 
@@ -70,7 +78,7 @@ describe 'postgresql::server', :type => :class do
     it { is_expected.to_not contain_Postgresql_conf('data_directory').that_notifies('Class[postgresql::server::service]')
     }
     it 'should validate connection' do
-      is_expected.to contain_postgresql__validate_db_connection('validate_service_is_running')
+      is_expected.to contain_postgresql_conn_validator('validate_service_is_running')
     end
   end
 
@@ -81,7 +89,7 @@ describe 'postgresql::server', :type => :class do
     it { is_expected.to contain_Postgresql_conf('data_directory').that_notifies('Class[postgresql::server::service]')
     }
     it 'should validate connection' do
-      is_expected.to contain_postgresql__validate_db_connection('validate_service_is_running')
+      is_expected.to contain_postgresql_conn_validator('validate_service_is_running')
     end
   end
 
@@ -94,7 +102,7 @@ describe 'postgresql::server', :type => :class do
     })
     }
     it 'should validate connection' do
-      is_expected.to contain_postgresql__validate_db_connection('validate_service_is_running')
+      is_expected.to contain_postgresql_conn_validator('validate_service_is_running')
     end
   end
 
@@ -107,7 +115,7 @@ describe 'postgresql::server', :type => :class do
     let(:params) {{ :service_manage => false }}
     it { is_expected.not_to contain_service('postgresqld') }
     it 'shouldnt validate connection' do
-      is_expected.not_to contain_postgresql__validate_db_connection('validate_service_is_running')
+      is_expected.not_to contain_postgresql_conn_validator('validate_service_is_running')
     end
   end
 

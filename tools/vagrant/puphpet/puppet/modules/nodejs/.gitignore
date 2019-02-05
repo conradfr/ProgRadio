@@ -1,3 +1,5 @@
 spec/fixtures/
 pkg/
-.gemfile.lock
+Gemfile.lock
+/.bundle/
+/vendor/

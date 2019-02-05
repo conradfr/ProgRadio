@@ -10,7 +10,7 @@ define puphpet::python::pyenv (
       default => false,
     }
 
-    pyenv_python { $version['version']:
+    pyenv_python { "${version['version']}":
       ensure     => present,
       keep       => true,
       virtualenv => $install_virtualenv,

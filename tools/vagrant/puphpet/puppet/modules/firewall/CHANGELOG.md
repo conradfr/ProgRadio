@@ -1,3 +1,71 @@
+## Supported Release 1.11.0
+### Summary
+This release is to implement Rubocop changes within the module.
+
+#### Added
+- Rubocop has been implemented in the module.
+
+### Changed
+- Module sync was updated.
+- Unparsable rules are now skipped with a warning.
+
+## Supported Release 1.10.0
+### Summary
+This is a clean release prior to the module being run through rubocop.
+
+#### Added
+- Hashlimit module added.
+- Firewall multi notes added.
+- Gidd lookup now added.
+- Simple sanity check added to hash parser rule.
+
+### Changed
+- Version requirement has been updated.
+- An array is no lnger accepted for icmp types.
+- UNTRACKED is now considered to be a valid state.
+- Modulesync updates.
+- ip6tables can be disabled.
+- Readme format has been fixed.
+- Fixes made to accomodate Puppet lint.
+- Fix to regex i 'connlimit_spec.rb' and 'firewall_spec.rb'.
+- General test fixes.
+- Negated match sets know properly dealt with.
+- Correct IP version for hostname resolution now chosen.
+- Unmanaged rule regex regarding iptable has been fixed.
+
+### Removed
+- Ubuntu 10.04 and 12.04 removed.
+
+## Supported Release 1.9.0
+### Summary
+This release includes several bugfixes and NFLOG support.
+
+#### Added
+- Support for NFLOG including the `NFLOG` jump target and four commandline options ([FM-4896](https://tickets.puppetlabs.com/browse/FM-4896))
+- Support for the geoip module ([MODULES-4279](https://tickets.puppetlabs.com/browse/MODULES-4279))
+- Management of the ebtables package
+
+#### Fixed
+- iptables parser fails with "Invalid address from IPAddr.new: -m" ([MODULES-4234](https://tickets.puppetlabs.com/browse/MODULES-4234))
+- selinux context for iptables configuration
+- Replace Puppet.version.to_f with Puppet::Util::Package.versioncmp ( [MODULES-4528](https://tickets.puppetlabs.com/browse/MODULES-4528))
+
+## Supported Release 1.8.2
+### Summary
+This release includes numerous features and bugfixes, See below.
+
+#### Bugfixes
+- Fixing issue with double quotes being removed when part of the rule comment
+- Add the --wait flag to the insert/update/delete iptables actions to prevent failures from occuring when iptables is running outside of puppet for iptables >= 1.4.20
+- Fix iptables_version and ip6tables_version facts not returning the version
+
+#### Features
+- Support for multiple IP sets in a single rule
+- Implement queue_bypass and queue_num parameters for NFQUEUE jump target
+- Tighten SELinux permissions on persistent files
+- RHEL7 SELinux support for puppet 3
+- Manage ip6tables service for Redhat Family
+
 ## Supported Release 1.8.1
 ### Summary
 This release documents an important issue with mcollective that may impact users of the firewall module. Workarounds are suggested as part of this advisory until mcollective can be patched.

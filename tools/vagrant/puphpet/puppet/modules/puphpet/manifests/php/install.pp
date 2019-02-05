@@ -69,7 +69,7 @@ class puphpet::php::install
   }, $php['ini'])
 
   each( $php_inis ) |$key, $value| {
-    if is_array($value) {
+    if $value =~ Array {
       each( $php_inis[$key] ) |$inner_key, $inner_value| {
         puphpet::php::ini { "${key}_${inner_key}":
           entry       => "CUSTOM_${inner_key}/${key}",

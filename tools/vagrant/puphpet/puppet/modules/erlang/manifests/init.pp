@@ -18,7 +18,7 @@ class erlang (
   $repos                    = $erlang::params::repos,
   $version                  = 'present',
 ) inherits erlang::params {
-  validate_string($version)
+  validate_legacy(String, 'validate_string', $version)
 
   case $::osfamily {
     'Debian' : {

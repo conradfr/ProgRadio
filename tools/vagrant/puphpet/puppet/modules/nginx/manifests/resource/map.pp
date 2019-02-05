@@ -48,14 +48,12 @@ define nginx::resource::map (
   $ensure     = 'present',
   $hostnames  = false
 ) {
-  validate_string($string)
-  validate_re($string, '^.{2,}$',
-    "Invalid string value [${string}]. Expected a minimum of 2 characters.")
-  validate_hash($mappings)
-  validate_bool($hostnames)
-  validate_re($ensure, '^(present|absent)$',
-    "Invalid ensure value '${ensure}'. Expected 'present' or 'absent'")
-  if ($default != undef) { validate_string($default) }
+  validate_legacy(String, 'validate_string', $string)
+  validate_legacy('Optional[String]', 'validate_re', $string, ['^.{2,}$'])
+  validate_legacy(Hash, 'validate_hash', $mappings)
+  validate_legacy(Boolean, 'validate_bool', $hostnames)
+  validate_legacy('Optional[String]', 'validate_re', $ensure, ['^(present|absent)$'])
+  if ($default != undef) { validate_legacy(String, 'validate_string', $default) }
 
   include nginx::params
   $root_group = $nginx::params::root_group

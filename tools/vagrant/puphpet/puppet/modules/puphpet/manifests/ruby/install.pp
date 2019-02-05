@@ -11,7 +11,7 @@ define puphpet::ruby::install (
   $bundler_true = value_true($bundler)
 
   if value_true($version) {
-    rvm_system_ruby { $version:
+    rvm_system_ruby { "${version}":
         default_use => $default_true,
         ensure      => present,
         require     => File_line['rvm_autoupdate_flag=0 >> /root/.rvmrc'],
@@ -33,11 +33,11 @@ define puphpet::ruby::install (
           $gem_ensure = present
         }
 
-        rvm_gem { $gem_array[0]:
+        rvm_gem { "${gem_array[0]} for Ruby ${version}":
           name         => $gem_array[0],
-          ruby_version => $version,
+          ruby_version => "${version}",
           ensure       => $gem_ensure,
-          require      => Rvm_system_ruby[$version]
+          require      => Rvm_system_ruby["${version}"]
         }
       }
     }

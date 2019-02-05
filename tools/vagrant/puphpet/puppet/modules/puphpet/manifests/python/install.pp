@@ -8,6 +8,7 @@ class puphpet::python::install
   -> class { 'puphpet::python::pre': }
   -> class { '::pyenv':
     manage_packages => false,
+    repo_revision   => 'v1.2.1',
   }
 
   puphpet::python::pyenv { 'from puphpet::python::install': }

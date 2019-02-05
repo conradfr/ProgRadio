@@ -62,10 +62,24 @@ class puphpet::redis::install {
 
   create_resources('class', { 'redis' => $settings })
 
-  if array_true($php, 'install') and ! defined(Puphpet::Php::Module::Pecl['redis']) {
-    puphpet::php::module::pecl { 'redis':
-      service_autorestart => $webserver_restart,
-      require             => Class['redis']
+  if array_true($php, 'install') {
+    if $::osfamily == 'debian' {
+      if ! defined(Puphpet::Php::Module::Package['redis']) {
+        puphpet::php::module::package { 'redis':
+          service_autorestart => $webserver_restart,
+          prefix              => 'php-',
+          require             => Class['redis']
+        }
+      }
+    }
+
+    if $::osfamily == 'redhat' {
+      if ! defined(Puphpet::Php::Module::Pecl['redis']) {
+        puphpet::php::module::pecl { 'redis':
+          service_autorestart => $webserver_restart,
+          require             => Class['redis']
+        }
+      }
     }
   }
 

@@ -1,22 +1,10 @@
 # Defines where we can expect PHP-FPM ini files and paths to be located.
 #
-# ubuntu 14.04
+# ubuntu
 #    7.1
 #        /etc/php/7.1/fpm/pool.d/www.conf
-#    7.0
-#        /etc/php/7.0/fpm/pool.d/www.conf
-#    5.6
-#        /etc/php/5.6/fpm/pool.d/www.conf
-#    5.5
-#        /etc/php/5.5/fpm/pool.d/www.conf
-# centos 6.x
+# centos
 #    7.1
-#        /etc/php-fpm.d/www.conf
-#    7.0
-#        /etc/php-fpm.d/www.conf
-#    5.6
-#        /etc/php-fpm.d/www.conf
-#    5.5
 #        /etc/php-fpm.d/www.conf
 #
 define puphpet::php::fpm::pool_ini (
@@ -28,24 +16,9 @@ define puphpet::php::fpm::pool_ini (
   $php_fpm_service
   ) {
 
-  $conf_filename = $fpm_version ? {
-    '7.1'   => $::osfamily ? {
-      'debian' => '/etc/php/7.1/fpm/pool.d/www.conf',
-      'redhat' => '/etc/php-fpm.d/www.conf',
-    },
-    '7.0'   => $::osfamily ? {
-      'debian' => '/etc/php/7.0/fpm/pool.d/www.conf',
-      'redhat' => '/etc/php-fpm.d/www.conf',
-    },
-    '5.6'   => $::osfamily ? {
-      'debian' => '/etc/php/5.6/fpm/pool.d/www.conf',
-      'redhat' => '/etc/php-fpm.d/www.conf',
-    },
-    '5.5'   => $::osfamily ? {
-      'debian' => '/etc/php/5.5/fpm/pool.d/www.conf',
-      'redhat' => '/etc/php-fpm.d/www.conf',
-    },
-    default => fail('Unsupported PHP version selected')
+  $conf_filename = $::osfamily ? {
+    'debian' => "/etc/php/${fpm_version}/fpm/pool.d/www.conf",
+    'redhat' => '/etc/php-fpm.d/www.conf',
   }
 
   if '=' in $value {

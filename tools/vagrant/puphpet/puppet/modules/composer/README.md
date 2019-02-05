@@ -1,18 +1,13 @@
 # Composer Puppet Module
 
-[![Build Status](https://travis-ci.org/tPl0ch/puppet-composer.png?branch=master)](https://travis-ci.org/tPl0ch/puppet-composer)
-
-## Maintainers needed!
-
-See https://github.com/tPl0ch/puppet-composer/issues/84 for more details!
-
 ## Description
 
-The `puppet-composer` module installs the latest version of Composer from http://getcomposer.org. Composer is a dependency manager for PHP.
+The `puppet-composer` module installs the latest version of Composer from http://getcomposer.org.
+Composer is a dependency manager for PHP.
 
 ## Supported Puppet versions
 
-This module supports puppet in versions `>= 2.7, <3.5`
+This module supports puppet in versions `>= 4.x`
 
 ## Supported Platforms
 
@@ -28,12 +23,7 @@ This module supports puppet in versions `>= 2.7, <3.5`
 #### Puppet Forge
 We recommend installing using the Puppet Forge as it automatically satisfies dependencies.
 
-    puppet module install --target-dir=/your/path/to/modules tPl0ch-composer
-
-#### Installation via git submodule
-You can also install as a git submodule and handle the dependencies manually. See the [Dependencies](#dependencies) section below.
-
-    git submodule add git://github.com/tPl0ch/puppet-composer.git modules/composer
+    puppet module install --target-dir=/your/path/to/modules puphpet-composer
 
 ## Dependencies
 
@@ -41,13 +31,10 @@ This module requires the following Puppet modules:
 
 * [`puppetlabs-git`](https://github.com/puppetlabs/puppetlabs-git/)
 
-And additional (for puppet version lower than 3.0.0) you need:
-
-* [`libaugeas`](http://augeas.net/) (For automatically updating php.ini settings for suhosin patch)
-* [`hiera-puppet`](http://docs.puppetlabs.com/hiera/1/installing.html#step-2-install-the-puppet-functions) (For managing config data)
-
 ## Usage
-To install the `composer` binary globally in `/usr/local/bin` you only need to declare the `composer` class. We try to set some sane defaults. There are also a number of parameters you can tweak should the defaults not be sufficient.
+To install the `composer` binary globally in `/usr/local/bin` you only need to declare the
+`composer` class. We try to set some sane defaults. There are also a number of parameters
+you can tweak should the defaults not be sufficient.
 
 ### Simple Include
 To install the binary with the defaults you just need to include the following in your manifests:
@@ -96,7 +83,9 @@ composer::project { 'silex':
 
 ### Updating Packages
 
-The `composer::exec` definition provides a more generic wrapper arround composer `update` and `install` commands. The following example will update the `silex/silex` and `symfony/browser-kit` packages in the `/vagrant/silex` directory. You can omit `packages` to update the entire project.
+The `composer::exec` definition provides a more generic wrapper arround composer `update` and
+`install` commands. The following example will update the `silex/silex` and `symfony/browser-kit`
+packages in the `/vagrant/silex` directory. You can omit `packages` to update the entire project.
 
 ```puppet
 composer::exec { 'silex-update':
@@ -120,7 +109,9 @@ composer::exec { 'silex-update':
 
 ### Installing Packages
 
-We support the `install` command in addition to `update`. The install command will ignore the `packages` parameter and the following example is the equivalent to running `composer install` in the `/vagrant/silex` directory.
+We support the `install` command in addition to `update`. The install command will ignore the
+`packages` parameter and the following example is the equivalent to running `composer install`
+in the `/vagrant/silex` directory.
 
 ```puppet
 composer::exec { 'silex-install':
@@ -142,7 +133,8 @@ composer::exec { 'silex-install':
 
 ### Updating composer
 
-You can use the defined type `composer::selfupdate` to update (or rollback) composer to the latest (or specific) version.
+You can use the defined type `composer::selfupdate` to update (or rollback) composer to the latest
+(or specific) version.
 
 ```puppet
 composer::selfupdate { 'selfupdate_composer':
@@ -158,11 +150,14 @@ composer::selfupdate { 'selfupdate_composer':
 
 ## Development
 
-For unit testing we use `rspec-puppet` and Travis CI. Functional testing happens through a Vagrant VM where you can test changes in a real server scenario.
+For unit testing we use `rspec-puppet` and Travis CI. Functional testing happens through a Vagrant
+VM where you can test changes in a real server scenario.
 
 ### Unit Tests
 
-When contributing fixes or features you should try and create RSpec tests for those changes. It is always a good idea to make sure the entire suite passes before opening a pull request. To run the RSpec tests locally you need `bundler` installed:
+When contributing fixes or features you should try and create RSpec tests for those changes. It is
+always a good idea to make sure the entire suite passes before opening a pull request. To run the
+RSpec tests locally you need `bundler` installed:
 
 ```
 gem install bundler
@@ -182,13 +177,20 @@ rake spec
 
 ### Functional Tests
 
-For easier development and actual testing the use of the module, we rely on Vagrant, which allows us to bring up a VM that we can use to test changes and perform active development without needing a real server.
+For easier development and actual testing the use of the module, we rely on Vagrant, which allows
+us to bring up a VM that we can use to test changes and perform active development without needing
+a real server.
 
-To get started with the Vagrant VM you should first get the [Unit Tests](#unit-tests) working. Then you will need to install [VirtualBox][virtualbox] and [Vagrant][vagrant].
+To get started with the Vagrant VM you should first get the [Unit Tests](#unit-tests) working.
+Then you will need to install [VirtualBox][virtualbox] and [Vagrant][vagrant].
 
-To bring up the development VM you can run `rake vagrant:up`. This Rake task runs `rake spec_prep` as a pre-requisite so that the `git` Puppet module is available. With the VM up and running you can login via SSH with `vagrant ssh` and run `puppet apply` against it with `rake vagrant:provision`.
+To bring up the development VM you can run `rake vagrant:up`. This Rake task runs `rake spec_prep`
+as a pre-requisite so that the `git` Puppet module is available. With the VM up and running you
+can login via SSH with `vagrant ssh` and run `puppet apply` against it with `rake vagrant:provision`.
 
-The VM will get the `spec/fixtures/manifests/vagrant.pp` file applied to the node. This currently creates a Silex project at `/tmp/silex` when the VM starts up. You can modify this manifest to your liking.
+The VM will get the `spec/fixtures/manifests/vagrant.pp` file applied to the node. This currently
+creates a Silex project at `/tmp/silex` when the VM starts up. You can modify this manifest to your
+liking.
 
 ### Acceptance Tests
 
@@ -206,7 +208,8 @@ To use beaker without rake, simply run `rspec spec/acceptance`.
 
 **Beaker + Hiera**
 
-When running acceptance tests, you may hit GitHub rate limits much faster than you would otherwise. To ensure your tests do not fail arbitrarily, you can add your GitHub auth token via hiera.
+When running acceptance tests, you may hit GitHub rate limits much faster than you would otherwise.
+To ensure your tests do not fail arbitrarily, you can add your GitHub auth token via hiera.
 
 Create a hiera config at `spec/fixtures/puppet/common.yaml`, that looks like this:
 

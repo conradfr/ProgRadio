@@ -49,15 +49,17 @@ class puphpet::mailhog::install
   ], ' ')
 
   supervisord::program { 'mailhog':
-    command     => "${path} ${options}",
-    priority    => '100',
-    user        => 'mailhog',
-    autostart   => true,
-    autorestart => 'true',
-    environment => {
-      'PATH' => "/bin:/sbin:/usr/bin:/usr/sbin:${path}"
+    command             => "${path} ${options}",
+    priority            => '100',
+    user                => 'mailhog',
+    autostart           => true,
+    autorestart         => 'true',
+    program_environment => {
+      'PATH' => "/bin:/sbin:/usr/bin:/usr/sbin:${path}",
     },
-    require     => Puphpet::Server::Wget[$puphpet::mailhog::params::install_path],
+    require             => [
+      Puphpet::Server::Wget[$puphpet::mailhog::params::install_path],
+    ],
   }
 
 }

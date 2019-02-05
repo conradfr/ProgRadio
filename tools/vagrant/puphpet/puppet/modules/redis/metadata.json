@@ -1,6 +1,6 @@
 {
   "name": "arioch-redis",
-  "version": "1.2.4",
+  "version": "3.2.0",
   "author": "Tom De Vylder",
   "summary": "Redis module",
   "license": "Apache-2.0",
@@ -8,9 +8,17 @@
   "project_page": "http://arioch.github.io/puppet-redis/",
   "issues_url": "https://github.com/arioch/puppet-redis/issues",
   "dependencies": [
-    {"name":"puppetlabs/apt","version_requirement":">= 2.3.0 <3.0.0"},
+    {"name":"puppetlabs/apt","version_requirement":">= 2.3.0 <5.0.0"},
     {"name":"puppetlabs/stdlib","version_requirement":">= 1.0.2 <5.0.0"},
-    {"name":"stahnma/epel","version_requirement":">= 1.0.2 <2.0.0"}
+    {"name":"stahnma/epel","version_requirement":">= 1.2.2 <2.0.0"},
+    {
+      "name": "herculesteam/augeasproviders_sysctl",
+      "version_requirement": ">=2.1.0 < 3.0.0"
+    },
+    {
+      "name": "herculesteam/augeasproviders_core",
+      "version_requirement": ">=2.1.0 < 3.0.0"
+    }
   ],
   "data_provider": null,
   "description": "Redis module with cluster support",
@@ -25,57 +33,32 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "6.0",
-        "6.1",
-        "6.2",
-        "6.3",
-        "6.4",
-        "6.5",
-        "6.6",
-        "6.6",
-        "6.7",
-        "6.9",
-        "7.0",
-        "7.1",
-        "7.2",
-        "7.3",
-        "7.4",
-        "7.5"
+        "8"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
         "14.04",
-        "14.10",
         "16.04"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "6.0",
-        "6.1",
-        "6.2",
-        "6.3",
-        "6.4",
-        "6.5",
-        "7.0",
-        "7.1"
+        "6",
+        "7"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "6.0",
-        "6.1",
-        "6.2",
-        "6.3",
-        "6.4",
-        "6.5",
-        "7.0",
-        "7.1"
+        "6",
+        "7"
       ]
+    },
+    {
+      "operatingsystem": "Archlinux"
     }
   ]
 }

@@ -60,7 +60,7 @@
 #   [*location_custom_cfg_append*]    - Expects a array with extra directives
 #     to put before anything else inside location (used with all other types
 #     except custom_cfg). Used for logical structures such as if.
-#   [*location_cfg_append*]  - Expects a hash with extra directives to put
+#   [*location_cfg_append*]  - Expects a hash or array with extra directives to put
 #     after everything else inside location (used with all other types except
 #     custom_cfg)
 #   [*try_files*]            - An array of file locations to try
@@ -168,108 +168,109 @@ define nginx::resource::location (
     notify => Class['nginx::service'],
   }
 
-  validate_re($ensure, '^(present|absent)$',
-    "${ensure} is not supported for ensure. Allowed values are 'present' and 'absent'.")
-  validate_string($location)
+  validate_legacy('Optional[String]', 'validate_re', $ensure, ['^(present|absent)$'])
+  validate_legacy(String, 'validate_string', $location)
   if ($vhost != undef) {
-    validate_string($vhost)
+    validate_legacy(String, 'validate_string', $vhost)
   }
   if ($www_root != undef) {
-    validate_string($www_root)
+    validate_legacy(String, 'validate_string', $www_root)
   }
   if ($autoindex != undef) {
-    validate_string($autoindex)
+    validate_legacy(String, 'validate_string', $autoindex)
   }
-  validate_array($index_files)
+  validate_legacy(Array, 'validate_array', $index_files)
   if ($proxy != undef) {
-    validate_string($proxy)
+    validate_legacy(String, 'validate_string', $proxy)
   }
-  validate_string($proxy_redirect)
-  validate_string($proxy_read_timeout)
-  validate_string($proxy_connect_timeout)
-  validate_array($proxy_set_header)
+  validate_legacy(String, 'validate_string', $proxy_redirect)
+  validate_legacy(String, 'validate_string', $proxy_read_timeout)
+  validate_legacy(String, 'validate_string', $proxy_connect_timeout)
+  validate_legacy(Array, 'validate_array', $proxy_set_header)
   if ($fastcgi != undef) {
-    validate_string($fastcgi)
+    validate_legacy(String, 'validate_string', $fastcgi)
   }
-  validate_string($fastcgi_params)
+  validate_legacy(String, 'validate_string', $fastcgi_params)
   if ($fastcgi_script != undef) {
-    validate_string($fastcgi_script)
+    validate_legacy(String, 'validate_string', $fastcgi_script)
   }
   if ($fastcgi_split_path != undef) {
-    validate_string($fastcgi_split_path)
+    validate_legacy(String, 'validate_string', $fastcgi_split_path)
   }
 
-  validate_bool($internal)
+  validate_legacy(Boolean, 'validate_bool', $internal)
 
-  validate_bool($ssl)
-  validate_bool($ssl_only)
+  validate_legacy(Boolean, 'validate_bool', $ssl)
+  validate_legacy(Boolean, 'validate_bool', $ssl_only)
   if ($location_alias != undef) {
-    validate_string($location_alias)
+    validate_legacy(String, 'validate_string', $location_alias)
   }
   if ($location_allow != undef) {
-    validate_array($location_allow)
+    validate_legacy(Array, 'validate_array', $location_allow)
   }
   if ($location_deny != undef) {
-    validate_array($location_deny)
+    validate_legacy(Array, 'validate_array', $location_deny)
   }
   if ($option != undef) {
     warning('The $option parameter has no effect and is deprecated.')
   }
   if ($stub_status != undef) {
-    validate_bool($stub_status)
+    validate_legacy(Boolean, 'validate_bool', $stub_status)
   }
   if ($raw_prepend != undef) {
-    if (is_array($raw_prepend)) {
-      validate_array($raw_prepend)
+    if ($raw_prepend =~ Array) {
+      validate_legacy(Array, 'validate_array', $raw_prepend)
     } else {
-      validate_string($raw_prepend)
+      validate_legacy(String, 'validate_string', $raw_prepend)
     }
   }
   if ($raw_append != undef) {
-    if (is_array($raw_append)) {
-      validate_array($raw_append)
+    if ($raw_append =~ Array) {
+      validate_legacy(Array, 'validate_array', $raw_append)
     } else {
-      validate_string($raw_append)
+      validate_legacy(String, 'validate_string', $raw_append)
     }
   }
   if ($location_custom_cfg != undef) {
-    validate_hash($location_custom_cfg)
+    validate_legacy(Hash, 'validate_hash', $location_custom_cfg)
   }
   if ($location_cfg_prepend != undef) {
-    validate_hash($location_cfg_prepend)
+    validate_legacy(Hash, 'validate_hash', $location_cfg_prepend)
   }
   if ($location_cfg_append != undef) {
-    validate_hash($location_cfg_append)
+    if ($location_cfg_append !~ Array) and ($location_cfg_append !~ Hash) {
+      fail('$location_cfg_append must be either a hash or array')
+    }
   }
   if ($try_files != undef) {
-    validate_array($try_files)
+    validate_legacy(Array, 'validate_array', $try_files)
   }
   if ($proxy_cache != false) {
-    validate_string($proxy_cache)
+    validate_legacy(String, 'validate_string', $proxy_cache)
   }
   if ($proxy_cache_valid != false) {
-    validate_string($proxy_cache_valid)
+    validate_legacy(String, 'validate_string', $proxy_cache_valid)
   }
   if ($proxy_method != undef) {
-    validate_string($proxy_method)
+    validate_legacy(String, 'validate_string', $proxy_method)
   }
   if ($proxy_set_body != undef) {
-    validate_string($proxy_set_body)
+    validate_legacy(String, 'validate_string', $proxy_set_body)
   }
   if ($auth_basic != undef) {
-    validate_string($auth_basic)
+    validate_legacy(String, 'validate_string', $auth_basic)
   }
   if ($auth_basic_user_file != undef) {
-    validate_string($auth_basic_user_file)
+    validate_legacy(String, 'validate_string', $auth_basic_user_file)
   }
-  if !is_integer($priority) {
+  if $priority !~ Integer {
     fail('$priority must be an integer.')
   }
-  validate_array($rewrite_rules)
+  validate_legacy(Array, 'validate_array', $rewrite_rules)
   if ($priority < 401) or ($priority > 899) {
     fail('$priority must be in the range 401-899.')
   }
-  validate_hash($rewrites)
+  validate_legacy(Hash, 'validate_hash', $rewrites)
 
   # # Shared Variables
   $ensure_real = $ensure ? {
@@ -322,7 +323,6 @@ define nginx::resource::location (
     $tmpFile=md5("${vhost_sanitized}-${priority}-${location_sanitized}")
 
     concat::fragment { "${tmpFile}":
-      ensure  => present,
       target  => $config_file,
       content => join([
         template('nginx/vhost/location_header.erb'),
@@ -340,7 +340,6 @@ define nginx::resource::location (
 
     $sslTmpFile=md5("${vhost_sanitized}-${ssl_priority}-${location_sanitized}-ssl")
     concat::fragment {"${sslTmpFile}":
-      ensure  => present,
       target  => $config_file,
       content => join([
         template('nginx/vhost/location_header.erb'),

@@ -2,8 +2,12 @@ class puphpet::rabbitmq::params
   inherits ::puphpet::params
 {
 
-  $gpg_key     = '0A9AF2115F4687BD29803A206B73A36E6026DFCA'
-  $gpg_key_src = 'https://www.rabbitmq.com/rabbitmq-release-signing-key.asc'
+  $repo_location = $::osfamily ? {
+    'debian' => 'https://packagecloud.io/rabbitmq/rabbitmq-server',
+    'redhat' => "https://packagecloud.io/rabbitmq/rabbitmq-server/el/${facts['os'][release][major]}/\$basearch",
+  }
+
+  $gpg_key     = '418A7F2FB0E1E6E7EABF6FE8C2E73424D59097AB'
 
   if array_true($puphpet::params::hiera['apache'], 'install') or
      array_true($puphpet::params::hiera['nginx'], 'install')
@@ -19,6 +23,7 @@ class puphpet::rabbitmq::params
   }
 
   $pecl_pkg = 'amqp'
+  $php_pkg  = 'amqp'
 
   # config file could contain no plugins key
   $plugins = array_true($puphpet::params::hiera['rabbitmq'], 'plugins') ? {

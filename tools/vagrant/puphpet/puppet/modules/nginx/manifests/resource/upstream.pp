@@ -46,12 +46,11 @@ define nginx::resource::upstream (
 ) {
 
   if $members != undef {
-    validate_array($members)
+    validate_legacy(Array, 'validate_array', $members)
   }
-  validate_re($ensure, '^(present|absent)$',
-    "${ensure} is not supported for ensure. Allowed values are 'present' and 'absent'.")
+  validate_legacy('Optional[String]', 'validate_re', $ensure, ['^(present|absent)$'])
   if ($upstream_cfg_prepend != undef) {
-    validate_hash($upstream_cfg_prepend)
+    validate_legacy(Hash, 'validate_hash', $upstream_cfg_prepend)
   }
 
   include nginx::params

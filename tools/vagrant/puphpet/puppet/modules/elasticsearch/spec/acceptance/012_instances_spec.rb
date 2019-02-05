@@ -1,5 +1,4 @@
 require 'spec_helper_acceptance'
-require 'spec_helper_faraday'
 require 'json'
 
 describe 'elasticsearch::instance' do
@@ -8,11 +7,10 @@ describe 'elasticsearch::instance' do
       pp = <<-EOS
         class { 'elasticsearch':
           config => {
-            'cluster.name' => '#{test_settings['cluster_name']}'
+            'cluster.name' => '#{test_settings['cluster_name']}',
+            'network.host' => '0.0.0.0',
           },
-          manage_repo => true,
           repo_version => '#{test_settings['repo_version']}',
-          java_install => true
         }
 
         elasticsearch::instance { 'es-01':
@@ -34,7 +32,7 @@ describe 'elasticsearch::instance' do
         apply_manifest pp, :catch_failures => true
       end
       it 'is idempotent' do
-        apply_manifest pp , :catch_changes  => true
+        apply_manifest pp, :catch_changes => true
       end
     end
 
@@ -48,12 +46,12 @@ describe 'elasticsearch::instance' do
       it { should be_running }
     end
 
-    describe file(test_settings['pid_file_a']) do
+    describe file(test_settings['pid_a']) do
       it { should be_file }
       its(:content) { should match(/[0-9]+/) }
     end
 
-    describe file(test_settings['pid_file_b']) do
+    describe file(test_settings['pid_b']) do
       it { should be_file }
       its(:content) { should match(/[0-9]+/) }
     end
@@ -77,13 +75,14 @@ describe 'elasticsearch::instance' do
     end
 
     describe port(test_settings['port_a']) do
-      it 'open', :with_retries do should be_listening end
+      it 'open', :with_retries do
+        should be_listening
+      end
     end
 
     describe server :container do
       describe http(
-        "http://localhost:#{test_settings['port_a']}",
-        :faraday_middleware => middleware
+        "http://localhost:#{test_settings['port_a']}"
       ) do
         it "serves requests on #{test_settings['port_a']}" do
           expect(response.status).to eq(200)
@@ -92,13 +91,14 @@ describe 'elasticsearch::instance' do
     end
 
     describe port(test_settings['port_b']) do
-      it 'open', :with_retries do should be_listening end
+      it 'open', :with_retries do
+        should be_listening
+      end
     end
 
     describe server :container do
       describe http(
-        "http://localhost:#{test_settings['port_b']}",
-        :faraday_middleware => middleware
+        "http://localhost:#{test_settings['port_b']}"
       ) do
         it "serves requests on #{test_settings['port_b']}" do
           expect(response.status).to eq(200)
@@ -112,10 +112,10 @@ describe 'elasticsearch::instance' do
       pp = <<-EOS
         class { 'elasticsearch':
           config => {
-            'cluster.name' => '#{test_settings['cluster_name']}'},
-          manage_repo => true,
+            'cluster.name' => '#{test_settings['cluster_name']}',
+            'network.host' => '0.0.0.0',
+          },
           repo_version => '#{test_settings['repo_version']}',
-          java_install => true
         }
 
         elasticsearch::instance { 'es-01':
@@ -149,7 +149,7 @@ describe 'elasticsearch::instance' do
       it { should be_running }
     end
 
-    describe file(test_settings['pid_file_a']) do
+    describe file(test_settings['pid_a']) do
       it { should be_file }
       its(:content) { should match(/[0-9]+/) }
     end
@@ -160,7 +160,9 @@ describe 'elasticsearch::instance' do
     end
 
     describe port(test_settings['port_a']) do
-      it 'open', :with_retries do should be_listening end
+      it 'open', :with_retries do
+        should be_listening
+      end
     end
 
     describe server :container do

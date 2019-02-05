@@ -9,6 +9,7 @@ vagrant_dot  = (ENV['VAGRANT_DOTFILE_PATH'].to_s.split.join.length > 0) ?
 
 provider = data['vm']['provider']['local']
 machines = !provider['machines'].empty? ? provider['machines'] : { }
+chosen_virtualizer = provider['chosen_virtualizer']
 
 if Vagrant.has_plugin?('vagrant-hostmanager')
   config.hostmanager.enabled = true
@@ -90,6 +91,26 @@ machines.each do |i, machine|
       end
     end
 
+    if chosen_virtualizer.empty? || chosen_virtualizer == 'virtualbox'
+      mount_options_virtualizer = ['rw', 'dmode="777"', 'fmode="666"']
+    elsif chosen_virtualizer == 'parallels'
+      mount_options_virtualizer = ['rw', 'share']
+    else
+      mount_options_virtualizer = ['rw']
+    end
+
+    # https://github.com/fgrehm/vagrant-cachier
+    if Vagrant.has_plugin?("vagrant-cachier")
+      config.cache.scope = :box
+      if "#{provider['box']}".include?('ubuntu-16.04') || "#{provider['box']}".include?('ubuntu1604')
+        config.cache.synced_folder_opts = {
+          mount_options: mount_options_virtualizer,
+          owner: "_apt",
+          group: "_apt"
+        }
+      end
+    end
+
     # https://github.com/smdahlen/vagrant-hostmanager
     if Vagrant.has_plugin?('vagrant-hostmanager')
       hosts = Array.new()
@@ -143,8 +164,8 @@ machines.each do |i, machine|
 
     data['vm']['synced_folder'].each do |i, folder|
       if folder['source'] != '' && folder['target'] != ''
-        sync_owner = !folder['owner'].nil? ? folder['owner'] : 'www-data'
-        sync_group = !folder['group'].nil? ? folder['group'] : 'www-data'
+        sync_owner = !folder['owner'].nil? ? folder['owner'] : 'vagrant'
+        sync_group = !folder['group'].nil? ? folder['group'] : 'vagrant'
 
         if folder['sync_type'] == 'nfs'
           if Vagrant.has_plugin?('vagrant-bindfs')
@@ -152,7 +173,7 @@ machines.each do |i, machine|
               id: "#{i}",
               type: 'nfs'
             machine_id.bindfs.bind_folder "/mnt/vagrant-#{i}", "#{folder['target']}",
-              after: :synced_folders,
+              after: !folder['after'].nil? ? folder['after'].to_sym : :synced_folders,
               force_user: sync_owner,
               force_group: sync_group,
               perms: "u=rwX:g=rwX:o=rD",
@@ -161,7 +182,7 @@ machines.each do |i, machine|
             machine_id.vm.synced_folder "#{folder['source']}", "#{folder['target']}",
               id: "#{i}",
               type: 'nfs',
-              :nfs => { :mount_options => ["dmode=777","fmode=666"] }
+              :nfs => { :mount_options => mount_options_virtualizer }
           end
         elsif folder['sync_type'] == 'smb'
           smb__host     = !folder['smb']['smb_host'].to_s.empty? ?
@@ -226,8 +247,6 @@ machines.each do |i, machine|
         end
       end
     end
-
-    chosen_virtualizer = provider['chosen_virtualizer']
 
     unless ENV.fetch('VAGRANT_DEFAULT_PROVIDER', '').strip.empty?
       chosen_virtualizer = ENV['VAGRANT_DEFAULT_PROVIDER'];

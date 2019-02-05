@@ -93,6 +93,15 @@ Puppet::Type.newtype(:archive) do
     desc "custom extraction command ('tar xvf example.tar.gz'), also support sprintf format ('tar xvf %s') which will be processed with the filename: sprintf('tar xvf %s', filename)"
   end
 
+  newparam(:temp_dir) do
+    desc 'Specify an alternative temporary directory to use for copying files, if unset then the operating system default will be used.'
+    validate do |value|
+      unless Puppet::Util.absolute_path?(value)
+        raise ArgumentError, "Invalid temp_dir #{value}"
+      end
+    end
+  end
+
   newparam(:extract_flags) do
     desc "custom extraction options, this replaces the default flags. A string such as 'xvf' for a tar file would replace the default xf flag. A hash is useful when custom flags are needed for different platforms. {'tar' => 'xzf', '7z' => 'x -aot'}."
     defaultto(:undef)
@@ -113,9 +122,9 @@ Puppet::Type.newtype(:archive) do
   end
 
   newparam(:source) do
-    desc 'archive file source, supports http|https|ftp|file|s3 uri.'
+    desc 'archive file source, supports puppet|http|https|ftp|file|s3 uri.'
     validate do |value|
-      unless value =~ URI.regexp(%w(http https ftp file s3)) || Puppet::Util.absolute_path?(value)
+      unless value =~ URI.regexp(%w[puppet http https ftp file s3]) || Puppet::Util.absolute_path?(value)
         raise ArgumentError, "invalid source url: #{value}"
       end
     end
@@ -125,7 +134,7 @@ Puppet::Type.newtype(:archive) do
     desc 'archive file source, supports http|https|ftp|file uri.
     (for camptocamp/archive compatibility)'
     validate do |value|
-      unless value =~ URI.regexp(%w(http https file ftp))
+      unless value =~ URI.regexp(%w[http https file ftp])
         raise ArgumentError, "invalid source url: #{value}"
       end
     end
@@ -144,7 +153,7 @@ Puppet::Type.newtype(:archive) do
     munge do |val|
       if val.nil? || val.empty? || val == :undef
         :false
-      elsif val == :true || val == :false
+      elsif [:true, :false].include? val
         resource[:checksum_verify] = val
       else
         val
@@ -223,6 +232,25 @@ Puppet::Type.newtype(:archive) do
   newparam(:allow_insecure, boolean: true, parent: Puppet::Parameter::Boolean) do
     desc 'ignore HTTPS certificate errors'
     defaultto :false
+  end
+
+  newparam(:download_options) do
+    desc 'provider download options (affects curl, wget, and only s3 downloads for ruby provider)'
+
+    validate do |val|
+      unless val.is_a?(::String) || val.is_a?(::Array)
+        raise ArgumentError, "download_options should be String or Array: #{val}"
+      end
+    end
+
+    munge do |val|
+      case val
+      when ::String
+        [val]
+      else
+        val
+      end
+    end
   end
 
   autorequire(:file) do

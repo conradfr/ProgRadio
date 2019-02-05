@@ -11,8 +11,8 @@ class puphpet::mongodb::params
   $merged_globals = merge({
     'manage_package_repo' => true,
     'version'             => $::osfamily ? {
-      'debian' => '2.6.12',
-      'redhat' => '2.6.12-1',
+      'debian' => '3.6.2',
+      'redhat' => '3.6.2',
     },
   }, $global_settings)
 

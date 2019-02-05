@@ -69,7 +69,7 @@ class composer(
   $php_bin         = $composer::params::php_bin,
   $suhosin_enabled = $composer::params::suhosin_enabled,
   $auto_update     = $composer::params::auto_update,
-  $projects        = hiera_hash('composer::execs', {}),
+  $projects        = lookup('composer::execs', Hash, {'strategy' => 'deep', 'merge_hash_arrays' => true}, {}),
   $github_token    = undef,
   $user            = undef,
 ) inherits ::composer::params {
@@ -78,12 +78,17 @@ class composer(
   require ::git
 
   # Validate input vars
-  validate_string(
-    $target_dir, $composer_file, $download_method,
-    $tmp_path, $php_package, $curl_package, $wget_package,
-    $composer_home, $php_bin
-  )
-  validate_bool($suhosin_enabled, $auto_update)
+  validate_legacy(String, 'validate_string', $target_dir)
+  validate_legacy(String, 'validate_string', $composer_file)
+  validate_legacy(String, 'validate_string', $download_method)
+  validate_legacy(String, 'validate_string', $tmp_path)
+  validate_legacy(String, 'validate_string', $php_package)
+  validate_legacy(String, 'validate_string', $curl_package)
+  validate_legacy(String, 'validate_string', $wget_package)
+  validate_legacy(String, 'validate_string', $composer_home)
+  validate_legacy(String, 'validate_string', $php_bin)
+  validate_legacy(Boolean, 'validate_bool', $suhosin_enabled)
+  validate_legacy(Boolean, 'validate_bool', $auto_update)
 
   # Set the exec path for composer target dir
   Exec { path => "/bin:/usr/bin/:/sbin:/usr/sbin:${target_dir}" }

@@ -7,12 +7,17 @@
   "source": "https://github.com/maestrodev/puppet-rvm",
   "project_page": "https://github.com/maestrodev/puppet-rvm",
   "issues_url": "https://github.com/maestrodev/puppet-rvm/issues",
-  "dependencies": [
-    {"name":"puppetlabs/stdlib","version_requirement":">=4.2.0"},
-    {"name":"golja/gnupg","version_requirement":">=1.2.0"}
-  ],
-  "data_provider": null,
   "description": "Installing and using RVM (Ruby Version Manager)",
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">=4.2.0"
+    },
+    {
+      "name": "golja/gnupg",
+      "version_requirement": ">=1.2.0"
+    }
+  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",

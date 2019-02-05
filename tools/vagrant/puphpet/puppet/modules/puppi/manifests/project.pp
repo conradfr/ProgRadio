@@ -5,7 +5,21 @@
 # to to build up the commands list
 #
 define puppi::project (
-  $enable = true ) {
+  $deploy_root              = undef,
+  $source                   = undef,
+  $user                     = 'root',
+  $predeploy_customcommand  = '',
+  $postdeploy_customcommand = '',
+  $init_script              = '',
+  $disable_services         = '',
+  $firewall_src_ip          = '',
+  $firewall_dst_port        = 0,
+  $report_email             = '',
+  $files_prefix             = undef,
+  $source_baseurl           = undef,
+  $document_root            = '',
+  $config_root              = undef,
+  $enable                   = true ) {
 
   require puppi::params
 
@@ -19,11 +33,11 @@ define puppi::project (
   # Create Project subdirs
   file {
     "${puppi::params::projectsdir}/${name}":
-      ensure  => $ensure,
-      mode    => '0755',
-      owner   => $puppi::params::configfile_owner,
-      group   => $puppi::params::configfile_group,
-      force   => true;
+      ensure => $ensure,
+      mode   => '0755',
+      owner  => $puppi::params::configfile_owner,
+      group  => $puppi::params::configfile_group,
+      force  => true;
 
     "${puppi::params::projectsdir}/${name}/check":
       ensure  => $ensure,

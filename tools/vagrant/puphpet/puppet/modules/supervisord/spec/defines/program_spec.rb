@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'supervisord::program', :type => :define do
   let(:title) {'foo'}
   let(:facts) {{ :concat_basedir => '/var/lib/puppet/concat' }}
-  let(:default_params) do 
+  let(:default_params) do
     {
       :command                 => 'bar',
       :process_name            => '%(process_num)s',
@@ -31,7 +31,7 @@ describe 'supervisord::program', :type => :define do
       :stderr_logfile_backups  => '10',
       :stderr_capture_maxbytes => '0',
       :stderr_events_enabled   => true,
-      :environment             => { 'env1' => 'value1', 'env2' => 'value2' },
+      :program_environment     => { 'env1' => 'value1', 'env2' => 'value2' },
       :directory               => '/opt/supervisord/chroot',
       :umask                   => '022',
       :serverurl               => 'AUTO'
@@ -82,5 +82,25 @@ describe 'supervisord::program', :type => :define do
   context 'ensure_process_removed' do
     let(:params) { default_params.merge({ :ensure_process => 'removed' }) }
     it { should contain_supervisord__supervisorctl('remove_foo') }
+  end
+
+  context 'change_process_name_on_numprocs_gt_1' do
+    let(:params) do
+    {
+      :command  => 'bar',
+      :numprocs => '2',
+    }
+    end
+    it { should contain_file('/etc/supervisor.d/program_foo.conf').with_content(/numprocs=2/) }
+    it { should contain_file('/etc/supervisor.d/program_foo.conf').with_content(/process_name=\%\(program_name\)s_\%\(process_num\)02d/) }
+  end
+
+  context 'absolute_log_paths' do
+    let(:params) { default_params.merge({
+      :stdout_logfile => '/path/to/program_foo.log',
+      :stderr_logfile => '/path/to/program_foo.error',
+    }) }
+    it { should contain_file('/etc/supervisor.d/program_foo.conf').with_content(/stdout_logfile=\/path\/to\/program_foo.log/) }
+    it { should contain_file('/etc/supervisor.d/program_foo.conf').with_content(/stderr_logfile=\/path\/to\/program_foo.error/) }
   end
 end

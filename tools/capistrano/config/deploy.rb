@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.9.0'
+lock '3.11.0'
 
 set :application, 'progradio'
 
@@ -34,11 +34,11 @@ set :default_env, {
 }
 
 # Default value for keep_releases is 5
-set :keep_releases, 3
+set :keep_releases, 5
 
 # For composer task
 SSHKit.config.command_map[:composer] = "php #{shared_path.join("composer.phar")}"
-set :composer_install_flags, '--no-dev --no-interaction --optimize-autoloader'
+set :composer_install_flags, '--no-dev --no-interaction --optimize-autoloader --classmap-authoritative'
 
 # File permissions
 set :file_permissions_groups, ["www-data"]

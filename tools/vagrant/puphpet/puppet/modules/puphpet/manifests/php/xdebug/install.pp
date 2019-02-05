@@ -7,12 +7,12 @@ class puphpet::php::xdebug::install
   $php    = $puphpet::params::hiera['php']
 
   $compile = $puphpet::php::params::version_match ? {
-    '7.1'   => true,
+    '7.2'   => true,
     default => false,
   }
 
   $xdebug_package = $::osfamily ? {
-    'Debian' => "${puphpet::php::params::package_prefix}xdebug",
+    'Debian' => 'php-xdebug',
     'Redhat' => "${puphpet::php::params::pecl_prefix}xdebug"
   }
 

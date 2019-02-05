@@ -46,9 +46,9 @@ define swap_file::files (
 {
   # Parameter validation
   validate_re($ensure, ['^absent$', '^present$'], "Invalid ensure: ${ensure} - (Must be 'present' or 'absent')")
-  validate_string($swapfile)
+  validate_legacy(String, 'validate_string', $swapfile)
   $swapfilesize_mb = to_bytes($swapfilesize) / 1048576
-  validate_bool($add_mount)
+  validate_legacy(Boolean, 'validate_bool', $add_mount)
 
   if $ensure == 'present' {
 
@@ -103,9 +103,16 @@ define swap_file::files (
       mode    => '0600',
       require => Exec["Create swap file ${swapfile}"],
     }
+
+    if $::selinux {
+      File[$swapfile] {
+        seltype => 'swapfile_t',
+      }
+    }
+
     swap_file { $swapfile:
       ensure  => 'present',
-      require => File[$swapfile]
+      require => File[$swapfile],
     }
     if $add_mount {
       mount { $swapfile:

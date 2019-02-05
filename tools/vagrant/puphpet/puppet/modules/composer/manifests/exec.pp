@@ -39,13 +39,21 @@ define composer::exec (
 ) {
   require ::composer
 
-  validate_string($cmd, $cwd)
-  validate_bool(
-    $lock, $prefer_source, $prefer_dist, $dry_run,
-    $custom_installers, $scripts, $optimize, $ignore_platform_reqs,
-    $interaction, $dev, $verbose, $refreshonly
-  )
-  validate_array($packages)
+  validate_legacy(String, 'validate_string', $cmd)
+  validate_legacy(String, 'validate_string', $cwd)
+  validate_legacy(Boolean, 'validate_bool', $lock)
+  validate_legacy(Boolean, 'validate_bool', $prefer_source)
+  validate_legacy(Boolean, 'validate_bool', $prefer_dist)
+  validate_legacy(Boolean, 'validate_bool', $dry_run)
+  validate_legacy(Boolean, 'validate_bool', $custom_installers)
+  validate_legacy(Boolean, 'validate_bool', $scripts)
+  validate_legacy(Boolean, 'validate_bool', $optimize)
+  validate_legacy(Boolean, 'validate_bool', $ignore_platform_reqs)
+  validate_legacy(Boolean, 'validate_bool', $interaction)
+  validate_legacy(Boolean, 'validate_bool', $dev)
+  validate_legacy(Boolean, 'validate_bool', $verbose)
+  validate_legacy(Boolean, 'validate_bool', $refreshonly)
+  validate_legacy(Array, 'validate_array', $packages)
 
   $m_timeout = $timeout?{
     undef => 300,

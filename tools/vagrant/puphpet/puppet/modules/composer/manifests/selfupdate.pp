@@ -23,6 +23,10 @@
 # [*user*]
 #   The user name to exec the composer commands as. Default is undefined.
 #
+# [*update_schedule*]
+#   Specify a `schedule` resource to execute the update only in a
+#   specified time range.
+#
 # === Authors
 #
 # Thomas Ploch <profiploch@gmail.com>
@@ -32,18 +36,19 @@
 # Copyright 2013-2014 Thomas Ploch
 #
 define composer::selfupdate(
-  $version       = undef,
-  $rollback      = false,
-  $clean_backups = false,
-  $user          = undef,
-  $logoutput     = false,
-  $timeout       = 300,
-  $tries         = 3,
-  $schedule      = undef,
+  $version         = undef,
+  $rollback        = false,
+  $clean_backups   = false,
+  $user            = undef,
+  $logoutput       = false,
+  $timeout         = 300,
+  $tries           = 3,
+  $update_schedule = undef,
 ) {
   require ::composer
 
-  validate_bool($rollback, $clean_backups)
+  validate_legacy(Boolean, 'validate_bool', $rollback)
+  validate_legacy(Boolean, 'validate_bool', $clean_backups)
 
   if $version == undef and $rollback == true {
     fail('You cannot use rollback without specifying a version')
@@ -61,7 +66,7 @@ define composer::selfupdate(
   $base_command = "${composer::php_bin} ${composer_path} selfupdate"
 
   if $version != undef {
-    validate_string($version)
+    validate_legacy(String, 'validate_string', $version)
     $version_arg = " ${version}"
   } else {
     $version_arg = ''
@@ -84,6 +89,6 @@ define composer::selfupdate(
     tries    => $tries,
     timeout  => $timeout,
     user     => $user,
-    schedule => $schedule,
+    schedule => $update_schedule,
   }
 }

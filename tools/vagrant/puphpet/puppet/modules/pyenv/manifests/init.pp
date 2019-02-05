@@ -9,13 +9,13 @@ class pyenv(
   $python_build_packages = $::pyenv::params::python_build_packages,
 ) inherits ::pyenv::params {
 
-  validate_absolute_path($repo_location)
-  validate_re($ensure_repo, ['present', 'absent'])
-  validate_string($repo_revision)
-  validate_bool($symlink_pyenv)
-  validate_absolute_path($symlink_path)
-  validate_bool($manage_packages)
-  validate_array($python_build_packages)
+  validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $repo_location)
+  validate_legacy('Optional[String]', 'validate_re', $ensure_repo, ['present', 'absent'])
+  validate_legacy(String, 'validate_string', $repo_revision)
+  validate_legacy(Boolean, 'validate_bool', $symlink_pyenv)
+  validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $symlink_path)
+  validate_legacy(Boolean, 'validate_bool', $manage_packages)
+  validate_legacy(Array, 'validate_array', $python_build_packages)
 
   vcsrepo { $repo_location:
     ensure   => $ensure_repo,

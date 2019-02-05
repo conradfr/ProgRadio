@@ -1,34 +1,28 @@
 class apt::backports (
-  $location = undef,
-  $release  = undef,
-  $repos    = undef,
-  $key      = undef,
-  $pin      = 200,
+  Optional[String] $location                    = undef,
+  Optional[String] $release                     = undef,
+  Optional[String] $repos                       = undef,
+  Optional[Variant[String, Hash]] $key          = undef,
+  Optional[Variant[Integer, String, Hash]] $pin = 200,
 ){
   if $location {
-    validate_string($location)
     $_location = $location
   }
   if $release {
-    validate_string($release)
     $_release = $release
   }
   if $repos {
-    validate_string($repos)
     $_repos = $repos
   }
   if $key {
-    unless is_hash($key) {
-      validate_string($key)
-    }
     $_key = $key
   }
-  if ($::apt::xfacts['lsbdistid'] == 'debian' or $::apt::xfacts['lsbdistid'] == 'ubuntu') {
+  if ($facts['lsbdistid'] == 'Debian' or $facts['lsbdistid'] == 'Ubuntu') {
     unless $location {
       $_location = $::apt::backports['location']
     }
     unless $release {
-      $_release = "${::apt::xfacts['lsbdistcodename']}-backports"
+      $_release = "${facts['lsbdistcodename']}-backports"
     }
     unless $repos {
       $_repos = $::apt::backports['repos']
@@ -42,9 +36,9 @@ class apt::backports (
     }
   }
 
-  if is_hash($pin) {
+  if $pin =~ Hash {
     $_pin = $pin
-  } elsif is_numeric($pin) or is_string($pin) {
+  } elsif $pin =~ Numeric or $pin =~ String {
     # apt::source defaults to pinning to origin, but we should pin to release
     # for backports
     $_pin = {

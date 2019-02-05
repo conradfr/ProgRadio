@@ -21,6 +21,7 @@ class postgresql::server::config {
   $logdir                     = $postgresql::server::logdir
   $service_name               = $postgresql::server::service_name
   $log_line_prefix            = $postgresql::server::log_line_prefix
+  $timezone                   = $postgresql::server::timezone
 
   if ($manage_pg_hba_conf == true) {
     # Prepare the main pg_hba file
@@ -48,40 +49,40 @@ class postgresql::server::config {
         user        => $user,
         auth_method => 'ident',
         auth_option => $local_auth_option,
-        order       => '001',
+        order       => 1,
       }
       postgresql::server::pg_hba_rule { 'local access to database with same name':
         type        => 'local',
         auth_method => 'ident',
         auth_option => $local_auth_option,
-        order       => '002',
+        order       => 2,
       }
       postgresql::server::pg_hba_rule { 'allow localhost TCP access to postgresql user':
         type        => 'host',
         user        => $user,
         address     => '127.0.0.1/32',
         auth_method => 'md5',
-        order       => '003',
+        order       => 3,
       }
       postgresql::server::pg_hba_rule { 'deny access to postgresql user':
         type        => 'host',
         user        => $user,
         address     => $ip_mask_deny_postgres_user,
         auth_method => 'reject',
-        order       => '004',
+        order       => 4,
       }
 
       postgresql::server::pg_hba_rule { 'allow access to all users':
         type        => 'host',
         address     => $ip_mask_allow_all_users,
         auth_method => 'md5',
-        order       => '100',
+        order       => 100,
       }
       postgresql::server::pg_hba_rule { 'allow access to ipv6 localhost':
         type        => 'host',
         address     => '::1/128',
         auth_method => 'md5',
-        order       => '101',
+        order       => 101,
       }
     }
 
@@ -99,16 +100,22 @@ class postgresql::server::config {
     create_resources('postgresql::server::pg_hba_rule', $ipv6acl_resources)
   }
 
-  # We must set a "listen_addresses" line in the postgresql.conf if we
-  # want to allow any connections from remote hosts.
-  postgresql::server::config_entry { 'listen_addresses':
-    value => $listen_addresses,
+  if $listen_addresses {
+    postgresql::server::config_entry { 'listen_addresses':
+      value => $listen_addresses,
+    }
   }
+
   postgresql::server::config_entry { 'port':
     value => $port,
   }
   postgresql::server::config_entry { 'data_directory':
     value => $datadir,
+  }
+  if $timezone {
+    postgresql::server::config_entry { 'timezone':
+      value => $timezone,
+    }
   }
   if $logdir {
     postgresql::server::config_entry { 'log_directory':
@@ -148,7 +155,6 @@ class postgresql::server::config {
     concat { $pg_ident_conf_path:
       owner  => $user,
       group  => $group,
-      force  => true, # do not crash if there is no pg_ident_rules
       mode   => '0640',
       warn   => true,
       notify => Class['postgresql::server::reload'],
@@ -159,7 +165,6 @@ class postgresql::server::config {
     concat { $recovery_conf_path:
       owner  => $user,
       group  => $group,
-      force  => true, # do not crash if there is no recovery conf file
       mode   => '0640',
       warn   => true,
       notify => Class['postgresql::server::reload'],
@@ -187,6 +192,27 @@ class postgresql::server::config {
         refreshonly => true,
         path        => '/bin:/usr/bin:/usr/local/bin'
       }
+    }
+  }
+  elsif $::osfamily == 'Gentoo' {
+    # Template uses:
+    # - $::operatingsystem
+    # - $service_name
+    # - $port
+    # - $datadir
+    file { 'systemd-override':
+      ensure  => present,
+      path    => "/etc/systemd/system/${service_name}.service",
+      owner   => root,
+      group   => root,
+      content => template('postgresql/systemd-override.erb'),
+      notify  => [ Exec['restart-systemd'], Class['postgresql::server::service'] ],
+      before  => Class['postgresql::server::reload'],
+    }
+    exec { 'restart-systemd':
+      command     => 'systemctl daemon-reload',
+      refreshonly => true,
+      path        => '/bin:/usr/bin:/usr/local/bin'
     }
   }
 }

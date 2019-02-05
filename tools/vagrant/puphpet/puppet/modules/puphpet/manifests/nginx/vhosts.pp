@@ -9,10 +9,13 @@ define puphpet::nginx::vhosts (
   each( $vhosts ) |$key, $vhost| {
     # Could be proxy vhost
     if $vhost['www_root'] != '' {
+      $chown = "${puphpet::nginx::params::webroot_user}:${puphpet::nginx::params::webroot_group}"
+
       exec { "exec mkdir -p ${vhost['www_root']} @ key ${key}":
-        command => "mkdir -p ${vhost['www_root']}",
-        user    => $puphpet::nginx::params::webroot_user,
-        group   => $puphpet::nginx::params::webroot_group,
+        command => "mkdir -m 775 -p ${vhost['www_root']} && \
+                    chown ${chown} ${vhost['www_root']}",
+        user    => 'root',
+        group   => 'root',
         creates => $vhost['www_root'],
         require => File[$puphpet::nginx::params::www_location],
       }
@@ -20,7 +23,6 @@ define puphpet::nginx::vhosts (
       if ! defined(File[$vhost['www_root']]) {
         file { $vhost['www_root']:
           ensure  => directory,
-          mode    => '0775',
           require => Exec["exec mkdir -p ${vhost['www_root']} @ key ${key}"],
         }
       }
@@ -45,8 +47,8 @@ define puphpet::nginx::vhosts (
       default => $puphpet::nginx::params::ssl_key_location,
     }
     $ssl_port = array_true($vhost, 'ssl_port') ? {
-      true    => $vhost['ssl_port'],
-      default => '443',
+      true    => Integer($vhost['ssl_port']),
+      default => 443,
     }
     $ssl_protocols = array_true($vhost, 'ssl_protocols') ? {
       true    => $vhost['ssl_protocols'],
@@ -85,9 +87,21 @@ define puphpet::nginx::vhosts (
       'rewrites'  => $rewrites
     })
 
+    $listen_port = array_true($vhost, 'listen_port') ? {
+      true    => Integer($vhost['listen_port']),
+      default => 80,
+    }
+
+    $ipv6_listen_port = array_true($vhost, 'ipv6_listen_port') ? {
+      true    => Integer($vhost['ipv6_listen_port']),
+      default => 80,
+    }
+
     # puppet-nginx is stupidly strict about ssl value datatypes
     $merged = delete(merge($vhost_rewrites_append, {
       'server_name'          => $server_names,
+      'listen_port'          => $listen_port,
+      'ipv6_listen_port'     => $ipv6_listen_port,
       'use_default_location' => false,
       'ssl'                  => $ssl,
       'ssl_cert'             => $ssl_cert_real,

@@ -63,6 +63,11 @@
 #
 #   Default: /var/log/redis/redis.log
 #
+# [*log_level*]
+#   Specify how much we should log.
+#
+#   Default: notice
+#
 # [*master_name*]
 #   Specify the name of the master redis server.
 #   The valid charset is A-z 0-9 and the three characters ".-_".
@@ -170,6 +175,7 @@ class redis::sentinel (
   $failover_timeout       = $::redis::params::sentinel_failover_timeout,
   $init_script            = $::redis::params::sentinel_init_script,
   $init_template          = $::redis::params::sentinel_init_template,
+  $log_level              = $::redis::params::log_level,
   $log_file               = $::redis::params::log_file,
   $master_name            = $::redis::params::sentinel_master_name,
   $redis_host             = $::redis::params::bind,
@@ -190,10 +196,21 @@ class redis::sentinel (
   $client_reconfig_script = $::redis::params::sentinel_client_reconfig_script,
 ) inherits redis::params {
 
-  unless defined(Package[$package_name]) {
-    ensure_resource('package', $package_name, {
-      'ensure' => $package_ensure
-    })
+  require ::redis
+
+  if $::osfamily == 'Debian' {
+    # Debian flavour machines have a dedicated redis-sentinel package
+    # This is default in Xenial or Stretch onwards or PPA/other upstream
+    # See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=775414 for context
+    if (
+      (versioncmp($::operatingsystemmajrelease, '16.04') >= 0 and $::operatingsystem == 'Ubuntu') or
+      (versioncmp($::operatingsystemmajrelease, '9') >= 0 and $::operatingsystem == 'Debian') or
+      $::redis::manage_repo
+      ) {
+      package { $package_name:
+        ensure => $package_ensure,
+      }
+    }
   }
 
   file {

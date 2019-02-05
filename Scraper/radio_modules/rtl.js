@@ -57,7 +57,6 @@ const fetch = dateObj => {
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-          .log(console.log)
             // .find('.timeline-schedule > .post-schedule-timeline > .post-schedule')
             .find('.timeline-schedule > .post-schedule-timeline')
             .set(

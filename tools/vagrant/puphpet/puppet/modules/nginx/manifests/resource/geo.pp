@@ -63,15 +63,14 @@ define nginx::resource::geo (
   $proxy_recursive = undef
 ) {
 
-  validate_hash($networks)
-  validate_bool($ranges)
-  validate_re($ensure, '^(present|absent)$',
-    "Invalid ensure value '${ensure}'. Expected 'present' or 'absent'")
-  if ($default != undef) { validate_string($default) }
-  if ($address != undef) { validate_string($address) }
-  if ($delete != undef) { validate_string($delete) }
-  if ($proxies != undef) { validate_array($proxies) }
-  if ($proxy_recursive != undef) { validate_bool($proxy_recursive) }
+  validate_legacy(Hash, 'validate_hash', $networks)
+  validate_legacy(Boolean, 'validate_bool', $ranges)
+  validate_legacy('Optional[String]', 'validate_re', $ensure, ['^(present|absent)$'])
+  if ($default != undef) { validate_legacy(String, 'validate_string', $default) }
+  if ($address != undef) { validate_legacy(String, 'validate_string', $address) }
+  if ($delete != undef) { validate_legacy(String, 'validate_string', $delete) }
+  if ($proxies != undef) { validate_legacy(Array, 'validate_array', $proxies) }
+  if ($proxy_recursive != undef) { validate_legacy(Boolean, 'validate_bool', $proxy_recursive) }
 
   include nginx::params
   $root_group = $nginx::params::root_group

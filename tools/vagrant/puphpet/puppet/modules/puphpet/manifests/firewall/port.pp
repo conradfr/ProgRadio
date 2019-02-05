@@ -7,7 +7,7 @@ define puphpet::firewall::port (
   $priority = 100,
 ) {
 
-  if is_array($port) {
+  if $port =~ Array {
     $port_string = join($port, ',')
     $port_real   = $port
   } elsif $port {

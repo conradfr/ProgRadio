@@ -1,3 +1,10 @@
+v1.5.0
+======
+
+Hard fork from `tPl0ch/puppet-composer`, now `puphpet/puppet-composer`
+
+d7550fd Adds Puppet 5.x support.
+        
 v1.4.1
 ======
 0685d57 Add support for Composer’s --ignore-platform-reqs option

@@ -3,7 +3,11 @@ require 'spec_helper'
 describe 'nodejs::npm', :type => :define do
   let(:title) { 'nodejs::npm' }
   let(:facts) {{
-    :nodejs_stable_version => 'v0.10.20'
+    :kernel         => 'linux',
+    :hardwaremodel  => 'x86',
+    :osfamily       => 'Debian',
+    :path           => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin',
+    :processorcount => 2,
   }}
 
   describe 'install npm package' do
@@ -28,7 +32,7 @@ describe 'nodejs::npm', :type => :define do
     }}
 
     it { should contain_exec('npm_remove_yo_/foo') \
-      .with_command('npm remove yo') \
+      .with_command('npm remove  yo') \
       .with_onlyif("npm list -p -l | grep '/foo/node_modules/yo:yo'")
     }
   end
@@ -48,32 +52,38 @@ describe 'nodejs::npm', :type => :define do
   end
 
   describe 'home path for unix systems' do
-    operating_systems = ['Debian', 'Ubuntu', 'RedHat', 'SLES', 'Fedora', 'CentOS']
+    # just assert against OS families
+    operating_systems = ['Debian', 'RedHat']
     operating_systems.each do |os|
       let (:params) {{
-        :name         => 'foo-yo',
-        :exec_as_user => 'Ma27',
+        :name      => 'foo-yo',
+        :exec_user => 'ma27',
         :pkg_name  => 'yo',
-        :directory => '/foo'
+        :directory => '/foo',
+        :home_dir  => '/home/ma27',
       }}
       let(:facts) {{
-        :operatingsystem       => os,
-        :nodejs_stable_version => 'v0.10.20'
+        :operatingsystem => os,
+        :osfamily        => os,
+        :hardwaremodel   => 'x86',
+        :kernel          => 'linux',
+        :path            => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin',
+        :processorcount  => 2,
       }}
 
       it { should contain_exec('npm_install_yo_/foo') \
         .with_command('npm install  yo') \
         .with_unless("npm list -p -l | grep '/foo/node_modules/yo:yo'") \
-        .with_environment('HOME=/home/Ma27')
+        .with_environment('HOME=/home/ma27')
       }
     end
   end
 
   describe 'installation from a package.json file' do
     let (:params) {{
-      :list        => true,
-      :directory   => '/foo',
-      :install_opt => '-x -z'
+      :list      => true,
+      :directory => '/foo',
+      :options   => '-x -z'
     }}
 
     it { should contain_exec('npm_install_dir_/foo') \

@@ -15,4 +15,4 @@ HOSTS:
       - locale-gen en_US en_US.UTF-8
       - dpkg-reconfigure locales
 CONFIG:
-  type: foss
+  log_level: warn

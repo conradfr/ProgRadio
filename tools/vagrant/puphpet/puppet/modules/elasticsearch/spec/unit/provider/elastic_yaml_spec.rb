@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','..','lib'))
 
-require 'spec_helper'
+require 'spec_helper_rspec'
 require 'puppet/provider/elastic_yaml'
 
 class String
@@ -46,7 +46,6 @@ describe Puppet::Provider::ElasticYaml do
     it 'returns sorted yaml' do
       expect(described_class.to_file(unsorted_hash).flattened).to(
         eq(%q{
-          ---
           role:
             alpha: foobar
             beta: foobaz

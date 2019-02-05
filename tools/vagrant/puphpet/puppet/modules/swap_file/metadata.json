@@ -1,6 +1,6 @@
 {
   "name": "petems-swap_file",
-  "version": "3.0.2",
+  "version": "4.0.1",
   "author": "Peter Souter",
   "summary": "Create swap files for Linux systems with Puppet",
   "license": "Apache-2.0",
@@ -42,10 +42,6 @@
   ],
   "requirements": [
     {
-      "name": "pe",
-      "version_requirement": ">= 3.3.0 < 2015.4.0"
-    },
-    {
       "name": "puppet",
       "version_requirement": ">= 3.0.0 < 5.0.0"
     }
@@ -53,11 +49,15 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 4.7.0"
+      "version_requirement": ">= 4.7.0 < 5.0.0"
     },
     {
-      "name": "fiddyspence/sysctl",
-      "version_requirement": "1.1.0"
+      "name": "herculesteam/augeasproviders_sysctl",
+      "version_requirement": ">=2.1.0 < 3.0.0"
+    },
+    {
+      "name": "herculesteam/augeasproviders_core",
+      "version_requirement": ">=2.1.0 < 3.0.0"
     }
   ]
 }

@@ -3,11 +3,11 @@
 #### Table of Contents
 
 
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with apt](#setup)
+1. [Module Description - What the module does and why it is useful](#module-description)
+1. [Setup - The basics of getting started with apt](#setup)
     * [What apt affects](#what-apt-affects)
     * [Beginning with apt](#beginning-with-apt)
-4. [Usage - Configuration options and additional functionality](#usage)
+1. [Usage - Configuration options and additional functionality](#usage)
     * [Add GPG keys](#add-gpg-keys)
     * [Prioritize backports](#prioritize-backports)
     * [Update the list of packages](#update-the-list-of-packages)
@@ -15,13 +15,14 @@
     * [Add a Personal Package Archive repository](#add-a-personal-package-archive-repository)
     * [Configure Apt from Hiera](#configure-apt-from-hiera)
     * [Replace the default sources.list file](#replace-the-default-sourceslist-file)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+1. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
     * [Classes](#classes)
-    * [Defined Types](#defined-types)
+    * [Defined types](#defined-types)
     * [Types](#types)
     * [Facts](#facts)
-6. [Limitations - OS compatibility, etc.](#limitations)
-7. [Development - Guide for contributing to the module](#development)
+    * [Tasks](#tasks)
+1. [Limitations - OS compatibility, etc.](#limitations)
+1. [Development - Guide for contributing to the module](#development)
 
 ## Module Description
 
@@ -40,7 +41,7 @@ Apt (Advanced Package Tool) is a package manager available on Debian, Ubuntu, an
 * System repositories
 * Authentication keys
 
-**Note:** This module offers `purge` parameters which, if set to 'true', **destroy** any configuration on the node's `sources.list(.d)` and `preferences(.d)` that you haven't declared through Puppet. The default for these parameters is 'false'.
+**Note:** This module offers `purge` parameters which, if set to `true`, **destroy** any configuration on the node's `sources.list(.d)` and `preferences(.d)` that you haven't declared through Puppet. The default for these parameters is `false`.
 
 ### Beginning with apt
 
@@ -58,11 +59,11 @@ include apt
 
 **Warning:** Using short key IDs presents a serious security issue, potentially leaving you open to collision attacks. We recommend you always use full fingerprints to identify your GPG keys. This module allows short keys, but issues a security warning if you use them.
 
-Declare the `apt::key` class:
+Declare the `apt::key` defined type:
 
 ```puppet
 apt::key { 'puppetlabs':
-  id      => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
+  id      => '6F6B15509CF8E59E6E469F327F438280EF8D349F',
   server  => 'pgp.mit.edu',
   options => 'http-proxy="http://proxyuser:proxypass@example.org:3128"',
 }
@@ -88,6 +89,16 @@ By default, Puppet runs `apt-get update` on the first Puppet run after you inclu
 class { 'apt':
   update => {
     frequency => 'daily',
+  },
+}
+```
+When `Exec['apt_update']` is triggered, it generates a `Notice` message. Because the default [logging level for agents](https://docs.puppet.com/puppet/latest/configuration.html#loglevel) is `notice`, this causes the repository update to appear in logs and agent reports. Some tools, such as [The Foreman](https://www.theforeman.org), report the update notice as a significant change. To eliminate these updates from reports, set the [loglevel](https://docs.puppet.com/puppet/latest/metaparameter.html#loglevel) metaparameter for `Exec['apt_update']` above the agent logging level:
+
+```puppet
+class { 'apt':
+  update => {
+    frequency => 'daily',
+    loglevel  => 'debug',
   },
 }
 ```
@@ -140,17 +151,17 @@ apt::source { 'debian_unstable':
 }
 ```
 
-To use the Puppet Labs Apt repository as a source:
+To use the Puppet Apt repository as a source:
 
 ```puppet
 apt::source { 'puppetlabs':
   location => 'http://apt.puppetlabs.com',
   repos    => 'main',
   key      => {
-    'id'     => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
+    'id'     => '6F6B15509CF8E59E6E469F327F438280EF8D349F',
     'server' => 'pgp.mit.edu',
   },
-},
+}
 ```
 
 ### Configure Apt from Hiera
@@ -178,11 +189,11 @@ apt::sources:
     location: 'http://apt.puppetlabs.com'
     repos: 'main'
     key:
-      id: '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30'
+      id: '6F6B15509CF8E59E6E469F327F438280EF8D349F'
       server: 'pgp.mit.edu'
 ```
 
-### Replace the default sources.list file
+### Replace the default `sources.list` file
 
 The following example replaces the default `/etc/apt/sources.list`. Along with this code, be sure to use the `purge` parameter, or you might get duplicate source warnings when running Apt.
 
@@ -192,21 +203,21 @@ apt::source { "archive.ubuntu.com-${lsbdistcodename}":
   key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
   repos    => 'main universe multiverse restricted',
 }
- 
+
 apt::source { "archive.ubuntu.com-${lsbdistcodename}-security":
   location => 'http://archive.ubuntu.com/ubuntu',
   key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
   repos    => 'main universe multiverse restricted',
   release  => "${lsbdistcodename}-security"
 }
- 
+
 apt::source { "archive.ubuntu.com-${lsbdistcodename}-updates":
   location => 'http://archive.ubuntu.com/ubuntu',
   key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
   repos    => 'main universe multiverse restricted',
   release  => "${lsbdistcodename}-updates"
 }
- 
+
 apt::source { "archive.ubuntu.com-${lsbdistcodename}-backports":
  location => 'http://archive.ubuntu.com/ubuntu',
  key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
@@ -244,21 +255,33 @@ apt::source { "archive.ubuntu.com-${lsbdistcodename}-backports":
 
 ### Facts
 
-* `apt_updates`: The number of installed packages with available updates.
+* `apt_updates`: The number of installed packages with available updates from `upgrade`.
 
-* `apt_security_updates`: The number of installed packages with available security updates.
+* `apt_dist_updates`: The number of installed packages with available updates from `dist-upgrade`.
 
-* `apt_package_updates`: The names of all installed packages with available updates. In Facter 2.0 and later this data is formatted as an array; in earlier versions it is a comma-delimited string.
+* `apt_security_updates`: The number of installed packages with available security updates from `upgrade`.
+
+* `apt_security_dist_updates`: The number of installed packages with available security updates from `dist-upgrade`.
+
+* `apt_package_updates`: The names of all installed packages with available updates from `upgrade`. In Facter 2.0 and later this data is formatted as an array; in earlier versions it is a comma-delimited string.
+
+* `apt_package_dist_updates`: The names of all installed packages with available updates from `dist-upgrade`. In Facter 2.0 and later this data is formatted as an array; in earlier versions it is a comma-delimited string.
 
 * `apt_update_last_success`: The date, in epochtime, of the most recent successful `apt-get update` run (based on the mtime of  /var/lib/apt/periodic/update-success-stamp).
 
 * `apt_reboot_required`: Determines if a reboot is necessary after updates have been installed.
 
+### Tasks
+
+The Apt module has an example task that allows a user to run apt-get update or upgrade. Please refer to to the [PE documentation](https://puppet.com/docs/pe/2017.3/orchestrator/running_tasks.html) or [Bolt documentation](https://puppet.com/docs/bolt/latest/bolt.html) on how to execute a task.
+
 #### Class: `apt`
 
 Main class, includes all other classes.
 
-##### Parameters (all optional)
+##### Parameters
+
+All parameters are optional unless specified.
 
 * `confs`: Creates new `apt::conf` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
 
@@ -268,23 +291,25 @@ Main class, includes all other classes.
 
 * `proxy`: Configures Apt to connect to a proxy server. Valid options: a hash made up from the following keys:
 
-  * 'host': Specifies a proxy host to be stored in `/etc/apt/apt.conf.d/01proxy`. Valid options: a string containing a hostname. Default: undef.
+  * `host`: Specifies a proxy host to be stored in `/etc/apt/apt.conf.d/01proxy`. Valid options: a string containing a hostname. Default: undef.
 
-  * 'port': Specifies a proxy port to be stored in `/etc/apt/apt.conf.d/01proxy`. Valid options: a string containing a port number. Default: '8080'.
+  * `port`: Specifies a proxy port to be stored in `/etc/apt/apt.conf.d/01proxy`. Valid options: an integer containing a port number. Default: 8080.
 
-  * 'https': Specifies whether to enable https proxies. Valid options: 'true' and 'false'. Default: 'false'.
+  * `https`: Specifies whether to enable https proxies. Valid options: `true` and `false`. Default: `false`.
 
-  * 'ensure': Optional parameter. Valid options: 'file', 'present', and 'absent'. Default: 'undef'. Prefer 'file' over 'present'.
+  * `ensure`: Optional parameter. Valid options: 'file', 'present', and 'absent'. Default: `undef`. Prefer 'file' over 'present'.
+  
+  * `direct`: Specifies whether or not to use a 'DIRECT' https proxy if http proxy is used but https is not. Valid options: `true` and `false`. Default: `false`.
 
 * `purge`: Specifies whether to purge any existing settings that aren't managed by Puppet. Valid options: a hash made up from the following keys:
 
-  * 'sources.list': Specifies whether to purge any unmanaged entries from `sources.list`. Valid options: 'true' and 'false'. Default: 'false'.
+  * `sources.list`: Specifies whether to purge any unmanaged entries from `sources.list`. Valid options: `true` and `false`. Default: `false`.
 
-  * 'sources.list.d': Specifies whether to purge any unmanaged entries from `sources.list.d`. Valid options: 'true' and 'false'. Default: 'false'.
+  * `sources.list.d`: Specifies whether to purge any unmanaged entries from `sources.list.d`. Valid options: `true` and `false`. Default: `false`.
 
-  * 'preferences': Specifies whether to purge any unmanaged entries from `preferences`. Valid options: 'true' and 'false'. Default: 'false'.
+  * `preferences`: Specifies whether to purge any unmanaged entries from `preferences`. Valid options: `true` and `false`. Default: `false`.
 
-  * 'preferences.d': Specifies whether to purge any unmanaged entries from `preferences.d`. Valid options: 'true' and 'false'. Default: 'false'.
+  * `preferences.d`: Specifies whether to purge any unmanaged entries from `preferences.d`. Valid options: `true` and `false`. Default: `false`.
 
 * `settings`: Creates new `apt::setting` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
 
@@ -294,17 +319,19 @@ Main class, includes all other classes.
 
 * `update`: Configures various update settings. Valid options: a hash made up from the following keys:
 
-  * 'frequency': Specifies how often to run `apt-get update`. If the exec resource `apt_update` is notified, `apt-get update` runs regardless of this value. Valid options: 'always' (at every Puppet run); 'daily' (if the value of `apt_update_last_success` is less than current epoch time minus 86400); 'weekly' (if the value of `apt_update_last_success` is less than current epoch time minus 604800); and 'reluctantly' (only if the exec resource `apt_update` is notified). Default: 'reluctantly'.
+  * `frequency`: Specifies how often to run `apt-get update`. If the exec resource `apt_update` is notified, `apt-get update` runs regardless of this value. Valid options: 'always' (at every Puppet run); 'daily' (if the value of `apt_update_last_success` is less than current epoch time minus 86400); 'weekly' (if the value of `apt_update_last_success` is less than current epoch time minus 604800); and 'reluctantly' (only if the exec resource `apt_update` is notified). Default: 'reluctantly'.
 
-  * 'timeout': Specifies how long to wait for the update to complete before canceling it. Valid options: an integer, in seconds. Default: 300.
+  * `timeout`: Specifies how long to wait for the update to complete before canceling it. Valid options: an integer, in seconds. Default: 300.
 
-  * 'tries': Specifies how many times to retry the update after receiving a DNS or HTTP error. Valid options: an integer. Default: 1.
+  * `tries`: Specifies how many times to retry the update after receiving a DNS or HTTP error. Valid options: an integer. Default: 1.
 
 #### Class: `apt::backports`
 
 Manages backports.
 
-##### Parameters (all optional on Debian and Ubuntu; all required on other operating systems, except where specified)
+##### Parameters
+
+All parameters are optional on Debian and Ubuntu and required on other operating systems, except where specified.
 
 * `key`: Specifies a key to authenticate the backports. Valid options: a string to be passed to the `id` parameter of the `apt::key` defined type, or a hash of `parameter => value` pairs to be passed to `apt::key`'s `id`, `server`, `content`, `source`, and/or `options` parameters. Defaults:
 
@@ -313,8 +340,7 @@ Manages backports.
 
 * `location`: Specifies an Apt repository containing the backports to manage. Valid options: a string containing a URL. Defaults:
 
-  * Debian (squeeze): 'http://httpredir.debian.org/debian-backports'
-  * Debian (other): 'http://httpredir.debian.org/debian'
+  * Debian: 'http://deb.debian.org/debian'
   * Ubuntu: 'http://archive.ubuntu.com/ubuntu'
 
 * `pin`: *Optional.* Specifies a pin priority for the backports. Valid options: a number or string to be passed to the `id` parameter of the `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters. Default: '200'.
@@ -332,15 +358,18 @@ Specifies a custom Apt configuration file.
 
 ##### Parameters
 
+All parameters are optional unless specified.
+
+
 * `content`: *Required, unless `ensure` is set to 'absent'.* Directly supplies content for the configuration file. Valid options: a string. Default: undef.
 
 * `ensure`: Specifies whether the configuration file should exist. Valid options: 'present' and 'absent'. Default: 'present'.
 
 * `priority`: *Optional.* Determines the order in which Apt processes the configuration file. Files with lower priority numbers are loaded first. Valid options: a string containing an integer. Default: '50'.
 
-* `notify_update`: *Optional.* Specifies whether to trigger an `apt-get update` run. Valid options: 'true' and 'false'. Default: 'true'.
+* `notify_update`: *Optional.* Specifies whether to trigger an `apt-get update` run. Valid options: `true` and `false`. Default: `true`.
 
-#### Defined Type: `apt::key`
+#### Defined type: `apt::key`
 
 Manages the GPG keys that Apt uses to authenticate packages.
 
@@ -360,23 +389,15 @@ The `apt::key` defined type makes use of the `apt_key` type, but includes extra 
 
 * `server`: Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or hkp://). Default: 'keyserver.ubuntu.com'.
 
-* `key`: Specifies a GPG key to authenticate Apt package signatures. Valid options: a string containing a key ID (8 or 16 hexadecimal characters, optionally prefixed with "0x") or a full key fingerprint (40 hexadecimal characters). Default: undef. **Note** This parameter is deprecated and will be removed in a future release.
-
-* `key_content`: Supplies the entire GPG key. Useful in case the key can't be fetched from a remote location and using a file resource is inconvenient. Valid options: a string. Default: undef. **Note** This parameter is deprecated and will be removed in a future release.
-
-* `key_source`: Specifies the location of an existing GPG key file to copy. Valid options: a string containing a URL (ftp://, http://, or https://) or an absolute path. Default: undef. **Note** This parameter is deprecated and will be removed in a future release.
-
-* `key_server`: Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or hkp://). Default: 'keyserver.ubuntu.com'. **Note** This parameter is deprecated and will be removed in a future release.
-
-* `key_options`: Passes additional options to `apt-key adv --keyserver-options`. Valid options: a string. Default: undef. **Note** This parameter is deprecated and will be removed in a future release.
-
-#### Defined Type: `apt::pin`
+#### Defined type: `apt::pin`
 
 Manages Apt pins. Does not trigger an `apt-get update` run.
 
 **Note:** For context on these parameters, we recommend reading the man page ['apt_preferences(5)'](http://linux.die.net/man/5/apt_preferences)
 
-##### Parameters (all optional)
+##### Parameters
+
+All parameters are optional unless specified.
 
 * `codename`: Specifies the distribution (lsbdistcodename) of the Apt repository. Valid options: a string. Default: ''.
 
@@ -394,13 +415,13 @@ Manages Apt pins. Does not trigger an `apt-get update` run.
 
 * `originator`: Names the originator of the packages in the directory tree of the Release file. Valid options: a string (most commonly, 'debian'). Default: ''.
 
-* `packages`: Specifies which package(s) to pin. Valid options: a string or an array. Default: '*'.
+* `packages`: Specifies which package(s) to pin. Valid options: a string or an array. Default: `*`.
 
 * `priority`: Sets the priority of the package. If multiple versions of a given package are available, `apt-get` installs the one with the highest priority number (subject to dependency constraints). Valid options: an integer. Default: 0.
 
 * `release`: Tells Apt to prefer packages that support the specified release. Typical values include 'stable', 'testing', and 'unstable' Valid options: a string. Default: ''.
 
-* `release_version`: Tells Apt to prefer packages that support the specified operating system release version (e.g., Debian release version 7). Valid options: a string. Default: ''.
+* `release_version`: Tells Apt to prefer packages that support the specified operating system release version (such as Debian release version 7). Valid options: a string. Default: ''.
 
 * `version`: Tells Apt to prefer a specified package version or version range. Valid options: a string. Default: ''.
 
@@ -408,7 +429,9 @@ Manages Apt pins. Does not trigger an `apt-get update` run.
 
 Manages PPA repositories using `add-apt-repository`. Not supported on Debian.
 
-##### Parameters (all optional, except where specified)
+##### Parameters
+
+All parameters are optional unless specified.
 
 * `ensure`: Specifies whether the PPA should exist. Valid options: 'present' and 'absent'. Default: 'present'.
 
@@ -417,7 +440,7 @@ Manages PPA repositories using `add-apt-repository`. Not supported on Debian.
   * Lucid: undef
   * All others: '-y'
 
-* `package_manage`: Specifies whether Puppet should manage the package that provides `apt-add-repository`. Valid options: 'true' and 'false'. Default: 'false'.
+* `package_manage`: Specifies whether Puppet should manage the package that provides `apt-add-repository`. Valid options: `true` and `false`. Default: `false`.
 
 * `package_name`: Names the package that provides the `apt-add-repository` command. Valid options: a string. Defaults:
 
@@ -433,11 +456,13 @@ Manages Apt configuration files.
 
 ##### Parameters
 
+All parameters are optional unless specified.
+
 * `content`: *Required, unless `source` is set.* Directly supplies content for the configuration file. Cannot be used in combination with `source`. Valid options: see the `content` attribute of [Puppet's native `file` type](https://docs.puppetlabs.com/references/latest/type.html#file-attribute-content). Default: undef.
 
 * `ensure`: Specifies whether the file should exist. Valid options: 'present', 'absent', and 'file'. Default: 'file'.
 
-* `notify_update`: *Optional.* Specifies whether to trigger an `apt-get update` run. Valid options: 'true' and 'false'. Default: 'true'.
+* `notify_update`: *Optional.* Specifies whether to trigger an `apt-get update` run. Valid options: `true` and `false`. Default: `true`.
 
 * `priority`: *Optional.* Determines the order in which Apt processes the configuration file. Files with higher priority numbers are loaded first. Valid options: an integer or zero-padded integer. Default: 50.
 
@@ -447,9 +472,11 @@ Manages Apt configuration files.
 
 Manages the Apt sources in `/etc/apt/sources.list.d/`.
 
-##### Parameters (all optional, except where specified)
+##### Parameters
 
-* `allow_unsigned`: Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked. Valid options: 'true' and 'false'. Default: 'false'.
+All parameters are optional unless specified.
+
+* `allow_unsigned`: Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked. Valid options: `true` and `false`. Default: `false`.
 
 * `architecture`: Tells Apt to only download information for specified architectures. Valid options: a string containing one or more architecture names, separated by commas (e.g., 'i386' or 'i386,alpha,powerpc'). Default: undef (if unspecified, Apt downloads information for all architectures defined in the Apt::Architectures option).
 
@@ -461,9 +488,9 @@ Manages the Apt sources in `/etc/apt/sources.list.d/`.
 
 * `include`: Configures include options. Valid options: a hash of available keys. Default: {}. Available keys are:
 
-  * 'deb' - Specifies whether to request the distribution's compiled binaries. Valid options: 'true' and 'false'. Default: 'true'.
+  * `deb` - Specifies whether to request the distribution's compiled binaries. Valid options: `true` and `false`. Default: `true`.
 
-  * 'src' - Specifies whether to request the distribution's uncompiled source code. Valid options: 'true' and 'false'. Default: 'false'.
+  * `src` - Specifies whether to request the distribution's uncompiled source code. Valid options: `true` and `false`. Default: `false`.
 
 * `location`: *Required, unless `ensure` is set to 'absent'.* Specifies an Apt repository. Valid options: a string containing a repository URL. Default: undef.
 
@@ -473,21 +500,7 @@ Manages the Apt sources in `/etc/apt/sources.list.d/`.
 
   * `repos`: Specifies a component of the Apt repository. Valid options: a string. Default: 'main'.
 
-* `include_deb`: Specify whether to request the distrubution's compiled binaries. Valid options: 'true' and 'false'. Default: undef. **Note**: This parameter is deprecated and will be removed in future versions of the module.
-
-* `include_src`: Specifies whether to request the distribution's uncompiled source code. Valid options: 'true' and 'false'. Default: undef. **Note**: This parameter is deprecated and will be removed in future versions of the module.
-
-* `required_packages`: Installs packages required for this Apt source via an exec. Default: 'false'. **Note**: This parameter is deprecated and will be removed in future versions of the module.
-
-* `key_content`: Specifies the content to be passed to `apt::key`. Default: undef. **Note**: This parameter is deprecated and will be removed in future versions of the module.
-
-* `key_server`: Specifies the server to be passed to `apt::key`. Default: undef. **Note**: This parameter is deprecated and will be removed in future versions of the module.
-
-* `key_source`: Specifies the source to be passed to `apt::key`. Default: undef. **Note**: This parameter is deprecated and will be removed in future versions of the module.
-
-* `trusted_source`: Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked. Valid options: 'true' and 'false'. Default: undef. This parameter is **deprecated** and will be removed in a future version of the module.
-
-* `notify_update`: *Optional.* Specifies whether to trigger an `apt-get update` run. Valid options: 'true' and 'false'. Default: 'true'.
+* `notify_update`: *Optional.* Specifies whether to trigger an `apt-get update` run. Valid options: `true` and `false`. Default: `true`.
 
 #### Type: `apt_key`
 
@@ -495,7 +508,9 @@ Manages the GPG keys that Apt uses to authenticate packages.
 
 **Note:** In most cases, we recommend using the `apt::key` defined type. It makes use of the `apt_key` type, but includes extra functionality to help prevent duplicate keys.
 
-##### Parameters (all optional)
+##### Parameters
+
+All parameters are optional.
 
 * `content`: Supplies the entire GPG key. Useful in case the key can't be fetched from a remote location and using a file resource is inconvenient. Cannot be used in combination with `source`. Valid options: a string. Default: undef.
 
@@ -520,7 +535,8 @@ Class['apt::update'] -> Package <| provider == 'apt' |>
 ```
 
 ## Development
-Puppet Labs modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. We can't access the huge number of platforms and myriad hardware, software, and deployment configurations that Puppet is intended to serve. We want to keep it as easy as possible to contribute changes so that our modules work in your environment. There are a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things.
+
+Puppet modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. We can't access the huge number of platforms and myriad hardware, software, and deployment configurations that Puppet is intended to serve. We want to keep it as easy as possible to contribute changes so that our modules work in your environment. There are a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things.
 
 For more information, see our [module contribution guide.](https://docs.puppetlabs.com/forge/contributing.html)
 

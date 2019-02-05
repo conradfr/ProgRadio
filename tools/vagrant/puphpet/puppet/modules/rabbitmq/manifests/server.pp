@@ -5,7 +5,7 @@
 # Parameters:
 #  [*port*] - port where rabbitmq server is hosted
 #  [*delete_guest_user*] - rather or not to delete the default user
-#  [*version*] - version of rabbitmq-server to install
+#  [*version*] - deprecated -- does nothing
 #  [*package_name*] - name of rabbitmq package
 #  [*service_name*] - name of rabbitmq service
 #  [*service_ensure*] - desired ensure state for service
@@ -36,7 +36,6 @@ class rabbitmq::server(
   $port                     = $rabbitmq::params::port,
   $delete_guest_user        = $rabbitmq::params::delete_guest_user,
   $package_name             = $rabbitmq::params::package_name,
-  $version                  = $rabbitmq::params::version,
   $service_name             = $rabbitmq::params::service_name,
   $service_ensure           = $rabbitmq::params::service_ensure,
   $service_manage           = $rabbitmq::params::service_manage,
@@ -52,19 +51,10 @@ class rabbitmq::server(
   $wipe_db_on_cookie_change = $rabbitmq::params::wipe_db_on_cookie_change,
 ) inherits rabbitmq::params {
 
-  anchor {'before::rabbimq::class':
-    before => Class['rabbitmq'],
-  }
-
-  anchor {'after::rabbimq::class':
-    require => Class['rabbitmq'],
-  }
-
   class { 'rabbitmq':
     port                     => $port,
     delete_guest_user        => $delete_guest_user,
     package_name             => $package_name,
-    version                  => $version,
     service_name             => $service_name,
     service_ensure           => $service_ensure,
     service_manage           => $service_manage,
@@ -79,4 +69,5 @@ class rabbitmq::server(
     erlang_cookie            => $erlang_cookie,
     wipe_db_on_cookie_change => $wipe_db_on_cookie_change,
   }
+  contain rabbitmq
 }

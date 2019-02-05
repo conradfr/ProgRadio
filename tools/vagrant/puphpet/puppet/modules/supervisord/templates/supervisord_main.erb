@@ -1,11 +1,14 @@
 [supervisord]
 logfile=<%= @log_path %>/<%= @log_file %>
+logfile_maxbytes=<%= @logfile_maxbytes %>
+logfile_backups=<%= @logfile_backups %>
+loglevel=<%= @log_level %>
 pidfile=<%= @run_path %>/<%= @pid_file %>
 nodaemon=<%= @nodaemon %>
 minfds=<%= @minfds %>
 minprocs=<%= @minprocs %>
 umask=<%= @umask %>
-<% if @strip_ansi -%>
+<% if @strip_ansi != nil -%>
 strip_ansi=<%= @strip_ansi %>
 <% end -%>
 <% if @user -%>

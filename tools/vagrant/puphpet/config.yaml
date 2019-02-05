@@ -3,7 +3,7 @@ vagrantfile:
     vm:
         provider:
             local:
-                box: puphpet/ubuntu1604-x64
+                box: bento/ubuntu-16.04
                 box_url: 'false'
                 box_version: '0'
                 chosen_virtualizer: virtualbox
@@ -19,15 +19,18 @@ vagrantfile:
                         check_guest_tools: 0
                         update_guest_tools: 0
                 machines:
-                    vflm_85zgev2lxze3:
+                    machine1:
                         id: progradio
                         hostname: progradio71.puphpet
                         network:
                             private_network: 192.168.56.101
                             forwarded_port:
-                                vflmnfp_r3y30z7bmce9:
+                                port1:
                                     host: '8080'
-                                    guest: '80'
+                                    guest: '22'
+                                port2:
+                                    host: '6379'
+                                    guest: '6379'
                         memory: '1024'
                         cpus: '1'
         provision:
@@ -38,11 +41,11 @@ vagrantfile:
                     - puphpet/puppet/manifests
                 options:
                     - '--verbose'
-                    - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
+                    - '--hiera_config /opt/puphpet/puppet/hiera.yaml'
         synced_folder:
-            vflsf_bbzlifyd83hc:
-                owner: www-data
-                group: www-data
+            folder1:
+                owner: vagrant
+                group: vagrant
                 source: 'D:\\Developpement\\Projets\\ProgRadio'
                 target: /var/www/progradio
                 sync_type: default
@@ -52,7 +55,7 @@ vagrantfile:
                     smb_password: ''
                     mount_options:
                         dir_mode: '0775'
-                        file_mode: '0775'
+                        file_mode: '0664'
                 rsync:
                     args:
                         - '--verbose'
@@ -62,7 +65,6 @@ vagrantfile:
                         - .vagrant/
                         - .git/
                     auto: 'true'
-
         usable_port_range:
             start: 10200
             stop: 10500
@@ -88,8 +90,9 @@ vagrantfile:
 server:
     install: '1'
     packages:
-        - vim
+        - bash-completion
         - htop
+        - vim
 users_groups:
     install: '1'
     groups: {  }
@@ -101,7 +104,6 @@ locale:
         locales:
             - en_GB.UTF-8
             - en_US.UTF-8
-            - fr_FR.UTF-8
         timezone: Europe/Paris
 firewall:
     install: '1'
@@ -129,90 +131,44 @@ nginx:
         names_hash_bucket_size: 128
     upstreams: {  }
     vhosts:
-        nxv_n2b27n5zbs6d:
+        vhost1:
             server_name: progradio.local
             server_aliases:
-            - local.programmes-radio.io
-            www_root: /var/www/progradio/web
+                - local.programmes-radio.io
+            www_root: /var/www/progradio/public
             listen_port: '80'
             client_max_body_size: 1m
             ssl: '0'
             locations:
-                nxvl_cenj7soebrkn:
-                    www_root: /var/www/progradio/web
+                php_html:
+                    www_root: /var/www/progradio/public
                     location: /
                     autoindex: 'off'
                     internal: 'false'
                     index_files:
                         - index.html
                         - index.php
-                        - app.php
                     try_files:
                         - $uri
                         - $uri/
                         - /index.php$is_args$args
-                        - /app.php$is_args$args
-                    fastcgi: ''
-                    fastcgi_index: ''
-                    fastcgi_split_path: ''
-                    proxy: ''
-                    proxy_redirect: ''
-                nxvl_orbqvsmrrf1j:
-                    www_root: /var/www/progradio/web
-                    location: '~ ^/(app_dev|config)\.php(/|$)'
+                php_php:
+                    www_root: /var/www/progradio/public
+                    location: '~ \.php$'
                     autoindex: 'off'
                     internal: 'false'
+                    index_files:
+                        - index.php
                     try_files:
                         - $uri
                         - $uri/
-                        - /app_dev.php$is_args$args
-                    fastcgi: '127.0.0.1:9000'
-                    fastcgi_index: app_dev.php
-                    fastcgi_split_path: '^(.+\.php)(/.*)$'
-                    fast_cgi_params_extra:
-                        - 'SCRIPT_FILENAME $document_root$fastcgi_script_name'
-                        - 'APP_ENV dev'
                     set:
                         - '$path_info $fastcgi_path_info'
-                    proxy: ''
-                    proxy_redirect: ''
-                nxvl_rcw9gut0ek67:
-                    www_root: /var/www/progradio/web
-                    location: '~ ^/index\.php(/|$)'
-                    autoindex: 'off'
-                    internal: 'false'
-                    try_files:
-                        - $uri
-                        - $uri/
-                        - /index.php$is_args$args
                     fastcgi: '127.0.0.1:9000'
                     fastcgi_index: index.php
-                    fastcgi_split_path: '^(.+\.php)(/.*)$'
+                    fastcgi_split_path: '^(.+?\.php)(/.*)$'
                     fast_cgi_params_extra:
                         - 'SCRIPT_FILENAME $document_root$fastcgi_script_name'
-                    set:
-                        - '$path_info $fastcgi_path_info'
-                    proxy: ''
-                    proxy_redirect: ''
-                nxvl_yzcwb66p1c7s:
-                    www_root: /var/www/progradio/web
-                    location: '~ ^/app\.php(/|$)'
-                    autoindex: 'off'
-                    internal: 'false'
-                    try_files:
-                        - $uri
-                        - $uri/
-                        - /app.php$is_args$args
-                    fastcgi: '127.0.0.1:9000'
-                    fastcgi_index: app.php
-                    fastcgi_split_path: '^(.+\.php)(/.*)$'
-                    fast_cgi_params_extra:
-                        - 'SCRIPT_FILENAME $document_root$fastcgi_script_name'
-                        - 'APP_ENV prod'
-                    set:
-                        - '$path_info $fastcgi_path_info'
-                    proxy: ''
-                    proxy_redirect: ''
     proxies: {  }
 apache:
     install: '0'
@@ -225,18 +181,17 @@ apache:
         manage_group: false
         sendfile: 0
     modules:
-        - cache
-        - headers
         - proxy_fcgi
         - rewrite
     vhosts:
-        av_s2duifb955sj:
-            servername: progradio.local
-            docroot: /var/www/progradio/web
+        vhost1:
+            servername: awesome.test
+            serveraliases:
+                - www.awesome.test
+            docroot: /var/www/awesome
             port: '80'
             setenvif:
                 - 'Authorization "(.*)" HTTP_AUTHORIZATION=$1'
-            custom_fragment: ''
             ssl: '0'
             ssl_cert: LETSENCRYPT
             ssl_key: LETSENCRYPT
@@ -245,9 +200,10 @@ apache:
             ssl_protocol: ''
             ssl_cipher: ''
             directories:
-                avd_hk38f3juao7i:
-                    path: /var/www/progradio/web
-                    directoryindex: app.php
+                php_html:
+                    provider: directory
+                    path: /var/www/awesome
+                    directoryindex: 'index.php index.html'
                     options:
                         - Indexes
                         - FollowSymlinks
@@ -256,29 +212,10 @@ apache:
                         - All
                     require:
                         - 'all granted'
-                    custom_fragment: ''
-                    provider: directory
-            files_match:
-                avfm_eu8kv1kp5r0k:
-                    path: (app_dev|config)\.php$
-                    sethandler: 'proxy:fcgi://127.0.0.1:9000'
-                    setenv:
-                        - 'APP_ENV dev'
-                        - 'SYMFONY_ENV dev'
-                    custom_fragment: ''
+                php_php:
                     provider: filesmatch
-                avfm_s8ultnzruhgk:
-                    path: app\.php$
-                    sethandler: 'proxy:fcgi://127.0.0.1:9000'
-                    setenv:
-                        - 'APP_ENV prod'
-                    custom_fragment: ''
-                    provider: filesmatch
-                avfm_cj2208kl06gj:
                     path: \.php$
                     sethandler: 'proxy:fcgi://127.0.0.1:9000'
-                    custom_fragment: ''
-                    provider: filesmatch
 letsencrypt:
     install: '1'
     settings:
@@ -288,15 +225,14 @@ letsencrypt:
 php:
     install: '1'
     settings:
-        version: '7.1'
+        version: '7.2'
     modules:
         php:
             - cli
             - intl
             - xml
-            - mcrypt
-            - curl
             - mbstrings
+            - curl
             - gd
         pear: {  }
         pecl: {  }
@@ -304,11 +240,11 @@ php:
         display_errors: 'On'
         error_reporting: '-1'
         session.save_path: /var/lib/php/session
-        date.timezone: Europe/Paris
+        date.timezone: UTC
     fpm_ini:
         error_log: /var/log/php-fpm.log
     fpm_pools:
-        phpfp_wv9gx82jp5pu:
+        pool1:
             ini:
                 prefix: www
                 listen: '127.0.0.1:9000'
@@ -325,7 +261,7 @@ xdebug:
         xdebug.remote_connect_back: '1'
         xdebug.remote_enable: '1'
         xdebug.remote_handler: dbgp
-        xdebug.remote_port: '9001'
+        xdebug.remote_port: '9000'
 blackfire:
     install: '0'
     settings:
@@ -340,17 +276,23 @@ blackfire:
             agent_timeout: '0.25'
             log_file: ''
             log_level: '1'
-xhprof:
-    install: '0'
 wpcli:
     install: '0'
-    version: v1.1.0
 drush:
     install: '0'
     version: 8.0.5
 ruby:
     install: '1'
-    versions: {  }
+    versions:
+        ruby1:
+            default: '1'
+            bundler: '1'
+            version: '2.4'
+            gems:
+                - deep_merge@1.2.1
+                - activesupport@5.1.4
+                - vine@0.4
+                - capistrano
 python:
     install: '1'
     packages: {  }
@@ -358,7 +300,7 @@ python:
 nodejs:
     install: '1'
     settings:
-        version: '6'
+        version: '8'
     npm_packages: {  }
 mariadb:
     install: '0'
@@ -367,15 +309,16 @@ mariadb:
         root_password: '123'
         override_options: {  }
     users:
-        mariadbnu_07wiiuwqig3a:
+        user1:
             name: dbuser
             password: '123'
     databases:
-        mariadbnd_ajnruaujz6po:
+        database1:
             name: dbname
+            collate: utf8_general_ci
             sql: ''
     grants:
-        mariadbng_j63nmvrsj3pb:
+        grant1:
             user: dbuser
             table: '*.*'
             privileges:
@@ -387,15 +330,16 @@ mysql:
         root_password: '123'
         override_options: {  }
     users:
-        mysqlnu_2ygj1hzk9ol7:
+        user1:
             name: dbuser
             password: '123'
     databases:
-        mysqlnd_0e5pubow6c7c:
+        database1:
             name: dbname
+            collate: utf8_general_ci
             sql: ''
     grants:
-        mysqlng_sedk3wh6bkcv:
+        grant1:
             user: dbuser
             table: '*.*'
             privileges:
@@ -409,16 +353,16 @@ postgresql:
         server:
             postgres_password: '123'
     databases:
-        postsqlnd_rtnw5ot6newk:
+        database1:
             dbname: progradio
             owner: progradio
     users:
-        postsqlnu_cqwyzlgkebgr:
+        user1:
             username: progradio
             password: '123'
             superuser: '1'
     grants:
-        postsqlng_4d0iq5dzuo0m:
+        grant1:
             role: progradio
             db: progradio
             privilege:
@@ -429,15 +373,24 @@ mongodb:
         bind_ip: 127.0.0.1
         port: '27017'
     globals:
-        version: 2.6.0
-    databases: {  }
+        version: 3.6.2
+    databases:
+        database1:
+            name: dbname
+            user: dbuser
+            password: '123'
 redis:
     install: '1'
     settings:
         port: '6379'
 sqlite:
     install: '0'
-    databases: {  }
+    databases:
+        database1:
+            name: dbname
+            owner: www-data
+            group: www-data
+            sql_file: ''
 mailhog:
     install: '1'
     settings:
@@ -461,20 +414,24 @@ rabbitmq:
     install: '0'
     settings:
         port: '5672'
-    users: {  }
+    users:
+        user1:
+            admin: '1'
+            name: admin
+            password: '123'
+            tags:
+                - admin
     vhosts: {  }
     plugins: {  }
 elastic_search:
     install: '0'
     settings:
-        version: 2.3.1
+        version: 6.1.2
         java_install: true
     instances:
-        esi_zznz3abf88d9:
+        instance1:
             name: es-01
-solr:
-    install: '0'
-    settings:
-        version: 5.5.2
-        port: '8984'
+            jvm_options:
+                - '-Xms2G'
+                - '-Xmx2G'
 

@@ -7,8 +7,8 @@
 #
 #
 class composer::project_factory (
-  $projects = hiera_hash('composer::project_factory::projects', {}),
-  $execs    = hiera_hash('composer::project_factory::execs', {}),
+  $projects = lookup('composer::project_factory::projects', Hash, {'strategy' => 'deep', 'merge_hash_arrays' => true}, {}),
+  $execs    = lookup('composer::project_factory::execs', Hash, {'strategy' => 'deep', 'merge_hash_arrays' => true}, {}),
 ) {
 
   if $projects {

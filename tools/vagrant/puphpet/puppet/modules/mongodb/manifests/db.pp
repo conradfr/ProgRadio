@@ -7,22 +7,22 @@
 #  user - Database username.
 #  db_name - Database name. Defaults to $name.
 #  password_hash - Hashed password. Hex encoded md5 hash of "$username:mongo:$password".
-#  password - Plain text user password. This is UNSAFE, use 'password_hash' unstead.
+#  password - Plain text user password. This is UNSAFE, use 'password_hash' instead.
 #  roles (default: ['dbAdmin']) - array with user roles.
 #  tries (default: 10) - The maximum amount of two second tries to wait MongoDB startup.
 #
 define mongodb::db (
-  $user,
-  $db_name       = $name,
-  $password_hash = false,
-  $password      = false,
-  $roles         = ['dbAdmin'],
-  $tries         = 10,
+  String           $user,
+  String           $db_name       = $name,
+  Optional[String] $password_hash = undef,
+  Optional[String] $password      = undef,
+  Array[String]    $roles         = ['dbAdmin'],
+  Integer[0]       $tries         = 10,
 ) {
 
   mongodb_database { $db_name:
     ensure => present,
-    tries  => $tries
+    tries  => $tries,
   }
 
   if $password_hash {
@@ -39,7 +39,6 @@ define mongodb::db (
     username      => $user,
     database      => $db_name,
     roles         => $roles,
-    require       => Mongodb_database[$db_name],
   }
 
 }

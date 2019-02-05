@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..","..",".."))
 
-require 'puppet_x/elastic/plugin_name'
+require 'puppet_x/elastic/plugin_parsing'
 
 module Puppet::Parser::Functions
   newfunction(
@@ -18,6 +18,8 @@ module Puppet::Parser::Functions
         es_plugin_name('foo/plug/1.0.0')
         es_plugin_name('foo/elasticsearch-plug')
         es_plugin_name('foo/es-plug/1.3.2')
+
+    @return String
     ENDHEREDOC
 
     if args.length < 1

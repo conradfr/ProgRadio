@@ -35,7 +35,6 @@ const fetch = dateObj => {
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-          .log(console.log)
             .find('.timeline-schedule > .post-schedule-timeline > .post-schedule.main')
             .set({
                 'datetime_raw': 'time@datetime' /* utc */

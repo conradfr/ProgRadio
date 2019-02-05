@@ -33,7 +33,7 @@ class puphpet::firewall
   }
 
   each( $rules ) |$key, $rule| {
-    if is_string($rule['port']) {
+    if $rule['port'] =~ String {
       $ports = [$rule['port']]
     } else {
       $ports = $rule['port']

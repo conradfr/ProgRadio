@@ -32,7 +32,7 @@ describe 'supervisord::fcgi_program', :type => :define do
       :stderr_logfile_backups  => '10',
       :stderr_capture_maxbytes => '0',
       :stderr_events_enabled   => true,
-      :environment             => { 'env1' => 'value1', 'env2' => 'value2' },
+      :program_environment     => { 'env1' => 'value1', 'env2' => 'value2' },
       :directory               => '/opt/supervisord/chroot',
       :umask                   => '022',
       :serverurl               => 'AUTO'
@@ -84,5 +84,26 @@ describe 'supervisord::fcgi_program', :type => :define do
   context 'ensure_process_removed' do
     let(:params) { default_params.merge({ :ensure_process => 'removed' }) }
     it { should contain_supervisord__supervisorctl('remove_foo') }
+  end
+
+  context 'change_process_name_on_numprocs_gt_1' do
+    let(:params) do
+    {
+      :numprocs => '2',
+      :command  => 'bar',
+      :socket   => 'tcp://localhost:1000',
+    }
+    end
+    it { should contain_file('/etc/supervisor.d/fcgi-program_foo.conf').with_content(/numprocs=2/) }
+    it { should contain_file('/etc/supervisor.d/fcgi-program_foo.conf').with_content(/process_name=\%\(program_name\)s_\%\(process_num\)02d/) }
+  end
+
+  context 'absolute_log_paths' do
+    let(:params) { default_params.merge({
+      :stdout_logfile => '/path/to/program_foo.log',
+      :stderr_logfile => '/path/to/program_foo.error',
+    }) }
+    it { should contain_file('/etc/supervisor.d/fcgi-program_foo.conf').with_content(/stdout_logfile=\/path\/to\/program_foo.log/) }
+    it { should contain_file('/etc/supervisor.d/fcgi-program_foo.conf').with_content(/stderr_logfile=\/path\/to\/program_foo.error/) }
   end
 end

@@ -1,5 +1,5 @@
 # Managed by puppet - do not modify
 ZONE="<%= @timezone %>"
-<% if !@hwutc.empty? -%>
+<% if !@hwutc.nil? -%>
 UTC=<%= @hwutc %>
 <% end -%>

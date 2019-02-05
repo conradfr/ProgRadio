@@ -5,11 +5,12 @@
 define supervisord::supervisorctl(
   $command,
   $process       = undef,
-  $refreshonly   = false
+  $refreshonly   = false,
+  $unless        = undef
 ) {
 
-  validate_string($command)
-  validate_string($process)
+  validate_legacy(String, 'validate_string', $command)
+  validate_legacy(String, 'validate_string', $process)
 
   $supervisorctl = $::supervisord::executable_ctl
 
@@ -17,11 +18,19 @@ define supervisord::supervisorctl(
     $cmd = join([$supervisorctl, $command, $process], ' ')
   }
   else {
-    $cmd = join([$supervisorctl, $command])
+    $cmd = join([$supervisorctl, $command], ' ')
+  }
+
+  if $unless {
+    $unless_cmd = join([$supervisorctl, 'status', $process, '|', 'awk', '{\'print $2\'}', '|', 'grep', '-i', $unless], ' ')
+  }
+  else {
+    $unless_cmd = undef
   }
 
   exec { "supervisorctl_command_${name}":
     command     => $cmd,
-    refreshonly => $refreshonly
+    refreshonly => $refreshonly,
+    unless      => $unless_cmd
   }
 }

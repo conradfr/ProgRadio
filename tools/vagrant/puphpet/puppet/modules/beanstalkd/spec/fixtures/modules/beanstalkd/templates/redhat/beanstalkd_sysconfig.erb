@@ -19,6 +19,7 @@ BEANSTALKD_USER=<%= @user %>
 # to a value to have it take affect.
 <% if @maxjobsize -%>
 BEANSTALKD_MAX_JOB_SIZE=<%= @maxjobsize %>
+MAX_JOB_SIZE="-z <%= @maxjobsize %>"
 <% else -%>
 #use default
 #BEANSTALKD_MAX_JOB_SIZE=65535
@@ -29,6 +30,7 @@ BEANSTALKD_MAX_JOB_SIZE=<%= @maxjobsize %>
 # The direcory to house the binlog.
 <% if @binlogdir -%>
 BEANSTALKD_BINLOG_DIR=<%= @binlogdir %>
+BINLOG_DIR="-b <%= @binlogdir %>"
 <% else -%>
 #use default
 #BEANSTALKD_BINLOG_DIR=/var/lib/beanstalkd/binlog
@@ -40,6 +42,7 @@ BEANSTALKD_BINLOG_DIR=<%= @binlogdir %>
 # performed.  That is, the -F option is used.
 <% if @binlogfsync -%>
 BEANSTALKD_BINLOG_FSYNC_PERIOD=<%= @bbinlogfsync %>
+BINLOG_FSYNC_PERIOD="-f <%= @bbinlogfsync %>"
 <% else -%>
 #use default
 #BEANSTALKD_BINLOG_FSYNC_PERIOD=
@@ -49,8 +52,8 @@ BEANSTALKD_BINLOG_FSYNC_PERIOD=<%= @bbinlogfsync %>
 # up to the nearest 512 byte boundary.
 <% if @binlogsize -%>
 BEANSTALKD_BINLOG_SIZE=<%= @binlogsize %>
+BINLOG_SIZE="-s <%= @binlogsize %>"
 <% else -%>
 #use default
 #BEANSTALKD_BINLOG_SIZE=10485760
 <% end -%>
-

@@ -4,19 +4,19 @@ describe 'archive' do
   context 'RHEL' do
     let(:facts) do
       {
-        osfamily: 'RedHat',
+        os: { family: 'RedHat' },
         operatingsystem: 'RedHat',
-        puppetversion: '3.7.3'
+        puppetversion: '4.4.0'
       }
     end
 
     context 'default' do
-      it { should_not contain_package('7zip') }
-      it { should_not contain_file('/opt/awscli-bundle') }
-      it { should_not contain_archive('awscli-bundle.zip') }
-      it { should_not contain_exec('install_aws_cli') }
-      it { should compile.with_all_deps }
-      it { should contain_class('archive::params') }
+      it { is_expected.not_to contain_package('7zip') }
+      it { is_expected.not_to contain_file('/opt/awscli-bundle') }
+      it { is_expected.not_to contain_archive('awscli-bundle.zip') }
+      it { is_expected.not_to contain_exec('install_aws_cli') }
+      it { is_expected.to compile.with_all_deps }
+      it { is_expected.to contain_class('archive::params') }
     end
 
     context 'with aws_cli' do
@@ -26,16 +26,16 @@ describe 'archive' do
         }
       end
 
-      it { should contain_file('/opt/awscli-bundle') }
-      it { should contain_archive('awscli-bundle.zip') }
-      it { should contain_exec('install_aws_cli') }
+      it { is_expected.to contain_file('/opt/awscli-bundle') }
+      it { is_expected.to contain_archive('awscli-bundle.zip') }
+      it { is_expected.to contain_exec('install_aws_cli') }
     end
   end
 
   describe 'Windows' do
     let(:default_facts) do
       {
-        osfamily: 'Windows',
+        os: { family: 'Windows' },
         operatingsystem: 'Windows',
         archive_windir: 'C:/staging'
       }
@@ -44,17 +44,17 @@ describe 'archive' do
     context 'default 7zip chcolatey package' do
       let(:facts) do
         {
-          puppetversion: '3.7.3'
+          puppetversion: '4.4.0'
         }.merge(default_facts)
       end
 
       it do
-        should contain_package('7zip').with(
+        is_expected.to contain_package('7zip').with(
           name: '7zip',
           provider: 'chocolatey'
         )
       end
-      it { should_not contain_archive('awscli-bundle.zip') }
+      it { is_expected.not_to contain_archive('awscli-bundle.zip') }
     end
 
     context 'with 7zip msi package' do
@@ -73,7 +73,7 @@ describe 'archive' do
       end
 
       it do
-        should contain_package('7zip').with(
+        is_expected.to contain_package('7zip').with(
           name: '7-Zip 9.20 (x64 edition)',
           source: 'C:/Windows/Temp/7z920-x64.msi',
           provider: 'windows'
@@ -94,7 +94,7 @@ describe 'archive' do
         }
       end
 
-      it { should_not contain_package('7zip') }
+      it { is_expected.not_to contain_package('7zip') }
     end
   end
 end
