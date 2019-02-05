@@ -2,11 +2,13 @@
 
 {% block bodysupp %} class="body-app"{% endblock %}
 {% block footersupp %}{% endblock %}
+{% block footerclasssupp %}{% endblock %}
 
 {% block javascript_head %}
 const baseUrl = '/';
 const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
 const categories = {{ categories |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
+const collections = {{ collections |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
 
 const scrollToCursor = function(e) {
     e.preventDefault();
@@ -25,8 +27,6 @@ const scrollToCursor = function(e) {
 </div>
 
 {% endblock %}
-
-{% block footerclasssupp %}{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}

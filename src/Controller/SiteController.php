@@ -5,14 +5,14 @@ namespace App\Controller;
 use App\Entity\Contact;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use App\Form\ContactType;
 
-class SiteController extends Controller
+class SiteController extends AbstractController
 {
     /**
      * @Route(
@@ -24,7 +24,7 @@ class SiteController extends Controller
      *      }
      * )
      */
-    public function faqAction(Request $request, EntityManagerInterface $em)
+    public function faqAction(EntityManagerInterface $em)
     {
         $radios = $em->getRepository('App:Radio')->getActiveRadios();
 
@@ -90,7 +90,7 @@ class SiteController extends Controller
      *     }
      * )
      */
-    public function sitemapAction(Request $request, EntityManagerInterface $em)
+    public function sitemapAction(EntityManagerInterface $em)
     {
         // @todo if route list grows, get collection & filter
         $routesToExport = ['homepage', 'now', 'faq', 'contact'];

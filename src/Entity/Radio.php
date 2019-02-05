@@ -52,6 +52,12 @@ class Radio
     private $category;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Collection")
+     * @ORM\JoinColumn(name="collection_id", referencedColumnName="id")
+     */
+    private $collection;
+
+    /**
      * @var double
      *
      * @ORM\Column(type="decimal", scale=2, options={"default"=0})
@@ -120,6 +126,22 @@ class Radio
     public function setCategory(Category $category)
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getCollection()
+    {
+        return $this->collection;
+    }
+
+    /**
+     * @param Collection $collection
+     */
+    public function setCollection(Collection $collection)
+    {
+        $this->collection = $collection;
     }
 
     /**

@@ -16,9 +16,11 @@ class RadioRepository extends EntityRepository
      */
     public function getRadio($codeName) {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, c.codeName as category
+            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, 
+                    c.codeName as category, cl.codeName as collection
                 FROM App:Radio r
                   INNER JOIN r.category c
+                  INNER JOIN r.collection cl
                 WHERE r.active = :active
                   AND r.codeName = :codename
             '
@@ -39,9 +41,11 @@ class RadioRepository extends EntityRepository
      */
     public function getActiveRadios() {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, c.codeName as category
+            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, 
+                    c.codeName as category, cl.codeName as collection
                 FROM App:Radio r
                   INNER JOIN r.category c
+                  INNER JOIN r.collection cl
                 WHERE r.active = :active
             '
         );

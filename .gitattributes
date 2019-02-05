@@ -5,3 +5,4 @@ docs/* linguist-documentation
 buildjs/* linguist-generated=true
 web/build/* linguist-generated=true
 work/* linguist-vendored
+* text=auto eol=lf

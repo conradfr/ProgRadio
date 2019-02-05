@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Service\ScheduleManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class DefaultController extends Controller
+class DefaultController extends AbstractController
 {
     /**
      * @Route(
@@ -22,14 +22,16 @@ class DefaultController extends Controller
      *      }
      * )
      */
-    public function indexAction(EntityManagerInterface $em, ScheduleManager $scheduleManager)
+    public function indexAction(EntityManagerInterface $em)
     {
         $radios = $em->getRepository('App:Radio')->getActiveRadios();
         $categories = $em->getRepository('App:Category')->getCategories();
+        $collections = $em->getRepository('App:Collection')->getCollections();
 
         return $this->render('default/index.html.twig', [
             'radios' => $radios,
-            'categories' => $categories
+            'categories' => $categories,
+            'collections' => $collections
         ]);
     }
 

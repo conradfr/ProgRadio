@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class CategoryRepository extends EntityRepository
 {
-    protected const CACHE_CATEGORY_TTL = 86400; // day
+    protected const CACHE_CATEGORY_TTL = 604800; // week
 
     /**
      * @return array
