@@ -1,7 +1,7 @@
 const radios = {
     'nationwide':
       [
-        // 'rtl',
+        'rtl',
         'franceinter',
         'rmc',
         'nrj',
@@ -13,7 +13,8 @@ const radios = {
         'skyrock',
         'rtl2',
         'virgin',
-        // 'franceculture',
+        'franceculture',
+        'francemusique',
         'radioclassique',
         'rireetchansons',
         'radionova',
@@ -25,7 +26,6 @@ const radios = {
       ],
     'francebleu':
       [
-        'rtl'
       ]
 };
 
