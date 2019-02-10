@@ -86,13 +86,13 @@ defmodule Importer.Processor.Builder do
   defp build_schedule_end(items, acc) when length(items) === 1 do
     [head | _tail] = items
 
-    # If last item with not end datetime, set at midnight next day
+    # If last item with not end datetime, set 23:00 in UTC
+    # TODO: improve
     item =
       case head["date_time_end"] do
         nil ->
           head["date_time_start"]
-          |> Timex.shift(days: 1)
-          |> Timex.set(hour: 0, minute: 0, second: 0)
+          |> Timex.set(hour: 23, minute: 0, second: 0)
           |> (&Map.put(head, "date_time_end", &1)).()
 
         _ ->
