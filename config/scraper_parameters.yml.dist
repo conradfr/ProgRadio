@@ -1,0 +1,16 @@
+redis_dsn: redis://127.0.0.1/0
+
+logmail:
+    enable: false
+    username: ''
+    password: ''
+    host: ''
+    port:
+    ssl: true
+    tls: false
+    authentication: ['LOGIN']
+    to: ''
+    from: ''
+    level: 'info'
+    unique: false
+    html: true

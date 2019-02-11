@@ -54,7 +54,7 @@ class SiteController extends AbstractController
             $message = (new \Swift_Message())
                 ->setSubject('Contact page')
                 ->setFrom('noreply@programmes-radio.io')
-                ->setTo('logs@programmes-radio.io')
+                ->setTo('contact@programmes-radio.io')
                 ->setBody($this->renderView('default/contactmail.html.twig',
                     [
                         'name' => $contact->getName(),
