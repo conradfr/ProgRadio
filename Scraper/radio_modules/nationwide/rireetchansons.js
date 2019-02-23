@@ -1,11 +1,10 @@
 const osmosis = require('osmosis');
 const moment = require('moment-timezone');
-const utils = require('../lib/utils');
+const utils = require('../../lib/utils');
 const striptags = require('striptags');
-const logger = require('../lib/logger.js');
+const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
-let referenceIndex = 0;
 
 // gonna be messy
 const format = dateObj => {
@@ -48,21 +47,41 @@ const format = dateObj => {
 
         // subs
         const sections = [];
-        regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s:\s([A-Za-zÀ-ÿ\s’'&]*)*/, 'gm');
+        regexp = new RegExp(/De ([0-9]{1,2})[h|H]([0-9]{2}){0,1} à ([0-9]{1,2})[h|H]([0-9]{2})\s:\s([A-Za-zÀ-ÿ0-9\s’'".&]*)*/, 'gm');
 
         while ((match = regexp.exec(curr.description)) !== null) {
+            console.log('loooooooooooooooooooool');
             sectionStartDateTime = moment(dateObj);
             sectionStartDateTime.hour(match[1]);
             sectionStartDateTime.minute(match[2]);
             sectionStartDateTime.second(0);
 
-            let title = match[3];
+            let title = match[5];
 
             sections.push({
                 'title': title,
                 'date_time_start': sectionStartDateTime.toISOString(),
             });
-         }
+        }
+
+        if (sections.length === 0) {
+
+            regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s:\s([A-Za-zÀ-ÿ0-9\s’'&]*)*/, 'gm');
+
+            while ((match = regexp.exec(curr.description)) !== null) {
+                sectionStartDateTime = moment(dateObj);
+                sectionStartDateTime.hour(match[1]);
+                sectionStartDateTime.minute(match[2]);
+                sectionStartDateTime.second(0);
+
+                let title = match[3];
+
+                sections.push({
+                    'title': title,
+                    'date_time_start': sectionStartDateTime.toISOString(),
+                });
+            }
+        }
 
         newEntry = {
             'date_time_start': startDateTime.toISOString(),
@@ -112,11 +131,14 @@ const fetch = dateObj => {
 const fetchAll = dateObj =>  {
     /* radio schedule page has the format 3am -> 3am,
        so we get the previous day as well to get the full day and the filter the list later  */
+
+    /* seems to have changed */
+
     const previousDay = moment(dateObj);
     previousDay.subtract(1, 'days');
 
-    return fetch(dateObj)
-        .then(() => { return fetch(previousDay); });
+    return fetch(dateObj);
+        // .then(() => { return fetch(previousDay); });
 };
 
 const getScrap = dateObj => {

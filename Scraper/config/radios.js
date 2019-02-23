@@ -26,6 +26,13 @@ const radios = {
       ],
     'francebleu':
       [
+          // 'francebleu_paris',
+          'francebleu_nord',
+          'francebleu_alsace',
+          'francebleu_armorique',
+          'francebleu_auxerre',
+          'francebleu_azur',
+          'francebleu_bearn',
       ]
 };
 
@@ -38,7 +45,7 @@ const radiosModule = {
         return radios[collection];
     },
     getRadiosWithPath(collection) {
-        return radios[collection];
+        return radios[collection].map(radio => `${collection}/${radio}`);
     },
     getRadioPath(radio) {
         for (let collection in radios) {

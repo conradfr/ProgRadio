@@ -66,4 +66,26 @@
       }
     }
   }
+
+  /* collection switch */
+
+  .radio-list-leave-active, .radio-list-enter-active {
+    transition: all .05s;
+
+    .radio-logo {
+      transition: all .05s;
+    }
+  }
+
+  .radio-list-leave-to {
+    .radio-logo {
+      opacity: 0;
+    }
+  }
+
+  .radio-list-enter-to {
+    .radio-logo {
+      opacity: 1;
+    }
+  }
 }

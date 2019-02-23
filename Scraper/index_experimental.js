@@ -80,8 +80,8 @@ let funList = null;
 if (options['radios']) {
     funList = [
         async function() {
-            const result = await getResults(options['radios']);
-            return 'radios via option'
+            const radios = options['radios'].map(radio => radiosModule.getRadioPath(radio));
+            return await getResults(radios);
         }
     ];
 }
@@ -90,7 +90,7 @@ else {
 
   funList = collections.map(function (collection) {
       return async function() {
-          return await getResults(radiosModule.getRadios(collection));
+          return await getResults(radiosModule.getRadiosWithPath(collection));
     }
   });
 }

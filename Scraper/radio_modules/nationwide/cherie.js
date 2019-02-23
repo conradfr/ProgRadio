@@ -1,7 +1,7 @@
 const osmosis = require('osmosis');
-const utils = require('../lib/utils');
+const utils = require('../../lib/utils');
 let moment = require('moment-timezone');
-const logger = require('../lib/logger.js');
+const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;
@@ -21,10 +21,13 @@ const format = dateObj => {
         // TIME
 
         const startDateTime = moment(curr.dateObj);
-        let endDateTime = moment(curr.dateObj);
+
+        // removing this for the moment, may revisit later to fine tune output if needed
+
+        // let endDateTime = moment(curr.dateObj);
 
         // 1st try in title
-        let regexp = new RegExp(/([\'\w\s\A-zÀ-ÿ\|]+)\s:\s(([0-9]{1,2}[H|h])|MINUIT)\s{0,1}-\s{0,1}(([0-9]{1,2}[H|h])|MINUIT)/);
+        /*let regexp = new RegExp(/([0-9]{1,2}[H|h])\/([0-9]{1,2}[H|h])/);
         let match = curr.title.match(regexp);
 
         if (match !== null) {
@@ -68,7 +71,7 @@ const format = dateObj => {
                 endDateTime.minute(0);
                 endDateTime.second(0);
             }
-            else {
+            else {*/
                 regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
                 match = curr.datetime_raw.match(regexp);
 
@@ -79,17 +82,10 @@ const format = dateObj => {
                 startDateTime.minute(match[2]);
                 startDateTime.second(0);
 
-                endDateTime = null;
-            }
-        }
+            // }
+        // }
 
         newEntry.date_time_start = startDateTime;
-        newEntry.date_time_end = endDateTime;
-
-        // sometimes two programs starts at same time, filtering the second one for now ...
-        if (index > 0 && prev.length > 0 && startDateTime.isSame(moment(prev[prev.length -1].date_time_start), 'minute')) {
-            return prev;
-        }
 
         let prevMatch = null;
         // keep only relevant time from previous day page
@@ -104,9 +100,6 @@ const format = dateObj => {
 
             // update day
             startDateTime.add(1, 'days');
-            if (endDateTime !== null) {
-                endDateTime.add(1, 'days');
-            }
         }
         // remove next day schedule from day page
         else {
@@ -123,10 +116,6 @@ const format = dateObj => {
 
                 if (prevDate.isAfter(startDateTime)) { return prev; }
             }
-
-            if (endDateTime !== null && startDateTime.hour() > endDateTime.hour()) {
-                endDateTime.add(1, 'days');
-            }
         }
 
         prev.push(newEntry);
@@ -138,21 +127,26 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     dateObj.locale('fr');
-    let day = dateObj.format('dddd').toLowerCase();
-    let url = 'http://www.nostalgie.fr/grille-des-emissions';
+    let url = 'https://www.cheriefm.fr/grille-des-emissions';
+
+    const dayOfWeek = dateObj.isoWeekday();
+    let tab = 'week';
+    if (dayOfWeek > 5) {
+        tab = 'weekend';
+    }
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-            .find(`#${day}`)
-            .select('.item-program > .card-program')
+            .find(`#${tab}`)
+            .select('.programsGrid-listItem')
             .set({
-                'datetime_raw': 'time@datetime',
+                'datetime_raw': 'time.cardProgram-hour',
                 'img': 'img.card-img@data-src',
-                'title': '.card-title',
-                'description': '.program-duration',
+                'title': '.cardProgram-title',
+                'description': '.cardProgram-duration',
             })
             .data(function (listing) {
                 listing.dateObj = dateObj;
@@ -165,7 +159,7 @@ const fetch = dateObj => {
 };
 
 const fetchAll = dateObj =>  {
-    /* radio schedule page has the format 3am -> 3am,
+    /* radio schedule page has the format 6am -> 5am,
        so we get the previous day as well to get the full day and the filter the list later  */
     const previousDay = moment(dateObj);
     previousDay.subtract(1, 'days');
@@ -182,7 +176,7 @@ const getScrap = dateObj => {
 };
 
 const scrapModule = {
-    getName: 'nostalgie',
+    getName: 'cherie',
     getScrap
 };
 

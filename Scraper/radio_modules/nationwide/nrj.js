@@ -1,81 +1,60 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
-const logger = require('../lib/logger.js');
+const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;
 
+// gonna be messy
 const format = dateObj => {
-
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
-
         // Time
-        const regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-        let match = curr.datetime_raw[0].match(regexp);
+        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
+        let match = curr.datetime_raw.match(regexp);
 
         // no time, exit
         if (match === null) { return prev; }
 
         const startDateTime = moment(curr.dateObj);
-
         startDateTime.hour(match[1]);
         startDateTime.minute(match[2]);
         startDateTime.second(0);
-
-        match = curr.datetime_raw[1].match(regexp);
-        const endDateTime = moment(curr.dateObj);
-
-        // no time, exit
-        if (match !== null) {
-            endDateTime.hour(match[1]);
-            endDateTime.minute(match[2]);
-            endDateTime.second(0);
-        }
 
         let prevMatch = null;
         // keep only relevant time from previous day page
         if (startDateTime.isBefore(dateObj, 'day')) {
             if (index === 0) { return prev; }
 
-            prevMatch = array[0].datetime_raw[0].match(regexp);
+            prevMatch = array[0].datetime_raw.match(regexp);
             array[0].dateObj.hour(prevMatch[1]);
 
             if (array[0].dateObj.isBefore(startDateTime)) { return prev; }
 
             // update day
             startDateTime.add(1, 'days');
-            endDateTime.add(1, 'days');
         }
         // remove next day schedule from day page
         else {
             if (curr.dateObj !== array[index-1].dateObj) {
                 referenceIndex = index;
             } else {
-                prevMatch = array[referenceIndex].datetime_raw[0].match(regexp);
+                prevMatch = array[referenceIndex].datetime_raw.match(regexp);
                 let prevDate = moment(array[referenceIndex].dateObj);
                 prevDate.hour(prevMatch[1]);
 
                 if (prevDate.isAfter(startDateTime)) { return prev; }
             }
-
-            if (startDateTime.hour() > endDateTime.hour()) {
-                endDateTime.add(1, 'days');
-            }
         }
 
         newEntry = {
             'date_time_start': startDateTime.toISOString(),
-            'date_time_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',
-            'host': curr.host,
-            'title': curr.title
+            'title': curr.title,
+            'img': curr.img,
+            'description': curr.description
+
         };
-
-        if (typeof curr.img !== 'undefined') {
-            newEntry.img = 'https://www.sudradio.fr' + curr.img.split('?')[0];
-        }
-
 
         prev.push(newEntry);
         return prev;
@@ -85,20 +64,24 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    const dayFormat = dateObj.format('YYYYMMDD');
-    const url = `https://www.sudradio.fr/programmes/${dayFormat}`;
+    let dayFormat = dateObj.day() - 1; // not sure why week start on monday this time
+    let url = 'https://www.nrj.fr/emissions/jour';
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
-            .get(url)
-            .find('.show-item')
+            .post(url, {dow: dayFormat.toString()})
+            .find('.programItem')
+            .log(console.log)
             .set({
-                'datetime_raw': ['.show-item-hours time'],
-                'img': '.show-item-media > a > img@src',
-                'title': '.show-item-name',
-                'host': '.show-item-author a',
+                'datetime_raw': 'p.time',
+                'title': 'h2.ttl-h1',
+            })
+            .select('.presentation-mode-xs')
+            .set({
+                'img': 'img@src',
+                'description': '.presentation-text > .text'
             })
             .data(function (listing) {
                 listing.dateObj = dateObj;
@@ -111,6 +94,8 @@ const fetch = dateObj => {
 };
 
 const fetchAll = dateObj =>  {
+    /* radio schedule page has the format 3am -> 3am,
+       so we get the previous day as well to get the full day and the filter the list later  */
     const previousDay = moment(dateObj);
     previousDay.subtract(1, 'days');
 
@@ -126,7 +111,7 @@ const getScrap = dateObj => {
 };
 
 const scrapModule = {
-    getName: 'sudradio',
+    getName: 'nrj',
     getScrap
 };
 

@@ -250,7 +250,7 @@ php:
                 listen: '127.0.0.1:9000'
                 security.limit_extensions: .php
                 user: www-user
-                group: www-data
+                group: vagrant
     composer: '1'
     composer_home: ''
 xdebug:

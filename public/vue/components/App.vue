@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <collection-switcher></collection-switcher>
     <timeline></timeline>
     <timeline-cursor-head></timeline-cursor-head>
     <schedule-container ref="container"></schedule-container>
@@ -11,6 +12,7 @@
 <script>
 import { mapGetters } from 'vuex';
 
+import CollectionSwitcher from './CollectionSwitcher.vue';
 import Timeline from './Timeline.vue';
 import TimelineCursorHead from './TimelineCursorHead.vue';
 import ScheduleContainer from './ScheduleContainer.vue';
@@ -19,6 +21,7 @@ import CategoryFilter from './CategoryFilter.vue';
 
 export default {
   components: {
+    CollectionSwitcher,
     Timeline,
     TimelineCursorHead,
     ScheduleContainer,

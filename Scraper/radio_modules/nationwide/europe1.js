@@ -1,7 +1,7 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 let util = require('util');
-const logger = require('../lib/logger.js');
+const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
 
@@ -36,6 +36,8 @@ const format = dateObj => {
         entry.date_time_start = startDateTime.toISOString();
         entry.date_time_end = endDateTime.toISOString();
         entry.timezone = 'Europe/Paris';
+
+        entry.description = entry.description ? entry.description.join(' ').trim() : null;
 
         entry.host = entry.host.split('\n')[0];
         entry.sections = [];
@@ -109,7 +111,7 @@ const fetch = dateObj => {
                 osmosis.follow('.bloc .bloc_texte .titre > span > a@href')
                     .find('section.content')
                     .set({
-                        'description':  'p[1]'
+                        'description':  ['p']
                     })
             )
             .data(function (listing) {

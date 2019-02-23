@@ -7381,6 +7381,13 @@ input[type="checkbox"]:disabled:checked:after,
   color: inherit;
 }
 /* bootstrap overloading */
+.navbar {
+  /*
+  .navbar-header {
+    margin-left: 61px;
+  }
+  */
+}
 .navbar .navbar-brand {
   height: 50px;
   padding-top: 13.5px;
@@ -7464,6 +7471,38 @@ body .footer a:focus {
 #app {
   overflow-x: hidden;
   background-color: #f3f3f3;
+}
+.collection-switcher {
+  display: none;
+}
+.collection-switcher .collection-control {
+  z-index: 2000;
+  display: block;
+  box-sizing: border-box;
+  position: fixed;
+  top: 16px;
+  width: 35px;
+  min-width: 35px;
+  max-width: 35px;
+  text-align: center;
+  color: #d9d9d9;
+  font-size: 18px;
+  cursor: pointer;
+  background-color: #0c7cd5;
+  padding-top: 2px;
+}
+.collection-switcher .collection-control:hover {
+  color: #e6e6e6;
+  background-color: #0b74c7;
+}
+.collection-switcher .collection-control.collection-backward {
+  left: 0;
+}
+.collection-switcher .collection-control.collection-forward {
+  left: 35px;
+  width: 36px;
+  min-width: 36px;
+  max-width: 36px;
 }
 .timeline {
   z-index: 3;
@@ -7570,10 +7609,10 @@ body .footer a:focus {
 .timeline .timeline-control.timeline-control-left .filter-icon:hover,
 .timeline .timeline-control.timeline-control-left .filter-icon.filter-icon-active {
   color: white;
-  background-color: #0a6ebd;
+  background-color: #0b74c7;
 }
 .timeline .timeline-control.timeline-control-left .filter-icon.filter-icon-enabled {
-  color: #0a6ebd;
+  color: #0b74c7;
 }
 .timeline .timeline-control.timeline-control-right {
   right: 0;
@@ -7804,7 +7843,7 @@ body .footer a:focus {
   top: 91px;
   left: 6px;
   width: 135px;
-  background-color: #0a6ebd;
+  background-color: #0b74c7;
 }
 #category-filter .category-one {
   padding: 4px 10px;
@@ -7815,7 +7854,7 @@ body .footer a:focus {
   opacity: 0.3;
 }
 #category-filter .category-one:hover {
-  background-color: #0960a5;
+  background-color: #0966af;
 }
 #category-filter .category-one span {
   margin-right: 10px;
@@ -7994,6 +8033,7 @@ body .footer a:focus {
   width: 71px;
   background-color: #343434;
   opacity: 0.95;
+  /* collection switch */
 }
 .schedule-container .schedule-radio-list .radio-logo {
   display: block;
@@ -8040,6 +8080,20 @@ body .footer a:focus {
 }
 .schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active {
   opacity: 0.7;
+}
+.schedule-container .schedule-radio-list .radio-list-leave-active,
+.schedule-container .schedule-radio-list .radio-list-enter-active {
+  transition: all .05s;
+}
+.schedule-container .schedule-radio-list .radio-list-leave-active .radio-logo,
+.schedule-container .schedule-radio-list .radio-list-enter-active .radio-logo {
+  transition: all .05s;
+}
+.schedule-container .schedule-radio-list .radio-list-leave-to .radio-logo {
+  opacity: 0;
+}
+.schedule-container .schedule-radio-list .radio-list-enter-to .radio-logo {
+  opacity: 1;
 }
 .schedule-container .schedule-radio-grid {
   margin-top: 40px;

@@ -16,7 +16,8 @@ class CollectionRepository extends EntityRepository
      */
     public function getCollections() {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT c.codeName as code_name, c.name as name_FR, c.priority
+            'SELECT c.codeName as code_name, c.name as name_FR, 
+                c.priority, c.sort_field, c.sort_order
                 FROM App:Collection c
                 ORDER BY c.priority asc, c.id asc
             '

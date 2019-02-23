@@ -47,6 +47,22 @@ class Collection
     private $priority;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=25)
+     * @Groups({"export"})
+     */
+    private $sort_field;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=5)
+     * @Groups({"export"})
+     */
+    private $sort_order;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -108,5 +124,37 @@ class Collection
     public function setPriority(int $priority): void
     {
         $this->priority = $priority;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSortField(): string
+    {
+        return $this->sort_field;
+    }
+
+    /**
+     * @param string $sort_field
+     */
+    public function setSortField(string $sort_field): void
+    {
+        $this->sort_field = $sort_field;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSortOrder(): string
+    {
+        return $this->sort_order;
+    }
+
+    /**
+     * @param string $sort_order
+     */
+    public function setSortOrder(string $sort_order): void
+    {
+        $this->sort_order = $sort_order;
     }
 }

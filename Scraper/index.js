@@ -62,7 +62,7 @@ logger.log('info', 'Starting ...');
 const getResults = radios => {
 
     return radios.map(function (radio) {
-        const radio_module = require(`./radio_modules/${radio}.js`);
+        const radio_module = require(`./radio_modules/nationwide/${radio}.js`);
 
         return radio_module.getScrap(dateObj)
             .then(function(data) {

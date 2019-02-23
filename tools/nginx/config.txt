@@ -1,8 +1,16 @@
 # thumbs
-location ~ ^/media/cache/(page|program)_thumb/media/program/(.+\.(?:gif|jpe?g|png))$ {
-    try_files $uri $uri/ @img_gen;
+# location ~ ^/media/cache/(page|program)_thumb/media/program/(.+\.(?:gif|jpe?g|png))$ {
+location ~ ^/media/cache/(page|program)_thumb/media/program/(.+)$ {
+  access_log off;
+  expires 1d;
+  add_header Pragma public;
+  add_header Cache-Control "public";
+
+  try_files $uri $uri/ @img_gen;
 }
 
 location @img_gen {
-    return 302 /app_dev.php/media/cache/resolve/$1_thumb/media/program/$2;
+    add_header Cache-Control no-cache;
+    expires 0;
+    return 302 /media/cache/resolve/$1_thumb/media/program/$2;
 }

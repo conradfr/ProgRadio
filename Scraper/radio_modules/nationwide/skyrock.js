@@ -1,6 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
-const logger = require('../lib/logger.js');
+const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;

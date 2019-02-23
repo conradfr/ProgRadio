@@ -5,7 +5,8 @@ import filter from 'lodash/fp/filter';
 import compose from 'lodash/fp/compose';
 import without from 'lodash/without';
 import forEach from 'lodash/forEach';
-import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
+import find from 'lodash/fp/find';
 
 import * as config from '../config/config';
 
@@ -18,6 +19,7 @@ const VueCookie = require('vue-cookie');
 Vue.use(VueCookie);
 
 const COOKIE_EXCLUDE = `${config.COOKIE_PREFIX}-exclude`;
+const COOKIE_COLLECTION = `${config.COOKIE_PREFIX}-collection`;
 
 const enforceScrollIndex = (rawScrollIndex) => {
   let scrollIndex = rawScrollIndex;
@@ -117,6 +119,23 @@ const getScheduleDisplay = (schedule, currentTime) => {
   return result;
 };
 
+const getCollectionIndex = (name, collections) => findIndex(collections, c => c.code_name === name);
+
+const getNextCollection = (current, collections, way) => {
+  const indexOfCurrentCollection = getCollectionIndex(current, collections);
+
+  let newIndex = 0;
+  if (way === 'backward') {
+    newIndex = indexOfCurrentCollection === 0 ? collections.length - 1
+      : indexOfCurrentCollection - 1;
+  } else if (way === 'forward') {
+    newIndex = collections.length === (indexOfCurrentCollection + 1) ? 0
+      : indexOfCurrentCollection + 1;
+  }
+
+  return collections[newIndex].code_name;
+};
+
 // initial state
 const initState = {
   radios,
@@ -128,7 +147,7 @@ const initState = {
   scrollIndex: initialScrollIndex,
   scrollClick: false,
   loading: false,
-  currentCollection: 'nationwide',
+  currentCollection: Vue.cookie.get(COOKIE_COLLECTION) || config.DEFAULT_COLLECTION,
   categoriesExcluded: Vue.cookie.get(COOKIE_EXCLUDE)
     ? Vue.cookie.get(COOKIE_EXCLUDE).split('|') : [],
   categoryFilterFocus: {
@@ -152,12 +171,17 @@ const storeGetters = {
   },
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
-  // sort by share, desc
-  radiosRanked: state => compose(
-    filter(entry => state.currentCollection === entry.collection),
-    filter(entry => state.categoriesExcluded.indexOf(entry.category) === -1),
-    orderBy(['share'], ['desc'])
-  )(state.radios),
+  // sort by share/name/etc, desc
+  radiosRanked: (state) => {
+    const index = getCollectionIndex(state.currentCollection, state.collections);
+    const { sort_field: sortField, sort_order: sortOrder } = state.collections[index];
+
+    return compose(
+      filter(entry => state.currentCollection === entry.collection),
+      filter(entry => state.categoriesExcluded.indexOf(entry.category) === -1),
+      orderBy([sortField], [sortOrder])
+    )(state.radios);
+  },
   displayCategoryFilter: state => state.categoryFilterFocus.icon
     || state.categoryFilterFocus.list || false,
   currentShowOnRadio: state => (radioCodename) => {
@@ -195,6 +219,15 @@ const storeActions = {
     commit('scrollClickSet', value);
     commit('updateDisplayData');
   },
+  collectionBackward: ({ state, commit }) => {
+    commit('collectionSwitch',
+      getNextCollection(state.currentCollection, state.collections, 'backward'));
+  },
+  collectionForward: ({ state, commit }) => {
+    commit('collectionSwitch',
+      getNextCollection(state.currentCollection, state.collections, 'forward'));
+  },
+
   categoryFilterFocus: ({ commit }, params) => {
     commit('setCategoryFilterFocus', params);
   },
@@ -285,6 +318,11 @@ const storeMutations = {
   },
   scrollClickSet: (state, value) => {
     state.scrollClick = value;
+  },
+  collectionSwitch(state, collection) {
+    state.currentCollection = collection;
+
+    Vue.cookie.set(COOKIE_COLLECTION, collection, { expires: config.COOKIE_TTL });
   },
   setCategoryFilterFocus(state, params) {
     state.categoryFilterFocus[params.element] = params.status;

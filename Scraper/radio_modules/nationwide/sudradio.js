@@ -1,6 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
-const logger = require('../lib/logger.js');
+const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
 let referenceIndex = 0;
@@ -11,28 +11,34 @@ const format = dateObj => {
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
 
         // Time
-        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\sà\s([0-9]{1,2})[h|H]([0-9]{2})/);
-        let match = curr.datetime_raw.match(regexp);
+        const regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
+        let match = curr.datetime_raw[0].match(regexp);
 
         // no time, exit
         if (match === null) { return prev; }
 
         const startDateTime = moment(curr.dateObj);
-        const endDateTime = moment(curr.dateObj);
 
         startDateTime.hour(match[1]);
         startDateTime.minute(match[2]);
         startDateTime.second(0);
-        endDateTime.hour(match[3]);
-        endDateTime.minute(match[4]);
-        endDateTime.second(0);
+
+        match = curr.datetime_raw[1].match(regexp);
+        const endDateTime = moment(curr.dateObj);
+
+        // no time, exit
+        if (match !== null) {
+            endDateTime.hour(match[1]);
+            endDateTime.minute(match[2]);
+            endDateTime.second(0);
+        }
 
         let prevMatch = null;
         // keep only relevant time from previous day page
         if (startDateTime.isBefore(dateObj, 'day')) {
             if (index === 0) { return prev; }
 
-            prevMatch = array[0].datetime_raw.match(regexp);
+            prevMatch = array[0].datetime_raw[0].match(regexp);
             array[0].dateObj.hour(prevMatch[1]);
 
             if (array[0].dateObj.isBefore(startDateTime)) { return prev; }
@@ -46,7 +52,7 @@ const format = dateObj => {
             if (curr.dateObj !== array[index-1].dateObj) {
                 referenceIndex = index;
             } else {
-                prevMatch = array[referenceIndex].datetime_raw.match(regexp);
+                prevMatch = array[referenceIndex].datetime_raw[0].match(regexp);
                 let prevDate = moment(array[referenceIndex].dateObj);
                 prevDate.hour(prevMatch[1]);
 
@@ -62,13 +68,14 @@ const format = dateObj => {
             'date_time_start': startDateTime.toISOString(),
             'date_time_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',
-            'host': curr.host.join(", "),
+            'host': curr.host,
             'title': curr.title
         };
 
         if (typeof curr.img !== 'undefined') {
-            newEntry.img = 'https:' + curr.img;
+            newEntry.img = 'https://www.sudradio.fr' + curr.img.split('?')[0];
         }
+
 
         prev.push(newEntry);
         return prev;
@@ -78,25 +85,20 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    const day = dateObj.day();
-    let dayUrl = 'semaine';
-
-    if (day === 0) { dayUrl = 'dimanche'; }
-    else if (day === 6) { dayUrl = 'samedi'; }
-
-    let url = `https://www.virginradio.fr/programmes-${dayUrl}/`;
+    const dayFormat = dateObj.format('YYYYMMDD');
+    const url = `https://www.sudradio.fr/programmes/${dayFormat}`;
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-            .find('.programme_container')
+            .find('.show-item')
             .set({
-                'datetime_raw': '.diffused_at',
-                'img': '.avatar > div.presentator span.img > img@src',
-                'title': '.h2',
-                'host': ['span.presentator'],
+                'datetime_raw': ['.show-item-hours time'],
+                'img': '.show-item-media > a > img@src',
+                'title': '.show-item-name',
+                'host': '.show-item-author a',
             })
             .data(function (listing) {
                 listing.dateObj = dateObj;
@@ -124,7 +126,7 @@ const getScrap = dateObj => {
 };
 
 const scrapModule = {
-    getName: 'virgin',
+    getName: 'sudradio',
     getScrap
 };
 

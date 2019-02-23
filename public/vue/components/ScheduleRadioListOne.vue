@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       styleObject: {
-        backgroundImage: `url("/img/radio/${this.radio.code_name}_icon.png")`
+        backgroundImage: `url("/img/radio/schedule/${this.radio.code_name}.png")`
       }
     };
   },

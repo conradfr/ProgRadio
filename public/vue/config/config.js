@@ -16,3 +16,5 @@ export const COOKIE_PREFIX = 'progradio';
 export const COOKIE_TTL = '1Y';
 
 export const TIMEZONE = 'Europe/Paris';
+
+export const DEFAULT_COLLECTION = 'nationwide';
