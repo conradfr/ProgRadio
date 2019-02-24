@@ -61,7 +61,7 @@ class ScheduleEntry
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=150)
+     * @ORM\Column(type="text")
      * @Groups({"export"})
      */
     private $title;

@@ -46,10 +46,6 @@ final class Version20190216183604 extends AbstractMigration implements Container
         $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
 
         $connection->exec(
-            "UPDATE collection SET sort_field = 'share' WHERE id = 1;"
-        );
-
-        $connection->exec(
             "UPDATE collection SET sort_field = 'share', sort_order = 'desc' WHERE id = 1;"
         );
     }
