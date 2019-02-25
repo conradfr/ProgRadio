@@ -64,7 +64,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    let dayFormat = dateObj.day() - 1; // not sure why week start on monday this time
+    let dayFormat = dateObj.day();
     let url = 'https://www.nrj.fr/emissions/jour';
 
     logger.log('info', `fetching ${url}`);
@@ -73,7 +73,6 @@ const fetch = dateObj => {
         return osmosis
             .post(url, {dow: dayFormat.toString()})
             .find('.programItem')
-            .log(console.log)
             .set({
                 'datetime_raw': 'p.time',
                 'title': 'h2.ttl-h1',
