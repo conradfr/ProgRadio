@@ -29,7 +29,6 @@ const format = dateObj => {
             curr.img = 'https://www.radioclassique.fr' + curr.img;
         }
 
-        // console.log(curr);
         prev.push(curr);
 
         return prev;

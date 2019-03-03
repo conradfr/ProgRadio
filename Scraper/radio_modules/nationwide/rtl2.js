@@ -53,10 +53,7 @@ const fetch = dateObj => {
         })
         .catch(function (error) {
             logger.log('error', error);
-        })
-/*        .then(function () {
-
-        })*/;
+        });
 };
 
 const fetchAll = dateObj =>  {

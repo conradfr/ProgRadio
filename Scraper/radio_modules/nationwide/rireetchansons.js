@@ -50,7 +50,6 @@ const format = dateObj => {
         regexp = new RegExp(/De ([0-9]{1,2})[h|H]([0-9]{2}){0,1} à ([0-9]{1,2})[h|H]([0-9]{2})\s:\s([A-Za-zÀ-ÿ0-9\s’'".&]*)*/, 'gm');
 
         while ((match = regexp.exec(curr.description)) !== null) {
-            console.log('loooooooooooooooooooool');
             sectionStartDateTime = moment(dateObj);
             sectionStartDateTime.hour(match[1]);
             sectionStartDateTime.minute(match[2]);
