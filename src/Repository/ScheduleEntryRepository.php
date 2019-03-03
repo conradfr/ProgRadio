@@ -61,10 +61,16 @@ class ScheduleEntryRepository extends EntityRepository
         foreach ($result as $row) {
             $section = $this->hydrateSection($row);
             $codeName = $row['codeName'];
+            $collectionCodeName = $row['collectionCodeName'];
             unset($row['codeName']);
 
+            if (!isset($export[$collectionCodeName])) {
+                $export[$collectionCodeName] = [];
+            }
+
+
             // add show if not already there
-            if (!isset($export[$codeName])) {
+            if (!isset($export[$collectionCodeName][$codeName])) {
                 $radioData = [
                     'codeName' => $codeName,
                     'name' => $row['radio_name'],
@@ -73,7 +79,7 @@ class ScheduleEntryRepository extends EntityRepository
 
                 unset($row['codeName'], $row['radio_name'], $row['radio_share']);
 
-                $export[$codeName] = [
+                $export[$collectionCodeName][$codeName] = [
                     'radio' => $radioData,
                     'show' => $row
                 ];
@@ -81,7 +87,7 @@ class ScheduleEntryRepository extends EntityRepository
 
             // if section, add it to collection
             if (isset($section)) {
-                $export[$codeName]['show']['sections'][] = $section;
+                $export[$collectionCodeName][$codeName]['show']['sections'][] = $section;
             }
         }
 
@@ -138,7 +144,7 @@ class ScheduleEntryRepository extends EntityRepository
                 and dayrange >= :week
                 and r.active = true
     
-        ORDER BY r.id asc, day desc;
+        ORDER BY r.share desc, r.code_name asc, day desc;
 EOT;
 
         $rsm = new ResultSetMapping();
@@ -238,7 +244,6 @@ EOT;
             'active' => true
         ]);
 
-
         if (!empty($radios)) {
             $qb->andWhere('r.codeName IN (:radios)');
             $qb->setParameter('radios', $radios);
@@ -257,14 +262,16 @@ EOT;
     protected function getTimeSpecificSchedulesAndSections(\DateTime $dateTime, array $radios=null) {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
-            ->addSelect('r.name as radio_name, r.share as radio_share')
+            ->addSelect('r.name as radio_name, r.share as radio_share, c.codeName as collectionCodeName')
            ->from('App:ScheduleEntry', 'se')
            ->innerJoin('se.radio', 'r')
+           ->innerJoin('r.collection', 'c')
            ->leftJoin('se.sectionEntries', 'sc')
            ->where('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') <= :datetime')
            ->andWhere('AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') >= :datetime')
            ->andWhere('r.active = :active')
            ->addOrderBy('r.share', 'DESC')
+           ->addOrderBy('r.codeName', 'ASC')
            ->addOrderBy('se.dateTimeStart', 'ASC')
            ->addOrderBy('sc.dateTimeStart', 'ASC')
         ;

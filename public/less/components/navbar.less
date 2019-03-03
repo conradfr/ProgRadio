@@ -2,12 +2,6 @@
 
 .navbar {
 
-  /*
-  .navbar-header {
-    margin-left: 61px;
-  }
-  */
-
   .navbar-brand {
     height: @navbar-height;
     padding-top: 13.5px;
@@ -34,13 +28,15 @@
   .navbar-brand-name > {
     display: inline-block;
     float: left;
-
   }
 
   .navbar-brand-name > img {
     display: inline-block;
     float: left;
     margin: -1px 10px 0;
+
+    width: 30px;
+    height: 24px;
   }
 
   #navbar {
@@ -50,6 +46,24 @@
 
       &:hover {
         opacity: 1;
+      }
+    }
+  }
+}
+
+.body-app {
+  .navbar-header {
+    margin-left: 61px;
+
+    @media (max-width: @screen-xs-min) {
+      .navbar-brand {
+        font-size: ceil((@font-size-base * 1.50));
+
+        .navbar-brand-name {
+          img {
+            display: none;
+          }
+        }
       }
     }
   }

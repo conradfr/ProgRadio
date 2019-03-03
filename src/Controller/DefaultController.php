@@ -36,25 +36,50 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @todo cache strategy
+     *
+     * @param array $data
+     *
+     * @return Response
+     */
+    protected function jsonResponse(array $data): Response {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $response->setContent(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
+
+        return $response;
+    }
+
+    /**
      * @Route(
      *     "/schedule/{date}",
      *     name="schedule"
      * )
      * @ParamConverter("date", options={"format": "Y-m-d"})
      */
-    public function scheduleAction(\DateTime $date, ScheduleManager $scheduleManager)
+    public function scheduleAction(\DateTime $date, ScheduleManager $scheduleManager): Response
     {
         $schedule = $scheduleManager->getDaySchedule($date, true);
 
-        $response = new Response();
-
-        $response->setContent(json_encode([
+        return $this->jsonResponse([
             'schedule' => $schedule
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
+        ]);
+    }
 
-        $response->headers->set('Content-Type', 'application/json');
+    /**
+     * @Route(
+     *     "/radios",
+     *     name="radios"
+     * )
+     */
+    public function radiosAction(EntityManagerInterface $em): response
+    {
+        $radios = $em->getRepository('App:Radio')->getActiveRadios();
 
-        return $response;
+        return $this->jsonResponse([
+            'radios' => $radios
+        ]);
     }
 
     /**
@@ -101,10 +126,12 @@ class DefaultController extends AbstractController
         $dateTime = new \DateTime();
 
         $schedule = $em->getRepository('App:ScheduleEntry')->getTimeSpecificSchedule($dateTime);
+        $collections = $em->getRepository('App:Collection')->getCollections();
 
         return $this->render('default/now.html.twig', [
             'schedule' => $schedule,
-            'date' => $dateTime
+            'collections' => $collections,
+            'date' => $dateTime,
         ]);
     }
 }

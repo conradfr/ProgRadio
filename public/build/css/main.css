@@ -7381,13 +7381,6 @@ input[type="checkbox"]:disabled:checked:after,
   color: inherit;
 }
 /* bootstrap overloading */
-.navbar {
-  /*
-  .navbar-header {
-    margin-left: 61px;
-  }
-  */
-}
 .navbar .navbar-brand {
   height: 50px;
   padding-top: 13.5px;
@@ -7430,6 +7423,8 @@ input[type="checkbox"]:disabled:checked:after,
   display: inline-block;
   float: left;
   margin: -1px 10px 0;
+  width: 30px;
+  height: 24px;
 }
 .navbar #navbar a > img {
   display: block;
@@ -7437,6 +7432,17 @@ input[type="checkbox"]:disabled:checked:after,
 }
 .navbar #navbar a > img:hover {
   opacity: 1;
+}
+.body-app .navbar-header {
+  margin-left: 61px;
+}
+@media (max-width: 480px) {
+  .body-app .navbar-header .navbar-brand {
+    font-size: 20px;
+  }
+  .body-app .navbar-header .navbar-brand .navbar-brand-name img {
+    display: none;
+  }
 }
 body {
   margin-top: 50px;
@@ -7471,9 +7477,6 @@ body .footer a:focus {
 #app {
   overflow-x: hidden;
   background-color: #f3f3f3;
-}
-.collection-switcher {
-  display: none;
 }
 .collection-switcher .collection-control {
   z-index: 2000;
@@ -7926,11 +7929,6 @@ body .footer a:focus {
 }
 .schedule-page {
   margin-top: 70px;
-}
-@media (max-width: 767px) {
-  .schedule-page .title {
-    text-align: center;
-  }
 }
 .schedule-page h5 {
   margin-top: 0;
