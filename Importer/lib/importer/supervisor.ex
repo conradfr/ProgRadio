@@ -18,7 +18,6 @@ defmodule Importer.Supervisor do
        name: :redix},
       Importer.Repo,
       {Task.Supervisor, name: Importer.TaskSupervisor},
-      Importer.ImageImporter,
       Importer.ProcessorMonitor,
       Importer.Queue
     ]

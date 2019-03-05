@@ -1,57 +1,40 @@
 defmodule Importer.ImageImporter do
-  use GenServer
   require Application
   require Logger
-
-  @name :image_importer
+  alias Importer.ImageCache
 
   @image_folder "program"
 
-  # ----- Client Interface -----
-
-  def start_link(_arg) do
-    Logger.info("Starting the image importer ...")
-    GenServer.start_link(__MODULE__, :ok, name: @name)
-  end
-
   @spec import(String.t(), struct) :: tuple
   def import(url, radio) do
-    GenServer.call(@name, {:import, url, radio})
-  end
-
-  # ----- Server callbacks -----
-
-  def init(:ok) do
-    {:ok, nil}
-  end
-
-  def handle_call({:import, url, radio}, _from, _state) do
     filename = get_name(url, radio)
     full_path = "#{Application.get_env(:importer, :image_path)}#{@image_folder}/#{filename}"
 
-    unless Importer.ImageCache.is_cached(full_path) do
+    unless ImageCache.is_cached(full_path) do
       try do
         case full_url(url)
              |> URI.encode()
              |> HTTPoison.get([], follow_redirect: true) do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
             case File.write(full_path, body) do
-              :ok -> {:reply, filename, nil}
-              _ -> {:reply, nil, nil}
+              :ok -> {:ok, filename}
+              _ -> {:ok, nil}
             end
 
           _ ->
-            {:reply, nil, nil}
+            {:ok, nil}
         end
       rescue
         _ ->
           Logger.warn("Error importing image #{url}")
-          {:reply, nil, nil}
+          {:ok, nil}
       catch
-        _ -> {:reply, nil, nil}
+        _ ->
+          Logger.warn("Error importing image #{url}")
+          {:ok, nil}
       end
     else
-      {:reply, filename, nil}
+      {:ok, filename}
     end
   end
 

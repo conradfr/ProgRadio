@@ -46,7 +46,7 @@ vagrantfile:
             folder1:
                 owner: vagrant
                 group: vagrant
-                source: 'D:\\Developpement\\Projets\\ProgRadio'
+                source: '/Users/lcocatrix/Perso/ProgRadio'
                 target: /var/www/progradio
                 sync_type: default
                 smb:

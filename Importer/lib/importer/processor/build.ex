@@ -135,9 +135,14 @@ defmodule Importer.Processor.Builder do
       case head["img"] do
         url when is_binary(url) and url !== "" ->
           try do
-            ImageImporter.import(url, radio)
-            |> (&Map.put(head, "picture_url", &1)).()
-            |> Map.delete("img")
+            with {:ok, imported} <- ImageImporter.import(url, radio)
+              do
+                imported
+                |> (&Map.put(head, "picture_url", &1)).()
+                |> Map.delete("img")
+              else
+              _ -> head
+            end
           rescue
             _ -> head
           catch
