@@ -1,7 +1,12 @@
+const commandLineArgs = require('command-line-args');
 const moment = require('moment-timezone');
-const redis = require("redis");
+const async = require('async');
 const yaml = require('js-yaml');
+const redis = require("redis");
 const fs = require('fs');
+
+const constants = require('./config/constants.js');
+const radiosModule = require('./config/radios.js');
 
 // config
 let config = {};
@@ -15,63 +20,37 @@ try {
 const logger = require('./lib/logger.js');
 logger.init(config.logmail);
 
+const redisClient = redis.createClient(config.redis_dsn);
+
+redisClient.on("error", function (err) {
+    logger.log('error', err);
+    process.exit(1);
+});
+
 // command line
-const commandLineArgs = require('command-line-args');
 const optionDefinitions = [
-    { name: 'radios', alias: 'r', type: String, multiple: true }
+    { name: 'radios', alias: 'r', type: String, multiple: true },
+    { name: 'collection', alias: 'c', type: String, multiple: true }
 ];
 const options = commandLineArgs(optionDefinitions);
 
-// queue constants
-const QUEUE_SCHEDULE_ONE_PREFIX = 'schedule_input:one:';
-const QUEUE_SCHEDULE_ONE_TTL = 172800;
-const QUEUE_LIST = 'schedule_input:queue';
-
-// radios
-const radios = options['radios'] || [
-    'rtl',
-    'franceinter',
-    'rmc',
-    'nrj',
-    'europe1',
-    'franceinfo',
-    'nostalgie',
-    'funradio',
-    'rfm',
-    'skyrock',
-    'rtl2',
-    'virgin',
-    'franceculture',
-    'radioclassique',
-    'rireetchansons',
-    'radionova',
-    'sudradio',
-    'ouifm',
-    'cherie',
-    'mradio',
-    'mouv',
-    'francemusique'
-];
-
-const redisClient = redis.createClient(config.redis_dsn);
 const dateObj = moment();
 dateObj.tz("Europe/Paris");
 
 logger.log('info', 'Starting ...');
 
-const getResults = radios => {
+const getResults = async (radios) => {
+    const all = await radios.map(async function (radio) {
+        const radio_module = require(`./radio_modules/${radio}.js`);
 
-    return radios.map(function (radio) {
-        const radio_module = require(`./radio_modules/nationwide/${radio}.js`);
-
-        return radio_module.getScrap(dateObj)
+        return await radio_module.getScrap(dateObj)
             .then(function(data) {
                 const dateFormat = 'DD-MM-YYYY';
 
                 logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
 
                 if (data.length > 0) {
-                    const redisKey = `${QUEUE_SCHEDULE_ONE_PREFIX}${radio_module.getName}:${dateObj.format(dateFormat)}`;
+                    const redisKey = `${constants.QUEUE_SCHEDULE_ONE_PREFIX}${radio_module.getName}:${dateObj.format(dateFormat)}`;
 
                     const dataExport = {
                         'radio': radio_module.getName,
@@ -79,9 +58,9 @@ const getResults = radios => {
                         'items': data
                     };
 
-                    redisClient.setex(redisKey, QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
-                    redisClient.LREM(QUEUE_LIST, 1, redisKey);
-                    redisClient.RPUSH(QUEUE_LIST, redisKey);
+                    redisClient.setex(redisKey, constants.QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
+                    redisClient.LREM(constants.QUEUE_LIST, 1, redisKey);
+                    redisClient.RPUSH(constants.QUEUE_LIST, redisKey);
                 }
                 else {
                     // Log specifically when no data is found, in case of website change etc
@@ -92,20 +71,35 @@ const getResults = radios => {
                 logger.log('error', error);
             });
     });
+
+  return Promise.all(all);
 };
 
-redisClient.on("error", function (err) {
-    logger.log('error', err);
-    process.exit(1);
-});
+let funList = null;
 
-redisClient.on("ready", function () {
-    const results = getResults(radios);
-    const schedule = Promise.all(results);
+if (options['radios']) {
+    funList = [
+        async function() {
+            const radios = options['radios'].map(radio => radiosModule.getRadioPath(radio));
+            return await getResults(radios);
+        }
+    ];
+}
+else {
+  const collections = options['collection'] ? options['collection'] : radiosModule.getCollections();
 
-    schedule.then(() => {
+  funList = collections.map(function (collection) {
+      return async function() {
+          return await getResults(radiosModule.getRadiosWithPath(collection));
+    }
+  });
+}
+
+async.series(
+    funList,
+    function(err, results) {
         redisClient.quit();
         logger.log('info', 'All done, exiting ...');
         process.exit(1);
-    });
-});
+    }
+);
