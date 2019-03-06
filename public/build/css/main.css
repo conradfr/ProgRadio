@@ -7494,6 +7494,11 @@ body .footer a:focus {
   background-color: #0c7cd5;
   padding-top: 2px;
 }
+@media (max-width: 768px) {
+  .collection-switcher .collection-control {
+    top: 15px;
+  }
+}
 .collection-switcher .collection-control:hover {
   color: #e6e6e6;
   background-color: #0b74c7;
