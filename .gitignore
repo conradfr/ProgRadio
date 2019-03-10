@@ -8,11 +8,11 @@
 !var/sessions/.gitkeep
 
 (Symfony4)
+/public/bundles/
+/.web-server-pid
 /.env.local
 /.env.local.php
 /.env.*.local
-/public/bundles/
-/.web-server-pid
 
 # Parameters
 /config/scraper_parameters.yml

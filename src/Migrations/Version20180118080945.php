@@ -24,13 +24,13 @@ class Version20180118080945 extends AbstractMigration implements ContainerAwareI
     /**
      * @param Schema $schema
      */
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
 
     }
 
-    public function postUp(Schema $schema)
+    public function postUp(Schema $schema): void
     {
         $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
 
@@ -117,7 +117,7 @@ class Version20180118080945 extends AbstractMigration implements ContainerAwareI
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
 

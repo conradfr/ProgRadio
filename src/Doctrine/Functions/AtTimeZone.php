@@ -14,7 +14,7 @@ class AtTimeZone extends FunctionNode
 
     public function __construct()
     {
-        $this->name = 'AT_TIME_ZONE';
+        parent::__construct('AT_TIME_ZONE');
     }
 
     public function parse(Parser $parser)

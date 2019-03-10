@@ -19,7 +19,7 @@ final class Version20190216183604 extends AbstractMigration implements Container
         $this->container = $container;
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
@@ -30,7 +30,7 @@ final class Version20190216183604 extends AbstractMigration implements Container
         $this->addSql('ALTER INDEX idx_secschedid RENAME TO IDX_BC76FA146DDA074');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
@@ -41,7 +41,7 @@ final class Version20190216183604 extends AbstractMigration implements Container
         $this->addSql('ALTER TABLE collection DROP sort');
     }
 
-    public function postUp(Schema $schema)
+    public function postUp(Schema $schema): void
     {
         $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
 

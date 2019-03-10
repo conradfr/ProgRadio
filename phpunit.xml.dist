@@ -9,10 +9,10 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
-        <server name="KERNEL_CLASS" value="AppKernel" />
+        <server name="KERNEL_CLASS" value="App\Kernel" />
 
         <!-- ###+ symfony/framework-bundle ### -->
-        <env name="APP_ENV" value="dev"/>
+        <env name="APP_ENV" value="test"/>
         <env name="APP_SECRET" value="c548db2b943982e830befac1423e9f62"/>
         <!-- env name="TRUSTED_PROXIES" value="127.0.0.1,127.0.0.2" -->
         <!-- env name="TRUSTED_HOSTS" value="'^localhost|example\.com$'" -->
@@ -42,11 +42,11 @@
     <filter>
         <whitelist>
             <directory>src</directory>
-            <exclude>
+<!--            <exclude>
                 <directory>src/*Bundle/Resources</directory>
                 <directory>src/*/*Bundle/Resources</directory>
                 <directory>src/*/Bundle/*Bundle/Resources</directory>
-            </exclude>
+            </exclude>-->
         </whitelist>
     </filter>
 </phpunit>

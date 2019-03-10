@@ -13,7 +13,7 @@ class Extract extends FunctionNode
 
     public function __construct()
     {
-        $this->name = 'EXTRACT';
+        parent::__construct('EXTRACT');
     }
 
     public function parse(Parser $parser)
