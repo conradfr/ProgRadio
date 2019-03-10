@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block title %}Parts de marché{% endblock %}
+{% block footerclasssupp %}{% endblock %}
+
+{% block body %}
+<div id="admin" class="container">
+    <div class="row">
+        <div class="col-md-6">
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

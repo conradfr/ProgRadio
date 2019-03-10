@@ -78,4 +78,20 @@ class RadioRepository extends EntityRepository
 
        return array_column($result, 'codeName');
     }
+
+    /**
+     *
+     * @return array
+     */
+    public function getNameAndShares()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('r.id, r.codeName, r.name, r.share')
+            ->from('App:Radio', 'r')
+            ->addOrderBy('r.share', 'DESC')
+            ->addOrderBy('r.codeName', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
 }
