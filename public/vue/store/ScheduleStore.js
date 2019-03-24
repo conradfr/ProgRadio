@@ -5,12 +5,12 @@ import filter from 'lodash/fp/filter';
 import compose from 'lodash/fp/compose';
 import without from 'lodash/without';
 import forEach from 'lodash/forEach';
-import findIndex from 'lodash/findIndex';
 import find from 'lodash/fp/find';
 
 import * as config from '../config/config';
 
 import ScheduleApi from '../api/ScheduleApi';
+import ScheduleUtils from '../utils/ScheduleUtils';
 
 const moment = require('moment-timezone');
 
@@ -21,122 +21,12 @@ Vue.use(VueCookie);
 const COOKIE_EXCLUDE = `${config.COOKIE_PREFIX}-exclude`;
 const COOKIE_COLLECTION = `${config.COOKIE_PREFIX}-collection`;
 
-const enforceScrollIndex = (rawScrollIndex) => {
-  let scrollIndex = rawScrollIndex;
-  if (scrollIndex < 0) {
-    scrollIndex = 0;
-  } else {
-    const maxScroll = (config.MINUTE_PIXEL * 1440 * config.DAYS)
-      - (window.innerWidth - 71) + config.GRID_VIEW_EXTRA;
-    if (scrollIndex >= maxScroll) {
-      scrollIndex = maxScroll;
-    }
-  }
-
-  return scrollIndex;
-};
-
-const initialScrollIndexFunction = (currentDateTime) => {
-  const hourPixels = config.MINUTE_PIXEL * 60;
-  let reduceToHour = 0;
-
-  if (window.innerWidth > (hourPixels + (config.MINUTE_PIXEL * 30))) {
-    reduceToHour = Math.abs(Math.floor(window.innerWidth / config.GRID_INDEX_BREAK));
-  } else {
-    const minutes = currentDateTime.minute();
-    if (minutes < 15) {
-      reduceToHour = 0.25;
-    } else if (minutes > 45) {
-      reduceToHour = -0.5;
-    }
-  }
-
-  return enforceScrollIndex((currentDateTime.hours() - reduceToHour) * hourPixels + 1);
-};
-
 const cursorTime = moment().tz(config.TIMEZONE);
 
-const initialScrollIndex = initialScrollIndexFunction(cursorTime);
-
-const updatedProgramTextCalc = (schedule, scheduleDisplay, scrollIndex) => {
-  const update = {};
-
-  forEach(schedule, (programs) => {
-    forEach(programs, (program, key) => {
-      let left = 0;
-
-      if (scheduleDisplay[key].container.left < scrollIndex
-        && (scheduleDisplay[key].container.left + scheduleDisplay[key].container.width)
-              > scrollIndex) {
-        left = scrollIndex - scheduleDisplay[key].container.left;
-      }
-
-      if (left !== scheduleDisplay[key].textLeft) {
-        update[key] = left;
-      }
-    });
-  });
-
-  return update;
-};
-
-const getUpdatedProgramText = (state) => {
-  const {
-    schedule,
-    scheduleDisplay,
-    scrollIndex
-  } = state;
-
-  return updatedProgramTextCalc(schedule, scheduleDisplay, scrollIndex);
-};
-
-/* eslint-disable no-undef */
-const getScheduleDisplay = (schedule, currentTime) => {
-  const startDay = moment(currentTime).startOf('day');
-  const result = {};
-
-  forEach(schedule, (programs) => {
-    forEach(programs, (program, key) => {
-      const width = program.duration * config.MINUTE_PIXEL;
-      const left = moment(program.start_at).diff(startDay, 'minutes') * config.MINUTE_PIXEL;
-
-      result[key] = {
-        container: {
-          left,
-          width,
-        },
-        textLeft: 0
-      };
-    });
-  });
-
-  const updatedProgramText = updatedProgramTextCalc(schedule, result, initialScrollIndex);
-
-  forEach(updatedProgramText, (data, key) => {
-    result[key].textLeft = data;
-  });
-
-  return result;
-};
-
-const getCollectionIndex = (name, collections) => findIndex(collections, c => c.code_name === name);
-
-const getNextCollection = (current, collections, way) => {
-  const indexOfCurrentCollection = getCollectionIndex(current, collections);
-
-  let newIndex = 0;
-  if (way === 'backward') {
-    newIndex = indexOfCurrentCollection === 0 ? collections.length - 1
-      : indexOfCurrentCollection - 1;
-  } else if (way === 'forward') {
-    newIndex = collections.length === (indexOfCurrentCollection + 1) ? 0
-      : indexOfCurrentCollection + 1;
-  }
-
-  return collections[newIndex].code_name;
-};
+const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
 
 // initial state
+/* eslint-disable no-undef */
 const initState = {
   radios,
   categories,
@@ -173,7 +63,7 @@ const storeGetters = {
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
   // sort by share/name/etc, desc
   radiosRanked: (state) => {
-    const index = getCollectionIndex(state.currentCollection, state.collections);
+    const index = ScheduleUtils.getCollectionIndex(state.currentCollection, state.collections);
     const { sort_field: sortField, sort_order: sortOrder } = state.collections[index];
 
     return compose(
@@ -199,8 +89,11 @@ const storeGetters = {
 
 // actions
 const storeActions = {
+
+  // ---------- SCROLL ----------
+
   scrollToCursor: ({ state, commit }) => {
-    commit('scrollSet', initialScrollIndexFunction(state.cursorTime));
+    commit('scrollSet', ScheduleUtils.initialScrollIndexFunction(state.cursorTime));
     commit('updateDisplayData');
   },
   scroll: ({ commit }, x) => {
@@ -219,14 +112,19 @@ const storeActions = {
     commit('scrollClickSet', value);
     commit('updateDisplayData');
   },
+
+  // ---------- COLLECTIONS ----------
+
   collectionBackward: ({ state, commit }) => {
     commit('collectionSwitch',
-      getNextCollection(state.currentCollection, state.collections, 'backward'));
+      ScheduleUtils.getNextCollection(state.currentCollection, state.collections, 'backward'));
   },
   collectionForward: ({ state, commit }) => {
     commit('collectionSwitch',
-      getNextCollection(state.currentCollection, state.collections, 'forward'));
+      ScheduleUtils.getNextCollection(state.currentCollection, state.collections, 'forward'));
   },
+
+  // ---------- CATEGORY ----------
 
   categoryFilterFocus: ({ commit }, params) => {
     commit('setCategoryFilterFocus', params);
@@ -234,6 +132,9 @@ const storeActions = {
   toggleExcludeCategory: ({ commit }, category) => {
     commit('toggleExcludeCategory', category);
   },
+
+  // ---------- CALENDAR ----------
+
   calendarToday: ({ commit, dispatch }) => {
     const newDate = moment().tz(config.TIMEZONE);
     commit('updateCursor', newDate);
@@ -259,6 +160,9 @@ const storeActions = {
       dispatch('getSchedule');
     });
   },
+
+  // ---------- SCHEDULE ----------
+
   getSchedule: ({ state, commit }) => {
     const dateStr = state.cursorTime.format('YYYY-MM-DD');
 
@@ -270,7 +174,7 @@ const storeActions = {
     }
 
     Vue.nextTick(() => {
-      ScheduleApi.getSchedule(dateStr)
+      ScheduleApi.getSchedule(dateStr, baseUrl)
         .then(schedule => commit('updateSchedule', schedule))
         .then(() => commit('setLoading', false));
     });
@@ -300,29 +204,31 @@ const storeMutations = {
       return;
     }
 
-    const update = getUpdatedProgramText(state);
+    const update = ScheduleUtils.getUpdatedProgramText(state);
 
     forEach(update, (data, key) => {
-      state.scheduleDisplay[key].textLeft = data;
+      Vue.set(state.scheduleDisplay[key], 'textLeft', data);
     });
   },
   scrollSet(state, x) {
-    state.scrollIndex = x;
+    Vue.set(state, 'scrollIndex', x);
   },
   scrollTo(state, x) {
     const newIndex = state.scrollIndex + x;
-    state.scrollIndex = enforceScrollIndex(newIndex);
+    Vue.set(state, 'scrollIndex', ScheduleUtils.enforceScrollIndex(newIndex));
   },
   updateCursor(state, value) {
     Vue.set(state, 'cursorTime', value);
   },
   scrollClickSet: (state, value) => {
-    state.scrollClick = value;
+    Vue.set(state, 'scrollClick', value);
   },
   collectionSwitch(state, collection) {
-    state.currentCollection = collection;
+    Vue.set(state, 'currentCollection', collection);
 
-    Vue.cookie.set(COOKIE_COLLECTION, collection, { expires: config.COOKIE_TTL });
+    setTimeout(() => {
+      Vue.cookie.set(COOKIE_COLLECTION, collection, { expires: config.COOKIE_TTL });
+    }, 300);
   },
   setCategoryFilterFocus(state, params) {
     state.categoryFilterFocus[params.element] = params.status;
@@ -331,17 +237,21 @@ const storeMutations = {
     if (state.categoriesExcluded.indexOf(category) === -1) {
       state.categoriesExcluded.push(category);
     } else {
-      state.categoriesExcluded = without(state.categoriesExcluded, category);
+      Vue.set(state, 'categoriesExcluded', without(state.categoriesExcluded, category));
     }
 
-    Vue.cookie.set(COOKIE_EXCLUDE, state.categoriesExcluded.join('|'),
-      { expires: config.COOKIE_TTL });
+    setTimeout(() => {
+      Vue.cookie.set(COOKIE_EXCLUDE, state.categoriesExcluded.join('|'),
+        { expires: config.COOKIE_TTL });
+    }, 500);
   },
   setLoading: (state, value) => {
-    state.loading = value;
+    Vue.set(state, 'loading', value);
   },
   updateSchedule: (state, value) => {
-    const scheduleDisplay = getScheduleDisplay(value, state.cursorTime);
+    const scheduleDisplay = ScheduleUtils.getScheduleDisplay(
+      value, state.cursorTime, initialScrollIndex
+    );
     Vue.set(state, 'schedule', value);
     Vue.set(state, 'scheduleDisplay', scheduleDisplay);
   }

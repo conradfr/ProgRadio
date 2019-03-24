@@ -43,6 +43,8 @@
 !/public/media/cache/page_thumb/media/.gitkeep
 !/public/media/cache/page_thumb/.gitkeep
 
+/public/build/js/*
+
 # Composer PHAR
 /composer.phar
 
