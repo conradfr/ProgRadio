@@ -22,6 +22,9 @@ const format = dateObj => {
   const sections = [];
 
   scrapedData.forEach(function(curr) {
+    if (typeof curr.json === 'undefined') {
+      return;
+    }
     const content = JSON.parse(curr.json.substr(20));
 
     let newEntry = {
@@ -39,7 +42,7 @@ const format = dateObj => {
 
     const datetime_raw = content.contentReducer.airtime;
 
-    if (datetime_raw === null) {
+    if (datetime_raw === null || typeof datetime_raw === 'undefined') {
       return;
     }
 
@@ -174,11 +177,13 @@ const fetch = dateObj => {
         return osmosis
           .get(url)
           .select('.concepts-list-block-container > a')
+            .set({'test': '@href'})
           .do(
             osmosis.follow('@href')
               .find('body')
               .set({
-                'json': 'script[1]'
+                'json': 'script[1]',
+                'test2': 'script[0]'
               })
 /*              .set({
                 'img': '.banner-image > .banner-image-visual@src',
