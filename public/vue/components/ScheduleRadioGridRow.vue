@@ -23,18 +23,11 @@ import ScheduleRadioProgram from './ScheduleRadioProgram.vue';
 
 export default {
   components: { ScheduleRadioProgram },
-  props: ['radio', 'displayNoSchedule'],
+  props: ['radio', 'displayNoSchedule', 'schedule', 'hasSchedule'],
   computed: mapState({
     noProgramStyleObject(state) {
       return { left: `${state.schedule.scrollIndex}px` };
     },
-    schedule(state) {
-      return state.schedule.schedule[this.radio];
-    },
-    hasSchedule(state) {
-      return (state.schedule.schedule[this.radio]
-        && Object.keys(state.schedule.schedule[this.radio]).length > 0) || false;
-    }
   })
 };
 </script>

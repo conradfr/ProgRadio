@@ -8,27 +8,26 @@
                     <div class="program-description">{{ program.description }}</div>
                 </div>
             </div>-->
-
     <div class="program" v-on:mouseover.once="hover = !hover"
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
       <div class="program-inner">
         <div class="program-img" v-if="program.picture_url && (hover || isCurrent)">
-          <img v-bind:src="program.picture_url | picture" alt="" @mousedown.prevent="">
+          <img v-bind:src="program.picture_url | picture" alt="" @mousedown.prevent="" v-once>
         </div>
         <div class="program-infos" :style="infosStyle">
-          <div class="program-title">
-            <span class="schedule-display">{{ scheduleDisplay }}</span>{{ program.title }}
+          <div class="program-title" v-once>
+            <!--<span class="schedule-display">{{ scheduleDisplay }}</span>-->{{ program.title }}
           </div>
           <div class="program-host">{{ program.host }}</div>
           <div class="program-description-short"
-               v-bind:class="{ 'program-description-nohost': !program.host }">
+               v-bind:class="{ 'program-description-nohost': !program.host }" v-once>
             <div class="program-description-short-inner">
               {{ program.description | shorten(program.duration) }}
             </div>
           </div>
         </div>
         <schedule-radio-section v-for="entry in program.sections" :key="entry.hash"
-          :program_start="program.start_at" :section="entry">
+          :program_start="program.start_at" :section="entry" v-once>
         </schedule-radio-section>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="program-section" :style="styleObject" :id="section.hash"
-    v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
+    v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()" v-once>
   </div>
 </template>
 
@@ -12,8 +12,7 @@ const moment = require('moment');
 export default {
   props: ['program_start', 'section'],
   data() {
-    const startProgram = moment(this.program_start);
-    const left = moment(this.section.start_at).diff(startProgram, 'minutes') * MINUTE_PIXEL;
+    const left = moment(this.section.start_at).diff(this.program_start, 'minutes') * MINUTE_PIXEL;
 
     return {
       styleObject: {

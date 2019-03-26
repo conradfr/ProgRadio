@@ -1,7 +1,4 @@
 <template>
-  <!--<a v-bind:href="'/radio/' + radio.code_name">
-    <div class="radio-logo" v-bind:title="radio.name" :style="styleObject"></div>
-    </a>-->
   <a v-on:click="play" :title="radio.name" :style="styleObject">
     <div class="radio-logo" :title="radio.name" :style="styleObject">
       <div class="radio-logo-play"

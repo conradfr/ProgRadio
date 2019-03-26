@@ -28,9 +28,9 @@ const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
 // initial state
 /* eslint-disable no-undef */
 const initState = {
-  radios,
-  categories,
-  collections,
+  radios: Object.freeze(radios),
+  categories: Object.freeze(categories),
+  collections: Object.freeze(collections),
   schedule: {},
   scheduleDisplay: {},
   cursorTime,
@@ -252,7 +252,7 @@ const storeMutations = {
     const scheduleDisplay = ScheduleUtils.getScheduleDisplay(
       value, state.cursorTime, initialScrollIndex
     );
-    Vue.set(state, 'schedule', value);
+    Vue.set(state, 'schedule', Object.freeze(value));
     Vue.set(state, 'scheduleDisplay', scheduleDisplay);
   }
 };

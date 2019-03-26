@@ -9,9 +9,12 @@
       v-on:panleft="onPan" v-on:panright="onPan"
       v-on:panstart="onPanStart" v-on:panend="onPanEnd">
       <schedule-radio-grid-row
-        v-for="entry in radios" :key="entry.code_name"
+        v-for="entry in radios"
+        :key="entry.code_name"
         :radio="entry.code_name"
         :displayNoSchedule="displayNoSchedule"
+        :schedule="getSchedule(entry.code_name)"
+        :hasSchedule="hasSchedule(entry.code_name)"
       >
       </schedule-radio-grid-row>
     </v-touch>
@@ -67,6 +70,13 @@ export default {
   },
   /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
   methods: {
+    getSchedule(radio) {
+      return this.$store.state.schedule.schedule[radio];
+    },
+    hasSchedule(radio) {
+      return (this.$store.state.schedule.schedule[radio]
+          && Object.keys(this.$store.state.schedule.schedule[radio]).length > 0) || false;
+    },
     onSwipe(event) {
       this.swipeActive = true;
       setInterval(this.swipeEnd, 1000);

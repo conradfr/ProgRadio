@@ -35,7 +35,7 @@
     <div class="timeline-control timeline-control-right" v-on:click="clickForward">
       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </div>
-    <div v-for="hour in 24" :key="hour" class="time">
+    <div v-for="hour in 24" :key="hour" class="time" v-once>
       {{ hour | toTime }}
     </div>
   </div>

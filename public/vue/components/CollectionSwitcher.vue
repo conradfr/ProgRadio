@@ -1,5 +1,5 @@
 <template>
-  <div class="collection-switcher">
+  <div class="collection-switcher" v-once>
       <div class="collection-control collection-backward"
            v-on:click="clickCollectionBackward">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
