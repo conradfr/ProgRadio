@@ -16,7 +16,7 @@
         </div>
         <div class="program-infos" :style="infosStyle">
           <div class="program-title" v-once>
-            <!--<span class="schedule-display">{{ scheduleDisplay }}</span>-->{{ program.title }}
+            <span class="schedule-display">{{ scheduleDisplay }}</span>{{ program.title }}
           </div>
           <div class="program-host">{{ program.host }}</div>
           <div class="program-description-short"
