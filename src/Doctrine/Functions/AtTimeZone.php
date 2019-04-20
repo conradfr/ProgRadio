@@ -9,15 +9,20 @@ use Doctrine\ORM\Query\SqlWalker;
 
 class AtTimeZone extends FunctionNode
 {
-    public $dateExpression = null;
-    public $timezoneExpression = null;
+    public $dateExpression;
+    public $timezoneExpression;
 
     public function __construct()
     {
         parent::__construct('AT_TIME_ZONE');
     }
 
-    public function parse(Parser $parser)
+    /**
+     * @param Parser $parser
+     *
+     * @throws \Doctrine\ORM\Query\QueryException
+     */
+    public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER); // (2)
         $parser->match(Lexer::T_OPEN_PARENTHESIS); // (3)
@@ -27,7 +32,12 @@ class AtTimeZone extends FunctionNode
         $parser->match(Lexer::T_CLOSE_PARENTHESIS); // (3)
     }
 
-    public function getSql(SqlWalker $sqlWalker)
+    /**
+     * @param SqlWalker $sqlWalker
+     *
+     * @return string
+     */
+    public function getSql(SqlWalker $sqlWalker): string
     {
         return $this->dateExpression->dispatch($sqlWalker).' AT TIME ZONE ( '
             .$this->timezoneExpression->dispatch($sqlWalker).

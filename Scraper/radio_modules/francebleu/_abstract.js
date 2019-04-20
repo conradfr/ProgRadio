@@ -8,7 +8,7 @@ const format = (dateObj, name) => {
     const mains = [];
     scrapedData[name].forEach(function(curr) {
         let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s{1,30}-\s([0-9]{1,2})[h|H]([0-9]{2})/);
-        match = curr.datetime_raw.match(regexp);
+        let match = curr.datetime_raw.match(regexp);
 
         if (match === null) {
             return;
@@ -77,7 +77,7 @@ const format = (dateObj, name) => {
             }
         });
 
-        newEntry = {
+        const newEntry = {
             'date_time_start': startDateTime.toISOString(),
             'date_time_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',

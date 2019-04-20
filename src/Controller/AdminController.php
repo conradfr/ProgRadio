@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Radio;
 use App\Form\SharesType;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -16,6 +16,10 @@ class AdminController extends AbstractController
      *     "/admin",
      *     name="admin"
      * )
+     *
+     * @param EntityManagerInterface $em
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(EntityManagerInterface $em)
     {
@@ -29,6 +33,11 @@ class AdminController extends AbstractController
      *     "/admin/shares",
      *     name="admin_shares"
      * )
+     *
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function sharesAction(EntityManagerInterface $em, Request $request)
     {

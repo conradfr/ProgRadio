@@ -12,7 +12,10 @@ class RadioRepository extends EntityRepository
     protected const CACHE_RADIO_TTL = 43200; // half-day
 
     /**
-     * @return array
+     * @param string $codeName
+     *
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getRadio($codeName) {
         $query = $this->getEntityManager()->createQuery(
@@ -31,15 +34,13 @@ class RadioRepository extends EntityRepository
             'codename' => $codeName
         ]);
 
-        $result = $query->getOneOrNullResult();
-
-        return $result;
+        return $query->getOneOrNullResult();
     }
 
     /**
      * @return array
      */
-    public function getActiveRadios() {
+    public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(
             'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, 
                     c.codeName as category, cl.codeName as collection
@@ -53,17 +54,17 @@ class RadioRepository extends EntityRepository
         $query->setParameter('active', true);
 
         $query->useResultCache(true, self::CACHE_RADIO_TTL, 'active_radios');
-        $result = $query->getResult();
-
-        return $result;
+        return $query->getResult();
     }
 
     /**
+     * @param bool $filterbyActive
+     *
      * @return array
      */
-    public function getAllCodename($filterbyActive=true) {
+    public function getAllCodename($filterbyActive=true): array {
         $queryString = 'SELECT r.codeName' . PHP_EOL
-                        . 'FROM App:Radio r' . PHP_EOL;;
+                        . 'FROM App:Radio r' . PHP_EOL;
 
         if ($filterbyActive) {
             $queryString .= ' WHERE r.active = TRUE'.PHP_EOL;

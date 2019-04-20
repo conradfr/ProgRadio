@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Service\ScheduleManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -21,8 +21,12 @@ class DefaultController extends AbstractController
      *      "changefreq": "daily"
      *      }
      * )
+     *
+     * @param EntityManagerInterface $em
+     *
+     * @return Response
      */
-    public function indexAction(EntityManagerInterface $em)
+    public function indexAction(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository('App:Radio')->getActiveRadios();
         $categories = $em->getRepository('App:Category')->getCategories();
@@ -57,6 +61,10 @@ class DefaultController extends AbstractController
      *     name="schedule"
      * )
      * @ParamConverter("date", options={"format": "Y-m-d"})
+     *
+     * @param \DateTime $date
+     * @param ScheduleManager $scheduleManager
+     * @return Response
      */
     public function scheduleAction(\DateTime $date, ScheduleManager $scheduleManager): Response
     {
@@ -72,6 +80,10 @@ class DefaultController extends AbstractController
      *     "/radios",
      *     name="radios"
      * )
+     *
+     * @param EntityManagerInterface $em
+     *
+     * @return Response
      */
     public function radiosAction(EntityManagerInterface $em): response
     {
@@ -91,8 +103,15 @@ class DefaultController extends AbstractController
      *      "changefreq": "daily"
      *      }
      * )
+     *
+     * @param $codename
+     * @param EntityManagerInterface $em
+     * @param ScheduleManager $scheduleManager
+     *
+     * @return Response
+     * @throws \Exception
      */
-    public function radioAction($codename, EntityManagerInterface $em, ScheduleManager $scheduleManager)
+    public function radioAction($codename, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
     {
         $dateTime = new \DateTime();
 
@@ -120,8 +139,13 @@ class DefaultController extends AbstractController
      *      "changefreq": "hourly"
      *      }
      * )
+     *
+     * @param EntityManagerInterface $em
+     *
+     * @return Response
+     * @throws \Exception
      */
-    public function nowAction(EntityManagerInterface $em)
+    public function nowAction(EntityManagerInterface $em): Response
     {
         $dateTime = new \DateTime();
 

@@ -141,7 +141,7 @@ class ScheduleEntry
     }
 
     /**
-     * @param \DateTime $ateTimeStart
+     * @param \DateTime $dateTimeStart
      * @return ScheduleEntry
      */
     public function setDateTimeStart($dateTimeStart)

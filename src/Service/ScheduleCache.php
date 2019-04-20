@@ -31,7 +31,7 @@ class ScheduleCache
      * @param Client $redis
      * @param SerializerInterface $serializer
      */
-    public function __construct(EntityManagerInterface $entityManager, \Predis\Client $redis, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $entityManager, Client $redis, SerializerInterface $serializer)
     {
         $this->em = $entityManager;
         $this->redis = $redis;
@@ -119,7 +119,7 @@ class ScheduleCache
      *
      * @return integer Number of fields that were removed
      */
-    public function removeRadiosFromDay(\DateTime $day, string $radioCodeName): int
+    public function removeRadiosFromDay(\DateTime $day, $radioCodeName): int
     {
         if (!is_array($radioCodeName)) {
             $radioCodeName = [$radioCodeName];

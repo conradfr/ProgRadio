@@ -7,9 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-use AppBundle\Entity\Radio;
-use AppBundle\Entity\Category;
-
 /**
  * Auto-generated Migration: Please modify to your needs!
  */

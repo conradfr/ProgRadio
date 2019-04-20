@@ -10,7 +10,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
  */
 class ScheduleEntryRepository extends EntityRepository
 {
-    const DAY_FORMAT = 'Y-m-d';
+    protected const DAY_FORMAT = 'Y-m-d';
 
     /**
      * @param \DateTime $dateTime
@@ -18,7 +18,7 @@ class ScheduleEntryRepository extends EntityRepository
      *
      * @return array
      */
-    public function getDaySchedule(\DateTime $dateTime, array $radios=null)
+    public function getDaySchedule(\DateTime $dateTime, array $radios=null): array
     {
         $result = $this->getSchedulesAndSections($dateTime, $radios);
 
@@ -52,7 +52,7 @@ class ScheduleEntryRepository extends EntityRepository
      *
      * @return array
      */
-    public function getTimeSpecificSchedule(\DateTime $dateTime, array $radios=null)
+    public function getTimeSpecificSchedule(\DateTime $dateTime, array $radios=null): array
     {
         $result = $this->getTimeSpecificSchedulesAndSections($dateTime, $radios);
 
@@ -99,8 +99,9 @@ class ScheduleEntryRepository extends EntityRepository
      * and the difference with the same day the week before
      *
      * @return array
+     * @throws \Exception
      */
-    public function getStatsByDayAndRadio()
+    public function getStatsByDayAndRadio(): array
     {
         $dateTime = new \DateTime();
         $dateTimeOneWeek = clone $dateTime;
@@ -181,7 +182,7 @@ EOT;
      *
      * @return array|null
      */
-    protected function hydrateSection(&$row)
+    protected function hydrateSection(&$row): ?array
     {
         if (!isset($row['section_title'])) {
             return null;
@@ -204,7 +205,7 @@ EOT;
     /**
      * @return string
      */
-    protected function getScheduleSelectString()
+    protected function getScheduleSelectString(): string
     {
         return 'r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
                 . 'AT_TIME_ZONE(AT_TIME_ZONE(se.dateTimeStart,\'UTC\'), \'Europe/Paris\') as start_at,'
@@ -221,7 +222,7 @@ EOT;
      *
      * @return array
      */
-    protected function getSchedulesAndSections(\DateTime $dateTime, array $radios=null) {
+    protected function getSchedulesAndSections(\DateTime $dateTime, array $radios=null): array {
         $dateTime->setTime('00', '00', '00');
         $dateTimeEnd = clone $dateTime;
         $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
@@ -259,7 +260,7 @@ EOT;
      *
      * @return array
      */
-    protected function getTimeSpecificSchedulesAndSections(\DateTime $dateTime, array $radios=null) {
+    protected function getTimeSpecificSchedulesAndSections(\DateTime $dateTime, array $radios=null): array {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
             ->addSelect('r.name as radio_name, r.share as radio_share, c.codeName as collectionCodeName')

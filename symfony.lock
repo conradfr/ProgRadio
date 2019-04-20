@@ -122,6 +122,9 @@
     "nette/robot-loader": {
         "version": "v3.1.1"
     },
+    "nette/schema": {
+        "version": "v1.0.0"
+    },
     "nette/utils": {
         "version": "v2.5.3"
     },
@@ -175,6 +178,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "roave/security-advisories": {
+        "version": "dev-master"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",

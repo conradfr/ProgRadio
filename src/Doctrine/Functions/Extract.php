@@ -8,15 +8,20 @@ use Doctrine\ORM\Query\Lexer;
 
 class Extract extends FunctionNode
 {
-    public $firstDateExpression = null;
-    public $secondDateExpression = null;
+    public $firstDateExpression;
+    public $secondDateExpression;
 
     public function __construct()
     {
         parent::__construct('EXTRACT');
     }
 
-    public function parse(Parser $parser)
+    /**
+     * @param Parser $parser
+     *
+     * @throws \Doctrine\ORM\Query\QueryException
+     */
+    public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
@@ -30,7 +35,12 @@ class Extract extends FunctionNode
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
-    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
+    /**
+     * @param \Doctrine\ORM\Query\SqlWalker $sqlWalker
+     *
+     * @return string
+     */
+    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker): string
     {
         return "EXTRACT('epoch' FROM "
             . $this->firstDateExpression->dispatch($sqlWalker)

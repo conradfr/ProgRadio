@@ -72,7 +72,7 @@ const format = dateObj => {
                 endDateTime.second(0);
             }
             else {*/
-                regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
+                let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
                 match = curr.datetime_raw.match(regexp);
 
                 // no time, exit

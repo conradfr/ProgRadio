@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Entity\ScheduleEntry;
 
 /**
  * Section entry
@@ -117,7 +116,7 @@ class SectionEntry
     }
 
     /**
-     * @param \DateTime $ateTimeStart
+     * @param \DateTime $dateTimeStart
      * @return SectionEntry
      */
     public function setDateTimeStart($dateTimeStart)

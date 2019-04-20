@@ -14,7 +14,7 @@ class CollectionRepository extends EntityRepository
     /**
      * @return array
      */
-    public function getCollections() {
+    public function getCollections(): array {
         $query = $this->getEntityManager()->createQuery(
             'SELECT c.codeName as code_name, c.name as name_FR, 
                 c.priority, c.sort_field, c.sort_order
@@ -24,8 +24,6 @@ class CollectionRepository extends EntityRepository
         );
 
         $query->useResultCache(true, self::CACHE_COLLECTION_TTL, 'collections');
-        $result = $query->getResult();
-
-        return $result;
+        return $query->getResult();
     }
 }

@@ -14,7 +14,7 @@ class CategoryRepository extends EntityRepository
     /**
      * @return array
      */
-    public function getCategories() {
+    public function getCategories(): array {
         $query = $this->getEntityManager()->createQuery(
             'SELECT c.codeName as code_name, c.name as name_FR
                 FROM App:Category c
@@ -23,8 +23,6 @@ class CategoryRepository extends EntityRepository
         );
 
         $query->useResultCache(true, self::CACHE_CATEGORY_TTL, 'categories');
-        $result = $query->getResult();
-
-        return $result;
+        return $query->getResult();
     }
 }

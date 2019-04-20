@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +23,13 @@ class SiteController extends AbstractController
      *      "changefreq": "monthly"
      *      }
      * )
+     *
+     *
+     * @param EntityManagerInterface $em
+     *
+     * @return Response
      */
-    public function faqAction(EntityManagerInterface $em)
+    public function faqAction(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository('App:Radio')->getActiveRadios();
 
@@ -40,6 +45,11 @@ class SiteController extends AbstractController
      *      "changefreq": "yearly"
      *      }
      * )
+     *
+     * @param Request $request
+     * @param \Swift_Mailer $mailer
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function contactAction(Request $request, \Swift_Mailer $mailer)
     {
@@ -89,8 +99,12 @@ class SiteController extends AbstractController
      *         "_format": "xml"
      *     }
      * )
+     *
+     * @param EntityManagerInterface $em
+     *
+     * @return Response
      */
-    public function sitemapAction(EntityManagerInterface $em)
+    public function sitemapAction(EntityManagerInterface $em): Response
     {
         // @todo if route list grows, get collection & filter
         $routesToExport = ['homepage', 'now', 'faq', 'contact'];
@@ -122,7 +136,15 @@ class SiteController extends AbstractController
         return $response;
     }
 
-    protected function getEntryXml($name, $route, $parameters=[]) {
+    /**
+     * @param $name
+     * @param $route
+     * @param array $parameters
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function getEntryXml($name, $route, $parameters=[]): string {
         $lastMod = new \DateTime();
         $lastModFormat = $lastMod->format('Y-m-d');
 

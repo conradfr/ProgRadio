@@ -6,7 +6,6 @@ namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\ScheduleCache;
 
 class ScheduleManager
 {
@@ -19,7 +18,7 @@ class ScheduleManager
     /**
      * ScheduleManager constructor.
      *
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param ScheduleCache $cache
      */
     public function __construct(EntityManagerInterface $entityManager, ScheduleCache $cache)
@@ -60,6 +59,7 @@ class ScheduleManager
 
     /**
      * @param \DateTime $dateTime
+     * @param bool $decode
      *
      * @return array
      */
