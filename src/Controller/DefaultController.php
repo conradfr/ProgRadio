@@ -26,7 +26,7 @@ class DefaultController extends AbstractController
      *
      * @return Response
      */
-    public function indexAction(EntityManagerInterface $em): Response
+    public function index(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository('App:Radio')->getActiveRadios();
         $categories = $em->getRepository('App:Category')->getCategories();
@@ -66,7 +66,7 @@ class DefaultController extends AbstractController
      * @param ScheduleManager $scheduleManager
      * @return Response
      */
-    public function scheduleAction(\DateTime $date, ScheduleManager $scheduleManager): Response
+    public function schedule(\DateTime $date, ScheduleManager $scheduleManager): Response
     {
         $schedule = $scheduleManager->getDaySchedule($date, true);
 
@@ -85,7 +85,7 @@ class DefaultController extends AbstractController
      *
      * @return Response
      */
-    public function radiosAction(EntityManagerInterface $em): response
+    public function radios(EntityManagerInterface $em): response
     {
         $radios = $em->getRepository('App:Radio')->getActiveRadios();
 
@@ -111,7 +111,7 @@ class DefaultController extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    public function radioAction($codename, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
+    public function radio($codename, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
     {
         $dateTime = new \DateTime();
 
@@ -145,7 +145,7 @@ class DefaultController extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    public function nowAction(EntityManagerInterface $em): Response
+    public function now(EntityManagerInterface $em): Response
     {
         $dateTime = new \DateTime();
 

@@ -29,7 +29,7 @@ class SiteController extends AbstractController
      *
      * @return Response
      */
-    public function faqAction(EntityManagerInterface $em): Response
+    public function faq(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository('App:Radio')->getActiveRadios();
 
@@ -51,7 +51,7 @@ class SiteController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function contactAction(Request $request, \Swift_Mailer $mailer)
+    public function contact(Request $request, \Swift_Mailer $mailer)
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -104,7 +104,7 @@ class SiteController extends AbstractController
      *
      * @return Response
      */
-    public function sitemapAction(EntityManagerInterface $em): Response
+    public function sitemap(EntityManagerInterface $em): Response
     {
         // @todo if route list grows, get collection & filter
         $routesToExport = ['homepage', 'now', 'faq', 'contact'];

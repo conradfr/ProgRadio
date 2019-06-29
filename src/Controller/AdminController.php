@@ -39,7 +39,7 @@ class AdminController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sharesAction(EntityManagerInterface $em, Request $request)
+    public function shares(EntityManagerInterface $em, Request $request)
     {
         $dbData = $em->getRepository('App:Radio')->getNameAndShares();
 
