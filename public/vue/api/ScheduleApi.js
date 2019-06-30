@@ -27,7 +27,7 @@ const isLocalStorageFull = (e) => {
 };
 
 const hasCache = (dateStr) => {
-  if (localStorage[dateStr]) {
+  if (localStorage !== null && localStorage[dateStr]) {
     const cached = JSON.parse(localStorage.getItem(dateStr));
     if (!Array.isArray(cached) && typeof cached === 'object') {
       return true;
@@ -40,6 +40,10 @@ const hasCache = (dateStr) => {
 const getCache = dateStr => JSON.parse(localStorage.getItem(dateStr));
 
 const setCache = (dateStr, data) => {
+  if (localStorage === null) {
+    return;
+  }
+
   localStorage.removeItem(dateStr);
 
   try {
