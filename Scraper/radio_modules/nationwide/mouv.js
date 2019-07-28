@@ -25,7 +25,17 @@ const format = dateObj => {
     if (typeof curr.json === 'undefined') {
       return;
     }
-    const content = JSON.parse(curr.json.substr(20));
+    const content = JSON.parse(curr.json.substr(21));
+
+    if (content === "") {
+      return;
+    }
+
+    const datetime_raw = content.contentReducer.airtime;
+
+    if (datetime_raw === null || typeof datetime_raw === 'undefined') {
+      return;
+    }
 
     let newEntry = {
       'title': content.contentReducer.title,
@@ -39,12 +49,6 @@ const format = dateObj => {
 
     let matched = false;
     let match_time = null;
-
-    const datetime_raw = content.contentReducer.airtime;
-
-    if (datetime_raw === null || typeof datetime_raw === 'undefined') {
-      return;
-    }
 
     let regexp = new RegExp(/^Du\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\sau\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
     let match = datetime_raw.match(regexp);
@@ -169,14 +173,13 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     dateObj.locale('fr');
-    let url = `https://www.mouv.fr/emissions`;
-
+    let url = 'https://www.mouv.fr/emissions#';
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
           .get(url)
-          .select('.concepts-list-block-container > a')
+          .select('.concepts-list-block-container a')
             .set({'test': '@href'})
           .do(
             osmosis.follow('@href')
@@ -194,7 +197,7 @@ const fetch = dateObj => {
                 'datetime_raw': '.concept-main-container-content-airtime',
                 'description': '.content > p'
               })*/
-          )
+            )
             .data(function (listing) {
                 scrapedData.push(listing);
             })
