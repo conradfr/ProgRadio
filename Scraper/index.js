@@ -98,6 +98,7 @@ else {
 async.series(
     funList,
     function(err, results) {
+        // console.log(err);
         redisClient.quit();
         logger.log('info', 'All done, exiting ...');
         process.exit(1);
