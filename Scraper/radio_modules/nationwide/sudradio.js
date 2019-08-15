@@ -3,7 +3,6 @@ let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
-let referenceIndex = 0;
 
 const format = dateObj => {
 
@@ -12,7 +11,7 @@ const format = dateObj => {
 
         // Time
         const regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-        let match = curr.datetime_raw[0].match(regexp);
+        let match = curr.datetime_raw_start.match(regexp);
 
         // no time, exit
         if (match === null) { return prev; }
@@ -23,7 +22,7 @@ const format = dateObj => {
         startDateTime.minute(match[2]);
         startDateTime.second(0);
 
-        match = curr.datetime_raw[1].match(regexp);
+        match = curr.datetime_raw_end.match(regexp);
         const endDateTime = moment(curr.dateObj);
 
         // no time, exit
@@ -33,49 +32,41 @@ const format = dateObj => {
             endDateTime.second(0);
         }
 
-        let prevMatch = null;
-        // keep only relevant time from previous day page
-        if (startDateTime.isBefore(dateObj, 'day')) {
-            if (index === 0) { return prev; }
-
-            prevMatch = array[0].datetime_raw[0].match(regexp);
-            array[0].dateObj.hour(prevMatch[1]);
-
-            if (array[0].dateObj.isBefore(startDateTime)) { return prev; }
-
-            // update day
-            startDateTime.add(1, 'days');
-            endDateTime.add(1, 'days');
-        }
-        // remove next day schedule from day page
-        else {
-            if (curr.dateObj !== array[index-1].dateObj) {
-                referenceIndex = index;
-            } else {
-                prevMatch = array[referenceIndex].datetime_raw[0].match(regexp);
-                let prevDate = moment(array[referenceIndex].dateObj);
-                prevDate.hour(prevMatch[1]);
-
-                if (prevDate.isAfter(startDateTime)) { return prev; }
-            }
-
-            if (startDateTime.hour() > endDateTime.hour()) {
-                endDateTime.add(1, 'days');
-            }
-        }
-
         newEntry = {
             'date_time_start': startDateTime.toISOString(),
             'date_time_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',
             'host': curr.host,
-            'title': curr.title
+            'title': curr.title,
+            'img': curr.img
         };
 
-        if (typeof curr.img !== 'undefined') {
-            newEntry.img = 'https://www.sudradio.fr' + curr.img.split('?')[0];
-        }
+        if (Array.isArray(curr.sub) && typeof curr.sub[0] !== 'string') {
+            sections = [];
 
+            curr.sub.forEach(function(entry) {
+                let match = entry.datetime_raw.match(regexp);
+                if (match !== null) {
+                    const startDateTime = moment(curr.dateObj);
+                    startDateTime.hour(match[1]);
+                    startDateTime.minute(match[2]);
+                    startDateTime.second(0);
+
+                    let secEntry = {
+                        date_time_start: startDateTime,
+                        title: entry.title,
+                        // description: entry.description,
+                        img: entry.img,
+                        presenter: entry.presenter
+
+                    };
+
+                    sections.push(secEntry);
+                }
+            });
+
+            newEntry.sections = sections;
+        }
 
         prev.push(newEntry);
         return prev;
@@ -85,23 +76,33 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    const dayFormat = dateObj.format('YYYYMMDD');
-    const url = `https://www.sudradio.fr/programmes/${dayFormat}`;
+    const dayFormat = dateObj.format('ddd').toLowerCase();
+    const url = 'https://www.sudradio.fr/programmes/';
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-            .find('.show-item')
+            .find(`#nav-${dayFormat}`)
+            .select('ol.list-unstyled li.sud-schedule__show')
             .set({
-                'datetime_raw': ['.show-item-hours time'],
-                'img': '.show-item-media > a > img@src',
-                'title': '.show-item-name',
-                'host': '.show-item-author a',
+                'datetime_raw_start': 'time.sud-show__meta-date-start',
+                'datetime_raw_end': 'time.sud-show__meta-date-end',
+                'img': 'img@src',
+                'title': 'h3 > a',
+                'host': 'address',
+                'sub': [
+                    osmosis.select('section.sud-podcast header')
+                        .set({
+                            'datetime_raw': 'time.sud-podcast__meta-date-start',
+                            'title': 'h4 a',
+                            // 'description': '.step-list-element-content-editorial-infos-title h3',
+                            'presenter': 'address'
+                        })
+                ]
             })
             .data(function (listing) {
-                listing.dateObj = dateObj;
                 scrapedData.push(listing);
             })
             .done(function () {
@@ -111,15 +112,11 @@ const fetch = dateObj => {
 };
 
 const fetchAll = dateObj =>  {
-    const previousDay = moment(dateObj);
-    previousDay.subtract(1, 'days');
-
-    return fetch(previousDay)
-        .then(() => { return fetch(dateObj); });
+    return fetch(dateObj);
 };
 
 const getScrap = dateObj => {
-    return fetchAll(dateObj)
+    return fetch(dateObj)
         .then(() => {
             return format(dateObj);
         });
