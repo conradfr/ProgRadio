@@ -4,199 +4,72 @@ const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
 
-const dayFr = {
-  'lundi': 1,
-  'mardi': 2,
-  'mercredi': 3,
-  'jeudi': 4,
-  'vendredi': 5,
-  'samedi': 6,
-  'dimanche': 7
-};
-
 const format = dateObj => {
-  dateObj.tz("Europe/Paris");
-  dateObj.locale('fr');
+  dateObj.tz('UTC');
 
-  const mains = [];
-  const sections = [];
-
-  scrapedData.forEach(function(curr) {
+  // we use reduce instead of map to act as a map+filter in one pass
+  const cleanedData = scrapedData.reduce(function(prev, curr) {
     if (typeof curr.json === 'undefined') {
-      return;
+      return prev;
     }
     const content = JSON.parse(curr.json.substr(21));
 
     if (content === "") {
-      return;
-    }
-
-    const datetime_raw = content.contentReducer.airtime;
-
-    if (datetime_raw === null || typeof datetime_raw === 'undefined') {
-      return;
+      return prev;
     }
 
     let newEntry = {
-      'title': content.contentReducer.title,
+      'title': curr.title,
       'timezone': 'Europe/Paris',
+      'description': curr.description,
       'img': content.contentReducer.visual.url
     };
 
-    if (content.contentReducer.body !== null) {
-      newEntry.description = content.contentReducer.body.children[0].children[0].value;
+    let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
+    let match = curr.datetime_raw.match(regexp);
+
+    // no time, exit
+    if (match === null) {
+      return prev;
     }
 
-    let matched = false;
-    let match_time = null;
+    const startDateTime = moment(dateObj);
+    startDateTime.hour(match[1]);
+    startDateTime.minute(match[2]);
+    startDateTime.second(0);
 
-    let regexp = new RegExp(/^Du\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\sau\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
-    let match = datetime_raw.match(regexp);
+    newEntry.date_time_start = startDateTime.toISOString();
 
-    if (match !== null) {
-      if (dateObj.isoWeekday() >= dayFr[match[1]] && dateObj.isoWeekday() <= dayFr[match[2]]) {
-        matched = true;
-      }
-    }
+    prev.push(newEntry);
+    return prev;
+  },[]);
 
-    if (matched === false) {
-      regexp = new RegExp(/^Le\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\set\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
-      match = datetime_raw.match(regexp);
-
-      if (match !== null) {
-        if (dateObj.isoWeekday() >= dayFr[match[1]] && dateObj.isoWeekday() <= dayFr[match[2]]) {
-          matched = true;
-        }
-      }
-    }
-
-    if (matched === false) {
-      regexp = new RegExp(/^Le\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
-      match = datetime_raw.match(regexp);
-
-      if (match !== null) {
-        if (dateObj.isoWeekday() === dayFr[match[1]]) {
-          matched = true;
-        }
-      }
-    }
-
-    if (matched === false) {
-      return;
-    }
-
-    let startDateTime = null;
-    let endDateTime = null;
-
-    regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})( à ((([0-9]{1,2})[h|H]([0-9]{0,2}))|minuit)){0,1}/);
-    match_time = datetime_raw.match(regexp);
-
-    if (match_time !== null) {
-      startDateTime = moment(dateObj);
-      startDateTime.hour(match_time[1]);
-      startDateTime.minute(match_time[2] || 0);
-      startDateTime.second(0);
-
-      if (match_time[3] !== undefined) {
-        endDateTime = moment(dateObj);
-        if (match_time[4] === 'minuit') {
-          endDateTime.hour(0);
-          endDateTime.minute(0);
-          endDateTime.add(1, 'days');
-        } else {
-          endDateTime.hour(match_time[6]);
-          endDateTime.minute(match_time[7] || 0);
-        }
-        endDateTime.second(0);
-      }
-
-      newEntry.date_time_start = startDateTime.toISOString();
-
-      if (endDateTime !== null) {
-        newEntry.date_time_end = endDateTime.toISOString();
-        newEntry.sections = [];
-      }
-    }
-    // no start datetime
-    else {
-      return;
-    }
-
-    if (typeof newEntry.sections === 'undefined') {
-      sections.push(newEntry);
-    } else {
-      mains.push(newEntry)
-    }
-  });
-
-    // put sections in main
-    if (sections.length > 0) {
-      // sort mains
-      function compare(a,b) {
-        momentA = moment(a.date_time_start);
-        momentB = moment(b.date_time_start);
-
-        if (momentA.isBefore(momentB))
-          return -1;
-        if (momentA.isAfter(momentB))
-          return 1;
-        return 0;
-      }
-
-      mains.sort(compare);
-
-      sections.forEach(function(entry) {
-        for (i=0;i<mains.length;i++){
-          entryMoment = moment(entry.date_time_start);
-          mainMoment = moment(mains[i].date_time_start);
-
-          let toAdd = false;
-          if (i === (mains.length - 1)) {
-            if (entryMoment.isAfter(mainMoment)) {
-              toAdd = true;
-            }
-          }
-          else if (entryMoment.isBetween(mainMoment, moment(mains[i + 1].date_time_start))) {
-            toAdd = true;
-          }
-
-          if (toAdd === true) {
-            mains[i].sections.push(entry);
-            break;
-          }
-        }
-      });
-    }
-
-    return Promise.resolve(mains);
+  return Promise.resolve(cleanedData);
 };
 
 const fetch = dateObj => {
-    dateObj.locale('fr');
-    let url = 'https://www.mouv.fr/emissions#';
-    logger.log('info', `fetching ${url}`);
+  dateObj.locale('fr');
+  let dayFormat = dateObj.format('YYYY-MM-DD');
+  let url = `http://www.mouv.fr/programmes/${dayFormat}`;
+
+  logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
           .get(url)
-          .select('.concepts-list-block-container a')
-            .set({'test': '@href'})
+          .select('.program-grid-step')
+            .set({
+              'datetime_raw': '.program-grid-step-timeline .time-plate',
+              'title': '.program-grid-step-infos-upper-title',
+              'img': '.color-spreaded-image visible img@src'
+            })
           .do(
-            osmosis.follow('@href')
+            osmosis.follow('.program-grid-step-infos-visual a@href')
               .find('body')
               .set({
+                'description': '.content p',
                 'json': 'script[1]',
-                'test2': 'script[0]'
               })
-/*              .set({
-                'img': '.banner-image > .banner-image-visual@src',
-              })
-              .find('.concept-main-container-content')
-              .set({
-                'title': 'h1',
-                'datetime_raw': '.concept-main-container-content-airtime',
-                'description': '.content > p'
-              })*/
             )
             .data(function (listing) {
                 scrapedData.push(listing);
