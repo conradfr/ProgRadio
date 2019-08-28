@@ -6,6 +6,7 @@ const logger = require('../../lib/logger.js');
 let scrapedData = [];
 
 const format = dateObj => {
+    dateObj.tz('Europe/Paris');
     const cleanedData = scrapedData.reduce(function(prev, entry){
         if (util.isNullOrUndefined(entry.datetime_raw)) {
             return prev;

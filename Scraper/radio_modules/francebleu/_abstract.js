@@ -5,6 +5,7 @@ const logger = require('../../lib/logger.js');
 let scrapedData = {};
 
 const format = (dateObj, name) => {
+    dateObj.tz('Europe/Paris');
     const mains = [];
     scrapedData[name].forEach(function(curr) {
         let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s{1,30}-\s([0-9]{1,2})[h|H]([0-9]{2})/);

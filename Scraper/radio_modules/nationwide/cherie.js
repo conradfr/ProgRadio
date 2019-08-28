@@ -8,6 +8,7 @@ let referenceIndex = 0;
 
 // gonna be messy
 const format = dateObj => {
+    dateObj.tz('Europe/Paris');
 
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
