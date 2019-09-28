@@ -1,59 +1,58 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
+const utils = require('../../lib/utils');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
-let referenceIndex = 0;
 
 // gonna be messy
 const format = dateObj => {
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
-        // Time
-        let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-        let match = curr.datetime_raw.match(regexp);
+        startDateTime = moment(curr.datetime_raw_start, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+        endDateTime = moment(curr.datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
 
-        // no time, exit
-        if (match === null) { return prev; }
-
-        const startDateTime = moment(curr.dateObj);
-        startDateTime.hour(match[1]);
-        startDateTime.minute(match[2]);
-        startDateTime.second(0);
-
-        let prevMatch = null;
         // keep only relevant time from previous day page
+
+        // NOTE: there is a bug in the NRJ page, all datetimes on it have the day date even if next day,
+        //       so we need to account for that
+
+        // this is previous day
         if (startDateTime.isBefore(dateObj, 'day')) {
             if (index === 0) { return prev; }
 
-            prevMatch = array[0].datetime_raw.match(regexp);
-            array[0].dateObj.hour(prevMatch[1]);
+            const firstEndTimePrevDay = moment(array[0].datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
 
-            if (array[0].dateObj.isBefore(startDateTime)) { return prev; }
+            // this is previous day normal scheduling, ignoring
+            if (startDateTime.isSameOrAfter(firstEndTimePrevDay)) { return prev; }
 
             // update day
             startDateTime.add(1, 'days');
+            endDateTime.add(1, 'days');
         }
         // remove next day schedule from day page
         else {
-            if (curr.dateObj !== array[index-1].dateObj) {
-                referenceIndex = index;
-            } else {
-                prevMatch = array[referenceIndex].datetime_raw.match(regexp);
-                let prevDate = moment(array[referenceIndex].dateObj);
-                prevDate.hour(prevMatch[1]);
+            const firstStartimeToday = moment(array[0].datetime_raw_start, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
 
-                if (prevDate.isAfter(startDateTime)) { return prev; }
-            }
+            // this is next day scheduling, ignoring
+            if (startDateTime.isSameOrBefore(firstStartimeToday)) { return prev; }
+        }
+
+        let regexp = new RegExp(/https:\/\/(.*)(smart\/)(.*)/);
+        let match = curr.img.match(regexp);
+        let img = curr.img;
+
+        if (match !== null) {
+            img = decodeURIComponent(match[3])
         }
 
         newEntry = {
             'date_time_start': startDateTime.toISOString(),
+            'date_time_end': endDateTime.toISOString(),
             'timezone': 'Europe/Paris',
             'title': curr.title,
-            'img': curr.img,
+            'img': img,
             'description': curr.description
-
         };
 
         prev.push(newEntry);
@@ -64,23 +63,23 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    let dayFormat = dateObj.day();
-    let url = 'https://www.nrj.fr/emissions/jour';
+    dateObj.locale('fr');
+    let day = utils.upperCaseWords(dateObj.format('dddd'));
+    let url = 'https://www.nrj.fr/emissions';
 
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
-            .post(url, {dow: dayFormat.toString()})
-            .find('.programItem')
+            .get(url)
+            .find(`#${day}`)
+            .select('.timelineShedule')
             .set({
-                'datetime_raw': 'p.time',
-                'title': 'h2.ttl-h1',
-            })
-            .select('.presentation-mode-xs')
-            .set({
-                'img': 'img@src',
-                'description': '.presentation-text > .text'
+                'datetime_raw_start': '.timelineShedule-header time[1]@datetime',
+                'datetime_raw_end': '.timelineShedule-header time[2]@datetime',
+                'img': '.timelineShedule-header picture.thumbnail-inner > img@data-src',
+                'title': '.timelineShedule-content h3.heading3',
+                'description': '.timelineShedule-content p.description'
             })
             .data(function (listing) {
                 listing.dateObj = dateObj;
