@@ -76,6 +76,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
+    dateObj.locale('en');
     const dayFormat = dateObj.format('ddd').toLowerCase();
     const url = 'https://www.sudradio.fr/programmes/';
 
