@@ -41,7 +41,6 @@ const format = (dateObj, name, img_prefix) => {
         mains.push(newEntry);
     });
 
-    console.log(mains);
     return Promise.resolve(mains);
 };
 
