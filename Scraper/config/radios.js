@@ -71,6 +71,15 @@ const radios = {
           'francebleu_sudlorraine',
           'francebleu_touraine',
           'francebleu_vaucluse',
+      ],
+    'lesindes':
+      [
+          'africaradio',
+          'alouette',
+          'beurfm',
+          'contactfm',
+          'latina',
+          'voltage',
       ]
 };
 
