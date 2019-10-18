@@ -27,10 +27,9 @@ defmodule Importer.Mixfile do
       {:redix, ">= 0.0.0"},
       {:jason, "~> 1.1"},
       {:postgrex, ">= 0.0.0"},
-      {:ecto_sql, "~> 3.0"},
-      {:timex, "~> 3.2"},
-      {:httpoison, "~> 1.0.0"},
-      {:gen_stage, "~> 0.13"},
+      {:ecto_sql, "~> 3.2"},
+      {:timex, "~> 3.5"},
+      {:httpoison, "~> 1.6.0"},
       {:distillery, "~> 2.0"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
     ]
