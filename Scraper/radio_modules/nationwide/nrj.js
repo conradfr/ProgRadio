@@ -9,8 +9,13 @@ let scrapedData = [];
 const format = dateObj => {
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
+        // we use datOfYear() because the dates on nrjpage are not accurate (next week etc)
+
         startDateTime = moment(curr.datetime_raw_start, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+        startDateTime.dayOfYear(curr.dateObj.dayOfYear());
+
         endDateTime = moment(curr.datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+        endDateTime.dayOfYear(curr.dateObj.dayOfYear());
 
         // keep only relevant time from previous day page
 
@@ -22,6 +27,7 @@ const format = dateObj => {
             if (index === 0) { return prev; }
 
             const firstEndTimePrevDay = moment(array[0].datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+            firstEndTimePrevDay.dayOfYear(array[0].dateObj.dayOfYear());
 
             // this is previous day normal scheduling, ignoring
             if (startDateTime.isSameOrAfter(firstEndTimePrevDay)) { return prev; }
@@ -32,10 +38,15 @@ const format = dateObj => {
         }
         // remove next day schedule from day page
         else {
-            const firstStartimeToday = moment(array[0].datetime_raw_start, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+            // if first of today, don't check
+            if (prev.length > 0) {
+                const firstStartTimeToday = moment(prev[0].date_time_start, moment.ISO_8601, "Europe/Paris");
 
-            // this is next day scheduling, ignoring
-            if (startDateTime.isSameOrBefore(firstStartimeToday)) { return prev; }
+                // this is next day scheduling, ignoring
+                if (startDateTime.isSameOrBefore(firstStartTimeToday)) {
+                    return prev;
+                }
+            }
         }
 
         let regexp = new RegExp(/https:\/\/(.*)(smart\/)(.*)/);
@@ -44,6 +55,10 @@ const format = dateObj => {
 
         if (match !== null) {
             img = decodeURIComponent(match[3])
+        }
+
+        if (startDateTime.hour() > endDateTime.hour()) {
+            endDateTime.add(1, 'days');
         }
 
         newEntry = {
@@ -66,7 +81,6 @@ const fetch = dateObj => {
     dateObj.locale('fr');
     let day = utils.upperCaseWords(dateObj.format('dddd'));
     let url = 'https://www.nrj.fr/emissions';
-
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
