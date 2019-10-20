@@ -8,7 +8,14 @@ defmodule Importer.Mixfile do
       version: "0.2.0",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      releases: [
+        prod: [
+          include_executables_for: [:unix],
+          applications: [runtime_tools: :permanent],
+          include_erts: false
+        ],
+      ]
     ]
   end
 
@@ -30,7 +37,6 @@ defmodule Importer.Mixfile do
       {:ecto_sql, "~> 3.2"},
       {:timex, "~> 3.5"},
       {:httpoison, "~> 1.6.0"},
-      {:distillery, "~> 2.0"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
     ]
   end
