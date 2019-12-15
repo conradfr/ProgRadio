@@ -39,6 +39,21 @@ const format = dateObj => {
 
         if (main !== null) {
             main.sections = sections;
+
+            // Since 13/12/2019 some shows are duplicated and if sections the first one do not have them.
+            // So we delete the first one if datetime & title are identical
+            // Will need to be monitored
+
+            if (prev.length > 0) {
+                const row_id = prev.length - 1;
+                prev_datetime = prev[row_id].date_time_start;
+                prev_title = prev[row_id].title;
+
+                if (prev_datetime === main.date_time_start && prev_title === main.title) {
+                    prev.pop();
+                }
+            }
+
             prev.push(main);
         }
 
