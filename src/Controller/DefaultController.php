@@ -21,10 +21,6 @@ class DefaultController extends AbstractController
      *      "changefreq": "daily"
      *      }
      * )
-     *
-     * @param EntityManagerInterface $em
-     *
-     * @return Response
      */
     public function index(EntityManagerInterface $em): Response
     {
@@ -41,10 +37,6 @@ class DefaultController extends AbstractController
 
     /**
      * @todo cache strategy
-     *
-     * @param array $data
-     *
-     * @return Response
      */
     protected function jsonResponse(array $data): Response {
         $response = new Response();
@@ -60,11 +52,8 @@ class DefaultController extends AbstractController
      *     "/schedule/{date}",
      *     name="schedule"
      * )
-     * @ParamConverter("date", options={"format": "Y-m-d"})
      *
-     * @param \DateTime $date
-     * @param ScheduleManager $scheduleManager
-     * @return Response
+     * @ParamConverter("date", options={"format": "Y-m-d"})
      */
     public function schedule(\DateTime $date, ScheduleManager $scheduleManager): Response
     {
@@ -80,12 +69,8 @@ class DefaultController extends AbstractController
      *     "/radios",
      *     name="radios"
      * )
-     *
-     * @param EntityManagerInterface $em
-     *
-     * @return Response
      */
-    public function radios(EntityManagerInterface $em): response
+    public function radios(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository('App:Radio')->getActiveRadios();
 
@@ -104,14 +89,9 @@ class DefaultController extends AbstractController
      *      }
      * )
      *
-     * @param $codename
-     * @param EntityManagerInterface $em
-     * @param ScheduleManager $scheduleManager
-     *
-     * @return Response
      * @throws \Exception
      */
-    public function radio($codename, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
+    public function radio(string $codename, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
     {
         $dateTime = new \DateTime();
 
@@ -140,9 +120,6 @@ class DefaultController extends AbstractController
      *      }
      * )
      *
-     * @param EntityManagerInterface $em
-     *
-     * @return Response
      * @throws \Exception
      */
     public function now(EntityManagerInterface $em): Response

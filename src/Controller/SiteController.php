@@ -9,7 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Routing\Route as RouteObject;
 use App\Form\ContactType;
 
 class SiteController extends AbstractController
@@ -23,11 +25,6 @@ class SiteController extends AbstractController
      *      "changefreq": "monthly"
      *      }
      * )
-     *
-     *
-     * @param EntityManagerInterface $em
-     *
-     * @return Response
      */
     public function faq(EntityManagerInterface $em): Response
     {
@@ -46,12 +43,9 @@ class SiteController extends AbstractController
      *      }
      * )
      *
-     * @param Request $request
-     * @param \Swift_Mailer $mailer
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function contact(Request $request, \Swift_Mailer $mailer)
+    public function contact(MailerInterface $mailer, Request $request)
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -61,19 +55,18 @@ class SiteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $contact = $form->getData();
 
-            $message = (new \Swift_Message())
-                ->setSubject('Contact page')
-                ->setFrom('noreply@programmes-radio.io')
-                ->setTo('contact@programmes-radio.io')
-                ->setBody($this->renderView('default/contactmail.html.twig',
-                    [
-                        'name' => $contact->getName(),
-                        'email' => $contact->getEmail(),
-                        'message' => $contact->getMessage()
-                    ]
-                ),'text/html');
+            $email = (new TemplatedEmail())
+                ->from('noreply@programmes-radio.io')
+                ->to('contact@programmes-radio.io')
+                ->subject('Contact page')
+                ->htmlTemplate('emails/contact.html.twig')
+                ->context([
+                    'name' => $contact->getName(),
+                    'contact_email' => $contact->getEmail(),
+                    'message' => $contact->getMessage()
+                ]);
 
-            $mailer->send($message);
+            $mailer->send($email);
 
             $this->addFlash(
                 'success',
@@ -99,10 +92,6 @@ class SiteController extends AbstractController
      *         "_format": "xml"
      *     }
      * )
-     *
-     * @param EntityManagerInterface $em
-     *
-     * @return Response
      */
     public function sitemap(EntityManagerInterface $em): Response
     {
@@ -137,14 +126,10 @@ class SiteController extends AbstractController
     }
 
     /**
-     * @param $name
-     * @param $route
-     * @param array $parameters
-     *
-     * @return string
      * @throws \Exception
      */
-    protected function getEntryXml($name, $route, $parameters=[]): string {
+    protected function getEntryXml(string $name, RouteObject $route, array $parameters=[]): string
+    {
         $lastMod = new \DateTime();
         $lastModFormat = $lastMod->format('Y-m-d');
 

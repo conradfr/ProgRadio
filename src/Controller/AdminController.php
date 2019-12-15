@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Radio;
 use App\Form\SharesType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,12 +17,8 @@ class AdminController extends AbstractController
      *     "/admin",
      *     name="admin"
      * )
-     *
-     * @param EntityManagerInterface $em
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(EntityManagerInterface $em)
+    public function indexAction(EntityManagerInterface $em): Response
     {
         $stats = $em->getRepository('App:ScheduleEntry')->getStatsByDayAndRadio();
 
@@ -33,13 +30,8 @@ class AdminController extends AbstractController
      *     "/admin/shares",
      *     name="admin_shares"
      * )
-     *
-     * @param EntityManagerInterface $em
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function shares(EntityManagerInterface $em, Request $request)
+    public function shares(EntityManagerInterface $em, Request $request): Response
     {
         $dbData = $em->getRepository('App:Radio')->getNameAndShares();
 
