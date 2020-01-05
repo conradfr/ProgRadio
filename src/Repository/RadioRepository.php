@@ -19,7 +19,8 @@ class RadioRepository extends EntityRepository
      */
     public function getRadio($codeName) {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, 
+            'SELECT r.codeName as code_name, r.name, r.streamUrl,
+                    r.share, r.streamnigEnabled as streaming_enabled,
                     c.codeName as category, cl.codeName as collection
                 FROM App:Radio r
                   INNER JOIN r.category c
@@ -42,7 +43,8 @@ class RadioRepository extends EntityRepository
      */
     public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamUrl, r.share, 
+            'SELECT r.codeName as code_name, r.name, r.streamUrl,
+                    r.share, r.streamingEnabled as streaming_enabled,
                     c.codeName as category, cl.codeName as collection
                 FROM App:Radio r
                   INNER JOIN r.category c
@@ -53,7 +55,7 @@ class RadioRepository extends EntityRepository
 
         $query->setParameter('active', true);
 
-        $query->useResultCache(true, self::CACHE_RADIO_TTL, 'active_radios');
+        $query->enableResultCache(self::CACHE_RADIO_TTL, 'active_radios');
         return $query->getResult();
     }
 

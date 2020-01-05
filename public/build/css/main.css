@@ -1,6 +1,6 @@
 /*!
- * Bootstrap v3.4.0 (https://getbootstrap.com/)
- * Copyright 2011-2018 Twitter, Inc.
+ * Bootstrap v3.4.1 (https://getbootstrap.com/)
+ * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -8050,15 +8050,21 @@ body .footer a:focus {
   border-bottom: 1px solid black;
   box-shadow: 3px 0 8px -3px rgba(0, 0, 0, 0.4);
 }
-.schedule-container .schedule-radio-list .radio-logo:hover {
+.schedule-container .schedule-radio-list .radio-logo.radio-logo-nohover {
+  cursor: default;
+}
+.schedule-container .schedule-radio-list .radio-logo:hover:not(.radio-logo-nohover) {
   opacity: 0.9;
 }
 .schedule-container .schedule-radio-list .radio-logo .radio-logo-play {
   width: 100%;
   height: 100%;
 }
-.schedule-container .schedule-radio-list .radio-logo .radio-logo-play:hover,
-.schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active {
+.schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-hide {
+  display: none;
+}
+.schedule-container .schedule-radio-list .radio-logo .radio-logo-play:hover:not(.radio-logo-play-hide),
+.schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active:not(.radio-logo-play-hide) {
   opacity: 0.9;
   background-color: #2196F3;
   mask-image: url('../../img/play-button-inside-a-circle.svg');
@@ -8072,8 +8078,8 @@ body .footer a:focus {
   /* IE only, default to black icon */
 }
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  .schedule-container .schedule-radio-list .radio-logo .radio-logo-play:hover,
-  .schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active {
+  .schedule-container .schedule-radio-list .radio-logo .radio-logo-play:hover:not(.radio-logo-play-hide),
+  .schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active:not(.radio-logo-play-hide) {
     background-color: transparent;
     background-image: url('../../img/play-button-inside-a-circle.svg');
     background-repeat: no-repeat;

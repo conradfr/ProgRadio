@@ -250,7 +250,7 @@ EOT;
             $qb->setParameter('radios', $radios);
         }
 
-        $qb->getQuery()->useResultCache(false); // rely on app schedule cache and only get fresh data here
+        $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
         return $qb->getQuery()->getResult();
     }
 

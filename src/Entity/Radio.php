@@ -78,6 +78,13 @@ class Radio
      *
      * @ORM\Column(type="boolean", options={"default"=true})
      */
+    private $streamingEnabled = true;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", options={"default"=true})
+     */
     private $active = true;
 
     /**
@@ -222,5 +229,21 @@ class Radio
     public function setActive($active)
     {
         $this->active = $active;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isStreamingEnabled()
+    {
+        return $this->streamingEnabled;
+    }
+
+    /**
+     * @param boolean $enabled
+     */
+    public function setStreamingEnabled(bool $enabled)
+    {
+        $this->active = $enabled;
     }
 }

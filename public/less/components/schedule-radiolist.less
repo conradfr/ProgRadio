@@ -27,7 +27,11 @@
     //border: 1px solid red;
     box-shadow: 3px 0 8px -3px rgba(0,0,0,0.4);
 
-    &:hover {
+    &.radio-logo-nohover {
+      cursor: default;
+    }
+
+    &:hover:not(.radio-logo-nohover) {
       opacity: 0.9;
     }
 
@@ -35,7 +39,11 @@
       width: 100%;
       height: 100%;
 
-      &:hover, &.radio-logo-play-active {
+      &.radio-logo-play-hide {
+        display: none;
+      }
+
+      &:hover:not(.radio-logo-play-hide), &.radio-logo-play-active:not(.radio-logo-play-hide) {
         opacity: 0.9;
 
         background-color: @brand-primary;

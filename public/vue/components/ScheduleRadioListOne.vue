@@ -1,8 +1,13 @@
 <template>
   <a v-on:click="play" :title="radio.name" :style="styleObject">
-    <div class="radio-logo" :title="radio.name" :style="styleObject">
+    <div class="radio-logo"
+         :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}"
+         :title="radio.name" :style="styleObject">
       <div class="radio-logo-play"
-           :class="{ 'radio-logo-play-active': (radio.code_name === radioPlayingCodeName) }">
+         :class="{
+          'radio-logo-play-active': (radio.code_name === radioPlayingCodeName),
+          'radio-logo-play-hide': (radio.streaming_enabled === false)
+      }">
       </div>
     </div>
   </a>
@@ -27,7 +32,9 @@ export default {
   },
   methods: {
     play() {
-      this.$store.dispatch('play', this.radio.code_name);
+      if (this.radio.streaming_enabled === true) {
+        this.$store.dispatch('play', this.radio.code_name);
+      }
     }
   }
 };

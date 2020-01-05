@@ -22,7 +22,7 @@ class CategoryRepository extends EntityRepository
             '
         );
 
-        $query->useResultCache(true, self::CACHE_CATEGORY_TTL, 'categories');
+        $query->enableResultCache(self::CACHE_CATEGORY_TTL, 'categories');
         return $query->getResult();
     }
 }

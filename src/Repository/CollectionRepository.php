@@ -23,7 +23,7 @@ class CollectionRepository extends EntityRepository
             '
         );
 
-        $query->useResultCache(true, self::CACHE_COLLECTION_TTL, 'collections');
+        $query->enableResultCache( self::CACHE_COLLECTION_TTL, 'collections');
         return $query->getResult();
     }
 }
