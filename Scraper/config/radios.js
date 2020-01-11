@@ -22,7 +22,8 @@ const radios = {
         'ouifm',
         'cherie',
         'mradio',
-        'mouv'
+        'mouv',
+        'fip'
       ],
     'francebleu':
       [
