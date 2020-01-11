@@ -35,6 +35,7 @@
 #                    color:    '#fff'
 
 liip_imagine:
+    driver: "gd"
     resolvers:
         default:
             web_path: ~
