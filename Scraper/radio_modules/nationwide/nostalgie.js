@@ -1,133 +1,74 @@
 const osmosis = require('osmosis');
-const utils = require('../../lib/utils');
 let moment = require('moment-timezone');
+const utils = require('../../lib/utils');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
-let referenceIndex = 0;
 
 // gonna be messy
 const format = dateObj => {
-
     // we use reduce instead of map to act as a map+filter in one pass
     const cleanedData = scrapedData.reduce(function(prev, curr, index, array){
-        let newEntry = {
-            'title': utils.upperCaseWords(curr.title),
-            'timezone': 'Europe/Paris',
-            'img': curr.img,
-            'description': curr.description
-        };
+        // we use datOfYear() because the dates on the page are not accurate (next week etc)
 
-        // TIME
+        startDateTime = moment(curr.datetime_raw_start, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+        startDateTime.dayOfYear(curr.dateObj.dayOfYear());
 
-        const startDateTime = moment(curr.dateObj);
-        let endDateTime = moment(curr.dateObj);
+        endDateTime = moment(curr.datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+        endDateTime.dayOfYear(curr.dateObj.dayOfYear());
 
-        // 1st try in title
-        let regexp = new RegExp(/([\'\w\s\A-zÀ-ÿ\|]+)\s:\s(([0-9]{1,2}[H|h])|MINUIT)\s{0,1}-\s{0,1}(([0-9]{1,2}[H|h])|MINUIT)/);
-        let match = curr.title.match(regexp);
-
-        if (match !== null) {
-            if (match[2] === 'MINUIT') {
-                startDateTime.hour(0);
-            } else {
-                startDateTime.hour(match[2].substr(0, match[2].length - 1));
-            }
-            startDateTime.minute(0);
-            startDateTime.second(0);
-
-            if (match[4] === 'MINUIT') {
-                endDateTime.hour(0);
-            } else {
-                endDateTime.hour(match[4].substr(0, match[4].length - 1));
-            }
-
-            endDateTime.minute(0);
-            endDateTime.second(0);
-        }
-        // 2nd try in the description
-        else {
-            regexp = new RegExp(/de\s(([0-9]{1,2}h)|minuit)\sà\s(([0-9]{1,2}h)|minuit)/);
-            match = curr.description.match(regexp);
-
-            if (match !== null) {
-                if (match[1] === 'minuit') {
-                    startDateTime.hour(0);
-                } else {
-                    startDateTime.hour(match[1].substr(0, match[1].length - 1));
-                }
-                startDateTime.minute(0);
-                startDateTime.second(0);
-
-                if (match[3] === 'minuit') {
-                    endDateTime.hour(0);
-                } else {
-                    endDateTime.hour(match[3].substr(0, match[3].length - 1));
-                }
-
-                endDateTime.minute(0);
-                endDateTime.second(0);
-            }
-            else {
-                regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-                match = curr.datetime_raw.match(regexp);
-
-                // no time, exit
-                if (match === null) { return prev; }
-
-                startDateTime.hour(match[1]);
-                startDateTime.minute(match[2]);
-                startDateTime.second(0);
-
-                endDateTime = null;
-            }
-        }
-
-        newEntry.date_time_start = startDateTime;
-        newEntry.date_time_end = endDateTime;
-
-        // sometimes two programs starts at same time, filtering the second one for now ...
-        if (index > 0 && prev.length > 0 && startDateTime.isSame(moment(prev[prev.length -1].date_time_start), 'minute')) {
-            return prev;
-        }
-
-        let prevMatch = null;
         // keep only relevant time from previous day page
+
+        // NOTE: there is a bug in the page, all datetimes on it have the day date even if next day,
+        //       so we need to account for that
+
+        // this is previous day
         if (startDateTime.isBefore(dateObj, 'day')) {
             if (index === 0) { return prev; }
 
-            regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-            prevMatch = array[0].datetime_raw.match(regexp);
-            array[0].dateObj.hour(prevMatch[1]);
+            const firstEndTimePrevDay = moment(array[0].datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+            firstEndTimePrevDay.dayOfYear(array[0].dateObj.dayOfYear());
 
-            if (array[0].dateObj.isBefore(startDateTime)) { return prev; }
+            // this is previous day normal scheduling, ignoring
+            if (startDateTime.isSameOrAfter(firstEndTimePrevDay)) { return prev; }
 
             // update day
             startDateTime.add(1, 'days');
-            if (endDateTime !== null) {
-                endDateTime.add(1, 'days');
-            }
+            endDateTime.add(1, 'days');
         }
         // remove next day schedule from day page
         else {
-            if (curr.dateObj !== array[index-1].dateObj) {
-                referenceIndex = index;
-            } else {
-                regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-                prevMatch = array[referenceIndex].datetime_raw.match(regexp);
+            // if first of today, don't check
+            if (prev.length > 0) {
+                const firstStartTimeToday = moment(prev[0].date_time_start, moment.ISO_8601, "Europe/Paris");
 
-                if (prevMatch === null) { return prev; }
-
-                let prevDate = moment(array[referenceIndex].dateObj);
-                prevDate.hour(prevMatch[1]);
-
-                if (prevDate.isAfter(startDateTime)) { return prev; }
-            }
-
-            if (endDateTime !== null && startDateTime.hour() > endDateTime.hour()) {
-                endDateTime.add(1, 'days');
+                // this is next day scheduling, ignoring
+                if (startDateTime.isSameOrBefore(firstStartTimeToday)) {
+                    return prev;
+                }
             }
         }
+
+        let regexp = new RegExp(/https:\/\/(.*)(smart\/)(.*)/);
+        let match = curr.img.match(regexp);
+        let img = curr.img;
+
+        if (match !== null) {
+            img = decodeURIComponent(match[3])
+        }
+
+        if (startDateTime.hour() > endDateTime.hour()) {
+            endDateTime.add(1, 'days');
+        }
+
+        newEntry = {
+            'date_time_start': startDateTime.toISOString(),
+            'date_time_end': endDateTime.toISOString(),
+            'timezone': 'Europe/Paris',
+            'title': curr.title,
+            'img': img,
+            'description': curr.description
+        };
 
         prev.push(newEntry);
         return prev;
@@ -138,29 +79,29 @@ const format = dateObj => {
 
 const fetch = dateObj => {
     dateObj.locale('fr');
-    let day = dateObj.format('dddd').toLowerCase();
-    let url = 'http://www.nostalgie.fr/grille-des-emissions';
-
+    let day = utils.upperCaseWords(dateObj.format('dddd'));
+    let url = 'https://www.nostalgie.fr/emissions';
     logger.log('info', `fetching ${url}`);
 
     return new Promise(function(resolve, reject) {
         return osmosis
-            .get(url)
-            .find(`#${day}`)
-            .select('.item-program > .card-program')
-            .set({
-                'datetime_raw': 'time@datetime',
-                'img': 'img.card-img@data-src',
-                'title': '.card-title',
-                'description': '.program-duration',
-            })
-            .data(function (listing) {
-                listing.dateObj = dateObj;
-                scrapedData.push(listing);
-            })
-            .done(function () {
-                resolve(true);
-            })
+          .get(url)
+          .find(`#${day}`)
+          .select('.timelineShedule')
+          .set({
+              'datetime_raw_start': '.timelineShedule-header time[1]@datetime',
+              'datetime_raw_end': '.timelineShedule-header time[2]@datetime',
+              'img': '.timelineShedule-header picture.thumbnail-inner > img@data-src',
+              'title': '.timelineShedule-content h3.heading3',
+              'description': '.timelineShedule-content p.description'
+          })
+          .data(function (listing) {
+              listing.dateObj = dateObj;
+              scrapedData.push(listing);
+          })
+          .done(function () {
+              resolve(true);
+          })
     });
 };
 
@@ -171,14 +112,14 @@ const fetchAll = dateObj =>  {
     previousDay.subtract(1, 'days');
 
     return fetch(previousDay)
-        .then(() => { return fetch(dateObj); });
+      .then(() => { return fetch(dateObj); });
 };
 
 const getScrap = dateObj => {
     return fetchAll(dateObj)
-        .then(() => {
-            return format(dateObj);
-        });
+      .then(() => {
+          return format(dateObj);
+      });
 };
 
 const scrapModule = {
@@ -187,3 +128,4 @@ const scrapModule = {
 };
 
 module.exports = scrapModule;
+
