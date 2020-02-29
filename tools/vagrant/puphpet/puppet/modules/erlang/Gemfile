@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'rake', '~> 10.5.0'
+gem 'rake', '~> 12.3.3'
 gem "puppet", ENV['PUPPET_GEM_VERSION'] || '~> 3.8.0'
 gem "puppet-lint"
 gem "rspec-puppet", '~> 2.3.2'
