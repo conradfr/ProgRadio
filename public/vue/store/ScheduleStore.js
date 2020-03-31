@@ -5,7 +5,7 @@ import filter from 'lodash/fp/filter';
 import compose from 'lodash/fp/compose';
 import without from 'lodash/without';
 import forEach from 'lodash/forEach';
-import find from 'lodash/fp/find';
+import find from 'lodash/find';
 
 import * as config from '../config/config';
 

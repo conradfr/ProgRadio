@@ -1,11 +1,13 @@
 <template>
   <div class="navbar-player">
     <div class="player-wrap">
-      <div class="player-sound player-sound-mute" v-on:click="toggleMute">
+      <div class="player-sound player-sound-mute"
+           v-on:click="toggleMute" v-if="!player.externalPlayer">
         <span class="glyphicon glyphicon-volume-off" aria-hidden="true"
               :class="{ 'player-muted': player.muted }"></span>
       </div>
       <div class="player-sound player-sound-fader"
+           v-if="!player.externalPlayer"
            v-on:mouseover="volumeFocus(true)"
            v-on:mouseleave="volumeFocus(false)"
            v-on:click.stop="toggleMute">
@@ -65,6 +67,8 @@ export default {
   /* eslint-disable func-names */
   watch: {
     'player.playing': function (val) {
+      if (this.player.externalPlayer === true) { return; }
+
       if (val === true) {
         this.play(this.player.radio.streamUrl);
       } else {
@@ -72,11 +76,15 @@ export default {
       }
     },
     'player.muted': function (val) {
+      if (this.player.externalPlayer === true) { return; }
+
       if (this.audio !== null) {
         this.audio.muted = val;
       }
     },
     'player.volume': function (val) {
+      if (this.player.externalPlayer === true) { return; }
+
       if (this.audio !== null) {
         this.audio.volume = (val * 0.1);
       }

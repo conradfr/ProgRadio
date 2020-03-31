@@ -14,6 +14,7 @@ const COOKIE_MUTED = `${config.COOKIE_PREFIX}-muted`;
 
 const initState = {
   playing: false,
+  externalPlayer: AndroidApi.hasAndroid,
   radio: null,
   show: null,
   volume: Vue.cookie.get(COOKIE_VOLUME)
@@ -36,7 +37,7 @@ const storeActions = {
 
     const radio = find(rootState.schedule.radios, { code_name: radioId });
 
-    if (radio !== undefined) {
+    if (radio !== undefined && radio.streaming_enabled === true) {
       const show = rootGetters.currentShowOnRadio(radio.code_name);
       commit('switchRadio', { radio, show });
       // Otherwise will be ignored
@@ -58,7 +59,11 @@ const storeActions = {
   },
   volumeFocus: ({ commit }, params) => {
     commit('setFocus', params);
-  }
+  },
+  /* From Android app */
+  updateStatusFromExternalPlayer: ({ commit }, playing) => {
+    commit('setPlayingStatus', playing);
+  },
 };
 
 const storeMutations = {
@@ -69,12 +74,12 @@ const storeMutations = {
   play(state) {
     if (state.radio !== null) {
       state.playing = true;
-      AndroidApi.playing();
+      // AndroidApi.play(state.radio);
     }
   },
   switchRadio(state, { radio, show }) {
-    const prevRadio = state.radio;
-    const prevShow = state.show;
+    // const prevRadio = state.radio;
+    // const prevShow = state.show;
 
     state.radio = null;
     state.radio = radio;
@@ -82,10 +87,11 @@ const storeMutations = {
     state.show = null;
     state.show = show;
 
-    if (Object.is(radio, prevRadio) === false || Object.is(show, prevShow) === false) {
-      AndroidApi.update(radio.name,
-        show === null ? '' : show.title);
-    }
+    // AndroidApi.play(radio, show);
+    //
+    // if (Object.is(radio, prevRadio) === false || Object.is(show, prevShow) === false) {
+    //   AndroidApi.update(radio, show);
+    // }
   },
   togglePlay(state) {
     if (state.playing === true) {
@@ -93,7 +99,7 @@ const storeMutations = {
       AndroidApi.pause();
     } else if (state.playing === false && state.radio !== undefined && state.radio !== null) {
       state.playing = true;
-      AndroidApi.playing();
+      AndroidApi.play(state.radio);
     }
   },
   toggleMute(state) {
@@ -104,6 +110,10 @@ const storeMutations = {
   },
   setFocus(state, params) {
     state.focus[params.element] = params.status;
+  },
+  /* From Android app */
+  setPlayingStatus(state, playing) {
+    state.playing = playing;
   }
 };
 
