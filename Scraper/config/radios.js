@@ -77,6 +77,8 @@ const radios = {
       [
           'africaradio',
           'alouette',
+          'alpes1_grenoble',
+          'alpes1_sud',
           'beurfm',
           'contactfm',
           'evasionfm',
