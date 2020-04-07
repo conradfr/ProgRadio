@@ -79,6 +79,7 @@ const radios = {
           'alouette',
           'beurfm',
           'contactfm',
+          'evasionfm',
           'latina',
           'voltage',
       ]
