@@ -11,7 +11,8 @@ const format = dateObj => {
         const match = curr.title.match(regexp);
 
         // no time, exit
-        if (match === null) {return prev;
+        if (match === null) {
+            return prev;
         }
 
         const newEntry = {};
@@ -40,10 +41,9 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    dateObj.tz("Europe/Paris");
     dateObj.locale('fr');
     const day = dateObj.format('dddd').toLowerCase();
-    let url = `https://www.evasionfm.com/programmes-${day}.html`;
+    const url = `https://www.evasionfm.com/programmes-${day}.html`;
 
     logger.log('info', `fetching ${url}`);
 
