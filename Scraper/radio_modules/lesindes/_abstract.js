@@ -7,10 +7,10 @@ let scrapedData = {};
 const format = (dateObj, name, img_prefix) => {
     const mains = [];
     scrapedData[name].forEach(function(curr) {
-        const regexp = new RegExp(/^(.*), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
-        const match = curr.datetime_raw.match(regexp);
+        let regexp = new RegExp(/^(.*), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+        let match = curr.datetime_raw.match(regexp);
 
-        // no time, exit -- Toute la semaine = chroniques
+        // no time = exit, Toute la semaine = chroniques
         if (match === null || match[1] === 'Toute la semaine') {
             return;
         }
@@ -65,7 +65,9 @@ const format = (dateObj, name, img_prefix) => {
 
 const fetch = (url, name, dateObj) => {
     dateObj.locale('fr');
-    let day = dateObj.format('dddd').toLowerCase();
+    const todayObj = moment(dateObj);
+    todayObj.tz('Europe/Paris');
+    let day = todayObj.format('dddd').toLowerCase();
 
     logger.log('info', `fetching ${url}`);
 
