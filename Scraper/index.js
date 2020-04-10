@@ -33,14 +33,15 @@ const optionDefinitions = [
 ];
 const options = commandLineArgs(optionDefinitions);
 
-const dateObj = moment();
-dateObj.tz("Europe/Paris");
-
 logger.log('info', 'Starting ...');
 
 const getResults = async (radios) => {
   const all = await radios.map(async function (radio) {
     const radio_module = require(`./radio_modules/${radio}.js`);
+
+    const dateObj = moment();
+    dateObj.tz("Europe/Paris");
+
     return await radio_module.getScrap(dateObj)
       .then(function (data) {
         const dateFormat = 'DD-MM-YYYY';

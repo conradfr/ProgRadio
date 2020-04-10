@@ -64,11 +64,9 @@ class Version20170801213834 extends AbstractMigration implements ContainerAwareI
         ];
 
         for ($i=0;$i<count($radios);$i++) {
-            for ($i=0;$i<count($radios);$i++) {
-                $connection->exec(
-                    "UPDATE radio SET share = ".$radios[$i]['share']." WHERE code_name = '".$radios[$i]['codename']."';"
-                );
-            }
+            $connection->exec(
+                "UPDATE radio SET share = ".$radios[$i]['share']." WHERE code_name = '".$radios[$i]['codename']."';"
+            );
         }
     }
 

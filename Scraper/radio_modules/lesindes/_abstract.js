@@ -54,7 +54,7 @@ const format = (dateObj, name, img_prefix) => {
             'timezone': 'Europe/Paris',
             'img': curr.img.substr(0, 4) !== 'http' ? `${img_prefix}${curr.img}` : curr.img,
             'title': curr.title,
-            'description': curr.description
+            'description': curr.description.split('\r\n').join(' ')
         };
 
         mains.push(newEntry);
@@ -74,11 +74,11 @@ const fetch = (url, name, dateObj) => {
     return new Promise(function(resolve, reject) {
         return osmosis
             .get(url)
-            .find(`.actus-format1.${day}`)
+            .find(`.row.${day}`)
             .set({
                 'img': 'img@src',
                 'datetime_raw': '.jours_diffusion',
-                'title': 'h3',
+                'title': 'h2, h3',
                 'description': 'p'
                 }
             )

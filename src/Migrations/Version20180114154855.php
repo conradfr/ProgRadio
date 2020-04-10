@@ -54,12 +54,10 @@ class Version20180114154855 extends AbstractMigration implements ContainerAwareI
         ];
 
         for ($i=0;$i<count($radios);$i++) {
-            for ($i=0;$i<count($radios);$i++) {
-                $connection->exec(
-                    'INSERT INTO radio (id, category_id, code_name, stream_url, name, share) VALUES ('
-                    .($i+19).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['stream']."','".$radios[$i]['name']."',".$radios[$i]['share'].");"
-                );
-            }
+            $connection->exec(
+                'INSERT INTO radio (id, category_id, code_name, stream_url, name, share) VALUES ('
+                .($i+19).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['stream']."','".$radios[$i]['name']."',".$radios[$i]['share'].");"
+            );
         }
     }
 }

@@ -47,12 +47,10 @@ final class Version20190209194223 extends AbstractMigration implements Container
         ];
 
         for ($i=0;$i<count($radios);$i++) {
-            for ($i=0;$i<count($radios);$i++) {
-                $connection->exec(
-                    'INSERT INTO radio (id, category_id, code_name, stream_url, name, share, collection_id) VALUES ('
-                    .($i+22).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['stream']."','".$radios[$i]['name']."',".$radios[$i]['share'].",".$radios[$i]['collection'].");"
-                );
-            }
+            $connection->exec(
+                'INSERT INTO radio (id, category_id, code_name, stream_url, name, share, collection_id) VALUES ('
+                .($i+22).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['stream']."','".$radios[$i]['name']."',".$radios[$i]['share'].",".$radios[$i]['collection'].");"
+            );
         }
     }
 }

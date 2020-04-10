@@ -1,3 +1,4 @@
+/* @todo refactor to use an api or just list files */
 const radios = {
     'nationwide':
       [
