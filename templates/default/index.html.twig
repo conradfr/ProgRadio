@@ -14,6 +14,11 @@ const scrollToCursor = function(e) {
     e.preventDefault();
     document.getElementById('app').__vue__.$store.dispatch('scrollToCursor');
 };
+
+const switchCollection = function(e, collection) {
+    e.preventDefault();
+    document.getElementById('app').__vue__.$store.dispatch('switchCollection', collection);
+};
 {% endblock %}
 
 {% block body %}

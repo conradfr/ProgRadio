@@ -85,6 +85,15 @@ class DefaultController extends AbstractController
         ]);
     }
 
+    public function collectionsMenu(EntityManagerInterface $em)
+    {
+        $collections = $em->getRepository(Collection::class)->getCollections();
+
+        return $this->render('utils/_collections_menu.html.twig', [
+            'collections' => $collections
+        ]);
+    }
+
     /**
      * @Route(
      *     "/radio/{codename}",

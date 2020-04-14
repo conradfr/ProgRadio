@@ -120,6 +120,10 @@ const storeActions = {
     commit('collectionSwitch',
       ScheduleUtils.getNextCollection(state.currentCollection, state.collections, 'forward'));
   },
+  switchCollection: ({ commit }, collection) => {
+    commit('collectionSwitch', collection);
+  },
+
 
   // ---------- CATEGORY ----------
 

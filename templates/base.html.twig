@@ -20,6 +20,7 @@
         {% block javascript_head %}
             // placeholder
             const scrollToCursor = function() {};
+            const switchCollection = function() {};
         {% endblock %}
     </script>
 
@@ -50,8 +51,11 @@
 
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ path('homepage') }}" onclick="scrollToCursor(event)">Grille</a></li>
-                <li><a href="{{ path('now') }}">En ce moment</a></li>
+                <li><a href="{{ path('homepage') }}" onclick="scrollToCursor(event)" style="padding-right: 0">Grille des programmes</a></li>
+                {{ render(controller(
+                    'App\\Controller\\DefaultController::collectionsMenu'
+                )) }}
+                <li class="hidden-sm"><a href="{{ path('now') }}">En ce moment</a></li>
                 <li><a href="{{ path('faq') }}">Faq</a></li>
                 <li><a href="{{ path('contact') }}">Contact</a></li>
                 {% if is_granted('ROLE_ADMIN') %}
