@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Radio;
+use App\Entity\ScheduleEntry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -35,8 +37,7 @@ class ScheduleManager
      */
     protected function getScheduleAndPutInCache(\DateTime $dateTime, array $radios): void
     {
-        $radioNewSchedule = $this->em->getRepository('App:ScheduleEntry')->getDaySchedule($dateTime, $radios);
-
+        $radioNewSchedule = $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($dateTime, $radios);
         if (count($radioNewSchedule) > 0) {
             $this->cache->addSchedulesToDay($dateTime, $radioNewSchedule);
         }
@@ -54,6 +55,10 @@ class ScheduleManager
             $this->getScheduleAndPutInCache($dateTime, [$radioCodeName]);
         }
 
+        $schedule = $this->cache->getScheduleForDayAndRadio($dateTime, $radioCodeName);
+
+        if ($schedule === null) { return null;}
+
         return json_decode($this->cache->getScheduleForDayAndRadio($dateTime, $radioCodeName), true);
     }
 
@@ -65,7 +70,7 @@ class ScheduleManager
      */
     public function getDaySchedule(\DateTime $dateTime, $decode = false): array
     {
-        $radios = $this->em->getRepository('App:Radio')->getAllCodename();
+        $radios = $this->em->getRepository(Radio::class)->getAllCodename();
         $radiosInCache = $this->cache->getRadiosForDay($dateTime);
 
         $radiosNotInCache = array_diff($radios, $radiosInCache);

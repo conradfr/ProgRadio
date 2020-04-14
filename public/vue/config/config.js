@@ -15,6 +15,9 @@ export const DEFAULT_VOLUME = 8;
 export const COOKIE_PREFIX = 'progradio';
 export const COOKIE_TTL = '1Y';
 
+export const COOKIE_EXCLUDE = `${COOKIE_PREFIX}-exclude`;
+export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
+
 export const TIMEZONE = 'Europe/Paris';
 
 export const DEFAULT_COLLECTION = 'nationwide';

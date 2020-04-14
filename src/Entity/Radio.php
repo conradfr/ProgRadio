@@ -52,7 +52,7 @@ class Radio
     private $category;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Collection")
+     * @ORM\ManyToOne(targetEntity="Collection", fetch="EAGER")
      * @ORM\JoinColumn(name="collection_id", referencedColumnName="id")
      */
     private $collection;

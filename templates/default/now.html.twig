@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-12 title">
             <h5>En ce moment à la radio</h5>
-            <a href="{{ path('homepage') }}">← Retourner à la grille complète</a>
+{#            <a href="{{ path('homepage') }}">← Retourner à la grille complète</a>#}
         </div>
     </div>
 
@@ -29,6 +29,7 @@
             <div class="tab-content">
                 {% for entry_collection in collections %}
                 <div role="tabpanel" class="tab-pane{{ loop.first ? ' active' : '' }}" id="{{ entry_collection.code_name }}">
+                    <div class="link-to-collection-schedule"><a href="{{ path('homepage', {'c': entry_collection.code_name}) }}">← Retourner à la grille des programmes</a></div>
                     {% if schedule[entry_collection.code_name] is defined %}
                     {% for entry in schedule[entry_collection.code_name] %}
                         <div class="row radio-schedule-row">
@@ -78,7 +79,7 @@
                         </div>
                     {% endfor %}
                     {% else %}
-                        <div class="alert alert-warning" role="alert"><strong>Oups ...</strong> aucunes données disponibles !</div>
+                        <div class="alert alert-warning" role="alert"><strong>Oups ...</strong> aucuns programmes disponibles.</div>
                     {% endif %}
                 </div>
                 {% endfor %}

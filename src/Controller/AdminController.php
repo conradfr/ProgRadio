@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Radio;
+use App\Entity\ScheduleEntry;
 use App\Form\SharesType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class AdminController extends AbstractController
      */
     public function indexAction(EntityManagerInterface $em): Response
     {
-        $stats = $em->getRepository('App:ScheduleEntry')->getStatsByDayAndRadio();
+        $stats = $em->getRepository(ScheduleEntry::class)->getStatsByDayAndRadio();
 
         return $this->render('default/admin/dashboard.html.twig', ['stats' => $stats]);
     }
@@ -35,7 +36,7 @@ class AdminController extends AbstractController
      */
     public function shares(EntityManagerInterface $em, Request $request): Response
     {
-        $dbData = $em->getRepository('App:Radio')->getNameAndShares();
+        $dbData = $em->getRepository(Radio::class)->getNameAndShares();
 
         $data = array_column($dbData, 'share', 'codeName');
         $labels = array_column($dbData, 'name', 'codeName');

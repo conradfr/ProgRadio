@@ -18,9 +18,6 @@ const VueCookie = require('vue-cookie');
 
 Vue.use(VueCookie);
 
-const COOKIE_EXCLUDE = `${config.COOKIE_PREFIX}-exclude`;
-const COOKIE_COLLECTION = `${config.COOKIE_PREFIX}-collection`;
-
 const cursorTime = moment().tz(config.TIMEZONE);
 
 const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
@@ -37,9 +34,9 @@ const initState = {
   scrollIndex: initialScrollIndex,
   scrollClick: false,
   loading: false,
-  currentCollection: Vue.cookie.get(COOKIE_COLLECTION) || config.DEFAULT_COLLECTION,
-  categoriesExcluded: Vue.cookie.get(COOKIE_EXCLUDE)
-    ? Vue.cookie.get(COOKIE_EXCLUDE).split('|') : [],
+  currentCollection: ScheduleUtils.initCurrentCollection(collections),
+  categoriesExcluded: Vue.cookie.get(config.COOKIE_EXCLUDE)
+    ? Vue.cookie.get(config.COOKIE_EXCLUDE).split('|') : [],
   categoryFilterFocus: {
     icon: false,
     list: false
@@ -227,7 +224,7 @@ const storeMutations = {
     Vue.set(state, 'currentCollection', collection);
 
     setTimeout(() => {
-      Vue.cookie.set(COOKIE_COLLECTION, collection, { expires: config.COOKIE_TTL });
+      Vue.cookie.set(config.COOKIE_COLLECTION, collection, { expires: config.COOKIE_TTL });
     }, 300);
   },
   setCategoryFilterFocus(state, params) {
@@ -241,7 +238,7 @@ const storeMutations = {
     }
 
     setTimeout(() => {
-      Vue.cookie.set(COOKIE_EXCLUDE, state.categoriesExcluded.join('|'),
+      Vue.cookie.set(config.COOKIE_EXCLUDE, state.categoriesExcluded.join('|'),
         { expires: config.COOKIE_TTL });
     }, 500);
   },

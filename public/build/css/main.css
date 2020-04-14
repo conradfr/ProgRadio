@@ -7982,6 +7982,12 @@ body .footer a:focus {
     margin-top: 0;
   }
 }
+#schedule-now .link-to-collection-schedule {
+  margin-top: 15px;
+}
+#schedule-now .link-to-collection-schedule + .radio-schedule-row {
+  margin-top: 18px;
+}
 #schedule-now .radio-schedule-row {
   margin-top: 25px;
   border-bottom: 1px dotted #c6c6c6;

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\ScheduleManager;
+use App\Entity\Radio;
+use App\Entity\Category;
+use App\Entity\Collection;
+use App\Entity\ScheduleEntry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,9 +30,9 @@ class DefaultController extends AbstractController
      */
     public function index(EntityManagerInterface $em): Response
     {
-        $radios = $em->getRepository('App:Radio')->getActiveRadios();
-        $categories = $em->getRepository('App:Category')->getCategories();
-        $collections = $em->getRepository('App:Collection')->getCollections();
+        $radios = $em->getRepository(Radio::class)->getActiveRadios();
+        $categories = $em->getRepository(Category::class)->getCategories();
+        $collections = $em->getRepository(Collection::class)->getCollections();
 
         return $this->render('default/index.html.twig', [
             'radios' => $radios,
@@ -74,7 +78,7 @@ class DefaultController extends AbstractController
      */
     public function radios(EntityManagerInterface $em): Response
     {
-        $radios = $em->getRepository('App:Radio')->getActiveRadios();
+        $radios = $em->getRepository(Radio::class)->getActiveRadios();
 
         return $this->jsonResponse([
             'radios' => $radios
@@ -98,7 +102,7 @@ class DefaultController extends AbstractController
         $dateTime = new \DateTime();
 
         // @todo check cache
-        $radio = $em->getRepository('App:Radio')->findOneBy(['codeName' => $codename, 'active' => true]);
+        $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codename, 'active' => true]);
         if (!$radio) {
             throw new NotFoundHttpException('Radio not found');
         }
@@ -128,8 +132,8 @@ class DefaultController extends AbstractController
     {
         $dateTime = new \DateTime();
 
-        $schedule = $em->getRepository('App:ScheduleEntry')->getTimeSpecificSchedule($dateTime);
-        $collections = $em->getRepository('App:Collection')->getCollections();
+        $schedule = $em->getRepository(ScheduleEntry::class)->getTimeSpecificSchedule($dateTime);
+        $collections = $em->getRepository(Collection::class)->getCollections();
 
         return $this->render('default/now.html.twig', [
             'schedule' => $schedule,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\Radio;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +31,7 @@ class SiteController extends AbstractController
      */
     public function faq(EntityManagerInterface $em): Response
     {
-        $radios = $em->getRepository('App:Radio')->getActiveRadios();
+        $radios = $em->getRepository(Radio::class)->getActiveRadios();
 
         return $this->render('default/faq.html.twig', ['radios' => $radios]);
     }
@@ -113,7 +114,7 @@ class SiteController extends AbstractController
         }
 
         // radio/schedule page
-        $radios = $em->getRepository('App:Radio')->getAllCodename();
+        $radios = $em->getRepository(Radio::class)->getAllCodename();
 
         foreach ($radios as $radio) {
             $xml .= $this->getEntryXml('radio', $this->get('router')->getRouteCollection()->get('radio'),['codename' => $radio]);
