@@ -34,7 +34,9 @@
                     {% for entry in schedule[entry_collection.code_name] %}
                         <div class="row radio-schedule-row">
                             <div class="col-md-1 col-xs-2 schedule-day-radio">
-                                <img class="center-block img-responsive" title="{{ entry.radio.name }}" alt="{{ entry.radio.name }}" src="{{ asset('img/radio/page/' ~ entry.radio.codeName ~ '.png') }}">
+                                <a href="{{ path('radio', {'codename': entry.radio.codeName}) }}">
+                                    <img class="center-block img-responsive" title="{{ entry.radio.name }}" alt="{{ entry.radio.name }}" src="{{ asset('img/radio/page/' ~ entry.radio.codeName ~ '.png') }}">
+                                </a>
                             </div>
                             <div class="col-md-10 col-xs-10 schedule-day-shows">
                                 <div class="media">
