@@ -85,6 +85,13 @@ const radios = {
           'evasionfm',
           'latina',
           'voltage',
+      ],
+    'international':
+      [
+        'couleur3',
+        'espace2',
+        'la1ere',
+        'optionmusique',
       ]
 };
 

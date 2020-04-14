@@ -10,7 +10,6 @@ const format = dateObj => {
     const mains = [];
     const sections = [];
 
-    // we use reduce instead of map to act as a map+filter in one pass
     scrapedData.forEach(function(curr) {
         const dateStart = moment.unix(parseInt(curr['date_time_start_raw']));
 
