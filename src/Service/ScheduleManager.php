@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ScheduleManager
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     protected $em;
 
     /** @var  ScheduleCache */

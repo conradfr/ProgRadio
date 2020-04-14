@@ -20,7 +20,7 @@ final class Version20190126211909 extends AbstractMigration
         $this->addSql('ALTER TABLE radio ADD CONSTRAINT FK_E0461B0F514956FD FOREIGN KEY (collection_id) REFERENCES collection (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_E0461B0F514956FD ON radio (collection_id)');
 
-        $this->addSql('INSERT INTO collection (id, code_name, name, priority) VALUES (1, \'nationwide\', \'Nationales\', 1)');
+        $this->addSql('INSERT INTO collection (id, code_name, name, priority) VALUES (1, \'nationwide\', \'Radio Nationales\', 1)');
         $this->addSql('UPDATE radio SET collection_id = 1');
     }
 

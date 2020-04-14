@@ -4,8 +4,14 @@ includes:
 	- vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
+	inferPrivatePropertyTypeFromConstructor: true
+	checkMissingIterableValueType: false
 	excludes_analyse:
 			- src/Migrations/*
 			- tests/*
 	symfony:
 		container_xml_path: '/dev/shm/progradio/cache/dev/App_KernelDevDebugContainer.xml'
+
+	ignoreErrors:
+		- '#Call to an undefined method [a-zA-Z0-9\\_<>]+::get[A-Z][a-zA-Z]*\(\)#'
+		- '#Call to an undefined method Predis[a-zA-Z0-9\\_<>]+::[A-Z][a-zA-Z]*\(\)#'

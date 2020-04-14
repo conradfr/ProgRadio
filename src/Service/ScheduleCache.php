@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Predis\Client;
@@ -17,7 +16,7 @@ class ScheduleCache
     protected const CACHE_KEY_DAY_FORMAT = 'Y-m-d';
     protected const CACHE_KEY_SERIALIZER_FORMAT = 'json';
 
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     protected $em;
 
     /** @var Client */
@@ -80,7 +79,7 @@ class ScheduleCache
      * @param \DateTime $day
      * @param string $radioCodeName
      *
-     * @return 1|0
+     * @return int 1|0
      */
     public function hasScheduleForDayAndRadio(\DateTime $day, string $radioCodeName): int {
         return $this->redis->HEXISTS(self::getKey($day), $radioCodeName);

@@ -223,7 +223,7 @@ EOT;
      * @return array
      */
     protected function getSchedulesAndSections(\DateTime $dateTime, array $radios=null): array {
-        $dateTime->setTime('00', '00', '00');
+        $dateTime->setTime(0, 0, 0);
         $dateTimeEnd = clone $dateTime;
         $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
 
