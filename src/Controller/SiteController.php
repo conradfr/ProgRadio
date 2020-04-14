@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Collection;
 use App\Entity\Contact;
 use App\Entity\Radio;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,8 +33,14 @@ class SiteController extends AbstractController
     public function faq(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository(Radio::class)->getActiveRadios();
+        $collections = $em->getRepository(Collection::class)->getCollections();
 
-        return $this->render('default/faq.html.twig', ['radios' => $radios]);
+        return $this->render('default/faq.html.twig',
+            [
+                'radios' => $radios,
+                'collections' => $collections
+            ]
+        );
     }
 
     /**

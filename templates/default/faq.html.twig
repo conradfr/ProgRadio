@@ -4,9 +4,18 @@
 
 {% block title %}FAQ - Les programmes radios en France }}{% endblock %}
 
+{% macro collections_list(collections) %}
+    {% for collection in collections %}
+        <a href="{{ path('homepage', {'c': collection.code_name}) }}">
+            {{ collection.name_FR }}
+        </a>
+        {% if not loop.last %}, {% endif %}
+    {% endfor %}
+{% endmacro %}
+
 {% macro radios_list(radios) %}
     {% for radio in radios|sort %}
-        <a href=" {{ path('radio', {'codename': radio.code_name}) }}">
+        <a href="{{ path('radio', {'codename': radio.code_name}) }}">
             {{ radio.name }}
         </a>
         {% if not loop.last %}, {% endif %}
@@ -16,13 +25,14 @@
 {% set faq= [
     {   'question': "Qu'est-ce que Programmes-radio.io ?",
         'answer': [
-            "Programmes-radio.io est un site indépendant centralisant les grilles de programmes des radios françaises.",
-            "Les données sont réactualisées chaque jour en provenance des sites des radios."
+            "Programmes-radio.io est un site indépendant centralisant les grilles de programmes de radios françaises et internationales.",
+            "Les données sont réactualisées chaque jour en provenance des sites des radios.",
+            "Vous pouvez aussi écuoter en streaming n'importe quelle radio en cliquant sur son logo."
         ]
     },
     {   'question': "Comment sont classées les radios ?",
         'answer': [
-            "Le classement est basé sur la part d'audience cumulée  de la dernière vague médiamétrie.",
+            "Suivant les catégories, le classement est basé sur la part d'audience cumulée de la dernière vague Médiamétrie ou alors par ordre alphabétique.",
             "A terme un système de favoris permettra d'avoir ses radios favorites en haut de la liste."
         ]
     },
@@ -30,6 +40,9 @@
         'answer': [
             "Des radios sont ajoutées au fur et à mesure, indiquez-nous dans la page Contact la radio que vous voulez voir ajoutée."
         ]
+    },
+    {   'question': "Liste des catégories",
+        'answer': [  self.collections_list(collections) ]
     },
     {   'question': "Liste des radios disponibles",
         'answer': [  self.radios_list(radios) ]
