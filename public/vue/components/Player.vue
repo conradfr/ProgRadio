@@ -26,7 +26,9 @@
           :class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }"
           aria-hidden="true"></span>
       </div>
-      <div v-if="player.radio" class="player-name">{{ player.radio.name }}</div>
+      <div v-if="player.radio" class="player-name" v-bind:title="showTitle">
+        {{ player.radio.name }}
+      </div>
       <div v-if="!player.radio" class="player-name player-name-help">
         Cliquer sur un logo pour lancer la lecture
       </div>
@@ -39,6 +41,8 @@
 import { mapState, mapGetters } from 'vuex';
 
 import VolumeFader from './VolumeFader.vue';
+
+const moment = require('moment');
 
 export default {
   components: { VolumeFader },
@@ -62,7 +66,18 @@ export default {
     ]),
     ...mapGetters([
       'displayVolume'
-    ])
+    ]),
+    showTitle() {
+      if (this.player.show === null) {
+        return '';
+      }
+
+      const format = 'HH[h]mm';
+      const start = moment(this.player.show.start_at).format(format);
+      const end = moment(this.player.show.end_at).format(format);
+
+      return `${this.player.show.title} - ${start}-${end}`;
+    },
   },
   /* eslint-disable func-names */
   watch: {

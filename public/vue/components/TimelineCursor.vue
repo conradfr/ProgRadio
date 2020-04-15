@@ -23,7 +23,7 @@ export default {
     }
   },
   watch: {
-    // If browsing another day we freeze the cursor
+    // if browsing another day we freeze the cursor
     isToday(newValue) {
       if (newValue === true) {
         this.setTick();

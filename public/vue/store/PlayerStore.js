@@ -4,6 +4,7 @@ import find from 'lodash/find';
 
 import * as config from '../config/config';
 import AndroidApi from '../api/AndroidApi';
+import PlayerUtils from '../utils/PlayerUtils';
 
 const VueCookie = require('vue-cookie');
 
@@ -78,8 +79,13 @@ const storeMutations = {
     }
   },
   switchRadio(state, { radio, show }) {
-    // const prevRadio = state.radio;
-    // const prevShow = state.show;
+    const prevRadioCodeName = state.radio === null ? null : state.radio.code_name;
+    const prevShowHash = state.show === null ? null : state.show.hash;
+
+    if ((radio !== null && prevRadioCodeName === radio.code_name)
+      && (show !== null && prevShowHash === show.hash)) {
+      return;
+    }
 
     state.radio = null;
     state.radio = radio;
@@ -92,6 +98,8 @@ const storeMutations = {
     // if (Object.is(radio, prevRadio) === false || Object.is(show, prevShow) === false) {
     //   AndroidApi.update(radio, show);
     // }
+
+    PlayerUtils.showNotification(radio, show);
   },
   togglePlay(state) {
     if (state.playing === true) {
@@ -99,7 +107,6 @@ const storeMutations = {
       AndroidApi.pause();
     } else if (state.playing === false && state.radio !== undefined && state.radio !== null) {
       state.playing = true;
-      AndroidApi.play(state.radio);
     }
   },
   toggleMute(state) {

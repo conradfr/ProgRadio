@@ -5,7 +5,7 @@ export const GRID_VIEW_EXTRA_LEFT = 76;
 
 export const GRID_INDEX_BREAK = 768;
 export const NAV_MOVE_BY = 60 * MINUTE_PIXEL;
-export const TICK_INTERVAL = 60000; /* one minute in ms */
+export const TICK_INTERVAL = 30000; /* one minute in ms */
 
 export const THUMBNAIL_PATH = '/media/cache/program_thumb/media/program/';
 export const PROGRAM_LONG_ENOUGH = 45; /* minutes */
@@ -21,3 +21,6 @@ export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
 export const TIMEZONE = 'Europe/Paris';
 
 export const DEFAULT_COLLECTION = 'nationwide';
+
+export const PLAYER_NOTIFICATION_ID = 'progradio-play';
+export const PLAYER_NOTIFICATION_LENGTH = 3000; // ms
