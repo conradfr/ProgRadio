@@ -92,6 +92,11 @@ const radios = {
         'espace2',
         'la1ere',
         'optionmusique',
+        'lapremiere',
+        'classic21',
+        'vivacite',
+        'musiq3',
+        'pure',
       ]
 };
 
