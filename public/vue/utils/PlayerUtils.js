@@ -45,6 +45,11 @@ const showNotification = (radio, show) => {
     return;
   }
 
+  const isMobile = window.matchMedia('only screen and (max-width: 1365px)');
+  if (isMobile.matches) {
+    return;
+  }
+
   if (Notification.permission === 'granted') {
     buildNotification(radio, show);
   } else if (Notification.permission !== 'denied') {
