@@ -21,6 +21,7 @@ const format = dateObj => {
         const newEntry = {};
 
         const startDateTime = moment(dateObj);
+        startDateTime.tz(dateObj.tz());
         startDateTime.hour(match[1]);
         startDateTime.minute(match[2]);
         startDateTime.second(0);
@@ -39,13 +40,16 @@ const format = dateObj => {
         match = curr.title_host.match(regexp);
 
         if (match === null) {
-            regexp = new RegExp(/^([\w\s\A-zÀ-ÿ]+)\|([\w\s\A-zÀ-ÿ\-]+)/);
+            regexp = new RegExp(/^([\w\s\A-zÀ-ÿ]+)\|([\s\A-zÀ-ÿ\-]+)/);
             match = curr.title_host.match(regexp);
+            if (match[2].trim() === '') {
+                match = null;
+            }
         }
 
         // no host
         if (match === null) {
-            newEntry.title = curr.title_host;
+            newEntry.title = curr.title_host.trim();
         }
         else {
             newEntry.title = match[1];
@@ -58,6 +62,7 @@ const format = dateObj => {
         return prev;
     },[]);
 
+    console.log(cleanedData);
     return Promise.resolve(cleanedData);
 };
 
