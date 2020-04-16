@@ -92,7 +92,10 @@ defmodule Importer.Processor.Builder do
       case head["date_time_end"] do
         nil ->
           head["date_time_start"]
-          |> Timex.set(hour: 23, minute: 0, second: 0)
+          |> Timex.Timezone.convert("Europe/Paris")
+          |> Timex.shift(days: 1)
+          |> Timex.beginning_of_day()
+          |> Timex.Timezone.convert("UTC")
           |> (&Map.put(head, "date_time_end", &1)).()
 
         _ ->
