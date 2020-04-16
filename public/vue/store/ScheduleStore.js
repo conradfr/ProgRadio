@@ -124,7 +124,6 @@ const storeActions = {
     commit('collectionSwitch', collection);
   },
 
-
   // ---------- CATEGORY ----------
 
   categoryFilterFocus: ({ commit }, params) => {

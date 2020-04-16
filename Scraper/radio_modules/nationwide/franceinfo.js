@@ -62,7 +62,6 @@ const format = dateObj => {
         return prev;
     },[]);
 
-    console.log(cleanedData);
     return Promise.resolve(cleanedData);
 };
 
