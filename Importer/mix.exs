@@ -37,7 +37,8 @@ defmodule Importer.Mixfile do
       {:ecto_sql, "~> 3.2"},
       {:timex, "~> 3.5"},
       {:httpoison, "~> 1.6.0"},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:quantum, "~> 2.3"}
     ]
   end
 end
