@@ -25,6 +25,11 @@ const format = (dateObj, name) => {
         endDateTime.minute(match[4]);
         endDateTime.second(0);
 
+        // midnight etc
+        if (startDateTime.hour() > endDateTime.hour() || (endDateTime.hour() === 0 && endDateTime.minute() === 0)) {
+            endDateTime.add(1, 'days');
+        }
+
         let host = null;
         if (curr.host.length > 0) {
             host = curr.host.join(", ");
