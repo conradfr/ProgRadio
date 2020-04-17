@@ -41,6 +41,7 @@
 import { mapState, mapGetters } from 'vuex';
 
 import VolumeFader from './VolumeFader.vue';
+import * as config from '../config/config';
 
 const moment = require('moment');
 
@@ -73,8 +74,8 @@ export default {
       }
 
       const format = 'HH[h]mm';
-      const start = moment(this.player.show.start_at).format(format);
-      const end = moment(this.player.show.end_at).format(format);
+      const start = moment(this.player.show.start_at).tz(config.TIMEZONE).format(format);
+      const end = moment(this.player.show.end_at).tz(config.TIMEZONE).format(format);
 
       return `${this.player.show.title} - ${start}-${end}`;
     },

@@ -25,8 +25,8 @@ const buildNotification = (radio, show) => {
 
   if (show !== null) {
     const format = 'HH[h]mm';
-    const start = moment(show.start_at).format(format);
-    const end = moment(show.end_at).format(format);
+    const start = moment(show.start_at).tz(config.TIMEZONE).format(format);
+    const end = moment(show.end_at).tz(config.TIMEZONE).format(format);
 
     options.body = `${start}-${end}`;
     text += `${show.title} - `;

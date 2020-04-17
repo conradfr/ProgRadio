@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { MINUTE_PIXEL } from '../config/config';
+import { TIMEZONE, MINUTE_PIXEL } from '../config/config';
 
 const moment = require('moment');
 
@@ -26,7 +26,7 @@ export default {
 
       function popoverTitle(title, startAt) {
         const format = 'HH[h]mm';
-        const start = moment(startAt).format(format);
+        const start = moment(startAt).tz(TIMEZONE).format(format);
 
         return `${title} - ${start}`;
       }

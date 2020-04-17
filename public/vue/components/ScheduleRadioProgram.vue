@@ -35,7 +35,7 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import { THUMBNAIL_PATH, PROGRAM_LONG_ENOUGH } from '../config/config';
+import { TIMEZONE, THUMBNAIL_PATH, PROGRAM_LONG_ENOUGH } from '../config/config';
 
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
 
@@ -76,13 +76,15 @@ export default {
     }),
     scheduleDisplay() {
       const format = 'HH[h]mm';
-      const start = moment(this.program.start_at).format(format);
-      const end = moment(this.program.end_at).format(format);
+      const start = moment(this.program.start_at).tz(TIMEZONE).format(format);
+      const end = moment(this.program.end_at).tz(TIMEZONE).format(format);
+
 
       return `${start}-${end}`;
     },
     isCurrent() {
-      return this.cursorTime.isBetween(moment(this.program.start_at), moment(this.program.end_at));
+      return this.cursorTime.isBetween(moment(this.program.start_at),
+        moment(this.program.end_at));
     },
     isLongEnough() {
       return this.program.duration >= PROGRAM_LONG_ENOUGH;

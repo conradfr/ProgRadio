@@ -77,13 +77,13 @@ const getUpdatedProgramText = (state) => {
 
 /* eslint-disable no-undef */
 const getScheduleDisplay = (schedule, currentTime, initialScrollIndex) => {
-  const startDay = moment(currentTime).startOf('day');
+  const startDay = moment(currentTime).tz(config.TIMEZONE).startOf('day');
   const result = {};
 
   forEach(schedule, (programs) => {
     forEach(programs, (program, key) => {
       const width = program.duration * config.MINUTE_PIXEL;
-      const left = moment(program.start_at).diff(startDay, 'minutes') * config.MINUTE_PIXEL;
+      const left = moment(program.start_at).tz(config.TIMEZONE).diff(startDay, 'minutes') * config.MINUTE_PIXEL;
 
       result[key] = {
         container: {

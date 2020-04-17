@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -112,8 +114,8 @@ class ScheduleEntryRepository extends EntityRepository
         $queryStr = <<<EOT
         WITH day_agg AS (
             select r.id as radio_id, r.code_name as radio_code_name,
-               date_trunc('day', se.date_time_start at time zone 'UTC' at time zone 'Europe/Paris') as se_day,
-               date_trunc('day', se.date_time_start at time zone 'UTC' at time zone 'Europe/Paris') + INTERVAL '7 day' as se_day_next,
+               date_trunc('day', se.date_time_start at time zone 'UTC') as se_day,
+               date_trunc('day', se.date_time_start at time zone 'UTC') + INTERVAL '7 day' as se_day_next,
            count(distinct se.id) as total,
            count(e.id) as sub_total
         
@@ -121,8 +123,8 @@ class ScheduleEntryRepository extends EntityRepository
                 inner join radio r on r.id = se.radio_id
                 left join section_entry e on se.id = e.schedule_entry_id
                 
-            where se.date_time_start <= :todayTime AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris'
-                and se.date_time_start >= :twoWeeksTime AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris'
+            where se.date_time_start <= :todayTime AT TIME ZONE 'UTC'
+                and se.date_time_start >= :twoWeeksTime AT TIME ZONE 'UTC'
         
             GROUP BY r.id, 3
         )
@@ -208,11 +210,11 @@ EOT;
     protected function getScheduleSelectString(): string
     {
         return 'r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
-                . 'AT_TIME_ZONE(AT_TIME_ZONE(se.dateTimeStart,\'UTC\'), \'Europe/Paris\') as start_at,'
-                . 'AT_TIME_ZONE(AT_TIME_ZONE(se.dateTimeEnd,\'UTC\'), \'Europe/Paris\') as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'
+                . 'AT_TIME_ZONE(se.dateTimeStart,\'UTC\') as start_at,'
+                . 'AT_TIME_ZONE(se.dateTimeEnd,\'UTC\') as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'
                 . 'MD5(CONCAT(r.codeName, se.title, se.dateTimeStart)) as hash,'
                 . 'sc.title as section_title, sc.pictureUrl as section_picture_url, sc.presenter as section_presenter, sc.description as section_description,'
-                . 'AT_TIME_ZONE(AT_TIME_ZONE(sc.dateTimeStart,\'UTC\'), \'Europe/Paris\') as section_start_at,'
+                . 'AT_TIME_ZONE(sc.dateTimeStart,\'UTC\') as section_start_at,'
                 . 'MD5(CONCAT(CONCAT(r.codeName, se.title, se.dateTimeStart), sc.title, sc.dateTimeStart)) as section_hash';
     }
 
