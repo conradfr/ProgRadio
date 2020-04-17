@@ -5,6 +5,47 @@
 .schedule-radio-grid {
   .schedule-radio-grid-row {
     .program-container {
+
+/*      &:after {
+        position: absolute;
+        display: block;
+        top: 80%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        content: "...";
+        font-weight: bold;
+        font-size: 24px;
+        border: 1px solid red;
+      }*/
+
+      &.prevday::after, &.nextday::after {
+        content: "...";
+        font-weight: bold;
+        font-size: 26px;
+        letter-spacing: -2px;
+        color: darken(@background-color, 35%);
+        cursor: e-resize;
+
+        position: absolute;
+        top: 60%;
+        width: 32px;
+        height: 20px;
+        display:flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &.prevday::after {
+        left: -15px;
+      }
+
+      &.nextday::after {
+        right: -10px;
+      }
+
       position: absolute;
 
       margin-top: 1px;

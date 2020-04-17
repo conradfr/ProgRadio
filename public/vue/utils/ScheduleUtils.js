@@ -78,12 +78,24 @@ const getUpdatedProgramText = (state) => {
 /* eslint-disable no-undef */
 const getScheduleDisplay = (schedule, currentTime, initialScrollIndex) => {
   const startDay = moment(currentTime).tz(config.TIMEZONE).startOf('day');
+  /* we use midnight next day as "end of current day",
+     as shows usually ends a midnight next day and not 23:59:59 */
+  const endDay = moment(currentTime).tz(config.TIMEZONE).add(1, 'days').startOf('day');
   const result = {};
 
   forEach(schedule, (programs) => {
     forEach(programs, (program, key) => {
-      const width = program.duration * config.MINUTE_PIXEL;
-      const left = moment(program.start_at).tz(config.TIMEZONE).diff(startDay, 'minutes') * config.MINUTE_PIXEL;
+      let width = config.MINUTE_PIXEL;
+      // @todo I guess we'll look at shows that start prev day and ends next day later ...
+      if (program.end_overflow) {
+        width *= moment(endDay).diff(program.start_at, 'minutes');
+      } else if (program.start_overflow) {
+        width *= moment(program.end_at).diff(startDay, 'minutes');
+      } else {
+        width *= program.duration;
+      }
+
+      const left = program.start_overflow ? 0 : (moment(program.start_at).tz(config.TIMEZONE).diff(startDay, 'minutes') * config.MINUTE_PIXEL);
 
       result[key] = {
         container: {

@@ -1,5 +1,6 @@
 <template>
-  <div class="program-container" :style="containerStyle" v-on:mouseup="detailClick">
+  <div class="program-container" :class="{ 'prevday': startsPrevDay, 'nextday': endsNextDay }"
+       :style="containerStyle" v-on:mouseup="detailClick">
     <!--        <div class="program program-full" :style="styleObjectDetail">
                 <div class="program-inner">
                     <div class="program-title"><span class="schedule-display">
@@ -88,7 +89,17 @@ export default {
     },
     isLongEnough() {
       return this.program.duration >= PROGRAM_LONG_ENOUGH;
-    }
+    },
+    /* eslint-disable max-len */
+    /* eslint-disable max-len */
+    startsPrevDay() {
+      return this.program.start_overflow;
+      // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.prevDayOverflow;
+    },
+    endsNextDay() {
+      return this.program.end_overflow;
+      // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.nextDayOverflow;
+    },
   },
   methods: {
     detailClick() {
