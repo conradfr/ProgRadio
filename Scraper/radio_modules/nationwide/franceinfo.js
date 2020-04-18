@@ -42,7 +42,7 @@ const format = dateObj => {
         if (match === null) {
             regexp = new RegExp(/^([\w\s\A-zÀ-ÿ]+)\|([\s\A-zÀ-ÿ\-]+)/);
             match = curr.title_host.match(regexp);
-            if (match[2].trim() === '') {
+            if (match !== null && match[2].trim() === '') {
                 match = null;
             }
         }

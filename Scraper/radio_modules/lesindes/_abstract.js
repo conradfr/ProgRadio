@@ -27,14 +27,14 @@ const format = (dateObj, name, img_prefix) => {
         endDateTime.minute(match[5]);
         endDateTime.second(0);
 
-        // chronique ?
-        if (endDateTime.diff(startDateTime, 'minutes') < 2) {
-            return;
-        }
-
         // midnight etc
         if (startDateTime.hour() > endDateTime.hour() || (endDateTime.hour() === 0 && endDateTime.minute() === 0)) {
             endDateTime.add(1, 'days');
+        }
+
+        // chronique ?
+        if (endDateTime.diff(startDateTime, 'minutes') < 2) {
+            return;
         }
 
         // Deal with radios on another timezone and convert to Paris time
