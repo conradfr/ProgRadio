@@ -36,7 +36,6 @@ const format = dateObj => {
         delete entry.datetime_raw;
         entry.date_time_start = startDateTime.toISOString();
         entry.date_time_end = endDateTime.toISOString();
-        entry.timezone = 'Europe/Paris';
 
         entry.description = entry.description ? entry.description.join(' ').trim() : null;
 
@@ -137,6 +136,7 @@ const getScrap = dateObj => {
 
 const scrapModule = {
     getName: 'europe1',
+    supportTomorrow: false,
     getScrap
 };
 

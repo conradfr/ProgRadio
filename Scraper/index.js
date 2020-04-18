@@ -29,7 +29,8 @@ redisClient.on("error", function (err) {
 // command line
 const optionDefinitions = [
   {name: 'radios', alias: 'r', type: String, multiple: true},
-  {name: 'collection', alias: 'c', type: String, multiple: true}
+  {name: 'collection', alias: 'c', type: String, multiple: true},
+  {name: 'tomorrow', alias: 't', type: Boolean}
 ];
 const options = commandLineArgs(optionDefinitions);
 
@@ -40,6 +41,12 @@ const getResults = async (radios) => {
     const radio_module = require(`./radio_modules/${radio}.js`);
 
     const dateObj = moment();
+    if (options['tomorrow'] === true) {
+      if (radio_module.supportTomorrow !== true) {
+        return true;
+      }
+      dateObj.add(1, 'days');
+    }
     dateObj.tz("Europe/Paris");
 
     return await radio_module.getScrap(dateObj)

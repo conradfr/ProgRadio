@@ -27,7 +27,7 @@
         </div>
         <div class="timeline-calendar-action timeline-calendar-forward">
           <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"
-                v-bind:class="{ 'timeline-calendar-disabled': isToday }"
+                v-bind:class="{ 'timeline-calendar-disabled': isTomorrow }"
                 v-on:click="clickCalendarForward"></span>
         </div>
       </div>
@@ -65,10 +65,12 @@ export default {
     ...mapGetters({
       styleObject: 'gridIndexLeft',
       displayFilter: 'displayCategoryFilter',
-      isToday: 'isToday'
+      isToday: 'isToday',
+      isTomorrow: 'isTomorrow'
     }),
     scheduleDate() {
       if (this.isToday === true) { return "Aujourd'hui"; }
+      if (this.isTomorrow === true) { return 'Demain'; }
       return this.cursorTime.format('DD/MM/YYYY');
     }
   },
@@ -86,7 +88,7 @@ export default {
       this.$store.dispatch('calendarBackward');
     },
     clickCalendarForward() {
-      if (!this.isToday) {
+      if (!this.isTomorrow) {
         this.$store.dispatch('calendarForward');
       }
     },

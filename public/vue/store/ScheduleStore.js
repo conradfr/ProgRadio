@@ -56,6 +56,10 @@ const storeGetters = {
     const now = moment().tz(config.TIMEZONE);
     return state.cursorTime.isSame(now, 'day');
   },
+  isTomorrow: (state) => {
+    const tomorrow = moment().add(1, 'day').tz(config.TIMEZONE);
+    return tomorrow.diff(state.cursorTime, 'days') === 0;
+  },
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
   // sort by share/name/etc, desc

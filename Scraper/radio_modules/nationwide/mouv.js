@@ -20,7 +20,6 @@ const format = dateObj => {
 
     let newEntry = {
       'title': curr.title,
-      'timezone': 'Europe/Paris',
       'description': curr.description,
       'img': content.contentReducer.visual.url
     };
@@ -93,6 +92,7 @@ const getScrap = dateObj => {
 
 const scrapModule = {
     getName: 'mouv',
+    supportTomorrow: false,
     getScrap
 };
 

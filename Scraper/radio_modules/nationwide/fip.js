@@ -15,7 +15,6 @@ const format = dateObj => {
 
     const newEntry = {
       'title': 'En direct sur FIP',
-      'timezone': 'Europe/Paris',
       'description': "Bienvenue sur Fip, la radio musicale la plus éclectique au monde ! Fip, c'est aussi l'actualité musicale : nouveautés, sorties d'albums, interviews, sessions live exclusives. Toute la musique est sur Fip !",
       'img': 'https://www.radiofrance.fr/sites/default/files/styles/format_32_9/public/2019-07/home%20fip.png.jpeg',
       'date_time_start': startDateTime.toISOString(),
@@ -54,8 +53,9 @@ const getScrap = dateObj => {
 };
 
 const scrapModule = {
-    getName: 'fip',
-    getScrap
+  getName: 'fip',
+  supportTomorrow: true,
+  getScrap
 };
 
 module.exports = scrapModule;
