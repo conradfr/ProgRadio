@@ -52,45 +52,76 @@ const getNextRadio = (currentRadio, radios, way) => {
 
 /* ---------- NOTIFICATION ---------- */
 
-const buildNotification = (radio, show) => {
-  let icon = '';
-  if (show !== null && show.picture_url !== null) {
-    icon = `${config.THUMBNAIL_PATH}${show.picture_url}`;
-  } else {
-    icon = `/img/radio/schedule/${radio.code_name}.png`;
-  }
-
-  const options = {
-    lang: 'fr',
-    tag: config.PLAYER_NOTIFICATION_ID,
-    icon
+const buildNotificationData = (radio, show) => {
+  const data = {
+    name: radio.name,
+    times: null,
+    host: null,
+    title: null,
   };
-
-  let text = '';
+  if (show !== null && show.picture_url !== null) {
+    data.icon = `${config.THUMBNAIL_PATH}${show.picture_url}`;
+  } else {
+    data.icon = `/img/radio/schedule/${radio.code_name}.png`;
+  }
 
   if (show !== null) {
     const format = 'HH[h]mm';
     const start = moment(show.start_at).tz(config.TIMEZONE).format(format);
     const end = moment(show.end_at).tz(config.TIMEZONE).format(format);
 
-    options.body = show.host !== null ? `${show.host} - ` : '';
-    options.body += `${start}-${end}`;
-    text += `${show.title} - `;
+    data.times = `${start}-${end}`;
+    data.host = show.host !== null ? show.host : null;
+    data.title = show.title;
   }
 
-  // We also update the mediasession metadata if supported
+  return data;
+};
+
+const buildMediaSessionMetadata = (data) => {
+  // we update the MediaSession metadata if supported
   if (navigator.mediaSession !== undefined) {
+    let title = '';
+
+    if (data.host !== null) {
+      title = `${data.host} - `;
+    }
+
+    if (data.times !== null) {
+      title += data.times;
+    }
+
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: text,
-      artist: radio.name,
-      album: show !== null && show.host !== null ? show.host : null,
+      title,
+      artist: data.name,
+      album: data.title,
       artwork: [
-        { src: icon, type: 'image/jpeg' },
+        { src: data.icon, type: 'image/jpeg' },
       ]
     });
   }
+};
 
-  text += radio.name;
+const buildNotification = (data) => {
+  const options = {
+    lang: 'fr',
+    tag: config.PLAYER_NOTIFICATION_ID,
+    icon: data.icon
+  };
+
+  options.body = '';
+  if (data.host !== null) {
+    options.body = `${data.host} - `;
+  }
+
+  if (data.times !== null) {
+    options.body += data.times;
+  }
+
+  let text = data.name;
+  if (data.title !== null) {
+    text += ` - ${data.title}`;
+  }
 
   const notification = new Notification(text, options);
   notification.onshow = () => {
@@ -103,13 +134,16 @@ const showNotification = (radio, show) => {
     return;
   }
 
+  const data = buildNotificationData(radio, show);
+  buildMediaSessionMetadata(data);
+
   const isMobile = window.matchMedia('only screen and (max-width: 1365px)');
   if (isMobile.matches) {
     return;
   }
 
   if (Notification.permission === 'granted') {
-    buildNotification(radio, show);
+    buildNotification(data);
   } else if (Notification.permission !== 'denied') {
     Notification.requestPermission((permission) => {
       if (!('permission' in Notification)) {
@@ -117,7 +151,7 @@ const showNotification = (radio, show) => {
       }
 
       if (permission === 'granted') {
-        buildNotification(radio, show);
+        buildNotification(data);
       }
     });
   }
