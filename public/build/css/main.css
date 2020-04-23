@@ -8093,6 +8093,9 @@ body .footer a:focus {
     background-size: 75% 75%;
   }
 }
+.schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-paused:not(:hover) {
+  opacity: 0.1;
+}
 .schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active {
   opacity: 0.7;
 }

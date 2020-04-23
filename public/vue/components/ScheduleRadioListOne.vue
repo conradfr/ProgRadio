@@ -6,6 +6,7 @@
       <div class="radio-logo-play"
          :class="{
           'radio-logo-play-active': (radio.code_name === radioPlayingCodeName),
+          'radio-logo-play-paused': (playing === false && radio.code_name === radioPlayingCodeName),
           'radio-logo-play-hide': (radio.streaming_enabled === false)
       }">
       </div>
@@ -14,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   props: ['radio'],
@@ -26,9 +27,12 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      playing: state => state.player.playing
+    }),
     ...mapGetters([
-      'radioPlayingCodeName'
-    ])
+      'radioPlayingCodeName',
+    ]),
   },
   methods: {
     play() {

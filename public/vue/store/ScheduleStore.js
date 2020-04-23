@@ -1,8 +1,5 @@
 import Vue from 'vue';
 
-import orderBy from 'lodash/fp/orderBy';
-import filter from 'lodash/fp/filter';
-import compose from 'lodash/fp/compose';
 import without from 'lodash/without';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
@@ -62,16 +59,10 @@ const storeGetters = {
   },
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
-  // sort by share/name/etc, desc
   radiosRanked: (state) => {
     const index = ScheduleUtils.getCollectionIndex(state.currentCollection, state.collections);
-    const { sort_field: sortField, sort_order: sortOrder } = state.collections[index];
-
-    return compose(
-      filter(entry => state.currentCollection === entry.collection),
-      filter(entry => state.categoriesExcluded.indexOf(entry.category) === -1),
-      orderBy([sortField], [sortOrder])
-    )(state.radios);
+    return ScheduleUtils.rankCollection(state.collections[index],
+      state.radios, state.categoriesExcluded);
   },
   displayCategoryFilter: state => state.categoryFilterFocus.icon
     || state.categoryFilterFocus.list || false,

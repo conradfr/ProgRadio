@@ -1,7 +1,5 @@
 <template>
-  <div class="schedule-container" tabindex="-1"
-       v-on:keyup.left.prevent="keyLeft()"
-       v-on:keyup.right.prevent="keyRight()">
+  <div class="schedule-container" tabindex="-1">
     <schedule-radio-grid-loading></schedule-radio-grid-loading>
     <schedule-radio-list></schedule-radio-list>
     <schedule-radio-grid></schedule-radio-grid>
@@ -18,14 +16,6 @@ export default {
     ScheduleRadioList,
     ScheduleRadioGrid,
     ScheduleRadioGridLoading
-  },
-  methods: {
-    keyLeft() {
-      this.$store.dispatch('scrollBackward');
-    },
-    keyRight() {
-      this.$store.dispatch('scrollForward');
-    }
   },
   created() {
     this.$store.dispatch('getSchedule');

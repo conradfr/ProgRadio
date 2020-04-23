@@ -15,14 +15,8 @@
 // import { mapGetters, mapState } from 'vuex';
 
 export default {
-  filters: {
-
-  },
   data() {
     return {};
-  },
-  computed: {
-
   },
   methods: {
     clickCollectionBackward() {

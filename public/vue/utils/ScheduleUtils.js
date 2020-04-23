@@ -2,6 +2,10 @@ import forEach from 'lodash/forEach';
 import findIndex from 'lodash/findIndex';
 
 import Vue from 'vue';
+import compose from 'lodash/fp/compose';
+import filter from 'lodash/fp/filter';
+import orderBy from 'lodash/fp/orderBy';
+
 import * as config from '../config/config';
 
 const moment = require('moment-timezone');
@@ -9,6 +13,8 @@ const moment = require('moment-timezone');
 const VueCookie = require('vue-cookie');
 
 Vue.use(VueCookie);
+
+/* ---------- GRID---------- */
 
 const enforceScrollIndex = (rawScrollIndex) => {
   if (rawScrollIndex < 0) {
@@ -116,6 +122,19 @@ const getScheduleDisplay = (schedule, currentTime, initialScrollIndex) => {
   return result;
 };
 
+/* ---------- COLLECTIONS ---------- */
+
+// sort by share/name/etc, desc
+const rankCollection = (collection, radios, categoriesExcluded) => {
+  const { sort_field: sortField, sort_order: sortOrder } = collection;
+
+  return compose(
+    filter(entry => collection.code_name === entry.collection),
+    filter(entry => categoriesExcluded.indexOf(entry.category) === -1),
+    orderBy([sortField], [sortOrder])
+  )(radios);
+};
+
 const getCollectionIndex = (name, collections) => findIndex(collections, c => c.code_name === name);
 
 const getNextCollection = (current, collections, way) => {
@@ -163,6 +182,7 @@ export default {
   initialScrollIndexFunction,
   getUpdatedProgramText,
   getScheduleDisplay,
+  rankCollection,
   initCurrentCollection,
   getCollectionIndex,
   getNextCollection
