@@ -2,3 +2,4 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         analytics: "%env(analytics)%"
+        timezone: "%timezone%"

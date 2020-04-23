@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-10 col-xs-12">
             <div class="title">
-                <h5>{{ date | localizeddate('full', 'none', 'fr_FR') | capitalize }}</h5>
+                <h5>{{ date | localizeddate('full', 'none', 'fr_FR', timezone) | capitalize }}</h5>
                 <a href="{{ path('homepage', {'c': radio.collection.codeName }) }}">← Retourner à la grille des programmes complète</a>
             </div>
 
@@ -27,7 +27,7 @@
                     </div>
                 {% endif %}
                 <div class="media-body">
-                    <h6 class="media-heading show-title">{{ show.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }}-{{ show.end_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ show.title }}</h6>
+                    <h6 class="media-heading show-title">{{ show.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }}-{{ show.end_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ show.title }}</h6>
                     {% if show.host %}
                         <div class="show-host"> {{ show.host }}</div>
                     {% endif %}
@@ -47,7 +47,7 @@
                                 </div>
                             {% endif %}
                             <div class="media-body">
-                                <h6 class="media-heading show-title">{{ section.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ section.title }}</h6>
+                                <h6 class="media-heading show-title">{{ section.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ section.title }}</h6>
                                 {% if section.presenter %}
                                     <div class="show-host">{{ section.presenter }}</div>
                                 {% endif %}

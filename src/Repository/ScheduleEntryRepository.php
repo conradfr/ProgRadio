@@ -266,6 +266,11 @@ EOT;
      * @return array
      */
     protected function getTimeSpecificSchedulesAndSections(\DateTime $dateTime, array $radios=null): array {
+        $dateTimeStart = clone $dateTime;
+        $dateTimeStart->setTime(0, 0, 0);
+        $dateTimeEnd = clone $dateTime;
+        $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
+
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
             ->addSelect('r.name as radio_name, r.share as radio_share, c.codeName as collectionCodeName')
@@ -284,6 +289,8 @@ EOT;
 
         $qb->setParameters([
             'datetime' => $dateTime,
+            'datetime_start' => $dateTimeStart,
+            'datetime_end' => $dateTimeEnd,
             'active' => true
         ]);
 

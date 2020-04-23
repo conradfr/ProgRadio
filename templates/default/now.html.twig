@@ -47,7 +47,7 @@
                                         </div>
                                     {% endif %}
                                     <div class="media-body">
-                                        <h6 class="media-heading show-title">{{ entry.show.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }}-{{ entry.show.end_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ entry.show.title }}</h6>
+                                        <h6 class="media-heading show-title">{{ entry.show.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }}-{{ entry.show.end_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ entry.show.title }}</h6>
                                         {% if entry.show.host %}
                                             <div class="show-host"> {{ entry.show.host }}</div>
                                         {% endif %}
@@ -67,7 +67,7 @@
                                                         </div>
                                                     {% endif %}
                                                     <div class="media-body">
-                                                        <h6 class="media-heading show-title">{{ section.start_at | localizeddate('none', 'short', 'fr_FR') | capitalize }} - {{ section.title }}</h6>
+                                                        <h6 class="media-heading show-title">{{ section.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ section.title }}</h6>
                                                         {% if section.presenter %}
                                                             <div class="show-host">{{ section.presenter }}</div>
                                                         {% endif %}
