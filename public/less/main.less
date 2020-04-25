@@ -6,8 +6,15 @@
 
 @import "components/navbar";
 
+html {
+  height: 100%;
+}
+
 body {
-  margin-top: @navbar-height;
+  height: 100%;
+  min-height: 100%;
+  padding-bottom: 30px;
+  padding-top: @navbar-height;
   background-color: white;
 
   &.body-app {
@@ -15,6 +22,11 @@ body {
   }
 
   @import "components/footer";
+}
+
+body > div.container, body > div.container-fluid {
+  min-height: 100%;
+  position: relative;
 }
 
 #app {

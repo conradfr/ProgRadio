@@ -2,7 +2,6 @@
 
 {% block bodysupp %} class="body-app"{% endblock %}
 {% block footersupp %}{% endblock %}
-{% block footerclasssupp %}{% endblock %}
 
 {% block javascript_head %}
 const baseUrl = '/';
@@ -22,7 +21,7 @@ const switchCollection = function(e, collection) {
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid" style="padding: 0 !important;">
+<div class="container-fluid" id="schedule-app">
     <div class="row" style="margin-right: 0 !important; margin-left: 0 !important">
         <div class="col-md-12" style="padding-right: 0 !important; padding-left: 0 !important">
             <div id="app">
