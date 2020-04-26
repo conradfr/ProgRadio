@@ -6,8 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Section entry
- *
  * @ORM\Entity(repositoryClass="App\Repository\ScheduleEntryRepository")
  */
 class SectionEntry
@@ -69,94 +67,59 @@ class SectionEntry
      */
     private $pictureUrl;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return SectionEntry
-     */
-    public function setId($id)
+    public function setId(int $id): SectionEntry
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return ScheduleEntry
-     */
-    public function getScheduleEntry()
+    public function getScheduleEntry(): ScheduleEntry
     {
         return $this->scheduleEntry;
     }
 
-    /**
-     * @param ScheduleEntry $scheduleEntry
-     * @return SectionEntry
-     */
-    public function setScheduleEntry($scheduleEntry)
+    public function setScheduleEntry(ScheduleEntry $scheduleEntry): SectionEntry
     {
         $this->scheduleEntry = $scheduleEntry;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateTimeStart()
+    public function getDateTimeStart(): \DateTime
     {
         return $this->dateTimeStart;
     }
 
-    /**
-     * @param \DateTime $dateTimeStart
-     * @return SectionEntry
-     */
-    public function setDateTimeStart($dateTimeStart)
+    public function setDateTimeStart(\DateTime $dateTimeStart): SectionEntry
     {
         $this->dateTimeStart = $dateTimeStart;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     * @return SectionEntry
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): SectionEntry
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPresenter(): string
     {
         return $this->presenter;
     }
 
-    /**
-     * @param string $presenter
-     * @return SectionEntry
-     */
     public function setPresenter(string $presenter): SectionEntry
     {
         $this->presenter = $presenter;
@@ -164,38 +127,24 @@ class SectionEntry
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     * @return SectionEntry
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): SectionEntry
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPictureUrl()
+    public function getPictureUrl(): string
     {
         return $this->pictureUrl;
     }
 
-    /**
-     * @param string $pictureUrl
-     * @return SectionEntry
-     */
-    public function setPictureUrl($pictureUrl)
+    public function setPictureUrl(string $pictureUrl): SectionEntry
     {
         $this->pictureUrl = $pictureUrl;
 

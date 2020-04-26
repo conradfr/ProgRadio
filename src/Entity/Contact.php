@@ -4,9 +4,6 @@ namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Contact
- */
 class Contact
 {
     /**
@@ -30,74 +27,38 @@ class Contact
      */
     private $message;
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Contact
-     */
-    public function setName($name)
+    public function setName(string $name): Contact
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Contact
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): Contact
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * Set message
-     *
-     * @param string $message
-     *
-     * @return Contact
-     */
-    public function setMessage($message)
+    public function setMessage(string $message): Contact
     {
         $this->message = $message;
 
         return $this;
     }
 
-    /**
-     * Get message
-     *
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }

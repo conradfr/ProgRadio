@@ -3,6 +3,10 @@ import Vue from 'vue';
 import without from 'lodash/without';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
+import compose from 'lodash/fp/compose';
+import filter from 'lodash/fp/filter';
+import map from 'lodash/fp/map';
 
 import * as config from '../config/config';
 
@@ -19,12 +23,16 @@ const cursorTime = moment().tz(config.TIMEZONE);
 
 const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
 
-// initial state
 /* eslint-disable no-undef */
+// radios.forEach(Object.freeze);
+categories.forEach(Object.freeze);
+collections.forEach(Object.freeze);
+
+// initial state
 const initState = {
-  radios: Object.freeze(radios),
-  categories: Object.freeze(categories),
-  collections: Object.freeze(collections),
+  radios,
+  categories,
+  collections,
   schedule: {},
   scheduleDisplay: {},
   cursorTime,
@@ -109,14 +117,20 @@ const storeActions = {
 
   collectionBackward: ({ state, commit }) => {
     commit('collectionSwitch',
-      ScheduleUtils.getNextCollection(state.currentCollection, state.collections, 'backward'));
+      ScheduleUtils.getNextCollection(state.currentCollection, state.collections, state.radios, 'backward'));
   },
   collectionForward: ({ state, commit }) => {
     commit('collectionSwitch',
-      ScheduleUtils.getNextCollection(state.currentCollection, state.collections, 'forward'));
+      ScheduleUtils.getNextCollection(state.currentCollection, state.collections, state.radios, 'forward'));
   },
   switchCollection: ({ commit }, collection) => {
     commit('collectionSwitch', collection);
+  },
+
+  // ---------- FAVORITES ----------
+
+  toggleFavorites: ({ commit }, radio) => {
+    commit('toggleFavorites', radio);
   },
 
   // ---------- CATEGORY ----------
@@ -225,6 +239,31 @@ const storeMutations = {
       Vue.cookie.set(config.COOKIE_COLLECTION, collection, { expires: config.COOKIE_TTL });
     }, 300);
   },
+  toggleFavorites(state, radioId) {
+    const index = findIndex(state.radios, r => r.code_name === radioId);
+    const updatedRadio = Object.assign({}, state.radios[index]);
+
+    // Is favorite
+    const favoriteIndex = updatedRadio.collection.indexOf(config.COLLECTION_FAVORITES);
+    if (updatedRadio.collection.indexOf(config.COLLECTION_FAVORITES) !== -1) {
+      updatedRadio.collection.splice(favoriteIndex, 1);
+      Vue.set(state.radios, index, updatedRadio);
+      // Vue.delete(state.radios[index].collection, favoriteIndex);
+    } else {
+      updatedRadio.collection.push(config.COLLECTION_FAVORITES);
+      Vue.set(state.radios, index, updatedRadio);
+    }
+
+    setTimeout(() => {
+      const favorites = compose(
+        map(entry => entry.code_name),
+        filter(entry => entry.collection.indexOf(config.COLLECTION_FAVORITES) !== -1)
+      )(state.radios);
+
+      Vue.cookie.set(config.COOKIE_FAVORITES, favorites.join('|'),
+        { expires: config.COOKIE_TTL });
+    }, 500);
+  },
   setCategoryFilterFocus(state, params) {
     state.categoryFilterFocus[params.element] = params.status;
   },
@@ -247,7 +286,9 @@ const storeMutations = {
     const scheduleDisplay = ScheduleUtils.getScheduleDisplay(
       value, state.cursorTime, initialScrollIndex
     );
-    Vue.set(state, 'schedule', Object.freeze(value));
+
+    Object.freeze(value);
+    Vue.set(state, 'schedule', value);
     Vue.set(state, 'scheduleDisplay', scheduleDisplay);
   }
 };

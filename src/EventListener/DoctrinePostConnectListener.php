@@ -15,7 +15,7 @@ class DoctrinePostConnectListener
         $this->timezone=$timezone;
     }
 
-    public function postConnect(ConnectionEventArgs $args)
+    public function __invoke(ConnectionEventArgs $args)
     {
         $args->getConnection()
              ->exec("SET time zone '" . $this->timezone . "'");

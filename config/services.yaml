@@ -40,6 +40,10 @@ services:
             - "@snc_redis.default"
             - "@serializer"
 
+    App\EventListener\KernelRequestListener:
+        tags:
+            - { name: kernel.event_listener }
+
     App\EventListener\DoctrinePostConnectListener:
         arguments:
             - "%timezone%"

@@ -12,6 +12,8 @@ export const PROGRAM_LONG_ENOUGH = 45; /* minutes */
 
 export const DEFAULT_VOLUME = 8;
 
+export const COLLECTION_FAVORITES = 'favorites';
+
 export const COOKIE_PREFIX = 'progradio';
 export const COOKIE_TTL = '1Y';
 
@@ -20,6 +22,7 @@ export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
 export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastradio`;
+export const COOKIE_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
 
 export const TIMEZONE = 'Europe/Paris';
 

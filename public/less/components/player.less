@@ -38,7 +38,7 @@
     width: 28px;
 
     padding-top: 3px;
-    padding-left: 11px;
+    padding-left: 10px;
 
     color: white;
     text-align: center;
@@ -113,5 +113,57 @@
   .player-name-help {
     font-size: 10px;
     line-height: 1.5em;
+  }
+
+  .player-favorite {
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+
+    background-color: @program-color;
+
+    mask-image: url('../../img/favorite-empty.svg');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: 13px 13px;
+
+    -webkit-mask-image: url('../../img/favorite-empty.svg');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: 13px 13px;
+
+    /* IE only, default to black icon */
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+      background-color: transparent;
+
+      background-image: url('../../img/favorite-empty.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 77% 77%;
+    }
+
+    &.player-favorite-added, &:hover {
+      mask-image: url('../../img/favorite.svg');
+      -webkit-mask-image: url('../../img/favorite.svg');
+
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        background-image: url('../../img/favorite.svg');
+      }
+    }
+
+    &.player-favorite-added:hover {
+      mask-image: url('../../img/favorite-empty.svg');
+      -webkit-mask-image: url('../../img/favorite-empty.svg');
+
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        background-image: url('../../img/favorite-empty.svg');
+      }
+    }
+
+    //img {
+    //  height: 13px;
+    //  width: 13px;
+    //  filter: invert(100%) sepia(0%) saturate(70%) hue-rotate(160deg) brightness(111%) contrast(100%);
+    //}
   }
 }

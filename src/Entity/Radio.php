@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Radio
- *
  * @ORM\Entity(repositoryClass="App\Repository\RadioRepository")
  */
 class Radio
 {
+    public const FAVORITES = 'favorites';
+
     /**
      * @var integer
      *
@@ -47,13 +47,11 @@ class Radio
 
     /**
      * @ORM\ManyToOne(targetEntity="Category")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     private $category;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Collection", fetch="EAGER")
-     * @ORM\JoinColumn(name="collection_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Collection", inversedBy="radios", fetch="EAGER")
      */
     private $collection;
 
@@ -87,66 +85,42 @@ class Radio
      */
     private $active = true;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return Category
-     */
-    public function getCategory()
+    public function getCategory(): Category
     {
         return $this->category;
     }
 
-    /**
-     * @param Category $category
-     */
-    public function setCategory(Category $category)
+    public function setCategory(Category $category): void
     {
         $this->category = $category;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getCollection()
+    public function getCollection(): Collection
     {
         return $this->collection;
     }
 
-    /**
-     * @param Collection $collection
-     */
-    public function setCollection(Collection $collection)
+    public function setCollection(Collection $collection): void
     {
         $this->collection = $collection;
     }
@@ -154,7 +128,7 @@ class Radio
     /**
      * @return double
      */
-    public function getShare()
+    public function getShare(): float
     {
         return $this->share;
     }
@@ -162,87 +136,57 @@ class Radio
     /**
      * @param double $share
      */
-    public function setShare($share)
+    public function setShare(float $share): void
     {
         $this->share = $share;
     }
 
-    /**
-     * @return string
-     */
     public function getStreamUrl(): string
     {
         return $this->streamUrl;
     }
 
-    /**
-     * @param string $streamUrl
-     */
     public function setStreamUrl(string $streamUrl): void
     {
         $this->streamUrl = $streamUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getCodeName()
+    public function getCodeName(): string
     {
         return $this->codeName;
     }
 
-    /**
-     * @param string $codeName
-     */
-    public function setCodeName($codeName)
+    public function setCodeName(string $codeName): void
     {
         $this->codeName = $codeName;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTimezone()
+    public function getTimezone(): string
     {
         return $this->timezone;
     }
 
-    /**
-     * @param mixed $timezone
-     */
-    public function setTimezone($timezone)
+    public function setTimezone(string $timezone): void
     {
         $this->timezone = $timezone;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * @param boolean $active
-     */
-    public function setActive($active)
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isStreamingEnabled()
+    public function isStreamingEnabled(): bool
     {
         return $this->streamingEnabled;
     }
 
-    /**
-     * @param boolean $enabled
-     */
-    public function setStreamingEnabled(bool $enabled)
+    public function setStreamingEnabled(bool $enabled): void
     {
         $this->active = $enabled;
     }

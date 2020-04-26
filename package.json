@@ -23,7 +23,7 @@
     "vue": "^2.5.16",
     "vue-cookie": "^1.1.4",
     "vue-touch": "^2.0.0-beta.4",
-    "vuex": "^3.0.1"
+    "vuex": "^3.3.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",

@@ -8,8 +8,6 @@ use Doctrine\ORM\Mapping\Index;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Schedule entry
- *
  * @ORM\Entity(repositoryClass="App\Repository\ScheduleEntryRepository")
  * @ORM\Table(indexes={@ORM\Index(name="starttime_idx", columns={"date_time_start"})})
  */
@@ -94,190 +92,120 @@ class ScheduleEntry
         $this->sectionEntries = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return ScheduleEntry
-     */
-    public function setId($id)
+    public function setId(int $id): ScheduleEntry
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRadio()
+    public function getRadio(): Radio
     {
         return $this->radio;
     }
 
-    /**
-     * @param mixed $radio
-     * @return ScheduleEntry
-     */
-    public function setRadio($radio)
+    public function setRadio(Radio $radio): ScheduleEntry
     {
         $this->radio = $radio;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateTimeStart()
+    public function getDateTimeStart(): \DateTime
     {
         return $this->dateTimeStart;
     }
 
-    /**
-     * @param \DateTime $dateTimeStart
-     * @return ScheduleEntry
-     */
-    public function setDateTimeStart($dateTimeStart)
+    public function setDateTimeStart(\DateTime $dateTimeStart): ScheduleEntry
     {
         $this->dateTimeStart = $dateTimeStart;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateTimeEnd()
+    public function getDateTimeEnd(): \DateTime
     {
         return $this->dateTimeEnd;
     }
 
-    /**
-     * @param \DateTime $dateTimeEnd
-     * @return ScheduleEntry
-     */
-    public function setDateTimeEnd($dateTimeEnd)
+    public function setDateTimeEnd(\DateTime $dateTimeEnd): ScheduleEntry
     {
         $this->dateTimeEnd = $dateTimeEnd;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getDuration()
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
-    /**
-     * @param int $duration
-     * @return ScheduleEntry
-     */
-    public function setDuration($duration)
+    public function setDuration(int $duration): ScheduleEntry
     {
         $this->duration = $duration;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     * @return ScheduleEntry
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): ScheduleEntry
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHost()
+    public function getHost(): string
     {
         return $this->host;
     }
 
-    /**
-     * @param string $host
-     * @return ScheduleEntry
-     */
-    public function setHost($host)
+    public function setHost(string $host): ScheduleEntry
     {
         $this->host = $host;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     * @return ScheduleEntry
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): ScheduleEntry
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPictureUrl()
+    public function getPictureUrl(): string
     {
         return $this->pictureUrl;
     }
 
-    /**
-     * @param string $pictureUrl
-     * @return ScheduleEntry
-     */
-    public function setPictureUrl($pictureUrl)
+    public function setPictureUrl(string $pictureUrl): ScheduleEntry
     {
         $this->pictureUrl = $pictureUrl;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSectionEntries()
+    public function getSectionEntries(): ArrayCollection
     {
         return $this->sectionEntries;
     }
 
-    /**
-     * @param mixed $sectionEntries
-     * @return ScheduleEntry
-     */
-    public function setSectionEntries($sectionEntries)
+    public function setSectionEntries(ArrayCollection $sectionEntries): ScheduleEntry
     {
         $this->sectionEntries = $sectionEntries;
 

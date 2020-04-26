@@ -6,9 +6,14 @@
   left: 0;
 
   width: @radio-list-width;
-  background-color: #343434;
+  //background-color: #343434;
 
   opacity: 0.95;
+
+  a {
+    position: relative;
+    z-index: 3;
+  }
 
   .radio-logo {
     display: block;
@@ -20,10 +25,11 @@
     align-items: center;
     justify-content: center;
 
+    background-color: #343434;
     background-repeat: no-repeat;
     background-position: center;
 
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid lighten(black, 3.6%);
     //border: 1px solid red;
     box-shadow: 3px 0 8px -3px rgba(0,0,0,0.4);
 
@@ -32,7 +38,7 @@
     }
 
     &:hover:not(.radio-logo-nohover) {
-      opacity: 0.9;
+      //opacity: 0.9;
     }
 
     .radio-logo-play {
@@ -44,7 +50,7 @@
       }
 
       &:hover:not(.radio-logo-play-hide), &.radio-logo-play-active:not(.radio-logo-play-hide) {
-        opacity: 0.9;
+        //opacity: 0.9;
 
         background-color: @brand-primary;
 
@@ -76,6 +82,85 @@
       &.radio-logo-play-active {
         opacity: 0.7;
       }
+    }
+  }
+
+  .radio-list-one-wrapper {
+    position: relative;
+    //z-index: 2;
+  }
+
+  .radio-list-one-wrapper:hover {
+    .radio-submenu {
+      //display: block;
+      left: @radio-list-width;
+    }
+  }
+  .radio-submenu {
+    //display: none;
+    z-index: 0;
+    position: absolute;
+    left: -@radio-list-width;
+    //left: -35px;
+    top: -1px;
+    transition: left 200ms ease-in-out 500ms;
+
+    height: calc(@grid-row-height + 1px);
+    width: @radio-list-width;
+
+    opacity: 0.95;
+    background-color: #343434;
+
+    border: 1px solid black;
+    border-left: none;
+
+    cursor: pointer;
+
+    .radio-submenu-entry {
+      width: 100%;
+      height: 100%;
+
+      font-size: 9px;
+      text-align: center;
+      line-height: 1.0;
+      color: darken(@program-color, 25%);
+
+      padding-top: 5px;
+
+      img {
+        height: 28px;
+        width: 28px;
+
+        //transition: width 50ms ease-in-out 0ms, height 50ms ease-in-out 0ms;
+      }
+
+      p {
+        margin-top: 5px;
+      }
+
+      .filter-fav {
+        filter: invert(13%) sepia(84%) saturate(4375%) hue-rotate(349deg) brightness(108%) contrast(95%);
+      }
+
+      span {
+        //vertical-align: bottom;
+        display: inline-block;
+        align-self: flex-end;
+      }
+
+      &:hover {
+        padding-top: 4px;
+
+        img {
+          height: 30px;
+          width: 30px;
+        }
+
+        p {
+          margin-top: 4px;
+        }
+      }
+
     }
   }
 

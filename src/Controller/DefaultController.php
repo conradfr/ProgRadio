@@ -10,6 +10,7 @@ use App\Entity\Category;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,11 +29,12 @@ class DefaultController extends AbstractController
      *      }
      * )
      */
-    public function index(EntityManagerInterface $em): Response
+    public function index(EntityManagerInterface $em, Request $request): Response
     {
-        $radios = $em->getRepository(Radio::class)->getActiveRadios();
+        $favorites = $request->attributes->get('favorites', []);
+        $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
         $categories = $em->getRepository(Category::class)->getCategories();
-        $collections = $em->getRepository(Collection::class)->getCollections();
+        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
 
         return $this->render('default/index.html.twig', [
             'radios' => $radios,
@@ -76,18 +78,20 @@ class DefaultController extends AbstractController
      *     name="radios"
      * )
      */
-    public function radios(EntityManagerInterface $em): Response
+    public function radios(EntityManagerInterface $em, Request $request): Response
     {
-        $radios = $em->getRepository(Radio::class)->getActiveRadios();
+        $favorites = $request->attributes->get('favorites', []);
+        $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
 
         return $this->jsonResponse([
             'radios' => $radios
         ]);
     }
 
-    public function collectionsMenu(EntityManagerInterface $em)
+    public function collectionsMenu(EntityManagerInterface $em, Request $request): Response
     {
-        $collections = $em->getRepository(Collection::class)->getCollections();
+        $favorites = $request->attributes->get('favorites', []);
+        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
 
         return $this->render('utils/_collections_menu.html.twig', [
             'collections' => $collections
@@ -137,12 +141,13 @@ class DefaultController extends AbstractController
      *
      * @throws \Exception
      */
-    public function now(EntityManagerInterface $em): Response
+    public function now(EntityManagerInterface $em, Request $request): Response
     {
         $dateTime = new \DateTime();
 
+        $favorites = $request->attributes->get('favorites', []);
         $schedule = $em->getRepository(ScheduleEntry::class)->getTimeSpecificSchedule($dateTime);
-        $collections = $em->getRepository(Collection::class)->getCollections();
+        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
 
         return $this->render('default/now.html.twig', [
             'schedule' => $schedule,

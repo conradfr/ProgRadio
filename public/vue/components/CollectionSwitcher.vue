@@ -1,22 +1,36 @@
 <template>
-  <div class="collection-switcher" v-once>
-      <div class="collection-control collection-backward"
-           v-on:click="clickCollectionBackward">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-      </div>
-      <div class="collection-control collection-forward"
-           v-on:click="clickCollectionForward">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-      </div>
+  <div class="collection-switcher">
+    <div class="collection-switcher-next">{{ nextCollection }}</div>
+    <div class="collection-control collection-backward"
+         v-on:click="clickCollectionBackward"
+         v-on:mouseover="hover('backward')">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    </div>
+    <div class="collection-control collection-forward"
+         v-on:click="clickCollectionForward"
+         v-on:mouseover="hover('forward')">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </div>
     </div>
 </template>
 
 <script>
-// import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import find from 'lodash/find';
+import ScheduleUtils from '../utils/ScheduleUtils';
 
 export default {
   data() {
-    return {};
+    return {
+      nextCollection: ''
+    };
+  },
+  computed: {
+    ...mapState({
+      radios: state => state.schedule.radios,
+      collections: state => state.schedule.collections,
+      currentCollection: state => state.schedule.currentCollection,
+    })
   },
   methods: {
     clickCollectionBackward() {
@@ -25,6 +39,13 @@ export default {
     clickCollectionForward() {
       this.$store.dispatch('collectionForward');
     },
+    hover(way) {
+      const nextCollectionCodeName = ScheduleUtils.getNextCollection(this.currentCollection,
+        this.collections, this.radios, way);
+
+      const collection = find(this.collections, c => c.code_name === nextCollectionCodeName);
+      this.nextCollection = collection.short_name;
+    }
   }
 };
 </script>

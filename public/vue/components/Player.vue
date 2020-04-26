@@ -32,6 +32,9 @@
       <div v-if="!player.radio" class="player-name player-name-help">
         Cliquer sur un logo pour lancer la lecture
       </div>
+      <div class="player-favorite" v-on:click="toggleFavorites"
+           :title="favoriteTitle" :class="{ 'player-favorite-added': isFavorite }">
+      </div>
     </div>
     <volume-fader v-if="displayVolume"/>
   </div>
@@ -68,6 +71,10 @@ export default {
     ...mapGetters([
       'displayVolume'
     ]),
+    isFavorite() {
+      return this.player.radio !== null
+        && this.player.radio.collection.indexOf(config.COLLECTION_FAVORITES) !== -1;
+    },
     showTitle() {
       if (this.player.show === null) {
         return '';
@@ -79,6 +86,11 @@ export default {
 
       return `${this.player.show.title} - ${start}-${end}`;
     },
+    favoriteTitle() {
+      return (this.player.radio !== null
+      && this.player.radio.collection.indexOf(config.COLLECTION_FAVORITES) !== -1)
+        ? 'Retirer des favoris' : 'Ajouter aux favoris';
+    }
   },
   /* eslint-disable func-names */
   watch: {
@@ -130,6 +142,11 @@ export default {
     stop() {
       this.audio.pause();
       this.audio = null;
+    },
+    toggleFavorites() {
+      if (this.player.radio !== null) {
+        this.$store.dispatch('toggleFavorites', this.player.radio.code_name);
+      }
     },
     volumeFocus(status) {
       setTimeout(

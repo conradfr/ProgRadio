@@ -4,6 +4,7 @@ import findIndex from 'lodash/findIndex';
 import Vue from 'vue';
 import compose from 'lodash/fp/compose';
 import filter from 'lodash/fp/filter';
+import filter2 from 'lodash/filter';
 import orderBy from 'lodash/fp/orderBy';
 
 import * as config from '../config/config';
@@ -126,10 +127,10 @@ const getScheduleDisplay = (schedule, currentTime, initialScrollIndex) => {
 
 // sort by share/name/etc, desc
 const rankCollection = (collection, radios, categoriesExcluded) => {
-  const { sort_field: sortField, sort_order: sortOrder } = collection;
+  const { code_name: codeName, sort_field: sortField, sort_order: sortOrder } = collection;
 
   return compose(
-    filter(entry => collection.code_name === entry.collection),
+    filter(entry => entry.collection.indexOf(codeName) !== -1),
     filter(entry => categoriesExcluded.indexOf(entry.category) === -1),
     orderBy([sortField], [sortOrder])
   )(radios);
@@ -137,16 +138,27 @@ const rankCollection = (collection, radios, categoriesExcluded) => {
 
 const getCollectionIndex = (name, collections) => findIndex(collections, c => c.code_name === name);
 
-const getNextCollection = (current, collections, way) => {
-  const indexOfCurrentCollection = getCollectionIndex(current, collections);
+const filterRadiosByCollection = (radios, collectionName) => filter2(radios,
+  entry => entry.collection.indexOf(collectionName) !== -1);
 
+const getNextCollection = (current, collections, radios, way) => {
+  const indexOfCurrentCollection = getCollectionIndex(current, collections);
   let newIndex = 0;
+
   if (way === 'backward') {
     newIndex = indexOfCurrentCollection === 0 ? collections.length - 1
       : indexOfCurrentCollection - 1;
   } else if (way === 'forward') {
     newIndex = collections.length === (indexOfCurrentCollection + 1) ? 0
       : indexOfCurrentCollection + 1;
+  }
+
+  // has the collection any radios? If no, skip it.
+  const nextCollection = collections[newIndex];
+  const radiosFiltered = filterRadiosByCollection(radios, nextCollection.code_name);
+
+  if (radiosFiltered.length === 0) {
+    return getNextCollection(nextCollection.code_name, collections, radios, way);
   }
 
   return collections[newIndex].code_name;
@@ -177,13 +189,18 @@ const initCurrentCollection = (collections) => {
   return param || config.DEFAULT_COLLECTION;
 };
 
+const initFavorites = () => (Vue.cookie.get(config.COOKIE_FAVORITES)
+  ? Vue.cookie.get(config.COOKIE_FAVORITES).split('|') : []);
+
 export default {
   enforceScrollIndex,
   initialScrollIndexFunction,
   getUpdatedProgramText,
   getScheduleDisplay,
   rankCollection,
+  filterRadiosByCollection,
   initCurrentCollection,
   getCollectionIndex,
-  getNextCollection
+  getNextCollection,
+  initFavorites,
 };

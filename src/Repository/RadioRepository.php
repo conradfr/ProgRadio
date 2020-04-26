@@ -1,47 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
+use App\Entity\Radio;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * RadioRepository
- */
 class RadioRepository extends EntityRepository
 {
-    protected const CACHE_RADIO_TTL = 43200; // half-day
+    protected const CACHE_RADIO_TTL = 604800; // week
 
-    /**
-     * @param string $codeName
-     *
-     * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getRadio($codeName) {
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamUrl,
-                    r.share, r.streamnigEnabled as streaming_enabled,
-                    c.codeName as category, cl.codeName as collection
-                FROM App:Radio r
-                  INNER JOIN r.category c
-                  INNER JOIN r.collection cl
-                WHERE r.active = :active
-                  AND r.codeName = :codename
-            '
-        );
-
-        $query->setParameters([
-            'active' => true,
-            'codename' => $codeName
-        ]);
-
-        return $query->getOneOrNullResult();
-    }
-
-    /**
-     * @return array
-     */
-    public function getActiveRadios(): array {
+    public function getActiveRadios(array $favorites = []): array {
         $query = $this->getEntityManager()->createQuery(
             'SELECT r.codeName as code_name, r.name, r.streamUrl,
                     r.share, r.streamingEnabled as streaming_enabled,
@@ -56,15 +26,22 @@ class RadioRepository extends EntityRepository
         $query->setParameter('active', true);
 
         $query->enableResultCache(self::CACHE_RADIO_TTL, 'active_radios');
-        return $query->getResult();
+
+        $results = $query->getResult();
+
+        /* @todo it works for now for favorites, but need real many-to-many if developed further */
+        $withCollectionAsArray = array_map(function($radio) use ($favorites) {
+            $radio['collection'] = [$radio['collection']];
+            if (in_array($radio['code_name'], $favorites)) {
+                $radio['collection'][] = Radio::FAVORITES;
+            }
+            return $radio;
+        }, $results);
+
+        return $withCollectionAsArray;
     }
 
-    /**
-     * @param bool $filterbyActive
-     *
-     * @return array
-     */
-    public function getAllCodename($filterbyActive=true): array {
+    public function getAllCodename($filterbyActive = true): array {
         $queryString = 'SELECT r.codeName' . PHP_EOL
                         . 'FROM App:Radio r' . PHP_EOL;
 
@@ -82,11 +59,7 @@ class RadioRepository extends EntityRepository
        return array_column($result, 'codeName');
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getNameAndShares()
+    public function getNameAndShares(): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 

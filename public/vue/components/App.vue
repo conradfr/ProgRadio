@@ -15,8 +15,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import throttle from 'lodash/throttle';
+
+import ScheduleUtils from '../utils/ScheduleUtils';
+import { COLLECTION_FAVORITES } from '../config/config';
 
 import CollectionSwitcher from './CollectionSwitcher.vue';
 import Timeline from './Timeline.vue';
@@ -47,9 +50,27 @@ export default {
     // set focus on the schedule container to allow key nav.
     this.$refs.container.$el.focus();
   },
-  computed: mapGetters([
-    'displayCategoryFilter'
-  ]),
+  computed: {
+    ...mapGetters([
+      'displayCategoryFilter'
+    ]),
+    ...mapState({
+      radios: state => state.schedule.radios
+    })
+  },
+  watch: {
+    // update the collection menu that is outside the Vue app for now
+    radios(val) {
+      const favorites = ScheduleUtils.filterRadiosByCollection(val, COLLECTION_FAVORITES);
+      const menuItem = document.getElementById(`collections-menu-${COLLECTION_FAVORITES}`);
+
+      if (favorites.length === 0) {
+        menuItem.classList.add('disabled');
+      } else {
+        menuItem.classList.remove('disabled');
+      }
+    },
+  },
   methods: {
     keyLeft() {
       this.$store.dispatch('scrollBackward');

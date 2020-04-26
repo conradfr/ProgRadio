@@ -30,10 +30,11 @@ class SiteController extends AbstractController
      *      }
      * )
      */
-    public function faq(EntityManagerInterface $em): Response
+    public function faq(EntityManagerInterface $em, Request $request): Response
     {
-        $radios = $em->getRepository(Radio::class)->getActiveRadios();
-        $collections = $em->getRepository(Collection::class)->getCollections();
+        $favorites = $request->attributes->get('favorites', []);
+        $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
+        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
 
         return $this->render('default/faq.html.twig',
             [

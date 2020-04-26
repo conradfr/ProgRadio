@@ -6,19 +6,13 @@
 
 {% macro collections_list(collections) %}
     {% for collection in collections %}
-        <a href="{{ path('homepage', {'c': collection.code_name}) }}">
-            {{ collection.name_FR }}
-        </a>
-        {% if not loop.last %}, {% endif %}
+        {% if collection.radio_count> 0 %}{% if not loop.first %}, {% endif %}<a href="{{ path('homepage', {'c': collection.code_name}) }}">{{ collection.name_FR }}</a>{% endif %}
     {% endfor %}
 {% endmacro %}
 
 {% macro radios_list(radios) %}
     {% for radio in radios|sort %}
-        <a href="{{ path('radio', {'codename': radio.code_name}) }}">
-            {{ radio.name }}
-        </a>
-        {% if not loop.last %}, {% endif %}
+        <a href="{{ path('radio', {'codename': radio.code_name}) }}">{{ radio.name }}</a>{% if not loop.last %}, {% endif %}
     {% endfor %}
 {% endmacro %}
 

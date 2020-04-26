@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20200424091022 extends AbstractMigration implements ContainerAwareInterface
+{
+    private $container;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    public function getDescription() : string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema) : void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql(
+            'INSERT INTO collection (id, code_name, name, priority, sort_field, sort_order) VALUES (5, \'favorites\', \'Mes favoris\', 50, \'code_name\', \'asc\')'
+        );
+
+    }
+
+    public function down(Schema $schema) : void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+
+    }
+}

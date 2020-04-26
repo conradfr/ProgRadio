@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Radio;
 
 /**
- * Collection
- *
- * @ORM\Entity
- *
  * @ORM\Entity(repositoryClass="App\Repository\CollectionRepository")
  */
 class Collection
@@ -40,6 +38,14 @@ class Collection
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=25)
+     * @Groups({"export"})
+     */
+    private $shortName;
+
+    /**
      * @var integer
      *
      * @ORM\Column(type="integer")
@@ -52,7 +58,7 @@ class Collection
      * @ORM\Column(type="string", length=25)
      * @Groups({"export"})
      */
-    private $sort_field;
+    private $sortField;
 
     /**
      * @var string
@@ -60,101 +66,94 @@ class Collection
      * @ORM\Column(type="string", length=5)
      * @Groups({"export"})
      */
-    private $sort_order;
+    private $sortOrder;
 
     /**
-     * @return int
+     * @ORM\OneToMany(targetEntity="Radio", mappedBy="collection")
      */
+    private $radios;
+
+    public function __construct() {
+        $this->radios = new ArrayCollection();
+    }
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getCodeName(): string
     {
         return $this->codeName;
     }
 
-    /**
-     * @param string $codeName
-     */
-    public function setCodeName($codeName): void
+    public function setCodeName(string $codeName): void
     {
         $this->codeName = $codeName;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return int
-     */
+    public function getShortName(): string
+    {
+        return $this->shortName;
+    }
+
+    public function setShortName(string $shortName): void
+    {
+        $this->shortName = $shortName;
+    }
+
     public function getPriority(): int
     {
         return $this->priority;
     }
 
-    /**
-     * @param int $priority
-     */
     public function setPriority(int $priority): void
     {
         $this->priority = $priority;
     }
 
-    /**
-     * @return string
-     */
     public function getSortField(): string
     {
-        return $this->sort_field;
+        return $this->sortField;
     }
 
-    /**
-     * @param string $sort_field
-     */
-    public function setSortField(string $sort_field): void
+    public function setSortField(string $sortField): void
     {
-        $this->sort_field = $sort_field;
+        $this->sortField = $sortField;
     }
 
-    /**
-     * @return string
-     */
     public function getSortOrder(): string
     {
-        return $this->sort_order;
+        return $this->sortOrder;
     }
 
-    /**
-     * @param string $sort_order
-     */
-    public function setSortOrder(string $sort_order): void
+    public function setSortOrder(string $sortOrder): void
     {
-        $this->sort_order = $sort_order;
+        $this->sortOrder = $sortOrder;
+    }
+
+    public function getRadios(): ArrayCollection
+    {
+        return $this->radios;
+    }
+
+    public function setRadio(ArrayCollection $radios): void
+    {
+        $this->radioss = $radios;
     }
 }
