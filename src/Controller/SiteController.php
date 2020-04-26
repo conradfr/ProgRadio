@@ -91,6 +91,21 @@ class SiteController extends AbstractController
     }
 
     /**
+     * @Route(
+     *     "/legal",
+     *     name="legal",
+     *     defaults={
+     *      "priority": "0.1",
+     *      "changefreq": "yearly"
+     *      }
+     * )
+     */
+    public function legal(): Response
+    {
+        return $this->render('default/legal.html.twig', []);
+    }
+
+    /**
      * Simple sitemap generator
      *
      * Doesn't use the serializer.
