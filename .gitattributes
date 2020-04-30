@@ -1,4 +1,7 @@
 tools/* linguist-vendored
+tools/vagrant/* linguist-vendored
+tools/vagrant/puphpet/puppet/modules/*/docs/* linguist-vendored
+tools/vagrant/puphpet/puppet/modules/*/doc/css/* linguist-vendored
 bin/* linguist-vendored
 Importer/_build/* linguist-generated=true
 docs/* linguist-documentation
@@ -12,6 +15,8 @@ work/* linguist-vendored
 
 # source code
 *.php text
+*.ex text
+*.exs text
 *.css text
 *.sass text
 *.scss text

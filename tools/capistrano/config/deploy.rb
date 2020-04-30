@@ -25,7 +25,8 @@ set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 set :linked_files, ["Importer/config/prod.exs", "config/scraper_parameters.yml", ".env.prod.local"]
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "public/media/program", "public/media/cache/program_thumb/media/program", "public/media/cache/page_thumb/media/program", "Importer/deps", "Importer/_build/prod/rel/importer/var");
+set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "public/media/program", "public/media/cache/program_thumb/media/program", "public/media/cache/page_thumb/media/program", "Importer/deps")
+# , "Importer/_build/prod/rel/importer/var");
 
 # Default value for default_env is {}
 set :default_env, {
@@ -44,7 +45,8 @@ set :composer_install_flags, '--no-dev --no-interaction --optimize-autoloader --
 set :file_permissions_groups, ["www-data"]
 set :file_permissions_users, ["www-data", "deployer"]
 set :file_permissions_chmod_mode, "0777"
-set :file_permissions_paths, ["var", "public/media/program","public/media/cache/program_thumb/media/program","public/media/cache/page_thumb/media/program"]
+set :file_permissions_paths, ["var"]
+# set :file_permissions_paths, ["var", "public/media/program","public/media/cache/program_thumb/media/program","public/media/cache/page_thumb/media/program"]
 
 # set :permission_method, :acl
 # set :use_set_permissions, true
@@ -124,7 +126,7 @@ namespace :myproject do
   task :importerbuild do
     on roles(:app) do
         within release_path + "Importer" do
-            execute "mix", "release", "--env=prod"
+            execute "mix", "release", "prod", "--overwrite"
         end
     end
   end

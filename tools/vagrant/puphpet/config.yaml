@@ -27,7 +27,7 @@ vagrantfile:
                             forwarded_port:
                                 port1:
                                     host: '8080'
-                                    guest: '22'
+                                    guest: '80'
                                 port2:
                                     host: '6379'
                                     guest: '6379'
@@ -46,7 +46,7 @@ vagrantfile:
             folder1:
                 owner: vagrant
                 group: vagrant
-                source: '/Users/lcocatrix/Perso/ProgRadio'
+                source: 'D:\\Developpement\\Projets\\ProgRadio'
                 target: /var/www/progradio
                 sync_type: default
                 smb:

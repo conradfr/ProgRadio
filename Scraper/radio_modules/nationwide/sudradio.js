@@ -37,9 +37,9 @@ const format = dateObj => {
     newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'host': curr.host,
-      'title': curr.title,
-      'img': curr.img
+      'host': curr.host.trim(),
+      'title': curr.title.trim(),
+      'img': curr.img.trim()
     };
 
     if (Array.isArray(curr.sub) && typeof curr.sub[0] !== 'string') {
@@ -55,10 +55,10 @@ const format = dateObj => {
 
           let secEntry = {
             date_time_start: startDateTime,
-            title: entry.title,
+            title: entry.title.trim(),
             // description: entry.description,
-            img: entry.img,
-            presenter: entry.presenter
+            img: entry.img.trim(),
+            presenter: entry.presenter.trim()
 
           };
 

@@ -1,0 +1,27 @@
+[Unit]
+Description=ProgRadio Importer Service
+After=network.target
+
+[Service]
+Type=simple
+
+User=www-data
+Group=www-data
+
+WorkingDirectory=/var/www/progradio_prod/current/Importer
+
+ExecStart=/var/www/progradio_prod/current/Importer/_build/prod/rel/prod/bin/prod start
+ExecStop=/var/www/progradio_prod/current/Importer/_build/prod/rel/prod/bin/prod stop
+
+Restart=always
+RemainAfterExit=yes
+RestartSec=5
+Environment=MIX_ENV=prod PORT=9090
+Environment=LANG=en_US.UTF-8
+Environment="HOME=/var/www/progradio_prod/current/Importer"
+Environment="MIX_ENV=prod"
+
+SyslogIdentifier=simple
+
+[Install]
+WantedBy=multi-user.target
