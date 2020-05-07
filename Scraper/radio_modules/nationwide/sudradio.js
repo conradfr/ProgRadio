@@ -37,9 +37,10 @@ const format = dateObj => {
     newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'host': curr.host.trim(),
+      'host': curr.host !== undefined ? curr.host.replace(/\s\s+/g, ' ') : null,
       'title': curr.title.trim(),
-      'img': curr.img.trim()
+      'description': curr.description !== undefined ? curr.description.replace(/\s\s+/g, ' ') : null,
+      'img': curr.img !== undefined ? curr.img.trim() : null
     };
 
     if (Array.isArray(curr.sub) && typeof curr.sub[0] !== 'string') {
@@ -57,8 +58,8 @@ const format = dateObj => {
             date_time_start: startDateTime,
             title: entry.title.trim(),
             // description: entry.description,
-            img: entry.img.trim(),
-            presenter: entry.presenter.trim()
+            img: entry.img !== undefined ? entry.img.trim() : null,
+            presenter: entry.presenter !== undefined ? entry.presenter.trim() : null
 
           };
 
@@ -89,11 +90,12 @@ const fetch = dateObj => {
       .find(`#nav-${dayFormat}`)
       .select('ol.list-unstyled li.sud-schedule__show')
       .set({
+        'img': 'img.sud-show__thumbnail-image@src',
         'datetime_raw_start': 'time.sud-show__meta-date-start',
         'datetime_raw_end': 'time.sud-show__meta-date-end',
-        'img': 'img@src',
         'title': 'h3 > a',
         'host': 'address',
+        'description': '.sud-show__excerpt.sud-excerpt p',
         'sub': [
           osmosis.select('section.sud-podcast header')
             .set({
