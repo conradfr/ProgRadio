@@ -8107,6 +8107,16 @@ body > div.container-fluid {
   max-height: 32px;
   max-width: 32px;
 }
+#admin .schedule-stats td.radio-streaming {
+  width: 48px;
+}
+#admin .schedule-stats td.radio-streaming .glyphicon-ok-sign {
+  font-size: 16px;
+  color: #4CAF50;
+}
+#admin .schedule-stats td.radio-streaming .badge {
+  background-color: #e51c23;
+}
 .schedule-container .schedule-radio-list {
   position: absolute;
   z-index: 2;

@@ -16,13 +16,13 @@ export default {
   play(radio, currentShow) {
     if (hasAndroid === false) { return; }
     const showTitle = (typeof currentShow === 'undefined' || currentShow === null) ? null : currentShow.title;
-    Android.play(radio.name, showTitle, radio.streamUrl);
+    Android.play(radio.name, showTitle, radio.streamingUrl);
   },
   pause() {
     if (hasAndroid === false) { return; }
     Android.pause();
   },
   toggle(radio) {
-    Android.toggle(radio.name, radio.streamUrl);
+    Android.toggle(radio.name, radio.streamingUrl);
   }
 };

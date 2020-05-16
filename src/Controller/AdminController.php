@@ -23,9 +23,13 @@ class AdminController extends AbstractController
      */
     public function indexAction(EntityManagerInterface $em): Response
     {
+        $radios = $em->getRepository(Radio::class)->findBy(['active' => true], ['id' => 'ASC']);
         $stats = $em->getRepository(ScheduleEntry::class)->getStatsByDayAndRadio();
 
-        return $this->render('default/admin/dashboard.html.twig', ['stats' => $stats]);
+        return $this->render('default/admin/dashboard.html.twig', [
+            'radios' => $radios,
+            'stats' => $stats
+        ]);
     }
 
     /**

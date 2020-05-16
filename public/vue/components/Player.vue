@@ -98,7 +98,7 @@ export default {
       if (this.player.externalPlayer === true) { return; }
 
       if (val === true) {
-        this.play(this.player.radio.streamUrl);
+        this.play(this.player.radio.streamingUrl);
       } else {
         this.stop();
       }

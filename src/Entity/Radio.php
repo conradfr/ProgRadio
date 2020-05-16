@@ -69,7 +69,7 @@ class Radio
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"export"})
      */
-    private $streamUrl;
+    private $streamingUrl;
 
     /**
      * @var boolean
@@ -77,6 +77,20 @@ class Radio
      * @ORM\Column(type="boolean", options={"default"=true})
      */
     private $streamingEnabled = true;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", options={"default"=true})
+     */
+    private $streamingStatus = true;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", options={"default"=true})
+     */
+    private $streamingRetries = true;
 
     /**
      * @var boolean
@@ -141,14 +155,14 @@ class Radio
         $this->share = $share;
     }
 
-    public function getStreamUrl(): string
+    public function getstreamingUrl(): string
     {
-        return $this->streamUrl;
+        return $this->streamingUrl;
     }
 
-    public function setStreamUrl(string $streamUrl): void
+    public function setstreamingUrl(string $streamingUrl): void
     {
-        $this->streamUrl = $streamUrl;
+        $this->streamingUrl = $streamingUrl;
     }
 
     public function getCodeName(): string
@@ -189,5 +203,25 @@ class Radio
     public function setStreamingEnabled(bool $enabled): void
     {
         $this->active = $enabled;
+    }
+
+    public function isStreamingStatus(): bool
+    {
+        return $this->streamingStatus;
+    }
+
+    public function setStreamingStatus(bool $streamingStatus): void
+    {
+        $this->streamingStatus = $streamingStatus;
+    }
+
+    public function getStreamingRetries(): int
+    {
+        return $this->streamingRetries;
+    }
+
+    public function setStreamingRetries(int $streamingRetries): void
+    {
+        $this->streamingRetries = $streamingRetries;
     }
 }

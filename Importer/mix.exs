@@ -14,7 +14,7 @@ defmodule Importer.Mixfile do
           include_executables_for: [:unix],
           applications: [runtime_tools: :permanent],
           include_erts: false
-        ],
+        ]
       ]
     ]
   end

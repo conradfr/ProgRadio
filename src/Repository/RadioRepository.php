@@ -13,8 +13,8 @@ class RadioRepository extends EntityRepository
 
     public function getActiveRadios(array $favorites = []): array {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamUrl,
-                    r.share, r.streamingEnabled as streaming_enabled,
+            'SELECT r.codeName as code_name, r.name, r.streamingUrl as streamUrl,
+                    r.streamingUrl, r.share, r.streamingEnabled as streaming_enabled,
                     c.codeName as category, cl.codeName as collection
                 FROM App:Radio r
                   INNER JOIN r.category c

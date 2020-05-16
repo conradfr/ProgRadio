@@ -3,11 +3,21 @@
 use Mix.Config
 
 config :importer,
-       ecto_repos: [Importer.Repo]
+  ecto_repos: [Importer.Repo]
 
 # Configure logger
 config :logger,
-       level: :error
+  level: :error
+
+config :hackney, use_default_pool: false
+
+ config :importer, Importer.Scheduler,
+       jobs: [
+         update: [
+           schedule: "14 */2 * * *",
+           task: {Importer.Checker.Streams, :check, []}
+         ],
+       ]
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
@@ -34,4 +44,4 @@ config :logger,
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
