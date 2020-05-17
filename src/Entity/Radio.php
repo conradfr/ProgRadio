@@ -7,6 +7,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RadioRepository")
+ * @ORM\Table(indexes={@ORM\Index(name="radio_code_name_idx", columns={"codename"})})
  */
 class Radio
 {

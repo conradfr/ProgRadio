@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ScheduleEntryRepository")
- * @ORM\Table(indexes={@ORM\Index(name="starttime_idx", columns={"date_time_start"})})
+ * @ORM\Table(indexes={@ORM\Index(name="starttime_idx", columns={"date_time_start"}), @ORM\Index(name="endtime_idx", columns={"date_time_end"})})
  */
 class ScheduleEntry
 {
@@ -67,7 +67,7 @@ class ScheduleEntry
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      * @Groups({"export"})
      */
     private $host;
