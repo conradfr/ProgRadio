@@ -14,7 +14,8 @@ defmodule Importer.ImageImporter do
       try do
         case full_url(url)
              |> URI.encode()
-             |> HTTPoison.get([], follow_redirect: true) do
+             |> HTTPoison.get([], [follow_redirect: true, ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]]) do
+#             |> HTTPoison.get([], [follow_redirect: true]) do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
             case File.write(full_path, body) do
               :ok -> {:ok, filename}
@@ -22,6 +23,7 @@ defmodule Importer.ImageImporter do
             end
 
           _ ->
+            Logger.warn("Error importing image #{url}")
             {:ok, nil}
         end
       rescue
