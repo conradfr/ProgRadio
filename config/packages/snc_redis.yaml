@@ -1,14 +1,13 @@
+snc_redis:
 # Define your clients here. The example below connects to database 0 of the default Redis server.
 #
 # See https://github.com/snc/SncRedisBundle/blob/master/Resources/doc/index.md for instructions on
 # how to configure the bundle.
 #
 #        default:
-#            type: predis
+#            type: phpredis
 #            alias: default
 #            dsn: "%env(REDIS_URL)%"
-
-snc_redis:
     clients:
         default:
             type: predis
@@ -18,3 +17,17 @@ snc_redis:
         client: default
         prefix: session_
 
+    doctrine:
+        metadata_cache:
+            client: default
+            entity_manager: default
+            document_manager: default
+        result_cache:
+            client: default
+            entity_manager: default
+        query_cache:
+            client: default
+            entity_manager: default
+        second_level_cache:
+            client: default
+            entity_manager: default

@@ -5,6 +5,3 @@
 admin_logout:
     path: /logout
     methods: GET
-
-#_liip_imagine:
-#    resource: "@LiipImagineBundle/Resources/config/routing.yaml"
