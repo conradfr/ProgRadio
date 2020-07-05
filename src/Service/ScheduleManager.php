@@ -17,12 +17,6 @@ class ScheduleManager
     /** @var  ScheduleCache */
     protected $cache;
 
-    /**
-     * ScheduleManager constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param ScheduleCache $cache
-     */
     public function __construct(EntityManagerInterface $entityManager, ScheduleCache $cache)
     {
         $this->em = $entityManager;
@@ -70,6 +64,10 @@ class ScheduleManager
      */
     public function getDaySchedule(\DateTime $dateTime, $decode = false): array
     {
+        $radioNewSchedule = $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($dateTime);
+        return $radioNewSchedule;
+
+
         $radios = $this->em->getRepository(Radio::class)->getAllCodename();
         $radiosInCache = $this->cache->getRadiosForDay($dateTime);
 

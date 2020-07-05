@@ -38,7 +38,9 @@ defmodule Importer.Mixfile do
       {:timex, "~> 3.5"},
       {:httpoison, "~> 1.6.0"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
-      {:quantum, "~> 2.3"}
+      {:quantum, "~> 2.3"},
+      {:dns, "~> 2.1.2"},
+      {:mogrify, "~> 0.7.4"}
     ]
   end
 end

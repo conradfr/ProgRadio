@@ -9,6 +9,8 @@ set :application, 'progradio'
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 
+# set :systemd_rpush_service, ->{ "rpush.service" }
+
 # Default value for :scm is :git
 # set :scm, :git
 
@@ -25,7 +27,7 @@ set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 set :linked_files, ["Importer/config/prod.exs", "config/scraper_parameters.yml", ".env.prod.local"]
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "public/media/program", "public/media/cache/program_thumb/media/program", "public/media/cache/page_thumb/media/program", "Importer/deps")
+set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "public/media/program", "public/media/stream", "public/media/cache/program_thumb/media/program", "public/media/cache/page_thumb/media/program", "Importer/deps")
 # , "Importer/_build/prod/rel/importer/var");
 
 # Default value for default_env is {}
@@ -68,11 +70,14 @@ namespace :deploy do
 
   before "deploy:updated", "myproject:migrations"
 
-  # before "deploy:updated", "myproject:importerdeps"
-  # before "deploy:updated", "myproject:importerbuild"
+  before "deploy:updated", "myproject:importerdeps"
+  before "deploy:updated", "myproject:importerbuild"
 
-  # before "deploy:starting", 'progradio_importer_ex:stop'
-  # after "deploy:publishing", 'progradio_importer_ex:start'
+  # before "deploy:starting", "myproject:importerstop"
+  # after "deploy:publishing", "myproject:importerstart"
+
+  # before "deploy:starting", 'systemd:importer:stop'
+  # after "deploy:publishing", 'systemd:importer:start'
 
   # after :publishing, "myproject:scraper_run"
 end
@@ -128,6 +133,24 @@ namespace :myproject do
         within release_path + "Importer" do
             execute "mix", "release", "prod", "--overwrite"
         end
+    end
+  end
+
+  desc "stop importer"
+  task :importerstop do
+    on roles(:app) do
+      within release_path do
+        execute "systemctl", "stop", "progradio_importer.service"
+      end
+    end
+  end
+
+  desc "start importer"
+  task :importerstart do
+    on roles(:app) do
+      within release_path do
+        execute "systemctl", "start", "progradio_importer.service"
+      end
     end
   end
 

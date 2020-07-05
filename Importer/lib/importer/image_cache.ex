@@ -6,7 +6,8 @@ defmodule Importer.ImageCache do
 
   @thumbnails [
     "cache/page_thumb/media/program/",
-    "cache/program_thumb/media/program/"
+    "cache/program_thumb/media/program/",
+    "cache/stream_thumb/media/stream/"
   ]
 
   @spec is_cached(String.t()) :: boolean
@@ -26,7 +27,7 @@ defmodule Importer.ImageCache do
     end
   end
 
-  @spec delete_cached_files(integer) :: boolean
+  @spec is_ttl_over(integer) :: boolean
   defp is_ttl_over(datetime) do
     DateTime.to_unix(DateTime.utc_now()) - @ttl > datetime
   end

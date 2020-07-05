@@ -23,16 +23,17 @@ require 'capistrano/deploy'
 # require 'capistrano/rails/migrations'
 # require 'capistrano/passenger'
 
-
 require "capistrano/scm/git"
 install_plugin Capistrano::SCM::Git
-
 
 require 'capistrano/symfony'
 # require 'capistrano/npm'
 require 'capistrano/yarn'
 
-require 'capistrano/upstart/service'
+# require "capistrano/systemd/multiservice"
+
+# install_plugin Capistrano::Systemd::MultiService.new_service("importer")
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
+

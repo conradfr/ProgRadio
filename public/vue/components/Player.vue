@@ -32,8 +32,11 @@
       <div v-if="!player.radio" class="player-name player-name-help">
         Cliquer sur un logo pour lancer la lecture
       </div>
-      <div class="player-favorite" v-on:click="toggleFavorites"
-           :title="favoriteTitle" :class="{ 'player-favorite-added': isFavorite }">
+      <div class="player-favorite"
+           v-if="player.radio && player.radio.type === 'radio'"
+           v-on:click="toggleFavorites"
+           :title="favoriteTitle"
+           :class="{ 'player-favorite-added': isFavorite }">
       </div>
     </div>
     <volume-fader v-if="displayVolume"/>
@@ -98,7 +101,7 @@ export default {
       if (this.player.externalPlayer === true) { return; }
 
       if (val === true) {
-        this.play(this.player.radio.streamingUrl);
+        this.play(this.player.radio.stream_url);
       } else {
         this.stop();
       }

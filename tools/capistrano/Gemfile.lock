@@ -18,8 +18,8 @@ GEM
       capistrano (~> 3.1)
       capistrano-composer (~> 0.0.3)
       capistrano-file-permissions (~> 1.0)
-    capistrano-upstart-service (0.1.0)
-      capistrano (>= 3.0.0.pre)
+    capistrano-systemd-multiservice (0.1.0.beta9)
+      capistrano (>= 3.7.0, < 3.14.0)
     capistrano-yarn (2.0.2)
       capistrano (~> 3.0)
     concurrent-ruby (1.1.4)
@@ -40,7 +40,7 @@ DEPENDENCIES
   capistrano
   capistrano-npm
   capistrano-symfony (~> 2.0.0.pre.alfa2)
-  capistrano-upstart-service
+  capistrano-systemd-multiservice
   capistrano-yarn
 
 BUNDLED WITH

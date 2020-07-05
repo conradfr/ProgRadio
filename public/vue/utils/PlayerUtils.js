@@ -1,9 +1,7 @@
 import Vue from 'vue';
-import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
 import * as config from '../config/config';
-
 
 const moment = require('moment-timezone');
 
@@ -13,19 +11,11 @@ Vue.use(VueCookie);
 
 /* ---------- RADIOS ---------- */
 
-/* eslint-disable no-undef */
-const initRadioState = () => {
-  if (radios && Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)) {
-    const radio = find(radios, { code_name: Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED) });
-    if (radio !== undefined) {
-      return radio;
-    }
+const getNextRadio = (currentRadio, radios, way) => {
+  if (currentRadio.type !== config.PLAYER_TYPE_RADIO) {
+    return null;
   }
 
-  return null;
-};
-
-const getNextRadio = (currentRadio, radios, way) => {
   // remove radios without streaming
   const radiosFiltered = filter(radios, r => r.streaming_enabled === true);
 
@@ -59,13 +49,16 @@ const buildNotificationData = (radio, show) => {
     host: null,
     title: null,
   };
-  if (show !== null && show.picture_url !== null) {
-    data.icon = `${config.THUMBNAIL_PATH}${show.picture_url}`;
-  } else {
+
+  if (show !== undefined && show !== null && show.picture_url !== null) {
+    data.icon = `${config.THUMBNAIL_PROGRAM_PATH}${show.picture_url}`;
+  } else if (radio.type === config.PLAYER_TYPE_RADIO) {
     data.icon = `/img/radio/schedule/${radio.code_name}.png`;
+  } else if (radio.img !== null && radio.img !== '') {
+    data.icon = `${config.THUMBNAIL_STREAM_PATH}${radio.img}`;
   }
 
-  if (show !== null) {
+  if (show !== undefined && show !== null) {
     const format = 'HH[h]mm';
     const start = moment(show.start_at).tz(config.TIMEZONE).format(format);
     const end = moment(show.end_at).tz(config.TIMEZONE).format(format);
@@ -91,6 +84,7 @@ const buildMediaSessionMetadata = (data) => {
       title += data.times;
     }
 
+    /* eslint-disable no-undef */
     navigator.mediaSession.metadata = new MediaMetadata({
       title,
       artist: data.name,
@@ -158,7 +152,6 @@ const showNotification = (radio, show) => {
 };
 
 export default {
-  initRadioState,
   getNextRadio,
   showNotification
 };

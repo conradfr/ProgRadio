@@ -8,7 +8,7 @@
         <p v-if="!isFavorite">Ajouter<br>aux favoris</p>
       </div>
     </div>
-    <a v-on:click="play" :title="radio.name" :style="styleObject">
+    <a v-on:click="play" :title="radio.name">
       <div class="radio-logo"
            :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}"
            :title="radio.name" :style="styleObject">

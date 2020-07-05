@@ -13,14 +13,15 @@ class RadioRepository extends EntityRepository
 
     public function getActiveRadios(array $favorites = []): array {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT r.codeName as code_name, r.name, r.streamingUrl as streamUrl,
+            "SELECT r.codeName as code_name, r.name, r.streamingUrl as streamUrl,
                     r.streamingUrl, r.share, r.streamingEnabled as streaming_enabled,
-                    c.codeName as category, cl.codeName as collection
+                    c.codeName as category, cl.codeName as collection, 'radio' as type,
+                    r.streamingUrl as stream_url 
                 FROM App:Radio r
                   INNER JOIN r.category c
                   INNER JOIN r.collection cl
                 WHERE r.active = :active
-            '
+            "
         );
 
         $query->setParameter('active', true);

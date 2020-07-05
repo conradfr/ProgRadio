@@ -153,6 +153,9 @@
     "psr/log": {
         "version": "1.1.0"
     },
+    "qbbr/pgsql-doctrine-random-function": {
+        "version": "1.0.1"
+    },
     "ramsey/collection": {
         "version": "1.0.1"
     },

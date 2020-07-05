@@ -1,0 +1,113 @@
+@import "../bootswatch/paper/variables";
+
+.app-streams {
+  margin-top:-5px;
+}
+
+.streams {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  cursor: pointer;
+
+  .streams-one {
+    position: relative;
+    width: 150px;
+    //border: 1px solid red;
+    background-color: @body-bg;
+    border: 1px solid darken(@background-color, 20%);
+
+    margin-bottom: 10px;
+    margin-right: 10px;
+
+    .streams-one-flag {
+      position: absolute;
+      top: -4px;
+      right: 4px;
+    }
+
+    .streams-one-img {
+      height: 150px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 85%;
+    }
+
+    .streams-one-name {
+      height: 75px;
+      //line-height: 60px;
+      overflow-y: hidden;
+      text-align: center;
+
+      color: #262b2f;
+      font-size:  12px;
+
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .streams-one-img-play {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover:not(.streams-one-play-hide), &.streams-one-play-active:not(.streams-one-play-hide) {
+      box-shadow: 0 0 7px 0 rgba(0,0,0,.35);
+
+      .streams-one-img-play {
+        background-color: @brand-primary;
+
+        mask-image: url('../../img/play-button-inside-a-circle.svg');
+        mask-repeat: no-repeat;
+        mask-position: center;
+        mask-size: 75% 75%;
+
+        -webkit-mask-image: url('../../img/play-button-inside-a-circle.svg');
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        -webkit-mask-size: 70% 70%;
+
+        /* IE only, default to black icon */
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+          background-color: transparent;
+
+          background-image: url('../../img/play-button-inside-a-circle.svg');
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 75% 75%;
+        }
+      }
+
+      &.streams-one-play-active:not(:hover) {
+        .streams-one-img-play {
+          opacity: 0.9;
+        }
+
+        &.streams-one-play-paused:not(:hover) {
+          .streams-one-img-play {
+            opacity: 0.6;
+          }
+        }
+      }
+
+      &.streams-one-play-active {
+        .streams-one-name {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+.streams-filters-container {
+  margin-top: 20px;
+  margin-bottom: 15px;
+
+  & > .row > .col-select {
+    @media (max-width: @screen-sm-max) {
+      margin-top: 10px;
+    }
+  }
+
+}

@@ -11,13 +11,17 @@ config :logger,
 
 config :hackney, use_default_pool: false
 
- config :importer, Importer.Scheduler,
-       jobs: [
-         update: [
-           schedule: "14 */2 * * *",
-           task: {Importer.Checker.Streams, :check, []}
-         ],
-       ]
+config :importer, Importer.Scheduler,
+  jobs: [
+    check: [
+      schedule: "14 */2 * * *",
+      task: {Importer.Checker.Streams, :check, []}
+    ],
+    import: [
+      schedule: "32 */12 * * *",
+      task: {Importer.Processor.Streams.RadioBrowser, :import, []}
+    ]
+  ]
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this

@@ -2,8 +2,14 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
     <ul class="dropdown-menu">
         {% for collection in collections %}
+            {% if collection.code_name == 'favorites' %}
+                <li role="separator" class="divider"></li>
+            {% endif %}
             <li id="collections-menu-{{ collection.code_name }}"{% if collection.radio_count == 0 %} class="disabled"{% endif %}>
-                <a href="{{ path('homepage', {'c': collection.code_name}) }}" onclick="switchCollection(event, '{{ collection.code_name }}')">
+{#                <a href="{{ path('homepage', {'c': collection.code_name}) }}" onclick="switchCollection(event, '{{ collection.code_name }}')">#}
+{#                    {{ collection.name_FR }}#}
+{#                </a>#}
+                <a href="{{ absolute_url('/#/schedule/' ~ collection.code_name) }}">
                     {{ collection.name_FR }}
                 </a>
             </li>

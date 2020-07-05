@@ -164,31 +164,6 @@ const getNextCollection = (current, collections, radios, way) => {
   return collections[newIndex].code_name;
 };
 
-const initCurrentCollection = (collections) => {
-  let param = null;
-  // test if url api is supported (IE ...)
-  if (typeof URLSearchParams !== 'undefined') {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('c')) {
-      param = urlParams.get('c');
-      // collection does not exist
-      if (getCollectionIndex(param, collections) === -1) {
-        param = null;
-      } else {
-        setTimeout(() => {
-          Vue.cookie.set(config.COOKIE_COLLECTION, param, { expires: config.COOKIE_TTL });
-        }, 300);
-      }
-    }
-  }
-
-  if (param === null) {
-    param = Vue.cookie.get(config.COOKIE_COLLECTION);
-  }
-
-  return param || config.DEFAULT_COLLECTION;
-};
-
 const initFavorites = () => (Vue.cookie.get(config.COOKIE_FAVORITES)
   ? Vue.cookie.get(config.COOKIE_FAVORITES).split('|') : []);
 
@@ -199,7 +174,6 @@ export default {
   getScheduleDisplay,
   rankCollection,
   filterRadiosByCollection,
-  initCurrentCollection,
   getCollectionIndex,
   getNextCollection,
   initFavorites,

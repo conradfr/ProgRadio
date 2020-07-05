@@ -35,10 +35,17 @@
 .phpunit
 
 /public/media/program/*
+/public/media/stream/*
+/public/media/temp/*
 /public/media/cache/page_thumb/media/program/*
 /public/media/cache/program_thumb/media/program/*
+/public/media/cache/stream_thumb/media/program/*
+/public/media/cache/stream_thumb/media/stream/*
 !/public/media/program/.gitkeep
+!/public/media/stream/.gitkeep
+!/public/media/temp/.gitkeep
 !/public/media/cache/program_thumb/media/.gitkeep
+!/public/media/cache/stream_thumb/media/.gitkeep
 !/public/media/cache/program_thumb/.gitkeep
 !/public/media/cache/page_thumb/media/.gitkeep
 !/public/media/cache/page_thumb/.gitkeep

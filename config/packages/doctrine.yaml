@@ -30,6 +30,7 @@ doctrine:
                 extract:        App\Doctrine\Functions\Extract
                 at_time_zone:   App\Doctrine\Functions\AtTimeZone
             numeric_functions:
+                Random: Qbbr\PgsqlDoctrineRandomFunction\DQL\RandomFunction
                 timestampdiff:  Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff
                 dayofyear:      Oro\ORM\Query\AST\Functions\SimpleFunction
                 dayofmonth:     Oro\ORM\Query\AST\Functions\SimpleFunction

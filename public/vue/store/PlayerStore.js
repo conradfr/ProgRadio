@@ -4,6 +4,7 @@ import find from 'lodash/find';
 
 import * as config from '../config/config';
 import AndroidApi from '../api/AndroidApi';
+import StreamsApi from '../api/StreamsApi';
 import PlayerUtils from '../utils/PlayerUtils';
 import ScheduleUtils from '../utils/ScheduleUtils';
 
@@ -14,7 +15,8 @@ Vue.use(VueCookie);
 const initState = {
   playing: false,
   externalPlayer: AndroidApi.hasAndroid,
-  radio: PlayerUtils.initRadioState(),
+  radio: Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)
+    ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)) : null,
   show: null,
   volume: Vue.cookie.get(config.COOKIE_VOLUME)
     ? parseInt(Vue.cookie.get(config.COOKIE_VOLUME), 10) : config.DEFAULT_VOLUME,
@@ -37,8 +39,7 @@ const storeActions = {
     const radio = find(rootState.schedule.radios, { code_name: radioId });
 
     if (radio !== undefined && radio.streaming_enabled === true) {
-      Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, radio.code_name,
-        { expires: config.COOKIE_TTL });
+      Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(radio), config.COOKIE_PARAMS);
       const show = rootGetters.currentShowOnRadio(radio.code_name);
       commit('switchRadio', { radio, show });
       // Otherwise will be ignored
@@ -47,18 +48,41 @@ const storeActions = {
       });
     }
   },
+  playStream: ({ commit }, stream) => {
+    commit('stop');
+
+    setTimeout(() => {
+      StreamsApi.incrementPlayCount(stream.code_name);
+    }, 500);
+    Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(stream), config.COOKIE_PARAMS);
+
+    commit('switchRadio', { radio: stream, show: null });
+
+    // Otherwise will be ignored
+    Vue.nextTick(() => {
+      commit('play');
+    });
+  },
   togglePlay: ({ commit }) => {
     commit('togglePlay');
   },
   toggleMute: ({ state, commit }) => {
-    Vue.cookie.set(config.COOKIE_MUTED, !state.muted, { expires: config.COOKIE_TTL });
+    Vue.cookie.set(config.COOKIE_MUTED, !state.muted, config.COOKIE_PARAMS);
     commit('toggleMute');
   },
-  playPrevious: ({ dispatch }) => {
+  playPrevious: ({ state, dispatch }) => {
+    if (state.radio === undefined || state.radio === null
+      || state.radio.type !== config.PLAYER_TYPE_RADIO) {
+      return;
+    }
+
     dispatch('playNext', 'backward');
   },
   playNext: ({ rootState, state, dispatch }, way) => {
-    if (state.radio === null) { return; }
+    if (state.radio === undefined || state.radio === null
+      || state.radio.type !== config.PLAYER_TYPE_RADIO) {
+      return;
+    }
 
     const collectionToIterateOn = find(rootState.schedule.collections,
       { code_name: state.radio.collection });
@@ -67,10 +91,12 @@ const storeActions = {
       rootState.schedule.radios, rootState.schedule.categoriesExcluded);
     const nextRadio = PlayerUtils.getNextRadio(state.radio, radios, way || 'forward');
 
-    dispatch('play', nextRadio.code_name);
+    if (nextRadio !== null) {
+      dispatch('play', nextRadio.code_name);
+    }
   },
   setVolume: ({ commit }, volume) => {
-    Vue.cookie.set(config.COOKIE_VOLUME, volume, { expires: config.COOKIE_TTL });
+    Vue.cookie.set(config.COOKIE_VOLUME, volume, config.COOKIE_PARAMS);
     commit('setVolume', volume);
   },
   volumeFocus: ({ commit }, params) => {

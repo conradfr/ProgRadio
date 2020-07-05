@@ -18,9 +18,8 @@
 
     <script type="text/javascript">
         {% block javascript_head %}
-            // placeholder
-            const scrollToCursor = function() {};
-            const switchCollection = function() {};
+        // placeholder
+        const scrollToCursor = function() {};
         {% endblock %}
     </script>
 
@@ -42,7 +41,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ path('homepage') }}" onclick="scrollToCursor(event)">
+            <a class="navbar-brand" href="{{ path('homepage') }}#/schedule" onclick="scrollToCursor(event)">
                 <div class="navbar-brand-name">
                     <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios">Programmes Radio
                 </div>
@@ -51,10 +50,12 @@
 
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ path('homepage') }}" onclick="scrollToCursor(event)" style="padding-right: 0">Grille des programmes</a></li>
+                <li><a href="{{ path('homepage') }}#/schedule" style="padding-right: 0">Grille des programmes</a></li>
                 {{ render(controller(
                     'App\\Controller\\DefaultController::collectionsMenu'
                 )) }}
+                <li><a href="{{ path('homepage') }}#/streaming">Streaming</a>
+                </li>
                 <li class="hidden-sm"><a href="{{ path('now') }}">En ce moment</a></li>
                 <li><a href="{{ path('faq') }}">Faq</a></li>
                 <li><a href="{{ path('contact') }}">Contact</a></li>
@@ -90,15 +91,15 @@
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 {% block javascripts %}{% endblock %}
 {% if app.environment == 'prod' %}
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-    ga('create', '{{ analytics }}', 'auto');
-    ga('send', 'pageview');
-</script>
+      ga('create', '{{ analytics }}', 'auto');
+      ga('send', 'pageview');
+    </script>
 {% endif %}
 </body>
 </html>

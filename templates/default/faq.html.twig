@@ -35,10 +35,13 @@
         ]
     },
     {   'question': "Liste des catégories",
-        'answer': [  self.collections_list(collections) ]
+        'answer': [ self.collections_list(collections) ]
     },
     {   'question': "Liste des radios disponibles",
-        'answer': [  self.radios_list(radios) ]
+        'answer': [
+            self.radios_list(radios),
+            '<p style="margin-top: 5px">Vous pouvez aussi streamer des radios du monde entier sur <a href="' ~ absolute_url('/#/streaming') ~ '">la page streaming</a>.</p>'
+        ]
     }
 ]
 %}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\RadioBrowser;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
 use App\Entity\Category;
@@ -29,17 +30,19 @@ class DefaultController extends AbstractController
      *      }
      * )
      */
-    public function index(EntityManagerInterface $em, Request $request): Response
+    public function index(RadioBrowser $radioBrowser, EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favorites', []);
         $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
         $categories = $em->getRepository(Category::class)->getCategories();
         $collections = $em->getRepository(Collection::class)->getCollections($favorites);
+        $radioBrowserUrl = 'https://' . $radioBrowser->getOneRandomServer();
 
         return $this->render('default/index.html.twig', [
             'radios' => $radios,
             'categories' => $categories,
-            'collections' => $collections
+            'collections' => $collections,
+            'radio_browser_url' => $radioBrowserUrl
         ]);
     }
 
@@ -85,6 +88,25 @@ class DefaultController extends AbstractController
 
         return $this->jsonResponse([
             'radios' => $radios
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/streams_host",
+     *     name="streams_host"
+     * )
+     */
+    public function streamsHost(RadioBrowser $radioBrowser): Response
+    {
+        $host = $radioBrowser->getOneRandomServer();
+
+        if ($host === null) {
+            throw new \Exception('No host available');
+        }
+
+        return $this->jsonResponse([
+            'host' => $host
         ]);
     }
 

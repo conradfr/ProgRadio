@@ -25,11 +25,6 @@ class ScheduleCache
     /** @var SerializerInterface */
     protected $serializer;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param Client $redis
-     * @param SerializerInterface $serializer
-     */
     public function __construct(EntityManagerInterface $entityManager, Client $redis, SerializerInterface $serializer)
     {
         $this->em = $entityManager;

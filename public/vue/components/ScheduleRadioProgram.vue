@@ -36,7 +36,7 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import { TIMEZONE, THUMBNAIL_PATH, PROGRAM_LONG_ENOUGH } from '../config/config';
+import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../config/config';
 
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
 
@@ -117,7 +117,7 @@ export default {
 
       return value.split('\n')[0];
     },
-    picture: value => `${THUMBNAIL_PATH}${value}`
+    picture: value => `${THUMBNAIL_PROGRAM_PATH}${value}`
   },
 };
 </script>

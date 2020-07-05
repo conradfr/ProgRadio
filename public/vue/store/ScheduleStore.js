@@ -38,8 +38,8 @@ const initState = {
   cursorTime,
   scrollIndex: initialScrollIndex,
   scrollClick: false,
-  loading: false,
-  currentCollection: ScheduleUtils.initCurrentCollection(collections),
+  currentCollection: Vue.cookie.get(config.COOKIE_COLLECTION)
+    ? Vue.cookie.get(config.COOKIE_COLLECTION) : config.DEFAULT_COLLECTION,
   categoriesExcluded: Vue.cookie.get(config.COOKIE_EXCLUDE)
     ? Vue.cookie.get(config.COOKIE_EXCLUDE).split('|') : [],
   categoryFilterFocus: {
@@ -175,17 +175,17 @@ const storeActions = {
   getSchedule: ({ state, commit }) => {
     const dateStr = state.cursorTime.format('YYYY-MM-DD');
 
-    // If we have cache we display it immediately and then fetch an update silently
+    // if we have cache we display it immediately and then fetch an update silently
     if (ScheduleApi.hasCache(dateStr)) {
       commit('updateSchedule', ScheduleApi.getCache(dateStr));
     } else {
-      commit('setLoading', true);
+      commit('setLoading', true, { root: true });
     }
 
     Vue.nextTick(() => {
       ScheduleApi.getSchedule(dateStr, baseUrl)
         .then(schedule => commit('updateSchedule', schedule))
-        .then(() => commit('setLoading', false));
+        .then(() => commit('setLoading', false, { root: true }));
     });
   },
   /* eslint-disable object-curly-newline */
@@ -236,7 +236,7 @@ const storeMutations = {
     Vue.set(state, 'currentCollection', collection);
 
     setTimeout(() => {
-      Vue.cookie.set(config.COOKIE_COLLECTION, collection, { expires: config.COOKIE_TTL });
+      Vue.cookie.set(config.COOKIE_COLLECTION, collection, config.COOKIE_PARAMS);
     }, 300);
   },
   toggleFavorites(state, radioId) {
@@ -260,8 +260,7 @@ const storeMutations = {
         filter(entry => entry.collection.indexOf(config.COLLECTION_FAVORITES) !== -1)
       )(state.radios);
 
-      Vue.cookie.set(config.COOKIE_FAVORITES, favorites.join('|'),
-        { expires: config.COOKIE_TTL });
+      Vue.cookie.set(config.COOKIE_FAVORITES, favorites.join('|'), config.COOKIE_PARAMS);
     }, 500);
   },
   setCategoryFilterFocus(state, params) {
@@ -276,11 +275,8 @@ const storeMutations = {
 
     setTimeout(() => {
       Vue.cookie.set(config.COOKIE_EXCLUDE, state.categoriesExcluded.join('|'),
-        { expires: config.COOKIE_TTL });
+        config.COOKIE_PARAMS);
     }, 500);
-  },
-  setLoading: (state, value) => {
-    Vue.set(state, 'loading', value);
   },
   updateSchedule: (state, value) => {
     const scheduleDisplay = ScheduleUtils.getScheduleDisplay(

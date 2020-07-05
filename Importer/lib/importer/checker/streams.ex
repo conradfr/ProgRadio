@@ -37,23 +37,32 @@ defmodule Importer.Checker.Streams do
         Logger.info("Checking: #{radio.code_name} (#{radio.streaming_url})")
 
         try do
-          HTTPoison.get!(radio.streaming_url, %{}, [stream_to: self(), async: :once, timeout: @timeout, recv_timeout: @timeout, ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]])
-          rescue
-            e in HTTPoison.Error ->
-              Logger.warn("Error (#{radio.code_name}): #{e.reason}")
-              update_status(radio, false)
+          HTTPoison.get!(radio.streaming_url, %{},
+            stream_to: self(),
+            async: :once,
+            timeout: @timeout,
+            recv_timeout: @timeout,
+            ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
+          )
+        rescue
+          e in HTTPoison.Error ->
+            Logger.warn("Error (#{radio.code_name}): #{e.reason}")
+            update_status(radio, false)
         end
 
         receive do
           %HTTPoison.AsyncStatus{code: status_code} ->
             case status_code do
-              s when s in @success_status -> update_status(radio, true)
+              s when s in @success_status ->
+                update_status(radio, true)
+
               _ ->
                 Logger.warn("Error status (#{radio.code_name}): #{status_code}")
                 update_status(radio, false)
             end
+
           message ->
-            Logger.warn("Non-status received (#{radio.code_name}): #{inspect message}")
+            Logger.warn("Non-status received (#{radio.code_name}): #{inspect(message)}")
             update_status(radio, false)
         end
       end,
@@ -68,7 +77,7 @@ defmodule Importer.Checker.Streams do
         false -> radio.streaming_retries + 1
       end
 
-    radio = Ecto.Changeset.change radio, %{streaming_status: working, streaming_retries: retries}
+    radio = Ecto.Changeset.change(radio, %{streaming_status: working, streaming_retries: retries})
     Repo.update(radio)
   end
 end
