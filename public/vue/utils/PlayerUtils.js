@@ -56,6 +56,8 @@ const buildNotificationData = (radio, show) => {
     data.icon = `/img/radio/schedule/${radio.code_name}.png`;
   } else if (radio.img !== null && radio.img !== '') {
     data.icon = `${config.THUMBNAIL_STREAM_PATH}${radio.img}`;
+  } else {
+    data.icon = '/img/stream-placeholder.png';
   }
 
   if (show !== undefined && show !== null) {

@@ -24,6 +24,7 @@
     "remove": "^0.1.5",
     "vue": "^2.5.16",
     "vue-cookie": "^1.1.4",
+    "vue-gtag": "^1.7.0",
     "vue-router": "^3.3.3",
     "vue-select": "^3.10.3",
     "vue-touch": "^2.0.0-beta.4",

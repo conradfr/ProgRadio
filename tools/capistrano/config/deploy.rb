@@ -27,7 +27,7 @@ set :deploy_to, "/var/www/#{fetch(:application)}_#{fetch(:stage)}"
 set :linked_files, ["Importer/config/prod.exs", "config/scraper_parameters.yml", ".env.prod.local"]
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "public/media/program", "public/media/stream", "public/media/cache/program_thumb/media/program", "public/media/cache/page_thumb/media/program", "Importer/deps")
+set :linked_dirs, fetch(:linked_dirs, []).push("vendor", "node_modules", "Scraper/node_modules", "public/media/program", "public/media/stream", "public/media/temp", "public/media/cache/program_thumb/media/program", "public/media/cache/page_thumb/media/program", "Importer/deps")
 # , "Importer/_build/prod/rel/importer/var");
 
 # Default value for default_env is {}

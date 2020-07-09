@@ -26,7 +26,15 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { COLLECTION_FAVORITES } from '../config/config';
+
+import {
+  COLLECTION_FAVORITES,
+  GTAG_CATEGORY_SCHEDULE,
+  GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE,
+  GTAG_SCHEDULE_ACTION_PLAY,
+  GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE,
+  GTAG_SCHEDULE_PLAY_VALUE
+} from '../config/config';
 
 export default {
   props: ['radio'],
@@ -50,11 +58,21 @@ export default {
   },
   methods: {
     play() {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_PLAY, {
+        event_category: GTAG_CATEGORY_SCHEDULE,
+        value: GTAG_SCHEDULE_PLAY_VALUE
+      });
+
       if (this.radio.streaming_enabled === true) {
         this.$store.dispatch('play', this.radio.code_name);
       }
     },
     toggleFavorites() {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE, {
+        event_category: GTAG_CATEGORY_SCHEDULE,
+        value: GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE
+      });
+
       this.$store.dispatch('toggleFavorites', this.radio.code_name);
     }
   }

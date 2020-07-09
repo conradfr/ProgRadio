@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block bodysupp %} class="body-app"{% endblock %}
+{# now done in vue based on route #}
+{#{% block bodysupp %} class="body-app"{% endblock %}#}
 {% block footersupp %}{% endblock %}
 
 {% block javascript_head %}
@@ -10,10 +11,13 @@ const categories = {{ categories |json_encode(constant('JSON_UNESCAPED_UNICODE')
 const collections = {{ collections |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
 const radioBrowserUrl = '{{ radio_browser_url }}';
 const appEnv = '{{ app.environment }}';
+const gtCode = '{{ analytics }}';
 
 const scrollToCursor = function(e) {
-    e.preventDefault();
+{#    e.preventDefault();#}
+  if (window.location.href.includes(e.getAttribute('href'))) {
     document.getElementById('app').__vue__.$store.dispatch('scrollToCursor');
+  }
 };
 {% endblock %}
 

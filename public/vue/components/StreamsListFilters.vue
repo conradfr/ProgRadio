@@ -42,6 +42,15 @@ import Vue from 'vue';
 import VueFlags from '@growthbunker/vueflags';
 import vSelect from 'vue-select';
 
+import {
+  GTAG_CATEGORY_STREAMING,
+  GTAG_STREAMING_ACTION_FILTER_COUNTRY,
+  GTAG_STREAMING_ACTION_FILTER_SORT,
+  GTAG_STREAMING_ACTION_PLAY_RANDOM,
+  GTAG_STREAMING_FILTER_VALUE,
+  GTAG_STREAMING_PLAY_VALUE,
+} from '../config/config';
+
 Vue.component('v-select', vSelect);
 
 Vue.use(VueFlags, {
@@ -68,12 +77,27 @@ export default {
   },
   methods: {
     countryChange(country) {
+      this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
+        event_category: GTAG_CATEGORY_STREAMING,
+        value: GTAG_STREAMING_FILTER_VALUE
+      });
+
       this.$store.dispatch('countrySelection', country);
     },
     sortByChange(sortBy) {
+      this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {
+        event_category: GTAG_CATEGORY_STREAMING,
+        value: GTAG_STREAMING_FILTER_VALUE
+      });
+
       this.$store.dispatch('sortBySelection', sortBy);
     },
     playRandom() {
+      this.$gtag.event(GTAG_STREAMING_ACTION_PLAY_RANDOM, {
+        event_category: GTAG_CATEGORY_STREAMING,
+        value: GTAG_STREAMING_PLAY_VALUE
+      });
+
       this.$store.dispatch('playRandom');
     }
   }

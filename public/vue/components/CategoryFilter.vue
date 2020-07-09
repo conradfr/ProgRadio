@@ -16,6 +16,12 @@
 <script>
 import { mapState } from 'vuex';
 
+import {
+  GTAG_CATEGORY_SCHEDULE,
+  GTAG_SCHEDULE_ACTION_FILTER,
+  GTAG_SCHEDULE_FILTER_VALUE
+} from '../config/config';
+
 export default {
   data() {
     return {};
@@ -28,12 +34,23 @@ export default {
   },
   methods: {
     filterFocus(status) {
-      this.$store.dispatch('categoryFilterFocus', { element: 'list', status });
+      // timer helps avoid the filter icon flickering
+      setTimeout(
+        () => {
+          this.$store.dispatch('categoryFilterFocus', { element: 'list', status });
+        },
+        100
+      );
     },
     isCategoryExcluded(category) {
       return this.categoriesExcluded.indexOf(category) !== -1;
     },
     toggleExclude(category) {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
+        event_category: GTAG_CATEGORY_SCHEDULE,
+        value: GTAG_SCHEDULE_FILTER_VALUE
+      });
+
       this.$store.dispatch('toggleExcludeCategory', category);
     }
   }

@@ -41,3 +41,23 @@ export const STREAMS_MAX_PAGES_DISPLAY = 9;
 
 export const PLAYER_TYPE_RADIO = 'radio';
 export const PLAYER_TYPE_STREAM = 'stream';
+
+// ----- GTAG -----
+
+export const GTAG_CATEGORY_SCHEDULE = 'schedule';
+export const GTAG_SCHEDULE_ACTION_CATEGORY_NAVIGATION = 'category_navigation';
+export const GTAG_SCHEDULE_CATEGORY_NAVIGATION_VALUE = 0.5;
+export const GTAG_SCHEDULE_ACTION_PLAY = 'play';
+export const GTAG_SCHEDULE_PLAY_VALUE = 1;
+export const GTAG_SCHEDULE_ACTION_FILTER = 'filter';
+export const GTAG_SCHEDULE_FILTER_VALUE = 1;
+export const GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE = 'favorite_toggle';
+export const GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE = 0.7;
+
+export const GTAG_CATEGORY_STREAMING = 'streaming';
+export const GTAG_STREAMING_ACTION_FILTER_COUNTRY = 'filter_country';
+export const GTAG_STREAMING_ACTION_FILTER_SORT = 'filter_sort';
+export const GTAG_STREAMING_ACTION_PLAY_RANDOM = 'play_random';
+export const GTAG_STREAMING_ACTION_PLAY = 'play';
+export const GTAG_STREAMING_FILTER_VALUE = 0.5;
+export const GTAG_STREAMING_PLAY_VALUE = 1;

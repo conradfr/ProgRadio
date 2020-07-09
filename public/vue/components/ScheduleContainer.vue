@@ -25,7 +25,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.params.collection !== from.params.collection) {
+      if (to.params.collection !== undefined && to.params.collection !== from.params.collection) {
         this.$store.dispatch('switchCollection', to.params.collection);
       }
     }

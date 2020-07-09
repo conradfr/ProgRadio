@@ -103,7 +103,13 @@ export default {
         );
       }
 
-      this.$store.dispatch('categoryFilterFocus', { element: 'icon', status });
+      // timer helps to avoid the submenu being closed before mouse can come over it
+      setTimeout(
+        () => {
+          this.$store.dispatch('categoryFilterFocus', { element: 'icon', status });
+        },
+        100
+      );
     },
     filterClick() {
       if (this.debounce === false) {

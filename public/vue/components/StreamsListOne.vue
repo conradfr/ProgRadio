@@ -24,7 +24,12 @@ import Vue from 'vue';
 import VueFlags from '@growthbunker/vueflags';
 
 import { mapGetters, mapState } from 'vuex';
-import { THUMBNAIL_STREAM_PATH } from '../config/config';
+import {
+  GTAG_CATEGORY_STREAMING,
+  GTAG_STREAMING_ACTION_PLAY,
+  GTAG_STREAMING_PLAY_VALUE,
+  THUMBNAIL_STREAM_PATH
+} from '../config/config';
 
 Vue.use(VueFlags, {
   // Specify the path of the folder where the flags are stored.
@@ -53,6 +58,11 @@ export default {
   },
   methods: {
     play() {
+      this.$gtag.event(GTAG_STREAMING_ACTION_PLAY, {
+        event_category: GTAG_CATEGORY_STREAMING,
+        value: GTAG_STREAMING_PLAY_VALUE
+      });
+
       this.$store.dispatch('playStream', this.radio);
     }
   }

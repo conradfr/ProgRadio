@@ -148,6 +148,11 @@ export default {
     },
     toggleFavorites() {
       if (this.player.radio !== null) {
+        this.$gtag.event(config.GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE, {
+          event_category: config.GTAG_CATEGORY_SCHEDULE,
+          value: config.GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE
+        });
+
         this.$store.dispatch('toggleFavorites', this.player.radio.code_name);
       }
     },

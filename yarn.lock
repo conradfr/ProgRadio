@@ -5488,6 +5488,11 @@ vue-eslint-parser@^5.0.0:
     esquery "^1.0.1"
     lodash "^4.17.11"
 
+vue-gtag@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/vue-gtag/-/vue-gtag-1.7.0.tgz#1a375d68c3b8a0338d2ebb1d1312f05803b6bca1"
+  integrity sha512-W3bBlgzrCC1FAmhBxDhhIiaNKVoqO/VDB6ZuYGcEg0Smg88A92FUKvNgpUv1Mkn+d61pUZXBWDFKyQMkyoFU7w==
+
 vue-hot-reload-api@^2.2.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"

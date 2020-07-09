@@ -107,7 +107,8 @@ const fetch = dayFormat => {
           })
       )
       .set({
-        'img': '.rich-section-list-gdp-item-visual picture img@src'
+        'img': '.rich-section-list-gdp-item-visual picture img@src',
+        'img_alt': '.rich-section-list-gdp-item-visual picture img@data-dejavu-src'
       })
       .select('.rich-section-list-gdp-item-content > .rich-section-list-gdp-item-content-show')
       .set({
@@ -122,6 +123,7 @@ const fetch = dayFormat => {
           )
       )
       .data(function (listing) {
+        console.log(listing);
         scrapedData.push(listing);
       })
       .done(function () {
