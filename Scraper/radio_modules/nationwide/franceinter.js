@@ -123,7 +123,6 @@ const fetch = dayFormat => {
           )
       )
       .data(function (listing) {
-        console.log(listing);
         scrapedData.push(listing);
       })
       .done(function () {

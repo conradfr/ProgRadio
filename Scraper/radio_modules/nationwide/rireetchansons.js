@@ -1,7 +1,6 @@
 const osmosis = require('osmosis');
-const moment = require('moment-timezone');
+let moment = require('moment-timezone');
 const utils = require('../../lib/utils');
-const striptags = require('striptags');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
@@ -10,90 +9,68 @@ let scrapedData = [];
 const format = dateObj => {
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
-    // Time
-    let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-    let match = curr.datetime_raw.match(regexp);
+    // we use datOfYear() because the dates on nrjpage are not accurate (next week etc)
 
-    // no time, exit
-    if (match === null) {
-      return prev;
-    }
+    startDateTime = moment(curr.datetime_raw_start, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+    startDateTime.dayOfYear(curr.dateObj.dayOfYear());
 
-    let startDateTime = moment(curr.dateObj);
-    startDateTime.hour(match[1]);
-    startDateTime.minute(match[2]);
-    startDateTime.second(0);
-
-    // sometimes two programs starts at same time, filtering the second one for now ...
-    if (index > 0 && typeof prev[index - 1] !== 'undefined' && startDateTime.isSame(moment(prev[index - 1].date_time_start), 'minute')) {
-      return prev;
-    }
+    endDateTime = moment(curr.datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+    endDateTime.dayOfYear(curr.dateObj.dayOfYear());
 
     // keep only relevant time from previous day page
+
+    // NOTE: there is a bug in the NRJ page, all datetimes on it have the day date even if next day,
+    //       so we need to account for that
+
+    // this is previous day
     if (startDateTime.isBefore(dateObj, 'day')) {
-      // We want only the last
-      if (index !== (array.length - 1)) {
+      if (index === 0) {
         return prev;
       }
 
-      // Check if current schedule starts at midnight (probably not)
-      firstentryTime = moment(prev[0].date_time_start);
-      if (firstentryTime.hour() === 0) {
+      const firstEndTimePrevDay = moment(array[0].datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+      firstEndTimePrevDay.dayOfYear(array[0].dateObj.dayOfYear());
+
+      // this is previous day normal scheduling, ignoring
+      if (startDateTime.isSameOrAfter(firstEndTimePrevDay)) {
         return prev;
       }
-
-      startDateTime = firstentryTime;
-      startDateTime.hour(0);
-      startDateTime.minute(0);
-      startDateTime.subtract(1, 'days');
 
       // update day
       startDateTime.add(1, 'days');
+      endDateTime.add(1, 'days');
     }
+    // remove next day schedule from day page
+    else {
+      // if first of today, don't check
+      if (prev.length > 0) {
+        const firstStartTimeToday = moment(prev[0].date_time_start, moment.ISO_8601, "Europe/Paris");
 
-    // subs
-    const sections = [];
-    regexp = new RegExp(/De ([0-9]{1,2})[h|H]([0-9]{2}){0,1} à ([0-9]{1,2})[h|H]([0-9]{2})\s:\s([A-Za-zÀ-ÿ0-9\s’'".&]*)*/, 'gm');
-
-    while ((match = regexp.exec(curr.description)) !== null) {
-      sectionStartDateTime = moment(dateObj);
-      sectionStartDateTime.hour(match[1]);
-      sectionStartDateTime.minute(match[2]);
-      sectionStartDateTime.second(0);
-
-      let title = match[5];
-
-      sections.push({
-        'title': title,
-        'date_time_start': sectionStartDateTime.toISOString(),
-      });
-    }
-
-    if (sections.length === 0) {
-
-      regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s:\s([A-Za-zÀ-ÿ0-9\s’'&]*)*/, 'gm');
-
-      while ((match = regexp.exec(curr.description)) !== null) {
-        sectionStartDateTime = moment(dateObj);
-        sectionStartDateTime.hour(match[1]);
-        sectionStartDateTime.minute(match[2]);
-        sectionStartDateTime.second(0);
-
-        let title = match[3];
-
-        sections.push({
-          'title': title,
-          'date_time_start': sectionStartDateTime.toISOString(),
-        });
+        // this is next day scheduling, ignoring
+        if (startDateTime.isSameOrBefore(firstStartTimeToday)) {
+          return prev;
+        }
       }
+    }
+
+    let regexp = new RegExp(/https:\/\/(.*)(smart\/)(.*)/);
+    let match = curr.img.match(regexp);
+    let img = curr.img;
+
+    if (match !== null) {
+      img = decodeURIComponent(match[3])
+    }
+
+    if (startDateTime.hour() > endDateTime.hour()) {
+      endDateTime.add(1, 'days');
     }
 
     newEntry = {
       'date_time_start': startDateTime.toISOString(),
-      'title': utils.upperCaseWords(striptags(curr.title)),
-      'description': striptags(curr.description),
-      'img': curr.img,
-      'sections': sections
+      'date_time_end': endDateTime.toISOString(),
+      'title': curr.title,
+      'img': img,
+      'description': curr.description
     };
 
     prev.push(newEntry);
@@ -105,22 +82,21 @@ const format = dateObj => {
 
 const fetch = dateObj => {
   dateObj.locale('fr');
-  let day = dateObj.format('dddd').toLowerCase();
-
-  let url = 'http://www.rireetchansons.fr/grille-des-emissions';
-
-  logger.log('info', `fetching ${url} (${day})`);
+  let day = utils.upperCaseWords(dateObj.format('dddd'));
+  let url = 'https://www.rireetchansons.fr/emissions';
+  logger.log('info', `fetching ${url}`);
 
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
       .find(`#${day}`)
-      .select('.cardProgram')
+      .select('.timelineShedule')
       .set({
-        'datetime_raw': 'time@datetime',
-        'img': 'img.cardProgram-img@src',
-        'title': 'h2.cardProgram-title',
-        'description': '.cardProgram-desc',
+        'datetime_raw_start': '.timelineShedule-header time[1]@datetime',
+        'datetime_raw_end': '.timelineShedule-header time[2]@datetime',
+        'img': '.timelineShedule-header picture.thumbnail-inner > img@data-src',
+        'title': '.timelineShedule-content h3.heading3',
+        'description': '.timelineShedule-content p.description'
       })
       .data(function (listing) {
         listing.dateObj = dateObj;
@@ -135,14 +111,13 @@ const fetch = dateObj => {
 const fetchAll = dateObj => {
   /* radio schedule page has the format 3am -> 3am,
      so we get the previous day as well to get the full day and the filter the list later  */
-
-  /* seems to have changed */
-
   const previousDay = moment(dateObj);
   previousDay.subtract(1, 'days');
 
-  return fetch(dateObj);
-  // .then(() => { return fetch(previousDay); });
+  return fetch(previousDay)
+    .then(() => {
+      return fetch(dateObj);
+    });
 };
 
 const getScrap = dateObj => {
