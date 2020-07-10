@@ -40,6 +40,7 @@
       </div>
     </div>
     <volume-fader v-if="displayVolume"/>
+    <video id="videoplayer" style="display:none"></video>
   </div>
 </template>
 
@@ -52,16 +53,19 @@ import * as config from '../config/config';
 const moment = require('moment');
 
 export default {
-  components: { VolumeFader },
+  components: {
+    VolumeFader
+  },
   data() {
     return {
       audio: null,
+      hls: null,
       /*
         As the volume icon may be shown instead of the mute icon on tablets and a click event
         also triggers a mouseover event before it, we avoid showing the volume fader if a mouseover
         is immediately followed by a click
       */
-      debounce: false
+      debounce: false,
     };
   },
   mounted() {
@@ -136,14 +140,36 @@ export default {
     togglePlay() {
       this.$store.dispatch('togglePlay');
     },
+    /* eslint-disable no-undef */
     play(url) {
-      this.audio = new Audio(`${url}?cb=${new Date().getTime()}`);
-      this.audio.muted = this.player.muted;
-      this.audio.volume = (this.player.volume * 0.1);
-      this.audio.play();
+      if (url.slice(url.length - 5) === '.m3u8') {
+        if (Hls.isSupported()) {
+          this.audio = document.getElementById('videoplayer');
+          this.hls = new Hls();
+          // bind them together
+          this.hls.attachMedia(this.audio);
+          this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+            this.hls.loadSource(url);
+            this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+              this.audio.muted = this.player.muted;
+              this.audio.volume = (this.player.volume * 0.1);
+              this.audio.play();
+            });
+          });
+        }
+      } else {
+        this.audio = new Audio(`${url}?cb=${new Date().getTime()}`);
+        this.audio.muted = this.player.muted;
+        this.audio.volume = (this.player.volume * 0.1);
+        this.audio.play();
+      }
     },
     stop() {
       this.audio.pause();
+      if (this.hls !== null) {
+        this.hls.destroy();
+        this.hls = null;
+      }
       this.audio = null;
     },
     toggleFavorites() {
