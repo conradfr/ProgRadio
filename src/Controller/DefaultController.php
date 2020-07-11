@@ -27,7 +27,7 @@ class DefaultController extends AbstractController
      *     defaults={
      *      "priority": "1.0",
      *      "changefreq": "daily"
-     *      }
+     *     },
      * )
      */
     public function index(RadioBrowser $radioBrowser, EntityManagerInterface $em, Request $request): Response

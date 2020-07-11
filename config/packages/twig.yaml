@@ -3,3 +3,4 @@ twig:
     globals:
         analytics: "%env(analytics)%"
         timezone: "%timezone%"
+        streams_proxy: "%env(streams_proxy)%"

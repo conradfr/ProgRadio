@@ -158,7 +158,11 @@ export default {
           });
         }
       } else {
-        this.audio = new Audio(`${url}?cb=${new Date().getTime()}`);
+        const streamUrl = (url.substring(0, 5) !== 'https')
+          ? `${streamsProxy}?stream=${url}` : url;
+
+        // this.audio = new Audio(`${stream_url}?cb=${new Date().getTime()}`);
+        this.audio = new Audio(`${streamUrl}`);
         this.audio.muted = this.player.muted;
         this.audio.volume = (this.player.volume * 0.1);
         this.audio.play();

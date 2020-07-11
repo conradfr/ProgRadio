@@ -1,0 +1,24 @@
+[Unit]
+Description=ProgRadio Streams Proxy Service
+After=network.target
+
+[Service]
+Type=simple
+
+User=deployer
+Group=www-data
+
+WorkingDirectory=/var/www/progradio_prod/current/streams-proxy
+
+ExecStart=/usr/bin/node /var/www/progradio_prod/current/streams-proxy/server.js
+
+Restart=always
+RemainAfterExit=yes
+RestartSec=5
+Environment=LANG=en_US.UTF-8
+Environment="HOME=/var/www/progradio_prod/current/streams-proxy"
+
+SyslogIdentifier=simple
+
+[Install]
+WantedBy=multi-user.target

@@ -50,15 +50,15 @@
 
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ path('homepage') }}#/schedule" onclick="scrollToCursor(this)" style="padding-right: 0">Grille des programmes</a></li>
+                <li><a href="{{ path('homepage') }}#/schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a></li>
                 {{ render(controller(
                     'App\\Controller\\DefaultController::collectionsMenu'
                 )) }}
-                <li><a href="{{ path('homepage') }}#/streaming">Streaming</a>
+                <li><a href="{{ path('homepage') }}#/streaming">{{ 'menu.streaming'|trans }}</a>
                 </li>
-                <li class="hidden-sm"><a href="{{ path('now') }}">En ce moment</a></li>
-                <li><a href="{{ path('faq') }}">Faq</a></li>
-                <li><a href="{{ path('contact') }}">Contact</a></li>
+                <li class="hidden-sm"><a href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
+                <li><a href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
+                <li><a href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
@@ -81,7 +81,7 @@
     <div class="container">
         <div class="row">
             {% block footer %}
-                <div class="col-md-12 col-xs-12"><p class="text-center">©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">Mentions légales</a></p></div>
+                <div class="col-md-12 col-xs-12"><p class="text-center">©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a></p></div>
             {% endblock %}
         </div>
     </div>
