@@ -23,16 +23,14 @@ const cursorTime = moment().tz(config.TIMEZONE);
 
 const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
 
-/* eslint-disable no-undef */
-// radios.forEach(Object.freeze);
-categories.forEach(Object.freeze);
-collections.forEach(Object.freeze);
-
 // initial state
 const initState = {
-  radios,
-  categories,
-  collections,
+  radios: ScheduleApi.hasCache(config.CACHE_KEY_RADIOS)
+    ? ScheduleApi.getCache(config.CACHE_KEY_RADIOS) : [],
+  categories: ScheduleApi.hasCache(config.CACHE_KEY_CATEGORIES)
+    ? Object.freeze(ScheduleApi.getCache(config.CACHE_KEY_CATEGORIES)) : [],
+  collections: ScheduleApi.hasCache(config.CACHE_KEY_COLLECTIONS)
+    ? Object.freeze(ScheduleApi.getCache(config.CACHE_KEY_COLLECTIONS)) : [],
   schedule: {},
   scheduleDisplay: {},
   cursorTime,
@@ -68,7 +66,16 @@ const storeGetters = {
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
   radiosRanked: (state) => {
+    if (state.collections.length === 0) {
+      return [];
+    }
+
     const index = ScheduleUtils.getCollectionIndex(state.currentCollection, state.collections);
+
+    if (index === -1) {
+      return [];
+    }
+
     return ScheduleUtils.rankCollection(state.collections[index],
       state.radios, state.categoriesExcluded);
   },
@@ -170,8 +177,24 @@ const storeActions = {
     });
   },
 
-  // ---------- SCHEDULE ----------
+  // ---------- DATA & SCHEDULE ----------
 
+  /* eslint-disable no-undef */
+  getRadiosData: ({ state, commit }) => {
+    if (state.radios === []) {
+      commit('setLoading', true, { root: true });
+    }
+
+    Vue.nextTick(() => {
+      ScheduleApi.getRadiosData(baseUrl)
+        .then(({ radios, collections, categories }) => {
+          commit('updateRadios', radios);
+          commit('updateCollections', collections);
+          commit('updateCategories', categories);
+        })
+        .then(() => commit('setLoading', false, { root: true }));
+    });
+  },
   getSchedule: ({ state, commit }) => {
     const dateStr = state.cursorTime.format('YYYY-MM-DD');
 
@@ -286,6 +309,17 @@ const storeMutations = {
     Object.freeze(value);
     Vue.set(state, 'schedule', value);
     Vue.set(state, 'scheduleDisplay', scheduleDisplay);
+  },
+  updateRadios: (state, value) => {
+    Vue.set(state, 'radios', value);
+  },
+  updateCollections: (state, value) => {
+    Object.freeze(value);
+    Vue.set(state, 'collections', value);
+  },
+  updateCategories: (state, value) => {
+    Object.freeze(value);
+    Vue.set(state, 'categories', value);
   }
 };
 

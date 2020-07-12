@@ -48,11 +48,11 @@ const storeActions = {
       });
     }
   },
-  playStream: ({ commit }, stream) => {
+  playStream: ({ rootState, commit }, stream) => {
     commit('stop');
 
     setTimeout(() => {
-      StreamsApi.incrementPlayCount(stream.code_name);
+      StreamsApi.incrementPlayCount(stream.code_name, rootState.streams.radioBrowserApi);
     }, 500);
     Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(stream), config.COOKIE_PARAMS);
 

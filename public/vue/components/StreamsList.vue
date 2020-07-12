@@ -34,11 +34,11 @@ export default {
     Loading
   },
   created() {
-    this.$store.dispatch('getRadios');
+    this.$store.dispatch('getStreamRadios');
   },
   computed: {
     ...mapState({
-      radios: state => state.streams.radios,
+      radios: state => state.streams.streamRadios,
     })
   },
 };

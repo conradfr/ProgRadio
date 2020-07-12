@@ -6,10 +6,6 @@
 
 {% block javascript_head %}
 const baseUrl = '/';
-const radios = {{ radios |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
-const categories = {{ categories |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
-const collections = {{ collections |json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_NUMERIC_CHECK'))|raw }};
-const radioBrowserUrl = '{{ radio_browser_url }}';
 const appEnv = '{{ app.environment }}';
 const gtCode = '{{ analytics }}';
 const streamsProxy = '{{ streams_proxy }}';
@@ -37,6 +33,7 @@ const scrollToCursor = function(e) {
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="{{ asset('build/js/app.js') }}"></script>
 {% endblock %}

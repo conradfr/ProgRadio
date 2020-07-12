@@ -255,12 +255,12 @@ EOT;
             $qb->setParameter('radios', $radios);
         }
 
-//        $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
+        $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
 
-        $query = $qb->getQuery();
-            $query->enableResultCache(3600, 'test');
+/*        $query = $qb->getQuery();
+        $query->enableResultCache(3600, 'test');
         $results = $query->getResult();
-        return $results;
+        return $results;*/
         return $qb->getQuery()->getResult();
     }
 

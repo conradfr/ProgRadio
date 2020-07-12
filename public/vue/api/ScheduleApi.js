@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+import { CACHE_KEY_RADIOS, CACHE_KEY_COLLECTIONS, CACHE_KEY_CATEGORIES } from '../config/config';
+
+// ------------------------- Cache -------------------------
+
 // http://crocodillon.com/blog/always-catch-localstorage-security-and-quota-exceeded-errors
 const isLocalStorageFull = (e) => {
   let quotaExceeded = false;
@@ -26,9 +30,9 @@ const isLocalStorageFull = (e) => {
   return quotaExceeded;
 };
 
-const hasCache = (dateStr) => {
-  if (localStorage !== null && localStorage[dateStr]) {
-    const cached = JSON.parse(localStorage.getItem(dateStr));
+const hasCache = (key) => {
+  if (localStorage !== null && localStorage[key]) {
+    const cached = JSON.parse(localStorage.getItem(key));
     if (!Array.isArray(cached) && typeof cached === 'object') {
       return true;
     }
@@ -37,24 +41,26 @@ const hasCache = (dateStr) => {
   return false;
 };
 
-const getCache = dateStr => JSON.parse(localStorage.getItem(dateStr));
+const getCache = key => JSON.parse(localStorage.getItem(key));
 
-const setCache = (dateStr, data) => {
+const setCache = (key, data) => {
   if (localStorage === null) {
     return;
   }
 
-  localStorage.removeItem(dateStr);
+  localStorage.removeItem(key);
 
   try {
-    localStorage.setItem(dateStr, JSON.stringify(data));
+    localStorage.setItem(key, JSON.stringify(data));
   } catch (e) {
     if (isLocalStorageFull(e)) {
       localStorage.clear();
-      setCache(dateStr, data);
+      setCache(key, data);
     }
   }
 };
+
+// ------------------------- API -------------------------
 
 /* todo fix baseUrl */
 /* eslint-disable arrow-body-style */
@@ -66,9 +72,20 @@ const getSchedule = (dateStr, baseUrl) => {
     });
 };
 
+const getRadiosData = (baseUrl) => {
+  return axios.get(`${baseUrl}radios`)
+    .then((response) => {
+      setCache(CACHE_KEY_RADIOS, response.data.radios);
+      setCache(CACHE_KEY_COLLECTIONS, response.data.collections);
+      setCache(CACHE_KEY_CATEGORIES, response.data.categories);
+      return response.data;
+    });
+};
+
 /* eslint-disable no-undef */
 export default {
   getSchedule,
+  getRadiosData,
   hasCache,
   getCache
 };

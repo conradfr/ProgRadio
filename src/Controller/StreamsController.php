@@ -10,14 +10,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/streams")
  */
-class StreamsController extends AbstractController
+class StreamsController  extends AbstractBaseController
 {
     protected const DEFAULT_RESULTS = 35;
 
@@ -37,10 +36,25 @@ class StreamsController extends AbstractController
         $streams = $em->getRepository(Stream::class)->getStreams($howMany, $offset, $country, $sort);
         $totalCount = $em->getRepository(Stream::class)->countStreams($country);
 
-        return new JsonResponse(
-            [
+        return $this->jsonResponse([
                 'streams' => $streams,
                 'total'   => $totalCount,
+            ]
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/config",
+     *     name="streams_config",
+     * )
+     */
+    public function config(RadioBrowser $radioBrowser): Response
+    {
+        $radioBrowserUrl = 'https://' . $radioBrowser->getOneRandomServer();
+
+        return $this->jsonResponse([
+                'radio_browser_url' => $radioBrowserUrl
             ]
         );
     }
@@ -62,8 +76,7 @@ class StreamsController extends AbstractController
             throw new NotFoundHttpException('No stream');
         }
 
-        return new JsonResponse(
-            [
+        return $this->jsonResponse([
                 'stream' => $stream,
             ]
         );
@@ -79,8 +92,7 @@ class StreamsController extends AbstractController
     {
         $countries = $radioBrowser->getCountries();
 
-        return new JsonResponse(
-            [
+        return $this->jsonResponse([
                 'countries' => $countries,
             ]
         );

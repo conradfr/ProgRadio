@@ -35,6 +35,13 @@ const getRandom = (country) => {
     });
 };
 
+const getConfig = () => {
+  return axios.get(`${baseUrl}streams/config`)
+    .then((response) => {
+      return response.data;
+    });
+};
+
 const getCountries = () => {
   return axios.get(`${baseUrl}streams/countries`)
     .then((response) => {
@@ -42,14 +49,15 @@ const getCountries = () => {
     });
 };
 
-const incrementPlayCount = (stationUuid) => {
-  if (appEnv !== 'dev') {
+const incrementPlayCount = (stationUuid, radioBrowserUrl) => {
+  if (appEnv !== 'dev' && radioBrowserUrl !== null) {
     axios.get(`${radioBrowserUrl}/json/url/${stationUuid}`);
   }
 };
 
 /* eslint-disable no-undef */
 export default {
+  getConfig,
   getRadios,
   getRandom,
   getCountries,

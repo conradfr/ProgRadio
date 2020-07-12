@@ -127,6 +127,10 @@ const getScheduleDisplay = (schedule, currentTime, initialScrollIndex) => {
 
 // sort by share/name/etc, desc
 const rankCollection = (collection, radios, categoriesExcluded) => {
+  if (radios.length === 0) {
+    return [];
+  }
+
   const { code_name: codeName, sort_field: sortField, sort_order: sortOrder } = collection;
 
   return compose(

@@ -1,6 +1,6 @@
 <template>
   <transition appear>
-    <div v-if="loading" class="loading">
+    <div v-if="isLoading" class="loading">
       <div class="alert alert-progradio" role="alert">
       <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
       Chargement ...
@@ -10,13 +10,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   computed: {
-    ...mapState({
-      loading: state => state.loading
-    })
+    ...mapGetters([
+      'isLoading'
+    ]),
   },
 };
 </script>

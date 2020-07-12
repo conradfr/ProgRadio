@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}La grille des programmes {{ radio.name }}{% endblock %}
+{% block title %}La grille des programmes de {{ radio.name }}{% endblock %}
 {% block description %}Le programme du jour de la radio {{ radio.name }} !{% endblock %}
 
 {% block body %}
@@ -14,7 +14,7 @@
         <div class="col-md-10 col-xs-12">
             <div class="title">
                 <h5>{{ date | localizeddate('full', 'none', 'fr_FR', timezone) | capitalize }}</h5>
-                <a href="{{ path('homepage', {'c': radio.collection.codeName }) }}">← Retourner à la grille des programmes complète</a>
+                <a href="{{ path('homepage', {'c': radio.collection.codeName }) }}">← Retourner à la grille des programmes de toutes les radios</a>
             </div>
 
             <div class="schedule-day-shows">
@@ -58,7 +58,7 @@
                 {% endif %}
             </div>
             {% else %}
-                <div class="alert alert-warning" role="alert">Programmes malheureusement non disponibles.</div>
+                <div class="alert alert-warning" role="alert">Programmes non disponibles.</div>
             {% endfor %}
             </div>
         </div>

@@ -15,6 +15,10 @@ export const DEFAULT_VOLUME = 8;
 
 export const COLLECTION_FAVORITES = 'favorites';
 
+export const CACHE_KEY_RADIOS = 'radios';
+export const CACHE_KEY_COLLECTIONS = 'collections';
+export const CACHE_KEY_CATEGORIES = 'categories';
+
 export const COOKIE_PREFIX = 'progradio';
 export const COOKIE_TTL = '1Y';
 
@@ -26,6 +30,7 @@ export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;
 export const COOKIE_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
 export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country`;
 export const COOKIE_STREAM_SORT = `${COOKIE_PREFIX}-stream-sort`;
+export const COOKIE_STREAM_RADIOBROWSER_API = `${COOKIE_PREFIX}-stream-radiobrowser_api`;
 
 export const COOKIE_PARAMS = { expires: COOKIE_TTL, secure: true, samesite: 'Lax' };
 

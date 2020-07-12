@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Service\RadioBrowser;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
 use App\Entity\Category;
@@ -13,12 +12,11 @@ use App\Entity\ScheduleEntry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class DefaultController extends AbstractController
+class DefaultController extends AbstractBaseController
 {
     /**
      * @Route(
@@ -30,32 +28,9 @@ class DefaultController extends AbstractController
      *     },
      * )
      */
-    public function index(RadioBrowser $radioBrowser, EntityManagerInterface $em, Request $request): Response
+    public function index(): Response
     {
-        $favorites = $request->attributes->get('favorites', []);
-        $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
-        $categories = $em->getRepository(Category::class)->getCategories();
-        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
-        $radioBrowserUrl = 'https://' . $radioBrowser->getOneRandomServer();
-
-        return $this->render('default/index.html.twig', [
-            'radios' => $radios,
-            'categories' => $categories,
-            'collections' => $collections,
-            'radio_browser_url' => $radioBrowserUrl
-        ]);
-    }
-
-    /**
-     * @todo cache strategy
-     */
-    protected function jsonResponse(array $data): Response {
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-
-        $response->setContent(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
-
-        return $response;
+        return $this->render('default/index.html.twig', []);
     }
 
     /**
@@ -85,28 +60,13 @@ class DefaultController extends AbstractController
     {
         $favorites = $request->attributes->get('favorites', []);
         $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
+        $categories = $em->getRepository(Category::class)->getCategories();
+        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
 
         return $this->jsonResponse([
-            'radios' => $radios
-        ]);
-    }
-
-    /**
-     * @Route(
-     *     "/streams_host",
-     *     name="streams_host"
-     * )
-     */
-    public function streamsHost(RadioBrowser $radioBrowser): Response
-    {
-        $host = $radioBrowser->getOneRandomServer();
-
-        if ($host === null) {
-            throw new \Exception('No host available');
-        }
-
-        return $this->jsonResponse([
-            'host' => $host
+            'radios' => $radios,
+            'categories' => $categories,
+            'collections' => $collections
         ]);
     }
 
