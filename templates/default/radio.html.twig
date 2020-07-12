@@ -14,7 +14,7 @@
         <div class="col-md-10 col-xs-12">
             <div class="title">
                 <h5>{{ date | localizeddate('full', 'none', 'fr_FR', timezone) | capitalize }}</h5>
-                <a href="{{ path('homepage', {'c': radio.collection.codeName }) }}">← Retourner à la grille des programmes de toutes les radios</a>
+                <a href="{{ absolute_url('/#/schedule/' ~ radio.collection.codeName) }}">← Retourner à la grille complète des programmes</a>
             </div>
 
             <div class="schedule-day-shows">

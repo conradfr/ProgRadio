@@ -29,7 +29,7 @@
             <div class="tab-content">
                 {% for entry_collection in collections %}
                 <div role="tabpanel" class="tab-pane{{ loop.first ? ' active' : '' }}" id="{{ entry_collection.code_name }}">
-                    <div class="link-to-collection-schedule"><a href="{{ path('homepage', {'c': entry_collection.code_name}) }}">← Retourner à la grille des programmes</a></div>
+                    <div class="link-to-collection-schedule"><a href="{{ absolute_url('/#/schedule/' ~ entry_collection.code_name) }}">← Retourner à la grille des programmes</a></div>
                     {% if schedule[entry_collection.code_name] is defined %}
                     {% for entry in schedule[entry_collection.code_name] %}
                         <div class="row radio-schedule-row">
