@@ -7932,6 +7932,11 @@ body > div.container-fluid {
   margin-bottom: 10px;
   margin-right: 10px;
 }
+@media (max-width: 991px) {
+  .streams .streams-one {
+    width: 155px;
+  }
+}
 .streams .streams-one .streams-one-flag {
   position: absolute;
   top: -4px;
