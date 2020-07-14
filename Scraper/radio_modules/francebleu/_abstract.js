@@ -1,7 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
-
 let scrapedData = {};
 
 const format = (dateObj, name) => {
@@ -42,7 +41,7 @@ const format = (dateObj, name) => {
         }*/
 
     const regex = /{%(.+?)%}/;
-    const description = curr.description ? curr.description.replace(regex, '') : null;
+    const description = curr.description ? curr.description.replace(regex, '').split('\r\n').join(' ') : null;
 
     // filtering weird base64 for now
     let img = null;
@@ -96,7 +95,26 @@ const format = (dateObj, name) => {
     mains.push(newEntry);
   });
 
-  return Promise.resolve(mains);
+  // sometimes the show is duplicated, we pick the one with the most sections
+  const mainsFiltered = mains.reduce(function (prev, curr, index, array) {
+    if (index === (array.length - 1)) {
+      prev.push(curr);
+      return prev;
+    }
+
+    const next = array[index + 1];
+    if (curr.date_time_start === next.date_time_start && curr.date_time_end === next.date_time_end
+      && curr.sections.length < next.sections.length) {
+      return prev;
+    } else {
+
+    }
+
+    prev.push(curr);
+    return prev;
+  }, []);
+
+  return Promise.resolve(mainsFiltered);
 };
 
 const fetch = (url, name) => {
