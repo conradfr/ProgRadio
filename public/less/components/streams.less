@@ -113,5 +113,22 @@
       margin-top: 10px;
     }
   }
+}
 
+ul.pagination {
+  li a {
+    cursor: default;
+  }
+
+  li.ellipsis {
+    &:before {
+      content: "\2026";
+      font-size: 24px;
+      float: left;
+      display: inline;
+      margin-right: 2.5px;
+      padding-right: 3px;
+      padding-left: 3px;
+    }
+  }
 }

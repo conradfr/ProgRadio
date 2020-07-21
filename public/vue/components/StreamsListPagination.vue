@@ -5,19 +5,22 @@
         <nav aria-label="Page navigation">
           <ul class="pagination">
             <li :class="{ 'disabled': page === 1 }">
-              <a href="#" aria-label="Previous">
+              <a v-on:click="gotoPage(page - 1)" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
             <li
-                v-for="n in pagesList"
+                v-for="(n, index) in pagesList"
                 :key="n"
-                :class="{ 'active': page === n }"
+                :class="{
+                  'active': page === n,
+                  'ellipsis': pagesList[index] - pagesList[index - 1] > 1
+                }"
             >
               <a v-on:click="gotoPage(n)">{{ n }}</a>
             </li>
             <li :class="{ 'disabled': page === pages }">
-              <a href="#" aria-label="Next">
+              <a v-on:click="gotoPage(page + 1)" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
@@ -61,6 +64,10 @@ export default {
   },
   methods: {
     gotoPage(page) {
+      if (page < 1 || page > this.pages) {
+        return;
+      }
+
       this.$store.dispatch('pageSelection', page);
     },
   }
