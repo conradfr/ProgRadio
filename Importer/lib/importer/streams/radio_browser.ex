@@ -31,7 +31,7 @@ defmodule Importer.Processor.Streams.RadioBrowser do
     |> Jason.decode!()
     |> Enum.uniq_by(fn s -> Map.get(s, "stationuuid") end)
     |> Enum.filter(fn s ->
-      Map.get(s, "stationuuid") !== "" and Map.get(s, "name") !== "" and
+      Map.get(s, "lastcheckok") !== 0 and Map.get(s, "stationuuid") !== "" and Map.get(s, "name") !== "" and
         (Map.get(s, "url_resolved") !== "" or Map.get(s, "url") !== "")
     end)
     |> Enum.map(&data_mapping/1)

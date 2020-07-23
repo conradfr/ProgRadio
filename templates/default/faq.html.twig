@@ -4,15 +4,24 @@
 
 {% block title %}FAQ - Les programmes radios en France{% endblock %}
 
-{% macro collections_list(collections) %}
+{% macro radios_list(collections, radios) %}
+    {%  set radios_sorted = radios|sort %}
     {% for collection in collections %}
-        {% if collection.radio_count> 0 %}{% if not loop.first %}, {% endif %}<a href="{{ path('homepage', {'c': collection.code_name}) }}">{{ collection.name_FR }}</a>{% endif %}
-    {% endfor %}
-{% endmacro %}
+        {% if collection.code_name != 'favorites' %}
+        <p>
+            <a class="faq-collection-link" href="{{ absolute_url('/#/schedule/' ~ collection.code_name) }}">{{ collection.name_FR }}</a>:
+        {% set radios_filtered = [] %}
+        {% for radio in radios_sorted %}
+            {% if collection.code_name in radio.collection %}
+                {% set radios_filtered = radios_filtered|merge([radio]) %}
+            {% endif %}
+        {% endfor %}
 
-{% macro radios_list(radios) %}
-    {% for radio in radios|sort %}
-        <a href="{{ path('radio', {'codename': radio.code_name}) }}">{{ radio.name }}</a>{% if not loop.last %}, {% endif %}
+        {% for radio in radios_filtered %}
+            <a href="{{ path('radio', {'codename': radio.code_name}) }}">{{ radio.name }}</a>{% if not loop.last %}, {% else %}.{% endif %}
+        {% endfor %}
+        </p>
+        {% endif %}
     {% endfor %}
 {% endmacro %}
 
@@ -29,18 +38,20 @@
             "Suivant les catégories, le classement est basé sur la part d'audience cumulée de la dernière vague Médiamétrie ou alors par ordre alphabétique."
         ]
     },
+    {   'question': "Certaines radios ont une publicité en début de lecture.",
+        'answer': [
+        "Ces publicités sont ajoutées par les radios elles-mêmes et non pas par Programmes-radio.io."
+    ]
+    },
     {   'question': "Il n'y a pas ma radio favorite.",
         'answer': [
             "Des radios sont ajoutées au fur et à mesure, indiquez-nous dans la page Contact la radio que vous voulez voir ajoutée."
         ]
     },
-    {   'question': "Liste des catégories",
-        'answer': [ self.collections_list(collections) ]
-    },
-    {   'question': "Liste des radios disponibles",
+    {   'question': "Liste des radios disponibles.",
         'answer': [
-            self.radios_list(radios),
-            '<p style="margin-top: 5px">Vous pouvez aussi streamer des radios du monde entier sur <a href="' ~ absolute_url('/#/streaming') ~ '">la page streaming</a>.</p>'
+            self.radios_list(collections, radios),
+            '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ absolute_url('/#/streaming') ~ '">la page streaming</a>.</p>'
         ]
     }
 ]

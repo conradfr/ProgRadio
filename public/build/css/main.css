@@ -8110,6 +8110,9 @@ ul.pagination li.ellipsis:before {
 #faq .content dl {
   margin-bottom: 15px;
 }
+#faq .content .faq-collection-link {
+  color: #0960a5;
+}
 .schedule-page {
   padding-top: 20px;
 }
