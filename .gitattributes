@@ -1,4 +1,13 @@
+tools/vagrant/puphpet/puppet/modules/augeasproviders_core/docs/buttondown.css linguist-vendored
+tools/vagrant/puphpet/puppet/modules/augeasproviders_sysctl/doc/css/common.css linguist-vendored
+tools/vagrant/puphpet/puppet/modules/augeasproviders_sysctl/doc/css/full_list.css linguist-vendored
+tools/vagrant/puphpet/puppet/modules/rabbitmq/docs/css/full_list.css linguist-vendored
+tools/vagrant/puphpet/puppet/modules/augeasproviders_sysctl/doc/css/full_list.css linguist-vendored
+tools/vagrant/puphpet/puppet/modules/augeasproviders_sysctl/doc/css/style.css linguist-vendored
+tools/vagrant/puphpet/puppet/modules/rabbitmq/docs/css/style.css linguist-vendored
+tools/vagrant/puphpet/puppet/modules/rabbitmq/docs/css/common.css linguist-vendored
 tools/* linguist-vendored
+tools/**/* linguist-vendored
 tools/vagrant/* linguist-vendored
 tools/vagrant/puphpet/puppet/modules/**/docs/* linguist-vendored
 tools/vagrant/puphpet/puppet/modules/**/doc/css/* linguist-vendored
