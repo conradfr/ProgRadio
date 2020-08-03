@@ -44,9 +44,9 @@ const format = (dateObj, name) => {
     }
     // remove next day schedule from day page
     else {
-      if (curr.dateObj !== array[index - 1].dateObj) {
+      if (index !== 0 && curr.dateObj !== array[index - 1].dateObj) {
         referenceIndex = index;
-      } else {
+      } else if (index !== 0) {
         prevMatch = array[referenceIndex].datetime_raw.match(regexp);
         let prevDate = moment(array[referenceIndex].dateObj);
         prevDate.hour(prevMatch[1]);
@@ -119,8 +119,10 @@ const fetch = (url, name, dateObj) => {
           })
       )
       .data(function (listing) {
-        listing.dateObj = dateObj;
-        scrapedData[name].push(listing);
+        if (listing.datetime_raw !== undefined) {
+          listing.dateObj = dateObj;
+          scrapedData[name].push(listing);
+        }
       })
       .done(function () {
         resolve(true);
