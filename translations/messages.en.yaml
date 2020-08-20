@@ -1,8 +1,20 @@
+general:
+    main_title: Radio schedules in France, streaming and more !
+    main_description: Check all shows on the radio in France, stream from all over the world.
+
 menu:
     schedule: Radio guide
     streaming: Streaming
     now: Currently on the air
     faq: Faq
     contact: Contact
+    signup: Sign-up
+    signon: Sign-on
+    logout: Logout
+    plus: More
+    account: My account
+    admin:
+        dashboard: Dashboard
+        shares: Shares
 
 legal: Legal notice

@@ -31,7 +31,7 @@ const isLocalStorageFull = (e) => {
 };
 
 const hasCache = (key) => {
-  if (localStorage !== null && localStorage[key]) {
+  if (localStorage !== null && localStorage[key] !== 'undefined') {
     const cached = JSON.parse(localStorage.getItem(key));
     if (!Array.isArray(cached) && typeof cached === 'object') {
       return true;
@@ -82,10 +82,20 @@ const getRadiosData = (baseUrl) => {
     });
 };
 
+const toggleFavoriteRadio = (radioCodeName, baseUrl) => {
+  axios.get(`${baseUrl}radios/favorite/${radioCodeName}`)
+    .catch((error) => {
+      if (error.response.status === 403) {
+        window.location.href = `${baseUrl}login`;
+      }
+    });
+};
+
 /* eslint-disable no-undef */
 export default {
   getSchedule,
   getRadiosData,
   hasCache,
-  getCache
+  getCache,
+  toggleFavoriteRadio
 };

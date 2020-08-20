@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié{% endblock %}
+
+{% block body %}
+<div class="container container-content">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Mot de passe oublié</h3>
+
+            <div class="alert alert-warning" role="alert">
+                Une erreur est survenue.<br>Si le lien de récupération de mot de passe est obselète merci de recommencer la procédure en <a href="{{ path('forgotten_password') }}">cliquant ici</a>.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -278,6 +278,11 @@ const storeMutations = {
     }
 
     setTimeout(() => {
+      if (logged === true) {
+        ScheduleApi.toggleFavoriteRadio(radioId, baseUrl);
+        return;
+      }
+
       const favorites = compose(
         map(entry => entry.code_name),
         filter(entry => entry.collection.indexOf(config.COLLECTION_FAVORITES) !== -1)

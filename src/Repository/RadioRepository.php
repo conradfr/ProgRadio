@@ -5,13 +5,29 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Radio;
-use Doctrine\ORM\EntityRepository;
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
-class RadioRepository extends EntityRepository
+class RadioRepository extends ServiceEntityRepository
 {
     protected const CACHE_RADIO_TTL = 604800; // week
 
-    public function getActiveRadios(array $favorites = []): array {
+    private $security;
+
+    public function __construct(Security $security, ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Radio::class);
+
+        // Avoid calling getUser() in the constructor: auth may not
+        // be complete yet. Instead, store the entire Security object.
+        $this->security = $security;
+    }
+
+    public function getActiveRadios(array $favoritesFromCookies = []): array {
+        $user = $this->security->getUser();
+
         $query = $this->getEntityManager()->createQuery(
             "SELECT r.codeName as code_name, r.name, r.streamingUrl as streamUrl,
                     r.streamingUrl, r.share, r.streamingEnabled as streaming_enabled,
@@ -30,7 +46,19 @@ class RadioRepository extends EntityRepository
 
         $results = $query->getResult();
 
-        /* @todo it works for now for favorites, but need real many-to-many if developed further */
+        // @todo refactor favorite management
+
+        $favorites = null;
+        if($user !== null) {
+            $favorites = $user->getFavoriteRadios()->map(
+                function ($radio) {
+                    return $radio->getCodeName();
+                }
+            )->toArray();
+        } else {
+            $favorites = $favoritesFromCookies;
+        }
+
         $withCollectionAsArray = array_map(function($radio) use ($favorites) {
             $radio['collection'] = [$radio['collection']];
             if (in_array($radio['code_name'], $favorites)) {

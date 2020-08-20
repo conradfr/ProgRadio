@@ -9,6 +9,7 @@ const baseUrl = '/';
 const appEnv = '{{ app.environment }}';
 const gtCode = '{{ analytics }}';
 const streamsProxy = '{{ streams_proxy }}';
+const logged = {{ is_granted('IS_AUTHENTICATED_FULLY') ? 'true' : 'false' }};
 
 const scrollToCursor = function(e) {
 {#    e.preventDefault();#}

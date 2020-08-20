@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suppression du compte{% endblock %}
+
+{% block body %}
+<div class="container container-content">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <h3>Suppression du compte</h3>
+            <div class="alert alert-success" role="alert">Votre compte a bien été supprimé.</div>
+            <p>
+                <strong>Que souhaitez-vous faire maintenant ?</strong><br>
+                <a href="{{ path('homepage') }}#/schedule">Consulter les programmes radios</a><br>
+                <a href="{{ path('homepage') }}#/streaming">Ecouter des radios en streaming</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

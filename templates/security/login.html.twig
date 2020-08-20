@@ -1,42 +1,55 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Se connecter{% endblock %}
+
 {% block body %}
-<div class="container">
+<div class="container container-content">
     <div class="row">
-        <div class="col-md-12">
-            <h5>Connexion</h5>
+        <div class="col-md-6 col-xs-12">
+            <h3>Connexion</h3>
 
-            {% if error %}
-                <div class="alert alert-warning w-50" role="alert">
-                {{ error.messageKey|trans(error.messageData, 'security') }}
-                </div>
-            {% endif %}
+            <form method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
 
-            <form action="{{ path('login') }}" method="post">
+                {% if app.user %}
+                    <div class="alert alert-success" role="alert">
+                        Vous êtes actuellement connecté en tant que {{ app.user.email}}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                    </div>
+                {% endif %}
+
                 <div class="form-group">
-                    <label for="username">Login :</label>
-                    <input type="text" id="username" name="_username" value="{{ last_username }}" />
+                    <label for="inputEmail">Email</label>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Mot de passe :</label>
-                    <input type="password" id="password" name="_password" />
+                    <label for="inputPassword">Mot de passe</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control" required>
                 </div>
 
-                <div class="checkbox">
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}">
+
+                <div class="checkbox mb-3">
                     <label>
-                        <input type="checkbox" id="remember_me" name="_remember_me" checked /> Se rappeler de moi
+                        <input type="checkbox" id="remember_me" name="_remember_me" checked/> Se rappeler de moi
                     </label>
                 </div>
 
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                <input type="hidden" name="_target_path" value="/admin" />
-
-                <button type="submit" class="btn btn-primary">login</button>
+                <button class="btn btn-primary" type="submit">
+                    Se connecter
+                </button>
             </form>
-
+            <p class="space-up-20"><a href="{{ path('forgotten_password') }}">Mot de passe oublié ?</a></p>
+        </div>
+        <div class="col-md-offset-1 col-md-5 col-xs-12">
+            <div class="well content-side-well">
+                <h5>Pas encore de compte ?</h5>
+                <p><a href="{{ path('app_register') }}">Cliquez ici pour vous enregistrer</a></p>
+            </div>
         </div>
     </div>
 </div>
-            {% endblock %}
+{% endblock %}

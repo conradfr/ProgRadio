@@ -4,10 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Repository\RadioRepository;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RadioRepository")
- * @ORM\Table(indexes={@ORM\Index(name="radio_code_name_idx", columns={"codename"})})
+ * @ORM\Entity(repositoryClass=RadioRepository::class)
+ * @ORM\Table(indexes={@ORM\Index(name="radio_code_name_idx", columns={"code_name"})})
  */
 class Radio
 {

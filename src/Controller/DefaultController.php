@@ -9,12 +9,14 @@ use App\Entity\Radio;
 use App\Entity\Category;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class DefaultController extends AbstractBaseController
 {
@@ -108,6 +110,33 @@ class DefaultController extends AbstractBaseController
             'schedule' => $schedule,
             'radio' => $radio,
             'date' => $dateTime
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/radios/favorite/{codeName}",
+     *     name="favorite_toggle"
+     * )
+     *
+     * @IsGranted("ROLE_USER")
+     */
+    public function toggleFavorite(Radio $radio, EntityManagerInterface $em): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ( $user->getFavoriteRadios()->contains($radio)) {
+            $user->removeFavoriteRadio($radio);
+        } else {
+            $user->addFavoriteRadio($radio);
+        }
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->jsonResponse([
+            'count' => $user->getFavoriteRadios()->count()
         ]);
     }
 

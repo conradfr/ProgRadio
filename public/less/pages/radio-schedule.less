@@ -1,0 +1,98 @@
+.schedule-page {
+  padding-top: 20px;
+
+  h5 {
+    margin-top: 0;
+    margin-bottom: 5px;
+
+    @media (max-width: @screen-xs-max) {
+      margin: 25px 0 5px;
+    }
+  }
+
+  .schedule-day-shows {
+    .media {
+      margin-bottom: 20px;
+    }
+
+    .show-title {
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+
+    .show-host {
+      line-height: 1.56;
+      color: #444;
+    }
+
+    .media-body {
+      p {
+        margin: 3px 0 0;
+        line-height: 1.5;
+      }
+    }
+
+    .sections {
+      margin-top: 25px;
+      margin-left: 40px;
+
+      font-size: @font-size-small;
+
+      h6 {
+        font-size: @font-size-base;
+      }
+
+      .media {
+        margin-bottom: 10px;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .alert {
+    margin-top: 25px;
+  }
+
+}
+
+#schedule-app {
+  padding: 0 0 20px !important;
+}
+
+#schedule-day {
+  .schedule-day-shows {
+    margin-top: 25px;
+  }
+}
+
+#schedule-now {
+  .title h5 {
+    @media (max-width: @screen-xs-max) {
+      margin-top: 0;
+    }
+  }
+
+
+  .link-to-collection-schedule {
+    margin-top: 15px;
+
+    &+.radio-schedule-row {
+      margin-top: 18px;
+    }
+  }
+
+  .radio-schedule-row {
+    margin-top: 25px;
+    border-bottom: 1px dotted darken(@background-color, 20%);
+
+    &:last-child {
+      border: none;
+      padding-bottom: 50px;
+    }
+
+    .schedule-day-radio {
+      margin-bottom: 20px; /* for shows without enough text */
+    }
+
+  }
+}

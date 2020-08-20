@@ -1,8 +1,20 @@
+general:
+    main_title: Toutes les grilles radio, tous les programmes et écoute en ligne
+    main_description: Ecoute en ligne et les programmes radio en France.
+
 menu:
     schedule: Grille des programmes
     streaming: Streaming
     now: En ce moment
     faq: Faq
     contact: Contact
+    signup: Créer un compte
+    signon: Se connecter
+    logout: Se déconnecter
+    account: Mon compte
+    plus: Plus
+    admin:
+        dashboard: Tableau de bord
+        shares: Parts de marché
 
 legal: Mentions légales

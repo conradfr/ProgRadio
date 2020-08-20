@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme registrationForm 'bootstrap_3_layout.html.twig' %}
+
+{% block title %}S'enregistrer{% endblock %}
+
+{% block body %}
+<div class="container container-content">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <h3>Créer un compte</h3>
+
+            {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.plainPassword) }}
+
+            <button type="submit" class="btn btn-primary">Créer mon compte</button>
+            {{ form_end(registrationForm) }}
+        </div>
+        <div class="col-md-offset-1 col-md-5 col-xs-12">
+            <div class="well content-side-well">
+                <h5>Pourquoi s'enregistrer ?</h5>
+                <p>Un compte vous permet d'accéder à vos favoris depuis n'importe quel navigateur.</p>
+            </div>
+
+            <div class="well content-side-well">
+                <h5>Vous déjà un compte ?</h5>
+                <p><a href="{{ path('app_login') }}">Cliquez ici pour vous connecter</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

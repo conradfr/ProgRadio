@@ -1264,7 +1264,7 @@ h2,
 }
 h3,
 .h3 {
-  font-size: 34px;
+  font-size: 30px;
 }
 h4,
 .h4 {
@@ -5775,7 +5775,7 @@ button.list-group-item-danger.active:focus {
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
-  background-color: #f5f5f5;
+  background-color: #f1f8fe;
   border: 1px solid transparent;
   border-radius: 3px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -6907,6 +6907,12 @@ a {
 }
 label {
   font-weight: normal;
+  margin-bottom: 0;
+  font-size: 14px;
+}
+.checkbox {
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 textarea,
 textarea.form-control,
@@ -7433,6 +7439,15 @@ input[type="checkbox"]:disabled:checked:after,
 .navbar #navbar a > img:hover {
   opacity: 1;
 }
+.navbar span.menu-connected {
+  color: #e2e2e2;
+}
+.navbar .menu-appstore-icon {
+  width: 32px;
+  position: absolute;
+  right: 0;
+  margin-top: -2px;
+}
 .body-app .navbar-header {
   margin-left: 61px;
 }
@@ -7488,6 +7503,9 @@ body > div.container-fluid {
 #app {
   overflow-x: hidden;
   background-color: #f9f9f9;
+}
+.space-up-20 {
+  margin-top: 20px;
 }
 .collection-switcher:hover .collection-switcher-next {
   top: 0;
@@ -8103,10 +8121,6 @@ ul.pagination li.ellipsis:before {
 .loading.v-leave-to {
   opacity: 0;
 }
-#faq .content h3 {
-  margin-top: 15px;
-  margin-bottom: 17px;
-}
 #faq .content dl {
   margin-bottom: 15px;
 }
@@ -8184,6 +8198,13 @@ ul.pagination li.ellipsis:before {
   margin-bottom: 20px;
   /* for shows without enough text */
 }
+.container-content h3 {
+  margin-top: 15px;
+  margin-bottom: 17px;
+}
+.content-side-well:first-child {
+  margin-top: 41px;
+}
 #admin {
   padding-top: 10px;
 }
@@ -8227,6 +8248,21 @@ ul.pagination li.ellipsis:before {
 }
 #admin .schedule-stats td.radio-streaming .badge {
   background-color: #e51c23;
+}
+.container-content .nav-user-desktop,
+.container-content .nav-user-mobile {
+  margin-top: 20px;
+}
+.container-content .nav-user-mobile {
+  margin-bottom: 5px;
+}
+.container-content .nav-user-desktop li.active a {
+  background-color: #eeeeee;
+}
+.container-content h4,
+.container-content h5 {
+  margin-top: 17px;
+  margin-bottom: 17px;
 }
 .schedule-container .schedule-radio-list {
   position: absolute;
@@ -8451,7 +8487,7 @@ ul.pagination li.ellipsis:before {
   user-select: none;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current {
-  background-color: #f9fcff;
+  background-color: #f6fbff;
   border-left: 3px solid #bdbdbd;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-full {
@@ -8467,7 +8503,7 @@ ul.pagination li.ellipsis:before {
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover {
   z-index: 3 !important;
-  box-shadow: 0 0 10px -3px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 9px -4px rgba(0, 0, 0, 0.25);
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .schedule-display {
   visibility: visible !important;
@@ -8484,7 +8520,7 @@ ul.pagination li.ellipsis:before {
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current .program-description-short-inner:before,
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .program-description-short-inner:before {
-  background: linear-gradient(to right, rgba(249, 252, 255, 0) 90%, rgba(249, 252, 255, 0.88) 95%, rgba(249, 252, 255, 0.999) 99%) !important;
+  background: linear-gradient(to right, rgba(246, 251, 255, 0) 90%, rgba(246, 251, 255, 0.88) 95%, rgba(246, 251, 255, 0.999) 99%) !important;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner {
   height: 100%;

@@ -12,7 +12,7 @@ class DoctrinePostConnectListener
 
     public function __construct(string $timezone)
     {
-        $this->timezone=$timezone;
+        $this->timezone = $timezone;
     }
 
     public function __invoke(ConnectionEventArgs $args)

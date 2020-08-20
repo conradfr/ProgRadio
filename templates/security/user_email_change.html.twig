@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Changement d'email{% endblock %}
+
+{% block body %}
+<div class="container container-content">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Annulation du changement d'email</h3>
+
+            {% if success == false %}
+            <div class="alert alert-warning" role="alert">
+                Une erreur est survenue.<br>Le lien est peut-être obselète ou le compte n'existe plus.
+            </div>
+            {% else %}
+            <div class="alert alert-success" role="alert">
+                L'ancien email a été restauré avec succès. Vous pouvez de nouveau vous connecter avec celui-ci.
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

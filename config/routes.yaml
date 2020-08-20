@@ -2,6 +2,6 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
-admin_logout:
+app_logout:
     path: /logout
     methods: GET

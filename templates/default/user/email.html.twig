@@ -1,0 +1,21 @@
+{% extends 'default/user/user.html.twig' %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block section %}
+Changer mon email
+{% endblock %}
+
+{% block content %}
+    <div class="alert  alert-info" role="alert">Cela mettra à jour l'email utilisé pour se connecter au site.<br>Une confirmation sera envoyée à l'ancienne et à la nouvelle adresse.</div>
+
+    {% if success == true %}
+        <div class="alert  alert-success" role="alert">L'adresse email a été mise à jour.</div>
+    {% endif %}
+
+    {{ form_start(form) }}
+    {{ form_row(form.email) }}
+
+    <button type="submit" class="btn btn-primary">Mettre à jour</button>
+    {{ form_end(form) }}
+{% endblock %}

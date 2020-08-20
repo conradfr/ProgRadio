@@ -1,0 +1,22 @@
+<h3>Changement d'adresse email</h3>
+
+<p>
+    Bonjour,
+</p>
+<p>
+    Une demande de changement d'email pour {{ new_email }} a été faite sur http://www.programmes-radio.io.<br>
+    Vous ne pouvez-donc plus vous connecter avec l'identifiant {{ old_email }}.
+</p>
+
+<p>
+    Si cela n'est pas de votre fait vous pouvez annuler ce changement en cliquant sur ce lien (valide 24h) : <a href="{{ url('revert_email', {'token': token}, false) }}">{{ url('revert_email', {'token': token}, false) }}</a>.
+</p>
+
+<p>
+    Nous vous conseillons également de changer votre mot de passe.
+</p>
+
+<p>
+    Cordialement,<br>
+    Programmes-Radio.io
+</p>

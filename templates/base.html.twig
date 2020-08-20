@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}Toutes les grilles de programmes radio et écoute en ligne{% endblock %}</title>
-    <meta name="description" content="{% block description %}Ecoute en ligne et les programmes en France.{% endblock %}" />
+    <title>{% block title %}{{ 'general.main_title'|trans }}{% endblock %} - Programme Radio</title>
+    <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
 
@@ -57,19 +57,33 @@
                 <li><a href="{{ path('homepage') }}#/streaming">{{ 'menu.streaming'|trans }}</a>
                 </li>
                 <li class="hidden-sm"><a href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
-                <li><a href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
-                <li><a href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ path('admin') }}">Tableau de bord</a></li>
-                            <li><a href="{{ path('admin_shares') }}">Parts de marché</a></li>
-                            <li><a href="{{ path('admin_logout') }}">Déconnexion</a></li>
-                        </ul>
-                    </li>
-                {% endif %}
-                <li><a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="Android app"></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ 'menu.plus'|trans}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
+                        <li><a href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="Android app"></div>Play Store</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user{{ is_granted('IS_AUTHENTICATED_FULLY') ? ' menu-connected' : '' }}" aria-hidden="true"></span> <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><a href="{{ path('admin') }}">{{ 'menu.admin.dashboard'|trans }}</a></li>
+                                <li><a href="{{ path('admin_shares') }}">{{ 'menu.admin.shares'|trans }}</a></li>
+                                <li role="separator" class="divider"></li>
+                            {% endif %}
+                            <li><a href="{{ path('user_page') }}">{{ 'menu.account'|trans }}</a></li>
+                            <li><a href="{{ path('app_logout') }}">{{ 'menu.logout'|trans }}</a></li>
+                        {% else %}
+                            <li><a href="{{ path('app_login') }}">{{ 'menu.signon'|trans }}</a></li>
+                            <li><a href="{{ path('app_register') }}">{{ 'menu.signup'|trans }}</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>
