@@ -35,11 +35,14 @@ const format = dateObj => {
     curr.date_time_start = startDateTime.toISOString();
     curr.date_time_end = endDateTime.toISOString();
 
+    curr.title = curr.title.replace('  /', '');
+
     prev.push(curr);
 
     return prev;
   }, []);
 
+  console.log(cleanedData);
   return Promise.resolve(cleanedData);
 };
 
