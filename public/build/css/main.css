@@ -8487,7 +8487,7 @@ ul.pagination li.ellipsis:before {
   user-select: none;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current {
-  background-color: #f6fbff;
+  background-color: #f7fbff;
   border-left: 3px solid #bdbdbd;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-full {
@@ -8520,7 +8520,7 @@ ul.pagination li.ellipsis:before {
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program.program-current .program-description-short-inner:before,
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program:hover .program-description-short-inner:before {
-  background: linear-gradient(to right, rgba(246, 251, 255, 0) 90%, rgba(246, 251, 255, 0.88) 95%, rgba(246, 251, 255, 0.999) 99%) !important;
+  background: linear-gradient(to right, rgba(247, 251, 255, 0) 90%, rgba(247, 251, 255, 0.88) 95%, rgba(247, 251, 255, 0.999) 99%) !important;
 }
 .schedule-container .schedule-radio-grid .schedule-radio-grid-row .program-container .program .program-inner {
   height: 100%;

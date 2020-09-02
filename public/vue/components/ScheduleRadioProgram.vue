@@ -11,7 +11,7 @@
             </div>-->
     <div class="program" v-on:mouseover.once="hover = !hover"
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
-      <div class="program-inner">
+      <div class="program-inner" v-bind:title="title">
         <div class="program-img" v-if="program.picture_url && (hover || isCurrent)">
           <img v-bind:src="program.picture_url | picture" alt="" @mousedown.prevent="" v-once>
         </div>
@@ -75,6 +75,21 @@ export default {
         };
       }
     }),
+    title() {
+      let { title } = this.program;
+
+      if (this.program.host) {
+        title += ` - ${this.program.host}`;
+      }
+
+      if (this.program.description) {
+        title += ` - ${this.program.description}`;
+      }
+
+      title += ` (${this.scheduleDisplay})`;
+
+      return title;
+    },
     scheduleDisplay() {
       const format = 'HH[h]mm';
       const start = moment(this.program.start_at).tz(TIMEZONE).format(format);
