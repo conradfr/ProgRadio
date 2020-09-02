@@ -33,7 +33,7 @@ const initState = {
     ? JSON.parse(Vue.cookie.get(config.COOKIE_STREAM_COUNTRY)) : { code: 'FR', label: 'France' },
   streamRadios: [],
   selectedSortBy: Vue.cookie.get(config.COOKIE_STREAM_SORT)
-    ? JSON.parse(Vue.cookie.get(config.COOKIE_STREAM_SORT)) : sortBySelect[0],
+    ? JSON.parse(Vue.cookie.get(config.COOKIE_STREAM_SORT)) : sortBySelect[1],
   radioBrowserApi: Vue.cookie.get(config.COOKIE_STREAM_RADIOBROWSER_API)
     ? Vue.cookie.get(config.COOKIE_STREAM_RADIOBROWSER_API) : null,
   sortBy: sortBySelect,

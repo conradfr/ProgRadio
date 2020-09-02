@@ -122,7 +122,7 @@ class SiteController extends AbstractController
     public function sitemap(EntityManagerInterface $em): Response
     {
         // @todo if route list grows, get collection & filter
-        $routesToExport = ['homepage', 'now', 'faq', 'contact'];
+        $routesToExport = ['app', 'now', 'faq', 'contact'];
         $routes = [];
         foreach ($routesToExport as $entry) {
             $routes[$entry] = $this->get('router')->getRouteCollection()->get($entry);
@@ -159,11 +159,23 @@ class SiteController extends AbstractController
         $lastMod = new \DateTime();
         $lastModFormat = $lastMod->format('Y-m-d');
 
-        return '<url>' . PHP_EOL
-            . '<loc>' . $this->generateUrl($name, $parameters, UrlGeneratorInterface::ABSOLUTE_URL) . '</loc>' . PHP_EOL
-            . "<lastmod>$lastModFormat</lastmod>" . PHP_EOL
-            . '<changefreq>' . $route->getDefaults()['changefreq'] . '</changefreq>' . PHP_EOL
-            . '<priority>' . $route->getDefaults()['priority'] . '</priority>' . PHP_EOL
-            . '</url>' . PHP_EOL;
+        $bangs = isset($route->getDefaults()['bangs']) ? explode(',', $route->getDefaults()['bangs']) : [''] ;
+
+        $entries = '';
+        foreach ($bangs as $bang) {
+            $url = $this->generateUrl($name, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+            if ($bang !== '') {
+                $url .= '#' . $bang;
+            }
+
+            $entries .= '<url>' . PHP_EOL
+                . '<loc>' . $url . '</loc>' . PHP_EOL
+                . "<lastmod>$lastModFormat</lastmod>" . PHP_EOL
+                . '<changefreq>' . $route->getDefaults()['changefreq'] . '</changefreq>' . PHP_EOL
+                . '<priority>' . $route->getDefaults()['priority'] . '</priority>' . PHP_EOL
+                . '</url>' . PHP_EOL;
+        }
+
+        return $entries;
     }
 }

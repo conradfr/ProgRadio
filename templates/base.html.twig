@@ -41,7 +41,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ path('homepage') }}#/schedule" onclick="scrollToCursor(this)">
+            <a class="navbar-brand" href="{{ path('app') }}#/schedule" onclick="scrollToCursor(this)">
                 <div class="navbar-brand-name">
                     <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios">Programmes Radio
                 </div>
@@ -50,11 +50,11 @@
 
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ path('homepage') }}#/schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a></li>
+                <li><a href="{{ path('app') }}#/schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a></li>
                 {{ render(controller(
                     'App\\Controller\\DefaultController::collectionsMenu'
                 )) }}
-                <li><a href="{{ path('homepage') }}#/streaming">{{ 'menu.streaming'|trans }}</a>
+                <li><a href="{{ path('app') }}#/streaming">{{ 'menu.streaming'|trans }}</a>
                 </li>
                 <li class="hidden-sm"><a href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
                 <li class="dropdown">

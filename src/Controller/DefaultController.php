@@ -23,10 +23,11 @@ class DefaultController extends AbstractBaseController
     /**
      * @Route(
      *     "/",
-     *     name="homepage",
+     *     name="app",
      *     defaults={
      *      "priority": "1.0",
-     *      "changefreq": "daily"
+     *      "changefreq": "daily",
+     *      "bangs": "schedule,streaming"
      *     },
      * )
      */
@@ -156,9 +157,11 @@ class DefaultController extends AbstractBaseController
     {
         $dateTime = new \DateTime();
 
-        $favorites = $request->attributes->get('favorites', []);
         $schedule = $em->getRepository(ScheduleEntry::class)->getTimeSpecificSchedule($dateTime);
-        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
+        $collections = $em->getRepository(Collection::class)->getCollections();
+        $collections = array_filter($collections, function($collection) {
+            return $collection['code_name'] !== Radio::FAVORITES;
+        });
 
         return $this->render('default/now.html.twig', [
             'schedule' => $schedule,
