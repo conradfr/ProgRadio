@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-on:keyup.f="keyupFav">
     <collection-switcher></collection-switcher>
     <timeline></timeline>
     <timeline-cursor-head></timeline-cursor-head>
@@ -63,6 +63,9 @@ export default {
     },
     keyRight() {
       this.$store.dispatch('scrollForward');
+    },
+    keyupFav() {
+      this.$store.dispatch('switchCollection', COLLECTION_FAVORITES);
     }
   }
 };
