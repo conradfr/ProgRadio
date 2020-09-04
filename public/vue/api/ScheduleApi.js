@@ -31,7 +31,7 @@ const isLocalStorageFull = (e) => {
 };
 
 const hasCache = (key) => {
-  if (localStorage !== null && localStorage[key] !== 'undefined') {
+  if (localStorage !== null && localStorage[key] !== undefined) {
     const cached = JSON.parse(localStorage.getItem(key));
     if (!Array.isArray(cached) && typeof cached === 'object') {
       return true;
