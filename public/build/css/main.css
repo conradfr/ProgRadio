@@ -7809,7 +7809,7 @@ body > div.container-fluid {
   transform: translateX(-50%);
   /* on mobile, put player at the bottom */
   height: 41px;
-  width: 210px;
+  width: 250px;
   margin-top: 5px;
   background-color: #39a1f4;
   border-radius: 5px;
@@ -7818,7 +7818,7 @@ body > div.container-fluid {
   .navbar-player {
     top: auto;
     bottom: 10px;
-    width: 182px;
+    width: 202px;
   }
 }
 .navbar-player .player-wrap {
