@@ -47,6 +47,9 @@ export const STREAMS_MAX_PAGES_DISPLAY = 9;
 export const PLAYER_TYPE_RADIO = 'radio';
 export const PLAYER_TYPE_STREAM = 'stream';
 
+export const PLAYER_TYPE_CHECK_INTERVAL = 3000; // ms
+export const PLAYER_TYPE_CHECK_TIMEOUT = 7000; // ms
+
 // ----- GTAG -----
 
 export const GTAG_CATEGORY_SCHEDULE = 'schedule';

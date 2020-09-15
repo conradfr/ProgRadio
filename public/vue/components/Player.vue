@@ -66,10 +66,15 @@ export default {
         is immediately followed by a click
       */
       debounce: false,
+      lastUpdated: null,
+      checkTimer: null
     };
   },
   mounted() {
     window.togglePlaybackStatus = this.togglePlay;
+  },
+  beforeDestroy: function () {
+    clearInterval(this.checkTimer);
   },
   computed: {
     ...mapState([
@@ -167,8 +172,26 @@ export default {
         this.audio.volume = (this.player.volume * 0.1);
         this.audio.play();
       }
+
+      // check if stream playing
+      this.audio.addEventListener('timeupdate', () => {
+        this.lastUpdated = new Date();
+      });
+
+      this.checkTimer = setInterval(this.check, config.PLAYER_TYPE_CHECK_INTERVAL);
+
+      this.lastUpdated = new Date();
+    },
+    check() {
+      const now = new Date();
+      if (now - this.lastUpdated > config.PLAYER_TYPE_CHECK_TIMEOUT) {
+        this.lastUpdated = null;
+        this.$store.dispatch('stop');
+        clearInterval(this.checkTimer);
+      }
     },
     stop() {
+      clearInterval(this.checkTimer);
       this.audio.pause();
       if (this.hls !== null) {
         this.hls.destroy();

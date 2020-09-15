@@ -14,7 +14,8 @@ Vue.use(VueCookie);
 
 const initState = {
   playing: false,
-  externalPlayer: AndroidApi.hasAndroid,
+  // externalPlayer: AndroidApi.hasAndroid,
+  externalPlayer: false,
   radio: Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)
     ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)) : null,
   show: null,
@@ -47,6 +48,9 @@ const storeActions = {
         commit('play');
       });
     }
+  },
+  stop: ({ commit }) => {
+    commit('stop');
   },
   playStream: ({ rootState, commit }, stream) => {
     commit('stop');
@@ -116,7 +120,7 @@ const storeMutations = {
   play(state) {
     if (state.radio !== null) {
       state.playing = true;
-      // AndroidApi.play(state.radio);
+      AndroidApi.play(state.radio);
     }
   },
   switchRadio(state, { radio, show }) {
