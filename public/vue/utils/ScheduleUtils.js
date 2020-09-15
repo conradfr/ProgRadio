@@ -7,9 +7,9 @@ import filter from 'lodash/fp/filter';
 import filter2 from 'lodash/filter';
 import orderBy from 'lodash/fp/orderBy';
 
-import * as config from '../config/config';
+import { DateTime } from 'luxon';
 
-const moment = require('moment-timezone');
+import * as config from '../config/config';
 
 const VueCookie = require('vue-cookie');
 
@@ -39,7 +39,7 @@ const initialScrollIndexFunction = (currentDateTime) => {
   if (window.innerWidth > (hourPixels + (config.MINUTE_PIXEL * 30))) {
     reduceToHour = Math.abs(Math.floor(window.innerWidth / config.GRID_INDEX_BREAK));
   } else {
-    const minutes = currentDateTime.minute();
+    const minutes = currentDateTime.minute;
     if (minutes < 15) {
       reduceToHour = 0.25;
     } else if (minutes > 45) {
@@ -47,7 +47,7 @@ const initialScrollIndexFunction = (currentDateTime) => {
     }
   }
 
-  return enforceScrollIndex((currentDateTime.hours() - reduceToHour) * hourPixels + 1);
+  return enforceScrollIndex((currentDateTime.hour - reduceToHour) * hourPixels + 1);
 };
 
 const updatedProgramTextCalc = (schedule, scheduleDisplay, scrollIndex) => {
@@ -84,10 +84,10 @@ const getUpdatedProgramText = (state) => {
 
 /* eslint-disable no-undef */
 const getScheduleDisplay = (schedule, currentTime, initialScrollIndex) => {
-  const startDay = moment(currentTime).tz(config.TIMEZONE).startOf('day');
+  const startDay = currentTime.startOf('day');
   /* we use midnight next day as "end of current day",
      as shows usually ends a midnight next day and not 23:59:59 */
-  const endDay = moment(currentTime).tz(config.TIMEZONE).add(1, 'days').startOf('day');
+  const endDay = currentTime.plus({ days: 1 }).startOf('day');
   const result = {};
 
   forEach(schedule, (programs) => {
@@ -95,14 +95,17 @@ const getScheduleDisplay = (schedule, currentTime, initialScrollIndex) => {
       let width = config.MINUTE_PIXEL;
       // @todo I guess we'll look at shows that start prev day and ends next day later ...
       if (program.end_overflow) {
-        width *= moment(endDay).diff(program.start_at, 'minutes');
+        width *= endDay.diff(DateTime.fromSQL(program.start_at).setZone(config.TIMEZONE))
+          .as('minutes');
       } else if (program.start_overflow) {
-        width *= moment(program.end_at).diff(startDay, 'minutes');
+        width *= DateTime.fromSQL(program.end_at).setZone(config.TIMEZONE).diff(startDay)
+          .as('minutes');
       } else {
         width *= program.duration;
       }
 
-      const left = program.start_overflow ? 0 : (moment(program.start_at).tz(config.TIMEZONE).diff(startDay, 'minutes') * config.MINUTE_PIXEL);
+      const left = program.start_overflow ? 0 : (DateTime.fromSQL(program.start_at)
+        .setZone(config.TIMEZONE).diff(startDay).as('minutes') * config.MINUTE_PIXEL);
 
       result[key] = {
         container: {

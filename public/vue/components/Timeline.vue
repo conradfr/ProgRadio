@@ -43,6 +43,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { DateTime } from 'luxon';
 
 export default {
   filters: {
@@ -71,7 +72,7 @@ export default {
     scheduleDate() {
       if (this.isToday === true) { return "Aujourd'hui"; }
       if (this.isTomorrow === true) { return 'Demain'; }
-      return this.cursorTime.format('DD/MM/YYYY');
+      return this.cursorTime.toLocaleString(DateTime.DATE_SHORT);
     }
   },
   methods: {

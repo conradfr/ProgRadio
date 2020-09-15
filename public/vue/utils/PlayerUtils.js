@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
-import * as config from '../config/config';
 
-const moment = require('moment-timezone');
+import { DateTime } from 'luxon';
+
+import * as config from '../config/config';
 
 const VueCookie = require('vue-cookie');
 
@@ -61,9 +62,10 @@ const buildNotificationData = (radio, show) => {
   }
 
   if (show !== undefined && show !== null) {
-    const format = 'HH[h]mm';
-    const start = moment(show.start_at).tz(config.TIMEZONE).format(format);
-    const end = moment(show.end_at).tz(config.TIMEZONE).format(format);
+    const start = DateTime.fromSQL(show.start_at).setZone(config.TIMEZONE)
+      .toLocaleString(DateTime.TIME_SIMPLE);
+    const end = DateTime.fromSQL(show.end_at).setZone(config.TIMEZONE)
+      .toLocaleString(DateTime.TIME_SIMPLE);
 
     data.times = `${start}-${end}`;
     data.host = show.host !== null ? show.host : null;

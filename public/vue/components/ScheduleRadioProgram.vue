@@ -35,12 +35,11 @@
   </div>
 </template>
 <script>
+import { DateTime, Interval } from 'luxon';
 import { mapState } from 'vuex';
 import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../config/config';
 
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
-
-const moment = require('moment');
 
 export default {
   components: { ScheduleRadioSection },
@@ -91,16 +90,16 @@ export default {
       return title;
     },
     scheduleDisplay() {
-      const format = 'HH[h]mm';
-      const start = moment(this.program.start_at).tz(TIMEZONE).format(format);
-      const end = moment(this.program.end_at).tz(TIMEZONE).format(format);
-
+      const start = DateTime.fromSQL(this.program.start_at)
+        .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
+      const end = DateTime.fromSQL(this.program.end_at)
+        .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
       return `${start}-${end}`;
     },
     isCurrent() {
-      return this.cursorTime.isBetween(moment(this.program.start_at),
-        moment(this.program.end_at));
+      return Interval.fromDateTimes(DateTime.fromSQL(this.program.start_at).setZone(TIMEZONE),
+        DateTime.fromSQL(this.program.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
     },
     isLongEnough() {
       return this.program.duration >= PROGRAM_LONG_ENOUGH;

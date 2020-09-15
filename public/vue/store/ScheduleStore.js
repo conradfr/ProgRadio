@@ -8,18 +8,18 @@ import compose from 'lodash/fp/compose';
 import filter from 'lodash/fp/filter';
 import map from 'lodash/fp/map';
 
+import { DateTime, Interval } from 'luxon';
+
 import * as config from '../config/config';
 
 import ScheduleApi from '../api/ScheduleApi';
 import ScheduleUtils from '../utils/ScheduleUtils';
 
-const moment = require('moment-timezone');
-
 const VueCookie = require('vue-cookie');
 
 Vue.use(VueCookie);
 
-const cursorTime = moment().tz(config.TIMEZONE);
+const cursorTime = DateTime.local().setZone(config.TIMEZONE);
 
 const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
 
@@ -50,18 +50,18 @@ const initState = {
 const storeGetters = {
   hasSchedule: state => Object.keys(state.schedule).length > 0,
   cursorIndex: (state) => {
-    const startDay = moment(state.cursorTime).startOf('day');
-    const newIndex = state.cursorTime.diff(startDay, 'minutes') * config.MINUTE_PIXEL + 1;
+    const startDay = state.cursorTime.startOf('day');
+    const newIndex = state.cursorTime.diff(startDay).as('minutes') * config.MINUTE_PIXEL + 1;
 
     return `${newIndex}px`;
   },
   isToday: (state) => {
-    const now = moment().tz(config.TIMEZONE);
-    return state.cursorTime.isSame(now, 'day');
+    const now = DateTime.local().setZone(config.TIMEZONE);
+    return state.cursorTime.hasSame(now, 'day');
   },
   isTomorrow: (state) => {
-    const tomorrow = moment().add(1, 'day').tz(config.TIMEZONE);
-    return tomorrow.diff(state.cursorTime, 'days') === 0;
+    const tomorrow = DateTime.local().plus({ days: 1 }).setZone(config.TIMEZONE);
+    return tomorrow.diff(state.cursorTime).as('days') === 0;
   },
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
@@ -82,13 +82,9 @@ const storeGetters = {
   displayCategoryFilter: state => state.categoryFilterFocus.icon
     || state.categoryFilterFocus.list || false,
   currentShowOnRadio: state => (radioCodename) => {
-    const currentShow = find(state.schedule[radioCodename], (show) => {
-      if (state.cursorTime.isBetween(moment(show.start_at), moment(show.end_at))) {
-        return true;
-      }
-
-      return false;
-    });
+    const currentShow = find(state.schedule[radioCodename], show => Interval
+      .fromDateTimes(DateTime.fromSQL(show.start_at).setZone(config.TIMEZONE),
+        DateTime.fromSQL(show.end_at).setZone(config.TIMEZONE)).contains(state.cursorTime));
 
     return typeof currentShow === 'undefined' ? null : currentShow;
   }
@@ -152,7 +148,7 @@ const storeActions = {
   // ---------- CALENDAR ----------
 
   calendarToday: ({ commit, dispatch }) => {
-    const newDate = moment().tz(config.TIMEZONE);
+    const newDate = DateTime.local().setZone(config.TIMEZONE);
     commit('updateCursor', newDate);
 
     Vue.nextTick(() => {
@@ -161,7 +157,7 @@ const storeActions = {
   },
   // calendarBackward: ({ state, commit, dispatch }) => {
   calendarBackward: ({ state, commit, dispatch }) => {
-    const newDate = moment(state.cursorTime).subtract(1, 'days');
+    const newDate = state.cursorTime.minus({ days: 1 });
     commit('updateCursor', newDate);
 
     Vue.nextTick(() => {
@@ -169,7 +165,7 @@ const storeActions = {
     });
   },
   calendarForward: ({ state, commit, dispatch }) => {
-    const newDate = moment(state.cursorTime).add(1, 'days');
+    const newDate = state.cursorTime.plus({ days: 1 });
     commit('updateCursor', newDate);
 
     Vue.nextTick(() => {
@@ -196,7 +192,7 @@ const storeActions = {
     });
   },
   getSchedule: ({ state, commit }) => {
-    const dateStr = state.cursorTime.format('YYYY-MM-DD');
+    const dateStr = state.cursorTime.toISODate();
 
     // if we have cache we display it immediately and then fetch an update silently
     if (ScheduleApi.hasCache(dateStr)) {
@@ -213,9 +209,9 @@ const storeActions = {
   },
   /* eslint-disable object-curly-newline */
   tick: ({ commit, getters, rootState, dispatch }) => {
-    const now = moment().tz(config.TIMEZONE);
+    const now = DateTime.local().setZone(config.TIMEZONE);
 
-    if (now.hour() === 0 && now.minutes() === 3) {
+    if (now.hour === 0 && now.minutes === 3) {
       dispatch('getSchedule');
     }
 

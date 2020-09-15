@@ -47,10 +47,10 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 
+import { DateTime } from 'luxon';
+
 import VolumeFader from './VolumeFader.vue';
 import * as config from '../config/config';
-
-const moment = require('moment');
 
 export default {
   components: {
@@ -73,7 +73,7 @@ export default {
   mounted() {
     window.togglePlaybackStatus = this.togglePlay;
   },
-  beforeDestroy: function () {
+  beforeDestroy() {
     clearInterval(this.checkTimer);
   },
   computed: {
@@ -92,9 +92,10 @@ export default {
         return '';
       }
 
-      const format = 'HH[h]mm';
-      const start = moment(this.player.show.start_at).tz(config.TIMEZONE).format(format);
-      const end = moment(this.player.show.end_at).tz(config.TIMEZONE).format(format);
+      const start = DateTime.fromSQL(this.player.show.start_at)
+        .setZone(config.TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
+      const end = DateTime.fromSQL(this.player.show.end_at)
+        .setZone(config.TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
       return `${this.player.show.title} - ${start}-${end}`;
     },

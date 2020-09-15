@@ -5,14 +5,15 @@
 </template>
 
 <script>
-import { TIMEZONE, MINUTE_PIXEL } from '../config/config';
+import { DateTime } from 'luxon';
 
-const moment = require('moment');
+import { TIMEZONE, MINUTE_PIXEL } from '../config/config';
 
 export default {
   props: ['program_start', 'section'],
   data() {
-    const left = moment(this.section.start_at).diff(this.program_start, 'minutes') * MINUTE_PIXEL;
+    const left = DateTime.fromSQL(this.section.start_at)
+      .diff(DateTime.fromSQL(this.program_start)).as('minutes') * MINUTE_PIXEL;
 
     return {
       styleObject: {
@@ -25,8 +26,8 @@ export default {
       // @todo improve / refactor
 
       function popoverTitle(title, startAt) {
-        const format = 'HH[h]mm';
-        const start = moment(startAt).tz(TIMEZONE).format(format);
+        const start = DateTime.fromSQL(startAt)
+          .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
         return `${title} - ${start}`;
       }
