@@ -34,7 +34,8 @@ const scrollToCursor = function(e) {
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script nomodule src="https://unpkg.com/date-time-format-timezone@latest/build/browserified/date-time-format-timezone-complete-min.js"></script>
+    <script nomodule src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default,String.prototype.repeat,Array.prototype.find,Array.prototype.findIndex,Math.trunc,Math.sign,Object.assign,Object.is"></script>
     <script src="//cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="{{ asset('build/js/app.js') }}"></script>
 {% endblock %}
