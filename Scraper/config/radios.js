@@ -95,8 +95,7 @@ const radios = {
         'lapremiere',
         'classic21',
         'vivacite',
-        'musiq3',
-        'pure',
+        'musiq3'
       ]
 };
 
