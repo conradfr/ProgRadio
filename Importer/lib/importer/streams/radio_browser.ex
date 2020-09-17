@@ -34,6 +34,11 @@ defmodule Importer.Processor.Streams.RadioBrowser do
       Map.get(s, "lastcheckok") !== 0 and Map.get(s, "stationuuid") !== "" and Map.get(s, "name") !== "" and
         (Map.get(s, "url_resolved") !== "" or Map.get(s, "url") !== "")
     end)
+    # the app can't read hls streams that are not served by https (cross-origin problem)
+    |> Enum.reject(fn s ->
+        Map.get(s, "url") |> String.downcase() |> String.starts_with?("https") === false
+          and Map.get(s, "url") |> String.downcase() |> String.ends_with?(".m3u8") === true
+    end)
     |> Enum.map(&data_mapping/1)
     |> Enum.map(&import_image/1)
   end
