@@ -61,9 +61,9 @@
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <span class="glyphicon glyphicon-user{{ is_granted('IS_AUTHENTICATED_FULLY') ? ' menu-connected' : '' }}" aria-hidden="true"></span> <span class="caret"></span></a>
+                        <span class="glyphicon glyphicon-user{{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? ' menu-connected' : '' }}" aria-hidden="true"></span> <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li><a href="{{ path('admin') }}">{{ 'menu.admin.dashboard'|trans }}</a></li>
                                 <li><a href="{{ path('admin_shares') }}">{{ 'menu.admin.shares'|trans }}</a></li>
