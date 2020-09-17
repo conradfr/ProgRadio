@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Radio;
+use App\Entity\Stream;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -62,6 +63,17 @@ class User implements UserInterface
     /**
      * @var Collection
      *
+     * @ORM\ManyToMany(targetEntity=Stream::class)
+     * @ORM\JoinTable(name="users_streams",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="stream_id", referencedColumnName="id")}
+     *      )
+     */
+    private $favoriteStreams;
+
+    /**
+     * @var Collection
+     *
      * @ORM\OneToMany(targetEntity=UserEmailChange::class, mappedBy="user")
      */
     private $emailChanges;
@@ -98,6 +110,7 @@ class User implements UserInterface
 
     public function __construct() {
         $this->favoriteRadios = new ArrayCollection();
+        $this->favoriteStreams = new ArrayCollection();
         $this->emailChanges = new ArrayCollection();
     }
 
@@ -197,6 +210,26 @@ class User implements UserInterface
     public function removeFavoriteRadio(Radio $favoriteRadio): void
     {
         $this->favoriteRadios->removeElement($favoriteRadio);
+    }
+
+    public function getFavoriteStreams(): Collection
+    {
+        return $this->favoriteStreams;
+    }
+
+    public function setFavoriteStreams(Collection $favoriteStreams): void
+    {
+        $this->favoriteStreams = $favoriteStreams;
+    }
+
+    public function addFavoriteStream(Stream $favoriteStream): void
+    {
+        $this->favoriteStreams->add($favoriteStream);
+    }
+
+    public function removeFavoriteStream(Stream $favoriteStream): void
+    {
+        $this->favoriteStreams->removeElement($favoriteStream);
     }
 
     public function getCreatedAt(): ?\Datetime

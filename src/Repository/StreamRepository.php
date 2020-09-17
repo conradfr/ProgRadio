@@ -5,18 +5,34 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Stream;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
-class StreamRepository extends EntityRepository
+class StreamRepository extends ServiceEntityRepository
 {
     protected const CACHE_TTL = 3600; // one hour
+
+    private $security;
+
+    public function __construct(Security $security, ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Stream::class);
+
+        // Avoid calling getUser() in the constructor: auth may not
+        // be complete yet. Instead, store the entire Security object.
+        $this->security = $security;
+    }
 
     public function getStreams(
         int $limit = null,
         int $offset = null,
-        string $country = null,
-        string $sort = null
+        string $countryOrCategory = null,
+        string $sort = null,
+        array $favoritesFromCookies = []
     ): array {
+        $user = $this->security->getUser();
+
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.votes, s.clicksLast24h as clicks_last_24h, 'stream' as type")
@@ -27,9 +43,24 @@ class StreamRepository extends EntityRepository
             $qb->setFirstResult($offset);
         }
 
-        if ($country !== null) {
-            $qb->where('s.countryCode = :country')
-                ->setParameter('country', $country);
+        if ($countryOrCategory !== null) {
+            if ($countryOrCategory === Stream::FAVORITES) {
+                if ($user !== null) {
+                    $favorites = $user->getFavoriteStreams()->map(
+                        function ($stream) {
+                            return $stream->getId();
+                        }
+                    )->toArray();
+                } else {
+                    $favorites = $favoritesFromCookies;
+                }
+
+                $qb->where('s.id IN (:favorites)')
+                    ->setParameter('favorites', $favorites);
+            } else {
+                $qb->where('s.countryCode = :country')
+                    ->setParameter('country', strtoupper($countryOrCategory));
+            }
         }
 
         if ($sort !== null) {
@@ -52,10 +83,18 @@ class StreamRepository extends EntityRepository
     }
 
     public function getOneRandomStream(
-        string $country = null,
-        string $language = null
+        string $countryOrCategory = null,
+        string $language = null,
+        array $favoritesFromCookies = []
     ): ?array {
-        $total = $this->countStreams($country, $language);
+        $user = $this->security->getUser();
+
+        $total = $this->countStreams($countryOrCategory, $language);
+
+        if ($total === 0) {
+            return $this->getOneRandomStream();
+        }
+
         $offset = mt_rand(0, $total - 1);
 
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -66,9 +105,24 @@ class StreamRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults(1);
 
-        if ($country !== null) {
-            $qb->where('s.countryCode = :country')
-                ->setParameter('country', strtoupper($country));
+        if ($countryOrCategory !== null) {
+            if ($countryOrCategory === Stream::FAVORITES) {
+                if ($user !== null) {
+                    $favorites = $user->getFavoriteStreams()->map(
+                        function ($stream) {
+                            return $stream->getId();
+                        }
+                    )->toArray();
+                } else {
+                    $favorites = $favoritesFromCookies;
+                }
+
+                $qb->where('s.id IN (:favorites)')
+                    ->setParameter('favorites', $favorites);
+            } else {
+                $qb->where('s.countryCode = :country')
+                    ->setParameter('country', strtoupper($countryOrCategory));
+            }
         }
 
         if ($language !== null) {
@@ -82,17 +136,35 @@ class StreamRepository extends EntityRepository
     }
 
     public function countStreams(
-        string $country = null,
-        string $language = null
+        string $countryOrCategory = null,
+        string $language = null,
+        array $favoritesFromCookies = []
     ): int {
+        $user = $this->security->getUser();
+
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('count(s.id)')
             ->from(Stream::class, 's');
 
-        if ($country !== null) {
-            $qb->where('s.countryCode = :country')
-                ->setParameter('country', strtoupper($country));
+        if ($countryOrCategory !== null) {
+            if ($countryOrCategory === Stream::FAVORITES) {
+                if ($user !== null) {
+                    $favorites = $user->getFavoriteStreams()->map(
+                        function ($stream) {
+                            return $stream->getId();
+                        }
+                    )->toArray();
+                } else {
+                    $favorites = $favoritesFromCookies;
+                }
+
+                $qb->where('s.id IN (:favorites)')
+                    ->setParameter('favorites', $favorites);
+            } else {
+                $qb->where('s.countryCode = :country')
+                    ->setParameter('country', strtoupper($countryOrCategory));
+            }
         }
 
         if ($language !== null) {

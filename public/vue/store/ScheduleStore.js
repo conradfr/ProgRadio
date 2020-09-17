@@ -132,8 +132,8 @@ const storeActions = {
 
   // ---------- FAVORITES ----------
 
-  toggleFavorites: ({ commit }, radio) => {
-    commit('toggleFavorites', radio);
+  toggleRadioFavorite: ({ commit }, radio) => {
+    commit('toggleRadioFavorite', radio);
   },
 
   // ---------- CATEGORY ----------
@@ -258,7 +258,7 @@ const storeMutations = {
       Vue.cookie.set(config.COOKIE_COLLECTION, collection, config.COOKIE_PARAMS);
     }, 300);
   },
-  toggleFavorites(state, radioId) {
+  toggleRadioFavorite(state, radioId) {
     const index = findIndex(state.radios, r => r.code_name === radioId);
     const updatedRadio = Object.assign({}, state.radios[index]);
 
@@ -284,7 +284,7 @@ const storeMutations = {
         filter(entry => entry.collection.indexOf(config.COLLECTION_FAVORITES) !== -1)
       )(state.radios);
 
-      Vue.cookie.set(config.COOKIE_FAVORITES, favorites.join('|'), config.COOKIE_PARAMS);
+      Vue.cookie.set(config.COOKIE_RADIO_FAVORITES, favorites.join('|'), config.COOKIE_PARAMS);
     }, 500);
   },
   setCategoryFilterFocus(state, params) {

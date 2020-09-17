@@ -171,9 +171,6 @@ const getNextCollection = (current, collections, radios, way) => {
   return collections[newIndex].code_name;
 };
 
-const initFavorites = () => (Vue.cookie.get(config.COOKIE_FAVORITES)
-  ? Vue.cookie.get(config.COOKIE_FAVORITES).split('|') : []);
-
 export default {
   enforceScrollIndex,
   initialScrollIndexFunction,
@@ -182,6 +179,5 @@ export default {
   rankCollection,
   filterRadiosByCollection,
   getCollectionIndex,
-  getNextCollection,
-  initFavorites,
+  getNextCollection
 };

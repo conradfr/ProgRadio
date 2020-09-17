@@ -33,8 +33,7 @@
         Cliquer sur un logo pour lancer la lecture
       </div>
       <div class="player-favorite"
-           v-if="player.radio && player.radio.type === 'radio'"
-           v-on:click="toggleFavorites"
+           v-on:click="toggleFavorite"
            :title="favoriteTitle"
            :class="{ 'player-favorite-added': isFavorite }">
       </div>
@@ -77,15 +76,25 @@ export default {
     clearInterval(this.checkTimer);
   },
   computed: {
-    ...mapState([
-      'player'
-    ]),
+    ...mapState({
+      player: state => state.player,
+      streamFavorites: state => state.streams.favorites
+    }),
     ...mapGetters([
       'displayVolume'
     ]),
     isFavorite() {
-      return this.player.radio !== null
-        && this.player.radio.collection.indexOf(config.COLLECTION_FAVORITES) !== -1;
+      if (this.player.radio === null) {
+        return false;
+      }
+
+      // radio
+      if (this.player.radio.type === 'radio') {
+        return this.player.radio.collection.indexOf(config.COLLECTION_FAVORITES) !== -1;
+      }
+
+      // stream
+      return this.streamFavorites.indexOf(this.player.radio.code_name) !== -1;
     },
     showTitle() {
       if (this.player.show === null) {
@@ -101,8 +110,8 @@ export default {
     },
     favoriteTitle() {
       return (this.player.radio !== null
-      && this.player.radio.collection.indexOf(config.COLLECTION_FAVORITES) !== -1)
-        ? 'Retirer des favoris' : 'Ajouter aux favoris';
+      && this.isFavorite === true
+        ? 'Retirer des favoris' : 'Ajouter aux favoris');
     }
   },
   /* eslint-disable func-names */
@@ -200,14 +209,14 @@ export default {
       }
       this.audio = null;
     },
-    toggleFavorites() {
+    toggleFavorite() {
       if (this.player.radio !== null) {
         this.$gtag.event(config.GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE, {
           event_category: config.GTAG_CATEGORY_SCHEDULE,
           value: config.GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE
         });
 
-        this.$store.dispatch('toggleFavorites', this.player.radio.code_name);
+        this.$store.dispatch('toggleFavorite', this.player.radio);
       }
     },
     volumeFocus(status) {

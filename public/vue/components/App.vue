@@ -15,6 +15,9 @@ export default {
     Player
   },
   created() {
+    // put here so any streaming preloaded on the player will have its correct favorite status
+    this.$store.dispatch('getFavorites');
+
     // OS hotkeys support
     if (navigator.mediaSession !== undefined) {
       navigator.mediaSession.setActionHandler('previoustrack', this.keyPlayPrevious.bind(this));

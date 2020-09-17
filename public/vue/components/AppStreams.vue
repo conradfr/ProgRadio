@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 
 import StreamsList from './StreamsList.vue';
 
@@ -16,6 +17,29 @@ export default {
   },
   components: {
     StreamsList
+  },
+  computed: {
+    ...mapState({
+      favorites: state => state.streams.favorites
+    })
+  },
+  beforeRouteUpdate(to, from, next) {
+    if (to.params.countryOrCategory) {
+      this.$store.dispatch('countrySelection', to.params.countryOrCategory);
+    }
+    next();
+  },
+  watch: {
+    // update the stream menu that is outside the Vue app for now
+    favorites(val) {
+      const menuItem = document.getElementById('streaming-menu-favorites');
+
+      if (val.length === 0) {
+        menuItem.classList.add('disabled');
+      } else {
+        menuItem.classList.remove('disabled');
+      }
+    },
   },
 };
 </script>

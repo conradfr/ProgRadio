@@ -1,7 +1,7 @@
 <template>
   <div class="radio-list-one-wrapper">
     <div class="radio-submenu">
-      <div v-on:click="toggleFavorites" class="radio-submenu-entry radio-submenu-entry-favorites">
+      <div v-on:click="toggleFavorite" class="radio-submenu-entry radio-submenu-entry-favorites">
         <img v-if="isFavorite" src="/img/favorite.svg" class="filter-fav"/>
         <p v-if="isFavorite">Retirer <br>des favoris</p>
         <img v-if="!isFavorite" src="/img/favorite-empty.svg" class="filter-fav"/>
@@ -67,13 +67,13 @@ export default {
         this.$store.dispatch('play', this.radio.code_name);
       }
     },
-    toggleFavorites() {
+    toggleFavorite() {
       this.$gtag.event(GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         value: GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE
       });
 
-      this.$store.dispatch('toggleFavorites', this.radio.code_name);
+      this.$store.dispatch('toggleFavorite', this.radio);
     }
   }
 };

@@ -1,10 +1,12 @@
 import Vue from 'vue';
 
 import forEach from 'lodash/forEach';
+import find from 'lodash/find';
 
 import { STREAMS_DEFAULT_PER_PAGE } from '../config/config';
 
 import * as config from '../config/config';
+
 import StreamsApi from '../api/StreamsApi';
 
 const VueCookie = require('vue-cookie');
@@ -27,8 +29,10 @@ const sortBySelect = [
 ];
 
 // initial state
+/* eslint-disable no-undef */
 const initState = {
   countries: [],
+  favorites: [],
   selectedCountry: Vue.cookie.get(config.COOKIE_STREAM_COUNTRY)
     ? JSON.parse(Vue.cookie.get(config.COOKIE_STREAM_COUNTRY)) : { code: 'FR', label: 'France' },
   streamRadios: [],
@@ -47,8 +51,12 @@ const storeGetters = {
     const countriesOptions = [];
     countriesOptions.push(
       {
+        label: 'Favoris',
+        code: config.STREAMING_CATEGORY_FAVORITES
+      },
+      {
         label: 'Tous les pays',
-        code: 'all'
+        code: config.STREAMING_CATEGORY_ALL
       }
     );
     forEach(state.countries, (value, key) => {
@@ -74,12 +82,26 @@ const storeActions = {
         commit('setConfig', data);
       });
   },
-  getCountries: ({ commit }) => {
+  getCountries: ({ state, dispatch, commit }) => {
     commit('setLoading', true, { root: true });
 
     Vue.nextTick(() => {
       StreamsApi.getCountries()
         .then(countries => commit('updateCountries', countries))
+        .then(() => commit('setLoading', false, { root: true }))
+        .then(() => {
+          if (state.selectedCountry.label === null) {
+            dispatch('countrySelection', state.selectedCountry.code);
+          }
+        });
+    });
+  },
+  getFavorites: ({ commit }) => {
+    commit('setLoading', true, { root: true });
+
+    Vue.nextTick(() => {
+      StreamsApi.getFavorites()
+        .then(favorites => commit('setFavorites', favorites))
         .then(() => commit('setLoading', false, { root: true }));
     });
   },
@@ -94,14 +116,26 @@ const storeActions = {
         .then(() => commit('setLoading', false, { root: true }));
     });
   },
-  countrySelection: ({ dispatch, commit }, country) => {
+  /* eslint-disable no-param-reassign */
+  countrySelection: ({ getters, dispatch, commit }, country, getAfter) => {
+    // if country is just country_code
+    if (typeof country !== 'object') {
+      country = find(getters.countriesOptions, ['code', country.toUpperCase()])
+        || { code: country, label: null };
+      if (country.label === null) {
+        getAfter = false;
+      }
+    }
+
     commit('setSelectedCountry', country);
     Vue.cookie.set(config.COOKIE_STREAM_COUNTRY,
       JSON.stringify(country), config.COOKIE_PARAMS);
 
-    Vue.nextTick(() => {
-      dispatch('getStreamRadios');
-    });
+    if (getAfter !== false) {
+      Vue.nextTick(() => {
+        dispatch('getStreamRadios');
+      });
+    }
   },
   pageSelection: ({ dispatch, commit }, page) => {
     commit('setPage', page);
@@ -127,7 +161,10 @@ const storeActions = {
         .then(data => dispatch('playStream', data))
         .then(() => commit('setLoading', false, { root: true }));
     });
-  }
+  },
+  toggleStreamFavorite: ({ commit }, stream) => {
+    commit('toggleStreamFavorite', stream);
+  },
 };
 
 // mutations
@@ -140,6 +177,9 @@ const storeMutations = {
   updateCountries: (state, value) => {
     Object.freeze(value);
     Vue.set(state, 'countries', value);
+  },
+  setFavorites: (state, value) => {
+    Vue.set(state, 'favorites', value);
   },
   setConfig: (state, data) => {
     Object.freeze(data);
@@ -155,6 +195,25 @@ const storeMutations = {
   },
   setPage: (state, value) => {
     Vue.set(state, 'page', value);
+  },
+  toggleStreamFavorite(state, streamId) {
+    const { favorites } = state;
+    const favoriteIndex = favorites.indexOf(streamId);
+    if (favoriteIndex !== -1) {
+      favorites.splice(favoriteIndex, 1);
+      Vue.set(state, 'favorites', favorites);
+    } else {
+      favorites.push(streamId);
+      Vue.set(state, 'favorites', favorites);
+    }
+
+    setTimeout(() => {
+      if (logged === true) {
+        StreamsApi.toggleFavoriteStream(streamId, baseUrl);
+        return;
+      }
+      Vue.cookie.set(config.COOKIE_STREAM_FAVORITES, favorites.join('|'), config.COOKIE_PARAMS);
+    }, 500);
   }
 };
 

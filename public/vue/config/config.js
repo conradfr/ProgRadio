@@ -27,7 +27,8 @@ export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
 export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;
-export const COOKIE_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
+export const COOKIE_RADIO_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
+export const COOKIE_STREAM_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}_streams`;
 export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country`;
 export const COOKIE_STREAM_SORT = `${COOKIE_PREFIX}-stream-sort`;
 export const COOKIE_STREAM_RADIOBROWSER_API = `${COOKIE_PREFIX}-stream-radiobrowser_api`;
@@ -49,6 +50,9 @@ export const PLAYER_TYPE_STREAM = 'stream';
 
 export const PLAYER_TYPE_CHECK_INTERVAL = 3000; // ms
 export const PLAYER_TYPE_CHECK_TIMEOUT = 7000; // ms
+
+export const STREAMING_CATEGORY_ALL = 'ALL';
+export const STREAMING_CATEGORY_FAVORITES = 'FAVORITES';
 
 // ----- GTAG -----
 

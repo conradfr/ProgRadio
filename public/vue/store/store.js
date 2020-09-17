@@ -16,6 +16,15 @@ const store = new Vuex.Store({
   getters: {
     isLoading: state => state.loading > 0
   },
+  actions: {
+    toggleFavorite: ({ dispatch }, radio) => {
+      if (radio.type === 'radio') {
+        dispatch('toggleRadioFavorite', radio.code_name, { root: true });
+      } else {
+        dispatch('toggleStreamFavorite', radio.code_name, { root: true });
+      }
+    }
+  },
   mutations: {
     setLoading: (state, value) => {
       const incrValue = value === true ? 1 : -1;

@@ -1,11 +1,13 @@
 import axios from 'axios';
 
+import { STREAMING_CATEGORY_ALL } from '../config/config';
+
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-undef */
 
 const getRadios = (country, sort, offset) => {
   const queryParamsList = [];
-  if (country !== null && country !== 'all') {
+  if (country !== null && country !== STREAMING_CATEGORY_ALL) {
     queryParamsList.push(`country=${country}`);
   }
 
@@ -25,7 +27,7 @@ const getRadios = (country, sort, offset) => {
 
 const getRandom = (country) => {
   const queryParamsList = [];
-  if (country !== null && country !== 'all') {
+  if (country !== null && country !== STREAMING_CATEGORY_ALL) {
     queryParamsList.push(`country=${country}`);
   }
 
@@ -55,11 +57,29 @@ const incrementPlayCount = (stationUuid, radioBrowserUrl) => {
   }
 };
 
+const getFavorites = () => {
+  return axios.get(`${baseUrl}streams/favorites`)
+    .then((response) => {
+      return response.data.favorites;
+    });
+};
+
+const toggleFavoriteStream = (streamCodeName, baseUrl) => {
+  axios.get(`${baseUrl}streams/favorite/${streamCodeName}`)
+    .catch((error) => {
+      if (error.response.status === 403) {
+        window.location.href = `${baseUrl}login`;
+      }
+    });
+};
+
 /* eslint-disable no-undef */
 export default {
   getConfig,
   getRadios,
   getRandom,
   getCountries,
-  incrementPlayCount
+  getFavorites,
+  incrementPlayCount,
+  toggleFavoriteStream
 };

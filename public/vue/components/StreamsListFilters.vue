@@ -13,12 +13,16 @@
           @input="countryChange"
           :value="selectedCountry"
           :options="countriesOptions"
+          :selectable="option => option.code !== code_favorites || this.favorites.length > 0"
         >
           <template v-slot:option="option">
+            <img v-if="option.code === code_all || option.code === code_favorites"
+                 class="gb-flag gb-flag--mini"
+                 :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
             <gb-flag
+                v-else
                 :code="option.code"
                 size="mini"
-                v-if="option.code !== 'all'"
             />&nbsp;&nbsp;{{ option.label }}
           </template>
         </v-select>
@@ -27,8 +31,7 @@
         <v-select
             @input="sortByChange"
             :value="selectedSortBy"
-            :options="sortByOptions"
-        >
+            :options="sortByOptions">
         </v-select>
       </div>
     </div>
@@ -43,6 +46,8 @@ import VueFlags from '@growthbunker/vueflags';
 import vSelect from 'vue-select';
 
 import {
+  STREAMING_CATEGORY_FAVORITES,
+  STREAMING_CATEGORY_ALL,
   GTAG_CATEGORY_STREAMING,
   GTAG_STREAMING_ACTION_FILTER_COUNTRY,
   GTAG_STREAMING_ACTION_FILTER_SORT,
@@ -59,17 +64,18 @@ Vue.use(VueFlags, {
 });
 
 export default {
-  components: {
-
-  },
-  created() {
-    this.$store.dispatch('getCountries');
-  },
+  data: () => (
+    {
+      code_all: STREAMING_CATEGORY_ALL,
+      code_favorites: STREAMING_CATEGORY_FAVORITES
+    }
+  ),
   computed: {
     ...mapGetters([
       'countriesOptions'
     ]),
     ...mapState({
+      favorites: state => state.streams.favorites,
       selectedCountry: state => state.streams.selectedCountry,
       selectedSortBy: state => state.streams.selectedSortBy,
       sortByOptions: state => state.streams.sortBy,
@@ -82,7 +88,7 @@ export default {
         value: GTAG_STREAMING_FILTER_VALUE
       });
 
-      this.$store.dispatch('countrySelection', country);
+      this.$router.push({ name: 'streaming', params: { countryOrCategory: country.code.toLowerCase() } });
     },
     sortByChange(sortBy) {
       this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {

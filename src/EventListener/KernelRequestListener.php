@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class KernelRequestListener
 {
     const COOKIE_PREFIX = 'progradio-';
+    const COOKIE_STREAM_SUFFIX = '_streams';
     const COOKIE_DELIMITER = '|';
 
     private string $defaultLocale;
@@ -23,11 +24,17 @@ class KernelRequestListener
     {
         $request = $event->getRequest();
 
-        // favorites
+        // radio favorites
         $favoritesRaw = $request->cookies->get(self::COOKIE_PREFIX . Radio::FAVORITES, '');
         $favorites = empty($favoritesRaw) ? [] : explode(self::COOKIE_DELIMITER, $favoritesRaw);
 
         $request->attributes->set('favorites', $favorites);
+
+        // stream favorites
+        $favoritesRaw = $request->cookies->get(self::COOKIE_PREFIX . Radio::FAVORITES . self::COOKIE_STREAM_SUFFIX, '');
+        $favoritesStream = empty($favoritesRaw) ? [] : explode(self::COOKIE_DELIMITER, $favoritesRaw);
+
+        $request->attributes->set('favoritesStream', $favoritesStream);
 
         // locale
 

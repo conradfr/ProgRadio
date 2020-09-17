@@ -14,6 +14,11 @@ const routes = [
     children: [
       {
         path: 'streaming',
+        name: 'streaming_home',
+        component: AppStreams
+      },
+      {
+        path: 'streaming/:countryOrCategory?',
         name: 'streaming',
         component: AppStreams
       },

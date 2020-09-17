@@ -1,20 +1,27 @@
 <template>
-  <div class="streams-one" v-on:click="play"
+  <div class="streams-one"
        :class="{
           'streams-one-play-active': (radio.code_name === radioPlayingCodeName),
           'streams-one-play-paused': (playing === false && radio.code_name === radioPlayingCodeName)
   }">
-    <div v-if="selectedCountry.code === 'all' && radio.country_code !== null"
-       class="streams-one-flag">
+    <div class="streams-one-img" :style="styleObject" v-on:click="play">
+      <div class="streams-one-img-play"></div>
+    </div>
+    <div class="streams-one-name" :title="radio.name" v-on:click="play">{{ radio.name }}
+    </div>
+    <div class="streams-one-fav" :class="{ 'streams-one-fav-isfavorite': isFavorite() }"
+         v-on:click.stop="toggleFavorite">
+      <img class="streams-one-icon" src="/img/favorites_streams.svg">
+    </div>
+    <div
+        class="streams-one-flag"
+        v-on:click.stop="flagClick"
+        v-if="(selectedCountry.code ===code_all || selectedCountry.code === code_favorites)
+                && radio.country_code !== null">
       <gb-flag
           :code="radio.country_code"
           size="micro"
       />
-    </div>
-    <div class="streams-one-img" :style="styleObject">
-      <div class="streams-one-img-play"></div>
-    </div>
-    <div class="streams-one-name" :title="radio.name">{{ radio.name }}
     </div>
   </div>
 </template>
@@ -24,12 +31,8 @@ import Vue from 'vue';
 import VueFlags from '@growthbunker/vueflags';
 
 import { mapGetters, mapState } from 'vuex';
-import {
-  GTAG_CATEGORY_STREAMING,
-  GTAG_STREAMING_ACTION_PLAY,
-  GTAG_STREAMING_PLAY_VALUE,
-  THUMBNAIL_STREAM_PATH
-} from '../config/config';
+
+import * as config from '../config/config';
 
 Vue.use(VueFlags, {
   // Specify the path of the folder where the flags are stored.
@@ -40,8 +43,10 @@ export default {
   props: ['radio'],
   data() {
     const img = (this.radio.img === null || this.radio.img === '') ? '/img/stream-placeholder.png'
-      : `${THUMBNAIL_STREAM_PATH}${this.radio.img}`;
+      : `${config.THUMBNAIL_STREAM_PATH}${this.radio.img}`;
     return {
+      code_all: config.STREAMING_CATEGORY_ALL,
+      code_favorites: config.STREAMING_CATEGORY_FAVORITES,
       styleObject: {
         backgroundImage: `url("${img}")`
       }
@@ -51,19 +56,39 @@ export default {
     ...mapState({
       playing: state => state.player.playing,
       selectedCountry: state => state.streams.selectedCountry,
+      favorites: state => state.streams.favorites
     }),
     ...mapGetters([
       'radioPlayingCodeName',
     ]),
   },
   methods: {
+    isFavorite() {
+      return this.favorites.indexOf(this.radio.code_name) !== -1;
+    },
     play() {
-      this.$gtag.event(GTAG_STREAMING_ACTION_PLAY, {
-        event_category: GTAG_CATEGORY_STREAMING,
-        value: GTAG_STREAMING_PLAY_VALUE
+      this.$gtag.event(config.GTAG_STREAMING_ACTION_PLAY, {
+        event_category: config.GTAG_CATEGORY_STREAMING,
+        value: config.GTAG_STREAMING_PLAY_VALUE
       });
 
       this.$store.dispatch('playStream', this.radio);
+    },
+    flagClick() {
+      this.$gtag.event(config.GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
+        event_category: config.GTAG_CATEGORY_STREAMING,
+        value: config.GTAG_STREAMING_FILTER_VALUE
+      });
+
+      this.$store.dispatch('countrySelection', this.radio.country_code);
+    },
+    toggleFavorite() {
+      this.$gtag.event(config.GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE, {
+        event_category: config.GTAG_CATEGORY_SCHEDULE,
+        value: config.GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE
+      });
+
+      this.$store.dispatch('toggleFavorite', this.radio);
     }
   }
 };

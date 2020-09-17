@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Radio;
+use App\Entity\Stream;
 use App\Entity\User;
 use App\Entity\UserEmailChange;
 use App\Form\ForgottenPasswordType;
@@ -71,11 +72,17 @@ class SecurityController extends AbstractController
 
             $user->setRoles(['ROLE_USER']);
 
-            // save favorites
+            // save radio favorites
             $favoritesFromCookies = $request->attributes->get('favorites', []);
             $favoriteRadios = $em->getRepository(Radio::class)->findBy(['codeName' => $favoritesFromCookies]);
 
             $user->setFavoriteRadios(new ArrayCollection($favoriteRadios));
+
+            // save streaming favorites
+            $favoritesFromCookies = $request->attributes->get('favoritesStream', []);
+            $favoriteStreams = $em->getRepository(Stream::class)->findBy(['id' => $favoritesFromCookies]);
+
+            $user->setFavoriteStreams(new ArrayCollection($favoriteStreams));
 
             $em->persist($user);
             $em->flush();
