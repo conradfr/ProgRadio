@@ -12,12 +12,14 @@ import { DateTime, Interval } from 'luxon';
 
 import * as config from '../config/config';
 
+import router from '../router/router';
 import ScheduleApi from '../api/ScheduleApi';
 import ScheduleUtils from '../utils/ScheduleUtils';
 
 const VueCookie = require('vue-cookie');
 
 Vue.use(VueCookie);
+
 
 const cursorTime = DateTime.local().setZone(config.TIMEZONE);
 
@@ -118,13 +120,25 @@ const storeActions = {
 
   // ---------- COLLECTIONS ----------
 
-  collectionBackward: ({ state, commit }) => {
-    commit('collectionSwitch',
-      ScheduleUtils.getNextCollection(state.currentCollection, state.collections, state.radios, 'backward'));
+  collectionBackward: ({ state }) => {
+    const nextCollection = ScheduleUtils.getNextCollection(
+      state.currentCollection,
+      state.collections,
+      state.radios,
+      'backward'
+    );
+
+    router.push({ name: 'schedule', params: { collection: nextCollection } });
   },
-  collectionForward: ({ state, commit }) => {
-    commit('collectionSwitch',
-      ScheduleUtils.getNextCollection(state.currentCollection, state.collections, state.radios, 'forward'));
+  collectionForward: ({ state }) => {
+    const nextCollection = ScheduleUtils.getNextCollection(
+      state.currentCollection,
+      state.collections,
+      state.radios,
+      'forward'
+    );
+
+    router.push({ name: 'schedule', params: { collection: nextCollection } });
   },
   switchCollection: ({ commit }, collection) => {
     commit('collectionSwitch', collection);
