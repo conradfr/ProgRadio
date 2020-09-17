@@ -23,6 +23,13 @@ export default {
       favorites: state => state.streams.favorites
     })
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (to.params.countryOrCategory) {
+        vm.$store.dispatch('countrySelection', to.params.countryOrCategory);
+      }
+    });
+  },
   beforeRouteUpdate(to, from, next) {
     if (to.params.countryOrCategory) {
       this.$store.dispatch('countrySelection', to.params.countryOrCategory);
