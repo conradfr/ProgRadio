@@ -7809,7 +7809,7 @@ body > div.container-fluid {
   transform: translateX(-50%);
   /* on mobile, put player at the bottom */
   height: 41px;
-  width: 250px;
+  width: 265px;
   margin-top: 5px;
   background-color: #39a1f4;
   border-radius: 5px;
@@ -7818,7 +7818,6 @@ body > div.container-fluid {
   .navbar-player {
     top: auto;
     bottom: 10px;
-    width: 202px;
   }
 }
 .navbar-player .player-wrap {
@@ -7884,6 +7883,7 @@ body > div.container-fluid {
   padding-right: 5px;
   color: white;
   text-align: center;
+  line-height: 1.3em;
 }
 .navbar-player .player-name-help {
   font-size: 10px;
