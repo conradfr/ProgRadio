@@ -207,6 +207,7 @@ export default {
         this.hls.destroy();
         this.hls = null;
       }
+      delete this.audio;
       this.audio = null;
     },
     toggleFavorite() {

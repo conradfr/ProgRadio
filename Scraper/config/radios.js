@@ -85,6 +85,9 @@ const radios = {
           'evasionfm',
           'latina',
           'voltage',
+          'generations',
+          'forum',
+          'hitwest'
       ],
     'international':
       [
