@@ -157,7 +157,7 @@ export default {
     },
     /* eslint-disable no-undef */
     play(url) {
-      if (url.slice(url.length - 5) === '.m3u8') {
+      if (url.indexOf('.m3u8') !== -1) {
         if (Hls.isSupported()) {
           this.audio = document.getElementById('videoplayer');
           this.hls = new Hls();
