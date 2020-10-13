@@ -3,9 +3,9 @@
     <div class="radio-submenu">
       <div v-on:click="toggleFavorite" class="radio-submenu-entry radio-submenu-entry-favorites">
         <img v-if="isFavorite" src="/img/favorite.svg" class="filter-fav"/>
-        <p v-if="isFavorite">Retirer <br>des favoris</p>
+        <p v-if="isFavorite">{{ $t('message.player.favorites.remove') }}</p>
         <img v-if="!isFavorite" src="/img/favorite-empty.svg" class="filter-fav"/>
-        <p v-if="!isFavorite">Ajouter<br>aux favoris</p>
+        <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
     </div>
     <a v-on:click="play" :title="radio.name">

@@ -10,6 +10,7 @@ const appEnv = '{{ app.environment }}';
 const gtCode = '{{ analytics }}';
 const streamsProxy = '{{ streams_proxy }}';
 const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }};
+const locale = '{{ app.request.locale }}';
 
 const scrollToCursor = function(e) {
 {#    e.preventDefault();#}

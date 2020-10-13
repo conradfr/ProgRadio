@@ -14,7 +14,7 @@
           <div class="row" v-else-if="isLoading === false">
             <div class="col-md-offset-3 col-md-6">
               <div class="alert alert-warning space-up-20 text-center" role="alert">
-                Aucunes radios</div>
+                {{ $t('message.streaming.no_results') }}</div>
             </div>
           </div>
           <streams-list-pagination v-if="radios.length"></streams-list-pagination>

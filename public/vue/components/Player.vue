@@ -30,9 +30,10 @@
         {{ player.radio.name }}
       </div>
       <div v-if="!player.radio" class="player-name player-name-help">
-        Cliquer sur un logo pour lancer la lecture
+        {{ $t('message.player.placeholder') }}
       </div>
       <div class="player-favorite"
+           v-if="player.radio"
            v-on:click="toggleFavorite"
            :title="favoriteTitle"
            :class="{ 'player-favorite-added': isFavorite }">
@@ -111,7 +112,7 @@ export default {
     favoriteTitle() {
       return (this.player.radio !== null
       && this.isFavorite === true
-        ? 'Retirer des favoris' : 'Ajouter aux favoris');
+        ? this.$i18n.tc('message.player.favorites.remove') : this.$i18n.tc('message.player.favorites.add'));
     }
   },
   /* eslint-disable func-names */

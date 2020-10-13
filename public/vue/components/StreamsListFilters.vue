@@ -5,7 +5,7 @@
         <button class="btn btn-primary btn-sm" type="submit"
           v-on:click="playRandom">
           <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
-          Jouer une radio au hasard
+          {{ $t('message.streaming.random') }}
         </button>
       </div>
       <div class="col-select col-md-4 col-sm-6">

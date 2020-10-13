@@ -70,8 +70,8 @@ export default {
       isTomorrow: 'isTomorrow'
     }),
     scheduleDate() {
-      if (this.isToday === true) { return "Aujourd'hui"; }
-      if (this.isTomorrow === true) { return 'Demain'; }
+      if (this.isToday === true) { return this.$i18n.tc('message.schedule.today'); }
+      if (this.isTomorrow === true) { return this.$i18n.tc('message.schedule.tomorrow'); }
       return this.cursorTime.toLocaleString(DateTime.DATE_SHORT);
     }
   },

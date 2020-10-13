@@ -50,7 +50,7 @@ services:
 
     App\EventListener\KernelRequestListener:
         tags:
-            - { name: kernel.event_listener }
+            - { name: kernel.event_listener, priority: 101 }
 
     App\EventListener\KernelExceptionListener:
         tags:

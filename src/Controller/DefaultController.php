@@ -73,16 +73,6 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    public function collectionsMenu(EntityManagerInterface $em, Request $request): Response
-    {
-        $favorites = $request->attributes->get('favorites', []);
-        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
-
-        return $this->render('utils/_collections_menu.html.twig', [
-            'collections' => $collections
-        ]);
-    }
-
     /**
      * @Route(
      *     "/radio/{codename}",

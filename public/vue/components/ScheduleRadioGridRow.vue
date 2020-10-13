@@ -3,7 +3,7 @@
     <div v-if="!hasSchedule && displayNoSchedule"
          class="program-container none" :style="noProgramStyleObject">
       <div class="program">
-        <div class="program-inner">Programmes non disponibles :(</div>
+        <div class="program-inner">{{ $t('message.schedule.no_schedule') }}</div>
       </div>
     </div>
     <template v-if="hasSchedule">

@@ -12,13 +12,7 @@ class KernelRequestListener
     const COOKIE_PREFIX = 'progradio-';
     const COOKIE_STREAM_SUFFIX = '_streams';
     const COOKIE_DELIMITER = '|';
-
-    private string $defaultLocale;
-
-    public function __construct($defaultLocale = 'fr')
-    {
-        $this->defaultLocale = $defaultLocale;
-    }
+    const COOKIE_LANG = 'locale';
 
     public function __invoke(RequestEvent $event): void
     {
@@ -38,16 +32,20 @@ class KernelRequestListener
 
         // locale
 
-        if (!$request->hasPreviousSession()) {
+/*        if (!$request->hasPreviousSession()) {
             return;
-        }
+        }*/
 
-        // try to see if the locale has been set as a _locale routing parameter
-        if ($locale = $request->attributes->get('_locale')) {
+        if ($locale = $request->query->get('lang')) {
             $request->getSession()->set('_locale', $locale);
         } else {
-            // if no explicit locale has been set on this request, use one from the session
-            $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
+            $localeFull = $request->cookies->get(self::COOKIE_PREFIX . self::COOKIE_LANG, locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+
+            // reduce to short locale name
+            $fmt = new \IntlDateFormatter($localeFull, \IntlDateFormatter::FULL, \IntlDateFormatter::FULL);
+            $locale = $fmt->getLocale();
         }
+
+        $request->setLocale($locale);
     }
 }

@@ -63,7 +63,7 @@ const storeGetters = {
   },
   isTomorrow: (state) => {
     const tomorrow = DateTime.local().plus({ days: 1 }).setZone(config.TIMEZONE);
-    return tomorrow.diff(state.cursorTime).as('days') === 0;
+    return Math.floor(tomorrow.diff(state.cursorTime).as('days')) === 0;
   },
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),

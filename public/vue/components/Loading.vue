@@ -3,7 +3,7 @@
     <div v-if="isLoading" class="loading">
       <div class="alert alert-progradio" role="alert">
       <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
-      Chargement ...
+      {{ $t('message.loading') }}
       </div>
     </div>
   </transition>

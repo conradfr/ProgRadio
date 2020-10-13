@@ -6,7 +6,7 @@ import find from 'lodash/find';
 import { STREAMS_DEFAULT_PER_PAGE } from '../config/config';
 
 import * as config from '../config/config';
-
+import i18n from '../lang/i18n';
 import StreamsApi from '../api/StreamsApi';
 
 const VueCookie = require('vue-cookie');
@@ -16,15 +16,15 @@ Vue.use(VueCookie);
 const sortBySelect = [
   {
     code: 'name',
-    label: 'Par ordre alphabétique'
+    label: i18n.tc('message.streaming.sort.name')
   },
   {
     code: 'popularity',
-    label: 'Par popularité'
+    label: i18n.tc('message.streaming.sort.popularity')
   },
   {
     code: 'random',
-    label: 'Par ordre aléatoire'
+    label: i18n.tc('message.streaming.sort.random')
   },
 ];
 
@@ -51,11 +51,11 @@ const storeGetters = {
     const countriesOptions = [];
     countriesOptions.push(
       {
-        label: 'Favoris',
+        label: i18n.tc('message.streaming.categories.favorites'),
         code: config.STREAMING_CATEGORY_FAVORITES
       },
       {
-        label: 'Tous les pays',
+        label: i18n.tc('message.streaming.categories.all_countries'),
         code: config.STREAMING_CATEGORY_ALL
       }
     );
