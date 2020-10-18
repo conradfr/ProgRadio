@@ -8,6 +8,7 @@ class SiteControllerTest extends WebTestCase
 {
     public function testFaq()
     {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/faq');
@@ -16,25 +17,27 @@ class SiteControllerTest extends WebTestCase
         $this->assertContains('Foire aux questions', $crawler->filter('h3')->text());
 
         $this->assertContains('Qu\'est-ce que Programmes-radio.io ?', $crawler->filter('dt')->text());
-        $this->assertContains('Programmes-radio.io est un site indépendant centralisant les grilles de programmes des radios françaises.', $crawler->filter('dd')->text());
+        $this->assertContains('Programmes-radio.io est un site indépendant centralisant les grilles de programmes de radios françaises et internationales.', $crawler->filter('dd')->text());
     }
 
     public function testSitemap()
     {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/sitemap.xml');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $items = $crawler->filterXPath('//urlset/url/loc')->extract('_text');
-        $items2 = $crawler->filterXPath('//urlset/url/lastmod')->extract('_text');
+        $items = $crawler->filterXPath('//urlset/url/loc')->extract(['_text']);
+        $items2 = $crawler->filterXPath('//urlset/url/lastmod')->extract(['_text']);
         $this->assertContains('http://localhost/',  $items[0]);
         $this->assertContains(date('Y-m-d'),  $items2[0]);
     }
 
     public function testContact()
     {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/contact');

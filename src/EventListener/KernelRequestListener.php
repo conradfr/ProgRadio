@@ -39,7 +39,8 @@ class KernelRequestListener
         if ($locale = $request->query->get('lang')) {
             $request->getSession()->set('_locale', $locale);
         } else {
-            $localeFull = $request->cookies->get(self::COOKIE_PREFIX . self::COOKIE_LANG, locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+            $defaultLang = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']) : null;
+            $localeFull = $request->cookies->get(self::COOKIE_PREFIX . self::COOKIE_LANG, $defaultLang);
 
             // reduce to short locale name
             $fmt = new \IntlDateFormatter($localeFull, \IntlDateFormatter::FULL, \IntlDateFormatter::FULL);
