@@ -139,6 +139,18 @@
           font-weight: bold;
         }
       }
+
+      &.streams-one-play-active:not(.streams-one-play-paused) {
+        .streams-one-img-play {
+          mask-image: url('../../img/rounded-pause-button.svg') !important;
+          -webkit-mask-image: url('../../img/rounded-pause-button.svg') !important;
+
+          /* IE only, default to black icon */
+          @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            background-image: url('../../img/rounded-pause-button.svg') !important;
+          }
+        }
+      }
     }
   }
 }

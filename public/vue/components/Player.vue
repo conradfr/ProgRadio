@@ -21,7 +21,7 @@
           aria-hidden="true"></span>
       </div>
       <div class="player-playpause" v-on:click="togglePlay"
-         :class="{ 'player-playpause-disabled': player.radio === null }">
+        :class="{ 'player-playpause-disabled': player.radio === null }">
         <span class="glyphicon icon-round"
           :class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }"
           aria-hidden="true"></span>
@@ -154,6 +154,11 @@ export default {
       );
     },
     togglePlay() {
+      this.$gtag.event(config.GTAG_ACTION_TOGGLE_PLAY, {
+        event_category: config.GTAG_CATEGORY_PLAYER,
+        value: config.GTAG_ACTION_TOGGLE_PLAY_VALUE
+      });
+
       this.$store.dispatch('togglePlay');
     },
     /* eslint-disable no-undef */
@@ -213,9 +218,10 @@ export default {
     },
     toggleFavorite() {
       if (this.player.radio !== null) {
-        this.$gtag.event(config.GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE, {
+        this.$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
           event_category: config.GTAG_CATEGORY_SCHEDULE,
-          value: config.GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE
+          event_label: this.player.radio.code_name,
+          value: config.GTAG_ACTION_FAVORITE_TOGGLE_VALUE
         });
 
         this.$store.dispatch('toggleFavorite', this.player.radio);

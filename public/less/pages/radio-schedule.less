@@ -1,18 +1,32 @@
 .schedule-page {
   padding-top: 20px;
 
-  h5 {
-    margin-top: 0;
-    margin-bottom: 5px;
-
+  .title {
     @media (max-width: @screen-xs-max) {
-      margin: 25px 0 5px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    h5 {
+      margin-top: 0;
+      margin-bottom: 5px;
+
+      @media (max-width: @screen-xs-max) {
+        margin: 10px 0 5px;
+      }
     }
   }
 
   .schedule-day-shows {
     .media {
       margin-bottom: 20px;
+    }
+
+    .media-current {
+      background-color: mix(white, @brand-primary, 96.5%);;
+      -webkit-box-shadow: 0px 0px 20px 5px rgba(247,251,255,1);
+      -moz-box-shadow: 0px 0px 20px 5px rgba(247,251,255,1);
+      box-shadow: 0px 0px 20px 5px rgba(247,251,255,1);
     }
 
     .show-title {
@@ -65,6 +79,37 @@
   }
 }
 
+.schedule-day-radio {
+  margin-bottom: 20px; /* for shows without enough text */
+}
+
+.schedule-day-play {
+  text-align: center;
+
+  .schedule-day-play-button {
+    height: 46px;
+    width: 46px;
+    filter: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
+  }
+
+  .schedule-day-play-text {
+    color: #4d6a82;
+    margin-top: 2px;
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    .schedule-day-play-button {
+      filter: invert(65%) sepia(47%) saturate(6464%) hue-rotate(183deg) brightness(97%) contrast(97%);
+    }
+
+    .schedule-day-play-text {
+      color: @brand-primary;
+    }
+  }
+}
+
 #schedule-now {
   .title h5 {
     @media (max-width: @screen-xs-max) {
@@ -81,6 +126,7 @@
     }
   }
 
+  /* now page */
   .radio-schedule-row {
     margin-top: 25px;
     border-bottom: 1px dotted darken(@background-color, 20%);
@@ -89,10 +135,5 @@
       border: none;
       padding-bottom: 50px;
     }
-
-    .schedule-day-radio {
-      margin-bottom: 20px; /* for shows without enough text */
-    }
-
   }
 }

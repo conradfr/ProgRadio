@@ -7502,6 +7502,8 @@ body > div.container-fluid {
 }
 #app {
   overflow-x: hidden;
+}
+#app:not(.no-background) {
   background-color: #f9f9f9;
 }
 .space-up-20 {
@@ -8048,6 +8050,18 @@ body > div.container-fluid {
 .streams .streams-one.streams-one-play-active:not(.streams-one-play-hide).streams-one-play-active .streams-one-name {
   font-weight: bold;
 }
+.streams .streams-one:hover:not(.streams-one-play-hide).streams-one-play-active:not(.streams-one-play-paused) .streams-one-img-play,
+.streams .streams-one.streams-one-play-active:not(.streams-one-play-hide).streams-one-play-active:not(.streams-one-play-paused) .streams-one-img-play {
+  mask-image: url('../../img/rounded-pause-button.svg') !important;
+  -webkit-mask-image: url('../../img/rounded-pause-button.svg') !important;
+  /* IE only, default to black icon */
+}
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .streams .streams-one:hover:not(.streams-one-play-hide).streams-one-play-active:not(.streams-one-play-paused) .streams-one-img-play,
+  .streams .streams-one.streams-one-play-active:not(.streams-one-play-hide).streams-one-play-active:not(.streams-one-play-paused) .streams-one-img-play {
+    background-image: url('../../img/rounded-pause-button.svg') !important;
+  }
+}
 .streams-filters-container {
   margin-top: 20px;
   margin-bottom: 15px;
@@ -8160,17 +8174,29 @@ ul.pagination li.ellipsis:before {
 .schedule-page {
   padding-top: 20px;
 }
-.schedule-page h5 {
+@media (max-width: 767px) {
+  .schedule-page .title {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+}
+.schedule-page .title h5 {
   margin-top: 0;
   margin-bottom: 5px;
 }
 @media (max-width: 767px) {
-  .schedule-page h5 {
-    margin: 25px 0 5px;
+  .schedule-page .title h5 {
+    margin: 10px 0 5px;
   }
 }
 .schedule-page .schedule-day-shows .media {
   margin-bottom: 20px;
+}
+.schedule-page .schedule-day-shows .media-current {
+  background-color: #f7fbff;
+  -webkit-box-shadow: 0px 0px 20px 5px #f7fbff;
+  -moz-box-shadow: 0px 0px 20px 5px #f7fbff;
+  box-shadow: 0px 0px 20px 5px #f7fbff;
 }
 .schedule-page .schedule-day-shows .show-title {
   font-weight: bold;
@@ -8205,6 +8231,34 @@ ul.pagination li.ellipsis:before {
 #schedule-day .schedule-day-shows {
   margin-top: 25px;
 }
+.schedule-day-radio {
+  margin-bottom: 20px;
+  /* for shows without enough text */
+}
+.schedule-day-play {
+  text-align: center;
+}
+.schedule-day-play .schedule-day-play-button {
+  height: 46px;
+  width: 46px;
+  filter: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
+}
+.schedule-day-play .schedule-day-play-text {
+  color: #4d6a82;
+  margin-top: 2px;
+}
+.schedule-day-play:hover {
+  cursor: pointer;
+}
+.schedule-day-play:hover .schedule-day-play-button {
+  filter: invert(65%) sepia(47%) saturate(6464%) hue-rotate(183deg) brightness(97%) contrast(97%);
+}
+.schedule-day-play:hover .schedule-day-play-text {
+  color: #2196F3;
+}
+#schedule-now {
+  /* now page */
+}
 @media (max-width: 767px) {
   #schedule-now .title h5 {
     margin-top: 0;
@@ -8223,10 +8277,6 @@ ul.pagination li.ellipsis:before {
 #schedule-now .radio-schedule-row:last-child {
   border: none;
   padding-bottom: 50px;
-}
-#schedule-now .radio-schedule-row .schedule-day-radio {
-  margin-bottom: 20px;
-  /* for shows without enough text */
 }
 .container-content h3 {
   margin-top: 15px;
@@ -8354,10 +8404,20 @@ ul.pagination li.ellipsis:before {
   }
 }
 .schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-paused:not(:hover) {
-  opacity: 0.1;
+  opacity: 0.3;
 }
 .schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active {
-  opacity: 0.7;
+  opacity: 0.8;
+}
+.schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active:not(.radio-logo-play-paused) {
+  mask-image: url('../../img/rounded-pause-button.svg') !important;
+  -webkit-mask-image: url('../../img/rounded-pause-button.svg') !important;
+  /* IE only, default to black icon */
+}
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .schedule-container .schedule-radio-list .radio-logo .radio-logo-play.radio-logo-play-active:not(.radio-logo-play-paused) {
+    background-image: url('../../img/rounded-pause-button.svg') !important;
+  }
 }
 .schedule-container .schedule-radio-list .radio-list-one-wrapper {
   position: relative;
@@ -8372,7 +8432,7 @@ ul.pagination li.ellipsis:before {
   top: -1px;
   transition: left 200ms ease-in-out 500ms;
   height: calc(65px);
-  width: 71px;
+  width: calc(142px);
   opacity: 0.95;
   background-color: #343434;
   border: 1px solid black;
@@ -8380,8 +8440,9 @@ ul.pagination li.ellipsis:before {
   cursor: pointer;
 }
 .schedule-container .schedule-radio-list .radio-submenu .radio-submenu-entry {
-  width: 100%;
+  display: table-cell;
   height: 100%;
+  width: 71px;
   font-size: 9px;
   text-align: center;
   line-height: 1.0;
@@ -8398,6 +8459,9 @@ ul.pagination li.ellipsis:before {
 .schedule-container .schedule-radio-list .radio-submenu .radio-submenu-entry .filter-fav {
   filter: invert(13%) sepia(84%) saturate(4375%) hue-rotate(349deg) brightness(108%) contrast(95%);
 }
+.schedule-container .schedule-radio-list .radio-submenu .radio-submenu-entry .filter-page {
+  filter: invert(100%);
+}
 .schedule-container .schedule-radio-list .radio-submenu .radio-submenu-entry span {
   display: inline-block;
   align-self: flex-end;
@@ -8411,6 +8475,11 @@ ul.pagination li.ellipsis:before {
 }
 .schedule-container .schedule-radio-list .radio-submenu .radio-submenu-entry:hover p {
   margin-top: 4px;
+}
+.schedule-container .schedule-radio-list .radio-submenu a {
+  text-decoration: none;
+  transition: none;
+  -webkit-transition: none;
 }
 .schedule-container .schedule-radio-list .radio-list-leave-active,
 .schedule-container .schedule-radio-list .radio-list-enter-active {

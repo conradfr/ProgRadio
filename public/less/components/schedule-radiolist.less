@@ -76,11 +76,21 @@
       }
 
       &.radio-logo-play-paused:not(:hover) {
-        opacity: 0.1;
+        opacity: 0.3;
       }
 
       &.radio-logo-play-active {
-        opacity: 0.7;
+        opacity: 0.8;
+      }
+
+      &.radio-logo-play-active:not(.radio-logo-play-paused) {
+        mask-image: url('../../img/rounded-pause-button.svg') !important;
+        -webkit-mask-image: url('../../img/rounded-pause-button.svg') !important;
+
+        /* IE only, default to black icon */
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+          background-image: url('../../img/rounded-pause-button.svg') !important;
+        }
       }
     }
   }
@@ -96,6 +106,7 @@
       left: @radio-list-width;
     }
   }
+
   .radio-submenu {
     //display: none;
     z-index: 0;
@@ -106,7 +117,7 @@
     transition: left 200ms ease-in-out 500ms;
 
     height: calc(@grid-row-height + 1px);
-    width: @radio-list-width;
+    width: calc(@radio-list-width * 2);
 
     opacity: 0.95;
     background-color: #343434;
@@ -117,8 +128,10 @@
     cursor: pointer;
 
     .radio-submenu-entry {
-      width: 100%;
+      //width: 100%;
+      display: table-cell;
       height: 100%;
+      width: @radio-list-width;
 
       font-size: 9px;
       text-align: center;
@@ -142,6 +155,10 @@
         filter: invert(13%) sepia(84%) saturate(4375%) hue-rotate(349deg) brightness(108%) contrast(95%);
       }
 
+      .filter-page {
+        filter: invert(100%);
+      }
+
       span {
         //vertical-align: bottom;
         display: inline-block;
@@ -160,7 +177,13 @@
           margin-top: 4px;
         }
       }
+    }
 
+    a {
+      text-decoration: none;
+      // avoid inherited glitch
+      transition: none;
+      -webkit-transition: none;
     }
   }
 

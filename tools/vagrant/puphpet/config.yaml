@@ -27,7 +27,7 @@ vagrantfile:
                             forwarded_port:
                                 port1:
                                     host: '8080'
-                                    guest: '80'
+                                    guest: '443'
                                 port2:
                                     host: '6379'
                                     guest: '6379'

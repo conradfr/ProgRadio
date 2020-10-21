@@ -139,8 +139,13 @@ class SiteController extends AbstractController
         // radio/schedule page
         $radios = $em->getRepository(Radio::class)->getAllCodename();
 
+        $savedRouteAppDefault = $this->get('router')->getRouteCollection()->get('radio')->getDefaults();
         foreach ($radios as $radio) {
             $xml .= $this->getEntryXml('radio', $this->get('router')->getRouteCollection()->get('radio'),['codename' => $radio]);
+            // spa radio page
+            $routeApp = $this->get('router')->getRouteCollection()->get('radio')->addDefaults(['bangs' => 'radio/' . $radio]);
+            $xml .= $this->getEntryXml('app', $routeApp);
+            $this->get('router')->getRouteCollection()->get('radio')->setDefaults($savedRouteAppDefault);
         }
 
         $xml .= '</urlset>';
@@ -165,7 +170,7 @@ class SiteController extends AbstractController
         foreach ($bangs as $bang) {
             $url = $this->generateUrl($name, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
             if ($bang !== '') {
-                $url .= '#' . $bang;
+                $url .= '#/' . $bang;
             }
 
             $entries .= '<url>' . PHP_EOL

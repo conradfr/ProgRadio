@@ -48,6 +48,7 @@ export default {
     toggleExclude(category) {
       this.$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
         event_category: GTAG_CATEGORY_SCHEDULE,
+        event_label: category,
         value: GTAG_SCHEDULE_FILTER_VALUE
       });
 

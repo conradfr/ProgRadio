@@ -1,6 +1,15 @@
 // todo modularize
 
-export default {
+export const dateTimeFormats = {
+  fr: {
+    date_title: { year: 'numeric', month: 'long', day: 'numeric' }
+  },
+  en: {
+    date_title: { year: 'numeric', month: 'short', day: 'numeric' }
+  }
+};
+
+export const messages = {
   fr: {
     message: {
       loading: 'Chargement ...',
@@ -14,7 +23,16 @@ export default {
       schedule: {
         no_schedule: 'Programmes non disponibles :(',
         today: "Aujourd'hui",
-        tomorrow: 'Demain'
+        tomorrow: 'Demain',
+        radio_list: {
+          page: 'Page des programmes'
+        }
+      },
+      radio_page: {
+        play: 'Ecouter {radio}',
+        stop: 'Stopper',
+        back: '← Retourner à la grille complète des programmes',
+        no_schedule: 'Programmes non disponibles.'
       },
       streaming: {
         categories: {
@@ -44,7 +62,16 @@ export default {
       schedule: {
         no_schedule: 'Schedule not available :(',
         today: 'Today',
-        tomorrow: 'Tomorrow'
+        tomorrow: 'Tomorrow',
+        radio_list: {
+          page: 'Schedule page'
+        }
+      },
+      radio_page: {
+        play: 'Listen to {radio}',
+        stop: 'Stop',
+        back: '← Back to radio guide',
+        no_schedule: 'Schedule not available'
       },
       streaming: {
         categories: {

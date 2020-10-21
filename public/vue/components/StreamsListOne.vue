@@ -4,10 +4,10 @@
           'streams-one-play-active': (radio.code_name === radioPlayingCodeName),
           'streams-one-play-paused': (playing === false && radio.code_name === radioPlayingCodeName)
   }">
-    <div class="streams-one-img" :style="styleObject" v-on:click="play">
+    <div class="streams-one-img" :style="styleObject" v-on:click="playStop">
       <div class="streams-one-img-play"></div>
     </div>
-    <div class="streams-one-name" :title="radio.name" v-on:click="play">{{ radio.name }}
+    <div class="streams-one-name" :title="radio.name" v-on:click="playStop">{{ radio.name }}
     </div>
     <div class="streams-one-fav" :class="{ 'streams-one-fav-isfavorite': isFavorite() }"
          v-on:click.stop="toggleFavorite">
@@ -66,10 +66,23 @@ export default {
     isFavorite() {
       return this.favorites.indexOf(this.radio.code_name) !== -1;
     },
-    play() {
-      this.$gtag.event(config.GTAG_STREAMING_ACTION_PLAY, {
+    playStop() {
+      // stop if playing
+      if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name) {
+        this.$gtag.event(config.GTAG_ACTION_STOP, {
+          event_category: config.GTAG_CATEGORY_STREAMING,
+          event_label: this.radio.code_name,
+          value: config.GTAG_ACTION_STOP_VALUE
+        });
+
+        this.$store.dispatch('stop');
+        return;
+      }
+
+      this.$gtag.event(config.GTAG_ACTION_PLAY, {
         event_category: config.GTAG_CATEGORY_STREAMING,
-        value: config.GTAG_STREAMING_PLAY_VALUE
+        event_label: this.radio.code_name,
+        value: config.GTAG_ACTION_PLAY_VALUE
       });
 
       this.$store.dispatch('playStream', this.radio);
@@ -77,15 +90,17 @@ export default {
     flagClick() {
       this.$gtag.event(config.GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
         event_category: config.GTAG_CATEGORY_STREAMING,
+        event_label: this.radio.country_code.lowerCase(),
         value: config.GTAG_STREAMING_FILTER_VALUE
       });
 
       this.$store.dispatch('countrySelection', this.radio.country_code);
     },
     toggleFavorite() {
-      this.$gtag.event(config.GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE, {
+      this.$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
         event_category: config.GTAG_CATEGORY_SCHEDULE,
-        value: config.GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE
+        event_label: this.radio.code_name,
+        value: config.GTAG_ACTION_FAVORITE_TOGGLE_VALUE
       });
 
       this.$store.dispatch('toggleFavorite', this.radio);

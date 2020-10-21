@@ -28,13 +28,16 @@ export default {
     ScheduleContainer,
     CategoryFilter
   },
-  created() {
-    const body = document.querySelector('body');
-    body.classList.add('body-app');
-  },
   mounted() {
     // set focus on the schedule container to allow key nav.
     this.$refs.container.$el.focus();
+
+    const body = document.querySelector('body');
+    body.classList.add('body-app');
+  },
+  beforeDestroy() {
+    const body = document.querySelector('body');
+    body.classList.remove('body-app');
   },
   computed: {
     ...mapGetters([

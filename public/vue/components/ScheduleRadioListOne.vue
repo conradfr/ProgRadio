@@ -7,8 +7,13 @@
         <img v-if="!isFavorite" src="/img/favorite-empty.svg" class="filter-fav"/>
         <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
+      <a :href="'/#/radio/' + radio.code_name"
+         class="radio-submenu-entry radio-submenu-entry-radiopage">
+        <img src="/img/list.svg" class="filter-page"/>
+        <p>{{ $t('message.schedule.radio_list.page') }}</p>
+      </a>
     </div>
-    <a v-on:click="play" :title="radio.name">
+    <a v-on:click="playStop" :title="radio.name">
       <div class="radio-logo"
            :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}"
            :title="radio.name" :style="styleObject">
@@ -30,10 +35,12 @@ import { mapGetters, mapState } from 'vuex';
 import {
   COLLECTION_FAVORITES,
   GTAG_CATEGORY_SCHEDULE,
-  GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE,
-  GTAG_SCHEDULE_ACTION_PLAY,
-  GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE,
-  GTAG_SCHEDULE_PLAY_VALUE
+  GTAG_ACTION_FAVORITE_TOGGLE,
+  GTAG_ACTION_PLAY,
+  GTAG_ACTION_FAVORITE_TOGGLE_VALUE,
+  GTAG_ACTION_PLAY_VALUE,
+  GTAG_ACTION_STOP,
+  GTAG_ACTION_STOP_VALUE
 } from '../config/config';
 
 export default {
@@ -57,20 +64,33 @@ export default {
     },
   },
   methods: {
-    play() {
-      this.$gtag.event(GTAG_SCHEDULE_ACTION_PLAY, {
-        event_category: GTAG_CATEGORY_SCHEDULE,
-        value: GTAG_SCHEDULE_PLAY_VALUE
-      });
+    playStop() {
+      // stop if playing
+      if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name) {
+        this.$gtag.event(GTAG_ACTION_STOP, {
+          event_category: GTAG_CATEGORY_SCHEDULE,
+          event_label: this.radio.code_name,
+          value: GTAG_ACTION_STOP_VALUE
+        });
+
+        this.$store.dispatch('stop');
+        return;
+      }
 
       if (this.radio.streaming_enabled === true) {
+        this.$gtag.event(GTAG_ACTION_PLAY, {
+          event_category: GTAG_CATEGORY_SCHEDULE,
+          event_label: this.radio.code_name,
+          value: GTAG_ACTION_PLAY_VALUE
+        });
+
         this.$store.dispatch('play', this.radio.code_name);
       }
     },
     toggleFavorite() {
-      this.$gtag.event(GTAG_SCHEDULE_ACTION_FAVORITE_TOGGLE, {
+      this.$gtag.event(GTAG_ACTION_FAVORITE_TOGGLE, {
         event_category: GTAG_CATEGORY_SCHEDULE,
-        value: GTAG_SCHEDULE_FAVORITE_TOGGLE_VALUE
+        value: GTAG_ACTION_FAVORITE_TOGGLE_VALUE
       });
 
       this.$store.dispatch('toggleFavorite', this.radio);

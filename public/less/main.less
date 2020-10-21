@@ -35,7 +35,10 @@ body > div.container, body > div.container-fluid {
 
 #app {
   overflow-x: hidden;
-  background-color: @background-color;
+
+  &:not(.no-background) {
+    background-color: @background-color;
+  }
 }
 
 @import "utils/spacing";
