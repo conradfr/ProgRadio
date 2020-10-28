@@ -8,6 +8,7 @@ use App\Entity\Collection;
 use App\Entity\Contact;
 use App\Entity\Radio;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +21,22 @@ use App\Form\ContactType;
 
 class SiteController extends AbstractController
 {
+    protected const LANG = ['fr', 'en'];
+
     /**
      * @Route(
      *     "/faq",
+     *     name="faq_legacy"
+     * )
+     */
+    public function faq_legacy(EntityManagerInterface $em, Request $request): RedirectResponse
+    {
+        return $this->redirectToRoute('faq', ['_locale' => 'fr'], 301);
+    }
+
+    /**
+     * @Route(
+     *     "/{_locale}/faq",
      *     name="faq",
      *     defaults={
      *      "priority": "0.2",
@@ -30,7 +44,8 @@ class SiteController extends AbstractController
      *      }
      * )
      */
-    public function faq(EntityManagerInterface $em, Request $request): Response
+    public function faq
+    (EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favorites', []);
         $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
@@ -46,7 +61,7 @@ class SiteController extends AbstractController
 
     /**
      * @Route(
-     *     "/contact",
+     *     "/{_locale}/contact",
      *     name="contact",
      *     defaults={
      *      "priority": "0.1",
@@ -92,7 +107,7 @@ class SiteController extends AbstractController
 
     /**
      * @Route(
-     *     "/legal",
+     *     "/{_locale}/legal",
      *     name="legal",
      *     defaults={
      *      "priority": "0.1",
@@ -132,20 +147,22 @@ class SiteController extends AbstractController
              . '<?xml-stylesheet type="text/xsl" href="/user/plugins/sitemap/sitemap.xsl"?>' . PHP_EOL
              . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
 
-        foreach ($routes as $name => $route) {
-            $xml .= $this->getEntryXml($name, $route);
-        }
+        foreach (self::LANG as $locale) {
+            foreach ($routes as $name => $route) {
+                $xml .= $this->getEntryXml($name, $route, $locale);
+            }
 
-        // radio/schedule page
-        $radios = $em->getRepository(Radio::class)->getAllCodename();
+            // radio/schedule page
+            $radios = $em->getRepository(Radio::class)->getAllCodename();
 
-        $savedRouteAppDefault = $this->get('router')->getRouteCollection()->get('radio')->getDefaults();
-        foreach ($radios as $radio) {
-            $xml .= $this->getEntryXml('radio', $this->get('router')->getRouteCollection()->get('radio'),['codename' => $radio]);
-            // spa radio page
-            $routeApp = $this->get('router')->getRouteCollection()->get('radio')->addDefaults(['bangs' => 'radio/' . $radio]);
-            $xml .= $this->getEntryXml('app', $routeApp);
-            $this->get('router')->getRouteCollection()->get('radio')->setDefaults($savedRouteAppDefault);
+            $savedRouteAppDefault = $this->get('router')->getRouteCollection()->get('radio')->getDefaults();
+            foreach ($radios as $radio) {
+                $xml .= $this->getEntryXml('radio', $this->get('router')->getRouteCollection()->get('radio'), $locale,  ['codename' => $radio]);
+                // spa radio page
+                $routeApp = $this->get('router')->getRouteCollection()->get('radio')->addDefaults(['bangs' => 'radio/' . $radio]);
+                $xml .= $this->getEntryXml('app', $routeApp, $locale);
+                $this->get('router')->getRouteCollection()->get('radio')->setDefaults($savedRouteAppDefault);
+            }
         }
 
         $xml .= '</urlset>';
@@ -159,10 +176,12 @@ class SiteController extends AbstractController
     /**
      * @throws \Exception
      */
-    protected function getEntryXml(string $name, RouteObject $route, array $parameters=[]): string
+    protected function getEntryXml(string $name, RouteObject $route, string $locale, array $parameters=[]): string
     {
         $lastMod = new \DateTime();
         $lastModFormat = $lastMod->format('Y-m-d');
+
+        $parameters['_locale'] = $locale;
 
         $bangs = isset($route->getDefaults()['bangs']) ? explode(',', $route->getDefaults()['bangs']) : [''] ;
 

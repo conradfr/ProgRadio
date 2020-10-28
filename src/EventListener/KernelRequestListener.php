@@ -9,10 +9,13 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class KernelRequestListener
 {
-    const COOKIE_PREFIX = 'progradio-';
-    const COOKIE_STREAM_SUFFIX = '_streams';
-    const COOKIE_DELIMITER = '|';
-    const COOKIE_LANG = 'locale';
+    protected const COOKIE_PREFIX = 'progradio-';
+    protected const COOKIE_STREAM_SUFFIX = '_streams';
+    protected const COOKIE_DELIMITER = '|';
+    protected const COOKIE_LANG = 'locale';
+
+    protected const AUTHORIZED_LOCALES = ['fr', 'en'];
+    protected const DEFAULT_LOCALE = ['fr', 'en'];
 
     public function __invoke(RequestEvent $event): void
     {
@@ -36,8 +39,9 @@ class KernelRequestListener
             return;
         }*/
 
-        if ($locale = $request->query->get('lang')) {
+/*        if ($locale = $request->query->get('lang')) {
             $request->getSession()->set('_locale', $locale);
+            $request->setLocale($locale);
         } else {
             $defaultLang = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']) : null;
             $localeFull = $request->cookies->get(self::COOKIE_PREFIX . self::COOKIE_LANG, $defaultLang);
@@ -45,8 +49,10 @@ class KernelRequestListener
             // reduce to short locale name
             $fmt = new \IntlDateFormatter($localeFull, \IntlDateFormatter::FULL, \IntlDateFormatter::FULL);
             $locale = $fmt->getLocale();
-        }
 
-        $request->setLocale($locale);
+            if (in_array($locale, self::AUTHORIZED_LOCALES)) {
+                $request->setLocale($locale);
+            }
+        }*/
     }
 }

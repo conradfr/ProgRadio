@@ -67,17 +67,30 @@ const setCache = (key, data) => {
 const getSchedule = (dateStr, baseUrl) => {
   return axios.get(`${baseUrl}schedule/${dateStr}`)
     .then((response) => {
-      setCache(dateStr, response.data.schedule);
-      return response.data.schedule;
+      if (response.data.schedule !== undefined) {
+        setCache(dateStr, response.data.schedule);
+        return response.data.schedule;
+      }
+
+      return [];
     });
 };
 
 const getRadiosData = (baseUrl) => {
   return axios.get(`${baseUrl}radios`)
     .then((response) => {
-      setCache(CACHE_KEY_RADIOS, response.data.radios);
-      setCache(CACHE_KEY_COLLECTIONS, response.data.collections);
-      setCache(CACHE_KEY_CATEGORIES, response.data.categories);
+      if (response.data.radios !== undefined) {
+        setCache(CACHE_KEY_RADIOS, response.data.radios);
+      }
+
+      if (response.data.radios !== undefined) {
+        setCache(CACHE_KEY_COLLECTIONS, response.data.collections);
+      }
+
+      if (response.data.radios !== undefined) {
+        setCache(CACHE_KEY_CATEGORIES, response.data.categories);
+      }
+
       return response.data;
     });
 };

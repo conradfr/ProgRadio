@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}{{ 'general.main_title'|trans }}{% endblock %} - Programme Radio</title>
+    <title>{% block title %}{{ 'general.main_title'|trans }}{% endblock %} - Programmes Radio</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
@@ -52,7 +52,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li id="streaming-menu-favorites" {% if hasStreamFavorites(app.user, app.request.attributes) == false %} class="disabled"{% endif %}>
-                            <a href="{{ absolute_url('/#/streaming/favorites') }}">
+                            <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/favorites') }}">
                                 {{ 'menu.favorites'|trans }}
                             </a>
                         </li>

@@ -37,7 +37,7 @@ class UserController extends AbstractBaseController
 
     /**
      * @Route(
-     *     "/",
+     *     "/{_locale}/",
      *     name="user_page",
      * )
      */
@@ -48,7 +48,7 @@ class UserController extends AbstractBaseController
 
     /**
      * @Route(
-     *     "/email",
+     *     "/{_locale}/email",
      *     name="user_page_email",
      * )
      */
@@ -121,7 +121,7 @@ class UserController extends AbstractBaseController
 
     /**
      * @Route(
-     *     "/password",
+     *     "/{_locale}/password",
      *     name="user_page_password",
      * )
      */
@@ -180,7 +180,7 @@ class UserController extends AbstractBaseController
 
     /**
      * @Route(
-     *     "/delete",
+     *     "/{_locale}/delete",
      *     name="user_page_delete",
      * )
      */
@@ -196,7 +196,7 @@ class UserController extends AbstractBaseController
 
     /**
      * @Route(
-     *     "/delete/confirm/{token}",
+     *     "/{_locale}/delete/confirm/{token}",
      *     name="user_page_delete_confirm",
      * )
      */

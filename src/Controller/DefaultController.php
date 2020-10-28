@@ -11,6 +11,7 @@ use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,22 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class DefaultController extends AbstractBaseController
 {
-    /**
-     * @Route(
-     *     "/",
-     *     name="app",
-     *     defaults={
-     *      "priority": "1.0",
-     *      "changefreq": "daily",
-     *      "bangs": "schedule,streaming"
-     *     },
-     * )
-     */
-    public function index(): Response
-    {
-        return $this->render('default/index.html.twig', []);
-    }
-
     /**
      * @Route(
      *     "/schedule/{date}",
@@ -76,6 +61,19 @@ class DefaultController extends AbstractBaseController
     /**
      * @Route(
      *     "/radio/{codename}",
+     *     name="radio_legacy"
+     * )
+     *
+     * @throws \Exception
+     */
+    public function radio_legacy(string $codename, EntityManagerInterface $em, ScheduleManager $scheduleManager): RedirectResponse
+    {
+        return $this->redirectToRoute('radio', ['_locale' => 'fr', 'codename' => $codename], 301);
+    }
+
+    /**
+     * @Route(
+     *     "/{_locale}/radio/{codename}",
      *     name="radio",
      *     defaults={
      *      "priority": "0.8",
@@ -134,6 +132,19 @@ class DefaultController extends AbstractBaseController
     /**
      * @Route(
      *     "/now",
+     *     name="now_legacy"
+     * )
+     *
+     * @throws \Exception
+     */
+    public function now_legacy(EntityManagerInterface $em, Request $request): RedirectResponse
+    {
+        return $this->redirectToRoute('now', ['_locale' => 'fr'], 301);
+    }
+
+    /**
+     * @Route(
+     *     "/{_locale}/now",
      *     name="now",
      *     defaults={
      *      "priority": "0.9",
@@ -158,5 +169,35 @@ class DefaultController extends AbstractBaseController
             'collections' => $collections,
             'date' => $dateTime,
         ]);
+    }
+
+    /**
+     * @Route(
+     *     "/{_locale}/",
+     *     name="app",
+     *     defaults={
+     *      "priority": "1.0",
+     *      "changefreq": "daily",
+     *      "bangs": "schedule,streaming"
+     *     },
+     *     requirements={
+     *      "_locale": "en|fr",
+     *     }
+     * )
+     */
+    public function index(): Response
+    {
+        return $this->render('default/index.html.twig', []);
+    }
+
+    /**
+     * @Route(
+     *     "/",
+     *     name="app_legacy"
+     * )
+     */
+    public function indexLegacy(): RedirectResponse
+    {
+        return $this->redirectToRoute('app', ['_locale' => 'fr'], 301);
     }
 }

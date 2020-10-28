@@ -28,7 +28,10 @@ use Symfony\Component\Mime\Address;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="app_login")
+     * @Route(
+     *     "/{_locale}/login",
+     *     name="app_login"
+     * )
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -45,7 +48,10 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="app_logout")
+     * @Route(
+     *     "/{_locale}/logout",
+     *     name="app_logout"
+     * )
      */
     public function logout()
     {
@@ -53,7 +59,10 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/signup", name="app_register")
+     * @Route(
+     *     "/{_locale}/signup",
+     *     name="app_register"
+     * )
      */
     public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator, MailerInterface $mailer): Response
     {
@@ -114,7 +123,10 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/forgotten-password", name="forgotten_password")
+     * @Route(
+     *     "/{_locale}/forgotten-password",
+     *     name="forgotten_password"
+     * )
      */
     public function forgottenPassword(Request $request, EntityManagerInterface $em, MailerInterface  $mailer): Response
     {
@@ -154,7 +166,7 @@ class SecurityController extends AbstractController
 
     /**
      * @Route(
-     *     "/reset-password/{token}",
+     *     "/{_locale}/reset-password/{token}",
      *     name="reset_password"
      * )
      */
@@ -198,7 +210,7 @@ class SecurityController extends AbstractController
 
     /**
      * @Route(
-     *     "/revert-email/{token}",
+     *     "/{_locale}/revert-email/{token}",
      *     name="revert_email"
      * )
      */
@@ -226,7 +238,10 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/signup-success", name="signup_success")
+     * @Route(
+     *     "/{_locale}/signup-success",
+     *     name="signup_success"
+     * )
      */
     public function registerConfirmation(): Response
     {
@@ -234,7 +249,10 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/deleted", name="user_deleted")
+     * @Route(
+     *     "/{_locale}/deleted",
+     *     name="user_deleted"
+     * )
      */
     public function delete(): Response
     {
