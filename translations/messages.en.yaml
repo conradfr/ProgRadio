@@ -18,4 +18,23 @@ menu:
     signup: Sign-up
     streaming: Streaming
 
+page:
+    contact:
+        title: 'Contact'
+        email: 'Email'
+        message: 'Message *'
+        name: 'Name *'
+        send: 'Send'
+        sent: 'Your message has been sent.'
+
+    now:
+        back: '← Back to radio guide'
+        no_schedule: '<strong>Oups ...</strong> no shows to display.'
+        title: 'Currently on the radio'
+
+    radio:
+        play: 'Listen to %radio%'
+        back: '← Back to radio guide'
+        no_schedule: 'Schedule not available'
+
 legal: Legal notice

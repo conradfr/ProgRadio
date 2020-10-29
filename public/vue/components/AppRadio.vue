@@ -66,6 +66,8 @@ import { DateTime } from 'luxon';
 
 import {
   TIMEZONE,
+  AUTOPLAY_INTERVAL_CHECK,
+  AUTOPLAY_INTERVAL_MAX_RETRIES,
   GTAG_CATEGORY_RADIOPAGE,
   GTAG_ACTION_PLAY,
   GTAG_ACTION_PLAY_VALUE, GTAG_ACTION_STOP, GTAG_ACTION_STOP_VALUE
@@ -77,6 +79,8 @@ export default {
   /* eslint-disable no-undef */
   data() {
     return {
+      autoPlayInterval: null,
+      autoPlayIntervalCounter: 0,
       date: DateTime.local().setZone(TIMEZONE).setLocale(locale)
         .toLocaleString(
           {
@@ -96,6 +100,11 @@ export default {
 
     const app = document.getElementById('app');
     app.classList.add('no-background');
+
+    // if autoplay
+    if (this.$route.query.play !== undefined && this.$route.query.play === '1') {
+      this.autoPlayInterval = setInterval(this.autoPlay, AUTOPLAY_INTERVAL_CHECK);
+    }
   },
   beforeDestroy() {
     const body = document.querySelector('body');
@@ -161,6 +170,19 @@ export default {
         });
 
         this.$store.dispatch('stop');
+      }
+    },
+    autoPlay() {
+      if (this.radio !== null) {
+        clearInterval(this.autoPlayInterval);
+        this.play();
+        return;
+      }
+
+      if (this.autoPlayIntervalCounter > AUTOPLAY_INTERVAL_MAX_RETRIES) {
+        clearInterval(this.autoPlayInterval);
+      } else {
+        this.autoPlayIntervalCounter += 1;
       }
     }
   },

@@ -45,12 +45,17 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import VueToast from 'vue-toast-notification';
+
 import { mapState, mapGetters } from 'vuex';
 
 import { DateTime } from 'luxon';
 
 import VolumeFader from './VolumeFader.vue';
 import * as config from '../config/config';
+
+Vue.use(VueToast);
 
 export default {
   components: {
@@ -163,6 +168,8 @@ export default {
     },
     /* eslint-disable no-undef */
     play(url) {
+      let startPlayPromise;
+
       if (url.indexOf('.m3u8') !== -1) {
         if (Hls.isSupported()) {
           this.audio = document.getElementById('videoplayer');
@@ -174,7 +181,7 @@ export default {
             this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
               this.audio.muted = this.player.muted;
               this.audio.volume = (this.player.volume * 0.1);
-              this.audio.play();
+              startPlayPromise = this.audio.play();
             });
           });
         }
@@ -186,24 +193,38 @@ export default {
         this.audio = new Audio(`${streamUrl}`);
         this.audio.muted = this.player.muted;
         this.audio.volume = (this.player.volume * 0.1);
-        this.audio.play();
+        startPlayPromise = this.audio.play();
       }
 
-      // check if stream playing
-      this.audio.addEventListener('timeupdate', () => {
-        this.lastUpdated = new Date();
-      });
+      if (startPlayPromise !== undefined) {
+        startPlayPromise.then(() => {
+          // check if stream playing
+          this.audio.addEventListener('timeupdate', () => {
+            this.lastUpdated = new Date();
+          });
 
-      this.checkTimer = setInterval(this.check, config.PLAYER_TYPE_CHECK_INTERVAL);
+          this.checkTimer = setInterval(this.check, config.PLAYER_TYPE_CHECK_INTERVAL);
 
-      this.lastUpdated = new Date();
+          this.lastUpdated = new Date();
+        }).catch((error) => {
+          this.$store.dispatch('stop');
+
+          if (error.name === 'NotAllowedError') {
+            this.toast(this.$i18n.tc('message.player.autoplay_error'));
+          } else {
+            this.toast(this.$i18n.tc('message.player.play_error'));
+          }
+        });
+      }
     },
+    // may be dead code due to new player promise handling
     check() {
       const now = new Date();
       if (now - this.lastUpdated > config.PLAYER_TYPE_CHECK_TIMEOUT) {
         this.lastUpdated = null;
         this.$store.dispatch('stop');
         clearInterval(this.checkTimer);
+        this.toast(this.$i18n.tc('message.player.play_error'));
       }
     },
     stop() {
@@ -236,6 +257,14 @@ export default {
         },
         200
       );
+    },
+    toast(message) {
+      Vue.$toast.open({
+        message,
+        type: config.TOAST_ERROR_COLOR,
+        duration: config.TOAST_DURATION,
+        position: config.TOAST_POSITION
+      });
     }
   }
 };

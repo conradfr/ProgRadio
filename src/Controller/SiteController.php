@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -71,7 +72,7 @@ class SiteController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function contact(MailerInterface $mailer, Request $request)
+    public function contact(MailerInterface $mailer, TranslatorInterface $translator, Request $request)
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -96,7 +97,7 @@ class SiteController extends AbstractController
 
             $this->addFlash(
                 'success',
-                'Votre message a bien été envoyé.'
+                $translator->trans('page.contact.sent')
             );
 
             return $this->redirectToRoute('contact');

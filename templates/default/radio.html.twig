@@ -7,14 +7,28 @@
 <div class="container schedule-page" id="schedule-day">
     <div class="row">
         <div class="col-md-2 col-xs-12">
-            <div class="schedule-day-radio center-block">
-                <img class="center-block" alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
+            <div class="row">
+                <div class="col-md-12 col-xs-6">
+                    <div class="schedule-day-radio center-block">
+                        <img class="center-block" alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-xs-6">
+                <div class="schedule-day-play center-block">
+                    <a href="{{ path('app') }}#/radio/{{ radio.codeName }}?play=1">
+                        <img class="schedule-day-play-button" alt="{{ 'page.radio.play'|trans({'%radio%': radio.name}) }}" src="/img/play-button-inside-a-circle.svg">
+                        <div class="schedule-day-play-text">
+                            {{ 'page.radio.play'|trans({'%radio%': radio.name}) }}
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-md-10 col-xs-12">
             <div class="title">
-                <h5>{{ date | localizeddate('full', 'none', 'fr_FR', timezone) | capitalize }}</h5>
-                <a href="{{ absolute_url('/#/schedule/' ~ radio.collection.codeName) }}">← Retourner à la grille complète des programmes</a>
+                <h5>{{ date | localizeddate('full', 'none', app.request.locale, timezone) | capitalize }}</h5>
+                <a href="{{ absolute_url('/#/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a>
             </div>
 
             <div class="schedule-day-shows">

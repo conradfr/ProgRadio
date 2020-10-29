@@ -7,8 +7,7 @@
 <div class="container schedule-page" id="schedule-now">
     <div class="row">
         <div class="col-md-12 title">
-            <h5>En ce moment à la radio</h5>
-{#            <a href="{{ path('app') }}">← Retourner à la grille complète</a>#}
+            <h5>{{ 'page.now.title'|trans }}</h5>
         </div>
     </div>
 
@@ -29,7 +28,7 @@
             <div class="tab-content">
                 {% for entry_collection in collections %}
                 <div role="tabpanel" class="tab-pane{{ loop.first ? ' active' : '' }}" id="{{ entry_collection.code_name }}">
-                    <div class="link-to-collection-schedule"><a href="{{ absolute_url('/#/schedule/' ~ entry_collection.code_name) }}">← Retourner à la grille des programmes</a></div>
+                    <div class="link-to-collection-schedule"><a href="{{ absolute_url('/#/schedule/' ~ entry_collection.code_name) }}">{{ 'page.now.back'|trans }}</a></div>
                     {% if schedule[entry_collection.code_name] is defined %}
                     {% for entry in schedule[entry_collection.code_name] %}
                         <div class="row radio-schedule-row">
@@ -81,7 +80,7 @@
                         </div>
                     {% endfor %}
                     {% else %}
-                        <div class="alert alert-warning" role="alert"><strong>Oups ...</strong> aucuns programmes disponibles.</div>
+                        <div class="alert alert-warning" role="alert">{{ 'page.now.no_schedule'|trans|raw }}</div>
                     {% endif %}
                 </div>
                 {% endfor %}

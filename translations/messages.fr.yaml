@@ -19,4 +19,23 @@ menu:
     signup: Créer un compte
     streaming: Streaming
 
+page:
+    contact:
+        title: 'Contact'
+        email: 'Email'
+        message: 'Message *'
+        name: 'Nom *'
+        send: 'Envoyer'
+        sent: 'Votre message a bien été envoyé.'
+
+    now:
+        back: '← Retourner à la grille des programmes'
+        no_schedule: <strong>Oups ...</strong> aucuns programmes disponibles.'
+        title: 'En ce moment à la radio'
+
+    radio:
+        play: 'Ecouter %radio%'
+        back: '← Retourner à la grille complète des programmes'
+        no_schedule: 'Programmes non disponibles.'
+
 legal: Mentions légales

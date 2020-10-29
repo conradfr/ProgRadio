@@ -14,6 +14,8 @@ export const messages = {
     message: {
       loading: 'Chargement ...',
       player: {
+        autoplay_error: "Votre navigateur n'autorise pas la lecture automatique de médias.",
+        play_error: 'Erreur de lecture.',
         placeholder: 'Cliquer sur un logo pour lancer la lecture',
         favorites: {
           add: 'Ajouter aux favoris',
@@ -53,6 +55,8 @@ export const messages = {
     message: {
       loading: 'Loading ...',
       player: {
+        autoplay_error: 'Your browser does not allow autoplay.',
+        play_error: 'Media error.',
         placeholder: 'Click on a radio logo to start streaming',
         favorites: {
           add: 'Add to favorites',

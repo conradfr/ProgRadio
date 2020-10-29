@@ -39,17 +39,24 @@ export const TIMEZONE = 'Europe/Paris';
 
 export const DEFAULT_COLLECTION = 'nationwide';
 
+export const TOAST_POSITION = 'top-right';
+export const TOAST_DURATION = 3000; // ms
+export const TOAST_ERROR_COLOR = 'error';
+
 export const PLAYER_NOTIFICATION_ID = 'progradio-play';
 export const PLAYER_NOTIFICATION_LENGTH = 3000; // ms
-
-export const STREAMS_DEFAULT_PER_PAGE = 35;
-export const STREAMS_MAX_PAGES_DISPLAY = 9;
 
 export const PLAYER_TYPE_RADIO = 'radio';
 export const PLAYER_TYPE_STREAM = 'stream';
 
-export const PLAYER_TYPE_CHECK_INTERVAL = 3000; // ms
+export const PLAYER_TYPE_CHECK_INTERVAL = 2500; // ms
 export const PLAYER_TYPE_CHECK_TIMEOUT = 7000; // ms
+
+export const AUTOPLAY_INTERVAL_CHECK = 100;
+export const AUTOPLAY_INTERVAL_MAX_RETRIES = 50;
+
+export const STREAMS_DEFAULT_PER_PAGE = 35;
+export const STREAMS_MAX_PAGES_DISPLAY = 9;
 
 export const STREAMING_CATEGORY_ALL = 'ALL';
 export const STREAMING_CATEGORY_FAVORITES = 'FAVORITES';
