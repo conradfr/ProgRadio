@@ -8,6 +8,10 @@ const fs = require('fs');
 const constants = require('./config/constants.js');
 const radiosModule = require('./config/radios.js');
 
+process.on('uncaughtException', function (err) {
+  console.log('Caught exception: ', err);
+});
+
 // config
 let config = {};
 try {
