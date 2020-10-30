@@ -20,7 +20,6 @@ const VueCookie = require('vue-cookie');
 
 Vue.use(VueCookie);
 
-
 const cursorTime = DateTime.local().setZone(config.TIMEZONE);
 
 const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
@@ -274,7 +273,7 @@ const storeMutations = {
   },
   toggleRadioFavorite(state, radioId) {
     const index = findIndex(state.radios, r => r.code_name === radioId);
-    const updatedRadio = Object.assign({}, state.radios[index]);
+    const updatedRadio = { ...state.radios[index] };
 
     // Is favorite
     const favoriteIndex = updatedRadio.collection.indexOf(config.COLLECTION_FAVORITES);

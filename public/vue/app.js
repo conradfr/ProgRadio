@@ -16,10 +16,10 @@ Vue.use(VueGtag, {
   disableScriptLoad: true
 }, router);
 
-
 /* eslint-disable no-new */
 new Vue({
   i18n,
   router,
   store,
+
 }).$mount('#app');

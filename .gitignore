@@ -48,9 +48,11 @@
 !/public/media/cache/stream_thumb/media/.gitkeep
 !/public/media/cache/program_thumb/.gitkeep
 !/public/media/cache/page_thumb/media/.gitkeep
-!/public/media/cache/page_thumb/.gitkeep
 
+# Compiled assets
 /public/build/js/*
+!/public/build/js/app.js
+/public/build/css/*.map
 
 # Composer PHAR
 /composer.phar
@@ -64,9 +66,6 @@
 # Node components
 /node_modules/
 /Scraper/node_modules/
-
-# Compiled assets
-/public/build/js/*
 
 /public/phpinfo.php
 
@@ -130,3 +129,5 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+.eslintcache

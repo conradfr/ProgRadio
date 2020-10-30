@@ -1,7 +1,15 @@
 {
   "presets": [
-    "env",
-    "stage-0"
+    [
+      "@babel/preset-env",
+      {
+        "targets": "> 0.25%, not dead",
+        "corejs": 2,
+        "useBuiltIns": "entry"
+      }
+    ]
   ],
-  "plugins": []
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ]
 }

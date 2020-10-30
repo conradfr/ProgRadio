@@ -31,7 +31,6 @@ import Nl2br from 'vue-nl2br';
 import { TIMEZONE } from '../config/config';
 import RadioShowSection from './RadioShowSection.vue';
 
-
 export default {
   props: ['show'],
   components: {
