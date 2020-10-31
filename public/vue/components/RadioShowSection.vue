@@ -2,7 +2,7 @@
   <div class="media">
     <div v-if="section.picture_url" class="media-left">
       <img alt="" class="media-object" style="width: 48px"
-        :src="'media/cache/page_thumb/media/program/' + section.picture_url">
+        :src="'/media/cache/page_thumb/media/program/' + section.picture_url">
     </div>
     <div class="media-body">
       <h6 class="media-heading show-title">{{ section.start_at | time }} - {{ section.title }}</h6>
