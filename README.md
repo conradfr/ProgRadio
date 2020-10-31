@@ -7,7 +7,7 @@ Dependencies
 --------------
 - VueJs 2.x
 - PHP 7.4 / Symfony 5.x
-- NodeJS v8+ (Scraper)
+- NodeJS v10+ (Scraper)
 - Elixir 1.9+ (Importer)
 - PostgreSQL & Redis
 - Nginx or Apache

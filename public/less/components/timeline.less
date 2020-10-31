@@ -159,7 +159,7 @@
 
   .time {
     box-sizing: border-box;
-    @width: calc(@one-hour-pixel - 1px);
+    @width: ~'calc(@{one-hour-pixel}px - 1px)';
     width: @width;
     min-width: @width;
     max-width: @width;
