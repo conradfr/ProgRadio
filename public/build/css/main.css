@@ -8299,6 +8299,14 @@ ul.pagination li.ellipsis:before {
 #faq .content .faq-collection-link {
   color: #0960a5;
 }
+#faq .twitter-feed-wrapper {
+  margin-top: 20px;
+}
+@media (max-width: 767px) {
+  #faq .twitter-feed-wrapper {
+    margin-top: 10px;
+  }
+}
 .schedule-page {
   padding-top: 20px;
 }
@@ -8365,6 +8373,11 @@ ul.pagination li.ellipsis:before {
 }
 .schedule-day-play {
   text-align: center;
+}
+@media (max-width: 767px) {
+  .schedule-day-play {
+    margin-top: 10px;
+  }
 }
 .schedule-day-play a {
   text-decoration: none;

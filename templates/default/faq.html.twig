@@ -58,9 +58,9 @@
 %}
 
 {% block body %}
-    <div class="container" id="faq">
+<div class="container" id="faq">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8 col-sm-12">
             <div class="content">
                 <h3>Foire aux questions</h3>
                 {% for entry in faq %}
@@ -71,6 +71,11 @@
                         {% endfor %}
                     </dl>
                 {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="twitter-feed-wrapper">
+            <a class="twitter-timeline" href="https://twitter.com/ProgsRadio">Tweets by ProgsRadio</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
         </div>
     </div>
