@@ -24,7 +24,7 @@ const radios = {
         'cherie',
         'mradio',
         'mouv',
-        'fip'
+        'fip',
       ],
     'francebleu':
       [
@@ -98,7 +98,9 @@ const radios = {
         'lapremiere',
         'classic21',
         'vivacite',
-        'musiq3'
+        'musiq3',
+        'rfi_monde',
+        'rfi_afrique'
       ]
 };
 
