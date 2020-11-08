@@ -9,6 +9,7 @@ use App\Entity\Radio;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CollectionRepository")
+ * @ORM\Table(indexes={@ORM\Index(name="collection_code_name_idx", columns={"code_name"})})
  */
 class Collection
 {

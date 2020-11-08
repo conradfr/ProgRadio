@@ -64,11 +64,24 @@ const setCache = (key, data) => {
 
 /* todo fix baseUrl */
 /* eslint-disable arrow-body-style */
-const getSchedule = (dateStr, baseUrl) => {
-  return axios.get(`${baseUrl}schedule/${dateStr}`)
+const getSchedule = (dateStr, baseUrl, params) => {
+  let url = `${baseUrl}schedule/${dateStr}`;
+
+  if (params !== undefined && params !== null) {
+    if (params.collection !== undefined) {
+      url += `?collection=${params.collection}`;
+    } else if (params.radio !== undefined) {
+      url += `?radio=${params.radio}`;
+    }
+  }
+  return axios.get(url)
     .then((response) => {
       if (response.data.schedule !== undefined) {
-        setCache(dateStr, response.data.schedule);
+        // only cache full data
+        if (params === undefined || params === null) {
+          setCache(dateStr, response.data.schedule);
+        }
+
         return response.data.schedule;
       }
 

@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\Security;
 class RadioRepository extends ServiceEntityRepository
 {
     protected const CACHE_RADIO_TTL = 604800; // week
+    protected const CACHE_RADIO_ACTIVE_ID = 'active_radios';
 
     private $security;
 
@@ -42,7 +43,7 @@ class RadioRepository extends ServiceEntityRepository
 
         $query->setParameter('active', true);
 
-        $query->enableResultCache(self::CACHE_RADIO_TTL, 'active_radios');
+        $query->enableResultCache(self::CACHE_RADIO_TTL, self::CACHE_RADIO_ACTIVE_ID);
 
         $results = $query->getResult();
 
@@ -86,6 +87,27 @@ class RadioRepository extends ServiceEntityRepository
         $result = $query->getResult();
 
        return array_column($result, 'codeName');
+    }
+
+    public function getAllActiveRadioCodenameOfCollection(string $collection): array {
+        $query = $this->getEntityManager()->createQuery(
+            "SELECT r.codeName
+                FROM App:Radio r
+                  INNER JOIN r.collection cl
+                WHERE r.active = :active
+                  AND cl.codeName = :collection 
+            "
+        );
+
+        $query->setParameters([
+            'active' => true,
+            'collection' => $collection
+        ]);
+
+        $query->enableResultCache(self::CACHE_RADIO_TTL, self::CACHE_RADIO_ACTIVE_ID . '_' . $collection);
+        $result = $query->getResult();
+
+        return array_column($result, 'codeName');
     }
 
     public function getNameAndShares(): array

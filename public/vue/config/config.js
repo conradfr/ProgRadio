@@ -13,6 +13,8 @@ export const PROGRAM_LONG_ENOUGH = 45; /* minutes */
 
 export const DEFAULT_VOLUME = 8;
 
+export const DEFAULT_COLLECTION = 'nationwide';
+
 export const COLLECTION_FAVORITES = 'favorites';
 
 export const CACHE_KEY_RADIOS = 'radios';
@@ -36,8 +38,6 @@ export const COOKIE_STREAM_RADIOBROWSER_API = `${COOKIE_PREFIX}-stream-radiobrow
 export const COOKIE_PARAMS = { expires: COOKIE_TTL, secure: true, samesite: 'Lax' };
 
 export const TIMEZONE = 'Europe/Paris';
-
-export const DEFAULT_COLLECTION = 'nationwide';
 
 export const TOAST_POSITION = 'top-right';
 export const TOAST_DURATION = 3000; // ms

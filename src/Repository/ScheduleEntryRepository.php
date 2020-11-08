@@ -14,6 +14,8 @@ class ScheduleEntryRepository extends EntityRepository
 {
     protected const DAY_FORMAT = 'Y-m-d';
 
+    protected const CACHE_SCHEDULE_TTL = 3600; // one hour
+
     /**
      * @param \DateTime $dateTime
      * @param array $radios array of radio codename, if null get all radios
@@ -255,13 +257,12 @@ EOT;
             $qb->setParameter('radios', $radios);
         }
 
-        $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
+        // $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
+        $query = $qb->getQuery();
+        $query->enableResultCache( self::CACHE_SCHEDULE_TTL);
 
-/*        $query = $qb->getQuery();
-        $query->enableResultCache(3600, 'test');
-        $results = $query->getResult();
-        return $results;*/
-        return $qb->getQuery()->getResult();
+        return $query->getResult();
+        //return $qb->getQuery()->getResult();
     }
 
     /**

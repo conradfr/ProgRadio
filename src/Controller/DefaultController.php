@@ -29,9 +29,20 @@ class DefaultController extends AbstractBaseController
      *
      * @ParamConverter("date", options={"format": "Y-m-d"})
      */
-    public function schedule(\DateTime $date, ScheduleManager $scheduleManager): Response
+    public function schedule(\DateTime $date, ScheduleManager $scheduleManager, EntityManagerInterface $em, Request $request): Response
     {
-        $schedule = $scheduleManager->getDaySchedule($date, true);
+        $radios = null;
+        $radio = $request->query->get('radio');
+        if ($radio !== null) {
+            $radios = [$radio];
+        } else {
+            $collection = $request->query->get('collection');
+            if ($collection !== null && $collection !== Radio::FAVORITES) {
+                $radios = $em->getRepository(Radio::class)->getAllActiveRadioCodenameOfCollection($collection);
+            }
+        }
+
+        $schedule = $scheduleManager->getDaySchedule($date, $radios,true);
 
         return $this->jsonResponse([
             'schedule' => $schedule

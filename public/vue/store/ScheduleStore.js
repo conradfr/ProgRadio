@@ -204,7 +204,7 @@ const storeActions = {
         .then(() => commit('setLoading', false, { root: true }));
     });
   },
-  getSchedule: ({ state, commit }) => {
+  getSchedule: ({ state, commit }, params) => {
     const dateStr = state.cursorTime.toISODate();
 
     // if we have cache we display it immediately and then fetch an update silently
@@ -214,11 +214,25 @@ const storeActions = {
       commit('setLoading', true, { root: true });
     }
 
-    Vue.nextTick(() => {
-      ScheduleApi.getSchedule(dateStr, baseUrl)
-        .then(schedule => commit('updateSchedule', schedule))
-        .then(() => commit('setLoading', false, { root: true }));
-    });
+    if (params !== null) {
+      Vue.nextTick(() => {
+        ScheduleApi.getSchedule(dateStr, baseUrl, params)
+          .then(schedule => commit('updateSchedule', schedule))
+          .then(() => commit('setLoading', false, { root: true }))
+          .then(() => {
+            Vue.nextTick(() => {
+              ScheduleApi.getSchedule(dateStr, baseUrl)
+                .then(schedule => commit('updateSchedule', schedule));
+            });
+          });
+      });
+    } else {
+      Vue.nextTick(() => {
+        ScheduleApi.getSchedule(dateStr, baseUrl)
+          .then(schedule => commit('updateSchedule', schedule))
+          .then(() => commit('setLoading', false, { root: true }));
+      });
+    }
   },
   /* eslint-disable object-curly-newline */
   tick: ({ commit, getters, rootState, dispatch }) => {

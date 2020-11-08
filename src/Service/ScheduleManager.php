@@ -62,13 +62,15 @@ class ScheduleManager
      *
      * @return array
      */
-    public function getDaySchedule(\DateTime $dateTime, $decode = false): array
+    public function getDaySchedule(\DateTime $dateTime, array $radios=null, $decode=false): array
     {
-        $radioNewSchedule = $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($dateTime);
+        $radioNewSchedule = $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($dateTime, $radios);
         return $radioNewSchedule;
 
+        if ($radios === null) {
+            $radios = $this->em->getRepository(Radio::class)->getAllCodename();
+        }
 
-        $radios = $this->em->getRepository(Radio::class)->getAllCodename();
         $radiosInCache = $this->cache->getRadiosForDay($dateTime);
 
         $radiosNotInCache = array_diff($radios, $radiosInCache);
