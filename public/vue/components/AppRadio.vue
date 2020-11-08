@@ -41,7 +41,7 @@
       <div v-if="radio" class="col-md-10 col-xs-12">
         <div class="title">
           <h5>{{ date | capitalize }}</h5>
-          <a v-if="collection" :href="'/#/schedule/' + collection.code_name">
+          <a v-if="collection" :href="'/' + locale + '/#/schedule/' + collection.code_name">
             {{ $t('message.radio_page.back') }}</a>
         </div>
 
@@ -79,6 +79,7 @@ export default {
   /* eslint-disable no-undef */
   data() {
     return {
+      locale: this.$i18n.locale,
       autoPlayInterval: null,
       autoPlayIntervalCounter: 0,
       date: DateTime.local().setZone(TIMEZONE).setLocale(locale)
@@ -91,7 +92,7 @@ export default {
   },
   created() {
     this.$store.dispatch('getRadiosData');
-    this.$store.dispatch('getSchedule');
+    this.$store.dispatch('getSchedule', { radio: this.$route.params.radio });
   },
   // TODO fix this hack
   mounted() {

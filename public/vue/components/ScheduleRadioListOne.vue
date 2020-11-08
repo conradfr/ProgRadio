@@ -7,7 +7,7 @@
         <img v-if="!isFavorite" src="/img/favorite-empty.svg" class="filter-fav"/>
         <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
-      <a :href="'/#/radio/' + radio.code_name"
+      <a :href="'/' + locale + '/#/radio/' + radio.code_name"
          class="radio-submenu-entry radio-submenu-entry-radiopage">
         <img src="/img/list.svg" class="filter-page"/>
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
@@ -47,6 +47,7 @@ export default {
   props: ['radio'],
   data() {
     return {
+      locale: this.$i18n.locale,
       styleObject: {
         backgroundImage: `url("/img/radio/schedule/${this.radio.code_name}.png")`
       }
