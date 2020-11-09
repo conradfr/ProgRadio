@@ -51,7 +51,7 @@
     {   'question': "Liste des radios disponibles.",
         'answer': [
             self.radios_list(collections, radios, app.request.locale),
-            '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ absolute_url('/#/streaming') ~ '">la page streaming</a>.</p>'
+            '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ absolute_url('/' ~ app.request.locale ~ '/#/streaming') ~ '">la page streaming</a>.</p>'
         ]
     }
 ]

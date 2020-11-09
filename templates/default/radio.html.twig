@@ -28,7 +28,7 @@
         <div class="col-md-10 col-xs-12">
             <div class="title">
                 <h5>{{ date | localizeddate('full', 'none', app.request.locale, timezone) | capitalize }}</h5>
-                <a href="{{ absolute_url('/#/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a>
+                <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a>
             </div>
 
             <div class="schedule-day-shows">
