@@ -91,8 +91,13 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch('getRadiosData');
-    this.$store.dispatch('getSchedule', { radio: this.$route.params.radio });
+    setTimeout(
+      () => {
+        this.$store.dispatch('getRadiosData');
+        this.$store.dispatch('getSchedule', { radio: this.$route.params.radio });
+      },
+      50
+    );
   },
   // TODO fix this hack
   mounted() {

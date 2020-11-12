@@ -9,6 +9,13 @@
 
     <title>{% block title %}{{ 'general.main_title'|trans }}{% endblock %} - Programmes Radio</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
+
+    <link rel="preload" href="{{ asset('build/css/main.css') }}?v={{ releaseVersion() }}" as="style">
+    <link rel="preload" href="{{ asset('build/fonts/glyphicons-halflings-regular.woff2') }}" as="font" crossorigin="anonymous">
+
+    {% block head_supp %}
+    {% endblock %}
+
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
 

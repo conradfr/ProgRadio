@@ -53,6 +53,7 @@
 /public/build/js/*
 !/public/build/js/app.js
 /public/build/css/*.map
+/public/build/css/main.css
 
 # Composer PHAR
 /composer.phar

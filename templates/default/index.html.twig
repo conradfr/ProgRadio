@@ -1,8 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block header_supp %}
+    <link rel="preload" href="{{ asset('build/js/app.bundle.js') }}?v={{ releaseVersion() }}" as="script">
+{% endblock %}
+
 {# now done in vue based on route #}
 {#{% block bodysupp %} class="body-app"{% endblock %}#}
-{% block footersupp %}{% endblock %}
 
 {% block javascript_head %}
 const baseUrl = '/';
@@ -37,9 +40,9 @@ const scrollToCursor = function(e) {
     {{ parent() }}
     <script nomodule src="https://unpkg.com/date-time-format-timezone@latest/build/browserified/date-time-format-timezone-complete-min.js"></script>
     <script nomodule src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default,String.prototype.repeat,Array.prototype.find,Array.prototype.findIndex,Math.trunc,Math.sign,Object.assign,Object.is"></script>
-    <script src="//cdn.jsdelivr.net/npm/hls.js@latest"></script>
 {#    <script src="{{ asset('build/js/app.js') }}?v={{ releaseVersion() }}"></script>#}
     <!-- for IE, old not updated script, may work for some time ... -->
     <script nomodule src="{{ asset('build/js/app.js') }}?v={{ releaseVersion() }}"></script>
     <script src="{{ asset('build/js/app.bundle.js') }}?v={{ releaseVersion() }}"></script>
+    <script async src="//cdn.jsdelivr.net/npm/hls.js@latest"></script>
 {% endblock %}
