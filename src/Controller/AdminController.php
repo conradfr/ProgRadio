@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Radio;
 use App\Entity\ScheduleEntry;
+use App\Entity\User;
 use App\Form\SharesType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,10 +30,14 @@ class AdminController extends AbstractController
     {
         $radios = $em->getRepository(Radio::class)->findBy(['active' => true], ['id' => 'ASC']);
         $stats = $em->getRepository(ScheduleEntry::class)->getStatsByDayAndRadio();
+        $users = $em->getRepository(User::class)->lastNAccounts();
+        $userCount = $em->getRepository(User::class)->count([]);
 
         return $this->render('default/admin/dashboard.html.twig', [
             'radios' => $radios,
-            'stats' => $stats
+            'stats' => $stats,
+            'users' => $users,
+            'userCount' => $userCount
         ]);
     }
 

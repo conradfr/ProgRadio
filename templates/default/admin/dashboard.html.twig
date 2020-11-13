@@ -29,53 +29,148 @@
 {% block body %}
 <div id="admin" class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <table class="table schedule-stats table-striped table-bordered">
-                <tr>
-                    <th></th>
-                    <th></th>
-                    {% for entry in stats|first %}
-                        <th>{{ entry.day | date('D d/m/Y') }}</th>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <th></th>
-                    <th>St.</th>
-                    {% for entry in stats|first %}
-                        <th>
-                            <div class="row">
-                                <div class="col-md-6">Programmes</div>
-                                <div class="col-md-6">Chroniques</div>
-                            </div>
-                        </th>
-                    {% endfor %}
-                </tr>
-
-                {% for radio in radios %}
-                <tr>
-                    <td class="radio-header">
-                        <img src="{{ asset('img/radio/schedule/' ~ radio.codeName ~ '.png') }}">
-                    </td>
-                    <td class="radio-streaming">
-                        {% if radio.streamingStatus == true %}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
-                        {% else %}
-                            <span class="badge">{{ radio.streamingRetries }}</span>
-                        {% endif %}
-                    </td>
-                    {% for entry in stats[radio.codeName] %}
-                    <td>
-                        <div class="row">
-                            <div class="col-md-offset-1 col-md-2">{{ self.nb(entry.total, true) }}</div>
-                            <div class="col-md-3">{{ self.trend(entry.diff) }}</div>
-                            <div class="col-md-offset-1 col-md-2">{{ self.nb(entry.section_total, false) }}</div>
-                            <div class="col-md-3">{{ self.trend(entry.section_diff) }}</div>
+        <div class="col-md-2">
+            <!-- Nav tabs -->
+            <ul class="nav nav-pills nav-stacked" role="tablist">
+                <li role="presentation" class="active"><a href="#brief" aria-controls="brief" role="tab" data-toggle="tab">Résumé</a></li>
+                <li role="presentation"><a href="#table" aria-controls="table" role="tab" data-toggle="tab">Tableau</a></li>
+            </ul>
+        </div>
+        <div class="col-md-10">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="brief">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-12">
+                            <h5>Comptes</h5>
+                            <p><strong>{{ userCount }} comptes</strong> actifs.</p>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr><th>Email</th><th>Création</th></tr>
+                                </thead>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.createdAt|date }}</td>
+                                    </tr>
+                                {% endfor %}
+                                <tfoot>
+                                <tr>
+                                    <th colspan="2">(10 derniers)</th>
+                                </tr>
+                                </tfoot>
+                            </table>
                         </div>
-                    </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-            </table>
+                        <div class="col-md-3 col-sm-12">
+                            <h5>Erreurs streams</h5>
+                            <table class="table table-striped schedule-stats">
+                                {% set stream_errors = 0 %}
+                                {% for radio in radios %}
+                                    {% if radio.streamingStatus == false %}
+                                        {% set stream_errors = stream_errors + 1 %}
+                                        <tr>
+                                            <td class="radio-header"><img title="{{ radio.name }}" alt="{{ radio.name }}" src="{{ asset('img/radio/schedule/' ~ radio.codeName ~ '.png') }}"></td>
+                                            <td class="td-auto">Erreurs pour <strong>{{ radio.streamingRetries }}</strong> checks.</td>
+                                            <td><a target="_blank" href="{{ radio.streamingUrl }}">lien</a></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if stream_errors == 0 %}
+                                    <tr><td class="radio-streaming-brief"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>&nbsp;&nbsp;Tous les streams fonctionnent</td></tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                        <div class="col-md-3 col-sm-12">
+                            <h5>Radios sans programmes aujourd'hui</h5>
+                            <table class="table table-striped schedule-stats">
+                                {% set schedule_errors = 0 %}
+                                {% for radio in radios %}
+                                    {% if stats[radio.codeName][0].total == 0 %}
+                                        {% set schedule_errors = schedule_errors + 1 %}
+                                        <tr>
+                                            <td class="radio-header"><img title="{{ radio.name }}" alt="{{ radio.name }}" src="{{ asset('img/radio/schedule/' ~ radio.codeName ~ '.png') }}"></td>
+                                            <td class="td-auto">
+                                                <div class="row">
+                                                    <div class="col-md-offset-1 col-md-2">{{ self.nb(stats[radio.codeName][0].total, true) }}</div>
+                                                    <div class="col-md-3">{{ self.trend(stats[radio.codeName][0].diff) }}</div>
+                                                    <div class="col-md-offset-1 col-md-2">{{ self.nb(stats[radio.codeName][0].section_total, false) }}</div>
+                                                    <div class="col-md-3">{{ self.trend(stats[radio.codeName][0].section_diff) }}</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if schedule_errors == 0 %}
+                                    <tr><td class="radio-streaming-brief"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                                            &nbsp;&nbsp;Toutes les radios ont des programmes affichés.</td></tr>
+                                {% else %}
+                                    <thead>
+                                        <tr>
+                                        <th></th>
+                                        <th>
+                                            <div class="row">
+                                                <div class="col-md-6">Programmes</div>
+                                                <div class="col-md-6">Chroniques</div>
+                                            </div>
+                                        </th>
+                                        </tr>
+                                    </thead>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="table">
+                    <table class="table schedule-stats table-striped table-bordered">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            {% for entry in stats|first %}
+                                <th>{{ entry.day | date('D d/m/Y') }}</th>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>St.</th>
+                            {% for entry in stats|first %}
+                                <th>
+                                    <div class="row">
+                                        <div class="col-md-6">Programmes</div>
+                                        <div class="col-md-6">Chroniques</div>
+                                    </div>
+                                </th>
+                            {% endfor %}
+                        </tr>
+
+                        {% for radio in radios %}
+                            <tr>
+                                <td class="radio-header">
+                                    <img title="{{ radio.name }}" alt="{{ radio.name }}" src="{{ asset('img/radio/schedule/' ~ radio.codeName ~ '.png') }}">
+                                </td>
+                                <td class="radio-streaming">
+                                    {% if radio.streamingStatus == true %}
+                                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                                    {% else %}
+                                        <span class="badge">{{ radio.streamingRetries }}</span>
+                                    {% endif %}
+                                </td>
+                                {% for entry in stats[radio.codeName] %}
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-offset-1 col-md-2">{{ self.nb(entry.total, true) }}</div>
+                                            <div class="col-md-3">{{ self.trend(entry.diff) }}</div>
+                                            <div class="col-md-offset-1 col-md-2">{{ self.nb(entry.section_total, false) }}</div>
+                                            <div class="col-md-3">{{ self.trend(entry.section_diff) }}</div>
+                                        </div>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

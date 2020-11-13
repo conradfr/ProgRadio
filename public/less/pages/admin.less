@@ -1,8 +1,17 @@
 #admin {
   padding-top: 10px;
 
+  .nav {
+/*    width: 500px;
+    margin-bottom: 20px;*/
+  }
+
   .schedule-stats {
     width: 100%;
+
+    @media (max-width: @screen-sm) {
+      margin-top: 10px;
+    }
 
     th {
       vertical-align: middle;
@@ -15,6 +24,10 @@
 
       vertical-align: middle;
       text-align: center;
+
+      &.td-auto {
+        width: auto !important;
+      }
 
       .trend {
         &.trend-up {
@@ -33,7 +46,7 @@
       }
 
       &.radio-header {
-        width: auto;
+        width: 53px;
 
         img {
           max-height: 32px;
@@ -43,7 +56,9 @@
 
       &.radio-streaming {
         width: 48px;
+      }
 
+      &.radio-streaming, &.radio-streaming-brief {
         .glyphicon-ok-sign {
           font-size: 16px;
           color: @brand-success;
