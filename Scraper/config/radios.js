@@ -100,7 +100,8 @@ const radios = {
         'vivacite',
         'musiq3',
         'rfi_monde',
-        'rfi_afrique'
+        'rfi_afrique',
+        'lessentielradio'
       ]
 };
 
