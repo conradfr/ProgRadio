@@ -64,12 +64,12 @@ const format = dateObj => {
       return prev;
     }
 
-    let startDateTime = moment(entry.dateObj);
+    let startDateTime = moment(dateObj);
     startDateTime.hour(match_time[1]);
     startDateTime.minute(match_time[2]);
     startDateTime.second(0);
 
-    endDateTime = moment(entry.dateObj);
+    endDateTime = moment(dateObj);
     endDateTime.hour(match_time[3]);
     endDateTime.minute(match_time[4]);
     endDateTime.second(0);
@@ -138,7 +138,7 @@ const getScrap = dateObj => {
 
 const scrapModule = {
   getName: 'mradio',
-  supportTomorrow: false, // revisit later
+  supportTomorrow: true,
   getScrap
 };
 
