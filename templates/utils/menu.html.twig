@@ -20,3 +20,15 @@
         </ul>
     </li>
 {% endmacro %}
+
+{% macro collections_mobile() %}
+    {% set collections = scheduleCollections(app.user, app.request.attributes) %}
+
+    {% for collection in collections %}
+    <li id="collections-menu-{{ collection.code_name }}" class="visible-xs{% if collection.radio_count == 0 %} disabled{% endif %}">
+        <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
+            &rarr; {{ collection.name_FR }}
+        </a>
+    </li>
+    {% endfor %}
+{% endmacro %}

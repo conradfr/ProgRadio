@@ -53,6 +53,7 @@
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ path('app') }}#/schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a></li>
+                {{ menu.collections_mobile() }}
                 {{ menu.collections() }}
                 <li><a href="{{ path('app') }}#/streaming" style="padding-right: 0">{{ 'menu.streaming'|trans }}</a></li>
                 <li class="dropdown hidden-xs">
@@ -66,11 +67,12 @@
                     </ul>
                 </li>
 
-                <li class="hidden-sm"><a href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
+                <li class="hidden-sm hidden-md"><a href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ 'menu.plus'|trans}} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li class="visible-sm visible-md"><a href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
                         <li><a href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
                         <li><a href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                         <li role="separator" class="divider"></li>
