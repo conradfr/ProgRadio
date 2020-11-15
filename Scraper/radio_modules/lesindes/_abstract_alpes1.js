@@ -63,12 +63,12 @@ const format = (dateObj, name) => {
       return;
     }
 
-    let startDateTime = moment(entry.dateObj);
+    let startDateTime = moment(dateObj);
     startDateTime.hour(match_time[1]);
     startDateTime.minute(match_time[2]);
     startDateTime.second(0);
 
-    endDateTime = moment(entry.dateObj);
+    endDateTime = moment(dateObj);
     endDateTime.hour(match_time[3]);
     endDateTime.minute(match_time[4]);
     endDateTime.second(0);
@@ -136,7 +136,7 @@ const getScrap = (dateObj, url, name) => {
 
 const scrapModuleAbstract = {
   getScrap,
-  supportTomorrow: false,
+  supportTomorrow: true,
 };
 
 module.exports = scrapModuleAbstract;
