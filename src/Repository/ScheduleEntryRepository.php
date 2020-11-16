@@ -4,27 +4,17 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\ValueObject\ScheduleResource;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 
-/**
- * ScheduleEntryRepository
- */
 class ScheduleEntryRepository extends EntityRepository
 {
     protected const DAY_FORMAT = 'Y-m-d';
 
-    protected const CACHE_SCHEDULE_TTL = 3600; // one hour
-
-    /**
-     * @param \DateTime $dateTime
-     * @param array $radios array of radio codename, if null get all radios
-     *
-     * @return array
-     */
-    public function getDaySchedule(\DateTime $dateTime, array $radios=null): array
+    public function getDaySchedule(ScheduleResource $scheduleResource): array
     {
-        $result = $this->getSchedulesAndSections($dateTime, $radios);
+        $result = $this->getSchedulesAndSections($scheduleResource);
 
         // array of radios, to be filled with schedules
         $export = array_fill_keys(array_column($result, 'codeName'), []);
@@ -48,13 +38,8 @@ class ScheduleEntryRepository extends EntityRepository
         return $export;
     }
 
-    /**
+    /*
      * @todo cleaner hydration
-     *
-     * @param \DateTime $dateTime
-     * @param array $radios array of radio codename, if null get all radios
-     *
-     * @return array
      */
     public function getTimeSpecificSchedule(\DateTime $dateTime, array $radios=null): array
     {
@@ -102,7 +87,6 @@ class ScheduleEntryRepository extends EntityRepository
      * Get stats for each day of the last 7 days with total shows per radio
      * and the difference with the same day the week before
      *
-     * @return array
      * @throws \Exception
      */
     public function getStatsByDayAndRadio(): array
@@ -181,11 +165,6 @@ EOT;
         return $return;
     }
 
-    /**
-     * @param array $row
-     *
-     * @return array|null
-     */
     protected function hydrateSection(&$row): ?array
     {
         if (!isset($row['section_title'])) {
@@ -206,9 +185,6 @@ EOT;
         return $section;
     }
 
-    /**
-     * @return string
-     */
     protected function getScheduleSelectString(): string
     {
         return 'r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
@@ -222,13 +198,8 @@ EOT;
                 . 'MD5(CONCAT(CONCAT(r.codeName, se.title, se.dateTimeStart), sc.title, sc.dateTimeStart)) as section_hash';
     }
 
-    /**
-     * @param \DateTime $dateTime
-     * @param array $radios
-     *
-     * @return array
-     */
-    protected function getSchedulesAndSections(\DateTime $dateTime, array $radios=null): array {
+    protected function getSchedulesAndSections(ScheduleResource $scheduleResource): array {
+        $dateTime = $scheduleResource->getDateTime();
         $dateTime->setTime(0, 0, 0);
         $dateTimeEnd = clone $dateTime;
         $dateTimeEnd->add(\DateInterval::createfromdatestring('+1 day'));
@@ -252,25 +223,21 @@ EOT;
             'active' => true
         ]);
 
-        if (!empty($radios)) {
-            $qb->andWhere('r.codeName IN (:radios)');
-            $qb->setParameter('radios', $radios);
+        if ($scheduleResource->getType() === ScheduleResource::TYPE_RADIO) {
+            $qb->andWhere('r.codeName = :radio')
+               ->setParameter('radio', $scheduleResource->getValue());
+        } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_COLLECTION) {
+            $qb->innerJoin('r.collection', 'c')
+               ->andWhere('c.codeName = :collection')
+               ->setParameter('collection', $scheduleResource->getValue());
         }
 
-        // $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
+        $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
         $query = $qb->getQuery();
-        $query->enableResultCache( self::CACHE_SCHEDULE_TTL);
 
         return $query->getResult();
-        //return $qb->getQuery()->getResult();
     }
 
-    /**
-     * @param \DateTime $dateTime
-     * @param array $radios
-     *
-     * @return array
-     */
     protected function getTimeSpecificSchedulesAndSections(\DateTime $dateTime, array $radios=null): array {
         $dateTimeStart = clone $dateTime;
         $dateTimeStart->setTime(0, 0, 0);

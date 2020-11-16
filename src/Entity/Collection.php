@@ -155,6 +155,6 @@ class Collection
 
     public function setRadio(ArrayCollection $radios): void
     {
-        $this->radioss = $radios;
+        $this->radios = $radios;
     }
 }

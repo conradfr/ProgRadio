@@ -4,97 +4,67 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Radio;
 use App\Entity\ScheduleEntry;
-use Doctrine\ORM\EntityManager;
+use App\ValueObject\ScheduleResource;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class ScheduleManager
 {
-    /** @var EntityManagerInterface */
-    protected $em;
+    protected const CACHE_SCHEDULE_PREFIX = 'cache_schedule_';
+    protected const CACHE_SCHEDULE_TTL = 604800; // in seconds = one week
 
-    /** @var  ScheduleCache */
-    protected $cache;
+    protected const CACHE_KEY_DAY_FORMAT = 'Y-m-d';
+    protected const CACHE_KEY_SERIALIZER_FORMAT = 'json';
 
-    public function __construct(EntityManagerInterface $entityManager, ScheduleCache $cache)
+    protected EntityManagerInterface $em;
+    protected AdapterInterface $cache;
+
+    public function __construct(EntityManagerInterface $entityManager, AdapterInterface $cache)
     {
         $this->em = $entityManager;
         $this->cache = $cache;
     }
 
-    /**
-     * @param \DateTime $dateTime
-     * @param array $radios
-     *
-     * @return void
-     */
-    protected function getScheduleAndPutInCache(\DateTime $dateTime, array $radios): void
+    /*
+    * Basically there would be a bug is any radio would have the same name as a collection
+    */
+    protected static function getKey(ScheduleResource $scheduleResource): string
     {
-        $radioNewSchedule = $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($dateTime, $radios);
-        if (count($radioNewSchedule) > 0) {
-            $this->cache->addSchedulesToDay($dateTime, $radioNewSchedule);
+        $key = self::CACHE_SCHEDULE_PREFIX . $scheduleResource->getDateTime()->format(self::CACHE_KEY_DAY_FORMAT);
+
+        if ($scheduleResource->getType() !== null) {
+            $key .= '_' . $scheduleResource->getValue();
         }
+
+        return $key;
     }
 
-    /**
-     * @param \DateTime $dateTime
-     * @param string $radioCodeName
-     *
-     * @return null|array
-     */
-    public function getRadioDaySchedule(\DateTime $dateTime, string $radioCodeName): ?array
+    public function getDayScheduleOfCollection(\DateTime $dateTime, string $collectionCodeName): array
     {
-        if ($this->cache->hasScheduleForDayAndRadio($dateTime, $radioCodeName) === 0) {
-            $this->getScheduleAndPutInCache($dateTime, [$radioCodeName]);
-        }
-
-        $schedule = $this->cache->getScheduleForDayAndRadio($dateTime, $radioCodeName);
-
-        if ($schedule === null) { return null;}
-
-        return json_decode($this->cache->getScheduleForDayAndRadio($dateTime, $radioCodeName), true);
+        $scheduleResource = new ScheduleResource($dateTime, ScheduleResource::TYPE_COLLECTION, $collectionCodeName);
+        return $this->getDaySchedule($scheduleResource);
     }
 
-    /**
-     * @param \DateTime $dateTime
-     * @param bool $decode
-     *
-     * @return array
-     */
-    public function getDaySchedule(\DateTime $dateTime, array $radios=null, $decode=false): array
+    public function getDayScheduleOfRadio(\DateTime $dateTime, string $radioCodeName): array
     {
-        $radioNewSchedule = $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($dateTime, $radios);
-        return $radioNewSchedule;
+        $scheduleResource = new ScheduleResource($dateTime, ScheduleResource::TYPE_RADIO, $radioCodeName);
+        return $this->getDaySchedule($scheduleResource);
+    }
 
-        if ($radios === null) {
-            $radios = $this->em->getRepository(Radio::class)->getAllCodename();
-        }
+    public function getDayScheduleOfDate(\DateTime $dateTime): array
+    {
+        $scheduleResource = new ScheduleResource($dateTime);
+        return $this->getDaySchedule($scheduleResource);
+    }
 
-        $radiosInCache = $this->cache->getRadiosForDay($dateTime);
+    protected function getDaySchedule(ScheduleResource $scheduleResource): array
+    {
+        return $this->cache->get(self::getKey($scheduleResource), function (ItemInterface $item) use($scheduleResource) {
+            $item->expiresAfter(self::CACHE_SCHEDULE_TTL);
 
-        $radiosNotInCache = array_diff($radios, $radiosInCache);
-        $radiosToRemoveFromCache = array_diff($radiosInCache, $radios);
-
-        // Remove any radio that are not active anymore but in cache
-        if (count($radiosToRemoveFromCache) > 0) {
-            $this->cache->removeRadiosFromDay($dateTime, $radiosToRemoveFromCache);
-        }
-
-        // Add any new radio schedule for that day in cache
-        if (count($radiosNotInCache) > 0) {
-            $this->getScheduleAndPutInCache($dateTime, $radiosNotInCache);
-        }
-
-        // Get cache & decode values
-        $cachedSchedule = $this->cache->getScheduleForDay($dateTime);
-
-        if ($decode === true) {
-            foreach ($cachedSchedule as $radio => $radioSchedule) {
-                $cachedSchedule[$radio] = json_decode($radioSchedule);
-            }
-        }
-
-        return $cachedSchedule;
+            return $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($scheduleResource);
+        });
     }
 }

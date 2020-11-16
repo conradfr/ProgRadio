@@ -49,7 +49,11 @@ defmodule Importer.Processor.Store do
     {multi, to_not_delete} =
       try do
         case ScheduleEntry
-             |> Repo.get_by(%{radio_id: radio.id, date_time_start: head["date_time_start"], date_time_end: head["date_time_end"]}) do
+             |> Repo.get_by(%{
+               radio_id: radio.id,
+               date_time_start: head["date_time_start"],
+               date_time_end: head["date_time_end"]
+             }) do
           nil ->
             changeset =
               Ecto.build_assoc(radio, :schedule_entry, %ScheduleEntry{})

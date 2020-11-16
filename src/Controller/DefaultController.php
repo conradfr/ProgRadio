@@ -31,18 +31,16 @@ class DefaultController extends AbstractBaseController
      */
     public function schedule(\DateTime $date, ScheduleManager $scheduleManager, EntityManagerInterface $em, Request $request): Response
     {
-        $radios = null;
-        $radio = $request->query->get('radio');
-        if ($radio !== null) {
-            $radios = [$radio];
-        } else {
-            $collection = $request->query->get('collection');
-            if ($collection !== null && $collection !== Radio::FAVORITES) {
-                $radios = $em->getRepository(Radio::class)->getAllActiveRadioCodenameOfCollection($collection);
-            }
-        }
+        $schedule = null;
+        $collection = $request->query->get('collection');
 
-        $schedule = $scheduleManager->getDaySchedule($date, $radios,true);
+        if ($radio = $request->query->get('radio')) {
+            $schedule = $scheduleManager->getDayScheduleOfRadio($date, $radio);
+        } elseif ($collection !== null && $collection !== Radio::FAVORITES) {
+            $schedule = $scheduleManager->getDayScheduleOfCollection($date, $collection);
+        } else {
+            $schedule = $scheduleManager->getDayScheduleOfDate($date);
+        }
 
         return $this->jsonResponse([
             'schedule' => $schedule
@@ -104,7 +102,7 @@ class DefaultController extends AbstractBaseController
             throw new NotFoundHttpException('Radio not found');
         }
 
-        $schedule = $scheduleManager->getRadioDaySchedule($dateTime, $codename);
+        $schedule = $scheduleManager->getDayScheduleOfRadio($dateTime, $codename)[$codename];
 
         return $this->render('default/radio.html.twig', [
             'schedule' => $schedule,

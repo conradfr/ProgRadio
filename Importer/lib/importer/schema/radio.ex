@@ -10,6 +10,7 @@ defmodule Importer.Radio do
     field(:streaming_status, :boolean)
     field(:streaming_retries, :integer)
     has_many(:schedule_entry, Importer.ScheduleEntry)
+    belongs_to(:collection, Importer.Collection)
   end
 
   def update_streaming_changeset(radio, params \\ %{}) do

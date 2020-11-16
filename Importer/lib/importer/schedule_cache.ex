@@ -1,10 +1,15 @@
 defmodule Importer.ScheduleCache do
   require Logger
   use Timex
+  alias Importer.Repo
+  alias Importer.Radio
 
-  @cache_schedule_prefix "cache:schedule:"
+  @cache_schedule_prefix "cache_schedule_"
   @cache_schedule_day_format "%Y-%m-%d"
 
+  @doc """
+  Remove cache entries containing this specific radio: full schedule, collection & radio
+  """
   @spec remove(Date.t() | any, String.t() | any) :: tuple
   def remove(date, radio_name)
 
@@ -13,21 +18,57 @@ defmodule Importer.ScheduleCache do
   end
 
   def remove(date, radio_name) do
-    del_num =
-      case Redix.command(:redix, ["HDEL", get_key(date), [radio_name]]) do
-        {:ok, num} ->
-          num
+    radio =
+      Repo.get_by(Radio, code_name: radio_name)
+      |> Repo.preload([:collection])
 
-        {:error, reason} ->
-          Logger.warn("#{inspect(reason)}")
-          0
-      end
+    keys_deleted_sum =
+      [
+        get_key(date),
+        get_key(date, radio_name),
+        get_key(date, radio.collection.code_name)
+      ]
+      |> Enum.reduce(0, fn key, acc ->
+        case find_cache_key(key) do
+          nil ->
+            acc
 
-    {:ok, del_num}
+          cache_key ->
+            case Redix.command(:redix, ["DEL", cache_key]) do
+              {:ok, num} ->
+                acc + num
+
+              {:error, _reason} ->
+                acc
+            end
+        end
+      end)
+
+    {:ok, keys_deleted_sum}
   end
 
-  @spec get_key(Date.t()) :: String.t()
-  defp get_key(date) do
+  @spec get_key(Date.t(), String.t()) :: String.t()
+  defp get_key(date, suffix \\ nil)
+
+  defp get_key(date, suffix) when suffix == nil or suffix == "" do
     @cache_schedule_prefix <> Timex.format!(date, @cache_schedule_day_format, :strftime)
+  end
+
+  defp get_key(date, suffix) do
+    get_key(date) <> "_" <> suffix
+  end
+
+  @doc """
+  As we rely on the Symfony cache we don't know the full keys because of the calculated namespace,
+  So we look it up here based on the rest of the key
+  """
+  @spec find_cache_key(String.t()) :: String.t() | nil
+  defp find_cache_key(pattern) do
+    {:ok, keys} = Redix.command(:redix, ["KEYS", "*:" <> pattern])
+
+    case Kernel.length(keys) do
+      0 -> nil
+      _ -> List.first(keys)
+    end
   end
 end
