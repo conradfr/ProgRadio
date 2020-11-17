@@ -73,7 +73,7 @@ import {
   GTAG_ACTION_PLAY_VALUE, GTAG_ACTION_STOP, GTAG_ACTION_STOP_VALUE
 } from '../config/config';
 
-import RadioShow from './RadioShow.vue';
+import RadioShow from './Radio/RadioShow.vue';
 
 export default {
   /* eslint-disable no-undef */

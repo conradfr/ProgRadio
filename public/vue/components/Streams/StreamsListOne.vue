@@ -32,7 +32,7 @@ import VueFlags from '@growthbunker/vueflags';
 
 import { mapGetters, mapState } from 'vuex';
 
-import * as config from '../config/config';
+import * as config from '../../config/config';
 
 Vue.use(VueFlags, {
   // Specify the path of the folder where the flags are stored.

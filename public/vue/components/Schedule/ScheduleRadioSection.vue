@@ -7,7 +7,7 @@
 <script>
 import { DateTime } from 'luxon';
 
-import { TIMEZONE, MINUTE_PIXEL } from '../config/config';
+import { TIMEZONE, MINUTE_PIXEL } from '../../config/config';
 
 export default {
   props: ['program_start', 'section'],

@@ -29,7 +29,7 @@ import { mapGetters, mapState } from 'vuex';
 import StreamsListFilters from './StreamsListFilters.vue';
 import StreamsListPagination from './StreamsListPagination.vue';
 import StreamsListOne from './StreamsListOne.vue';
-import Loading from './Loading.vue';
+import Loading from '../Loading.vue';
 
 export default {
   components: {

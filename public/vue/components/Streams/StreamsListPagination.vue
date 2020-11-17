@@ -34,7 +34,7 @@
 <script>
 import { mapState } from 'vuex';
 
-import { STREAMS_DEFAULT_PER_PAGE, STREAMS_MAX_PAGES_DISPLAY } from '../config/config';
+import { STREAMS_DEFAULT_PER_PAGE, STREAMS_MAX_PAGES_DISPLAY } from '../../config/config';
 
 export default {
   computed: {

@@ -92,7 +92,7 @@ class Radio
      *
      * @ORM\Column(type="integer", options={"default"=0})
      */
-    private $streamingRetries = true;
+    private $streamingRetries = 0;
 
     /**
      * @var boolean

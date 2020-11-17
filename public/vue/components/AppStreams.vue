@@ -7,7 +7,7 @@
 <script>
 import { mapState } from 'vuex';
 
-import StreamsList from './StreamsList.vue';
+import StreamsList from './Streams/StreamsList.vue';
 
 export default {
   created() {

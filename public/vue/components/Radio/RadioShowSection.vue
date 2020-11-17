@@ -13,7 +13,7 @@
 
 <script>
 import { DateTime } from 'luxon';
-import { TIMEZONE } from '../config/config';
+import { TIMEZONE } from '../../config/config';
 
 export default {
   props: ['section'],

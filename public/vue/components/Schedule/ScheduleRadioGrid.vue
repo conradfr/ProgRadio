@@ -25,7 +25,7 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 
-import { NAV_MOVE_BY } from '../config/config';
+import { NAV_MOVE_BY } from '../../config/config';
 
 import TimelineCursor from './TimelineCursor.vue';
 import ScheduleRadioGridRow from './ScheduleRadioGridRow.vue';

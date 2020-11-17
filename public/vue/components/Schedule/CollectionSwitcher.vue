@@ -18,13 +18,13 @@
 import { mapState } from 'vuex';
 import find from 'lodash/find';
 
-import ScheduleUtils from '../utils/ScheduleUtils';
+import ScheduleUtils from '../../utils/ScheduleUtils';
 
 import {
   GTAG_CATEGORY_SCHEDULE,
   GTAG_SCHEDULE_ACTION_CATEGORY_NAVIGATION,
   GTAG_SCHEDULE_CATEGORY_NAVIGATION_VALUE
-} from '../config/config';
+} from '../../config/config';
 
 export default {
   data() {

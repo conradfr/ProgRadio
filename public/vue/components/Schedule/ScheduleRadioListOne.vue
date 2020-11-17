@@ -41,7 +41,7 @@ import {
   GTAG_ACTION_PLAY_VALUE,
   GTAG_ACTION_STOP,
   GTAG_ACTION_STOP_VALUE
-} from '../config/config';
+} from '../../config/config';
 
 export default {
   props: ['radio'],

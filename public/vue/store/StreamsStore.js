@@ -97,12 +97,12 @@ const storeActions = {
     });
   },
   getFavorites: ({ commit }) => {
-    commit('setLoading', true, { root: true });
+    // commit('setLoading', true, { root: true });
 
     Vue.nextTick(() => {
       StreamsApi.getFavorites()
-        .then(favorites => commit('setFavorites', favorites))
-        .then(() => commit('setLoading', false, { root: true }));
+        .then(favorites => commit('setFavorites', favorites));
+      // .then(() => commit('setLoading', false, { root: true }));
     });
   },
   getStreamRadios: ({ state, commit }) => {

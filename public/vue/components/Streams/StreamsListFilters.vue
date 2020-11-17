@@ -54,7 +54,7 @@ import {
   GTAG_ACTION_PLAY_RANDOM,
   GTAG_STREAMING_FILTER_VALUE,
   GTAG_ACTION_PLAY_VALUE,
-} from '../config/config';
+} from '../../config/config';
 
 Vue.component('v-select', vSelect);
 

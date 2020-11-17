@@ -20,7 +20,7 @@ import {
   GTAG_CATEGORY_SCHEDULE,
   GTAG_SCHEDULE_ACTION_FILTER,
   GTAG_SCHEDULE_FILTER_VALUE
-} from '../config/config';
+} from '../../config/config';
 
 export default {
   data() {

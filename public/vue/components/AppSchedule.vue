@@ -14,11 +14,11 @@ import { mapGetters, mapState } from 'vuex';
 import ScheduleUtils from '../utils/ScheduleUtils';
 import { COLLECTION_FAVORITES } from '../config/config';
 
-import CollectionSwitcher from './CollectionSwitcher.vue';
-import Timeline from './Timeline.vue';
-import TimelineCursorHead from './TimelineCursorHead.vue';
-import ScheduleContainer from './ScheduleContainer.vue';
-import CategoryFilter from './CategoryFilter.vue';
+import CollectionSwitcher from './Schedule/CollectionSwitcher.vue';
+import Timeline from './Schedule/Timeline.vue';
+import TimelineCursorHead from './Schedule/TimelineCursorHead.vue';
+import ScheduleContainer from './Schedule/ScheduleContainer.vue';
+import CategoryFilter from './Schedule/CategoryFilter.vue';
 
 export default {
   components: {

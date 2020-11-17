@@ -6,7 +6,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { GRID_VIEW_EXTRA_LEFT } from '../config/config';
+import { GRID_VIEW_EXTRA_LEFT } from '../../config/config';
 
 export default {
   computed: {

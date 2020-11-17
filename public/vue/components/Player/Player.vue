@@ -53,7 +53,7 @@ import { mapState, mapGetters } from 'vuex';
 import { DateTime } from 'luxon';
 
 import VolumeFader from './VolumeFader.vue';
-import * as config from '../config/config';
+import * as config from '../../config/config';
 
 Vue.use(VueToast);
 

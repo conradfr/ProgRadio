@@ -37,7 +37,7 @@
 <script>
 import { DateTime, Interval } from 'luxon';
 import { mapState } from 'vuex';
-import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../config/config';
+import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../../config/config';
 
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
 

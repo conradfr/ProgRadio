@@ -191,7 +191,7 @@ const storeActions = {
   /* eslint-disable no-undef */
   getRadiosData: ({ state, commit }) => {
     if (state.radios === []) {
-      commit('setLoading', true, { root: true });
+      // commit('setLoading', true, { root: true });
     }
 
     Vue.nextTick(() => {

@@ -6,7 +6,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { TICK_INTERVAL } from '../config/config';
+import { TICK_INTERVAL } from '../../config/config';
 
 export default {
   data() {

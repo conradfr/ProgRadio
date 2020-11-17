@@ -9,7 +9,7 @@
 <script>
 import ScheduleRadioList from './ScheduleRadioList.vue';
 import ScheduleRadioGrid from './ScheduleRadioGrid.vue';
-import Loading from './Loading.vue';
+import Loading from '../Loading.vue';
 
 export default {
   components: {
