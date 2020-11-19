@@ -2,7 +2,8 @@
 
 {% import _self as self %}
 
-{% block title %}FAQ - Les programmes radios en France{% endblock %}
+{% block title %}{{ 'page.faq.page_title'|trans }}{% endblock %}
+{% block description %}{{ 'page.faq.page_description'|trans }}{% endblock %}
 
 {% macro radios_list(collections, radios, locale) %}
     {%  set radios_sorted = radios|sort %}
@@ -21,36 +22,63 @@
     {% endfor %}
 {% endmacro %}
 
-{% set faq= [
-    {   'question': "Qu'est-ce que Programmes-radio.io ?",
-        'answer': [
-            "Programmes-radio.io est un site indépendant centralisant les grilles de programmes de radios françaises et internationales.",
-            "Les données sont réactualisées chaque jour en provenance des sites des radios.",
-            "Vous pouvez aussi écouter en streaming n'importe quelle radio en cliquant sur son logo."
+{% set faq = {
+    "fr": [
+        {   'question': "Qu'est-ce que Programmes-radio.io ?",
+            'answer': [
+                "Programmes-radio.io est un site indépendant centralisant les grilles de programmes de radios françaises et internationales.",
+                "Les données sont réactualisées chaque jour en provenance des sites des radios.",
+                "Vous pouvez aussi écouter en streaming n'importe quelle radio en cliquant sur son logo."
+            ]
+        },
+        {   'question': "Comment sont classées les radios ?",
+            'answer': [
+                "Suivant les catégories, le classement est basé sur la part d'audience cumulée de la dernière vague Médiamétrie ou alors par ordre alphabétique."
+            ]
+        },
+        {   'question': "Certaines radios ont une publicité en début de lecture.",
+            'answer': [
+            "Ces publicités sont ajoutées par les radios elles-mêmes et non pas par Programmes-radio.io."
         ]
-    },
-    {   'question': "Comment sont classées les radios ?",
-        'answer': [
-            "Suivant les catégories, le classement est basé sur la part d'audience cumulée de la dernière vague Médiamétrie ou alors par ordre alphabétique."
+        },
+        {   'question': "Il n'y a pas ma radio favorite.",
+            'answer': [
+                "Des radios sont ajoutées au fur et à mesure, indiquez-nous dans la page Contact la radio que vous voulez voir ajoutée."
+            ]
+        },
+        {   'question': "Liste des radios disponibles.",
+            'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ absolute_url('/' ~ app.request.locale ~ '/#/streaming') ~ '">la page streaming</a>.</p>'
+            ]
+        }
+    ],
+    "en": [
+        {   'question': "What is Programmes-radio.io?",
+            'answer': [
+            "Programmes-radio.io is an independant website displaying schedules from French and more broadly French speaking radios.",
+            "Data are updated each day from radios' websites.",
+            "You can also listen to any radio by clicking on its logo."
         ]
-    },
-    {   'question': "Certaines radios ont une publicité en début de lecture.",
-        'answer': [
-        "Ces publicités sont ajoutées par les radios elles-mêmes et non pas par Programmes-radio.io."
-    ]
-    },
-    {   'question': "Il n'y a pas ma radio favorite.",
-        'answer': [
-            "Des radios sont ajoutées au fur et à mesure, indiquez-nous dans la page Contact la radio que vous voulez voir ajoutée."
+        },
+        {   'question': "How are radios sorted?",
+            'answer': [
+            "Radios are sorted by their ratings or alphabetically depending on the category."
         ]
-    },
-    {   'question': "Liste des radios disponibles.",
-        'answer': [
+        },
+        {   'question': "Some radios have an ad at the start of their streaming.",
+            'answer': [
+            "These ads are added by the radios themselves and not Programmes-radio.io."
+        ]
+        },
+        {   'question': "Available radios:",
+            'answer': [
             self.radios_list(collections, radios, app.request.locale),
-            '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ absolute_url('/' ~ app.request.locale ~ '/#/streaming') ~ '">la page streaming</a>.</p>'
-        ]
-    }
-]
+            '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ absolute_url('/' ~ app.request.locale ~ '/#/streaming') ~ '">the streaming page</a>.</p>'
+            ]
+        }
+    ]
+}
 %}
 
 {% block body %}
@@ -58,8 +86,8 @@
     <div class="row">
         <div class="col-md-8 col-sm-12">
             <div class="content">
-                <h3>Foire aux questions</h3>
-                {% for entry in faq %}
+                <h3>{{ 'page.faq.title'|trans }}</h3>
+                {% for entry in faq[app.request.locale] %}
                     <dl>
                         <dt>{{ entry.question }}</dt>
                         {% for line in entry.answer %}

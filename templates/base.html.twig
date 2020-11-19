@@ -105,10 +105,12 @@
 {% block body %}{% endblock %}
 
 <footer class="footer">
+{% set other_locale = app.request.locale == 'fr' ? 'en' : 'fr' %}
     <div class="container">
         <div class="row">
             {% block footer %}
-                <div class="col-md-12 col-xs-12"><p class="text-center">©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a></p></div>
+                <div class="col-md-12 col-xs-12"><p class="text-center">©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a> -
+<a href="{{ path('app', {'_locale': other_locale}) }}">{{ other_locale }}</a></p></div>
             {% endblock %}
         </div>
     </div>

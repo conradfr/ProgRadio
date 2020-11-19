@@ -31,11 +31,18 @@ page:
     now:
         back: '← Retourner à la grille des programmes'
         no_schedule: <strong>Oups ...</strong> aucuns programmes disponibles.'
+        page_description: 'Quoi écouter tout de suite ?'
+        page_title: 'Programmes en ce moment à la radio'
         title: 'En ce moment à la radio'
 
     radio:
         play: 'Ecouter %radio%'
         back: '← Retourner à la grille complète des programmes'
         no_schedule: 'Programmes non disponibles.'
+
+    faq:
+        title: 'Foire aux questions'
+        page_title: 'FAQ - Les programmes radios en France'
+        page_description: 'Questions sur Programmmes-Radio.io'
 
 legal: Mentions légales

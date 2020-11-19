@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Security;
 
 class StreamRepository extends ServiceEntityRepository
 {
-    protected const CACHE_TTL = 3600; // one hour
+    protected const CACHE_TTL = 21600; // six hours
 
     private $security;
 

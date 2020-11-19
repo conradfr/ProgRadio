@@ -37,4 +37,9 @@ page:
         back: '← Back to radio guide'
         no_schedule: 'Schedule not available'
 
+    faq:
+        page_title: 'FAQ - Radio shows in France'
+        page_description: 'Questions about Programmmes-Radio.io'
+        title: 'Frequently Asked Questions'
+
 legal: Legal notice

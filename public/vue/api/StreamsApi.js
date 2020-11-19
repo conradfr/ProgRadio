@@ -38,14 +38,14 @@ const getRandom = (country) => {
 };
 
 const getConfig = () => {
-  return axios.get(`/streams/config`)
+  return axios.get('/streams/config')
     .then((response) => {
       return response.data;
     });
 };
 
 const getCountries = () => {
-  return axios.get('/streams/countries')
+  return axios.get(`/streams/countries?locale=${locale}`)
     .then((response) => {
       return response.data.countries;
     });

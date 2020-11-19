@@ -93,9 +93,10 @@ class StreamsController  extends AbstractBaseController
      *     name="streams_countries",
      * )
      */
-    public function countries(RadioBrowser $radioBrowser): Response
+    public function countries(RadioBrowser $radioBrowser, Request $request): Response
     {
-        $countries = $radioBrowser->getCountries();
+        $locale = $request->query->get('locale', $this->getParameter('kernel.default_locale'));
+        $countries = $radioBrowser->getCountries($locale);
 
         return $this->jsonResponse([
                 'countries' => $countries,

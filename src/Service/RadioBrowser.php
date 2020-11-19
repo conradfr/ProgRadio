@@ -20,18 +20,18 @@ class RadioBrowser
         $this->em = $entityManager;
     }
 
-    public function getCountries()
+    public function getCountries(string $locale)
     {
         $countriesDb = $this->em->getRepository(Stream::class)->getCountryCodes();
 
         $countries = [];
         foreach ($countriesDb as $country) {
             if (Countries::exists($country['countryCode'])) {
-                $countries[$country['countryCode']] = Countries::getName($country['countryCode'], 'fr');
+                $countries[$country['countryCode']] = Countries::getName($country['countryCode'], $locale);
             }
         }
 
-        $coll = collator_create( 'fr_FR' );
+        $coll = collator_create($locale);
         collator_asort($coll, $countries);
 
         return $countries;
