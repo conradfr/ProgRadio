@@ -31,7 +31,7 @@ const isLocalStorageFull = (e) => {
 };
 
 const hasCache = (key) => {
-  if (localStorage !== null && localStorage[key] !== undefined) {
+  if (localStorage !== undefined && localStorage[key] !== undefined) {
     const cached = JSON.parse(localStorage.getItem(key));
     if (Array.isArray(cached) || typeof cached === 'object') {
       return true;
@@ -44,7 +44,7 @@ const hasCache = (key) => {
 const getCache = key => JSON.parse(localStorage.getItem(key));
 
 const setCache = (key, data) => {
-  if (localStorage === null) {
+  if (localStorage === undefined) {
     return;
   }
 
@@ -62,10 +62,9 @@ const setCache = (key, data) => {
 
 // ------------------------- API -------------------------
 
-/* todo fix baseUrl */
 /* eslint-disable arrow-body-style */
-const getSchedule = (dateStr, baseUrl, params) => {
-  let url = `${baseUrl}schedule/${dateStr}`;
+const getSchedule = (dateStr, params) => {
+  let url = `/schedule/${dateStr}`;
 
   if (params !== undefined && params !== null) {
     if (params.collection !== undefined) {
@@ -86,11 +85,14 @@ const getSchedule = (dateStr, baseUrl, params) => {
       }
 
       return [];
+    })
+    .catch(() => {
+      return {};
     });
 };
 
-const getRadiosData = (baseUrl) => {
-  return axios.get(`${baseUrl}radios`)
+const getRadiosData = () => {
+  return axios.get('/radios')
     .then((response) => {
       if (response.data.radios !== undefined) {
         setCache(CACHE_KEY_RADIOS, response.data.radios);
@@ -105,14 +107,17 @@ const getRadiosData = (baseUrl) => {
       }
 
       return response.data;
+    })
+    .catch(() => {
+      return {};
     });
 };
 
-const toggleFavoriteRadio = (radioCodeName, baseUrl) => {
-  axios.get(`${baseUrl}radios/favorite/${radioCodeName}`)
+const toggleFavoriteRadio = (radioCodeName) => {
+  axios.get(`/radios/favorite/${radioCodeName}`)
     .catch((error) => {
       if (error.response.status === 403) {
-        window.location.href = `${baseUrl}login`;
+        window.location.href = '/fr/login';
       }
     });
 };

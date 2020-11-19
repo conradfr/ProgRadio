@@ -18,24 +18,27 @@ export default {
     Loading
   },
   created() {
+    this.$store.dispatch('getRadiosData');
+    this.$store.dispatch('getSchedule',
+      {
+        collection: this.$route.params.collection
+          ? this.$route.params.collection : this.$store.state.schedule.currentCollection
+      });
+    if (this.$route.params.collection) {
+      this.$store.dispatch('switchCollection', this.$route.params.collection);
+    }
+
     setTimeout(
       () => {
-        this.$store.dispatch('getRadiosData');
-        this.$store.dispatch('getSchedule',
-          {
-            collection: this.$route.params.collection
-              ? this.$route.params.collection : this.$store.state.schedule.currentCollection
-          });
-        if (this.$route.params.collection) {
-          this.$store.dispatch('switchCollection', this.$route.params.collection);
-        }
+        this.$store.dispatch('getSchedule');
       },
-      50
+      3500
     );
   },
   watch: {
     $route(to, from) {
       if (to.params.collection !== undefined && to.params.collection !== from.params.collection) {
+        this.$store.dispatch('getSchedule', { collection: this.$route.params.collection });
         this.$store.dispatch('switchCollection', to.params.collection);
       }
     }

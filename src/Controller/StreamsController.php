@@ -135,7 +135,7 @@ class StreamsController  extends AbstractBaseController
     /**
      * @Route(
      *     "/favorite/{id}",
-     *     name="favorite_toggle"
+     *     name="streams_favorite_toggle"
      * )
      *
      * @IsGranted("ROLE_USER")

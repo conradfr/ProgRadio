@@ -1,6 +1,6 @@
 <template>
   <div class="schedule-radio-grid-row">
-    <div v-if="!hasSchedule && displayNoSchedule"
+    <div v-if="!hasSchedule && displayNoSchedule && isLoading == false"
          class="program-container none" :style="noProgramStyleObject">
       <div class="program">
         <div class="program-inner">{{ $t('message.schedule.no_schedule') }}</div>
@@ -17,17 +17,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 import ScheduleRadioProgram from './ScheduleRadioProgram.vue';
 
 export default {
   components: { ScheduleRadioProgram },
   props: ['radio', 'displayNoSchedule', 'schedule', 'hasSchedule'],
-  computed: mapState({
-    noProgramStyleObject(state) {
-      return { left: `${state.schedule.scrollIndex}px` };
-    },
-  })
+  computed: {
+    ...mapGetters([
+      'isLoading'
+    ]),
+    ...mapState({
+      noProgramStyleObject(state) {
+        return { left: `${state.schedule.scrollIndex}px` };
+      },
+    })
+  }
 };
 </script>

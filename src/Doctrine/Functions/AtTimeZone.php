@@ -24,12 +24,12 @@ class AtTimeZone extends FunctionNode
      */
     public function parse(Parser $parser): void
     {
-        $parser->match(Lexer::T_IDENTIFIER); // (2)
-        $parser->match(Lexer::T_OPEN_PARENTHESIS); // (3)
-        $this->dateExpression = $parser->ArithmeticPrimary(); // (4)
+        $parser->match(Lexer::T_IDENTIFIER);
+        $parser->match(Lexer::T_OPEN_PARENTHESIS);
+        $this->dateExpression = $parser->ArithmeticPrimary();
         $parser->match(Lexer::T_COMMA); // (5)
-        $this->timezoneExpression = $parser->StringPrimary(); // (6)
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS); // (3)
+        $this->timezoneExpression = $parser->StringPrimary();
+        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
     /**

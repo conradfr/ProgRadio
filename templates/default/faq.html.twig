@@ -10,15 +10,11 @@
         {% if collection.code_name != 'favorites' %}
         <p>
             <a class="faq-collection-link" href="{{ absolute_url('/' ~ locale ~ '/#/schedule/' ~ collection.code_name) }}">{{ collection.name_FR }}</a>:
-        {% set radios_filtered = [] %}
-        {% for radio in radios_sorted %}
-            {% if collection.code_name in radio.collection %}
-                {% set radios_filtered = radios_filtered|merge([radio]) %}
-            {% endif %}
-        {% endfor %}
 
-        {% for radio in radios_filtered %}
-            <a href="{{ path('radio', {'codename': radio.code_name}) }}">{{ radio.name }}</a>{% if not loop.last %}, {% else %}.{% endif %}
+        {% for radioCodeName in collection.radios %}
+            {% if radios[radioCodeName] is defined  %}
+            <a href="{{ path('radio', {'codename': radios[radioCodeName].code_name}) }}">{{ radios[radioCodeName].name }}</a>{% if not loop.last %}, {% else %}.{% endif %}
+            {% endif %}
         {% endfor %}
         </p>
         {% endif %}

@@ -17,15 +17,15 @@ export const DEFAULT_COLLECTION = 'nationwide';
 
 export const COLLECTION_FAVORITES = 'favorites';
 
-export const CACHE_KEY_RADIOS = 'radios';
-export const CACHE_KEY_COLLECTIONS = 'collections';
+export const CACHE_KEY_RADIOS = 'radios_v2';
+export const CACHE_KEY_COLLECTIONS = 'collections_v2';
 export const CACHE_KEY_CATEGORIES = 'categories';
 
 export const COOKIE_PREFIX = 'progradio';
 export const COOKIE_TTL = '1Y';
 
 export const COOKIE_EXCLUDE = `${COOKIE_PREFIX}-exclude`;
-export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
+export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection_v2`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
 export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;

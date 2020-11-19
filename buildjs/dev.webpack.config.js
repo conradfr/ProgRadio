@@ -7,7 +7,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  target: ['web', 'es2015'],
+  target: 'web',
   devtool: 'eval-cheap-module-source-map',
   entry: {
     app: [path.resolve(__dirname, '../public/vue/app.js'), path.resolve(__dirname, '../public/less/main.less')]

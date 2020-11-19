@@ -84,6 +84,7 @@ export default {
   computed: {
     ...mapState({
       player: state => state.player,
+      collections: state => state.schedule.collections,
       streamFavorites: state => state.streams.favorites
     }),
     ...mapGetters([
@@ -96,7 +97,7 @@ export default {
 
       // radio
       if (this.player.radio.type === 'radio') {
-        return this.player.radio.collection.indexOf(config.COLLECTION_FAVORITES) !== -1;
+        return this.$store.getters.isFavorite(this.player.radio.code_name);
       }
 
       // stream

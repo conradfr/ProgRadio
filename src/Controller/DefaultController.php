@@ -29,14 +29,14 @@ class DefaultController extends AbstractBaseController
      *
      * @ParamConverter("date", options={"format": "Y-m-d"})
      */
-    public function schedule(\DateTime $date, ScheduleManager $scheduleManager, EntityManagerInterface $em, Request $request): Response
+    public function schedule(\DateTime $date, ScheduleManager $scheduleManager, Request $request): Response
     {
         $schedule = null;
         $collection = $request->query->get('collection');
 
         if ($radio = $request->query->get('radio')) {
             $schedule = $scheduleManager->getDayScheduleOfRadio($date, $radio);
-        } elseif ($collection !== null && $collection !== Radio::FAVORITES) {
+        } elseif ($collection !== null) {
             $schedule = $scheduleManager->getDayScheduleOfCollection($date, $collection);
         } else {
             $schedule = $scheduleManager->getDayScheduleOfDate($date);
@@ -50,13 +50,13 @@ class DefaultController extends AbstractBaseController
     /**
      * @Route(
      *     "/radios",
-     *     name="radios"
+     *     name="api_radios"
      * )
      */
     public function radios(EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favorites', []);
-        $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
+        $radios = $em->getRepository(Radio::class)->getActiveRadios();
         $categories = $em->getRepository(Category::class)->getCategories();
         $collections = $em->getRepository(Collection::class)->getCollections($favorites);
 

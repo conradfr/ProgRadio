@@ -6,8 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'production',
-  target: ['web', 'es2015'],
-  // devtool: 'source-map',
+  // target: ['web', 'es5'],
+  target: 'web',
   entry: {
     app: [path.resolve(__dirname, '../public/vue/app.js'), path.resolve(__dirname, '../public/less/main.less')]
   },

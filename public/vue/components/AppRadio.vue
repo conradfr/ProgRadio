@@ -125,17 +125,16 @@ export default {
   computed: {
     ...mapState({
       player: state => state.player,
-      playing: state => state.player.playing
+      playing: state => state.player.playing,
+      radios: state => state.schedule.radios
     }),
     ...mapGetters([
       'hasSchedule',
       'radioPlayingCodeName'
     ]),
     radio() {
-      const index = findIndex(this.$store.state.schedule.radios,
-        r => r.code_name === this.$route.params.radio);
-
-      return index === -1 ? null : this.$store.state.schedule.radios[index];
+      return this.radios[this.$route.params.radio] === undefined ? null
+        : this.radios[this.$route.params.radio];
     },
     schedule() {
       if (this.hasSchedule === true) {

@@ -12,8 +12,8 @@
     <div class="program" v-on:mouseover.once="hover = !hover"
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
       <div class="program-inner" v-bind:title="title">
-        <div class="program-img" v-if="program.picture_url && (hover || isCurrent)">
-          <img v-bind:src="program.picture_url | picture" alt="" @mousedown.prevent="" v-once>
+        <div class="program-img" v-if="program.picture_url && (hover || isCurrent)" v-once>
+          <img v-bind:src="program.picture_url | picture" alt="" @mousedown.prevent="">
         </div>
         <div class="program-infos" :style="infosStyle">
           <div class="program-title" v-once>

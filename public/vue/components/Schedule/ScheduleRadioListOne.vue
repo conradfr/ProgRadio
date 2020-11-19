@@ -8,7 +8,7 @@
         <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
       <a :href="'/' + locale + '/#/radio/' + radio.code_name"
-         class="radio-submenu-entry radio-submenu-entry-radiopage">
+         class="radio-submenu-entry radio-submenu-entry-radiopage" v-once>
         <img src="/img/list.svg" class="filter-page"/>
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
       </a>
@@ -33,7 +33,6 @@
 import { mapGetters, mapState } from 'vuex';
 
 import {
-  COLLECTION_FAVORITES,
   GTAG_CATEGORY_SCHEDULE,
   GTAG_ACTION_FAVORITE_TOGGLE,
   GTAG_ACTION_PLAY,
@@ -61,8 +60,8 @@ export default {
       'radioPlayingCodeName',
     ]),
     isFavorite() {
-      return this.radio.collection.indexOf(COLLECTION_FAVORITES) !== -1;
-    },
+      return this.$store.getters.isFavorite(this.radio.code_name);
+    }
   },
   methods: {
     playStop() {

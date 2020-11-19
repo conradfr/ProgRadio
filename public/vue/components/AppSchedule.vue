@@ -11,7 +11,6 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 
-import ScheduleUtils from '../utils/ScheduleUtils';
 import { COLLECTION_FAVORITES } from '../config/config';
 
 import CollectionSwitcher from './Schedule/CollectionSwitcher.vue';
@@ -50,7 +49,8 @@ export default {
   watch: {
     // update the collection menu that is outside the Vue app for now
     radios(val) {
-      const favorites = ScheduleUtils.filterRadiosByCollection(val, COLLECTION_FAVORITES);
+      // const favorites = ScheduleUtils.filterRadiosByCollection(val, COLLECTION_FAVORITES);
+      const favorites = [];
       const menuItem = document.getElementById(`collections-menu-${COLLECTION_FAVORITES}`);
 
       if (favorites.length === 0) {

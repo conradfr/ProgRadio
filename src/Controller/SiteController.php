@@ -49,7 +49,7 @@ class SiteController extends AbstractController
     (EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favorites', []);
-        $radios = $em->getRepository(Radio::class)->getActiveRadios($favorites);
+        $radios = $em->getRepository(Radio::class)->getActiveRadios();
         $collections = $em->getRepository(Collection::class)->getCollections($favorites);
 
         return $this->render('default/faq.html.twig',

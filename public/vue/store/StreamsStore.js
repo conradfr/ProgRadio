@@ -209,7 +209,7 @@ const storeMutations = {
 
     setTimeout(() => {
       if (logged === true) {
-        StreamsApi.toggleFavoriteStream(streamId, baseUrl);
+        StreamsApi.toggleFavoriteStream(streamId);
         return;
       }
       Vue.cookie.set(config.COOKIE_STREAM_FAVORITES, favorites.join('|'), config.COOKIE_PARAMS);

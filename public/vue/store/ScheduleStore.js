@@ -1,12 +1,9 @@
 import Vue from 'vue';
 
 import without from 'lodash/without';
+import pick from 'lodash/pick';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
-import compose from 'lodash/fp/compose';
-import filter from 'lodash/fp/filter';
-import map from 'lodash/fp/map';
 
 import { DateTime, Interval } from 'luxon';
 
@@ -31,7 +28,7 @@ const initState = {
   categories: ScheduleApi.hasCache(config.CACHE_KEY_CATEGORIES)
     ? Object.freeze(ScheduleApi.getCache(config.CACHE_KEY_CATEGORIES)) : [],
   collections: ScheduleApi.hasCache(config.CACHE_KEY_COLLECTIONS)
-    ? Object.freeze(ScheduleApi.getCache(config.CACHE_KEY_COLLECTIONS)) : [],
+    ? Object.freeze(ScheduleApi.getCache(config.CACHE_KEY_COLLECTIONS)) : {},
   schedule: {},
   scheduleDisplay: {},
   cursorTime,
@@ -67,19 +64,21 @@ const storeGetters = {
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
   radiosRanked: (state) => {
-    if (state.collections.length === 0) {
+    if (Object.keys(state.collections).length === 0) {
       return [];
     }
 
-    const index = ScheduleUtils.getCollectionIndex(state.currentCollection, state.collections);
-
-    if (index === -1) {
+    if (state.collections[state.currentCollection] === undefined) {
       return [];
     }
 
-    return ScheduleUtils.rankCollection(state.collections[index],
-      state.radios, state.categoriesExcluded);
+    const radios = pick(state.radios, state.collections[state.currentCollection].radios);
+
+    return ScheduleUtils.rankCollection(state.collections[state.currentCollection],
+      radios, state.categoriesExcluded);
   },
+  isFavorite: state => radioCodeName => state.collections[config.COLLECTION_FAVORITES] !== undefined
+      && state.collections[config.COLLECTION_FAVORITES].radios.indexOf(radioCodeName) !== -1,
   displayCategoryFilter: state => state.categoryFilterFocus.icon
     || state.categoryFilterFocus.list || false,
   currentShowOnRadio: state => (radioCodename) => {
@@ -145,8 +144,8 @@ const storeActions = {
 
   // ---------- FAVORITES ----------
 
-  toggleRadioFavorite: ({ commit }, radio) => {
-    commit('toggleRadioFavorite', radio);
+  toggleRadioFavorite: ({ commit }, radioCodeName) => {
+    commit('toggleRadioFavorite', radioCodeName);
   },
 
   // ---------- CATEGORY ----------
@@ -190,19 +189,22 @@ const storeActions = {
 
   /* eslint-disable no-undef */
   getRadiosData: ({ state, commit }) => {
-    if (state.radios === []) {
-      // commit('setLoading', true, { root: true });
-    }
+    setTimeout(
+      () => {
+        ScheduleApi.getRadiosData()
+          .then(({ radios, collections, categories }) => {
+            commit('updateRadios', radios);
+            commit('updateCollections', collections);
+            commit('updateCategories', categories);
+          })
+          .then(() => commit('setLoading', false, { root: true }));
+      },
+      30
+    );
 
-    Vue.nextTick(() => {
-      ScheduleApi.getRadiosData(baseUrl)
-        .then(({ radios, collections, categories }) => {
-          commit('updateRadios', radios);
-          commit('updateCollections', collections);
-          commit('updateCategories', categories);
-        })
-        .then(() => commit('setLoading', false, { root: true }));
-    });
+    if (state.radios === []) {
+      commit('setLoading', true, { root: true });
+    }
   },
   getSchedule: ({ state, commit }, params) => {
     const dateStr = state.cursorTime.toISODate();
@@ -215,30 +217,43 @@ const storeActions = {
     }
 
     if (params !== null) {
-      Vue.nextTick(() => {
-        ScheduleApi.getSchedule(dateStr, baseUrl, params)
-          .then(schedule => commit('updateSchedule', schedule))
-          .then(() => commit('setLoading', false, { root: true }))
-          .then(() => {
-            Vue.nextTick(() => {
-              ScheduleApi.getSchedule(dateStr, baseUrl)
-                .then(schedule => commit('updateSchedule', schedule));
+      setTimeout(
+        () => {
+          ScheduleApi.getSchedule(dateStr, params)
+            .then(schedule => commit('updateSchedule', schedule))
+            .then(() => commit('setLoading', false, { root: true }))
+            .then(() => {
+            /*              setTimeout(
+                () => {
+                  ScheduleApi.getSchedule(dateStr)
+                    .then(schedule => commit('updateSchedule', schedule));
+                },
+                1000
+              ); */
             });
-          });
-      });
+        },
+        75
+      );
     } else {
-      Vue.nextTick(() => {
-        ScheduleApi.getSchedule(dateStr, baseUrl)
-          .then(schedule => commit('updateSchedule', schedule))
-          .then(() => commit('setLoading', false, { root: true }));
-      });
+      if (ScheduleApi.hasCache(dateStr)) {
+        commit('updateSchedule', ScheduleApi.getCache(dateStr));
+      }
+
+      setTimeout(
+        () => {
+          ScheduleApi.getSchedule(dateStr)
+            .then(schedule => commit('updateSchedule', schedule))
+            .then(() => commit('setLoading', false, { root: true }));
+        },
+        1000
+      );
     }
   },
   /* eslint-disable object-curly-newline */
   tick: ({ commit, getters, rootState, dispatch }) => {
     const now = DateTime.local().setZone(config.TIMEZONE);
 
-    if (now.hour === 0 && now.minutes === 3) {
+    if (now.hour === 0 && now.minutes === 2) {
       dispatch('getSchedule');
     }
 
@@ -285,33 +300,28 @@ const storeMutations = {
       Vue.cookie.set(config.COOKIE_COLLECTION, collection, config.COOKIE_PARAMS);
     }, 300);
   },
-  toggleRadioFavorite(state, radioId) {
-    const index = findIndex(state.radios, r => r.code_name === radioId);
-    const updatedRadio = { ...state.radios[index] };
+  toggleRadioFavorite(state, radioCodeName) {
+    const favorites = state.collections[config.COLLECTION_FAVORITES] === undefined
+      ? [] : state.collections[config.COLLECTION_FAVORITES].radios;
+    const radioIndex = favorites.indexOf(radioCodeName);
 
     // Is favorite
-    const favoriteIndex = updatedRadio.collection.indexOf(config.COLLECTION_FAVORITES);
-    if (updatedRadio.collection.indexOf(config.COLLECTION_FAVORITES) !== -1) {
-      updatedRadio.collection.splice(favoriteIndex, 1);
-      Vue.set(state.radios, index, updatedRadio);
-      // Vue.delete(state.radios[index].collection, favoriteIndex);
+    if (radioIndex !== -1) {
+      favorites.splice(radioIndex, 1);
     } else {
-      updatedRadio.collection.push(config.COLLECTION_FAVORITES);
-      Vue.set(state.radios, index, updatedRadio);
+      favorites.push(radioCodeName);
     }
+
+    Vue.set(state.collections[config.COLLECTION_FAVORITES], 'radios', favorites);
 
     setTimeout(() => {
       if (logged === true) {
-        ScheduleApi.toggleFavoriteRadio(radioId, baseUrl);
+        ScheduleApi.toggleFavoriteRadio(radioCodeName);
         return;
       }
 
-      const favorites = compose(
-        map(entry => entry.code_name),
-        filter(entry => entry.collection.indexOf(config.COLLECTION_FAVORITES) !== -1)
-      )(state.radios);
-
-      Vue.cookie.set(config.COOKIE_RADIO_FAVORITES, favorites.join('|'), config.COOKIE_PARAMS);
+      const favoritesAsString = favorites.join('|');
+      Vue.cookie.set(config.COOKIE_RADIO_FAVORITES, favoritesAsString, config.COOKIE_PARAMS);
     }, 500);
   },
   setCategoryFilterFocus(state, params) {
@@ -330,20 +340,26 @@ const storeMutations = {
     }, 500);
   },
   updateSchedule: (state, value) => {
+    const updatedSchedule = { ...{ ...state.schedule }, ...value };
     const scheduleDisplay = ScheduleUtils.getScheduleDisplay(
-      value, state.cursorTime, initialScrollIndex
+      updatedSchedule, state.cursorTime, initialScrollIndex
     );
 
-    Object.freeze(value);
-    Vue.set(state, 'schedule', value);
+    Object.freeze(updatedSchedule);
+    Vue.set(state, 'schedule', updatedSchedule);
     Vue.set(state, 'scheduleDisplay', scheduleDisplay);
   },
   updateRadios: (state, value) => {
     Vue.set(state, 'radios', value);
   },
-  updateCollections: (state, value) => {
-    Object.freeze(value);
-    Vue.set(state, 'collections', value);
+  updateCollections: (state, collections) => {
+    forEach(collections, (collection, key) => {
+      if (key !== config.COLLECTION_FAVORITES) {
+        Object.freeze(collection);
+      }
+    });
+
+    Vue.set(state, 'collections', collections);
   },
   updateCategories: (state, value) => {
     Object.freeze(value);

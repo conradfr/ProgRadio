@@ -2,7 +2,8 @@
   <transition-group name="radio-list" tag="div" class="schedule-radio-list">
   <!--<div class="schedule-radio-list">-->
     <schedule-radio-list-one
-        v-for="entry in radios" :key="entry.code_name"
+        v-for="entry in radios"
+        :key="entry.code_name"
         :radio="entry">
     </schedule-radio-list-one>
   <!--</div>-->
@@ -19,7 +20,7 @@ export default {
   components: { ScheduleRadioListOne },
   computed: {
     ...mapGetters({
-      radios: 'radiosRanked'
+      radios: 'radiosRanked',
     })
   }
 };

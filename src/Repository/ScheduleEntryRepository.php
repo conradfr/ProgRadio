@@ -225,7 +225,10 @@ EOT;
 
         if ($scheduleResource->getType() === ScheduleResource::TYPE_RADIO) {
             $qb->andWhere('r.codeName = :radio')
-               ->setParameter('radio', $scheduleResource->getValue());
+                ->setParameter('radio', $scheduleResource->getValue());
+        } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_RADIOS) {
+            $qb->andWhere('r.codeName IN (:radios)')
+                ->setParameter('radios', $scheduleResource->getValue());
         } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_COLLECTION) {
             $qb->innerJoin('r.collection', 'c')
                ->andWhere('c.codeName = :collection')

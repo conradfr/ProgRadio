@@ -26,17 +26,14 @@ class RadioRepository extends ServiceEntityRepository
         $this->security = $security;
     }
 
-    public function getActiveRadios(array $favoritesFromCookies = []): array {
-        $user = $this->security->getUser();
-
+    public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(
             "SELECT r.codeName as code_name, r.name, r.streamingUrl as streamUrl,
                     r.streamingUrl, r.share, r.streamingEnabled as streaming_enabled,
-                    c.codeName as category, cl.codeName as collection, 'radio' as type,
+                    c.codeName as category, 'radio' as type,
                     r.streamingUrl as stream_url 
                 FROM App:Radio r
                   INNER JOIN r.category c
-                  INNER JOIN r.collection cl
                 WHERE r.active = :active
             "
         );
@@ -44,31 +41,9 @@ class RadioRepository extends ServiceEntityRepository
         $query->setParameter('active', true);
 
         $query->enableResultCache(self::CACHE_RADIO_TTL, self::CACHE_RADIO_ACTIVE_ID);
-
         $results = $query->getResult();
 
-        // @todo refactor favorite management
-
-        $favorites = null;
-        if($user !== null) {
-            $favorites = $user->getFavoriteRadios()->map(
-                function ($radio) {
-                    return $radio->getCodeName();
-                }
-            )->toArray();
-        } else {
-            $favorites = $favoritesFromCookies;
-        }
-
-        $withCollectionAsArray = array_map(function($radio) use ($favorites) {
-            $radio['collection'] = [$radio['collection']];
-            if (in_array($radio['code_name'], $favorites)) {
-                $radio['collection'][] = Radio::FAVORITES;
-            }
-            return $radio;
-        }, $results);
-
-        return $withCollectionAsArray;
+        return array_column($results, null, 'code_name');
     }
 
     public function getAllCodename($filterbyActive = true): array {

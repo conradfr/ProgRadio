@@ -8,7 +8,7 @@
                 {% if collection.code_name == 'favorites' %}
                     <li role="separator" class="divider"></li>
                 {% endif %}
-                <li id="collections-menu-{{ collection.code_name }}"{% if collection.radio_count == 0 %} class="disabled"{% endif %}>
+                <li id="collections-menu-{{ collection.code_name }}"{% if collection.radios|length == 0 %} class="disabled"{% endif %}>
                     {#                <a href="{{ path('app', {'c': collection.code_name}) }}" onclick="switchCollection(event, '{{ collection.code_name }}')">#}
                     {#                    {{ collection.name_FR }}#}
                     {#                </a>#}
@@ -25,7 +25,7 @@
     {% set collections = scheduleCollections(app.user, app.request.attributes) %}
 
     {% for collection in collections %}
-    <li id="collections-menu-{{ collection.code_name }}" class="visible-xs{% if collection.radio_count == 0 %} disabled{% endif %}">
+    <li id="collections-menu-{{ collection.code_name }}" class="visible-xs{% if collection.radios|length == 0 %} disabled{% endif %}">
         <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
             &rarr; {{ collection.name_FR }}
         </a>

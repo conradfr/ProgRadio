@@ -1,10 +1,10 @@
 import forEach from 'lodash/forEach';
+import sortBy from 'lodash/sortBy';
 import findIndex from 'lodash/findIndex';
 
 import Vue from 'vue';
 import compose from 'lodash/fp/compose';
 import filter from 'lodash/fp/filter';
-import filter2 from 'lodash/filter';
 import orderBy from 'lodash/fp/orderBy';
 
 import { DateTime } from 'luxon';
@@ -134,10 +134,10 @@ const rankCollection = (collection, radios, categoriesExcluded) => {
     return [];
   }
 
-  const { code_name: codeName, sort_field: sortField, sort_order: sortOrder } = collection;
+  const { sort_field: sortField, sort_order: sortOrder } = collection;
 
   return compose(
-    filter(entry => entry.collection.indexOf(codeName) !== -1),
+    // filter(entry => entry.collection.indexOf(codeName) !== -1),
     filter(entry => categoriesExcluded.indexOf(entry.category) === -1),
     orderBy([sortField], [sortOrder])
   )(radios);
@@ -145,30 +145,27 @@ const rankCollection = (collection, radios, categoriesExcluded) => {
 
 const getCollectionIndex = (name, collections) => findIndex(collections, c => c.code_name === name);
 
-const filterRadiosByCollection = (radios, collectionName) => filter2(radios,
-  entry => entry.collection.indexOf(collectionName) !== -1);
-
 const getNextCollection = (current, collections, radios, way) => {
-  const indexOfCurrentCollection = getCollectionIndex(current, collections);
-  let newIndex = 0;
+  const collectionsOrdered = sortBy(collections, 'priority');
+  const indexOfCurrentCollection = getCollectionIndex(current, collectionsOrdered);
 
+  let newIndex = 0;
   if (way === 'backward') {
-    newIndex = indexOfCurrentCollection === 0 ? collections.length - 1
+    newIndex = indexOfCurrentCollection === 0 ? collectionsOrdered.length - 1
       : indexOfCurrentCollection - 1;
   } else if (way === 'forward') {
-    newIndex = collections.length === (indexOfCurrentCollection + 1) ? 0
+    newIndex = collectionsOrdered.length === (indexOfCurrentCollection + 1) ? 0
       : indexOfCurrentCollection + 1;
   }
 
   // has the collection any radios? If no, skip it.
-  const nextCollection = collections[newIndex];
-  const radiosFiltered = filterRadiosByCollection(radios, nextCollection.code_name);
+  const nextCollection = collectionsOrdered[newIndex];
 
-  if (radiosFiltered.length === 0) {
+  if (nextCollection.radios.length === 0) {
     return getNextCollection(nextCollection.code_name, collections, radios, way);
   }
 
-  return collections[newIndex].code_name;
+  return collectionsOrdered[newIndex].code_name;
 };
 
 export default {
@@ -177,7 +174,6 @@ export default {
   getUpdatedProgramText,
   getScheduleDisplay,
   rankCollection,
-  filterRadiosByCollection,
   getCollectionIndex,
   getNextCollection
 };

@@ -19,7 +19,7 @@ const getRadios = (country, sort, offset) => {
     queryParamsList.push(`offset=${offset}`);
   }
 
-  return axios.get(`${baseUrl}streams/list?${queryParamsList.join('&')}`)
+  return axios.get(`/streams/list?${queryParamsList.join('&')}`)
     .then((response) => {
       return response.data;
     });
@@ -31,21 +31,21 @@ const getRandom = (country) => {
     queryParamsList.push(`country=${country}`);
   }
 
-  return axios.get(`${baseUrl}streams/random?${queryParamsList.join('&')}`)
+  return axios.get(`/streams/random?${queryParamsList.join('&')}`)
     .then((response) => {
       return response.data.stream;
     });
 };
 
 const getConfig = () => {
-  return axios.get(`${baseUrl}streams/config`)
+  return axios.get(`/streams/config`)
     .then((response) => {
       return response.data;
     });
 };
 
 const getCountries = () => {
-  return axios.get(`${baseUrl}streams/countries`)
+  return axios.get('/streams/countries')
     .then((response) => {
       return response.data.countries;
     });
@@ -58,17 +58,17 @@ const incrementPlayCount = (stationUuid, radioBrowserUrl) => {
 };
 
 const getFavorites = () => {
-  return axios.get(`${baseUrl}streams/favorites`)
+  return axios.get('/streams/favorites')
     .then((response) => {
       return response.data.favorites;
     });
 };
 
-const toggleFavoriteStream = (streamCodeName, baseUrl) => {
-  axios.get(`${baseUrl}streams/favorite/${streamCodeName}`)
+const toggleFavoriteStream = (streamCodeName) => {
+  axios.get(`/streams/favorite/${streamCodeName}`)
     .catch((error) => {
       if (error.response.status === 403) {
-        window.location.href = `${baseUrl}login`;
+        window.location.href = '/fr/login';
       }
     });
 };

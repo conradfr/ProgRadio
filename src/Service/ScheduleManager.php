@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
+use App\Entity\Radio;
 use App\ValueObject\ScheduleResource;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -41,9 +43,20 @@ class ScheduleManager
         return $key;
     }
 
-    public function getDayScheduleOfCollection(\DateTime $dateTime, string $collectionCodeName): array
+    public function getDayScheduleOfCollection(\DateTime $dateTime, string $collectionCodeName, array $favoritesFromCookies = []): array
     {
-        $scheduleResource = new ScheduleResource($dateTime, ScheduleResource::TYPE_COLLECTION, $collectionCodeName);
+        if ($collectionCodeName === Radio::FAVORITES) {
+            $radiosCodeName = $this->em->getRepository(Collection::class)->getFavorites($favoritesFromCookies);
+
+            if (count($radiosCodeName) === 0) {
+                return [];
+            }
+
+            $scheduleResource = new ScheduleResource($dateTime, ScheduleResource::TYPE_RADIOS, $radiosCodeName);
+        } else {
+            $scheduleResource = new ScheduleResource($dateTime, ScheduleResource::TYPE_COLLECTION, $collectionCodeName);
+        }
+
         return $this->getDaySchedule($scheduleResource);
     }
 
@@ -61,6 +74,11 @@ class ScheduleManager
 
     protected function getDaySchedule(ScheduleResource $scheduleResource): array
     {
+        // no cache for favorites
+        if ($scheduleResource->getType() === ScheduleResource::TYPE_RADIOS) {
+            return $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($scheduleResource);
+        }
+
         return $this->cache->get(self::getKey($scheduleResource), function (ItemInterface $item) use($scheduleResource) {
             $item->expiresAfter(self::CACHE_SCHEDULE_TTL);
 
