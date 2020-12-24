@@ -8,14 +8,14 @@
 {#{% block bodysupp %} class="body-app"{% endblock %}#}
 
 {% block javascript_head %}
-const baseUrl = '/';
-const appEnv = '{{ app.environment }}';
-const gtCode = '{{ analytics }}';
-const streamsProxy = '{{ streams_proxy }}';
-const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }};
-const locale = '{{ app.request.locale }}';
+var baseUrl = '/';
+var appEnv = '{{ app.environment }}';
+var gtCode = '{{ analytics }}';
+var streamsProxy = '{{ streams_proxy }}';
+var logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }};
+var locale = '{{ app.request.locale }}';
 
-const scrollToCursor = function(e) {
+var scrollToCursor = function(e) {
 {#    e.preventDefault();#}
   if (window.location.href.includes(e.getAttribute('href'))) {
     document.getElementById('app').__vue__.$store.dispatch('scrollToCursor');

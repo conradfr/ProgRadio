@@ -32,7 +32,7 @@ export default {
     }
 
     // making the router works on IE 11 https://github.com/vuejs/vue-router/issues/1849
-    /*    if ('-ms-scroll-limit' in document.documentElement.style
+    /* if ('-ms-scroll-limit' in document.documentElement.style
         && '-ms-ime-align' in document.documentElement.style) { // detect it's IE11
       window.addEventListener('hashchange', () => {
         const currentPath = window.location.hash.slice(1);
@@ -40,7 +40,7 @@ export default {
           this.$router.push(currentPath);
         }
       }, false);
-    } */
+    }*/
   },
   methods: {
     /* eslint-disable func-names */

@@ -83,6 +83,9 @@
     "egulias/email-validator": {
         "version": "2.1.7"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.0"
+    },
     "gedmo/doctrine-extensions": {
         "version": "v2.4.41"
     },
@@ -441,6 +444,9 @@
     },
     "symfony/property-info": {
         "version": "v4.2.2"
+    },
+    "symfony/proxy-manager-bridge": {
+        "version": "v5.1.10"
     },
     "symfony/routing": {
         "version": "5.1",
