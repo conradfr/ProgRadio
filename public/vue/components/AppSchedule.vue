@@ -33,10 +33,12 @@ export default {
 
     const body = document.querySelector('body');
     body.classList.add('body-app');
+    body.classList.add('body-app-schedule');
   },
   beforeDestroy() {
     const body = document.querySelector('body');
     body.classList.remove('body-app');
+    body.classList.remove('body-app-schedule');
   },
   computed: {
     ...mapGetters([
@@ -48,7 +50,7 @@ export default {
   },
   watch: {
     // update the collection menu that is outside the Vue app for now
-    radios(val) {
+    radios() {
       // const favorites = ScheduleUtils.filterRadiosByCollection(val, COLLECTION_FAVORITES);
       const favorites = [];
       const menuItem = document.getElementById(`collections-menu-${COLLECTION_FAVORITES}`);

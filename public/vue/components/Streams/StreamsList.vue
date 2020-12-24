@@ -39,12 +39,12 @@ export default {
     Loading
   },
   created() {
-    this.$store.dispatch('getCountries');
     if (this.$route.params.countryOrCategory) {
       this.$store.dispatch('countrySelection', this.$route.params.countryOrCategory);
     } else {
       this.$store.dispatch('getStreamRadios');
     }
+    this.$store.dispatch('getCountries');
   },
   computed: {
     ...mapGetters([

@@ -58,3 +58,10 @@ liip_imagine:
             post_processors:
                 jpegoptim: { strip_all: true, max: 95, progressive: true }
                 # optipng: { strip_all: true, level: 5 }
+        notification_thumb:
+            filters:
+                downscale:
+                    max: [1024, 512]
+            post_processors:
+                jpegoptim: { strip_all: true, max: 95, progressive: false }
+                # optipng: { strip_all: true, level: 5 }

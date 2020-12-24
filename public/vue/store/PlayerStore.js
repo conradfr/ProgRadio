@@ -14,8 +14,8 @@ Vue.use(VueCookie);
 
 const initState = {
   playing: false,
-  // externalPlayer: AndroidApi.hasAndroid,
-  externalPlayer: false,
+  externalPlayer: AndroidApi.hasAndroid,
+  // externalPlayer: false,
   radio: Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)
     ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)) : null,
   show: null,
@@ -34,10 +34,10 @@ const storeGetters = {
 };
 
 const storeActions = {
-  play: ({ commit, rootState, rootGetters }, radioId) => {
+  play: ({ commit, rootState, rootGetters }, radioCodeName) => {
     commit('stop');
 
-    const radio = find(rootState.schedule.radios, { code_name: radioId });
+    const radio = find(rootState.schedule.radios, { code_name: radioCodeName });
 
     if (radio !== undefined && radio.streaming_enabled === true) {
       Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(radio), config.COOKIE_PARAMS);
@@ -50,7 +50,7 @@ const storeActions = {
     }
   },
   stop: ({ commit }) => {
-    commit('stop');
+    commit('pause');
   },
   playStream: ({ rootState, commit }, stream) => {
     commit('stop');
@@ -107,25 +107,68 @@ const storeActions = {
     commit('setFocus', params);
   },
   /* From Android app */
-  updateStatusFromExternalPlayer: ({ commit }, playing) => {
-    commit('setPlayingStatus', playing);
+  updateStatusFromExternalPlayer: ({ rootState, commit }, params) => {
+    const { playbackState, radioCodeName } = params;
+
+    const parse = () => {
+      let radio = find(rootState.schedule.radios, { code_name: radioCodeName });
+
+      // if not radio, maybe stream
+      // @todo better handling of both types
+      if (radio === undefined) {
+        radio = find(rootState.streams.streamRadios, { code_name: radioCodeName });
+      }
+
+      if (radio !== undefined /* && radio.streaming_enabled === true */
+        && config.PLAYER_STATE.indexOf(playbackState) !== -1) {
+        commit('updatePlayingStatus', { radio, playbackState });
+      }
+    };
+
+    parse();
+
+    setTimeout(
+      () => {
+        parse();
+      },
+      1000
+    );
   },
 };
 
 const storeMutations = {
+  pause(state) {
+    if (state.externalPlayer === true) {
+      AndroidApi.pause();
+      return;
+    }
+
+    state.playing = false;
+  },
   stop(state) {
     state.playing = false;
-    AndroidApi.pause();
   },
   play(state) {
+    if (state.externalPlayer === true) {
+      return;
+    }
     if (state.radio !== null) {
+    /* if (state.externalPlayer === true) {
+        AndroidApi.play(state.radio, state.show);
+        return;
+      } */
+
       state.playing = true;
-      AndroidApi.play(state.radio);
     }
   },
   switchRadio(state, { radio, show }) {
     const prevRadioCodeName = state.radio === null ? null : state.radio.code_name;
     const prevShowHash = state.show === null ? null : state.show.hash;
+
+    if (radio !== null && state.externalPlayer === true) {
+      AndroidApi.play(radio, show);
+      // return;
+    }
 
     if ((radio !== null && prevRadioCodeName === radio.code_name)
       && ((show !== null && prevShowHash === show.hash)
@@ -139,19 +182,22 @@ const storeMutations = {
     state.show = null;
     state.show = show;
 
-    // AndroidApi.play(radio, show);
-    //
-    // if (Object.is(radio, prevRadio) === false || Object.is(show, prevShow) === false) {
-    //   AndroidApi.update(radio, show);
-    // }
-
     PlayerUtils.showNotification(radio, show);
   },
   togglePlay(state) {
     if (state.playing === true) {
+      if (state.externalPlayer === true) {
+        AndroidApi.pause();
+        return;
+      }
+
       state.playing = false;
-      // AndroidApi.pause();
     } else if (state.playing === false && state.radio !== undefined && state.radio !== null) {
+      if (state.externalPlayer === true) {
+        AndroidApi.play(state.radio, state.show);
+        return;
+      }
+
       state.playing = true;
     }
   },
@@ -165,8 +211,12 @@ const storeMutations = {
     state.focus[params.element] = params.status;
   },
   /* From Android app */
-  setPlayingStatus(state, playing) {
-    state.playing = playing;
+  updatePlayingStatus(state, params) {
+    const { playbackState, radio } = params;
+
+    state.playing = playbackState === config.PLAYER_STATE_PLAYING;
+    state.radio = radio;
+    state.show = null;
   }
 };
 

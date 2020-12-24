@@ -8,6 +8,8 @@ export const NAV_MOVE_BY = 60 * MINUTE_PIXEL;
 export const TICK_INTERVAL = 30000; /* one minute in ms */
 
 export const THUMBNAIL_PROGRAM_PATH = '/media/cache/program_thumb/media/program/';
+export const THUMBNAIL_PAGE_PROGRAM_PATH = '/media/cache/page_thumb/media/program/';
+export const THUMBNAIL_NOTIFICATION_PROGRAM_PATH = '/media/cache/notification_thumb/media/program/';
 export const THUMBNAIL_STREAM_PATH = '/media/stream/';
 export const PROGRAM_LONG_ENOUGH = 45; /* minutes */
 
@@ -60,6 +62,20 @@ export const STREAMS_MAX_PAGES_DISPLAY = 9;
 
 export const STREAMING_CATEGORY_ALL = 'ALL';
 export const STREAMING_CATEGORY_FAVORITES = 'FAVORITES';
+
+export const PLAYER_STATE_NONE = 0;
+export const PLAYER_STATE_STOPPED = 1;
+export const PLAYER_STATE_PAUSED = 2;
+export const PLAYER_STATE_PLAYING = 3;
+export const PLAYER_STATE_ERROR = 7;
+
+export const PLAYER_STATE = [
+  PLAYER_STATE_NONE,
+  PLAYER_STATE_STOPPED,
+  PLAYER_STATE_PAUSED,
+  PLAYER_STATE_PLAYING,
+  PLAYER_STATE_ERROR
+];
 
 // ----- GTAG -----
 

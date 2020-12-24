@@ -3,7 +3,7 @@
        v-bind:class="{ 'media-current': isCurrent }">
     <div v-if="show.picture_url" class="media-left">
       <img alt="" class="media-object" style="width: 64px"
-         :src="'/media/cache/page_thumb/media/program/' + show.picture_url">
+         :src="picture">
     </div>
     <div class="media-body">
       <h6 class="media-heading show-title">
@@ -28,7 +28,7 @@ import { mapState } from 'vuex';
 import { DateTime, Interval } from 'luxon';
 import Nl2br from 'vue-nl2br';
 
-import { TIMEZONE } from '../../config/config';
+import { TIMEZONE, THUMBNAIL_PAGE_PROGRAM_PATH } from '../../config/config';
 import RadioShowSection from './RadioShowSection.vue';
 
 export default {
@@ -52,6 +52,9 @@ export default {
     isCurrent() {
       return Interval.fromDateTimes(DateTime.fromSQL(this.show.start_at).setZone(TIMEZONE),
         DateTime.fromSQL(this.show.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
+    },
+    picture() {
+      return `${THUMBNAIL_PAGE_PROGRAM_PATH}${this.show.picture_url}`;
     }
   }
 };

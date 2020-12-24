@@ -54,6 +54,7 @@ import { DateTime } from 'luxon';
 
 import VolumeFader from './VolumeFader.vue';
 import * as config from '../../config/config';
+import AndroidApi from '../../api/AndroidApi';
 
 Vue.use(VueToast);
 
@@ -76,7 +77,11 @@ export default {
     };
   },
   mounted() {
-    window.togglePlaybackStatus = this.togglePlay;
+    // window.togglePlaybackStatus = this.togglePlay;
+    // we refresh the state if the app is running
+    if (this.player.externalPlayer === true) {
+      AndroidApi.getState();
+    }
   },
   beforeDestroy() {
     clearInterval(this.checkTimer);

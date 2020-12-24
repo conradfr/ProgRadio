@@ -1,6 +1,6 @@
 # thumbs
-# location ~ ^/media/cache/(page|program)_thumb/media/program/(.+\.(?:gif|jpe?g|png))$ {
-location ~ ^/media/cache/(page|program)_thumb/media/program/(.+)$ {
+# location ~ ^/media/cache/(page|program|notification|stream)_thumb/media/program/(.+\.(?:gif|jpe?g|png))$ {
+location ~ ^/media/cache/(page|program|notification|stream)_thumb/media/(program|stream)/(.+)$ {
   access_log off;
   expires 1d;
   add_header Pragma public;

@@ -12,6 +12,22 @@ Vue.use(VueCookie);
 
 /* ---------- RADIOS ---------- */
 
+const getPictureUrl = (radio, show) => {
+  if (show !== undefined && show !== null && show.picture_url !== null) {
+    return `${config.THUMBNAIL_NOTIFICATION_PROGRAM_PATH}${show.picture_url}`;
+  }
+
+  if (radio.type === config.PLAYER_TYPE_RADIO) {
+    return `/img/radio/schedule/${radio.code_name}.png`;
+  }
+
+  if (radio.img !== null && radio.img !== '') {
+    return `${config.THUMBNAIL_STREAM_PATH}${radio.img}`;
+  }
+
+  return '/img/stream-placeholder.png';
+};
+
 const getNextRadio = (currentRadio, radios, way) => {
   if (currentRadio.type !== config.PLAYER_TYPE_RADIO) {
     return null;
@@ -51,15 +67,7 @@ const buildNotificationData = (radio, show) => {
     title: null,
   };
 
-  if (show !== undefined && show !== null && show.picture_url !== null) {
-    data.icon = `${config.THUMBNAIL_PROGRAM_PATH}${show.picture_url}`;
-  } else if (radio.type === config.PLAYER_TYPE_RADIO) {
-    data.icon = `/img/radio/schedule/${radio.code_name}.png`;
-  } else if (radio.img !== null && radio.img !== '') {
-    data.icon = `${config.THUMBNAIL_STREAM_PATH}${radio.img}`;
-  } else {
-    data.icon = '/img/stream-placeholder.png';
-  }
+  data.icon = getPictureUrl(radio, show);
 
   if (show !== undefined && show !== null) {
     const start = DateTime.fromSQL(show.start_at).setZone(config.TIMEZONE)
@@ -156,6 +164,7 @@ const showNotification = (radio, show) => {
 };
 
 export default {
+  getPictureUrl,
   getNextRadio,
   showNotification
 };
