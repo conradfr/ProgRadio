@@ -118,7 +118,16 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-{% block javascripts %}{% endblock %}
+<script>
+  // makes the bootstrap navbar collapse on click on mobile
+  $(document).on('click','.navbar-collapse.in',function(e) {
+    if( $(e.target).is('a:not(".dropdown-toggle")') ) {
+      $(this).collapse('hide');
+    }
+  });
+</script>
+{% block javascripts %}
+{% endblock %}
 {% if app.environment == 'prod' %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ analytics }}"></script>
