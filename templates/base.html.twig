@@ -43,6 +43,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
+                <div class="menu-appstore-icon-main">
+                    <a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="Android app"></a>
+                </div>
+            {% endif %}
             <a class="navbar-brand" href="{{ path('app') }}#/schedule" onclick="scrollToCursor(this)">
                 <div class="navbar-brand-name">
                     <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios">Programmes Radio

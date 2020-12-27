@@ -30,8 +30,16 @@ const isLocalStorageFull = (e) => {
   return quotaExceeded;
 };
 
+const isLocalStorageEnabled = () => {
+  try {
+    return localStorage !== undefined;
+  } catch (e) {
+    return false;
+  }
+};
+
 const hasCache = (key) => {
-  if (localStorage !== undefined && localStorage[key] !== undefined) {
+  if (isLocalStorageEnabled() && localStorage[key] !== undefined) {
     const cached = JSON.parse(localStorage.getItem(key));
     if (Array.isArray(cached) || typeof cached === 'object') {
       return true;
@@ -44,7 +52,7 @@ const hasCache = (key) => {
 const getCache = key => JSON.parse(localStorage.getItem(key));
 
 const setCache = (key, data) => {
-  if (localStorage === undefined) {
+  if (isLocalStorageEnabled() === false) {
     return;
   }
 

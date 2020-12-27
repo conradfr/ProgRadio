@@ -40,7 +40,7 @@ export default {
           this.$router.push(currentPath);
         }
       }, false);
-    }*/
+    } */
   },
   methods: {
     /* eslint-disable func-names */

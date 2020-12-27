@@ -8,7 +8,8 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /*
- * This extract the Capistrano release version from the file path
+ * This extracts the Capistrano release version from the file path
+ * This allows to invalid assets cache after a new release
  */
 class ReleaseVersion extends AbstractExtension
 {
@@ -25,6 +26,6 @@ class ReleaseVersion extends AbstractExtension
     {
         preg_match('/releases\/(\d{1,})\/public/', $_SERVER['SCRIPT_FILENAME'], $matches);
 
-        return isset($matches[1]) ? $matches[1] : self::DEFAULT_VERSION;
+        return isset($matches[1]) ? $matches[1] : self::DEFAULT_VERSION . random_int(0, 2);
     }
 }
