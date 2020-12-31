@@ -85,12 +85,12 @@ export const GTAG_ACTION_PLAY = 'play';
 export const GTAG_ACTION_STOP = 'pause';
 export const GTAG_ACTION_TOGGLE_PLAY = 'toggle_play';
 
-export const GTAG_ACTION_PLAY_VALUE = 1;
-export const GTAG_ACTION_STOP_VALUE = 0.8;
-export const GTAG_ACTION_TOGGLE_PLAY_VALUE = 0.8;
+export const GTAG_ACTION_PLAY_VALUE = 3;
+export const GTAG_ACTION_STOP_VALUE = 1;
+export const GTAG_ACTION_TOGGLE_PLAY_VALUE = 2;
 
 export const GTAG_ACTION_FAVORITE_TOGGLE = 'favorite_toggle';
-export const GTAG_ACTION_FAVORITE_TOGGLE_VALUE = 0.7;
+export const GTAG_ACTION_FAVORITE_TOGGLE_VALUE = 2;
 
 // categories
 
@@ -98,13 +98,13 @@ export const GTAG_CATEGORY_SCHEDULE = 'schedule';
 export const GTAG_SCHEDULE_ACTION_CATEGORY_NAVIGATION = 'category_navigation';
 export const GTAG_SCHEDULE_CATEGORY_NAVIGATION_VALUE = 1;
 export const GTAG_SCHEDULE_ACTION_FILTER = 'filter';
-export const GTAG_SCHEDULE_FILTER_VALUE = 0.5;
+export const GTAG_SCHEDULE_FILTER_VALUE = 1;
 
 export const GTAG_CATEGORY_STREAMING = 'streaming';
 export const GTAG_STREAMING_ACTION_FILTER_COUNTRY = 'filter_country';
 export const GTAG_STREAMING_ACTION_FILTER_SORT = 'filter_sort';
 export const GTAG_ACTION_PLAY_RANDOM = 'play_random';
-export const GTAG_STREAMING_FILTER_VALUE = 0.5;
+export const GTAG_STREAMING_FILTER_VALUE = 1;
 
 export const GTAG_CATEGORY_PLAYER = 'player';
 
