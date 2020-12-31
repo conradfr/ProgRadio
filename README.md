@@ -1,7 +1,7 @@
 ProgRadio
 =========
 
-https://www.programmes-radio.io
+https://www.programmes-radio.com
 
 Dependencies
 --------------

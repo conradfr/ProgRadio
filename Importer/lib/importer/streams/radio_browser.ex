@@ -24,7 +24,7 @@ defmodule Importer.Processor.Streams.RadioBrowser do
     # ?limit=200&offset=7500
     HTTPoison.get!(
       "https://#{host}/json/#{@api_all_radios}",
-      [{"User-Agent", "programmes-radio.io"}],
+      [{"User-Agent", "programmes-radio.com"}],
       ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
     )
     |> Map.get(:body)

@@ -101,7 +101,7 @@ class SecurityController extends AbstractController
             $email = (new TemplatedEmail())
                 ->from(Address::fromString($from))
                 ->to($user->getEmail())
-                ->subject('Programmes-Radio.io - Inscription')
+                ->subject('Programmes-Radio.com - Inscription')
                 ->htmlTemplate('emails/signup.html.twig')
                 ->context([]);
 
@@ -150,7 +150,7 @@ class SecurityController extends AbstractController
                 $email = (new TemplatedEmail())
                     ->from(Address::fromString($from))
                     ->to($user->getEmail())
-                    ->subject('Programmes-Radio.io - Réinitialisation du mot de passe')
+                    ->subject('Programmes-Radio.com - Réinitialisation du mot de passe')
                     ->htmlTemplate('emails/reset.html.twig')
                     ->context(['token' => $user->getPasswordResetToken()]);
 

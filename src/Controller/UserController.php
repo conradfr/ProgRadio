@@ -84,7 +84,7 @@ class UserController extends AbstractBaseController
                 $email = (new TemplatedEmail())
                     ->from(Address::fromString($from))
                     ->to($user->getEmail())
-                    ->subject("Programmes-Radio.io - Modification de l'adresse email")
+                    ->subject("Programmes-Radio.com - Modification de l'adresse email")
                     ->htmlTemplate('emails/user_email_change_new.html.twig')
                     ->context(
                         [
@@ -99,7 +99,7 @@ class UserController extends AbstractBaseController
                 $email = (new TemplatedEmail())
                     ->from(Address::fromString($from))
                     ->to($userEmailChange->getEmail())
-                    ->subject("Programmes-Radio.io - Modification de l'adresse email")
+                    ->subject("Programmes-Radio.com - Modification de l'adresse email")
                     ->htmlTemplate('emails/user_email_change.html.twig')
                     ->context(
                         [
@@ -161,7 +161,7 @@ class UserController extends AbstractBaseController
             $email = (new TemplatedEmail())
                 ->from(Address::fromString($from))
                 ->to($user->getEmail())
-                ->subject("Programmes-Radio.io - Modification du mot de passe")
+                ->subject("Programmes-Radio.com - Modification du mot de passe")
                 ->htmlTemplate('emails/user_password_update.html.twig')
                 ->context(
                     [

@@ -45,7 +45,7 @@
             </button>
             {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
                 <div class="menu-appstore-icon-main">
-                    <a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="Android app"></a>
+                    <a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
                 </div>
             {% endif %}
             <a class="navbar-brand" href="{{ path('app') }}#/schedule" onclick="scrollToCursor(this)">
@@ -81,7 +81,7 @@
                         <li><a href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
                         <li><a href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="Android app"></div>Play Store</a></li>
+                        <li><a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

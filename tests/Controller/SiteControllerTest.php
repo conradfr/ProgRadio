@@ -16,8 +16,8 @@ class SiteControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertContains('Foire aux questions', $crawler->filter('h3')->text());
 
-        $this->assertContains('Qu\'est-ce que Programmes-radio.io ?', $crawler->filter('dt')->text());
-        $this->assertContains('Programmes-radio.io est un site indépendant centralisant les grilles de programmes de radios françaises et internationales.', $crawler->filter('dd')->text());
+        $this->assertContains('Qu\'est-ce que Programmes-Radio.com ?', $crawler->filter('dt')->text());
+        $this->assertContains('Programmes-Radio.com est un site indépendant centralisant les grilles de programmes de radios françaises et internationales.', $crawler->filter('dd')->text());
     }
 
     public function testSitemap()
