@@ -55,6 +55,7 @@ export default {
   computed: {
     ...mapState({
       playing: state => state.player.playing,
+      externalPlayer: state => state.player.externalPlayer,
       selectedCountry: state => state.streams.selectedCountry,
       favorites: state => state.streams.favorites
     }),
@@ -69,21 +70,25 @@ export default {
     playStop() {
       // stop if playing
       if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name) {
-        this.$gtag.event(config.GTAG_ACTION_STOP, {
-          event_category: config.GTAG_CATEGORY_STREAMING,
-          event_label: this.radio.code_name,
-          value: config.GTAG_ACTION_STOP_VALUE
-        });
+        if (this.externalPlayer === false) {
+          this.$gtag.event(config.GTAG_ACTION_STOP, {
+            event_category: config.GTAG_CATEGORY_STREAMING,
+            event_label: this.radio.code_name,
+            value: config.GTAG_ACTION_STOP_VALUE
+          });
+        }
 
         this.$store.dispatch('stop');
         return;
       }
 
-      this.$gtag.event(config.GTAG_ACTION_PLAY, {
-        event_category: config.GTAG_CATEGORY_STREAMING,
-        event_label: this.radio.code_name,
-        value: config.GTAG_ACTION_PLAY_VALUE
-      });
+      if (this.externalPlayer === false) {
+        this.$gtag.event(config.GTAG_ACTION_PLAY, {
+          event_category: config.GTAG_CATEGORY_STREAMING,
+          event_label: this.radio.code_name,
+          value: config.GTAG_ACTION_PLAY_VALUE
+        });
+      }
 
       this.$store.dispatch('playStream', this.radio);
     },

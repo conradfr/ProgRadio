@@ -165,10 +165,12 @@ export default {
       );
     },
     togglePlay() {
-      this.$gtag.event(config.GTAG_ACTION_TOGGLE_PLAY, {
-        event_category: config.GTAG_CATEGORY_PLAYER,
-        value: config.GTAG_ACTION_TOGGLE_PLAY_VALUE
-      });
+      if (this.player.externalPlayer === false) {
+        this.$gtag.event(config.GTAG_ACTION_TOGGLE_PLAY, {
+          event_category: config.GTAG_CATEGORY_PLAYER,
+          value: config.GTAG_ACTION_TOGGLE_PLAY_VALUE
+        });
+      }
 
       this.$store.dispatch('togglePlay');
     },

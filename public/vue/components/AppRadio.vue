@@ -157,22 +157,26 @@ export default {
   methods: {
     play() {
       if (this.radio.streaming_enabled === true) {
-        this.$gtag.event(GTAG_ACTION_PLAY, {
-          event_category: GTAG_CATEGORY_RADIOPAGE,
-          event_label: this.radio.code_name,
-          value: GTAG_ACTION_PLAY_VALUE
-        });
+        if (this.player.externalPlayer === false) {
+          this.$gtag.event(GTAG_ACTION_PLAY, {
+            event_category: GTAG_CATEGORY_RADIOPAGE,
+            event_label: this.radio.code_name,
+            value: GTAG_ACTION_PLAY_VALUE
+          });
+        }
 
         this.$store.dispatch('play', this.radio.code_name);
       }
     },
     stop() {
       if (this.radio.streaming_enabled === true) {
-        this.$gtag.event(GTAG_ACTION_STOP, {
-          event_category: GTAG_CATEGORY_RADIOPAGE,
-          event_label: this.radio.code_name,
-          value: GTAG_ACTION_STOP_VALUE
-        });
+        if (this.player.externalPlayer === false) {
+          this.$gtag.event(GTAG_ACTION_STOP, {
+            event_category: GTAG_CATEGORY_RADIOPAGE,
+            event_label: this.radio.code_name,
+            value: GTAG_ACTION_STOP_VALUE
+          });
+        }
 
         this.$store.dispatch('stop');
       }

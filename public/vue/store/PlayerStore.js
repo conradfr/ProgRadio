@@ -107,7 +107,7 @@ const storeActions = {
     commit('setFocus', params);
   },
   /* From Android app */
-  updateStatusFromExternalPlayer: ({ rootState, commit }, params) => {
+  updateStatusFromExternalPlayer: ({ rootState, rootGetters, commit }, params) => {
     const { playbackState, radioCodeName } = params;
 
     const parse = () => {
@@ -119,7 +119,7 @@ const storeActions = {
       if (radio === undefined) {
         radio = find(rootState.streams.streamRadios, { code_name: radioCodeName });
       } else {
-        show = rootState.schedule.getters.currentShowOnRadio(radio.CodeName);
+        show = rootGetters.currentShowOnRadio(radio.CodeName);
       }
 
       if (radio !== undefined /* && radio.streaming_enabled === true */

@@ -54,7 +54,8 @@ export default {
   },
   computed: {
     ...mapState({
-      playing: state => state.player.playing
+      playing: state => state.player.playing,
+      externalPlayer: state => state.player.externalPlayer
     }),
     ...mapGetters([
       'radioPlayingCodeName',
@@ -67,22 +68,26 @@ export default {
     playStop() {
       // stop if playing
       if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name) {
-        this.$gtag.event(GTAG_ACTION_STOP, {
-          event_category: GTAG_CATEGORY_SCHEDULE,
-          event_label: this.radio.code_name,
-          value: GTAG_ACTION_STOP_VALUE
-        });
+        if (this.externalPlayer === false) {
+          this.$gtag.event(GTAG_ACTION_STOP, {
+            event_category: GTAG_CATEGORY_SCHEDULE,
+            event_label: this.radio.code_name,
+            value: GTAG_ACTION_STOP_VALUE
+          });
+        }
 
         this.$store.dispatch('stop');
         return;
       }
 
       if (this.radio.streaming_enabled === true) {
-        this.$gtag.event(GTAG_ACTION_PLAY, {
-          event_category: GTAG_CATEGORY_SCHEDULE,
-          event_label: this.radio.code_name,
-          value: GTAG_ACTION_PLAY_VALUE
-        });
+        if (this.externalPlayer === false) {
+          this.$gtag.event(GTAG_ACTION_PLAY, {
+            event_category: GTAG_CATEGORY_SCHEDULE,
+            event_label: this.radio.code_name,
+            value: GTAG_ACTION_PLAY_VALUE
+          });
+        }
 
         this.$store.dispatch('play', this.radio.code_name);
       }
