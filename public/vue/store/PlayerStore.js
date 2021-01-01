@@ -112,16 +112,19 @@ const storeActions = {
 
     const parse = () => {
       let radio = find(rootState.schedule.radios, { code_name: radioCodeName });
+      let show = null;
 
       // if not radio, maybe stream
       // @todo better handling of both types
       if (radio === undefined) {
         radio = find(rootState.streams.streamRadios, { code_name: radioCodeName });
+      } else {
+        show = rootState.schedule.getters.currentShowOnRadio(radio.CodeName);
       }
 
       if (radio !== undefined /* && radio.streaming_enabled === true */
         && config.PLAYER_STATE.indexOf(playbackState) !== -1) {
-        commit('updatePlayingStatus', { radio, playbackState });
+        commit('updatePlayingStatus', { radio, show, playbackState });
       }
     };
 
@@ -165,15 +168,15 @@ const storeMutations = {
     const prevRadioCodeName = state.radio === null ? null : state.radio.code_name;
     const prevShowHash = state.show === null ? null : state.show.hash;
 
-    if (radio !== null && state.externalPlayer === true) {
-      AndroidApi.play(radio, show);
-      // return;
-    }
-
     if ((radio !== null && prevRadioCodeName === radio.code_name)
       && ((show !== null && prevShowHash === show.hash)
         || (prevShowHash === null && show === null))) {
       return;
+    }
+
+    if (radio !== null && state.externalPlayer === true) {
+      AndroidApi.play(radio, show);
+      // return;
     }
 
     state.radio = null;
