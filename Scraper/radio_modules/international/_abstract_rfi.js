@@ -31,7 +31,7 @@ const format = (dateObj, name) => {
 const fetch = (dateObj, name, url) => {
   dateObj.locale('fr');
 
-  logger.log('info', `fetching ${url})`);
+  logger.log('info', `fetching ${url}`);
 
   return new Promise(function (resolve, reject) {
     return osmosis

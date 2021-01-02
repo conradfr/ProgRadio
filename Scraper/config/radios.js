@@ -74,7 +74,7 @@ const radios = {
           'francebleu_touraine',
           'francebleu_vaucluse',
       ],
-    'lesindes':
+    'regional':
       [
           'africaradio',
           'alouette',
@@ -102,7 +102,13 @@ const radios = {
         'rfi_monde',
         'rfi_afrique',
         'lessentielradio'
-      ]
+      ],
+  'domtom':
+    [
+      'martinique_la1ere',
+      'guadeloupe_la1ere',
+      'reunion_la1ere',
+    ]
 };
 
 const radiosModule = {
