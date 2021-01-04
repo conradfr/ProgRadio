@@ -41,6 +41,9 @@ const initState = {
   radioBrowserApi: Vue.cookie.get(config.COOKIE_STREAM_RADIOBROWSER_API)
     ? Vue.cookie.get(config.COOKIE_STREAM_RADIOBROWSER_API) : null,
   sortBy: sortBySelect,
+  searchActive: false,
+  searchText: null,
+  searchLastTimestamp: 0,
   total: 0,
   page: 1
 };
@@ -88,12 +91,12 @@ const storeActions = {
     Vue.nextTick(() => {
       StreamsApi.getCountries()
         .then(countries => commit('updateCountries', countries))
-        .then(() => commit('setLoading', false, { root: true }))
         .then(() => {
           if (state.selectedCountry.label === null) {
             dispatch('countrySelection', state.selectedCountry.code);
           }
-        });
+        })
+        .finally(() => commit('setLoading', false, { root: true }));
     });
   },
   getFavorites: ({ commit }) => {
@@ -105,15 +108,33 @@ const storeActions = {
       // .then(() => commit('setLoading', false, { root: true }));
     });
   },
-  getStreamRadios: ({ state, commit }) => {
+  getStreamRadios: ({ state, commit }, text) => {
     commit('setLoading', true, { root: true });
 
     const offset = (state.page - 1) * STREAMS_DEFAULT_PER_PAGE;
 
+    if (text !== undefined && text !== null && text.trim() !== '') {
+      commit('setSearchText', text);
+
+      Vue.nextTick(() => {
+        StreamsApi.searchRadios(state.searchText, state.selectedCountry.code,
+          state.selectedSortBy.code, offset)
+          .then((data) => {
+            if (data.timestamp > state.searchLastTimestamp) {
+              commit('setSearchLastTimestamp', data.timestamp);
+              commit('updateStreamRadios', data);
+            }
+          })
+          .finally(() => commit('setLoading', false, { root: true }));
+      });
+
+      return;
+    }
+
     Vue.nextTick(() => {
       StreamsApi.getRadios(state.selectedCountry.code, state.selectedSortBy.code, offset)
         .then(data => commit('updateStreamRadios', data))
-        .then(() => commit('setLoading', false, { root: true }));
+        .finally(() => commit('setLoading', false, { root: true }));
     });
   },
   /* eslint-disable no-param-reassign */
@@ -159,12 +180,23 @@ const storeActions = {
     Vue.nextTick(() => {
       StreamsApi.getRandom(state.selectedCountry.code)
         .then(data => dispatch('playStream', data))
-        .then(() => commit('setLoading', false, { root: true }));
+        .finally(() => commit('setLoading', false, { root: true }));
     });
   },
   toggleStreamFavorite: ({ commit }, stream) => {
     commit('toggleStreamFavorite', stream);
   },
+  setSearchActive: ({ commit, dispatch }, status) => {
+    commit('setSearchActive', status);
+
+    if (status === false) {
+      commit('setSearchText', null);
+
+      Vue.nextTick(() => {
+        dispatch('getStreamRadios');
+      });
+    }
+  }
 };
 
 // mutations
@@ -195,6 +227,15 @@ const storeMutations = {
   },
   setPage: (state, value) => {
     Vue.set(state, 'page', value);
+  },
+  setSearchActive: (state, status) => {
+    Vue.set(state, 'searchActive', status);
+  },
+  setSearchText: (state, value) => {
+    Vue.set(state, 'searchText', value);
+  },
+  setSearchLastTimestamp: (state, value) => {
+    Vue.set(state, 'searchLastTimestamp', value);
   },
   toggleStreamFavorite(state, streamId) {
     const { favorites } = state;

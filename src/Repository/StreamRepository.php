@@ -35,7 +35,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.votes, s.clicksLast24h as clicks_last_24h, 'stream' as type")
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type")
             ->from(Stream::class, 's')
             ->setMaxResults($limit);
 
@@ -69,7 +69,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addOrderBy('s.name', 'ASC');
                     break;
                 case 'popularity':
-                    $qb->addOrderBy('s.votes', 'DESC');
+                    $qb->addOrderBy('s.clicksLast24h', 'DESC');
                     break;
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
@@ -77,7 +77,72 @@ class StreamRepository extends ServiceEntityRepository
             }
         }
 
-        $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+        if ($sort !== 'random') {
+            $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function searchStreams(
+        string $text,
+        int $limit = null,
+        int $offset = null,
+        string $countryOrCategory = null,
+        string $sort = null,
+        array $favoritesFromCookies = []
+    ): array {
+        $user = $this->security->getUser();
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type")
+            ->from(Stream::class, 's')
+            ->where('ILIKE(s.name, :text) = true')
+            ->setMaxResults($limit)
+            ->setParameter('text', '%' . $text . '%');
+
+        if ($offset !== null) {
+            $qb->setFirstResult($offset);
+        }
+
+        if ($countryOrCategory !== null) {
+            if ($countryOrCategory === Stream::FAVORITES) {
+                if ($user !== null) {
+                    $favorites = $user->getFavoriteStreams()->map(
+                        function ($stream) {
+                            return $stream->getId();
+                        }
+                    )->toArray();
+                } else {
+                    $favorites = $favoritesFromCookies;
+                }
+
+                $qb->andWhere('s.id IN (:favorites)')
+                   ->setParameter('favorites', $favorites);
+            } else {
+                $qb->andWhere('s.countryCode = :country')
+                   ->setParameter('country', strtoupper($countryOrCategory));
+            }
+        }
+
+        if ($sort !== null) {
+            switch ($sort) {
+                case 'name':
+                    $qb->addOrderBy('s.name', 'ASC');
+                    break;
+                case 'popularity':
+                    $qb->addOrderBy('s.clicksLast24h', 'DESC');
+                    break;
+                case 'random':
+                    $qb->addOrderBy('RANDOM()');
+                    break;
+            }
+        }
+
+        if ($sort !== 'random') {
+            $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+        }
 
         return $qb->getQuery()->getResult();
     }
@@ -99,7 +164,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.votes, s.clicksLast24h as clicks_last_24h')
+        $qb->select('s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h')
             ->from(Stream::class, 's')
             ->addOrderBy('s.name', 'ASC')
             ->setFirstResult($offset)
@@ -163,6 +228,51 @@ class StreamRepository extends ServiceEntityRepository
                     ->setParameter('favorites', $favorites);
             } else {
                 $qb->where('s.countryCode = :country')
+                    ->setParameter('country', strtoupper($countryOrCategory));
+            }
+        }
+
+        if ($language !== null) {
+            $qb->andWhere('s.language = :language')
+                ->setParameter('language', $language);
+        }
+
+        $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function countSearchStreams(
+        string $text,
+        string $countryOrCategory = null,
+        string $language = null,
+        array $favoritesFromCookies = []
+    ): int {
+        $user = $this->security->getUser();
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('count(s.id)')
+            ->from(Stream::class, 's')
+            ->where('ILIKE(s.name, :text) = true')
+            ->setParameter('text', '%' . $text . '%');
+
+        if ($countryOrCategory !== null) {
+            if ($countryOrCategory === Stream::FAVORITES) {
+                if ($user !== null) {
+                    $favorites = $user->getFavoriteStreams()->map(
+                        function ($stream) {
+                            return $stream->getId();
+                        }
+                    )->toArray();
+                } else {
+                    $favorites = $favoritesFromCookies;
+                }
+
+                $qb->andWhere('s.id IN (:favorites)')
+                    ->setParameter('favorites', $favorites);
+            } else {
+                $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
         }

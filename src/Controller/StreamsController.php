@@ -9,12 +9,11 @@ use App\Entity\User;
 use App\Service\RadioBrowser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/streams")
@@ -43,6 +42,37 @@ class StreamsController  extends AbstractBaseController
         return $this->jsonResponse([
                 'streams' => $streams,
                 'total'   => $totalCount,
+            ]
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/search",
+     *     name="streams_radios_search",
+     * )
+     */
+    public function search(EntityManagerInterface $em, Request $request): Response
+    {
+        $text = (string) $request->query->get('text');
+
+        if ($text === null) {
+            throw new BadRequestHttpException('no text');
+        }
+
+        $favorites = $request->attributes->get('favoritesStream', []);
+        $howMany = (int) $request->query->get('limit', self::DEFAULT_RESULTS);
+        $offset = (int) $request->query->get('offset', 0);
+        $country = $request->query->get('country', null);
+        $sort = $request->query->get('sort', null);
+
+        $streams = $em->getRepository(Stream::class)->searchStreams(trim($text), $howMany, $offset, $country, $sort, $favorites);
+        $totalCount = $em->getRepository(Stream::class)->countSearchStreams(trim($text), $country, null, $favorites);
+
+        return $this->jsonResponse([
+                'streams' => $streams,
+                'total'   => $totalCount,
+                'timestamp' => time()
             ]
         );
     }

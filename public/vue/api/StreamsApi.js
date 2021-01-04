@@ -25,6 +25,32 @@ const getRadios = (country, sort, offset) => {
     });
 };
 
+const searchRadios = (text, country, sort, offset) => {
+  const queryParamsList = [];
+  if (text !== undefined && text !== null && text !== '') {
+    queryParamsList.push(`text=${encodeURIComponent(text)}`);
+  } else {
+    return getRadios(country, sort, offset);
+  }
+
+  if (country !== null && country !== STREAMING_CATEGORY_ALL) {
+    queryParamsList.push(`country=${country}`);
+  }
+
+  if (sort !== null) {
+    queryParamsList.push(`sort=${sort}`);
+  }
+
+  if (offset !== null) {
+    queryParamsList.push(`offset=${offset}`);
+  }
+
+  return axios.get(`/streams/search?${queryParamsList.join('&')}`)
+    .then((response) => {
+      return response.data;
+    });
+};
+
 const getRandom = (country) => {
   const queryParamsList = [];
   if (country !== null && country !== STREAMING_CATEGORY_ALL) {
@@ -80,6 +106,7 @@ export default {
   getRandom,
   getCountries,
   getFavorites,
+  searchRadios,
   incrementPlayCount,
   toggleFavoriteStream
 };

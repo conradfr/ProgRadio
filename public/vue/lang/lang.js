@@ -41,8 +41,9 @@ export const messages = {
           all_countries: 'Tous les pays',
           favorites: 'Favoris',
         },
-        no_results: 'Aucunes radios',
+        no_results: 'Aucune radio',
         random: 'Jouer une radio au hasard',
+        search_placeholder: 'Chercher par nom ...',
         sort: {
           name: 'Par ordre alphabétique',
           popularity: 'Par popularité',
@@ -84,6 +85,7 @@ export const messages = {
         },
         no_results: 'No radio',
         random: 'Play a random radio',
+        search_placeholder: 'Search by name ...',
         sort: {
           name: 'By alphabetical order',
           popularity: 'By popularity',

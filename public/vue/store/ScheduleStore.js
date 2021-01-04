@@ -197,7 +197,7 @@ const storeActions = {
             commit('updateCollections', collections);
             commit('updateCategories', categories);
           })
-          .then(() => commit('setLoading', false, { root: true }));
+          .finally(() => commit('setLoading', false, { root: true }));
       },
       30
     );
@@ -221,7 +221,7 @@ const storeActions = {
         () => {
           ScheduleApi.getSchedule(dateStr, params)
             .then(schedule => commit('updateSchedule', schedule))
-            .then(() => commit('setLoading', false, { root: true }))
+            .finally(() => commit('setLoading', false, { root: true }))
             .then(() => {
             /*              setTimeout(
                 () => {
@@ -243,7 +243,7 @@ const storeActions = {
         () => {
           ScheduleApi.getSchedule(dateStr)
             .then(schedule => commit('updateSchedule', schedule))
-            .then(() => commit('setLoading', false, { root: true }));
+            .finally(() => commit('setLoading', false, { root: true }));
         },
         1000
       );

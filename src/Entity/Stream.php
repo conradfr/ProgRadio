@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StreamRepository")
- * @ORM\Table()
+ * @ORM\Table(name="`stream`", indexes={@ORM\Index(name="name_idx", columns={"name"}), @ORM\Index(name="click24_idx", columns={"clicks_last_24h"}), @ORM\Index(name="country_code_idx", columns={"country_code"})})
  */
 class Stream
 {
