@@ -140,6 +140,34 @@ const format = (dateObj, dayWanted, name) => {
         }
 
         timeMatched = true;
+
+        regexp = new RegExp(/\spuis\s([0-9]{1,2})[h|H]([0-9]{0,2})\sà(.*)/);
+        matchTimeMultiple = entry2.match(regexp);
+        if (matchTimeMultiple !== null) {
+          isMultiple = true;
+          matchTime[5] = matchTimeMultiple[1];
+          if (matchTimeMultiple.length === 3) {
+            matchTime[6] = 0;
+          } else {
+            matchTime[6] = matchTimeMultiple[2];
+          }
+
+          const restOfText = matchTimeMultiple.length === 3 ? matchTimeMultiple[2] : matchTimeMultiple[3];
+          regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})/);
+          matchTimeMultiple = restOfText.match(regexp);
+
+          // should not be null
+          if (matchTimeMultiple !== null) {
+            matchTime[7] = matchTimeMultiple[1];
+
+            if (matchTimeSupp.length === 2) {
+              matchTime[8] = 0;
+            } else {
+              matchTime[8] = matchTimeMultiple[2];
+            }
+          }
+        }
+
         break;
       }
 
@@ -262,6 +290,24 @@ const format = (dateObj, dayWanted, name) => {
       }
     } else {
       prev['shows'].push(newEntry);
+
+      if (isMultiple === true) {
+        const newEntryCopy = Object.assign({}, newEntry);
+        const startDateTime2 = moment(curr.dateObj);
+        startDateTime2.tz(dateObj.tz());
+        startDateTime2.hour(matchTime[5]);
+        startDateTime2.minute(matchTime[6]);
+        startDateTime2.second(0);
+        newEntryCopy.date_time_start = startDateTime2.toISOString();
+
+        const endDateTime2 = moment(curr.dateObj);
+        endDateTime2.tz(dateObj.tz());
+        endDateTime2.hour(matchTime[7]);
+        endDateTime2.minute(matchTime[8]);
+        endDateTime2.second(0);
+        newEntryCopy.date_time_end = endDateTime2.toISOString();
+        prev['shows'].push(newEntryCopy);
+      }
     }
 
     return prev;
