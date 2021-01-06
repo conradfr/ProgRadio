@@ -22,8 +22,8 @@ import ScheduleUtils from '../../utils/ScheduleUtils';
 
 import {
   GTAG_CATEGORY_SCHEDULE,
-  GTAG_SCHEDULE_ACTION_CATEGORY_NAVIGATION,
-  GTAG_SCHEDULE_CATEGORY_NAVIGATION_VALUE
+  GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION,
+  GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
 } from '../../config/config';
 
 export default {
@@ -41,17 +41,17 @@ export default {
   },
   methods: {
     clickCollectionBackward() {
-      this.$gtag.event(GTAG_SCHEDULE_ACTION_CATEGORY_NAVIGATION, {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
         event_category: GTAG_CATEGORY_SCHEDULE,
-        value: GTAG_SCHEDULE_CATEGORY_NAVIGATION_VALUE
+        value: GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
       });
 
       this.$store.dispatch('collectionBackward');
     },
     clickCollectionForward() {
-      this.$gtag.event(GTAG_SCHEDULE_ACTION_CATEGORY_NAVIGATION, {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
         event_category: GTAG_CATEGORY_SCHEDULE,
-        value: GTAG_SCHEDULE_CATEGORY_NAVIGATION_VALUE
+        value: GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
       });
 
       this.$store.dispatch('collectionForward');

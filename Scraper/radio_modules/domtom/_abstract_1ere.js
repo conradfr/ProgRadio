@@ -1,8 +1,6 @@
 const osmosis = require('osmosis');
 const moment = require('moment-timezone');
 const mm = require('music-metadata');
-const util = require('util');
-const https = require('https');
 const logger = require('../../lib/logger.js');
 const node_fetch = require('node-fetch');
 

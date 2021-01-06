@@ -87,7 +87,8 @@ const radios = {
           'voltage',
           'generations',
           'forum',
-          'hitwest'
+          'hitwest',
+          'bfmbusiness'
       ],
     'international':
       [
@@ -108,6 +109,7 @@ const radios = {
       'martinique_la1ere',
       'guadeloupe_la1ere',
       'reunion_la1ere',
+      'nrj_antilles',
     ]
 };
 

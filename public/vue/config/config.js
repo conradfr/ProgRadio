@@ -5,7 +5,7 @@ export const GRID_VIEW_EXTRA_LEFT = 76;
 
 export const GRID_INDEX_BREAK = 768;
 export const NAV_MOVE_BY = 60 * MINUTE_PIXEL;
-export const TICK_INTERVAL = 30000; /* one minute in ms */
+export const TICK_INTERVAL = 30000; /* ms */
 
 export const THUMBNAIL_PROGRAM_PATH = '/media/cache/program_thumb/media/program/';
 export const THUMBNAIL_PAGE_PROGRAM_PATH = '/media/cache/page_thumb/media/program/';
@@ -42,17 +42,17 @@ export const COOKIE_PARAMS = { expires: COOKIE_TTL, secure: true, samesite: 'Lax
 export const TIMEZONE = 'Europe/Paris';
 
 export const TOAST_POSITION = 'top-right';
-export const TOAST_DURATION = 3000; // ms
+export const TOAST_DURATION = 3000; /* ms */
 export const TOAST_ERROR_COLOR = 'error';
 
 export const PLAYER_NOTIFICATION_ID = 'progradio-play';
-export const PLAYER_NOTIFICATION_LENGTH = 3000; // ms
+export const PLAYER_NOTIFICATION_LENGTH = 3000; /* ms */
 
 export const PLAYER_TYPE_RADIO = 'radio';
 export const PLAYER_TYPE_STREAM = 'stream';
 
-export const PLAYER_TYPE_CHECK_INTERVAL = 2500; // ms
-export const PLAYER_TYPE_CHECK_TIMEOUT = 7000; // ms
+export const PLAYER_TYPE_CHECK_INTERVAL = 2500; /* ms */
+export const PLAYER_TYPE_CHECK_TIMEOUT = 7000; /* ms */
 
 export const AUTOPLAY_INTERVAL_CHECK = 100;
 export const AUTOPLAY_INTERVAL_MAX_RETRIES = 50;
@@ -95,8 +95,8 @@ export const GTAG_ACTION_FAVORITE_TOGGLE_VALUE = 2;
 // categories
 
 export const GTAG_CATEGORY_SCHEDULE = 'schedule';
-export const GTAG_SCHEDULE_ACTION_CATEGORY_NAVIGATION = 'category_navigation';
-export const GTAG_SCHEDULE_CATEGORY_NAVIGATION_VALUE = 1;
+export const GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION = 'collection_navigation';
+export const GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE = 1;
 export const GTAG_SCHEDULE_ACTION_FILTER = 'filter';
 export const GTAG_SCHEDULE_FILTER_VALUE = 1;
 
