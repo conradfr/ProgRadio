@@ -367,8 +367,6 @@ const format = dateObj => {
     }
   }
 
-  console.log(finalShows);
-
   return Promise.resolve(finalShows);
 };
 

@@ -95,7 +95,7 @@ export default {
     flagClick() {
       this.$gtag.event(config.GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
         event_category: config.GTAG_CATEGORY_STREAMING,
-        event_label: this.radio.country_code.lowerCase(),
+        event_label: this.radio.country_code.toLowerCase(),
         value: config.GTAG_STREAMING_FILTER_VALUE
       });
 
