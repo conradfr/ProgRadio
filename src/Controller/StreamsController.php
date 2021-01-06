@@ -72,7 +72,7 @@ class StreamsController  extends AbstractBaseController
         return $this->jsonResponse([
                 'streams' => $streams,
                 'total'   => $totalCount,
-                'timestamp' => time()
+                'timestamp' => microtime(true)
             ]
         );
     }
