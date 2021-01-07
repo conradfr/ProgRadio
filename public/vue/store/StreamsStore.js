@@ -108,14 +108,12 @@ const storeActions = {
       // .then(() => commit('setLoading', false, { root: true }));
     });
   },
-  getStreamRadios: ({ state, commit }, text) => {
+  getStreamRadios: ({ state, commit }) => {
     commit('setLoading', true, { root: true });
 
     const offset = (state.page - 1) * STREAMS_DEFAULT_PER_PAGE;
 
-    if (text !== undefined && text !== null && text.trim() !== '') {
-      commit('setSearchText', text);
-
+    if (state.searchActive === true && state.searchText !== null) {
       Vue.nextTick(() => {
         StreamsApi.searchRadios(state.searchText, state.selectedCountry.code,
           state.selectedSortBy.code, offset)
@@ -186,15 +184,26 @@ const storeActions = {
   toggleStreamFavorite: ({ commit }, stream) => {
     commit('toggleStreamFavorite', stream);
   },
-  setSearchActive: ({ commit, dispatch }, status) => {
+  setSearchActive: ({ state, commit, dispatch }, status) => {
     commit('setSearchActive', status);
 
     if (status === false) {
+      const oldText = state.searchText;
+
       commit('setSearchText', null);
 
-      Vue.nextTick(() => {
-        dispatch('getStreamRadios');
-      });
+      if (oldText !== null && oldText !== '') {
+        Vue.nextTick(() => {
+          dispatch('getStreamRadios');
+        });
+      }
+    }
+  },
+  setSearchText: ({ commit }, text) => {
+    if (text !== null && text.trim() !== '') {
+      commit('setSearchText', text);
+    } else {
+      commit('setSearchText', null);
     }
   }
 };

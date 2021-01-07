@@ -123,7 +123,12 @@ export default {
       }
     },
     searchTextChange(event) {
-      this.$store.dispatch('getStreamRadios', event.target.value);
+      this.$store.dispatch('setSearchText', event.target.value)
+        .then(() => {
+          Vue.nextTick(() => {
+            this.$store.dispatch('getStreamRadios');
+          });
+        });
     },
     countryChange(country) {
       this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
