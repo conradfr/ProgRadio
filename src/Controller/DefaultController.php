@@ -102,10 +102,17 @@ class DefaultController extends AbstractBaseController
             throw new NotFoundHttpException('Radio not found');
         }
 
-        $schedule = $scheduleManager->getDayScheduleOfRadio($dateTime, $codename)[$codename];
+        $schedule = $scheduleManager->getDayScheduleOfRadio($dateTime, $codename);
+        $scheduleRadio = [];
+
+        if (isset($schedule[$codename])) {
+            $scheduleRadio =$schedule[$codename];
+        }
+
+        //$schedule = $scheduleManager->getDayScheduleOfRadio($dateTime, $codename);
 
         return $this->render('default/radio.html.twig', [
-            'schedule' => $schedule,
+            'schedule' => $scheduleRadio,
             'radio' => $radio,
             'date' => $dateTime
         ]);

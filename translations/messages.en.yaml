@@ -34,9 +34,11 @@ page:
         title: 'Currently on the radio'
 
     radio:
-        play: 'Listen to %radio%'
         back: '← Back to radio guide'
+        description: 'Day schedule of radio %radio% !'
         no_schedule: 'Schedule not available'
+        play: 'Listen to %radio%'
+        title: 'Listen to %radio%'
 
     faq:
         page_title: 'FAQ - Radio shows in France'

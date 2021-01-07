@@ -37,9 +37,11 @@ page:
         title: 'En ce moment à la radio'
 
     radio:
-        play: 'Ecouter %radio%'
         back: '← Retourner à la grille complète des programmes'
+        description: 'Le programme du jour de la radio %radio% !'
         no_schedule: 'Programmes non disponibles.'
+        play: 'Ecouter %radio%'
+        title: 'Ecouter %radio% - Grille des programmes'
 
     faq:
         title: 'Foire aux questions'

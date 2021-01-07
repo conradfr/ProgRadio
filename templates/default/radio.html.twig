@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}La grille des programmes de {{ radio.name }}{% endblock %}
-{% block description %}Le programme du jour de la radio {{ radio.name }} !{% endblock %}
+{% block title %}{{ 'page.radio.title'|trans({'%radio%': radio.name}) }}{% endblock %}
+{% block description %}{{ 'page.radio.description'|trans({'%radio%': radio.name}) }}{% endblock %}
 
 {% block body %}
 <div class="container schedule-page" id="schedule-day">
