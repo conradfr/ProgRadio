@@ -72,6 +72,8 @@
     }
 
     .streams-one-name {
+      position: relative;
+
       height: 75px;
       //line-height: 60px;
       overflow-y: hidden;
@@ -82,6 +84,25 @@
 
       padding-left: 10px;
       padding-right: 10px;
+
+
+      .streams-one-tags {
+        position: absolute;
+        bottom: 5px;
+        width: 90%;
+        text-align: center;
+        display: none;
+        overflow: hidden;
+
+        .label {
+          margin: 0 1px;
+
+          &.label-inverse {
+            color: @gray-light;
+            border: 1px solid @gray-light;
+          }
+        }
+      }
     }
 
     .streams-one-img-play {
@@ -91,6 +112,10 @@
 
     &:hover {
       .streams-one-fav {
+        display: block;
+      }
+
+      .streams-one-tags {
         display: block;
       }
     }

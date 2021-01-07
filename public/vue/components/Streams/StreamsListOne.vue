@@ -7,7 +7,14 @@
     <div class="streams-one-img" :style="styleObject" v-on:click="playStop">
       <div class="streams-one-img-play"></div>
     </div>
-    <div class="streams-one-name" :title="radio.name" v-on:click="playStop">{{ radio.name }}
+    <div class="streams-one-name" :title="radio.name" v-on:click="playStop" v-once>
+      {{ radio.name }}
+      <div v-if="radio.tags" class="streams-one-tags" v-once>
+        <span class="label label-inverse"
+          v-for="tag in tags()" :key="tag">
+          {{ tag }}
+        </span>
+      </div>
     </div>
     <div class="streams-one-fav" :class="{ 'streams-one-fav-isfavorite': isFavorite() }"
          v-on:click.stop="toggleFavorite">
@@ -109,6 +116,13 @@ export default {
       });
 
       this.$store.dispatch('toggleFavorite', this.radio);
+    },
+    tags() {
+      if (this.radio.tags === undefined || this.radio.tags === null) {
+        return [];
+      }
+
+      return [...new Set(this.radio.tags.split(','))];
     }
   }
 };

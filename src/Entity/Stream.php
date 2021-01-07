@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StreamRepository")
- * @ORM\Table(name="`stream`", indexes={@ORM\Index(name="name_idx", columns={"name"}), @ORM\Index(name="click24_idx", columns={"clicks_last_24h"}), @ORM\Index(name="country_code_idx", columns={"country_code"})})
+ * @ORM\Table(name="`stream`", indexes={@ORM\Index(name="name_idx", columns={"name"}), @ORM\Index(name="click24_idx", columns={"clicks_last_24h"}), @ORM\Index(name="country_code_idx", columns={"country_code"}), @ORM\Index(name="stream_tags_idx", columns={"tags"})})
  */
 class Stream
 {
@@ -43,6 +43,13 @@ class Stream
      * @ORM\Column(type="string", length=500)
      */
     private $streamUrl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=500, nullable=true)
+     */
+    private $tags;
 
     /**
      * @var string
@@ -110,6 +117,16 @@ class Stream
     public function setStreamUrl(string $streamUrl): void
     {
         $this->streamUrl = $streamUrl;
+    }
+
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(string $tags=null): void
+    {
+        $this->tags = $tags;
     }
 
     public function getCountryCode(): string

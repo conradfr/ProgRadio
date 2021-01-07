@@ -10,6 +10,7 @@ defmodule Importer.Stream do
     field(:name, :string)
     field(:img, :string)
     field(:stream_url, :string)
+    field(:tags, :string)
     field(:country_code, :string)
     field(:language, :string)
     field(:votes, :integer, default: 0)
@@ -23,6 +24,7 @@ defmodule Importer.Stream do
       :name,
       :img,
       :stream_url,
+      :tags,
       :country_code,
       :language,
       :votes,

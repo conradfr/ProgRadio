@@ -43,7 +43,7 @@ export const messages = {
         },
         no_results: 'Aucune radio',
         random: 'Jouer une radio au hasard',
-        search_placeholder: 'Chercher par nom ...',
+        search_placeholder: 'Chercher par nom, style, contenu ...',
         sort: {
           name: 'Par ordre alphabétique',
           popularity: 'Par popularité',
@@ -85,7 +85,7 @@ export const messages = {
         },
         no_results: 'No radio',
         random: 'Play a random radio',
-        search_placeholder: 'Search by name ...',
+        search_placeholder: 'Search by name, style, content ...',
         sort: {
           name: 'By alphabetical order',
           popularity: 'By popularity',

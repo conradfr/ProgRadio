@@ -35,7 +35,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type")
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type")
             ->from(Stream::class, 's')
             ->setMaxResults($limit);
 
@@ -96,9 +96,10 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type")
+        $qb->select("s.id as code_name, s.name, s.img, s.tags, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type")
             ->from(Stream::class, 's')
             ->where('ILIKE(s.name, :text) = true')
+            ->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
             ->setParameter('text', '%' . $text . '%');
 
@@ -119,10 +120,10 @@ class StreamRepository extends ServiceEntityRepository
                 }
 
                 $qb->andWhere('s.id IN (:favorites)')
-                   ->setParameter('favorites', $favorites);
+                    ->setParameter('favorites', $favorites);
             } else {
                 $qb->andWhere('s.countryCode = :country')
-                   ->setParameter('country', strtoupper($countryOrCategory));
+                    ->setParameter('country', strtoupper($countryOrCategory));
             }
         }
 
@@ -255,6 +256,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb->select('count(s.id)')
             ->from(Stream::class, 's')
             ->where('ILIKE(s.name, :text) = true')
+            ->orWhere('ILIKE(s.tags, :text) = true')
             ->setParameter('text', '%' . $text . '%');
 
         if ($countryOrCategory !== null) {
