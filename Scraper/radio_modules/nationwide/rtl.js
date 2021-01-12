@@ -31,6 +31,12 @@ const format = dateObj => {
           element.presenter = element.host;
           delete element.host;
 
+          // temp has there is a ssl error on the server on img import for rtl
+          if (element.img !== undefined && element.img !== null) {
+            element.img = 'http' + element.img.substr(5);
+          }
+
+
           sections.push(element);
         }
       }
@@ -51,6 +57,11 @@ const format = dateObj => {
         if (prev_datetime === main.date_time_start && prev_title === main.title) {
           prev.pop();
         }
+      }
+
+      // temp has there is a ssl error on the server on img import for rtl
+      if (main.img !== undefined && main.img !== null) {
+        main.img = 'http' + main.img.substr(5);
       }
 
       prev.push(main);
