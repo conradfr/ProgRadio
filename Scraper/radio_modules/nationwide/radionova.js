@@ -7,21 +7,31 @@ let scrapedData = [];
 const format = dateObj => {
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr) {
-    if (typeof curr.datetime_raw === 'undefined') {
+    if (typeof curr.days === 'undefined') {
+      return prev;
+    }
+
+    if (typeof curr.time === 'undefined') {
+      return prev;
+    }
+
+    const daysArray = eval(curr.days);
+
+    if (daysArray.indexOf(dateObj.day().toString()) === -1) {
       return prev;
     }
 
     // TIME
 
     let regexp = new RegExp(/([0-9]{1,2}):([0-9]{0,2})/);
-    let match = curr.datetime_raw.match(regexp);
+    let match = curr.time.match(regexp);
 
     // should not happen
     if (match === null) {
       return prev;
     }
 
-    const startDateTime = moment(curr.dateObj);
+    const startDateTime = moment(dateObj);
     startDateTime.hour(match[1]);
     if (match[2].length > 0) {
       startDateTime.minute(match[2]);
@@ -32,14 +42,28 @@ const format = dateObj => {
 
     // Export
 
-    newEntry = {
+    const newEntry = {
       'date_time_start': startDateTime.toISOString(),
-      'img': 'https://www.nova.fr' + curr.img.split('?')[0],
-      'host': curr.host.substr(4),
-      'title': curr.title.substr(6),
-      'description': curr.description.join("\n\n").replace(/\<br>/, "\n")
+      'title': curr.title
+    }
 
-    };
+    if (curr.img !== undefined) {
+      if ( curr.img.indexOf('?') !== -1) {
+        newEntry.img = curr.img.split('?')[0];
+      } else {
+        newEntry.img = curr.img;
+      }
+    }
+
+    if (curr.host !== undefined) {
+      newEntry.host = curr.host;
+    }
+
+    if (curr.description !== undefined && curr.description.length > 0) {
+      newEntry.description = curr.description.join("\n").trim();
+    } else if (curr.description_alt !== undefined) {
+      newEntry.description = curr.description_alt.replace(/\u00a0/g, ' ').replace(/(<([^>]+)>)/gi, "");
+    }
 
     prev.push(newEntry);
     return prev;
@@ -50,24 +74,22 @@ const format = dateObj => {
 
 const fetch = dateObj => {
   dateObj.locale('fr');
-  const day = dateObj.format('dddd').toLowerCase();
-  const url = `http://www.nova.fr/grille/${day}`;
+  const url = 'https://www.nova.fr/la-grille-nova/la-grille/';
 
   logger.log('info', `fetching ${url}`);
 
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find('.flexbox-container.row-picture-grille')
+      .select('.program-item')
       .set({
-        'img': 'picture > img@src'
-      })
-      .select('.entry')
-      .set({
-        'datetime_raw': 'h2.post-title > time',
-        'title': 'h2.post-title',
-        'host': 'span.after-title',
-        'description': ['p']
+        'days': '@data-days',
+        'img': '.img_grille img@src',
+        'time': '.infos_grille > .date',
+        'title': '.infos_grille > h2',
+        'host': '.presenter p',
+        'description': ['.content p'],
+        'description_alt': '.content'
       })
       .data(function (listing) {
         scrapedData.push(listing);
