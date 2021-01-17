@@ -17,7 +17,7 @@ const format = dateObj => {
 
     const daysArray = eval(curr.days);
 
-    if (daysArray.indexOf(dateObj.day().toString()) === -1) {
+    if (daysArray.indexOf((dateObj.weekday() + 1).toString()) === -1) {
       return prev;
     }
 
