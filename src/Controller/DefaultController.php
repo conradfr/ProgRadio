@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Stream;
+use App\Form\ListeningSessionType;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
 use App\Entity\Category;
@@ -11,13 +13,16 @@ use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Entity\ListeningSession;
 
 class DefaultController extends AbstractBaseController
 {
@@ -184,6 +189,75 @@ class DefaultController extends AbstractBaseController
             'schedule' => $schedule,
             'collections' => $collections,
             'date' => $dateTime,
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/listen",
+     *     name="listen",
+     *     methods={"POST"}
+     * )
+     */
+    public function listen(EntityManagerInterface $em, Request $request): Response
+    {
+        /**
+         * @todo move to new api
+         *
+         * Code is not great but it's just temporary (famous last word)
+         */
+
+        //$json = $this->getJson($request);
+        $data = $this->getJson($request);
+
+        $listeningSession = new ListeningSession();
+
+        $dateTimeStart = new \DateTime($data['date_time_start']);
+        $dateTimeStart->setTimezone(new \DateTimeZone('UTC'));
+
+        $dateTimeEnd = new \DateTime($data['date_time_end']);
+        $dateTimeEnd->setTimezone(new \DateTimeZone('UTC'));
+
+        $listeningSession->setDateTimeStart($dateTimeStart);
+        $listeningSession->setDateTimeEnd($dateTimeEnd);
+
+        try {
+            if ($listeningSession->getDateTimeEnd()->getTimestamp() - $listeningSession->getDateTimeStart()->getTimestamp() < ListeningSession::MINIMUM_SECONDS) {
+                //throw new BadRequestHttpException('Invalid data');
+
+                return $this->jsonResponse([
+                    'status' => 'Ignored'
+                ]);
+            }
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        if(!isset($data['id']) || !is_string($data['id'])) {
+            throw new BadRequestHttpException('Invalid data');
+        }
+
+        if (Uuid::isValid($data['id'])) {
+            $stream = $em->getRepository(Stream::class)->findOneBy(['id' => $data['id']]);
+            if (!$stream) {
+                throw new NotFoundHttpException('Stream not found');
+            }
+
+            $listeningSession->setStream($stream);
+        } else {
+            $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $data['id'], 'active' => true]);
+            if (!$radio) {
+                throw new NotFoundHttpException('Radio not found');
+            }
+
+            $listeningSession->setRadio($radio);
+        }
+
+        $em->persist($listeningSession);
+        $em->flush();
+
+        return $this->jsonResponse([
+            'status' => 'OK'
         ]);
     }
 

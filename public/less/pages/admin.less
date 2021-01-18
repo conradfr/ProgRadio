@@ -6,7 +6,7 @@
     margin-bottom: 20px;*/
   }
 
-  .schedule-stats {
+  .schedule-stats, .listening-stats {
     width: 100%;
 
     @media (max-width: @screen-sm) {
@@ -68,6 +68,19 @@
           background-color: @brand-danger;
         }
       }
+    }
+  }
+
+  .schedule-stats {
+    td {
+      height: 60px;
+      vertical-align: middle;
+
+      img {
+        max-height: 31px;
+        max-width: 39px;
+      }
+
     }
   }
 }

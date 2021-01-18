@@ -6,6 +6,7 @@ menu:
     account: My account
     admin:
         dashboard: Dashboard
+        listening: Listening
         shares: Shares
     contact: Contact
     faq: Faq

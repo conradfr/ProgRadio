@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 import find from 'lodash/find';
+import { DateTime } from 'luxon';
 
 import * as config from '../config/config';
 import AndroidApi from '../api/AndroidApi';
@@ -22,6 +23,7 @@ const initState = {
   volume: Vue.cookie.get(config.COOKIE_VOLUME)
     ? parseInt(Vue.cookie.get(config.COOKIE_VOLUME), 10) : config.DEFAULT_VOLUME,
   muted: Vue.cookie.get(config.COOKIE_MUTED) === 'true' || false,
+  sessionStart: null,
   focus: {
     icon: false,
     fader: false
@@ -33,10 +35,12 @@ const storeGetters = {
   displayVolume: state => state.focus.icon || state.focus.fader || false
 };
 
+/* eslint-disable object-curly-newline */
 const storeActions = {
-  play: ({ commit, rootState, rootGetters }, radioCodeName) => {
+  play: ({ state, commit, rootState, rootGetters }, radioCodeName) => {
+    PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
+      state.radio, state.sessionStart);
     commit('stop');
-
     const radio = find(rootState.schedule.radios, { code_name: radioCodeName });
 
     if (radio !== undefined && radio.streaming_enabled === true) {
@@ -49,10 +53,14 @@ const storeActions = {
       });
     }
   },
-  stop: ({ commit }) => {
+  stop: ({ state, commit }) => {
+    PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
+      state.radio, state.sessionStart);
     commit('pause');
   },
-  playStream: ({ rootState, commit }, stream) => {
+  playStream: ({ rootState, state, commit }, stream) => {
+    PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
+      state.radio, state.sessionStart);
     commit('stop');
 
     setTimeout(() => {
@@ -67,7 +75,9 @@ const storeActions = {
       commit('play');
     });
   },
-  togglePlay: ({ commit }) => {
+  togglePlay: ({ state, commit }) => {
+    PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
+      state.radio, state.sessionStart);
     commit('togglePlay');
   },
   toggleMute: ({ state, commit }) => {
@@ -75,6 +85,8 @@ const storeActions = {
     commit('toggleMute');
   },
   playPrevious: ({ state, dispatch }) => {
+    PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
+      state.radio, state.sessionStart);
     if (state.radio === undefined || state.radio === null
       || state.radio.type !== config.PLAYER_TYPE_RADIO) {
       return;
@@ -147,9 +159,11 @@ const storeMutations = {
     }
 
     state.playing = false;
+    state.sessionStart = null;
   },
   stop(state) {
     state.playing = false;
+    state.sessionStart = null;
   },
   play(state) {
     if (state.externalPlayer === true) {
@@ -161,6 +175,7 @@ const storeMutations = {
         return;
       } */
 
+      state.sessionStart = DateTime.local().setZone(config.TIMEZONE);
       state.playing = true;
     }
   },
@@ -168,7 +183,7 @@ const storeMutations = {
     const prevRadioCodeName = state.radio === null ? null : state.radio.code_name;
     const prevShowHash = state.show === null ? null : state.show.hash;
 
-    if ((radio !== null && prevRadioCodeName === radio.code_name)
+    if (state.playing === true && (radio !== null && prevRadioCodeName === radio.code_name)
       && ((show !== null && prevShowHash === show.hash)
         || (prevShowHash === null && show === null))) {
       return;
@@ -177,6 +192,10 @@ const storeMutations = {
     if (radio !== null && state.externalPlayer === true) {
       AndroidApi.play(radio, show);
       // return;
+    }
+
+    if (state.playing === true && radio !== null && state.externalPlayer === false) {
+      state.sessionStart = DateTime.local().setZone(config.TIMEZONE);
     }
 
     state.radio = null;
@@ -195,6 +214,8 @@ const storeMutations = {
       }
 
       state.playing = false;
+      PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
+        state.radio, state.sessionStart);
     } else if (state.playing === false && state.radio !== undefined && state.radio !== null) {
       if (state.externalPlayer === true) {
         AndroidApi.play(state.radio, state.show);
@@ -202,6 +223,7 @@ const storeMutations = {
       }
 
       state.playing = true;
+      state.sessionStart = DateTime.local().setZone(config.TIMEZONE);
     }
   },
   toggleMute(state) {

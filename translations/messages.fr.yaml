@@ -6,6 +6,7 @@ menu:
     account: Mon compte
     admin:
         dashboard: Tableau de bord
+        listening: Ecoutes
         shares: Parts de marché
     contact: Contact
     faq: Faq

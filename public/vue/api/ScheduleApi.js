@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-import { CACHE_KEY_RADIOS, CACHE_KEY_COLLECTIONS, CACHE_KEY_CATEGORIES } from '../config/config';
+import {
+  CACHE_KEY_RADIOS,
+  CACHE_KEY_COLLECTIONS,
+  CACHE_KEY_CATEGORIES
+} from '../config/config';
 
 // ------------------------- Cache -------------------------
 
@@ -130,11 +134,22 @@ const toggleFavoriteRadio = (radioCodeName) => {
     });
 };
 
+const sendListeningSession = (codeName, dateTimeStart, dateTimeEnd) => {
+  const data = {
+    id: codeName,
+    date_time_start: dateTimeStart.toISO(),
+    date_time_end: dateTimeEnd.toISO()
+  };
+
+  axios.post('/listen', data);
+};
+
 /* eslint-disable no-undef */
 export default {
   getSchedule,
   getRadiosData,
   hasCache,
   getCache,
-  toggleFavoriteRadio
+  toggleFavoriteRadio,
+  sendListeningSession
 };

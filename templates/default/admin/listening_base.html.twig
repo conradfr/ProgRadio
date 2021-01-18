@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ecoutes{% endblock %}
+
+{% macro dateRangeActive(current, dateRange) %}
+    {% if current == dateRange %} class="active"{% endif %}
+{% endmacro %}
+
+{% block body %}
+<div id="admin" class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <!-- Nav tabs -->
+            <ul class="nav nav-pills nav-stacked" role="tablist">
+                <li role="presentation"{% if active_tab == 'radios' %} class="active"{% endif %}><a href="{{ path('admin_listening_radios', {'dateRange': dateRange}) }}" aria-controls="brief" role="tab">Radios</a></li>
+                <li role="presentation"{% if active_tab == 'streams' %} class="active"{% endif %}><a href="{{ path('admin_listening_streams', {'dateRange': dateRange}) }}" aria-controls="table" role="tab">Streams</a></li>
+            </ul>
+
+            <div class="well space-up-20">
+                {% if dateEnd is null %}
+                    <div>Le {{ dateStart|date('d/m/Y') }}</div>
+                {% else %}
+                    <div>Du {{ dateStart|date('d/m/Y') }}</div>
+                    <div>au {{ dateEnd|date('d/m/Y') }}</div>
+                {% endif %}
+            </div>
+
+            <ul class="nav nav-pills nav-stacked space-up-20">
+                <li role="presentation"{{ _self.dateRangeActive(dateRange, 'today') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'today'})  }}">Aujourd'hui</a></li>
+                <li role="presentation"{{ _self.dateRangeActive(dateRange, 'yesterday') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'yesterday'})  }}">Hier</a></li>
+                <li role="presentation"{{ _self.dateRangeActive(dateRange, 'thisweek') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'thisweek'})  }}">Cette semaine</a></li>
+                <li role="presentation"{{ _self.dateRangeActive(dateRange, 'thismonth') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'thismonth'})  }}">Ce mois-ci</a></li>
+                <li role="presentation"{{ _self.dateRangeActive(dateRange, 'lastweek') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'lastweek'})  }}">Semaine dernière</a></li>
+                <li role="presentation"{{ _self.dateRangeActive(dateRange, 'lastmonth') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'lastmonth'})  }}">Mois dernier</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-10">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="{{ active_tab }}">
+                    {% block tab_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AbstractBaseController extends AbstractController
 {
@@ -20,5 +22,19 @@ class AbstractBaseController extends AbstractController
         $response->setContent(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
 
         return $response;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    protected function getJson(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new HttpException(400, 'Invalid json');
+        }
+
+        return $data;
     }
 }

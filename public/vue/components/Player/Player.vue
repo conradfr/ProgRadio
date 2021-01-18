@@ -168,6 +168,7 @@ export default {
       if (this.player.externalPlayer === false) {
         this.$gtag.event(config.GTAG_ACTION_TOGGLE_PLAY, {
           event_category: config.GTAG_CATEGORY_PLAYER,
+          event_label: this.player.radio.code_name,
           value: config.GTAG_ACTION_TOGGLE_PLAY_VALUE
         });
       }

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Collection;
+use App\Entity\ListeningSession;
 use App\Entity\Radio;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
 use App\Form\SharesType;
+use App\Service\DateUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,6 +42,86 @@ class AdminController extends AbstractController
             'stats' => $stats,
             'users' => $users,
             'userCount' => $userCount
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/admin/listening/radios/{dateRange}",
+     *     requirements={"dateRange"="\w+"},
+     *     name="admin_listening_radios"
+     * )
+     */
+    public function listeningRadiosAction(DateUtils $dateUtils, EntityManagerInterface $em, string $dateRange='yesterday'): Response
+    {
+        $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
+
+        if ($dates === null) {
+            throw new BadRequestHttpException('Invalid data');
+        }
+
+        $radioListening = $em->getRepository(ListeningSession::class)->getRadiosData($dates[0], $dates[1]);
+        $collections = $em->getRepository(Collection::class)->getCollections();
+        $collections = array_filter($collections, function($collection) {
+            return $collection['code_name'] !== Radio::FAVORITES;
+        });
+
+        // format data for easy displaying (should be done elsewhere but lazy)
+
+        $radioListeningInCollections = [];
+        foreach ($radioListening as $rl) {
+            $radioListeningInCollections[$rl['c_codeName']][] = $rl;
+        }
+
+        $collectionsSessions = [];
+        $i = 0;
+        $t = 0;
+        do {
+            foreach ($collections as $collection) {
+                if (isset($radioListeningInCollections[$collection['code_name']][$i])) {
+                    $collectionsSessions[$i][] = $radioListeningInCollections[$collection['code_name']][$i];
+                    $t++;
+                } else {
+                    $collectionsSessions[$i][] = 'empty';
+                }
+            }
+            $i++;
+        } while ($t < count($radioListening));
+
+        return $this->render(
+            'default/admin/listening_radios.html.twig', [
+            'collections' => $collections,
+            'radio_listening' => $radioListening,
+            'collections_sessions' => $collectionsSessions,
+            'dateStart' => $dates[0],
+            'dateEnd' => $dates[1],
+            'dateRange' => $dateRange
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/admin/listening/streams/{dateRange}",
+     *     requirements={"dateRange"="\w+"},
+     *     name="admin_listening_streams"
+     * )
+     */
+    public function listeningStreamsAction(DateUtils $dateUtils, EntityManagerInterface $em, string $dateRange='yesterday'): Response
+    {
+        $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
+
+        if ($dates === null) {
+            throw new BadRequestHttpException('Invalid data');
+        }
+
+        $streamListening = $em->getRepository(ListeningSession::class)->getStreamsData($dates[0], $dates[1]);
+
+        return $this->render(
+            'default/admin/listening_streams.html.twig', [
+            'streams_listening' => $streamListening,
+            'dateStart' => $dates[0],
+            'dateEnd' => $dates[1],
+            'dateRange' => $dateRange
         ]);
     }
 

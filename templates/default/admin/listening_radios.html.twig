@@ -1,0 +1,47 @@
+{% extends 'default/admin/listening_base.html.twig' %}
+
+{% import "default/admin/macro/format.html.twig" as format %}
+
+{% set active_tab = 'radios' %}
+
+{% block tab_content %}
+    <table class="table schedule-stats table-striped table-bordered">
+        <tr>
+            {% for entry in collections %}
+                <th style="width:{{ 100 / collections|length }}%">{{ entry.name_FR }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for entry in collections %}
+                <th>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3">Sess.</div>
+                        <div class="col-md-3">Moy.</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                </th>
+            {% endfor %}
+        </tr>
+        {% for entry in collections_sessions %}
+            <tr>
+                {% for one in entry %}
+                    <td>
+                        {% if one != 'empty' %}
+                        <div class="col-md-3"><img title="{{ one.name }}" alt="{{ one.name }}" src="{{ asset('img/radio/schedule/' ~ one.codeName ~ '.png') }}"></div>
+                        <div class="col-md-3">{{ one.total_sessions }}</div>
+                        <div class="col-md-3">
+                            {% if (one.total_sessions > 0) %}
+                                {{ format.secondsToMinutes(one.total_seconds / one.total_sessions) }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">{{ format.secondsToMinutes(one.total_seconds) }}</div>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

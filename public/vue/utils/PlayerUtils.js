@@ -5,6 +5,7 @@ import filter from 'lodash/filter';
 import { DateTime } from 'luxon';
 
 import * as config from '../config/config';
+import ScheduleApi from '../api/ScheduleApi';
 
 const VueCookie = require('vue-cookie');
 
@@ -163,8 +164,32 @@ const showNotification = (radio, show) => {
   }
 };
 
+/* ---------- API ---------- */
+
+const sendListeningSession = (externalPlayer, playing, radio, dateTimeStart) => {
+  if (externalPlayer === true) {
+    return;
+  }
+
+  if (playing === true && dateTimeStart !== null) {
+    const dateTimeEnd = DateTime.local().setZone(config.TIMEZONE);
+
+    if (dateTimeEnd.diff(dateTimeStart).as('seconds') < config.LISTENING_SESSION_MIN_SECONDS) {
+      return;
+    }
+
+    setTimeout(
+      () => {
+        ScheduleApi.sendListeningSession(radio.code_name, dateTimeStart, dateTimeEnd);
+      },
+      500
+    );
+  }
+};
+
 export default {
   getPictureUrl,
   getNextRadio,
-  showNotification
+  showNotification,
+  sendListeningSession
 };

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -78,6 +79,15 @@ class Stream
      * @ORM\Column(type="integer", name="clicks_last_24h", options={"default"=0})
      */
     private $clicksLast24h;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="stream", fetch="EXTRA_LAZY")
+     */
+    private $listeningSessions;
+
+    public function __construct() {
+        $this->listeningSessions = new ArrayCollection();
+    }
 
     public function getId(): string
     {
@@ -167,5 +177,15 @@ class Stream
     public function setClicksLast24h(int $clicksLast24h): void
     {
         $this->clicksLast24h = $clicksLast24h;
+    }
+
+    public function getListeningSessions(): ArrayCollection
+    {
+        return $this->listeningSessions;
+    }
+
+    public function setListeningSessions(ArrayCollection $listeningSessions): void
+    {
+        $this->listeningSessions = $listeningSessions;
     }
 }

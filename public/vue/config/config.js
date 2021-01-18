@@ -54,6 +54,8 @@ export const PLAYER_TYPE_STREAM = 'stream';
 export const PLAYER_TYPE_CHECK_INTERVAL = 2500; /* ms */
 export const PLAYER_TYPE_CHECK_TIMEOUT = 7000; /* ms */
 
+export const LISTENING_SESSION_MIN_SECONDS = 30;
+
 export const AUTOPLAY_INTERVAL_CHECK = 100;
 export const AUTOPLAY_INTERVAL_MAX_RETRIES = 50;
 
