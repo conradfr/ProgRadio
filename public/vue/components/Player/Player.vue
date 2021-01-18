@@ -83,6 +83,9 @@ export default {
       AndroidApi.getState();
     }
   },
+  created() {
+    window.addEventListener('beforeunload', this.beforeWindowUnload);
+  },
   beforeDestroy() {
     clearInterval(this.checkTimer);
   },
@@ -153,6 +156,11 @@ export default {
     },
   },
   methods: {
+    beforeWindowUnload() {
+      if (this.player.externalPlayer === false && this.player.playing === true) {
+        this.$store.dispatch('stop');
+      }
+    },
     toggleMute() {
       this.$store.dispatch('toggleMute');
 

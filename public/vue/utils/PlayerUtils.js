@@ -58,6 +58,32 @@ const getNextRadio = (currentRadio, radios, way) => {
   return radiosFiltered[newIndex];
 };
 
+/* There is a bug as it loops on one page only
+  @todo fix
+ */
+const getNextStream = (currentStream, streams, way) => {
+  if (currentStream.type !== config.PLAYER_TYPE_STREAM) {
+    return null;
+  }
+
+  const currentIndex = findIndex(streams, s => s.code_name === currentStream.code_name);
+
+  if (currentIndex === -1) {
+    return streams[0];
+  }
+
+  let newIndex = 0;
+  if (way === 'backward') {
+    newIndex = currentIndex === 0 ? streams.length - 1
+      : currentIndex - 1;
+  } else if (way === 'forward') {
+    newIndex = streams.length === (currentIndex + 1) ? 0
+      : currentIndex + 1;
+  }
+
+  return streams[newIndex];
+};
+
 /* ---------- NOTIFICATION ---------- */
 
 const buildNotificationData = (radio, show) => {
@@ -190,6 +216,7 @@ const sendListeningSession = (externalPlayer, playing, radio, dateTimeStart) => 
 export default {
   getPictureUrl,
   getNextRadio,
+  getNextStream,
   showNotification,
   sendListeningSession
 };

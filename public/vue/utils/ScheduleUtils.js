@@ -137,7 +137,7 @@ const rankCollection = (collection, radios, categoriesExcluded) => {
   const { sort_field: sortField, sort_order: sortOrder } = collection;
 
   return compose(
-    // filter(entry => entry.collection.indexOf(codeName) !== -1),
+    filter(entry => collection.radios.indexOf(entry.code_name) !== -1),
     filter(entry => categoriesExcluded.indexOf(entry.category) === -1),
     orderBy([sortField], [sortOrder])
   )(radios);

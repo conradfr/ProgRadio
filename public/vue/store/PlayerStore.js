@@ -87,28 +87,34 @@ const storeActions = {
   playPrevious: ({ state, dispatch }) => {
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
       state.radio, state.sessionStart);
-    if (state.radio === undefined || state.radio === null
-      || state.radio.type !== config.PLAYER_TYPE_RADIO) {
-      return;
-    }
 
     dispatch('playNext', 'backward');
   },
   playNext: ({ rootState, state, dispatch }, way) => {
-    if (state.radio === undefined || state.radio === null
-      || state.radio.type !== config.PLAYER_TYPE_RADIO) {
+    if (
+      (rootState.schedule.collections === null || rootState.schedule.collections.length === 0)
+      || rootState.schedule.currentCollection === null
+      || (state.radio === undefined || state.radio === null)
+    ) {
       return;
     }
 
-    const collectionToIterateOn = find(rootState.schedule.collections,
-      { code_name: state.radio.collection });
+    if (state.radio.type === config.PLAYER_TYPE_RADIO) {
+      const collectionToIterateOn = find(rootState.schedule.collections,
+        { code_name: rootState.schedule.currentCollection });
+      const radios = ScheduleUtils.rankCollection(collectionToIterateOn,
+        rootState.schedule.radios, rootState.schedule.categoriesExcluded);
+      const nextRadio = PlayerUtils.getNextRadio(state.radio, radios, way || 'forward');
 
-    const radios = ScheduleUtils.rankCollection(collectionToIterateOn,
-      rootState.schedule.radios, rootState.schedule.categoriesExcluded);
-    const nextRadio = PlayerUtils.getNextRadio(state.radio, radios, way || 'forward');
+      if (nextRadio !== null) {
+        dispatch('play', nextRadio.code_name);
+      }
+    } else if (state.radio.type === config.PLAYER_TYPE_STREAM) {
+      const nextRadio = PlayerUtils.getNextStream(state.radio, rootState.streams.streamRadios, way || 'forward');
 
-    if (nextRadio !== null) {
-      dispatch('play', nextRadio.code_name);
+      if (nextRadio !== null) {
+        dispatch('playStream', nextRadio);
+      }
     }
   },
   setVolume: ({ commit }, volume) => {
@@ -149,6 +155,10 @@ const storeActions = {
       1000
     );
   },
+  commandFromExternalPlayer: ({ dispatch }, params) => {
+    const { command } = params;
+    dispatch(command);
+  }
 };
 
 const storeMutations = {
