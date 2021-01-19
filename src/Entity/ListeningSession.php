@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ListeningSessionRepository;
+use Darsyn\IP\Version\Multi as IP;
 
 /**
  * @ORM\Entity(repositoryClass=ListeningSessionRepository::class)
@@ -15,6 +16,15 @@ class ListeningSession
     public const TYPE_STREAM = 'stream';
 
     public const MINIMUM_SECONDS = 30;
+    public const MAX_DIFFERENCE_WITH_CURRENT_SECONDS = 60;
+
+    public const SOURCE_WEB = 'web';
+    public const SOURCE_ANDROID = 'android';
+
+    public const SOURCES = [
+        self::SOURCE_WEB,
+        self::SOURCE_ANDROID
+    ];
 
     /**
      * @var string
@@ -52,6 +62,18 @@ class ListeningSession
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateTimeEnd;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $source;
+
+    /**
+     * @ORM\Column(type="ip", nullable=true)
+     */
+    protected $ipAddress;
 
     public function getId(): int
     {
@@ -116,5 +138,25 @@ class ListeningSession
     public function setDateTimeEnd(\DateTime $dateTimeEnd=null): void
     {
         $this->dateTimeEnd = $dateTimeEnd;
+    }
+
+    public function getSource(): ?string
+    {
+        return $this->source;
+    }
+
+    public function setSource(string $source=null): void
+    {
+        $this->source = $source;
+    }
+
+    public function getIpAddress()
+    {
+        return $this->ipAddress;
+    }
+
+    public function setIpAddress(IP $ip=null)
+    {
+        $this->ipAddress = $ip;
     }
 }

@@ -5,6 +5,9 @@
     "brick/math": {
         "version": "0.8.15"
     },
+    "darsyn/ip": {
+        "version": "4.0.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {

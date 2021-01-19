@@ -25,6 +25,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "darsyn/ip": "^4.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "gedmo/doctrine-extensions": "^2.4",
         "liip/imagine-bundle": "^2.3.0",

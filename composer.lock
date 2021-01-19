@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "547217f7ad0aaaf067929bb8ed50058d",
+    "content-hash": "63e1ed184be7fa959635a2bc315d5a6c",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -183,6 +183,60 @@
                 }
             ],
             "time": "2020-11-11T10:22:58+00:00"
+        },
+        {
+            "name": "darsyn/ip",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/darsyn/ip.git",
+                "reference": "36db5b2160190de65ea66db4eedf38b3cfaa4d94"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/darsyn/ip/zipball/36db5b2160190de65ea66db4eedf38b3cfaa4d94",
+                "reference": "36db5b2160190de65ea66db4eedf38b3cfaa4d94",
+                "shasum": ""
+            },
+            "require": {
+                "php-64bit": ">=5.6",
+                "php-ipv6": ">=5.6"
+            },
+            "suggest": {
+                "doctrine/dbal": "to use IP as a column type"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Darsyn\\IP\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Zan Baldwin",
+                    "email": "hello@zanbaldwin.com",
+                    "homepage": "https://zanbaldwin.com"
+                }
+            ],
+            "description": "An immutable IP Address value object that provides several different notations, including helper functions.",
+            "homepage": "https://github.com/darsyn/ip",
+            "keywords": [
+                "IP",
+                "immutable",
+                "ipv4",
+                "ipv6",
+                "library",
+                "value-object"
+            ],
+            "support": {
+                "issues": "https://github.com/darsyn/ip/issues",
+                "source": "https://github.com/darsyn/ip/tree/4.0.0"
+            },
+            "time": "2018-06-15T13:45:56+00:00"
         },
         {
             "name": "doctrine/annotations",

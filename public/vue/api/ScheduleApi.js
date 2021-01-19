@@ -3,7 +3,8 @@ import axios from 'axios';
 import {
   CACHE_KEY_RADIOS,
   CACHE_KEY_COLLECTIONS,
-  CACHE_KEY_CATEGORIES
+  CACHE_KEY_CATEGORIES,
+  LISTENING_SESSION_SOURCE
 } from '../config/config';
 
 // ------------------------- Cache -------------------------
@@ -138,7 +139,8 @@ const sendListeningSession = (codeName, dateTimeStart, dateTimeEnd) => {
   const data = {
     id: codeName,
     date_time_start: dateTimeStart.toISO(),
-    date_time_end: dateTimeEnd.toISO()
+    date_time_end: dateTimeEnd.toISO(),
+    source: LISTENING_SESSION_SOURCE
   };
 
   axios.post('/listen', data);

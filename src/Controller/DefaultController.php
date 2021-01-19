@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Stream;
-use App\Form\ListeningSessionType;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
 use App\Entity\Category;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
+use Darsyn\IP\Version\Multi;
 use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -210,6 +210,8 @@ class DefaultController extends AbstractBaseController
         //$json = $this->getJson($request);
         $data = $this->getJson($request);
 
+        $now = new \DateTime('UTC');
+
         $listeningSession = new ListeningSession();
 
         $dateTimeStart = new \DateTime($data['date_time_start']);
@@ -221,12 +223,16 @@ class DefaultController extends AbstractBaseController
         $listeningSession->setDateTimeStart($dateTimeStart);
         $listeningSession->setDateTimeEnd($dateTimeEnd);
 
-        try {
-            if ($listeningSession->getDateTimeEnd()->getTimestamp() - $listeningSession->getDateTimeStart()->getTimestamp() < ListeningSession::MINIMUM_SECONDS) {
-                //throw new BadRequestHttpException('Invalid data');
+        $listeningSession->setSource($data['source'] ?: null);
 
+        try {
+            $ip = Multi::factory($request->getClientIp());
+            $listeningSession->setIpAddress($ip);
+
+            if ($listeningSession->getDateTimeEnd()->getTimestamp() - $listeningSession->getDateTimeStart()->getTimestamp() < ListeningSession::MINIMUM_SECONDS
+                || abs($now->getTimestamp() - $listeningSession->getDateTimeEnd()->getTimestamp()) > ListeningSession::MAX_DIFFERENCE_WITH_CURRENT_SECONDS) {
                 return $this->jsonResponse([
-                    'status' => 'Ignored'
+                    'status' => 'Ignored',
                 ]);
             }
         } catch (\Exception $e) {
