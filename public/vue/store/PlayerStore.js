@@ -137,7 +137,7 @@ const storeActions = {
       if (radio === undefined) {
         radio = find(rootState.streams.streamRadios, { code_name: radioCodeName });
       } else {
-        show = rootGetters.currentShowOnRadio(radio.CodeName);
+        show = rootGetters.currentShowOnRadio(radio.code_name);
       }
 
       if (radio !== undefined /* && radio.streaming_enabled === true */
@@ -193,7 +193,7 @@ const storeMutations = {
     const prevRadioCodeName = state.radio === null ? null : state.radio.code_name;
     const prevShowHash = state.show === null ? null : state.show.hash;
 
-    if (state.playing === true && (radio !== null && prevRadioCodeName === radio.code_name)
+    if ((radio !== null && prevRadioCodeName === radio.code_name)
       && ((show !== null && prevShowHash === show.hash)
         || (prevShowHash === null && show === null))) {
       return;
@@ -208,13 +208,12 @@ const storeMutations = {
       state.sessionStart = DateTime.local().setZone(config.TIMEZONE);
     }
 
-    state.radio = null;
-    state.radio = radio;
+    Vue.set(state, 'radio', radio);
+    Vue.set(state, 'show', show);
 
-    state.show = null;
-    state.show = show;
-
-    PlayerUtils.showNotification(radio, show);
+    if (state.externalPlayer === false) {
+      PlayerUtils.showNotification(radio, show);
+    }
   },
   togglePlay(state) {
     if (state.playing === true) {
@@ -247,11 +246,11 @@ const storeMutations = {
   },
   /* From Android app */
   updatePlayingStatus(state, params) {
-    const { playbackState, radio } = params;
+    const { playbackState, radio, show } = params;
 
     state.playing = playbackState === config.PLAYER_STATE_PLAYING;
-    state.radio = radio;
-    state.show = null;
+    Vue.set(state, 'radio', radio);
+    Vue.set(state, 'show', show);
   }
 };
 
