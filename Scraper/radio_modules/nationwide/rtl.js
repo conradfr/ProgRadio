@@ -36,7 +36,6 @@ const format = dateObj => {
             element.img = 'http' + element.img.substr(5);
           }
 
-
           sections.push(element);
         }
       }
