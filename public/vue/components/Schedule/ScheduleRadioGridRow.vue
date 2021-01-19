@@ -1,6 +1,6 @@
 <template>
   <div class="schedule-radio-grid-row">
-    <div v-if="!hasSchedule && displayNoSchedule && isLoading == false"
+    <div v-if="!hasSchedule && displayNoSchedule && isLoading === false"
          class="program-container none" :style="noProgramStyleObject">
       <div class="program">
         <div class="program-inner">{{ $t('message.schedule.no_schedule') }}</div>

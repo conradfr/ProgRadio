@@ -26,7 +26,7 @@
           :class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }"
           aria-hidden="true"></span>
       </div>
-      <div v-if="player.radio" class="player-name" v-bind:title="showTitle">
+      <div v-if="player.radio" v-bind:title="showTitle" class="player-name">
         {{ player.radio.name }}
       </div>
       <div v-if="!player.radio" class="player-name player-name-help">

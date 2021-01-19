@@ -143,7 +143,7 @@
       background-size: 77% 77%;
     }
 
-    &.player-favorite-added, &:hover {
+    &.player-favorite-added/*, &:hover*/ {
       mask-image: url('../../img/favorite.svg');
       -webkit-mask-image: url('../../img/favorite.svg');
 
@@ -152,14 +152,34 @@
       }
     }
 
-    &.player-favorite-added:hover {
+    @media (min-width:  @screen-sm-max) {
+      &:hover {
+        mask-image: url('../../img/favorite.svg');
+        -webkit-mask-image: url('../../img/favorite.svg');
+
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+          background-image: url('../../img/favorite.svg');
+        }
+      }
+
+      &.player-favorite-added:hover {
+        mask-image: url('../../img/favorite-empty.svg');
+        -webkit-mask-image: url('../../img/favorite-empty.svg');
+
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+          background-image: url('../../img/favorite-empty.svg');
+        }
+      }
+    }
+
+/*    &.player-favorite-added:hover {
       mask-image: url('../../img/favorite-empty.svg');
       -webkit-mask-image: url('../../img/favorite-empty.svg');
 
       @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
         background-image: url('../../img/favorite-empty.svg');
       }
-    }
+    }*/
 
     //img {
     //  height: 13px;
