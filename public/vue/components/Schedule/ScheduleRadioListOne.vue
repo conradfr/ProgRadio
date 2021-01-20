@@ -1,6 +1,9 @@
 <template>
-  <div class="radio-list-one-wrapper">
-    <div class="radio-submenu">
+  <div class="radio-list-one-wrapper"
+       :class="{'radio-list-one-wrapper-hover': hover}"
+       v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
+    <div class="radio-submenu"
+         :class="{ 'radio-submenu': hover }">
       <div v-on:click="toggleFavorite" class="radio-submenu-entry radio-submenu-entry-favorites">
         <img v-if="isFavorite" src="/img/favorite.svg" class="filter-fav"/>
         <p v-if="isFavorite">{{ $t('message.player.favorites.remove') }}</p>
@@ -46,6 +49,8 @@ export default {
   props: ['radio'],
   data() {
     return {
+      hover: false,
+      hoverTimer: null,
       locale: this.$i18n.locale,
       styleObject: {
         backgroundImage: `url("/img/radio/schedule/${this.radio.code_name}.png")`
@@ -99,6 +104,22 @@ export default {
       });
 
       this.$store.dispatch('toggleFavorite', this.radio);
+    },
+    hoverOn() {
+      this.hover = true;
+
+      clearTimeout(this.hoverTimer);
+
+      this.hoverTimer = setTimeout(
+        () => {
+          this.hover = false;
+        },
+        2250
+      );
+    },
+    hoverOff() {
+      clearTimeout(this.hoverTimer);
+      this.hover = false;
     }
   }
 };

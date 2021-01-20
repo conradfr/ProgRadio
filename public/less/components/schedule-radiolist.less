@@ -100,10 +100,13 @@
     //z-index: 2;
   }
 
-  .radio-list-one-wrapper:hover {
+  .radio-list-one-wrapper-hover {
     .radio-submenu {
       //display: block;
       left: @radio-list-width;
+      .radio-submenu-entry {
+        opacity: 1;
+      }
     }
   }
 
@@ -114,7 +117,7 @@
     left: -@radio-list-width;
     //left: -35px;
     top: -1px;
-    transition: left 200ms ease-in-out 500ms;
+    transition: left 200ms ease-in-out 350ms;
 
     height: calc(@grid-row-height + 1px);
     width: calc(@radio-list-width * 2);
@@ -139,6 +142,9 @@
       color: darken(@program-color, 25%);
 
       padding-top: 5px;
+
+      opacity: 0;
+      transition: opacity 200ms ease-in-out 500ms;
 
       img {
         height: 28px;

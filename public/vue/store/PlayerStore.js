@@ -40,12 +40,14 @@ const storeActions = {
   play: ({ state, commit, rootState, rootGetters }, radioCodeName) => {
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
       state.radio, state.sessionStart);
+
     commit('stop');
     const radio = find(rootState.schedule.radios, { code_name: radioCodeName });
 
     if (radio !== undefined && radio.streaming_enabled === true) {
       Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(radio), config.COOKIE_PARAMS);
       const show = rootGetters.currentShowOnRadio(radio.code_name);
+
       commit('switchRadio', { radio, show });
       // Otherwise will be ignored
       Vue.nextTick(() => {
@@ -196,7 +198,10 @@ const storeMutations = {
     if ((radio !== null && prevRadioCodeName === radio.code_name)
       && ((show !== null && prevShowHash === show.hash)
         || (prevShowHash === null && show === null))) {
-      return;
+      // @todo fix this, probably by differentiate switchRadio & update
+      if (state.externalPlayer === false || state.playing === true) {
+        return;
+      }
     }
 
     if (radio !== null && state.externalPlayer === true) {
