@@ -74,20 +74,22 @@ class DefaultController extends AbstractBaseController
 
     /**
      * @Route(
-     *     "/radio/{codename}",
+     *     "/{_locale}/radio/{codename}",
      *     name="radio_legacy"
      * )
      *
      * @throws \Exception
      */
-    public function radio_legacy(string $codename, EntityManagerInterface $em, ScheduleManager $scheduleManager): RedirectResponse
+    public function radio_legacy(string $codename, Request $request): Response
     {
-        return $this->redirectToRoute('radio', ['_locale' => 'fr', 'codename' => $codename], 301);
+        return $this->redirectToRoute('radio', ['_locale' => $request->getLocale(), 'codename' => $codename], 301);
     }
 
     /**
-     * @Route(
-     *     "/{_locale}/radio/{codename}",
+     * @Route({
+     *     "en": "/{_locale}/schedule-streaming-{codename}",
+     *     "fr": "/{_locale}/grille-ecouter-{codename}"
+     * },
      *     name="radio",
      *     defaults={
      *      "priority": "0.8",
@@ -148,19 +150,6 @@ class DefaultController extends AbstractBaseController
         return $this->jsonResponse([
             'count' => $user->getFavoriteRadios()->count()
         ]);
-    }
-
-    /**
-     * @Route(
-     *     "/now",
-     *     name="now_legacy"
-     * )
-     *
-     * @throws \Exception
-     */
-    public function now_legacy(EntityManagerInterface $em, Request $request): RedirectResponse
-    {
-        return $this->redirectToRoute('now', ['_locale' => 'fr'], 301);
     }
 
     /**

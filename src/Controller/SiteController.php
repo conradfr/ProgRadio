@@ -156,13 +156,13 @@ class SiteController extends AbstractController
             // radio/schedule page
             $radios = $em->getRepository(Radio::class)->getAllCodename();
 
-            $savedRouteAppDefault = $this->get('router')->getRouteCollection()->get('radio')->getDefaults();
+            $savedRouteAppDefault = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->getDefaults();
             foreach ($radios as $radio) {
-                $xml .= $this->getEntryXml('radio', $this->get('router')->getRouteCollection()->get('radio'), $locale,  ['codename' => $radio]);
+                $xml .= $this->getEntryXml('radio', $this->get('router')->getRouteCollection()->get('radio.'.$locale), $locale,  ['codename' => $radio]);
                 // spa radio page
-                $routeApp = $this->get('router')->getRouteCollection()->get('radio')->addDefaults(['bangs' => 'radio/' . $radio]);
+                $routeApp = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
                 $xml .= $this->getEntryXml('app', $routeApp, $locale);
-                $this->get('router')->getRouteCollection()->get('radio')->setDefaults($savedRouteAppDefault);
+                $this->get('router')->getRouteCollection()->get('radio.'.$locale)->setDefaults($savedRouteAppDefault);
             }
         }
 
