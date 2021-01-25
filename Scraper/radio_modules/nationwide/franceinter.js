@@ -29,7 +29,7 @@ const format = dateObj => {
         delete curr.img_alt;
       }
 
-      if (typeof curr.main !== 'undefined') {
+      if (curr.main === true) {
         curr.date_time_start = date.toISOString();
 
         delete curr.main;
@@ -88,22 +88,30 @@ const format = dateObj => {
   return Promise.resolve(mains);
 };
 
-const fetch = dayFormat => {
+const fetch = (dayFormat, sections) => {
   let url = `https://www.franceinter.fr/programmes${dayFormat}`;
 
   logger.log('info', `fetching ${url}`);
 
+  let findClass = 'article.rich-section-list-gdp-item';
+
+  if (sections === true) {
+    findClass = findClass + '.step';
+  } else {
+    findClass = findClass + ':not(.step)';
+  }
+
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find('article.rich-section-list-gdp-item')
+      .find(findClass)
       .set({
         'datetime_raw': '@data-start-time' /* utc */
       })
       .do(
-        osmosis.select('.rich-section-list-gdp-item-podcast > .replay-links-podcasts')
+        osmosis.select('.step')
           .set({
-            'main': 'label@title'
+            'main': 'div'
           })
       )
       .set({
@@ -123,6 +131,7 @@ const fetch = dayFormat => {
           )
       )
       .data(function (listing) {
+        listing.main = sections !== true;
         scrapedData.push(listing);
       })
       .done(function () {
@@ -138,7 +147,7 @@ const fetchAll = dateObj => {
   /* page of the day doesn't go online before 5am (maybe) so only get previous day page
       if scraper is run before that */
 
-  // IT SEEMS TO HAVE CHANGE, LET'S SEE
+  // IT SEEMS TO HAVE CHANGED, LET'S SEE
 
 /*  const now = new moment();
   now.tz('Europe/Paris');
@@ -150,9 +159,15 @@ const fetchAll = dateObj => {
   const previousDay = moment(dateObj);
   previousDay.subtract(1, 'days');
 
-  return fetch('/' + previousDay.format('YYYY-MM-DD'))
+  return fetch('/' + previousDay.format('YYYY-MM-DD'), false)
     .then(() => {
-      return fetch('/' + dateObj.format('YYYY-MM-DD'));
+      return fetch('/' + previousDay.format('YYYY-MM-DD'), true)
+        .then(() => {
+          return fetch('/' + dateObj.format('YYYY-MM-DD'), false)
+            .then(() => {
+              return fetch('/' + dateObj.format('YYYY-MM-DD'), true)
+            })
+        })
     });
 };
 
