@@ -45,20 +45,25 @@ export default {
       'displayCategoryFilter'
     ]),
     ...mapState({
-      radios: state => state.schedule.radios
+      collections: state => state.schedule.collections
     })
   },
   watch: {
     // update the collection menu that is outside the Vue app for now
-    radios() {
-      // const favorites = ScheduleUtils.filterRadiosByCollection(val, COLLECTION_FAVORITES);
-      const favorites = [];
-      const menuItem = document.getElementById(`collections-menu-${COLLECTION_FAVORITES}`);
+    collections: {
+      deep: true,
+      handler(newVal) {
+        const menuItem = document.getElementById(`collections-menu-${COLLECTION_FAVORITES}`);
+        const topMenuItem = document.getElementById(`collections-top-menu-${COLLECTION_FAVORITES}`);
 
-      if (favorites.length === 0) {
-        menuItem.classList.add('disabled');
-      } else {
-        menuItem.classList.remove('disabled');
+        if (newVal[COLLECTION_FAVORITES] === undefined
+            || newVal[COLLECTION_FAVORITES].radios.length === 0) {
+          menuItem.classList.add('disabled');
+          topMenuItem.classList.add('hidden');
+        } else {
+          menuItem.classList.remove('disabled');
+          topMenuItem.classList.remove('hidden');
+        }
       }
     },
   },
