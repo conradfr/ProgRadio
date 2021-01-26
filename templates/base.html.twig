@@ -55,9 +55,16 @@
             </a>
         </div>
 
+        {% set collections = scheduleCollections(app.user, app.request.attributes) %}
+
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ path('app') }}#/schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a></li>
+                <li
+                    id="collections-top-menu-favorites" class="hidden-xs{% if collections['favorites'].radios|length == 0 %} hidden{% endif %}"
+                    title="{{ 'menu.favorites'|trans }}">
+                        <a href="{{ path('app') }}#/schedule/favorites" style="padding-right: 0"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></a>
+                </li>
                 {{ menu.collections_mobile() }}
                 {{ menu.collections() }}
                 <li><a href="{{ path('app') }}#/streaming" style="padding-right: 0">{{ 'menu.streaming'|trans }}</a></li>
