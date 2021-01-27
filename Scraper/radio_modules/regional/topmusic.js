@@ -27,34 +27,37 @@ const format = dateObj => {
     }
 
     // duplicated for now on the page
-    if (match[3] === 24) {
+    if (match[2] === '24') {
       return prev;
     }
 
     let startDateTime = moment(dateObj);
-    const startHour = match[1] === 24 ? 0 : match[1];
+    const startHour = match[1] === '24' ? 0 : match[1];
     startDateTime.hour(startHour);
     startDateTime.minute(0);
     startDateTime.second(0);
 
     endDateTime = moment(dateObj);
-    const endHour = match[2] === 24 ? 0 : match[2];
+    const endHour = match[2] === '24' ? 0 : match[2];
     endDateTime.hour(endHour);
     endDateTime.minute(0);
     endDateTime.second(0);
 
     // midnight
     if (endDateTime.hour() === 0) {
-      console.log('lol');
       endDateTime.add(1, 'days');
     }
+
+    const startImgStr = entry.img.indexOf('image=') + 6;
+    const imgStrLength = entry.img.indexOf('&') - startImgStr;
+    const img = 'https://www.topmusic.fr/' + entry.img.substr(startImgStr, imgStrLength);
 
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'img': 'https://www.topmusic.fr' + entry.img,
-      'title': entry.title.substr(match[0].length),
-      'description': entry.description,
+      'img': img,
+      'title': entry.title.substr(match[0].length).trim(),
+      'description': entry.description.trim(),
     };
 
     prev.push(newEntry);
@@ -102,7 +105,7 @@ const getScrap = dateObj => {
 };
 
 const scrapModule = {
-  getName: 'top_music',
+  getName: 'topmusic',
   supportTomorrow: true,
   getScrap
 };
