@@ -48,12 +48,23 @@ const format = (dateObj, name, img_prefix) => {
       endDateTime.tz('Europe/Paris');
     }
 
+    let description = curr.description.split('\r\n').join(' ').trim();
+
+    if (description === undefined || description === null || description === '') {
+      description = curr.description_alt.join(' ').trim();
+    }
+
+    if (description === '') {
+      description = null;
+    }
+
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'img': curr.img.substr(0, 4) !== 'http' ? `${img_prefix}${curr.img}` : curr.img,
       'title': curr.title,
-      'description': curr.description.split('\r\n').join(' ')
+      'description': description,
+      'host': typeof curr.host === 'object' ? curr.host[1] : null
     };
 
     mains.push(newEntry);
@@ -80,6 +91,14 @@ const fetch = (url, name, dateObj) => {
           'title': 'h2, h3',
           'description': 'p'
         }
+      )
+      .do(
+        osmosis.follow('.title a@href')
+          .find('.content')
+          .set({
+            'description_alt': ['p'],
+            'host': 'h4',
+          })
       )
       .data(function (listing) {
         scrapedData[name].push(listing);
