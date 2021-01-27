@@ -168,12 +168,12 @@ const fetchAll = dateObj => {
   let dayQuery = '';
 
   // if monday asked and it's today we need to go back with url for prev day
-  if (isToday === true && dateObj.weekday() === 1) {
+  if (isToday === true && dateObj.isoWeekday() === 1) {
     prevDayQuery = '?week=-1';
   }
 
   // if monday asked but today is sunday we need to go next week for url
-  if (isToday === false && dateObj.weekday() === 1) {
+  if (isToday === false && dateObj.isoWeekday() === 1) {
     dayQuery = '?week=1';
   }
 

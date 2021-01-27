@@ -51,7 +51,7 @@ const getResults = async (radios) => {
       }
       dateObj.add(1, 'days');
     }
-    dateObj.tz("Europe/Paris");
+    dateObj.tz('Europe/Paris');
 
     return await radio_module.getScrap(dateObj)
       .then(function (data) {
