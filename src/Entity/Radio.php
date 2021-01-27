@@ -4,9 +4,9 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\RadioRepository;
 use App\Entity\ListeningSession;
+use App\Entity\RadioStream;
 
 /**
  * @ORM\Entity(repositoryClass=RadioRepository::class)
@@ -29,7 +29,6 @@ class Radio
      * @var string
      *
      * @ORM\Column(type="string", length=100)
-     * @Groups({"export"})
      */
     private $codeName;
 
@@ -37,7 +36,6 @@ class Radio
      * @var string
      *
      * @ORM\Column(type="string", length=100)
-     * @Groups({"export"})
      */
     private $name;
 
@@ -45,7 +43,6 @@ class Radio
      * @var string
      *
      * @ORM\Column(type="string", length=50, options={"default"="Europe/Paris"})
-     * @Groups({"export"})
      */
     private $timezone = 'Europe/Paris';
 
@@ -63,38 +60,8 @@ class Radio
      * @var double
      *
      * @ORM\Column(type="decimal", scale=2, options={"default"=0})
-     * @Groups({"export"})
      */
     private $share;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"export"})
-     */
-    private $streamingUrl;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
-    private $streamingEnabled = true;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
-    private $streamingStatus = true;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", options={"default"=0})
-     */
-    private $streamingRetries = 0;
 
     /**
      * @var boolean
@@ -108,9 +75,14 @@ class Radio
      */
     private $listeningSessions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=RadioStream::class, mappedBy="radio", fetch="EXTRA_LAZY")
+     */
+    private $streams;
 
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
+        $this->streams = new ArrayCollection();
     }
 
     public function getId(): int
@@ -169,16 +141,6 @@ class Radio
         $this->share = $share;
     }
 
-    public function getstreamingUrl(): string
-    {
-        return $this->streamingUrl;
-    }
-
-    public function setstreamingUrl(string $streamingUrl): void
-    {
-        $this->streamingUrl = $streamingUrl;
-    }
-
     public function getCodeName(): string
     {
         return $this->codeName;
@@ -207,36 +169,6 @@ class Radio
     public function setActive(bool $active): void
     {
         $this->active = $active;
-    }
-
-    public function isStreamingEnabled(): bool
-    {
-        return $this->streamingEnabled;
-    }
-
-    public function setStreamingEnabled(bool $enabled): void
-    {
-        $this->active = $enabled;
-    }
-
-    public function isStreamingStatus(): bool
-    {
-        return $this->streamingStatus;
-    }
-
-    public function setStreamingStatus(bool $streamingStatus): void
-    {
-        $this->streamingStatus = $streamingStatus;
-    }
-
-    public function getStreamingRetries(): int
-    {
-        return $this->streamingRetries;
-    }
-
-    public function setStreamingRetries(int $streamingRetries): void
-    {
-        $this->streamingRetries = $streamingRetries;
     }
 
     public function getListeningSessions(): ArrayCollection

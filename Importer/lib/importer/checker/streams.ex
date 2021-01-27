@@ -2,6 +2,7 @@ defmodule Importer.Checker.Streams do
   require Logger
   import Ecto.Query, only: [from: 2]
   alias Importer.Repo
+  alias Importer.RadioStream
   alias Importer.Radio
 
   @timeout 100_000
@@ -12,32 +13,34 @@ defmodule Importer.Checker.Streams do
     todo: some genstage or other backpressure mechanism to pace the checks
   """
   def check() do
-    get_radios()
-    |> Enum.each(fn radio ->
-      check_stream_of_radio(radio)
+    get_radio_streams()
+    |> Enum.each(fn radio_stream ->
+      check_stream_of_radio(radio_stream)
     end)
 
     :ok
   end
 
-  defp get_radios() do
+  defp get_radio_streams() do
     query =
-      from(r in Radio,
+      from(rs in RadioStream,
+        join: r in Radio,
+        on: r.id == rs.radio_id,
         where: r.active == true,
-        order_by: [desc: :id]
+        order_by: [desc: rs.id]
       )
 
     Repo.all(query)
   end
 
-  defp check_stream_of_radio(radio) do
+  defp check_stream_of_radio(radio_stream) do
     Task.Supervisor.start_child(
       Importer.TaskSupervisor,
       fn ->
-        Logger.info("Checking: #{radio.code_name} (#{radio.streaming_url})")
+        Logger.info("Checking: #{radio_stream.code_name} (#{radio_stream.url})")
 
         try do
-          HTTPoison.get!(radio.streaming_url, %{},
+          HTTPoison.get!(radio_stream.url, %{},
             stream_to: self(),
             async: :once,
             timeout: @timeout,
@@ -46,38 +49,38 @@ defmodule Importer.Checker.Streams do
           )
         rescue
           e in HTTPoison.Error ->
-            Logger.warn("Error (#{radio.code_name}): #{e.reason}")
-            update_status(radio, false)
+            Logger.warn("Error (#{radio_stream.code_name}): #{e.reason}")
+            update_status(radio_stream, false)
         end
 
         receive do
           %HTTPoison.AsyncStatus{code: status_code} ->
             case status_code do
               s when s in @success_status ->
-                update_status(radio, true)
+                update_status(radio_stream, true)
 
               _ ->
-                Logger.warn("Error status (#{radio.code_name}): #{status_code}")
-                update_status(radio, false)
+                Logger.warn("Error status (#{radio_stream.code_name}): #{status_code}")
+                update_status(radio_stream, false)
             end
 
           message ->
-            Logger.warn("Non-status received (#{radio.code_name}): #{inspect(message)}")
-            update_status(radio, false)
+            Logger.warn("Non-status received (#{radio_stream.code_name}): #{inspect(message)}")
+            update_status(radio_stream, false)
         end
       end,
-      [radio]
+      [radio_stream]
     )
   end
 
-  defp update_status(radio, working) do
+  defp update_status(radio_stream, working) do
     retries =
       case working do
         true -> 0
-        false -> radio.streaming_retries + 1
+        false -> radio_stream.retries + 1
       end
 
-    radio = Ecto.Changeset.change(radio, %{streaming_status: working, streaming_retries: retries})
-    Repo.update(radio)
+    radio_stream = Ecto.Changeset.change(radio_stream, %{status: working, retries: retries})
+    Repo.update(radio_stream)
   end
 end

@@ -32,7 +32,7 @@ class AdminController extends AbstractController
      */
     public function indexAction(EntityManagerInterface $em): Response
     {
-        $radios = $em->getRepository(Radio::class)->findBy(['active' => true], ['id' => 'ASC']);
+        $radios = $em->getRepository(Radio::class)->getActiveRadiosFull();
         $stats = $em->getRepository(ScheduleEntry::class)->getStatsByDayAndRadio();
         $users = $em->getRepository(User::class)->lastNAccounts();
         $userCount = $em->getRepository(User::class)->count([]);

@@ -28,13 +28,37 @@ class RadioRepository extends ServiceEntityRepository
 
     public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT r.codeName as code_name, r.name, r.streamingUrl as streamUrl,
-                    r.streamingUrl, r.share, r.streamingEnabled as streaming_enabled,
+            "SELECT r.codeName as code_name, r.name, s.url as streamUrl,
+                    s.url as streamingUrl, r.share, s.enabled as streaming_enabled,
                     c.codeName as category, 'radio' as type,
-                    r.streamingUrl as stream_url 
+                    s.url as stream_url 
                 FROM App:Radio r
                   INNER JOIN r.category c
-                WHERE r.active = :active
+                  INNER JOIN r.streams s
+                WHERE r.active = :active 
+                  AND s.main = TRUE
+            "
+        );
+
+        $query->setParameter('active', true);
+
+        $query->enableResultCache(self::CACHE_RADIO_TTL, self::CACHE_RADIO_ACTIVE_ID);
+        $results = $query->getResult();
+
+        return array_column($results, null, 'code_name');
+    }
+
+    public function getActiveRadiosFull(): array {
+        $query = $this->getEntityManager()->createQuery(
+            "SELECT r.codeName, r.name, s.url as streamingUrl, r.share, s.enabled as streamingEnabled,
+                    s.retries as streamingRetries, s.status as streamingStatus,
+                    c.codeName as category, 'radio' as type,
+                    s.url as streamUrl 
+                FROM App:Radio r
+                  INNER JOIN r.category c
+                  INNER JOIN r.streams s
+                WHERE r.active = :active 
+                  AND s.main = TRUE
             "
         );
 
