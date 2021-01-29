@@ -31,14 +31,22 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (to.params.countryOrCategory) {
-        vm.$store.dispatch('countrySelection', to.params.countryOrCategory);
+      if (to.params.countryOrCategoryOrUuid) {
+        if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
+          vm.$store.dispatch('getStreamRadio', to.params.countryOrCategoryOrUuid);
+        } else {
+          vm.$store.dispatch('countrySelection', to.params.countryOrCategoryOrUuid);
+        }
       }
     });
   },
   beforeRouteUpdate(to, from, next) {
-    if (to.params.countryOrCategory) {
-      this.$store.dispatch('countrySelection', to.params.countryOrCategory);
+    if (to.params.countryOrCategoryOrUuid) {
+      if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
+        this.$store.dispatch('getStreamRadio', to.params.countryOrCategoryOrUuid);
+      } else {
+        this.$store.dispatch('countrySelection', to.params.countryOrCategoryOrUuid);
+      }
     }
     next();
   },

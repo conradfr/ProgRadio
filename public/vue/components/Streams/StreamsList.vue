@@ -39,10 +39,12 @@ export default {
     Loading
   },
   created() {
-    if (this.$route.params.countryOrCategory) {
-      this.$store.dispatch('countrySelection', this.$route.params.countryOrCategory);
-    } else {
-      this.$store.dispatch('getStreamRadios');
+    if (this.$route.params.countryOrCategoryOrUuid) {
+      if (this.$route.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
+        this.$store.dispatch('getStreamRadio', this.$route.params.countryOrCategoryOrUuid);
+      } else {
+        this.$store.dispatch('countrySelection', this.$route.params.countryOrCategoryOrUuid);
+      }
     }
     this.$store.dispatch('getCountries');
   },

@@ -3,8 +3,6 @@ import Vue from 'vue';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
 
-import { STREAMS_DEFAULT_PER_PAGE } from '../config/config';
-
 import * as config from '../config/config';
 import i18n from '../lang/i18n';
 import StreamsApi from '../api/StreamsApi';
@@ -108,10 +106,25 @@ const storeActions = {
       // .then(() => commit('setLoading', false, { root: true }));
     });
   },
+  getStreamRadio: ({ commit }, radioId) => {
+    commit('setLoading', true, { root: true });
+
+    commit('setPage', 0);
+    commit('setSelectedCountry', {
+      label: i18n.tc('message.streaming.categories.all_countries'),
+      code: config.STREAMING_CATEGORY_ALL
+    });
+
+    Vue.nextTick(() => {
+      StreamsApi.getRadios(radioId)
+        .then(data => commit('updateStreamRadios', data))
+        .finally(() => commit('setLoading', false, { root: true }));
+    });
+  },
   getStreamRadios: ({ state, commit }) => {
     commit('setLoading', true, { root: true });
 
-    const offset = (state.page - 1) * STREAMS_DEFAULT_PER_PAGE;
+    const offset = (state.page - 1) * config.STREAMS_DEFAULT_PER_PAGE;
 
     if (state.searchActive === true && state.searchText !== null) {
       Vue.nextTick(() => {

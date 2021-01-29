@@ -5,10 +5,14 @@ import { STREAMING_CATEGORY_ALL } from '../config/config';
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-undef */
 
-const getRadios = (country, sort, offset) => {
+const getRadios = (countryOrUuid, sort, offset) => {
   const queryParamsList = [];
-  if (country !== null && country !== STREAMING_CATEGORY_ALL) {
-    queryParamsList.push(`country=${country}`);
+  if (countryOrUuid !== null && countryOrUuid !== STREAMING_CATEGORY_ALL) {
+    if (countryOrUuid.indexOf('-') !== -1) {
+      queryParamsList.push(`radio=${countryOrUuid}`);
+    } else {
+      queryParamsList.push(`country=${countryOrUuid}`);
+    }
   }
 
   if (sort !== null) {

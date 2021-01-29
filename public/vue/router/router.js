@@ -19,7 +19,7 @@ const routes = [
         component: AppStreams
       },
       {
-        path: 'streaming/:countryOrCategory?',
+        path: 'streaming/:countryOrCategoryOrUuid?',
         name: 'streaming',
         component: AppStreams
       },

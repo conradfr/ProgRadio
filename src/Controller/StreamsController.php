@@ -31,13 +31,19 @@ class StreamsController  extends AbstractBaseController
     public function list(EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favoritesStream', []);
+        $radioId = $request->query->get('radio', null);
         $howMany = (int) $request->query->get('limit', self::DEFAULT_RESULTS);
         $offset = (int) $request->query->get('offset', 0);
         $country = $request->query->get('country', null);
         $sort = $request->query->get('sort', null);
 
-        $streams = $em->getRepository(Stream::class)->getStreams($howMany, $offset, $country, $sort, $favorites);
-        $totalCount = $em->getRepository(Stream::class)->countStreams($country, null, $favorites);
+        if ($radioId !== null) {
+            $streams = [$em->getRepository(Stream::class)->getOneSpecificStream($radioId)];
+            $totalCount = 0;
+        } else {
+            $streams = $em->getRepository(Stream::class)->getStreams($howMany, $offset, $country, $sort, $favorites);
+            $totalCount = $em->getRepository(Stream::class)->countStreams($country, null, $favorites);
+        }
 
         return $this->jsonResponse([
                 'streams' => $streams,

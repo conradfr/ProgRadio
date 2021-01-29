@@ -137,7 +137,7 @@ export default {
         value: GTAG_STREAMING_FILTER_VALUE
       });
 
-      this.$router.push({ name: 'streaming', params: { countryOrCategory: country.code.toLowerCase() } });
+      this.$router.push({ name: 'streaming', params: { countryOrCategoryOrUuid: country.code.toLowerCase() } });
     },
     sortByChange(sortBy) {
       this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {

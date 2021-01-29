@@ -201,6 +201,23 @@ class StreamRepository extends ServiceEntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
+    public function getOneSpecificStream(
+        string $id
+    ): ?array {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h')
+            ->from(Stream::class, 's')
+            ->where('s.id = :id')
+            ->setMaxResults(1);
+
+        $qb->setParameter('id', $id);
+
+        $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
     public function countStreams(
         string $countryOrCategory = null,
         string $language = null,
