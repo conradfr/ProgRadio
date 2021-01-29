@@ -7,12 +7,12 @@
 {% block tab_content %}
     <table class="table schedule-stats table-striped table-bordered">
         <tr>
-            {% for entry in collections %}
-                <th style="width:{{ 100 / collections|length }}%">{{ entry.name_FR }}</th>
+            {% for entry in collections_admin %}
+                <th style="width:{{ 100 / collections_admin|length }}%">{{ entry.name_FR }}</th>
             {% endfor %}
         </tr>
         <tr>
-            {% for entry in collections %}
+            {% for entry in collections_admin %}
                 <th>
                     <div class="row">
                         <div class="col-md-3"></div>
@@ -23,25 +23,110 @@
                 </th>
             {% endfor %}
         </tr>
-        {% for entry in collections_sessions %}
-            <tr>
-                {% for one in entry %}
-                    <td>
-                        {% if one != 'empty' %}
-                        <div class="col-md-3"><img title="{{ one.name }}" alt="{{ one.name }}" src="{{ asset('img/radio/schedule/' ~ one.codeName ~ '.png') }}"></div>
-                        <div class="col-md-3">{{ one.total_sessions }}</div>
+        <tr>
+            {% for entry in collections_admin %}
+                <th>
+                    <div class="row">
+                        <div class="col-md-3">Total</div>
                         <div class="col-md-3">
-                            {% if (one.total_sessions > 0) %}
-                                {{ format.secondsToMinutes(one.total_seconds / one.total_sessions) }}
+                            {% if sessions_sum[entry.code_name] is defined %}
+                                {{ sessions_sum[entry.code_name].total_sessions }}
                             {% else %}
                                 0
                             {% endif %}
                         </div>
-                        <div class="col-md-3">{{ format.secondsToMinutes(one.total_seconds) }}</div>
-                        {% endif %}
+                        <div class="col-md-3">
+                            {% if sessions_sum[entry.code_name] is defined %}
+                                {{ format.secondsToMinutes(sessions_sum[entry.code_name].total_seconds / sessions_sum[entry.code_name].total_sessions) }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">
+                            {% if sessions_sum[entry.code_name] is defined %}
+                                {{ format.secondsToMinutes(sessions_sum[entry.code_name].total_seconds) }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+                </th>
+            {% endfor %}
+        </tr>
+        {% for entry in collections_sessions %}
+            <tr>
+                {% for one in entry %}
+                    <td>
+                        <div class="row">
+                            {% if one != 'empty' %}
+                            <div class="col-md-3"><img title="{{ one.name }}" alt="{{ one.name }}" src="{{ asset('img/radio/schedule/' ~ one.codeName ~ '.png') }}"></div>
+                            <div class="col-md-3">{{ one.total_sessions }}</div>
+                            <div class="col-md-3">
+                                {% if (one.total_sessions > 0) %}
+                                    {{ format.secondsToMinutes(one.total_seconds / one.total_sessions) }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">{{ format.secondsToMinutes(one.total_seconds) }}</div>
+                            {% endif %}
+                        </div>
                     </td>
                 {% endfor %}
             </tr>
         {% endfor %}
+    </table>
+
+    <table class="table schedule-stats table-striped table-bordered">
+        <tr>
+            <th style="width:{{ 100 / collections_admin|length }}%">
+                <div class="row">
+                    <div class="col-md-3">
+                        Total
+                    </div>
+                    <div class="col-md-3">
+                        {{ sessions_total.total_sessions }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ format.secondsToMinutes(sessions_total.total_seconds / sessions_total.total_sessions) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ format.secondsToMinutes(sessions_total.total_seconds) }}
+                    </div>
+                </div>
+            </th>
+            <td style="width:{{ 100 / collections_admin|length }}%">
+                <div class="col-md-3">
+                    Web
+                </div>
+                <div class="col-md-3">
+                    -
+                </div>
+                <div class="col-md-3">
+                    -
+                </div>
+                <div class="col-md-3">
+                    -
+                </div>
+            </td>
+            <td style="width:{{ 100 / collections_admin|length }}%">
+                <div class="col-md-3">
+                    Android
+                </div>
+                <div class="col-md-3">
+                    -
+                </div>
+                <div class="col-md-3">
+                    -
+                </div>
+                <div class="col-md-3">
+                    -
+                </div>
+            </td>
+            <td style="width:{{ 100 / collections_admin|length }}%">
+            </td>
+            <td style="width:{{ 100 / collections_admin|length }}%">
+            </td>
+        </tr>
     </table>
 {% endblock %}

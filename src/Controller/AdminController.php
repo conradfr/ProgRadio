@@ -88,11 +88,38 @@ class AdminController extends AbstractController
             $i++;
         } while ($t < count($radioListening));
 
+        // sums
+
+        $sessionsSum = array_map(function ($collection) {
+            return array_reduce($collection, function($acc, $radio) {
+                $acc['total_seconds'] += $radio['total_seconds'];
+                $acc['total_sessions'] += $radio['total_sessions'];
+                return $acc;
+            }, ['total_seconds' => 0, 'total_sessions' => 0]);
+        } , $radioListeningInCollections);
+
+        $sessionsDevice = array_map(function ($collection) {
+            return array_reduce($collection, function($acc, $radio) {
+                $acc['total_seconds'] += $radio['total_seconds'];
+                $acc['total_sessions'] += $radio['total_sessions'];
+                return $acc;
+            }, ['total_seconds' => 0, 'total_sessions' => 0]);
+        } , $radioListeningInCollections);
+
+        $sessionsTotal =  array_reduce($sessionsSum, function($acc, $collection) {
+            $acc['total_seconds'] += $collection['total_seconds'];
+            $acc['total_sessions'] += $collection['total_sessions'];
+            return $acc;
+        }, ['total_seconds' => 0, 'total_sessions' => 0]);
+
         return $this->render(
             'default/admin/listening_radios.html.twig', [
-            'collections' => $collections,
+            'collections_admin' => $collections,
             'radio_listening' => $radioListening,
             'collections_sessions' => $collectionsSessions,
+            'sessions_sum' => $sessionsSum,
+            'sessions_device' => [],
+            'sessions_total' => $sessionsTotal,
             'dateStart' => $dates[0],
             'dateEnd' => $dates[1],
             'dateRange' => $dateRange
