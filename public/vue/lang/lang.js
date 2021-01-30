@@ -13,14 +13,24 @@ export const messages = {
   fr: {
     message: {
       loading: 'Chargement ...',
+      now_page: {
+        back: '← Retourner à la grille complète des programmes',
+        title: 'En ce moment à la radio'
+      },
       player: {
-        autoplay_error: "Votre navigateur n'autorise pas la lecture automatique de médias.",
+        autoplay_error: "Votre navigateur n'autorise pas la lecture automatique de médias. Merci de cliquer sur \"Ecouter\" une fois de plus.",
         play_error: 'Erreur de lecture.',
         placeholder: 'Cliquer sur un logo pour lancer la lecture',
         favorites: {
           add: 'Ajouter aux favoris',
           remove: 'Retirer des favoris'
         }
+      },
+      radio_page: {
+        back: '← Retourner à la grille complète des programmes',
+        no_schedule: 'Programmes non disponibles.',
+        play: 'Ecouter {radio}',
+        stop: 'Stopper'
       },
       schedule: {
         no_schedule: 'Programmes non disponibles :(',
@@ -29,12 +39,6 @@ export const messages = {
         radio_list: {
           page: 'Page des programmes'
         }
-      },
-      radio_page: {
-        play: 'Ecouter {radio}',
-        stop: 'Stopper',
-        back: '← Retourner à la grille complète des programmes',
-        no_schedule: 'Programmes non disponibles.'
       },
       streaming: {
         categories: {
@@ -55,14 +59,24 @@ export const messages = {
   en: {
     message: {
       loading: 'Loading ...',
+      now_page: {
+        back: '← Back to radio guide',
+        title: 'Currently on the radio'
+      },
       player: {
-        autoplay_error: 'Your browser does not allow autoplay.',
+        autoplay_error: 'Your browser does not allow autoplay. Please ckick play one more time.',
         play_error: 'Media error.',
         placeholder: 'Click on a radio logo to start streaming',
         favorites: {
           add: 'Add to favorites',
           remove: 'Remove from favorites'
         }
+      },
+      radio_page: {
+        play: 'Listen to {radio}',
+        stop: 'Stop',
+        back: '← Back to radio guide',
+        no_schedule: 'Schedule not available'
       },
       schedule: {
         no_schedule: 'Schedule not available :(',
@@ -71,12 +85,6 @@ export const messages = {
         radio_list: {
           page: 'Schedule page'
         }
-      },
-      radio_page: {
-        play: 'Listen to {radio}',
-        stop: 'Stop',
-        back: '← Back to radio guide',
-        no_schedule: 'Schedule not available'
       },
       streaming: {
         categories: {

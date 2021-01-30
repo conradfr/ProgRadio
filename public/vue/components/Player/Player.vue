@@ -1,5 +1,8 @@
 <template>
   <div class="navbar-player">
+    <div class="player-radio-link">
+      <a :href="radioLink()"><span class="glyphicon glyphicon-share"></span></a>
+    </div>
     <div class="player-wrap">
       <div class="player-sound player-sound-mute"
            v-on:click="toggleMute" v-if="!player.externalPlayer">
@@ -73,7 +76,8 @@ export default {
       */
       debounce: false,
       lastUpdated: null,
-      checkTimer: null
+      checkTimer: null,
+      locale: this.$i18n.locale,
     };
   },
   mounted() {
@@ -160,6 +164,13 @@ export default {
       if (this.player.externalPlayer === false && this.player.playing === true) {
         this.$store.dispatch('stop');
       }
+    },
+    radioLink() {
+      if (this.player.radio.type === 'radio') {
+        return `/${this.locale}/#/radio/${this.player.radio.code_name}`;
+      }
+
+      return `/${this.locale}/#/streaming/${this.player.radio.code_name}`;
     },
     toggleMute() {
       this.$store.dispatch('toggleMute');

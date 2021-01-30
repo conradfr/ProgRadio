@@ -11,6 +11,16 @@
   left: 50%;
   transform: translateX(-50%);
 
+  &:hover {
+    @media (min-width: @screen-md-min) {
+      .player-radio-link {
+        visibility: visible !important;
+        opacity: 1;
+        background-color: @player-background;
+      }
+    }
+  }
+
   /* on mobile, put player at the bottom */
   @media (max-width: @screen-xs-max) {
     top: auto;
@@ -187,4 +197,36 @@
     //  filter: invert(100%) sepia(0%) saturate(70%) hue-rotate(160deg) brightness(111%) contrast(100%);
     //}
   }
+
+  .player-radio-link {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 250ms ease-in-out 4500ms, background-color 300ms ease-in-out 3500ms;
+
+    position: absolute;
+    top: 10px;
+    right: -21px;
+    width: 21px;
+
+    text-align: right;
+    line-height: 1em;
+
+    padding: 3px 5px 5px 0;
+    background-color: @brand-primary;;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+
+    a {
+      color: mix(white, @player-background, 70%);
+
+      &:hover {
+        color: mix(white, @player-background, 85%);
+      }
+
+      span {
+        font-size: 10px;
+      }
+    }
+  }
+
 }
