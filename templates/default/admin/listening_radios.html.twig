@@ -88,10 +88,18 @@
                         {{ sessions_total.total_sessions }}
                     </div>
                     <div class="col-md-3">
+                    {% if sessions_total.total_sessions > 0 %}
                         {{ format.secondsToMinutes(sessions_total.total_seconds / sessions_total.total_sessions) }}
+                    {% else %}
+                        -
+                    {% endif %}
                     </div>
                     <div class="col-md-3">
-                        {{ format.secondsToMinutes(sessions_total.total_seconds) }}
+                        {% if sessions_total.total_sessions > 0 %}
+                            {{ format.secondsToMinutes(sessions_total.total_seconds) }}
+                        {% else %}
+                            -
+                        {% endif %}
                     </div>
                 </div>
             </th>
