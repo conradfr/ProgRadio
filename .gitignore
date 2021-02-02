@@ -107,12 +107,6 @@
 /tools/capistrano/config/deploy/*.rb
 /tools/capistrano/ssh/deployer*
 /tools/capistrano/log/capistrano.log
-
-###> liip/imagine-bundle ###
-/public/media/cache/
-###< liip/imagine-bundle ###
-
-
 /work/
 
 ###> symfony/framework-bundle ###
