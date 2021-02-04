@@ -34,6 +34,8 @@ final class Version20210201171459 extends AbstractMigration implements Container
         $this->addSql('CREATE INDEX ls_radio_stream_idx ON listening_session (radio_stream_id)');
 
         $this->addSql('ALTER TABLE listening_session ADD CONSTRAINT FK_BC76FA146DDA074 FOREIGN KEY (radio_stream_id) REFERENCES radio_stream (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+
+        $this->addSql("UPDATE listening_session SET radio_stream_id = radio_id WHERE radio_id IS NOT NULL;");
     }
 
     public function down(Schema $schema) : void
@@ -44,10 +46,6 @@ final class Version20210201171459 extends AbstractMigration implements Container
 
     public function postUp(Schema $schema): void
     {
-        $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
 
-        $connection->exec(
-            "UPDATE listening_session SET radio_stream_id = radio_id WHERE radio_id IS NOT NULL;"
-        );
     }
 }
