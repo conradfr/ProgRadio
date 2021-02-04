@@ -2,6 +2,7 @@ export const MINUTE_PIXEL = 6;
 export const DAYS = 1;
 export const GRID_VIEW_EXTRA = 50;
 export const GRID_VIEW_EXTRA_LEFT = 76;
+export const RADIO_MENU_WIDTH = 71;
 
 export const GRID_INDEX_BREAK = 768;
 export const NAV_MOVE_BY = 60 * MINUTE_PIXEL;
@@ -31,6 +32,7 @@ export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection_v2`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
 export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;
+export const COOKIE_LAST_RADIO_STREAM_PLAYED = `${COOKIE_PREFIX}-stream-lastplayed`;
 export const COOKIE_RADIO_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
 export const COOKIE_STREAM_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}_streams`;
 export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country`;
@@ -113,3 +115,4 @@ export const GTAG_STREAMING_FILTER_VALUE = 1;
 export const GTAG_CATEGORY_PLAYER = 'player';
 
 export const GTAG_CATEGORY_RADIOPAGE = 'radio_page';
+export const GTAG_CATEGORY_NOWPAGE = 'now_page';

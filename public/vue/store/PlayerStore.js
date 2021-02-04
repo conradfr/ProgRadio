@@ -19,6 +19,8 @@ const initState = {
   // externalPlayer: false,
   radio: Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)
     ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)) : null,
+  radioStreamCodeName: Vue.cookie.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED)
+    ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED)) : null,
   show: null,
   volume: Vue.cookie.get(config.COOKIE_VOLUME)
     ? parseInt(Vue.cookie.get(config.COOKIE_VOLUME), 10) : config.DEFAULT_VOLUME,
@@ -32,23 +34,45 @@ const initState = {
 
 const storeGetters = {
   radioPlayingCodeName: state => (state.radio !== null ? state.radio.code_name : null),
+  streamUrl: (state) => {
+    if (state.radio === null) { return null; }
+
+    if (state.radio.type === config.PLAYER_TYPE_STREAM || state.radioStreamCodeName === null) {
+      return state.radio.stream_url;
+    }
+
+    return state.radio.streams[state.radioStreamCodeName].url;
+  },
   displayVolume: state => state.focus.icon || state.focus.fader || false
 };
 
 /* eslint-disable object-curly-newline */
 const storeActions = {
-  play: ({ state, commit, rootState, rootGetters }, radioCodeName) => {
+  play: ({ state, commit, rootState, rootGetters }, params) => {
+    const { radioCodeName, streamCodeName } = params;
+
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.sessionStart);
+      state.radio, state.radioStreamCodeName, state.sessionStart);
 
     commit('stop');
+
     const radio = find(rootState.schedule.radios, { code_name: radioCodeName });
 
-    if (radio !== undefined && radio.streaming_enabled === true) {
-      Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(radio), config.COOKIE_PARAMS);
-      const show = rootGetters.currentShowOnRadio(radio.code_name);
+    if (radio === undefined || radio.streaming_enabled === false) {
+      return;
+    }
 
-      commit('switchRadio', { radio, show });
+    const stream = ScheduleUtils.getStreamFromCodeName(streamCodeName, radio);
+
+    if (stream !== null) {
+      Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(radio), config.COOKIE_PARAMS);
+      Vue.cookie.set(config.COOKIE_LAST_RADIO_STREAM_PLAYED,
+        JSON.stringify(streamCodeName), config.COOKIE_PARAMS);
+
+      // secondary streams have no schedule
+      const show = stream.main === true ? rootGetters.currentShowOnRadio(radio.code_name) : null;
+
+      commit('switchRadio', { radio, streamCodeName, show });
       // Otherwise will be ignored
       Vue.nextTick(() => {
         commit('play');
@@ -57,12 +81,12 @@ const storeActions = {
   },
   stop: ({ state, commit }) => {
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.sessionStart);
+      state.radio, state.radioStreamCodeName, state.sessionStart);
     commit('pause');
   },
   playStream: ({ rootState, state, commit }, stream) => {
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.sessionStart);
+      state.radio, state.radioStreamCodeName, state.sessionStart);
     commit('stop');
 
     setTimeout(() => {
@@ -79,7 +103,7 @@ const storeActions = {
   },
   togglePlay: ({ state, commit }) => {
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.sessionStart);
+      state.radio, state.radioStreamCodeName, state.sessionStart);
     commit('togglePlay');
   },
   toggleMute: ({ state, commit }) => {
@@ -88,7 +112,7 @@ const storeActions = {
   },
   playPrevious: ({ state, dispatch }) => {
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.sessionStart);
+      state.radio, state.radioStreamCodeName, state.sessionStart);
 
     dispatch('playNext', 'backward');
   },
@@ -191,33 +215,41 @@ const storeMutations = {
       state.playing = true;
     }
   },
-  switchRadio(state, { radio, show }) {
+  switchRadio(state, { radio, streamCodeName, show }) {
     const prevRadioCodeName = state.radio === null ? null : state.radio.code_name;
+    const prevStreamCodeName = state.radioStreamCodeName;
     const prevShowHash = state.show === null ? null : state.show.hash;
 
     if ((radio !== null && prevRadioCodeName === radio.code_name)
+      && ((streamCodeName !== undefined && streamCodeName !== null
+        && streamCodeName === prevStreamCodeName)
+        || (prevStreamCodeName === null
+          && (streamCodeName === undefined || streamCodeName === null)))
       && ((show !== null && prevShowHash === show.hash)
         || (prevShowHash === null && show === null))) {
-      // @todo fix this, probably by differentiate switchRadio & update
+      // @todo fix this, probably by differentiating switchRadio & update
       if (state.externalPlayer === false || state.playing === true) {
         return;
       }
     }
 
     if (radio !== null && state.externalPlayer === true) {
-      AndroidApi.play(radio, show);
+      const stream = ScheduleUtils.getStreamFromCodeName(streamCodeName, radio);
+      AndroidApi.play(radio, stream, show);
       // return;
     }
 
-    if (state.playing === true && radio !== null && state.externalPlayer === false) {
+    if (state.playing === true && radio !== null
+      && state.externalPlayer === false) {
       state.sessionStart = DateTime.local().setZone(config.TIMEZONE);
     }
 
     Vue.set(state, 'radio', radio);
     Vue.set(state, 'show', show);
+    Vue.set(state, 'radioStreamCodeName', streamCodeName || null);
 
     if (state.externalPlayer === false) {
-      PlayerUtils.showNotification(radio, show);
+      PlayerUtils.showNotification(radio, streamCodeName, show);
     }
   },
   togglePlay(state) {
@@ -229,10 +261,11 @@ const storeMutations = {
 
       state.playing = false;
       PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-        state.radio, state.sessionStart);
+        state.radio, state.radioStreamCodeName, state.sessionStart);
     } else if (state.playing === false && state.radio !== undefined && state.radio !== null) {
       if (state.externalPlayer === true) {
-        AndroidApi.play(state.radio, state.show);
+        const stream = find(state.radio.streams, { code_name: state.radioStreamCodeName });
+        AndroidApi.play(state.radio, stream, state.show);
         return;
       }
 

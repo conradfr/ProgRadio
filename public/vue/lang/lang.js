@@ -30,7 +30,8 @@ export const messages = {
         back: '← Retourner à la grille complète des programmes',
         no_schedule: 'Programmes non disponibles.',
         play: 'Ecouter {radio}',
-        stop: 'Stopper'
+        stop: 'Stopper',
+        webradios: 'Radios web'
       },
       schedule: {
         no_schedule: 'Programmes non disponibles :(',
@@ -76,7 +77,8 @@ export const messages = {
         play: 'Listen to {radio}',
         stop: 'Stop',
         back: '← Back to radio guide',
-        no_schedule: 'Schedule not available'
+        no_schedule: 'Schedule not available',
+        webradios: 'Webradios'
       },
       schedule: {
         no_schedule: 'Schedule not available :(',

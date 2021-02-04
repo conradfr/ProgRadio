@@ -83,6 +83,34 @@
   margin-bottom: 20px; /* for shows without enough text */
 }
 
+.webradios-header {
+  width: 65%;
+
+  color: #4d6a82;
+  text-align: center;
+  font-weight: bold;
+
+  margin: 17px auto 20px;
+
+  &:before, &:after {
+    content: "";
+    display: inline-block;
+    width: 50%;
+    opacity: 0.3;
+    margin: 0 .5em 0 -55%;
+    vertical-align: middle;
+    border-bottom: 1px solid;
+  }
+
+  &:after {
+    margin: 0 -55% 0 .5em;
+  }
+}
+
+.schedule-page-streams-one {
+  margin-bottom: 20px;
+}
+
 .schedule-day-play {
   text-align: center;
 

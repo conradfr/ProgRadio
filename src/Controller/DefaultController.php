@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\RadioStream;
 use App\Entity\Stream;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
@@ -228,24 +229,52 @@ class DefaultController extends AbstractBaseController
             throw new BadRequestHttpException($e->getMessage());
         }
 
-        if(!isset($data['id']) || !is_string($data['id'])) {
+        if(
+            (!isset($data['id']) || !is_string($data['id']))
+            && (!isset($data['radio_stream_id']) || !is_string($data['radio_stream_id']))
+            && (!isset($data['stream_id']) || !is_string($data['stream_id']))
+        )
+        {
             throw new BadRequestHttpException('Invalid data');
         }
 
-        if (Uuid::isValid($data['id'])) {
-            $stream = $em->getRepository(Stream::class)->findOneBy(['id' => $data['id']]);
+        $id = null;
+        $isStream = false;
+
+        if (isset($data['id']) && is_string($data['id'])) {
+            $id = $data['id'];
+            if (Uuid::isValid($id)) {
+                $isStream = true;
+            }
+        } elseif (isset($data['radio_stream_id']) && is_string($data['radio_stream_id'])) {
+            $id = $data['radio_stream_id'];
+        } else {
+            $id = $data['stream_id'];
+            $isStream = true;
+        }
+
+        if ($isStream === true) {
+            $stream = $em->getRepository(Stream::class)->findOneBy(['id' => $id]);
             if (!$stream) {
                 throw new NotFoundHttpException('Stream not found');
             }
 
             $listeningSession->setStream($stream);
         } else {
-            $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $data['id'], 'active' => true]);
-            if (!$radio) {
-                throw new NotFoundHttpException('Radio not found');
+            $radioStream = $em->getRepository(RadioStream::class)->findOneBy(['codeName' => $id]);
+            if (!$radioStream) {
+                $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $id, 'active' => true]);
+                if (!$radio) {
+                    throw new NotFoundHttpException('Radio not found');
+                }
+
+                $radioStream = $em->getRepository(RadioStream::class)->findOneBy(['radio' => $radio]);
+                if (!$radioStream) {
+                    throw new NotFoundHttpException('Radio not found');
+                }
             }
 
-            $listeningSession->setRadio($radio);
+            $listeningSession->setRadioStream($radioStream);
         }
 
         $em->persist($listeningSession);

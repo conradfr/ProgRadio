@@ -9,33 +9,7 @@
                    :src="'/img/radio/page/' + radio.code_name + '.png'">
             </div>
           </div>
-          <div class="col-md-12 col-xs-6">
-            <div
-                v-if="radio.streaming_enabled === true &&
-           (playing === false || radio.code_name !== radioPlayingCodeName)"
-                v-on:click="play"
-                class="schedule-day-play center-block"
-            >
-              <img :alt="$t('message.radio_page.play', { radio: radio.name })"
-                   class="schedule-day-play-button" src="/img/play-button-inside-a-circle.svg">
-              <div class="schedule-day-play-text">
-                {{ $t('message.radio_page.play', { radio: radio.name }) }}
-              </div>
-            </div>
-
-            <div
-                v-if="radio.streaming_enabled === true &&
-              playing === true && radio.code_name === radioPlayingCodeName"
-                v-on:click="stop"
-                class="schedule-day-play center-block"
-            >
-              <img :alt="$t('message.radio_page.stop')" class="schedule-day-play-button"
-                   src="/img/rounded-pause-button.svg">
-              <div class="schedule-day-play-text">
-                {{ $t('message.radio_page.stop') }}
-              </div>
-            </div>
-          </div>
+          <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
         </div>
       </div>
       <div v-if="radio" class="col-md-10 col-xs-12">
@@ -67,15 +41,17 @@ import { DateTime } from 'luxon';
 import {
   TIMEZONE,
   AUTOPLAY_INTERVAL_CHECK,
-  AUTOPLAY_INTERVAL_MAX_RETRIES,
-  GTAG_CATEGORY_RADIOPAGE,
-  GTAG_ACTION_PLAY,
-  GTAG_ACTION_PLAY_VALUE, GTAG_ACTION_STOP, GTAG_ACTION_STOP_VALUE
+  AUTOPLAY_INTERVAL_MAX_RETRIES
 } from '../config/config';
 
 import RadioShow from './Radio/RadioShow.vue';
+import RadioStreams from './Radio/RadioStreams.vue';
 
 export default {
+  components: {
+    RadioShow,
+    RadioStreams
+  },
   /* eslint-disable no-undef */
   data() {
     return {
@@ -119,14 +95,12 @@ export default {
     const app = document.getElementById('app');
     app.classList.remove('no-background');
   },
-  components: {
-    RadioShow
-  },
   computed: {
     ...mapState({
       player: state => state.player,
       playing: state => state.player.playing,
-      radios: state => state.schedule.radios
+      radios: state => state.schedule.radios,
+      playingStreamCodeName: state => state.player.radioStreamCodeName
     }),
     ...mapGetters([
       'hasSchedule',
@@ -155,32 +129,6 @@ export default {
     }
   },
   methods: {
-    play() {
-      if (this.radio.streaming_enabled === true) {
-        if (this.player.externalPlayer === false) {
-          this.$gtag.event(GTAG_ACTION_PLAY, {
-            event_category: GTAG_CATEGORY_RADIOPAGE,
-            event_label: this.radio.code_name,
-            value: GTAG_ACTION_PLAY_VALUE
-          });
-        }
-
-        this.$store.dispatch('play', this.radio.code_name);
-      }
-    },
-    stop() {
-      if (this.radio.streaming_enabled === true) {
-        if (this.player.externalPlayer === false) {
-          this.$gtag.event(GTAG_ACTION_STOP, {
-            event_category: GTAG_CATEGORY_RADIOPAGE,
-            event_label: this.radio.code_name,
-            value: GTAG_ACTION_STOP_VALUE
-          });
-        }
-
-        this.$store.dispatch('stop');
-      }
-    },
     autoPlay() {
       if (this.radio !== null) {
         clearInterval(this.autoPlayInterval);

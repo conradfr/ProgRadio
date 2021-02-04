@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\RadioStreamRepository;
@@ -76,6 +77,15 @@ class RadioStream
      * @ORM\Column(type="integer", options={"default"=0})
      */
     private $retries = 0;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
+     */
+    private $listeningSessions;
+
+    public function __construct() {
+        $this->listeningSessions = new ArrayCollection();
+    }
 
     public function getId(): string
     {
@@ -162,7 +172,13 @@ class RadioStream
         $this->retries = $retries;
     }
 
+    public function getListeningSessions(): ArrayCollection
+    {
+        return $this->listeningSessions;
+    }
 
-
-
+    public function setListeningSessions(ArrayCollection $listeningSessions): void
+    {
+        $this->listeningSessions = $listeningSessions;
+    }
 }

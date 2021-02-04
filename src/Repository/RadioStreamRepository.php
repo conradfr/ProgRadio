@@ -4,22 +4,30 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\RadioStream;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityRepository;
 
-class RadioStreamRepository extends ServiceEntityRepository
+class RadioStreamRepository extends EntityRepository
 {
-    private $security;
+    protected const CACHE_TTL = 604800; // week
+    protected const CACHE_ID = 'enabled_radios_streams';
 
-    public function __construct(Security $security, ManagerRegistry $registry)
-    {
-        parent::__construct($registry, RadioStream::class);
+    public function getStreamsOfRadios(array $ids): array {
+        $query = $this->getEntityManager()->createQuery(
+            "SELECT rs.id, r.codeName as radio_code_name, rs.codeName as code_name, rs.name, rs.url, rs.main
+                FROM App:RadioStream rs
+                  INNER JOIN rs.radio r
+                WHERE rs.enabled = :enabled
+                  AND r.id IN (:radioIds)
+                ORDER BY rs.name ASC
+            "
+        );
 
-        // Avoid calling getUser() in the constructor: auth may not
-        // be complete yet. Instead, store the entire Security object.
-        $this->security = $security;
+        $query->setParameters([
+            'enabled' => true,
+            'radioIds' => $ids
+        ]);
+
+        $query->enableResultCache(self::CACHE_TTL, self::CACHE_ID);
+        return $query->getResult();
     }
-
 }

@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 
 import * as config from '../config/config';
 import ScheduleApi from '../api/ScheduleApi';
+import ScheduleUtils from './ScheduleUtils';
 
 const VueCookie = require('vue-cookie');
 
@@ -86,13 +87,19 @@ const getNextStream = (currentStream, streams, way) => {
 
 /* ---------- NOTIFICATION ---------- */
 
-const buildNotificationData = (radio, show) => {
+const buildNotificationData = (radio, streamCodeName, show) => {
   const data = {
     name: radio.name,
     times: null,
     host: null,
     title: null,
   };
+
+  const stream = ScheduleUtils.getStreamFromCodeName(streamCodeName, radio);
+
+  if (stream !== null) {
+    data.name = stream.name;
+  }
 
   data.icon = getPictureUrl(radio, show);
 
@@ -162,12 +169,12 @@ const buildNotification = (data) => {
   };
 };
 
-const showNotification = (radio, show) => {
+const showNotification = (radio, streamCodeName, show) => {
   if (!('Notification' in window)) {
     return;
   }
 
-  const data = buildNotificationData(radio, show);
+  const data = buildNotificationData(radio, streamCodeName, show);
   buildMediaSessionMetadata(data);
 
   const isMobile = window.matchMedia('only screen and (max-width: 1365px)');
@@ -192,11 +199,11 @@ const showNotification = (radio, show) => {
 
 /* ---------- API ---------- */
 
-const sendListeningSession = (externalPlayer, playing, radio, dateTimeStart) => {
+const sendListeningSession = (externalPlayer, playing, radio, radioStreamCodeName,
+  dateTimeStart) => {
   if (externalPlayer === true) {
     return;
   }
-
   if (playing === true && dateTimeStart !== null) {
     const dateTimeEnd = DateTime.local().setZone(config.TIMEZONE);
 
@@ -206,7 +213,8 @@ const sendListeningSession = (externalPlayer, playing, radio, dateTimeStart) => 
 
     setTimeout(
       () => {
-        ScheduleApi.sendListeningSession(radio.code_name, dateTimeStart, dateTimeEnd);
+        ScheduleApi.sendListeningSession(radio.code_name, radioStreamCodeName,
+          dateTimeStart, dateTimeEnd);
       },
       500
     );

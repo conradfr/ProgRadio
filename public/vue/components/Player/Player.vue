@@ -1,6 +1,6 @@
 <template>
   <div class="navbar-player">
-    <div class="player-radio-link">
+    <div v-if="this.player.radio" class="player-radio-link">
       <a :href="radioLink()"><span class="glyphicon glyphicon-share"></span></a>
     </div>
     <div class="player-wrap">
@@ -30,7 +30,7 @@
           aria-hidden="true"></span>
       </div>
       <div v-if="player.radio" v-bind:title="showTitle" class="player-name">
-        {{ player.radio.name }}
+        {{ playedName }}
       </div>
       <div v-if="!player.radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}
@@ -100,7 +100,8 @@ export default {
       streamFavorites: state => state.streams.favorites
     }),
     ...mapGetters([
-      'displayVolume'
+      'displayVolume',
+      'streamUrl'
     ]),
     isFavorite() {
       if (this.player.radio === null) {
@@ -114,6 +115,14 @@ export default {
 
       // stream
       return this.streamFavorites.indexOf(this.player.radio.code_name) !== -1;
+    },
+    playedName() {
+      if (Object.prototype.hasOwnProperty.call(this.player.radio, 'streams')
+          && this.player.radioStreamCodeName !== null) {
+        return this.player.radio.streams[this.player.radioStreamCodeName].name;
+      }
+
+      return this.player.radio.name;
     },
     showTitle() {
       if (this.player.show === null) {
@@ -139,7 +148,7 @@ export default {
       if (this.player.externalPlayer === true) { return; }
 
       if (val === true) {
-        this.play(this.player.radio.stream_url);
+        this.play(this.streamUrl);
       } else {
         this.stop();
       }
@@ -166,6 +175,10 @@ export default {
       }
     },
     radioLink() {
+      if (this.player.radio === null) {
+        return '#';
+      }
+
       if (this.player.radio.type === 'radio') {
         return `/${this.locale}/#/radio/${this.player.radio.code_name}`;
       }
@@ -217,7 +230,6 @@ export default {
         const streamUrl = (url.substring(0, 5) !== 'https')
           ? `${streamsProxy}?stream=${url}` : url;
 
-        // this.audio = new Audio(`${stream_url}?cb=${new Date().getTime()}`);
         this.audio = new Audio(`${streamUrl}`);
         this.audio.muted = this.player.muted;
         this.audio.volume = (this.player.volume * 0.1);

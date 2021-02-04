@@ -45,6 +45,8 @@ export default {
       } else {
         this.$store.dispatch('countrySelection', this.$route.params.countryOrCategoryOrUuid);
       }
+    } else {
+      this.$store.dispatch('getStreamRadios');
     }
     this.$store.dispatch('getCountries');
   },

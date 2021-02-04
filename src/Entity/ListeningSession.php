@@ -8,7 +8,7 @@ use Darsyn\IP\Version\Multi as IP;
 
 /**
  * @ORM\Entity(repositoryClass=ListeningSessionRepository::class)
- * @ORM\Table(indexes={@ORM\Index(name="radio_idx", columns={"radio_id"}), @ORM\Index(name="stream_idx", columns={"stream_id"}), @ORM\Index(name="date_time_start_idx", columns={"date_time_start"})})
+ * @ORM\Table(indexes={@ORM\Index(name="ls_radio_stream_idx", columns={"radio_stream_id"}), @ORM\Index(name="stream_idx", columns={"stream_id"}), @ORM\Index(name="date_time_start_idx", columns={"date_time_start"})})
  */
 class ListeningSession
 {
@@ -42,6 +42,12 @@ class ListeningSession
      * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
      */
     private $radio;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=RadioStream::class, inversedBy="listeningSessions")
+     * @ORM\JoinColumn(name="radio_stream_id", referencedColumnName="id")
+     */
+    private $radioStream;
 
     /**
      * @ORM\ManyToOne(targetEntity=Stream::class, inversedBy="listeningSessions")
@@ -108,6 +114,16 @@ class ListeningSession
     public function setRadio(Radio $radio): void
     {
         $this->radio = $radio;
+    }
+
+    public function getRadioStream(): ?RadioStream
+    {
+        return $this->radioStream;
+    }
+
+    public function setRadioStream(RadioStream $radioStream): void
+    {
+        $this->radioStream = $radioStream;
     }
 
     public function getStream(): ?Stream

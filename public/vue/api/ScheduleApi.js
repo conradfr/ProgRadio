@@ -135,13 +135,18 @@ const toggleFavoriteRadio = (radioCodeName) => {
     });
 };
 
-const sendListeningSession = (codeName, dateTimeStart, dateTimeEnd) => {
+const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, dateTimeEnd) => {
   const data = {
-    id: codeName,
     date_time_start: dateTimeStart.toISO(),
     date_time_end: dateTimeEnd.toISO(),
     source: LISTENING_SESSION_SOURCE
   };
+
+  if (radioStreamCodeName !== undefined && radioStreamCodeName !== null) {
+    data.radio_stream_id = radioStreamCodeName;
+  } else {
+    data.id = codeName;
+  }
 
   axios.post('/listen', data);
 };

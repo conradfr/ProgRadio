@@ -168,6 +168,15 @@ const getNextCollection = (current, collections, radios, way) => {
   return collectionsOrdered[newIndex].code_name;
 };
 
+const getStreamFromCodeName = (streamCodeName, radio) => {
+  if (Object.prototype.hasOwnProperty.call(radio, 'streams')
+    && Object.prototype.hasOwnProperty.call(radio.streams, streamCodeName)) {
+    return radio.streams[streamCodeName];
+  }
+
+  return null;
+};
+
 export default {
   enforceScrollIndex,
   initialScrollIndexFunction,
@@ -175,5 +184,6 @@ export default {
   getScheduleDisplay,
   rankCollection,
   getCollectionIndex,
-  getNextCollection
+  getNextCollection,
+  getStreamFromCodeName
 };

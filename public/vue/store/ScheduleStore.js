@@ -258,9 +258,10 @@ const storeActions = {
     }
 
     if (rootState.player.playing === true) {
-      const { radio } = rootState.player;
+      const { radio, radioStreamCodeName } = rootState.player;
+
       const show = getters.currentShowOnRadio(radio.code_name);
-      commit('switchRadio', { radio, show });
+      commit('switchRadio', { radio, streamCodeName: radioStreamCodeName, show });
     }
 
     commit('updateCursor', now);

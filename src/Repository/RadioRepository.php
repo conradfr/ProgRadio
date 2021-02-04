@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Radio;
+use App\Entity\RadioStream;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,13 +29,13 @@ class RadioRepository extends ServiceEntityRepository
 
     public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT r.codeName as code_name, r.name, s.url as streamUrl,
-                    s.url as streamingUrl, r.share, s.enabled as streaming_enabled,
+            "SELECT r.id, r.codeName as code_name, r.name, s.url as streamUrl,
+                    s.url as streamingUrl, r.share, COALESCE(s.enabled, false) as streaming_enabled,
                     c.codeName as category, 'radio' as type,
                     s.url as stream_url 
                 FROM App:Radio r
                   INNER JOIN r.category c
-                  INNER JOIN r.streams s
+                  LEFT JOIN r.streams s
                 WHERE r.active = :active 
                   AND s.main = TRUE
             "
@@ -43,20 +44,40 @@ class RadioRepository extends ServiceEntityRepository
         $query->setParameter('active', true);
 
         $query->enableResultCache(self::CACHE_RADIO_TTL, self::CACHE_RADIO_ACTIVE_ID);
-        $results = $query->getResult();
+        $result = $query->getResult();
 
-        return array_column($results, null, 'code_name');
+        $resultRadios = array_column($result, null, 'code_name');
+
+        $ids = array_column($result, 'id');
+        $radioStreamsResult = $this->getEntityManager()->getRepository(RadioStream::class)->getStreamsOfRadios($ids);
+
+        $resultRadios = array_map(function ($radio) {
+            $radio['streams'] = [];
+            unset($radio['id']);
+            return $radio;
+        } , $resultRadios);
+        
+        foreach ($radioStreamsResult as $radioStream) {
+            $resultRadios[$radioStream['radio_code_name']]['streams'][$radioStream['code_name']] = [
+                'code_name' => $radioStream['code_name'],
+                'name' => $radioStream['name'],
+                'url' => $radioStream['url'],
+                'main' => $radioStream['main']
+            ];
+        }
+        
+        return $resultRadios;
     }
 
     public function getActiveRadiosFull(): array {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT r.codeName, r.name, s.url as streamingUrl, r.share, s.enabled as streamingEnabled,
+            "SELECT r.codeName, r.name, s.url as streamingUrl, r.share, COALESCE(s.enabled, false) as streamingEnabled,
                     s.retries as streamingRetries, s.status as streamingStatus,
                     c.codeName as category, 'radio' as type,
                     s.url as streamUrl 
                 FROM App:Radio r
                   INNER JOIN r.category c
-                  INNER JOIN r.streams s
+                  LEFT JOIN r.streams s
                 WHERE r.active = :active 
                   AND s.main = TRUE
             "
