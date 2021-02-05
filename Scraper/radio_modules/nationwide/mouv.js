@@ -21,8 +21,12 @@ const format = dateObj => {
     let newEntry = {
       'title': curr.title,
       'description': curr.description,
-      'img': content.contentReducer.visual.url
     };
+
+    // temp has there is a ssl error on the server on img import for rtl
+    if (content.contentReducer.visual !== undefined && content.contentReducer.visual.url !== undefined) {
+      newEntry.img = 'http' + content.contentReducer.visual.url.substr(5);
+    }
 
     let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
     let match = curr.datetime_raw.match(regexp);
@@ -31,6 +35,7 @@ const format = dateObj => {
     if (match === null) {
       return prev;
     }
+
 
     const startDateTime = moment(dateObj);
     startDateTime.hour(match[1]);
