@@ -35,12 +35,13 @@ defmodule Importer.Mixfile do
       {:jason, "~> 1.1"},
       {:postgrex, ">= 0.0.0"},
       {:ecto_sql, "~> 3.2"},
-      {:timex, "~> 3.5"},
+      {:timex, "~> 3.6"},
       {:httpoison, "~> 1.6.0"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:quantum, "~> 2.3"},
       {:dns, "~> 2.1.2"},
-      {:mogrify, "~> 0.7.4"}
+      {:mogrify, "~> 0.7.4"},
+      {:tzdata, "~> 1.1", override: true}
     ]
   end
 end

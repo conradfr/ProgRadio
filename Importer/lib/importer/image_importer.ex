@@ -88,7 +88,7 @@ defmodule Importer.ImageImporter do
               url_encoded,
               [],
               follow_redirect: true,
-              ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]],
+              ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.3", :"tlsv1.2", :"tlsv1.1", :tlsv1]],
               recv_timeout: 5000
             )
           rescue
