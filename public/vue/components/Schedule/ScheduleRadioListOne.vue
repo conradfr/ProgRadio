@@ -17,7 +17,7 @@
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
       </a>
       <div v-for="entry in secondaryStreams" :key="entry.code_name"
-         v-on:click="playStop(entry.code_name)" :title="entry.name"
+         v-on:click="playStop(entry.code_name, true)" :title="entry.name"
          class="radio-submenu-entry radio-submenu-entry-secondary">
         <div class="radio-submenu-entry-secondary-logo" :style="styleObject">
           <div class="radio-logo-play"
@@ -33,7 +33,7 @@
         <p>{{ entry.name }}</p>
       </div>
     </div>
-    <a v-on:click="playStop(`${radio.code_name}_main`)" :title="radio.name">
+    <a v-on:click="playStop(`${radio.code_name}_main`, false)" :title="radio.name">
       <div class="radio-logo"
            :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}"
            :title="radio.name" :style="styleObject">
@@ -107,11 +107,11 @@ export default {
     }
   },
   methods: {
-    playStop(streamCodeName) {
+    playStop(streamCodeName, isSubStream) {
       // stop if playing
-      // @todo check if ok with new multistream impl
       if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name
-        && this.playingStreamCodeName === streamCodeName) {
+        && ((isSubStream === true && this.playingStreamCodeName === streamCodeName)
+          || isSubStream === false)) {
         if (this.externalPlayer === false) {
           this.$gtag.event(GTAG_ACTION_STOP, {
             event_category: GTAG_CATEGORY_SCHEDULE,

@@ -156,19 +156,36 @@ const storeActions = {
 
     const parse = () => {
       let radio = find(rootState.schedule.radios, { code_name: radioCodeName });
+      let radioStream = null;
       let show = null;
 
-      // if not radio, maybe stream
-      // @todo better handling of both types
+      // if not radio, maybe radio substream, or maybe stream
+      // @todo better handling of types
       if (radio === undefined) {
-        radio = find(rootState.streams.streamRadios, { code_name: radioCodeName });
+        let found = false;
+        const radios = Object.keys(rootState.schedule.radios);
+        let i = 0;
+        do {
+          radioStream = find(rootState.schedule.radios[radios[i]].streams,
+            { code_name: radioCodeName });
+
+          if (radioStream !== undefined) {
+            radio = rootState.schedule.radios[radios[i]];
+            found = true;
+          }
+          i += 1;
+        } while (found === false && i < radios.length);
+
+        if (radio === undefined) {
+          radio = find(rootState.streams.streamRadios, { code_name: radioCodeName });
+        }
       } else {
         show = rootGetters.currentShowOnRadio(radio.code_name);
       }
 
       if (radio !== undefined /* && radio.streaming_enabled === true */
         && config.PLAYER_STATE.indexOf(playbackState) !== -1) {
-        commit('updatePlayingStatus', { radio, show, playbackState });
+        commit('updatePlayingStatus', { radio, radioStream, show, playbackState });
       }
     };
 
@@ -284,10 +301,11 @@ const storeMutations = {
   },
   /* From Android app */
   updatePlayingStatus(state, params) {
-    const { playbackState, radio, show } = params;
+    const { playbackState, radio, radioStream, show } = params;
 
-    state.playing = playbackState === config.PLAYER_STATE_PLAYING;
+    Vue.set(state, 'playing', playbackState === config.PLAYER_STATE_PLAYING);
     Vue.set(state, 'radio', radio);
+    Vue.set(state, 'radioStreamCodeName', radioStream !== null ? radioStream.code_name : null);
     Vue.set(state, 'show', show);
   }
 };
