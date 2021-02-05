@@ -27,10 +27,15 @@ const getPictureUrl = (radio, show) => {
 
 export default {
   hasAndroid,
-  play(radio, currentShow) {
+  play(radio, stream, currentShow) {
     if (hasAndroid === false) { return; }
-    const showTitle = (typeof currentShow === 'undefined' || currentShow === null) ? null : currentShow.title;
-    Android.play(radio.code_name, radio.name, radio.stream_url, showTitle,
+    const showTitle = currentShow === undefined || currentShow === null ? null : currentShow.title;
+    const radioCodeName = stream === undefined || stream === null
+      ? radio.code_name : stream.code_name;
+    const radioName = stream === undefined || stream === null ? radio.name : stream.name;
+    const streamUrl = stream === undefined || stream === null ? radio.stream_url : stream.url;
+
+    Android.play(radioCodeName, radioName, streamUrl, showTitle,
       getPictureUrl(radio, currentShow));
   },
   pause() {
