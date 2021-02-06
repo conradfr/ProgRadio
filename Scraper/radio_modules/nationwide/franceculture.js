@@ -20,10 +20,9 @@ const format = dateObj => {
 
     delete curr.date_time_start_raw;
 
-    // filtering weird base64 for now
-    if (typeof curr.img !== 'undefined' && curr.img.substring(0, 3) !== 'http') {
+/*    if (typeof curr.img !== 'undefined' && curr.img.substr(0, 4) !== 'http') {
       delete curr.img;
-    }
+    }*/
 
     curr.date_time_start = dateStart.toISOString();
 
