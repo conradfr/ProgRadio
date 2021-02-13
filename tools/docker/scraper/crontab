@@ -1,0 +1,7 @@
+01 00 * * * /home/node/app && /usr/bin/node index.js
+01 06 * * * /home/node/app && /usr/bin/node index.js -r franceinter
+02 06 * * * /home/node/app && /usr/bin/node index.js -r rfi_afrique
+03 06 * * * /home/node/app && /usr/bin/node index.js -r rfi_monde
+01 12 * * * /home/node/app && /usr/bin/node index.js
+01 07 * * * /home/node/app && /usr/bin/node index.js -t
+01 17 * * * /home/node/app && /usr/bin/node index.js -t

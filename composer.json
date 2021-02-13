@@ -24,7 +24,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -35,7 +35,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
         "gedmo/doctrine-extensions": "^3.0",
-        "liip/imagine-bundle": "^2.4",
+        "liip/imagine-bundle": "^2.5",
         "oro/doctrine-extensions": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.2",
         "predis/predis": "^1.1",
@@ -98,7 +98,7 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
-            "@auto-scripts"
+
         ],
         "post-update-cmd": [
             "@auto-scripts"

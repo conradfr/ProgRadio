@@ -1,0 +1,8 @@
+logmail:
+    enable: true
+    ssl: true
+    tls: false
+    authentication: ['LOGIN']
+    level: 'warn'
+    unique: false
+    html: true

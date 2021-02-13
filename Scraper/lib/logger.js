@@ -20,6 +20,13 @@ if (process.env.NODE_ENV !== 'production') {
 const init = (mailConfig) => {
   if (mailConfig.enable === true) {
     delete mailConfig.enable;
+
+    mailConfig.username = process.env.MAIL_USERNAME || mailConfig.username;
+    mailConfig.password = process.env.MAIL_PASSWORD || mailConfig.password;
+    mailConfig.host = process.env.MAIL_HOST || mailConfig.host;
+    mailConfig.to = process.env.MAIL_TO || mailConfig.to;
+    mailConfig.from = process.env.MAIL_USERNAME || mailConfig.from;
+
     logger.add(new winston.transports.Mail(mailConfig));
   }
 };

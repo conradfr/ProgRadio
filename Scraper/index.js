@@ -15,7 +15,7 @@ process.on('uncaughtException', function (err) {
 // config
 let config = {};
 try {
-  config = yaml.safeLoad(fs.readFileSync('../config/scraper_parameters.yml', 'utf8'));
+  config = yaml.safeLoad(fs.readFileSync('./scraper_parameters.yml', 'utf8'));
 } catch (e) {
   process.exit(1);
 }
@@ -23,7 +23,7 @@ try {
 const logger = require('./lib/logger.js');
 logger.init(config.logmail);
 
-const redisClient = redis.createClient(config.redis_dsn);
+const redisClient = redis.createClient(process.env.REDIS_URL || config.redis_dsn);
 
 redisClient.on("error", function (err) {
   logger.log('error', err);
@@ -52,11 +52,9 @@ const getResults = async (radios) => {
       dateObj.add(1, 'days');
     }
     dateObj.tz('Europe/Paris');
-
     return await radio_module.getScrap(dateObj)
       .then(function (data) {
         const dateFormat = 'DD-MM-YYYY';
-
         logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
 
         if (data.length > 0) {

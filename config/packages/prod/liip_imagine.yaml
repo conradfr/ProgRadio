@@ -3,5 +3,5 @@ liip_imagine:
         default:
             filesystem:
                 data_root:
+                    - '%kernel.project_dir%/../shared/'
                     - '%kernel.project_dir%/public/'
-                    - '%kernel.project_dir%/../../shared/public/'

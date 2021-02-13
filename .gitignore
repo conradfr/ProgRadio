@@ -15,7 +15,8 @@
 /.env.*.local
 
 # Parameters
-/config/scraper_parameters.yml
+/Scraper/scraper_parameters.yml
+/Scraper/scraper_parameters.yml
 
 # Managed by Composer
 /var/bootstrap.php.cache
@@ -88,7 +89,6 @@
 /Importer/*.ez
 #Config
 /Importer/config/dev.exs
-/Importer/config/prod.exs
 
 # Tools
 

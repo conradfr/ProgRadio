@@ -16,28 +16,48 @@ const format = dateObj => {
       const date = moment(parseInt(element['datetime_raw']));
 
       // filter other days
-      if (date.tz('Europe/Paris').format('DD') === dayStr) {
-        delete element.datetime_raw;
-        const isMain = element['class'].indexOf('main') >= 0;
-        delete element['class'];
+      if (date.tz('Europe/Paris').format('DD') !== dayStr) {
+        return prev;
+      }
 
-        if (isMain) {
-          element.date_time_start = date.toISOString();
+      const newEntry = {
+        date_time_start: date.toISOString(),
+        title: element.title
+      }
 
-          main = element;
+      // temp has there is a ssl error on the server on img import for rtl
+      if (element.img !== undefined && element.img !== null) {
+        if (element.img.startsWith('https')) {
+          newEntry.img = 'http' + element.img.substr(4);
         } else {
-          element.date_time_start = date.toISOString();
-
-          element.presenter = element.host;
-          delete element.host;
-
-          // temp has there is a ssl error on the server on img import for rtl
-          if (element.img !== undefined && element.img !== null) {
-            element.img = 'http' + element.img.substr(5);
-          }
-
-          sections.push(element);
+          newEntry.img = element.img;
         }
+      }
+
+      let description = '';
+      if (element.description2 !== undefined && element.description2 !== null) {
+        description = element.description2.replace(/\n/g, '').replace(/\s+/g, ' ').trim() + '. ';
+      }
+
+      // description3 is often the same as description but not truncated, so used in priority
+      if (element.description3 !== undefined && element.description3 !== null) {
+        description += element.description3.trim();
+      } else if (element.description !== undefined && element.description !== null) {
+        description += element.description.trim();
+      }
+
+      newEntry.description = description.trim();
+
+      const isMain = element['class'].indexOf('main') >= 0;
+
+      if (isMain) {
+        newEntry.host = element.host;
+
+        main = newEntry;
+      } else {
+        newEntry.presenter = element.host;
+
+        sections.push(newEntry);
       }
     });
 
@@ -95,8 +115,15 @@ const fetch = dateObj => {
               'title': '.infos > h2.title',
               'img': 'img@data-src',
               'host': '.infos > p[1] > b',
-              'description': '.infos > .text.desc'
+              'description': '.infos > .text.desc',
+              'description2': '.infos > .text.small'
             })
+            .do(
+              osmosis.follow('@href')
+                .set({
+                  'description3': '.cover-head-cell p.text',
+                })
+            )
         ]
       )
       .data(function (listing) {
