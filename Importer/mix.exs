@@ -6,14 +6,13 @@ defmodule Importer.Mixfile do
       app: :importer,
       description: "Importer daemon",
       version: "0.2.0",
-      elixir: "~> 1.9",
+      elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       releases: [
         prod: [
           include_executables_for: [:unix],
-          applications: [runtime_tools: :permanent],
-          include_erts: false
+          applications: [runtime_tools: :permanent]
         ]
       ]
     ]

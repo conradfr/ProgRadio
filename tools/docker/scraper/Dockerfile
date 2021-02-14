@@ -7,6 +7,7 @@ RUN apt-get update \
 
 ADD ./tools/docker/scraper/crontab /etc/cron.d/scraper-cron
 RUN chmod 0644 /etc/cron.d/scraper-cron
+RUN crontab /etc/cron.d/scraper-cron
 
 RUN touch /var/log/cron.log
 
@@ -20,3 +21,4 @@ COPY ./tools/docker/scraper/scraper_parameters.yml .
 RUN yarn install
 
 CMD cron && tail -f /var/log/cron.log
+# CMD ["cron"]

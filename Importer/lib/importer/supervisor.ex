@@ -15,6 +15,7 @@ defmodule Importer.Supervisor do
       {Redix,
        host: Application.get_env(:importer, :redis_host),
        database: Application.get_env(:importer, :redis_db),
+       password: Application.get_env(:importer, :redis_password),
        name: :redix},
       Importer.Repo,
       {Task.Supervisor, name: Importer.TaskSupervisor},

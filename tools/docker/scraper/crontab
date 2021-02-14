@@ -1,7 +1,10 @@
-01 00 * * * /home/node/app && /usr/bin/node index.js
-01 06 * * * /home/node/app && /usr/bin/node index.js -r franceinter
-02 06 * * * /home/node/app && /usr/bin/node index.js -r rfi_afrique
-03 06 * * * /home/node/app && /usr/bin/node index.js -r rfi_monde
-01 12 * * * /home/node/app && /usr/bin/node index.js
-01 07 * * * /home/node/app && /usr/bin/node index.js -t
-01 17 * * * /home/node/app && /usr/bin/node index.js -t
+01 00 * * * cd /home/node/app && node index.js >> /var/log/cron.log 2>&1
+01 06 * * * cd /home/node/app && node index.js -r franceinter >> /var/log/cron.log 2>&1
+02 06 * * * cd /home/node/app && node index.js -r rfi_afrique >> /var/log/cron.log 2>&1
+03 06 * * * cd /home/node/app && node index.js -r rfi_monde >> /var/log/cron.log 2>&1
+01 12 * * * cd /home/node/app && node index.js >> /var/log/cron.log 2>&1
+01 07 * * * cd /home/node/app && node index.js -t >> /var/log/cron.log 2>&1
+01 17 * * * cd /home/node/app && node index.js -t >> /var/log/cron.log 2>&1
+*/5 * * * * echo "Hello ducon" >> /var/log/cron.log 2>&1
+*/5 * * * *  cd /home/node/app && node test.js -t bouooubououuo >> /var/log/cron.log 2>&1
+*/5 * * * *  cd /home/node/app && node test.js >> /var/log/cron.log 2>&1
