@@ -6,7 +6,7 @@ require('winston-mail');
 const logger = winston.createLogger({
   level: 'warn',
   transports: [
-    new winston.transports.File({filename: '../var/logs/prod.log'})
+    new winston.transports.File({filename: '../var/logs/cron.log'})
   ]
 });
 

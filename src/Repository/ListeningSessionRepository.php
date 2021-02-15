@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\ListeningSession;
 use App\Entity\Radio;
 use App\Entity\Stream;
 use App\Entity\User;
@@ -36,13 +37,32 @@ class ListeningSessionRepository extends ServiceEntityRepository
             ->innerJoin('r.collection', 'c')
             ->leftJoin('r.streams', 'rs')
             ->leftJoin('rs.listeningSessions', 'ls')
-            //->where('ls.dateTimeStart IS NULL OR DATE(AT_TIME_ZONE(AT_TIME_ZONE(ls.dateTimeStart, \'UTC\'), \'Europe/Paris\')) = DATE(:startDateTime)')
             ->groupBy('r.id, c.id')
             ->addOrderBy('total_seconds', 'DESC');
 
         $this->addDates($qb, $startDate, $endDate);
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function getPerDeviceRadiosData($startDate, $endDate=null): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('ls.source,'
+            . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
+            ->from(ListeningSession::class, 'ls')
+            ->groupBy('ls.source')
+            ->addOrderBy('total_seconds', 'DESC');
+
+        $this->addDates($qb, $startDate, $endDate);
+
+        $qb->andWhere('ls.source IS NOT NULL')
+           ->andWhere('ls.stream IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+
+        return array_column($result, null, 'source');
     }
 
     public function getStreamsData($startDate, $endDate=null): array
@@ -53,7 +73,6 @@ class ListeningSessionRepository extends ServiceEntityRepository
             . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
             ->from(Stream::class, 's')
             ->leftJoin('s.listeningSessions', 'ls')
-            //->where('ls.dateTimeStart IS NULL OR DATE(AT_TIME_ZONE(AT_TIME_ZONE(ls.dateTimeStart, \'UTC\'), \'Europe/Paris\')) = DATE(:startDateTime)')
             ->groupBy('s.id')
             ->addOrderBy('total_seconds', 'DESC');
 

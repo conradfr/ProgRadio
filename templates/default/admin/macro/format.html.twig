@@ -1,25 +1,27 @@
-{# from https://caffeinecreations.ca/blog/twig-macro-convert-seconds-to-hhmmss/ #}
+{# inspired by https://caffeinecreations.ca/blog/twig-macro-convert-seconds-to-hhmmss/ #}
 {% macro secondsToMinutes(seconds) %}
+
   {# set hours minus minutes/seconds #}
-  {% set hours = seconds / 3600 % 60 %}
+  {% set hours = (seconds / 3600)|round(0, 'floor') %}
+  {% set seconds_remaining = seconds - (hours * 3600) %}
 
   {% if hours  < 1 %}
       {# set hours to nothing #}
-      {% set hours = null %}
+      {% set hours_display = null %}
   {% else %}
       {# output hours with a colon: #}
-      {% set hours = hours|number_format ~ 'h' %}
+      {% set hours_display = hours|number_format ~ 'h' %}
   {% endif %}
 
   {# set minutes remain but no seconds and with a colon #}
-  {% set minutes = seconds / 60 % 60  ~ 'm' %}
+  {% set minutes = seconds_remaining / 60 % 60  ~ 'm' %}
 
   {# set seconds but no minutes or hours #}
-  {% set seconds = seconds % 60 %}
+  {% set seconds = seconds_remaining % 60 %}
   {% if seconds < 10 %}
       {# add a leading zero if seconds are less than 10 #}
       {% set seconds = '0' ~ seconds %}
   {% endif %}
 
-  {{ hours }}{{ minutes}}{{ seconds }}s
+  {{ hours_display }}{{ minutes}}{{ seconds }}s
 {% endmacro %}

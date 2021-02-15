@@ -2,6 +2,24 @@ FROM node:10.23.3
 
 ENV TZ=Europe/Paris
 
+ARG MAIL_PASSWORD=${MAIL_PASSWORD}
+ARG MAIL_USERNAME=${MAIL_USERNAME}
+ARG MAILER_DSN=${MAILER_DSNL}
+ARG MAIL_HOST=${MAIL_HOST}
+ARG MAIL_PORT=${MAIL_PORT}
+ARG MAIL_TO=${MAIL_TO}
+ARG REDIS_URL=${REDIS_URL}
+ARG NODE_ENV=${NODE_ENV}
+
+ENV MAIL_PASSWORD=${MAIL_PASSWORD} \
+    MAIL_USERNAME=${MAIL_USERNAME} \
+    MAILER_DSN=${MAILER_DSNL} \
+    MAIL_HOST=${MAIL_HOST} \
+    MAIL_PORT=${MAIL_PORT} \
+    MAIL_TO=${MAIL_TO} \
+    REDIS_URL=${REDIS_URL} \
+    NODE_ENV=${NODE_ENV}
+
 RUN apt-get update \
     && apt-get -y install \
     cron \
@@ -12,6 +30,8 @@ RUN chmod 0644 /etc/cron.d/scraper-cron
 RUN crontab /etc/cron.d/scraper-cron
 
 RUN touch /var/log/cron.log
+
+RUN printenv | sed 's/^\(.*\)$/export \1/g' > /root/project_env.sh
 
 WORKDIR /home/node/app
 
