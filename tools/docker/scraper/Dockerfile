@@ -1,5 +1,7 @@
 FROM node:10.23.3
 
+ENV TZ=Europe/Paris
+
 RUN apt-get update \
     && apt-get -y install \
     cron \

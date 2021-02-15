@@ -21,6 +21,8 @@ FROM php:8-fpm
 RUN mkdir -p /scripts
 COPY ./tools/docker/www/docker-entry.sh /scripts
 
+ENV TZ=Europe/Paris
+
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     iputils-ping \

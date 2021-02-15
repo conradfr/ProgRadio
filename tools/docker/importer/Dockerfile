@@ -4,6 +4,7 @@ FROM elixir:latest
 
 COPY ./Importer .
 
+ENV TZ=Europe/Paris
 ENV MIX_ENV=prod
 
 RUN rm -Rf _build && \
