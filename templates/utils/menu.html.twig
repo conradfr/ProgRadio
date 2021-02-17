@@ -1,6 +1,4 @@
-{% macro collections() %}
-    {% set collections = scheduleCollections(app.user, app.request.attributes) %}
-
+{% macro collections_menu(collections) %}
     <li class="dropdown hidden-xs">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
         <ul class="dropdown-menu">
@@ -21,9 +19,7 @@
     </li>
 {% endmacro %}
 
-{% macro collections_mobile() %}
-    {% set collections = scheduleCollections(app.user, app.request.attributes) %}
-
+{% macro collections_mobile(collections) %}
     {% for collection in collections %}
     <li id="collections-menu-{{ collection.code_name }}" class="visible-xs{% if collection.radios|length == 0 %} disabled{% endif %}">
         <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
