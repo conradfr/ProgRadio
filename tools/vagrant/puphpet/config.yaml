@@ -31,6 +31,9 @@ vagrantfile:
                                 port2:
                                     host: '6379'
                                     guest: '6379'
+                                port3:
+                                    host: '8079'
+                                    guest: '4001'
                         memory: '1024'
                         cpus: '1'
         provision:

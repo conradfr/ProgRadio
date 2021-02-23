@@ -30,7 +30,7 @@
   }
 
   height: 41px;
-  width: 265px;
+  width: 305px;
 
   margin-top: 5px;
   background-color: @player-background;
@@ -110,6 +110,65 @@
     }
   }
 
+  .player-infos {
+    flex: 1;
+
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    padding-left: 0;
+    padding-right: 5px;
+
+    //font-size: 11px;
+    color: white;
+    text-align: center;
+    line-height: 1.3em;
+
+    @player-info-height: 32px;
+
+    /* rolodex effect */
+    ul {
+      list-style: none;
+      height: 100%;
+      max-height: @player-info-height;
+
+      margin: 0;
+      margin-block-start: 0;
+      margin-block-end: 0;
+      padding-inline-start: 0;
+
+      //animation-name: roll-up-3; /* dynamic */
+      animation-duration: 12s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+
+      li {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        height: @player-info-height;
+        min-height: @player-info-height;
+        max-height: @player-info-height;
+        overflow-y: hidden;
+      }
+    }
+
+    @keyframes roll-up-2 {
+      0%, 50%, 100% { transform: translateY(0) }
+      60%, 90% { transform: translateY(-1 * @player-info-height) }
+    }
+
+    @keyframes roll-up-3 {
+      0%, 20%, 100% { transform: translateY(0) }
+      30%, 45%, 80%, 90% { transform: translateY(-1 * @player-info-height) }
+      55%, 70% { transform: translateY(-2 * @player-info-height) }
+    }
+  }
+
+  /* kept for IE compat (non-updated js) */
   .player-name {
     flex: 1;
 

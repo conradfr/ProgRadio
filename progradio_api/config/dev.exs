@@ -1,10 +1,10 @@
-use Mix.Config
+import Config
 
 # Configure your database
 config :progradio_api, ProgRadioApi.Repo,
   username: "postgres",
-  password: "postgres",
-  database: "progradio_api_dev",
+  password: "123",
+  database: "progradio",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -21,6 +21,13 @@ config :progradio_api, ProgRadioApiWeb.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: []
+
+#  https: [
+#    port: 4001,
+#    cipher_suite: :strong,
+#    certfile: "priv/cert/selfsigned.pem",
+#    keyfile: "priv/cert/selfsigned_key.pem"
+#  ]
 
 # ## SSL Support
 #

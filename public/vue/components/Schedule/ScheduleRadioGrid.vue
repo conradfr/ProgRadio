@@ -11,7 +11,7 @@
       <schedule-radio-grid-row
         v-for="entry in radios"
         :key="entry.code_name"
-        :radio="entry.code_name"
+        :radio_code_name="entry.code_name"
         :displayNoSchedule="displayNoSchedule"
         :schedule="getSchedule(entry.code_name)"
         :hasSchedule="hasSchedule(entry.code_name)"

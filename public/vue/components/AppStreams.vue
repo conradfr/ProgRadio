@@ -7,6 +7,8 @@
 <script>
 import { mapState } from 'vuex';
 
+import { PLAYER_TYPE_STREAM } from '../config/config';
+
 import StreamsList from './Streams/StreamsList.vue';
 
 export default {
@@ -16,6 +18,7 @@ export default {
   mounted() {
     const body = document.querySelector('body');
     body.classList.add('body-app');
+    document.title = this.$i18n.tc('message.streaming.title');
   },
   beforeDestroy() {
     const body = document.querySelector('body');
@@ -26,7 +29,9 @@ export default {
   },
   computed: {
     ...mapState({
-      favorites: state => state.streams.favorites
+      favorites: state => state.streams.favorites,
+      playingRadio: state => state.player.radio,
+      playing: state => state.player.playing
     })
   },
   beforeRouteEnter(to, from, next) {
@@ -50,7 +55,14 @@ export default {
     }
     next();
   },
+  /* eslint-disable func-names */
   watch: {
+    playing() {
+      this.updateTitle();
+    },
+    playingRadio() {
+      this.updateTitle();
+    },
     // update the stream menu that is outside the Vue app for now
     favorites(val) {
       const menuItem = document.getElementById('streaming-menu-favorites');
@@ -62,5 +74,18 @@ export default {
       }
     },
   },
+  methods: {
+    updateTitle() {
+      if (this.playing === true && this.playingRadio
+          && this.playingRadio.type === PLAYER_TYPE_STREAM) {
+        let preTitle = '';
+        preTitle += `${this.playingRadio.name} - `;
+
+        document.title = `${preTitle}${this.$i18n.tc('message.streaming.title')}`;
+      } else {
+        document.title = this.$i18n.tc('message.streaming.title');
+      }
+    }
+  }
 };
 </script>

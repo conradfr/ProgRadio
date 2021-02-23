@@ -67,6 +67,13 @@ class RadioStream
     /**
      * @var boolean
      *
+     * @ORM\Column(type="boolean", options={"default"=false})
+     */
+    private $currentSong = true;
+
+    /**
+     * @var boolean
+     *
      * @ORM\Column(type="boolean", options={"default"=true})
      */
     private $status = true;
@@ -150,6 +157,22 @@ class RadioStream
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCurrentSong(): bool
+    {
+        return $this->currentSong;
+    }
+
+    /**
+     * @param bool $currentSong
+     */
+    public function setCurrentSong(bool $currentSong): void
+    {
+        $this->currentSong = $currentSong;
     }
 
     public function isStatus(): bool

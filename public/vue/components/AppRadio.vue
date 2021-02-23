@@ -83,6 +83,9 @@ export default {
     const app = document.getElementById('app');
     app.classList.add('no-background');
 
+    // variable interpolation seems to not be working, no idea why
+    document.title = this.$i18n.tc('message.radio_page.title', { radio: this.radio.name });
+
     // if autoplay
     if (this.$route.query.play !== undefined && this.$route.query.play === '1') {
       this.autoPlayInterval = setInterval(this.autoPlay, AUTOPLAY_INTERVAL_CHECK);

@@ -21,9 +21,16 @@
           </div>
           <div class="program-host">{{ program.host }}</div>
           <div class="program-description-short"
-               v-bind:class="{ 'program-description-nohost': !program.host }" v-once>
+               v-bind:class="{ 'program-description-nohost': !program.host }">
             <div class="program-description-short-inner">
-              {{ program.description | shorten(program.duration) }}
+              <span class="program-description-short-inner-song"
+                  v-if="isCurrent && radioPlaying && currentSong">
+                <span class="glyphicon glyphicon-music" aria-hidden="true"></span>
+                {{ currentSong }}
+              </span>
+              <span class="program-description-short-inner-text" v-once>
+                {{ program.description | shorten(program.duration) }}
+              </span>
             </div>
           </div>
         </div>
@@ -36,14 +43,14 @@
 </template>
 <script>
 import { DateTime, Interval } from 'luxon';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../../config/config';
 
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
 
 export default {
   components: { ScheduleRadioSection },
-  props: ['program'],
+  props: ['program', 'radioPlaying'],
   data() {
     return {
       hover: false,
@@ -74,6 +81,9 @@ export default {
         };
       }
     }),
+    ...mapGetters([
+      'currentSong'
+    ]),
     title() {
       let { title } = this.program;
 

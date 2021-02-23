@@ -13,7 +13,7 @@ class RadioStreamRepository extends EntityRepository
 
     public function getStreamsOfRadios(array $ids): array {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT rs.id, r.codeName as radio_code_name, rs.codeName as code_name, rs.name, rs.url, rs.main
+            "SELECT rs.id, r.codeName as radio_code_name, rs.currentSong as current_song, rs.codeName as code_name, rs.name, rs.url, rs.main
                 FROM App:RadioStream rs
                   INNER JOIN rs.radio r
                 WHERE rs.enabled = :enabled

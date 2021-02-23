@@ -27,5 +27,11 @@ Run
 Architecture
 --------------
 
+Scraper / Importing / Web
+
 ![Flowchart](docs/ProgRadioFlowchart.png)
+
+Current song playing
+
+![Flowchart](docs/CurrentSong.png)
 

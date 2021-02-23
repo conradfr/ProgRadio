@@ -22,6 +22,7 @@ const initState = {
   radioStreamCodeName: Vue.cookie.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED)
     ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED)) : null,
   show: null,
+  song: null,
   volume: Vue.cookie.get(config.COOKIE_VOLUME)
     ? parseInt(Vue.cookie.get(config.COOKIE_VOLUME), 10) : config.DEFAULT_VOLUME,
   muted: Vue.cookie.get(config.COOKIE_MUTED) === 'true' || false,
@@ -34,6 +35,7 @@ const initState = {
 
 const storeGetters = {
   radioPlayingCodeName: state => (state.radio !== null ? state.radio.code_name : null),
+  displayVolume: state => state.focus.icon || state.focus.fader || false,
   streamUrl: (state) => {
     if (state.radio === null) { return null; }
 
@@ -43,7 +45,28 @@ const storeGetters = {
 
     return state.radio.streams[state.radioStreamCodeName].url;
   },
-  displayVolume: state => state.focus.icon || state.focus.fader || false
+  currentSong: (state) => {
+    if (state.song === undefined || state.song === null) {
+      return null;
+    }
+
+    let song = '';
+    let hasInterpreter = false;
+    if (state.song.interpreter !== undefined && state.interpreter !== null) {
+      song += state.song.interpreter;
+      hasInterpreter = true;
+    }
+
+    if (state.song.title !== undefined && state.song.title !== null) {
+      if (hasInterpreter === true) {
+        song += ' - ';
+      }
+
+      song += state.song.title;
+    }
+
+    return song;
+  }
 };
 
 /* eslint-disable object-curly-newline */
@@ -142,6 +165,9 @@ const storeActions = {
         dispatch('playStream', nextRadio);
       }
     }
+  },
+  setSong: ({ commit }, song) => {
+    commit('setSong', song);
   },
   setVolume: ({ commit }, volume) => {
     Vue.cookie.set(config.COOKIE_VOLUME, volume, config.COOKIE_PARAMS);
@@ -263,6 +289,7 @@ const storeMutations = {
 
     Vue.set(state, 'radio', radio);
     Vue.set(state, 'show', show);
+    Vue.set(state, 'song', null);
     Vue.set(state, 'radioStreamCodeName', streamCodeName || null);
 
     if (state.externalPlayer === false) {
@@ -295,6 +322,9 @@ const storeMutations = {
   },
   setVolume(state, volume) {
     state.volume = volume;
+  },
+  setSong(state, song) {
+    state.song = song;
   },
   setFocus(state, params) {
     state.focus[params.element] = params.status;

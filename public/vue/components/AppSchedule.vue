@@ -11,7 +11,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 
-import { COLLECTION_FAVORITES } from '../config/config';
+import { COLLECTION_FAVORITES, PLAYER_TYPE_RADIO } from '../config/config';
 
 import CollectionSwitcher from './Schedule/CollectionSwitcher.vue';
 import Timeline from './Schedule/Timeline.vue';
@@ -34,6 +34,8 @@ export default {
     const body = document.querySelector('body');
     body.classList.add('body-app');
     body.classList.add('body-app-schedule');
+
+    document.title = this.$i18n.tc('message.schedule.title');
   },
   beforeDestroy() {
     const body = document.querySelector('body');
@@ -42,13 +44,27 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'displayCategoryFilter'
+      'displayCategoryFilter',
+      'currentSong'
     ]),
     ...mapState({
-      collections: state => state.schedule.collections
+      collections: state => state.schedule.collections,
+      playingRadio: state => state.player.radio,
+      playingShow: state => state.player.show,
+      playing: state => state.player.playing
     })
   },
+  /* eslint-disable func-names */
   watch: {
+    playing() {
+      this.updateTitle();
+    },
+    playingShow() {
+      this.updateTitle();
+    },
+    currentSong() {
+      this.updateTitle();
+    },
     // update the collection menu that is outside the Vue app for now
     collections: {
       deep: true,
@@ -76,6 +92,25 @@ export default {
     },
     keyupFav() {
       this.$store.dispatch('switchCollection', COLLECTION_FAVORITES);
+    },
+    updateTitle() {
+      if (this.playing === true && this.playingRadio
+          && this.playingRadio.type === PLAYER_TYPE_RADIO) {
+        let preTitle = '♫ ';
+        if (this.currentSong) {
+          preTitle += `${this.currentSong} - `;
+        }
+
+        if (this.playingShow) {
+          preTitle += `${this.playingShow.title} - `;
+        }
+
+        preTitle += `${this.playingRadio.name} - `;
+
+        document.title = `${preTitle}${this.$i18n.tc('message.schedule.title')}`;
+      } else {
+        document.title = this.$i18n.tc('message.schedule.title');
+      }
     }
   }
 };

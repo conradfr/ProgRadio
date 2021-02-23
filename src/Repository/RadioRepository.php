@@ -62,7 +62,8 @@ class RadioRepository extends ServiceEntityRepository
                 'code_name' => $radioStream['code_name'],
                 'name' => $radioStream['name'],
                 'url' => $radioStream['url'],
-                'main' => $radioStream['main']
+                'main' => $radioStream['main'],
+                'current_song' => $radioStream['current_song']
             ];
         }
         

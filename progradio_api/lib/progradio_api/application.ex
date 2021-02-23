@@ -13,6 +13,9 @@ defmodule ProgRadioApi.Application do
       ProgRadioApiWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: ProgRadioApi.PubSub},
+      ProgRadioApiWeb.Presence,
+      {Registry, [keys: :unique, name: SongDataProviderRegistry]},
+      {DynamicSupervisor, strategy: :one_for_one, name: ProgRadioApi.SongDynamicSupervisor},
       # Start the Endpoint (http/https)
       ProgRadioApiWeb.Endpoint
       # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)

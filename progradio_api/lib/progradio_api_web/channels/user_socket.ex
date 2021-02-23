@@ -2,7 +2,7 @@ defmodule ProgRadioApiWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", ProgRadioApiWeb.RoomChannel
+  channel "song:*", ProgRadioApiWeb.SongChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

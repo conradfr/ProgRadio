@@ -10,7 +10,8 @@
       <schedule-radio-program
         v-for="(entry, key) in schedule"
         :key="key"
-        :program="entry">
+        :program="entry"
+        :radioPlaying="playing && playingStreamCodeName === `${radio_code_name}_main`">
       </schedule-radio-program>
     </template>
   </div>
@@ -23,8 +24,12 @@ import ScheduleRadioProgram from './ScheduleRadioProgram.vue';
 
 export default {
   components: { ScheduleRadioProgram },
-  props: ['radio', 'displayNoSchedule', 'schedule', 'hasSchedule'],
+  props: ['radio_code_name', 'displayNoSchedule', 'schedule', 'hasSchedule'],
   computed: {
+    ...mapState({
+      playing: state => state.player.playing,
+      playingStreamCodeName: state => state.player.radioStreamCodeName
+    }),
     ...mapGetters([
       'isLoading'
     ]),

@@ -29,9 +29,7 @@
           :class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }"
           aria-hidden="true"></span>
       </div>
-      <div v-if="player.radio" v-bind:title="showTitle" class="player-name">
-        {{ playedName }}
-      </div>
+      <player-info v-if="player.radio"></player-info>
       <div v-if="!player.radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}
       </div>
@@ -53,8 +51,9 @@ import VueToast from 'vue-toast-notification';
 
 import { mapState, mapGetters } from 'vuex';
 
-import { DateTime } from 'luxon';
+import { Socket } from '../../../js/phoenix';
 
+import PlayerInfo from './PlayerInfo.vue';
 import VolumeFader from './VolumeFader.vue';
 import * as config from '../../config/config';
 import AndroidApi from '../../api/AndroidApi';
@@ -63,12 +62,15 @@ Vue.use(VueToast);
 
 export default {
   components: {
+    PlayerInfo,
     VolumeFader
   },
   data() {
     return {
       audio: null,
       hls: null,
+      socket: null,
+      channel: null,
       /*
         As the volume icon may be shown instead of the mute icon on tablets and a click event
         also triggers a mouseover event before it, we avoid showing the volume fader if a mouseover
@@ -109,32 +111,12 @@ export default {
       }
 
       // radio
-      if (this.player.radio.type === 'radio') {
+      if (this.player.radio.type === config.PLAYER_TYPE_RADIO) {
         return this.$store.getters.isFavorite(this.player.radio.code_name);
       }
 
       // stream
       return this.streamFavorites.indexOf(this.player.radio.code_name) !== -1;
-    },
-    playedName() {
-      if (Object.prototype.hasOwnProperty.call(this.player.radio, 'streams')
-          && this.player.radioStreamCodeName !== null) {
-        return this.player.radio.streams[this.player.radioStreamCodeName].name;
-      }
-
-      return this.player.radio.name;
-    },
-    showTitle() {
-      if (this.player.show === null) {
-        return '';
-      }
-
-      const start = DateTime.fromSQL(this.player.show.start_at)
-        .setZone(config.TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
-      const end = DateTime.fromSQL(this.player.show.end_at)
-        .setZone(config.TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
-
-      return `${this.player.show.title} - ${start}-${end}`;
     },
     favoriteTitle() {
       return (this.player.radio !== null
@@ -143,8 +125,47 @@ export default {
     }
   },
   /* eslint-disable func-names */
+  /* eslint-disable no-undef */
   watch: {
     'player.playing': function (val) {
+      if (val === true && this.player.radio.type === config.PLAYER_TYPE_RADIO
+          && this.player.radio.streams[this.player.radioStreamCodeName].current_song === true) {
+        this.socket = new Socket(`wss://${apiUrl}/socket`);
+        this.socket.connect();
+        this.socket.onError(() => {
+          this.socket.disconnect();
+          this.channel = null;
+          this.socket = null;
+          this.$store.dispatch('setSong', null);
+        });
+
+        this.channel = this.socket.channel(`song:${this.player.radioStreamCodeName}`);
+
+        this.channel.on('playing', (song) => {
+          this.$store.dispatch('setSong', song);
+        });
+
+        this.channel.join()
+          // .receive('ok', ({ messages }) => console.log('catching up', messages))
+          .receive('error', () => {
+            this.socket.disconnect();
+            this.channel = null;
+            this.socket = null;
+            this.$store.dispatch('setSong', null);
+          })
+          .receive('timeout', () => {
+            this.socket.disconnect();
+            this.channel = null;
+            this.socket = null;
+            this.$store.dispatch('setSong', null);
+          });
+      } else if (this.socket !== null) {
+        this.socket.disconnect();
+        this.channel = null;
+        this.socket = null;
+        this.$store.dispatch('setSong', null);
+      }
+
       if (this.player.externalPlayer === true) { return; }
 
       if (val === true) {

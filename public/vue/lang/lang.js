@@ -31,10 +31,12 @@ export const messages = {
         no_schedule: 'Programmes non disponibles.',
         play: 'Ecouter {radio}',
         stop: 'Stopper',
+        title: 'Les programmes et streaming de {radio}',
         webradios: 'Radios web'
       },
       schedule: {
         no_schedule: 'Programmes non disponibles :(',
+        title: 'Toutes les grilles radio, tous les programmes et écoute en ligne',
         today: "Aujourd'hui",
         tomorrow: 'Demain',
         radio_list: {
@@ -53,7 +55,8 @@ export const messages = {
           name: 'Par ordre alphabétique',
           popularity: 'Par popularité',
           random: 'Par ordre aléatoire'
-        }
+        },
+        title: 'Les radios du monde entier en streaming'
       }
     }
   },
@@ -78,10 +81,12 @@ export const messages = {
         stop: 'Stop',
         back: '← Back to radio guide',
         no_schedule: 'Schedule not available',
+        title: 'Schedule of the radio {radio}',
         webradios: 'Webradios'
       },
       schedule: {
         no_schedule: 'Schedule not available :(',
+        title: 'Radio schedules in France, streaming and more !',
         today: 'Today',
         tomorrow: 'Tomorrow',
         radio_list: {
@@ -100,7 +105,8 @@ export const messages = {
           name: 'By alphabetical order',
           popularity: 'By popularity',
           random: 'By random order'
-        }
+        },
+        title: 'Stream radios from all over the world!'
       }
     }
   }
