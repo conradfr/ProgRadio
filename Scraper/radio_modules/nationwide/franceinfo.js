@@ -59,6 +59,31 @@ const format = dateObj => {
       }
     }
 
+    if (curr.hasOwnProperty('sections')) {
+      newEntry.sections = [];
+      curr.sections.forEach(function (section) {
+        if (section.title.substr(0, 8) !== "L'info à") {
+          let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
+          let match = section.datetime_raw.match(regexp);
+
+          if (match !== null) {
+            const newSection = {};
+
+            const startDateTime = moment(dateObj);
+            startDateTime.tz(dateObj.tz());
+            startDateTime.hour(match[1]);
+            startDateTime.minute(match[2]);
+            startDateTime.second(0);
+
+            newSection.date_time_start = startDateTime.toISOString();
+            newSection.title = section.title;
+
+            newEntry.sections.push(newSection);
+          }
+        }
+      });
+    }
+
     prev.push(newEntry);
 
     return prev;
@@ -78,7 +103,12 @@ const fetch = dateObj => {
       .find('.program__grid__line')
       .set({
         'datetime_raw': '.program__grid__line__time',
-        'title_host': '.program__grid__line__right > span'
+        'title_host': '.program__grid__line__right > span',
+        'sections': osmosis.select('.program__grid__sublines .program__grid__subline')
+          .set({
+            'datetime_raw': '.program__grid__line__time',
+            'title': '.program__grid__line__right__title'
+          })
       })
       .data(function (listing) {
         scrapedData.push(listing);
