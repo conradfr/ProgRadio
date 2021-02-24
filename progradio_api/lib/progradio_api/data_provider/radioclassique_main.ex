@@ -29,7 +29,9 @@ defmodule ProgRadioApi.DataProvider.RadioclassiqueMain do
           nil ->
             Logger.debug("Data provider - #{name}: not real current song")
             nil
-          _ -> %{interpreter: data["auteur"], title: data["titre"]}
+
+          _ ->
+            %{interpreter: data["auteur"], title: data["titre"]}
         end
     end
   end

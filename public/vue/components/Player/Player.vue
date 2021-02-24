@@ -177,15 +177,15 @@ export default {
     'player.muted': function (val) {
       if (this.player.externalPlayer === true) { return; }
 
-      if (this.audio !== null) {
-        this.audio.muted = val;
+      if (window.audio !== null) {
+        window.audio.muted = val;
       }
     },
     'player.volume': function (val) {
       if (this.player.externalPlayer === true) { return; }
 
-      if (this.audio !== null) {
-        this.audio.volume = (val * 0.1);
+      if (window.audio !== null) {
+        window.audio.volume = (val * 0.1);
       }
     },
   },
@@ -234,16 +234,16 @@ export default {
 
       if (url.indexOf('.m3u8') !== -1) {
         if (Hls.isSupported()) {
-          this.audio = document.getElementById('videoplayer');
+          window.audio = document.getElementById('videoplayer');
           this.hls = new Hls();
           // bind them together
-          this.hls.attachMedia(this.audio);
+          this.hls.attachMedia(window.audio);
           this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
             this.hls.loadSource(url);
             this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              this.audio.muted = this.player.muted;
-              this.audio.volume = (this.player.volume * 0.1);
-              startPlayPromise = this.audio.play();
+              window.audio.muted = this.player.muted;
+              window.audio.volume = (this.player.volume * 0.1);
+              startPlayPromise = window.audio.play();
             });
           });
         }
@@ -251,16 +251,16 @@ export default {
         const streamUrl = (url.substring(0, 5) !== 'https')
           ? `${streamsProxy}?stream=${url}` : url;
 
-        this.audio = new Audio(`${streamUrl}`);
-        this.audio.muted = this.player.muted;
-        this.audio.volume = (this.player.volume * 0.1);
-        startPlayPromise = this.audio.play();
+        window.audio = new Audio(`${streamUrl}`);
+        window.audio.muted = this.player.muted;
+        window.audio.volume = (this.player.volume * 0.1);
+        startPlayPromise = window.audio.play();
       }
 
       if (startPlayPromise !== undefined) {
         startPlayPromise.then(() => {
           // check if stream playing
-          this.audio.addEventListener('timeupdate', () => {
+          window.audio.addEventListener('timeupdate', () => {
             this.lastUpdated = new Date();
           });
 
@@ -290,13 +290,13 @@ export default {
     },
     stop() {
       clearInterval(this.checkTimer);
-      this.audio.pause();
+      window.audio.pause();
       if (this.hls !== null) {
         this.hls.destroy();
         this.hls = null;
       }
-      delete this.audio;
-      this.audio = null;
+      delete window.audio;
+      window.audio = null;
     },
     toggleFavorite() {
       if (this.player.radio !== null) {

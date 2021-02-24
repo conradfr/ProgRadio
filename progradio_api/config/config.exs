@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 config :progradio_api,
   namespace: ProgRadioApi,
   ecto_repos: [ProgRadioApi.Repo]
