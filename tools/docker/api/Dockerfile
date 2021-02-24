@@ -19,12 +19,16 @@ ENV DATABASE_URL=${DATABASE_URL} \
     REDIS_PASSWORD=${REDIS_PASSWORD} \
     TZ=Europe/Paris
 
-COPY ./progradio_api .
+COPY ./progradio_api/config ./config/
+COPY ./progradio_api/mix.* ./
 
 RUN rm -Rf _build && \
     mix local.hex --force && \
     mix local.rebar --force && \
-    mix deps.get --only prod && \
-    mix release prod --overwrite
+    mix deps.get --only prod
+
+COPY ./progradio_api .
+
+RUN mix release prod --overwrite
 
 CMD ["_build/prod/rel/prod/bin/prod", "start"]
