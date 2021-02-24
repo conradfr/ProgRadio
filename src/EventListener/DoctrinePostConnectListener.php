@@ -8,14 +8,9 @@ use Doctrine\DBAL\Event\ConnectionEventArgs;
 
 class DoctrinePostConnectListener
 {
-    protected $timezone;
+    public function __construct(protected string $timezone) { }
 
-    public function __construct(string $timezone)
-    {
-        $this->timezone = $timezone;
-    }
-
-    public function __invoke(ConnectionEventArgs $args)
+    public function __invoke(ConnectionEventArgs $args): void
     {
         $args->getConnection()
              ->exec("SET time zone '" . $this->timezone . "'");

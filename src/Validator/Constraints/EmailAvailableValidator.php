@@ -13,15 +13,9 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 class EmailAvailableValidator extends ConstraintValidator
 {
-    /** @var EntityManagerInterface */
-    protected $em;
+    public function __construct(protected EntityManagerInterface $em) { }
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->em = $entityManager;
-    }
-
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof EmailAvailable) {
             throw new UnexpectedTypeException($constraint, EmailAvailable::class);

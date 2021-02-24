@@ -32,8 +32,8 @@ class StreamsController  extends AbstractBaseController
     {
         $favorites = $request->attributes->get('favoritesStream', []);
         $radioId = $request->query->get('radio', null);
-        $howMany = (int) $request->query->get('limit', self::DEFAULT_RESULTS);
-        $offset = (int) $request->query->get('offset', 0);
+        $howMany = (int) $request->query->get('limit', (string) self::DEFAULT_RESULTS);
+        $offset = (int) $request->query->get('offset', "0");
         $country = $request->query->get('country', null);
         $sort = $request->query->get('sort', null);
 
@@ -67,8 +67,8 @@ class StreamsController  extends AbstractBaseController
         }
 
         $favorites = $request->attributes->get('favoritesStream', []);
-        $howMany = (int) $request->query->get('limit', self::DEFAULT_RESULTS);
-        $offset = (int) $request->query->get('offset', 0);
+        $howMany = (int) $request->query->get('limit', (string) self::DEFAULT_RESULTS);
+        $offset = (int) $request->query->get('offset',"0");
         $country = $request->query->get('country', null);
         $sort = $request->query->get('sort', null);
 

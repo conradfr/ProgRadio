@@ -11,5 +11,5 @@ use Symfony\Component\Validator\Constraint;
 */
 class EmailAvailable extends Constraint
 {
-  public $message = "Cet email n'est pas disponible.";
+  public string $message = "Cet email n'est pas disponible.";
 }

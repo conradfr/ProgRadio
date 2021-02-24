@@ -78,7 +78,7 @@ export default {
     updateTitle() {
       if (this.playing === true && this.playingRadio
           && this.playingRadio.type === PLAYER_TYPE_STREAM) {
-        let preTitle = '';
+        let preTitle = '♫ ';
         preTitle += `${this.playingRadio.name} - `;
 
         document.title = `${preTitle}${this.$i18n.tc('message.streaming.title')}`;

@@ -28,12 +28,7 @@ class UserController extends AbstractBaseController
 {
     protected const SESSION_DELETE_ATTR = 'delete-id';
 
-    private $session;
-
-    public function __construct(SessionInterface $session)
-    {
-        $this->session = $session;
-    }
+    public function __construct(private SessionInterface $session) { }
 
     /**
      * @Route(

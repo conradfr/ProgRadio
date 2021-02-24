@@ -23,7 +23,7 @@ class ReleaseVersion extends AbstractExtension
         ];
     }
 
-    public function releaseVersion()
+    public function releaseVersion() : string
     {
         return getenv(self::ENV_VAR) ?: self::DEFAULT_VERSION . random_int(0, 100);
     }

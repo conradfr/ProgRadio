@@ -27,7 +27,7 @@ class AbstractBaseController extends AbstractController
     /**
      * @throws HttpException
      */
-    protected function getJson(Request $request)
+    protected function getJson(Request $request): mixed
     {
         $data = json_decode($request->getContent(), true);
 

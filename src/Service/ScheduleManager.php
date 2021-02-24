@@ -20,14 +20,7 @@ class ScheduleManager
     protected const CACHE_KEY_DAY_FORMAT = 'Y-m-d';
     protected const CACHE_KEY_SERIALIZER_FORMAT = 'json';
 
-    protected EntityManagerInterface $em;
-    protected AdapterInterface $cache;
-
-    public function __construct(EntityManagerInterface $entityManager, AdapterInterface $cache)
-    {
-        $this->em = $entityManager;
-        $this->cache = $cache;
-    }
+    public function __construct(protected EntityManagerInterface $em, protected AdapterInterface $cache) { }
 
     /*
     * Basically there would be a bug is any radio would have the same name as a collection

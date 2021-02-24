@@ -12,15 +12,9 @@ class RadioBrowser
 {
     protected const SERVERS_DNS = 'all.api.radio-browser.info';
 
-    /** @var EntityManagerInterface */
-    protected $em;
+    public function __construct(protected EntityManagerInterface $em) { }
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->em = $entityManager;
-    }
-
-    public function getCountries(string $locale)
+    public function getCountries(string $locale): array
     {
         $countriesDb = $this->em->getRepository(Stream::class)->getCountryCodes();
 

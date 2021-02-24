@@ -16,16 +16,11 @@ class ScheduleResource
         self::TYPE_COLLECTION
     ];
 
-    protected \DateTime $dateTime;
-    protected ?string $type;
-
-    /**
-     * @var string|array|null
-     */
-    protected $value;
-
-    public function __construct(\DateTime $dateTime, ?string $type=null, $value=null)
-    {
+    public function __construct(
+        protected \DateTime $dateTime,
+        protected ?string $type=null,
+        protected string|array|null $value=null
+    ) {
         if ($type !== null && !in_array($type, self::TYPES)) {
             throw new \BadMethodCallException('Not allowed type');
         }
@@ -37,10 +32,6 @@ class ScheduleResource
         if ($type !== null && $type !== self::TYPE_RADIOS && !is_string($value)) {
             throw new \BadMethodCallException('Wrong value type');
         }
-
-        $this->dateTime = $dateTime;
-        $this->type = $type;
-        $this->value = $value;
     }
 
     public function getDateTime(): \DateTime
