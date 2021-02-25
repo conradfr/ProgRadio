@@ -13,4 +13,12 @@ defmodule ProgRadioApi.DataProvider do
     Get artist & song as map
   """
   @callback get_song(String.t(), map() | nil) :: map()
+
+  # ----- Utils -----
+
+  def get_stream_code_name_from_channel(channel_name) do
+    channel_name
+    |> String.split(":")
+    |> List.last()
+  end
 end

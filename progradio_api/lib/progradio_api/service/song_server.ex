@@ -3,23 +3,21 @@ defmodule ProgRadioApi.SongServer do
   require Logger
   alias ProgRadioApiWeb.Presence
 
-  @refresh_song_interval 15000
+  @refresh_song_interval 30000
   @refresh_presence_interval 10000
 
   # ----- Client Interface -----
 
-  def start_link(arg) do
+  def start_link({song_topic, radio_code_name} = arg) do
     name = {:via, Registry, {SongDataProviderRegistry, arg}}
 
     module_name =
-      arg
-      |> String.split(":")
-      |> List.last()
+      radio_code_name
       |> Macro.camelize()
       |> (&("Elixir.ProgRadioApi.DataProvider." <> &1)).()
       |> String.to_existing_atom()
 
-    GenServer.start_link(__MODULE__, %{module: module_name, name: arg, song: nil}, name: name)
+    GenServer.start_link(__MODULE__, %{module: module_name, name: song_topic, song: nil}, name: name)
   end
 
   # ----- Server callbacks -----
@@ -27,7 +25,8 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def init(state) do
     Logger.info("Data provider - #{state.name}: starting ...")
-    Process.send_after(self(), :refresh, 500)
+    Process.send_after(self(), {:refresh, :one_off}, 500)
+    Process.send_after(self(), {:refresh, :auto}, @refresh_song_interval)
     Process.send_after(self(), :presence, @refresh_presence_interval)
     {:ok, state}
   end
@@ -39,16 +38,29 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_info(:refresh, %{module: module, name: name} = state) do
-    data = apply(module, :get_data, [name])
-    song = apply(module, :get_song, [name, data])
+  def handle_info({:refresh, :auto}, %{module: module, name: name} = state) do
+    {_data, song} = get_data_song(module, name)
+
+    ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
+    Process.send_after(self(), {:refresh, :auto}, @refresh_song_interval)
+
+    Logger.info(
+      "Data provider - #{name}: song updated"
+    )
+
+    {:noreply, %{module: module, name: name, song: song}}
+  end
+
+  @impl true
+  def handle_info({:refresh, _}, %{module: module, name: name} = state) do
+    {data, song} = get_data_song(module, name)
 
     ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
 
     next_refresh =
       apply(module, :get_refresh, [name, data, @refresh_song_interval]) || @refresh_song_interval
 
-    Process.send_after(self(), :refresh, next_refresh)
+    Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 
     Logger.info(
       "Data provider - #{name}: song updated, next update in #{trunc(next_refresh / 1000)} seconds"
@@ -74,5 +86,15 @@ defmodule ProgRadioApi.SongServer do
         Process.send_after(self(), :presence, @refresh_presence_interval)
         {:noreply, state}
     end
+  end
+
+  # ----- Internal -----
+
+  @spec get_data_song(atom(), String.t()) :: tuple()
+  defp get_data_song(module, name) do
+    data = apply(module, :get_data, [name])
+    song = apply(module, :get_song, [name, data]) || %{}
+
+    {data, song}
   end
 end

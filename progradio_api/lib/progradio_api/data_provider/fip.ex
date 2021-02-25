@@ -1,7 +1,20 @@
-defmodule ProgRadioApi.DataProvider.FipMain do
+defmodule ProgRadioApi.DataProvider.Fip do
   require Logger
+  alias ProgRadioApi.DataProvider
 
   @behaviour ProgRadioApi.DataProvider
+
+  @stream_ids %{
+    "fip_main" => 7,
+    "fip_rock" => 64,
+    "fip_jazz" => 65,
+    "fip_groove" => 66,
+    "fip_pop" => 78,
+    "fip_electro" => 74,
+    "fip_monde" => 69,
+    "fip_reggae" => 71,
+    "fip_nouveautes" => 70
+  }
 
   @impl true
   def get_refresh(_name, data, default_refresh) do
@@ -22,9 +35,15 @@ defmodule ProgRadioApi.DataProvider.FipMain do
   end
 
   @impl true
-  def get_data(_name) do
+  def get_data(name) do
+    id =
+      DataProvider.get_stream_code_name_from_channel(name)
+      |> (&Map.get(@stream_ids, &1)).()
+
     HTTPoison.get!(
-      "https://www.fip.fr/latest/api/graphql?operationName=NowList&variables={\"bannerPreset\":\"266x266\",\"stationIds\":[7]}&extensions={\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"151ca055b816d28507dae07f9c036c02031ed54e18defc3d16feee2551e9a731\"}}",
+      "https://www.fip.fr/latest/api/graphql?operationName=NowList&variables={\"bannerPreset\":\"266x266\",\"stationIds\":[#{
+        id
+      }]}&extensions={\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"151ca055b816d28507dae07f9c036c02031ed54e18defc3d16feee2551e9a731\"}}",
       [],
       ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
     )

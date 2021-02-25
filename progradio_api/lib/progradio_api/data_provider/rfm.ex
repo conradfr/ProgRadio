@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.DataProvider.RfmMain do
+defmodule ProgRadioApi.DataProvider.Rfm do
   require Logger
 
   @behaviour ProgRadioApi.DataProvider

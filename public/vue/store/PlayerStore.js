@@ -52,12 +52,14 @@ const storeGetters = {
 
     let song = '';
     let hasInterpreter = false;
-    if (state.song.interpreter !== undefined && state.interpreter !== null) {
+    if (state.song.interpreter !== undefined && state.song.interpreter !== null
+      && state.song.interpreter !== '') {
       song += state.song.interpreter;
       hasInterpreter = true;
     }
 
-    if (state.song.title !== undefined && state.song.title !== null) {
+    if (state.song.title !== undefined && state.song.title !== null
+        && state.song.title !== '') {
       if (hasInterpreter === true) {
         song += ' - ';
       }
@@ -65,7 +67,7 @@ const storeGetters = {
       song += state.song.title;
     }
 
-    return song;
+    return song === '' ? null : song;
   }
 };
 
@@ -324,6 +326,10 @@ const storeMutations = {
     state.volume = volume;
   },
   setSong(state, song) {
+    if (song === null || song === undefined) {
+      state.song = null;
+    }
+
     state.song = song;
   },
   setFocus(state, params) {

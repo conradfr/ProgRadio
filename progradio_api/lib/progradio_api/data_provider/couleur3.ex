@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.DataProvider.Couleur3Main do
+defmodule ProgRadioApi.DataProvider.Couleur3 do
   require Logger
 
   @behaviour ProgRadioApi.DataProvider

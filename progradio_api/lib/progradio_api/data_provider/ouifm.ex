@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.DataProvider.OuifmMain do
+defmodule ProgRadioApi.DataProvider.Ouifm do
   require Logger
 
   @behaviour ProgRadioApi.DataProvider

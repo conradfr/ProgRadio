@@ -295,8 +295,8 @@ export default {
         this.hls.destroy();
         this.hls = null;
       }
-      delete window.audio;
       window.audio = null;
+      delete window.audio;
     },
     toggleFavorite() {
       if (this.player.radio !== null) {
