@@ -4,6 +4,9 @@ defmodule ProgRadioApi.DataProvider.Radioclassique do
   @behaviour ProgRadioApi.DataProvider
 
   @impl true
+  def has_custom_refresh(), do: false
+
+  @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true

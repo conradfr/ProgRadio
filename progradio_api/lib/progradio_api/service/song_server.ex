@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongServer do
   alias ProgRadioApiWeb.Presence
 
   @refresh_song_interval 30000
-  @refresh_presence_interval 10000
+  @refresh_presence_interval 20000
 
   # ----- Client Interface -----
 
@@ -25,9 +25,11 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def init(state) do
     Logger.info("Data provider - #{state.name}: starting ...")
-    Process.send_after(self(), {:refresh, :one_off}, 500)
-    Process.send_after(self(), {:refresh, :auto}, @refresh_song_interval)
+
+    if (apply(state.module, :has_custom_refresh, []) == true), do: Process.send_after(self(), {:refresh, :one_off}, 1000)
+    Process.send_after(self(), {:refresh, :auto}, 250)
     Process.send_after(self(), :presence, @refresh_presence_interval)
+
     {:ok, state}
   end
 
@@ -45,7 +47,7 @@ defmodule ProgRadioApi.SongServer do
     Process.send_after(self(), {:refresh, :auto}, @refresh_song_interval)
 
     Logger.info(
-      "Data provider - #{name}: song updated"
+      "Data provider - #{name}: song updated (timer)"
     )
 
     {:noreply, %{module: module, name: name, song: song}}

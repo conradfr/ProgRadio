@@ -14,6 +14,11 @@ defmodule ProgRadioApi.DataProvider do
   """
   @callback get_song(String.t(), map() | nil) :: map()
 
+  @doc """
+    Indicates if it can refreshes based on metadata or not
+  """
+  @callback has_custom_refresh() :: boolean()
+
   # ----- Utils -----
 
   def get_stream_code_name_from_channel(channel_name) do

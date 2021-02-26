@@ -4,6 +4,9 @@ defmodule ProgRadioApi.DataProvider.Couleur3 do
   @behaviour ProgRadioApi.DataProvider
 
   @impl true
+  def has_custom_refresh(), do: true
+
+  @impl true
   def get_refresh(_name, data, default_refresh) do
     case data do
       nil ->
