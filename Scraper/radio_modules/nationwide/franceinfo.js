@@ -61,6 +61,12 @@ const format = dateObj => {
 
     if (curr.hasOwnProperty('sections')) {
       newEntry.sections = [];
+
+      // sometimes we got only one section not in an array
+      if (Array.isArray(curr.sections) === false) {
+        curr.sections = [curr.sections];
+      }
+
       curr.sections.forEach(function (section) {
         if (section.title.substr(0, 8) !== "L'info à") {
           let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
