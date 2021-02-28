@@ -32,8 +32,12 @@ config :logger,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+{:ok, origin} =
+  System.get_env("CORS", ".*")
+  |> Regex.compile()
+
 config :cors_plug,
-  origin: [System.get_env("CORS") || "*"],
+  origin: [origin],
   max_age: 86400,
   methods: ["GET", "POST", "OPTIONS"]
 

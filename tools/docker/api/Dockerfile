@@ -11,6 +11,7 @@ ARG REDIS_PASSWORD=${REDIS_PASSWORD}
 ARG MIX_ENV=${MIX_ENV}
 ARG ORIGIN=${ORIGIN}
 ARG CORS=${CORS}
+ARG TZ=${TZ}
 
 ENV DATABASE_URL=${DATABASE_URL} \
     PORT=${PORT} \
@@ -21,7 +22,7 @@ ENV DATABASE_URL=${DATABASE_URL} \
     REDIS_PASSWORD=${REDIS_PASSWORD} \
     ORIGIN=${ORIGIN} \
     CORS=${CORS} \
-    TZ=Europe/Paris
+    TZ=${TZ}
 
 COPY ./progradio_api/config ./config/
 COPY ./progradio_api/mix.* ./
@@ -34,6 +35,6 @@ RUN rm -Rf _build && \
 
 COPY ./progradio_api .
 
-RUN mix release prod --overwrite
+RUN mix release prod
 
 CMD ["_build/prod/rel/prod/bin/prod", "start"]
