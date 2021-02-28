@@ -12,15 +12,16 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
 #  end
 
   def create(conn, listening_session_params) do
-    with {:ok, %ListeningSession{} = listening_session} <-
+    with {:ok, %ListeningSession{}} <-
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
       conn
       |> put_status(:created)
-      |> put_resp_header(
-        "location",
-        Routes.listening_session_path(conn, :show, listening_session)
-      )
-      |> render("show.json", listening_session: listening_session)
+      |> json(%{"status" => "OK"})
+    else
+      _ ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{"status" => "Error"})
     end
   end
 
