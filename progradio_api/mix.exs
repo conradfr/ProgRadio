@@ -50,7 +50,9 @@ defmodule ProgRadioApi.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.8"},
-      {:tzdata, "~> 1.1"}
+      {:tzdata, "~> 1.1"},
+      {:cors_plug, "~> 2.0"},
+      {:remote_ip, "~> 0.2.0"}
     ]
   end
 

@@ -193,8 +193,14 @@ class DefaultController extends AbstractBaseController
     {
         /**
          * @todo move to new api
+         * edit: we did it ;)
+         *
+         * This route is kept for now for the non-updated mobile app
+         *
+         *-----
          *
          * Code is not great but it's just temporary (famous last word)
+         *
          */
 
         //$json = $this->getJson($request);

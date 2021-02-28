@@ -26,8 +26,16 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :logger,
+  compile_time_purge_matching: [[application: :remote_ip]]
+
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :cors_plug,
+  origin: [System.get_env("CORS") || "*"],
+  max_age: 86400,
+  methods: ["GET", "POST", "OPTIONS"]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

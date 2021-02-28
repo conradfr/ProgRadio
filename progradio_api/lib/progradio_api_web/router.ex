@@ -2,11 +2,16 @@ defmodule ProgRadioApiWeb.Router do
   use ProgRadioApiWeb, :router
 
   pipeline :api do
+    plug CORSPlug
+    plug RemoteIp,
+         clients: ~w[10.0.2.2/32]
     plug :accepts, ["json"]
   end
 
-  scope "/api", ProgRadioApiWeb do
+  scope "/", ProgRadioApiWeb do
     pipe_through :api
+
+    resources "/listening_session", ListeningSessionController, except: [:new]
   end
 
   # Enables LiveDashboard only for development

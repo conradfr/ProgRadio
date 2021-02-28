@@ -143,12 +143,13 @@ const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, date
   };
 
   if (radioStreamCodeName !== undefined && radioStreamCodeName !== null) {
-    data.radio_stream_id = radioStreamCodeName;
+    data.radio_stream_code_name = radioStreamCodeName;
   } else {
-    data.id = codeName;
+    data.stream_id = codeName;
   }
 
-  axios.post('/listen', data);
+  /* eslint-disable no-undef */
+  axios.post(`https://${apiUrl}/listening_session`, data);
 };
 
 /* eslint-disable no-undef */
