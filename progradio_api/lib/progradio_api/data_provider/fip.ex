@@ -4,6 +4,8 @@ defmodule ProgRadioApi.DataProvider.Fip do
 
   @behaviour ProgRadioApi.DataProvider
 
+  @refresh_fallback 3
+
   @stream_ids %{
     "fip_main" => 7,
     "fip_rock" => 64,
@@ -30,10 +32,13 @@ defmodule ProgRadioApi.DataProvider.Fip do
           DateTime.utc_now()
           |> DateTime.to_unix()
 
-        abs(
-          Map.get(data, "next_refresh", now_unix + default_refresh / 1000) + 2 -
-            now_unix
-        ) * 1000
+        next = (Map.get(data, "next_refresh", now_unix + default_refresh / 1000) + 5 - now_unix)
+
+        if next < @refresh_fallback do
+          @refresh_fallback * 1000
+        else
+          next * 1000
+        end
     end
   end
 
