@@ -25,7 +25,8 @@ defmodule ProgRadioApi.ListeningSession do
 
   # listening time must have a minimum length
   defp validate_time_minimum(%{params: params} = changeset) do
-    IO.puts "#{inspect params}"
+    IO.puts("#{inspect(params)}")
+
     {:ok, date_time_start, _} =
       Map.get(params, "date_time_start")
       |> DateTime.from_iso8601()
@@ -34,8 +35,8 @@ defmodule ProgRadioApi.ListeningSession do
       Map.get(params, "date_time_end")
       |> DateTime.from_iso8601()
 
-    if (DateTime.diff(date_time_end, date_time_start) < @time_length_minimum_seconds) do
-      %{changeset | valid?: false,}
+    if DateTime.diff(date_time_end, date_time_start) < @time_length_minimum_seconds do
+      %{changeset | valid?: false}
     else
       %{changeset | valid?: true}
     end

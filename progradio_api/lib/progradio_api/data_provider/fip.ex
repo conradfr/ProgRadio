@@ -32,7 +32,7 @@ defmodule ProgRadioApi.DataProvider.Fip do
           DateTime.utc_now()
           |> DateTime.to_unix()
 
-        next = (Map.get(data, "next_refresh", now_unix + default_refresh / 1000) + 5 - now_unix)
+        next = Map.get(data, "next_refresh", now_unix + default_refresh / 1000) + 5 - now_unix
 
         if next < @refresh_fallback do
           @refresh_fallback * 1000

@@ -34,7 +34,8 @@ defmodule ProgRadioApiWeb.SongChannel do
   defp get_radio_stream(code_name) do
     query =
       from(rs in RadioStream,
-        join: r in Radio, on: r.id == rs.radio_id,
+        join: r in Radio,
+        on: r.id == rs.radio_id,
         select: %{radio_code_name: r.code_name, radio_stream_code_name: rs.code_name},
         where: rs.code_name == ^code_name
       )

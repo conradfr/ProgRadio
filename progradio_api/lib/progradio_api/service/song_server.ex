@@ -17,7 +17,9 @@ defmodule ProgRadioApi.SongServer do
       |> (&("Elixir.ProgRadioApi.DataProvider." <> &1)).()
       |> String.to_existing_atom()
 
-    GenServer.start_link(__MODULE__, %{module: module_name, name: song_topic, song: nil}, name: name)
+    GenServer.start_link(__MODULE__, %{module: module_name, name: song_topic, song: nil},
+      name: name
+    )
   end
 
   # ----- Server callbacks -----
@@ -26,7 +28,9 @@ defmodule ProgRadioApi.SongServer do
   def init(state) do
     Logger.info("Data provider - #{state.name}: starting ...")
 
-    if (apply(state.module, :has_custom_refresh, []) == true), do: Process.send_after(self(), {:refresh, :one_off}, 1000)
+    if apply(state.module, :has_custom_refresh, []) == true,
+      do: Process.send_after(self(), {:refresh, :one_off}, 1000)
+
     Process.send_after(self(), {:refresh, :auto}, 250)
     Process.send_after(self(), :presence, @refresh_presence_interval)
 
@@ -46,9 +50,7 @@ defmodule ProgRadioApi.SongServer do
     ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
     Process.send_after(self(), {:refresh, :auto}, @refresh_song_interval)
 
-    Logger.info(
-      "Data provider - #{name}: song updated (timer)"
-    )
+    Logger.info("Data provider - #{name}: song updated (timer)")
 
     {:noreply, %{module: module, name: name, song: song}}
   end
