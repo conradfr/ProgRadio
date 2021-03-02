@@ -11,6 +11,7 @@ defmodule ProgRadioApi.Application do
       ProgRadioApi.Repo,
       # Start the Telemetry supervisor
       ProgRadioApiWeb.Telemetry,
+      {Cachex, name: :progradio_cache},
       # Start the PubSub system
       {Phoenix.PubSub, name: ProgRadioApi.PubSub},
       ProgRadioApiWeb.Presence,

@@ -26,7 +26,7 @@ defmodule ProgRadioApi.MixProject do
   def application do
     [
       mod: {ProgRadioApi.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:cachex, :logger, :runtime_tools]
     ]
   end
 
@@ -52,7 +52,8 @@ defmodule ProgRadioApi.MixProject do
       {:httpoison, "~> 1.8"},
       {:tzdata, "~> 1.1"},
       {:cors_plug, "~> 2.0"},
-      {:remote_ip, "~> 0.2.0"}
+      {:remote_ip, "~> 0.2.0"},
+      {:cachex, "~> 3.3"}
     ]
   end
 
