@@ -12,140 +12,155 @@ defmodule ProgRadioApi.Radios do
   alias ProgRadioApi.Collection
 
   # one week
-  @cache_ttl_default 604800000
+  @cache_ttl_default 604_800_000
 
   # one day
-  @cache_ttl_radios 86400000
+  @cache_ttl_radios 86_400_000
 
   def list_active_radios() do
     {_, radios} =
-      Cachex.fetch(:progradio_cache, "radios", fn(_key) ->
-        query =
-          from r in Radio,
-               join: c in Category,
-               on: r.category_id == c.id,
-               left_join: rs in RadioStream,
-               on: rs.radio_id == r.id,
-               where: r.active == true,
-               select: %{
-                 id: r.id,
-                 code_name: r.code_name,
-                 name: r.name,
-                 share: r.share,
-                 category: c.code_name
-               },
-               select_merge: %{
-                 stream_code_name: rs.code_name,
-                 stream_name: rs.name,
-                 stream_url: rs.url,
-                 stream_main: rs.main,
-                 stream_current_song: rs.current_song
-               }
+      Cachex.fetch(
+        :progradio_cache,
+        "radios",
+        fn _key ->
+          query =
+            from r in Radio,
+              join: c in Category,
+              on: r.category_id == c.id,
+              left_join: rs in RadioStream,
+              on: rs.radio_id == r.id,
+              where: r.active == true,
+              select: %{
+                id: r.id,
+                code_name: r.code_name,
+                name: r.name,
+                share: r.share,
+                category: c.code_name
+              },
+              select_merge: %{
+                stream_code_name: rs.code_name,
+                stream_name: rs.name,
+                stream_url: rs.url,
+                stream_main: rs.main,
+                stream_current_song: rs.current_song
+              }
 
-        result =
-          query
-          |> Repo.all()
-          |> Enum.reduce(%{}, fn r, acc ->
-            radio =
-              case Map.has_key?(acc, r.code_name) do
-                true ->
-                  Map.get(acc, r.code_name)
+          result =
+            query
+            |> Repo.all()
+            |> Enum.reduce(%{}, fn r, acc ->
+              radio =
+                case Map.has_key?(acc, r.code_name) do
+                  true ->
+                    Map.get(acc, r.code_name)
 
-                false ->
-                  %{
-                    id: r.id,
-                    code_name: r.code_name,
-                    name: r.name,
-                    share: r.share,
-                    category: r.category,
-                    streaming_enabled: false,
-                    type: "radio",
-                    streams: []
-                  }
+                  false ->
+                    %{
+                      id: r.id,
+                      code_name: r.code_name,
+                      name: r.name,
+                      share: r.share,
+                      category: r.category,
+                      streaming_enabled: false,
+                      type: "radio",
+                      streams: []
+                    }
+                end
+
+              radio =
+                case Map.has_key?(r, :stream_code_name) do
+                  true ->
+                    stream = %{
+                      code_name: r.stream_code_name,
+                      name: r.stream_name,
+                      url: r.stream_url,
+                      main: r.stream_main,
+                      current_song: r.stream_current_song
+                    }
+
+                    %{radio | streams: radio.streams ++ [stream]}
+
+                  false ->
+                    radio
+                end
+
+              Map.put(acc, radio.code_name, radio)
+            end)
+            |> Enum.map(fn {k, r} ->
+              case Kernel.length(r.streams) do
+                0 -> {k, r}
+                _ -> {k, %{r | streaming_enabled: true}}
               end
+            end)
+            |> Enum.into(%{})
 
-            radio =
-              case Map.has_key?(r, :stream_code_name) do
-                true ->
-                  stream = %{
-                    code_name: r.stream_code_name,
-                    name: r.stream_name,
-                    url: r.stream_url,
-                    main: r.stream_main,
-                    current_song: r.stream_current_song
-                  }
-
-                  %{radio | streams: radio.streams ++ [stream]}
-
-                false ->
-                  radio
-              end
-
-            Map.put(acc, radio.code_name, radio)
-          end)
-          |> Enum.map(fn {k, r} ->
-            case Kernel.length(r.streams) do
-              0 -> {k, r}
-              _ -> {k, %{r | streaming_enabled: true}}
-            end
-          end)
-          |> Enum.into(%{})
-
-        {:commit, result}
-      end, ttl: @cache_ttl_radios)
+          {:commit, result}
+        end,
+        ttl: @cache_ttl_radios
+      )
 
     radios
   end
 
   def list_collections() do
     {_, collections} =
-      Cachex.fetch(:progradio_cache, "collections", fn(_key) ->
-        query =
-          from c in Collection,
-            join: r in Radio,
-            on: r.collection_id == c.id,
-            select: %{
-              code_name: c.code_name,
-              name_FR: c.name,
-              short_name: c.short_name,
-              priority: c.priority,
-              sort_field: c.sort_field,
-              sort_order: c.sort_order,
-              radios: fragment("array_agg(?)", r.code_name)
-            },
-            group_by: [c.id, c.priority],
-            order_by: [asc: c.priority, asc: c.id]
+      Cachex.fetch(
+        :progradio_cache,
+        "collections",
+        fn _key ->
+          query =
+            from c in Collection,
+              join: r in Radio,
+              on: r.collection_id == c.id,
+              select: %{
+                code_name: c.code_name,
+                name_FR: c.name,
+                short_name: c.short_name,
+                priority: c.priority,
+                sort_field: c.sort_field,
+                sort_order: c.sort_order,
+                radios: fragment("array_agg(?)", r.code_name)
+              },
+              group_by: [c.id, c.priority],
+              order_by: [asc: c.priority, asc: c.id]
 
-        result =
-          query
-          |> Repo.all()
-          |> Enum.reduce(%{}, fn c, acc ->
-            Map.put(acc, c.code_name, c)
-          end)
+          result =
+            query
+            |> Repo.all()
+            |> Enum.reduce(%{}, fn c, acc ->
+              Map.put(acc, c.code_name, c)
+            end)
 
-        {:commit, result}
-      end, ttl: @cache_ttl_default)
+          {:commit, result}
+        end,
+        ttl: @cache_ttl_default
+      )
 
     collections
   end
 
   def list_categories() do
     {_, categories} =
-      Cachex.fetch(:progradio_cache, "categories", fn(_key) ->
-        query =
-          from c in Category,
-               select: %{
-                 code_name: c.code_name,
-                 name_FR: c.name
-               },
-               order_by: [asc: c.id]
+      Cachex.fetch(
+        :progradio_cache,
+        "categories",
+        fn _key ->
+          query =
+            from c in Category,
+              select: %{
+                code_name: c.code_name,
+                name_FR: c.name
+              },
+              order_by: [asc: c.id]
 
-        result =
-          query
-          |> Repo.all()
+          result =
+            query
+            |> Repo.all()
 
-        {:commit, result}
-      end, ttl: @cache_ttl_default)
+          {:commit, result}
+        end,
+        ttl: @cache_ttl_default
+      )
 
     categories
   end
