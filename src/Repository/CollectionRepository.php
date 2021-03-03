@@ -15,6 +15,8 @@ class CollectionRepository extends ServiceEntityRepository
     protected const CACHE_COLLECTION_TTL = 604800; // week
     protected const CACHE_COLLECTION_ID = 'collections';
 
+    protected const CACHE_FAVORITES_TTL = 3600; // one hour
+
     private $security;
 
     public function __construct(Security $security, ManagerRegistry $registry)
@@ -96,7 +98,7 @@ class CollectionRepository extends ServiceEntityRepository
         $qb->andWhere('r.codeName IN (:radios)')
             ->setParameter('radios', $favorites);
 
-        $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
+        $qb->getQuery()->enableResultCache( self::CACHE_FAVORITES_TTL);
         $result = $qb->getQuery()->getResult();
 
         return array_column($result, 'codeName');

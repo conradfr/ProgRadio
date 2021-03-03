@@ -44,7 +44,8 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libwebp-dev \
     libcurl4-openssl-dev \
-    jpegoptim
+    jpegoptim \
+    sudo
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

@@ -30,6 +30,7 @@ doctrine:
                 convert_tz:     Oro\ORM\Query\AST\Functions\DateTime\ConvertTz
                 extract:        App\Doctrine\Functions\Extract
                 at_time_zone:   App\Doctrine\Functions\AtTimeZone
+                timezone:       App\Doctrine\Functions\Timezone
             numeric_functions:
                 Random:         Qbbr\PgsqlDoctrineRandomFunction\DQL\RandomFunction
                 timestampdiff:  Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff

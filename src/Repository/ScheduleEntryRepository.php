@@ -210,8 +210,8 @@ EOT;
            ->innerJoin('se.radio', 'r')
            ->leftJoin('se.sectionEntries', 'sc')
            ->where(
-               '(AT_TIME_ZONE(se.dateTimeStart, \'UTC\') >= :datetime_start AND AT_TIME_ZONE(se.dateTimeStart, \'UTC\') < :datetime_end)'
-                    . 'OR (AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') > :datetime_start AND AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') <= :datetime_end)')
+               '(TIMEZONE(\'UTC\', se.dateTimeStart) >= :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeStart) < :datetime_end)'
+                    . 'OR (TIMEZONE(\'UTC\', se.dateTimeEnd) > :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeEnd) <= :datetime_end)')
            ->andWhere('r.active = :active')
            ->addOrderBy('se.dateTimeStart', 'ASC')
            ->addOrderBy('sc.dateTimeStart', 'ASC')
