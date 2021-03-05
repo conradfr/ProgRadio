@@ -8,6 +8,7 @@ import find from 'lodash/find';
 import { DateTime, Interval } from 'luxon';
 
 import * as config from '../config/config';
+import cache from '../utils/cache';
 
 import router from '../router/router';
 import ScheduleApi from '../api/ScheduleApi';
@@ -23,12 +24,12 @@ const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
 
 // initial state
 const initState = {
-  radios: ScheduleApi.hasCache(config.CACHE_KEY_RADIOS)
-    ? ScheduleApi.getCache(config.CACHE_KEY_RADIOS) : [],
-  categories: ScheduleApi.hasCache(config.CACHE_KEY_CATEGORIES)
-    ? Object.freeze(ScheduleApi.getCache(config.CACHE_KEY_CATEGORIES)) : [],
-  collections: ScheduleApi.hasCache(config.CACHE_KEY_COLLECTIONS)
-    ? Object.freeze(ScheduleApi.getCache(config.CACHE_KEY_COLLECTIONS)) : {},
+  radios: cache.hasCache(config.CACHE_KEY_RADIOS)
+    ? cache.getCache(config.CACHE_KEY_RADIOS) : [],
+  categories: cache.hasCache(config.CACHE_KEY_CATEGORIES)
+    ? Object.freeze(cache.getCache(config.CACHE_KEY_CATEGORIES)) : [],
+  collections: cache.hasCache(config.CACHE_KEY_COLLECTIONS)
+    ? Object.freeze(cache.getCache(config.CACHE_KEY_COLLECTIONS)) : {},
   schedule: {},
   scheduleDisplay: {},
   cursorTime,
@@ -83,8 +84,8 @@ const storeGetters = {
     || state.categoryFilterFocus.list || false,
   currentShowOnRadio: state => (radioCodename) => {
     const currentShow = find(state.schedule[radioCodename], show => Interval
-      .fromDateTimes(DateTime.fromSQL(show.start_at).setZone(config.TIMEZONE),
-        DateTime.fromSQL(show.end_at).setZone(config.TIMEZONE)).contains(state.cursorTime));
+      .fromDateTimes(DateTime.fromISO(show.start_at).setZone(config.TIMEZONE),
+        DateTime.fromISO(show.end_at).setZone(config.TIMEZONE)).contains(state.cursorTime));
 
     return typeof currentShow === 'undefined' ? null : currentShow;
   }
@@ -141,11 +142,8 @@ const storeActions = {
   switchCollection: ({ commit }, collection) => {
     commit('collectionSwitch', collection);
   },
-
-  // ---------- FAVORITES ----------
-
-  toggleRadioFavorite: ({ commit }, radioCodeName) => {
-    commit('toggleRadioFavorite', radioCodeName);
+  setFavoritesCollection: ({ commit }, radios) => {
+    commit('setFavoritesCollection', radios);
   },
 
   // ---------- CATEGORY ----------
@@ -188,7 +186,7 @@ const storeActions = {
   // ---------- DATA & SCHEDULE ----------
 
   /* eslint-disable no-undef */
-  getRadiosData: ({ state, commit }) => {
+  getRadiosData: ({ dispatch, state, commit }) => {
     setTimeout(
       () => {
         ScheduleApi.getRadiosData()
@@ -196,6 +194,7 @@ const storeActions = {
             commit('updateRadios', radios);
             commit('updateCollections', collections);
             commit('updateCategories', categories);
+            dispatch('syncRadioFavorites');
           })
           .finally(() => commit('setLoading', false, { root: true }));
       },
@@ -210,13 +209,20 @@ const storeActions = {
     const dateStr = state.cursorTime.toISODate();
 
     // if we have cache we display it immediately and then fetch an update silently
-    if (ScheduleApi.hasCache(dateStr)) {
-      commit('updateSchedule', ScheduleApi.getCache(dateStr));
+    if (cache.hasCache(dateStr)) {
+      commit('updateSchedule', cache.getCache(dateStr));
     } else {
       commit('setLoading', true, { root: true });
     }
 
-    if (params !== null) {
+    if (params !== undefined && params !== null) {
+      // api don't have user favorites access
+      /* eslint-disable no-param-reassign */
+      if (params.collection !== undefined && params.collection === config.COLLECTION_FAVORITES) {
+        params.radios = state.collections[config.COLLECTION_FAVORITES].radios;
+        delete params.collection;
+      }
+
       setTimeout(
         () => {
           ScheduleApi.getSchedule(dateStr, params)
@@ -235,8 +241,8 @@ const storeActions = {
         75
       );
     } else {
-      if (ScheduleApi.hasCache(dateStr)) {
-        commit('updateSchedule', ScheduleApi.getCache(dateStr));
+      if (cache.hasCache(dateStr)) {
+        commit('updateSchedule', cache.getCache(dateStr));
       }
 
       setTimeout(
@@ -245,7 +251,7 @@ const storeActions = {
             .then(schedule => commit('updateSchedule', schedule))
             .finally(() => commit('setLoading', false, { root: true }));
         },
-        1000
+        75
       );
     }
   },
@@ -301,29 +307,12 @@ const storeMutations = {
       Vue.cookie.set(config.COOKIE_COLLECTION, collection, config.COOKIE_PARAMS);
     }, 300);
   },
-  toggleRadioFavorite(state, radioCodeName) {
-    const favorites = state.collections[config.COLLECTION_FAVORITES] === undefined
-      ? [] : state.collections[config.COLLECTION_FAVORITES].radios;
-    const radioIndex = favorites.indexOf(radioCodeName);
-
-    // Is favorite
-    if (radioIndex !== -1) {
-      favorites.splice(radioIndex, 1);
-    } else {
-      favorites.push(radioCodeName);
+  setFavoritesCollection(state, radios) {
+    if (state.collections[config.COLLECTION_FAVORITES] === undefined) {
+      return;
     }
 
-    Vue.set(state.collections[config.COLLECTION_FAVORITES], 'radios', favorites);
-
-    setTimeout(() => {
-      if (logged === true) {
-        ScheduleApi.toggleFavoriteRadio(radioCodeName);
-        return;
-      }
-
-      const favoritesAsString = favorites.join('|');
-      Vue.cookie.set(config.COOKIE_RADIO_FAVORITES, favoritesAsString, config.COOKIE_PARAMS);
-    }, 500);
+    Vue.set(state.collections[config.COLLECTION_FAVORITES], 'radios', radios || []);
   },
   setCategoryFilterFocus(state, params) {
     state.categoryFilterFocus[params.element] = params.status;

@@ -28,6 +28,8 @@ use App\Entity\ListeningSession;
 class DefaultController extends AbstractBaseController
 {
     /**
+     * LEGACY
+     *
      * @Route(
      *     "/schedule/{date}",
      *     name="schedule"
@@ -54,6 +56,8 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
+     * LEGACY
+     *
      * @Route(
      *     "/radios",
      *     name="api_radios"
@@ -128,6 +132,43 @@ class DefaultController extends AbstractBaseController
 
     /**
      * @Route(
+     *     "/user",
+     *     name="user_config",
+     * )
+     */
+    public function user(Request $request): Response
+    {
+        $user = $this->getUser();
+
+        if ($user !== null) {
+            $favorites = $user->getFavoriteRadios()->map(
+                function ($radio) {
+                    return $radio->getCodeName();
+                }
+            )->toArray();
+
+            $favoritesStream = $user->getFavoriteStreams()->map(
+                function ($stream) {
+                    return $stream->getId();
+                }
+            )->toArray();
+
+        } else {
+            $favorites = $request->attributes->get('favorites', []);
+            $favoritesStream = $request->attributes->get('favoritesStream', []);
+        }
+
+        return $this->jsonResponse([
+            'user' => [
+                'favoritesRadio' => $favorites,
+                'favoritesStream' => $favoritesStream,
+                'logged' => $user !== null
+            ]
+        ]);
+    }
+
+    /**
+     * @Route(
      *     "/radios/favorite/{codeName}",
      *     name="favorite_toggle"
      * )
@@ -195,6 +236,7 @@ class DefaultController extends AbstractBaseController
          * @todo move to new api
          * edit: we did it ;)
          *
+         * LEGACY
          * This route is kept for now for the non-updated mobile app
          *
          *-----

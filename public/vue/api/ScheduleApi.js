@@ -7,83 +7,23 @@ import {
   LISTENING_SESSION_SOURCE
 } from '../config/config';
 
-// ------------------------- Cache -------------------------
+import cache from '../utils/cache';
 
-// http://crocodillon.com/blog/always-catch-localstorage-security-and-quota-exceeded-errors
-const isLocalStorageFull = (e) => {
-  let quotaExceeded = false;
-  if (e) {
-    if (e.code) {
-      switch (e.code) {
-        case 22:
-          quotaExceeded = true;
-          break;
-        case 1014:
-          // Firefox
-          if (e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-            quotaExceeded = true;
-          }
-          break;
-        default:
-          // nothing
-      }
-    } else if (e.number === -2147024882) {
-      // Internet Explorer 8
-      quotaExceeded = true;
-    }
-  }
-  return quotaExceeded;
-};
-
-const isLocalStorageEnabled = () => {
-  try {
-    return localStorage !== undefined;
-  } catch (e) {
-    return false;
-  }
-};
-
-const hasCache = (key) => {
-  if (isLocalStorageEnabled() && localStorage[key] !== undefined) {
-    const cached = JSON.parse(localStorage.getItem(key));
-    if (Array.isArray(cached) || typeof cached === 'object') {
-      return true;
-    }
-  }
-
-  return false;
-};
-
-const getCache = key => JSON.parse(localStorage.getItem(key));
-
-const setCache = (key, data) => {
-  if (isLocalStorageEnabled() === false) {
-    return;
-  }
-
-  localStorage.removeItem(key);
-
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (e) {
-    if (isLocalStorageFull(e)) {
-      localStorage.clear();
-      setCache(key, data);
-    }
-  }
-};
+/* eslint-disable no-undef */
 
 // ------------------------- API -------------------------
 
 /* eslint-disable arrow-body-style */
 const getSchedule = (dateStr, params) => {
-  let url = `/schedule/${dateStr}`;
+  let url = `https://${apiUrl}/schedule/${dateStr}`;
 
   if (params !== undefined && params !== null) {
     if (params.collection !== undefined) {
       url += `?collection=${params.collection}`;
     } else if (params.radio !== undefined) {
       url += `?radio=${params.radio}`;
+    } else if (params.radios !== undefined && params.radios.length > 0) {
+      url += `?radios=${params.radios.join(',')}`;
     }
   }
   return axios.get(url)
@@ -91,7 +31,7 @@ const getSchedule = (dateStr, params) => {
       if (response.data.schedule !== undefined) {
         // only cache full data
         if (params === undefined || params === null) {
-          setCache(dateStr, response.data.schedule);
+          cache.setCache(dateStr, response.data.schedule);
         }
 
         return response.data.schedule;
@@ -105,18 +45,20 @@ const getSchedule = (dateStr, params) => {
 };
 
 const getRadiosData = () => {
-  return axios.get('/radios')
+  /* eslint-disable no-undef */
+  return axios.get(`https://${apiUrl}/radios`)
+  // return axios.get('/radios')
     .then((response) => {
       if (response.data.radios !== undefined) {
-        setCache(CACHE_KEY_RADIOS, response.data.radios);
+        cache.setCache(CACHE_KEY_RADIOS, response.data.radios);
       }
 
-      if (response.data.radios !== undefined) {
-        setCache(CACHE_KEY_COLLECTIONS, response.data.collections);
+      if (response.data.collections !== undefined) {
+        cache.setCache(CACHE_KEY_COLLECTIONS, response.data.collections);
       }
 
-      if (response.data.radios !== undefined) {
-        setCache(CACHE_KEY_CATEGORIES, response.data.categories);
+      if (response.data.categories !== undefined) {
+        cache.setCache(CACHE_KEY_CATEGORIES, response.data.categories);
       }
 
       return response.data;
@@ -148,7 +90,6 @@ const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, date
     data.stream_id = codeName;
   }
 
-  /* eslint-disable no-undef */
   axios.post(`https://${apiUrl}/listening_session`, data);
 };
 
@@ -156,8 +97,6 @@ const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, date
 export default {
   getSchedule,
   getRadiosData,
-  hasCache,
-  getCache,
   toggleFavoriteRadio,
   sendListeningSession
 };

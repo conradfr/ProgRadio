@@ -95,16 +95,16 @@ const getScheduleDisplay = (schedule, currentTime, initialScrollIndex) => {
       let width = config.MINUTE_PIXEL;
       // @todo I guess we'll look at shows that start prev day and ends next day later ...
       if (program.end_overflow) {
-        width *= endDay.diff(DateTime.fromSQL(program.start_at).setZone(config.TIMEZONE))
+        width *= endDay.diff(DateTime.fromISO(program.start_at).setZone(config.TIMEZONE))
           .as('minutes');
       } else if (program.start_overflow) {
-        width *= DateTime.fromSQL(program.end_at).setZone(config.TIMEZONE).diff(startDay)
+        width *= DateTime.fromISO(program.end_at).setZone(config.TIMEZONE).diff(startDay)
           .as('minutes');
       } else {
         width *= program.duration;
       }
 
-      const left = program.start_overflow ? 0 : (DateTime.fromSQL(program.start_at)
+      const left = program.start_overflow ? 0 : (DateTime.fromISO(program.start_at)
         .setZone(config.TIMEZONE).diff(startDay).as('minutes') * config.MINUTE_PIXEL);
 
       result[key] = {

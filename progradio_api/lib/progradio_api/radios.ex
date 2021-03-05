@@ -6,6 +6,7 @@ defmodule ProgRadioApi.Radios do
   import Ecto.Query, warn: false, only: [from: 2]
   alias ProgRadioApi.Repo
 
+  alias ProgRadioApi.Utils
   alias ProgRadioApi.Radio
   alias ProgRadioApi.RadioStream
   alias ProgRadioApi.Category
@@ -63,7 +64,7 @@ defmodule ProgRadioApi.Radios do
                       category: r.category,
                       streaming_enabled: false,
                       type: "radio",
-                      streams: []
+                      streams: %{}
                     }
                 end
 
@@ -78,7 +79,7 @@ defmodule ProgRadioApi.Radios do
                       current_song: r.stream_current_song
                     }
 
-                    %{radio | streams: radio.streams ++ [stream]}
+                    put_in(radio, [:streams, stream.code_name], stream)
 
                   false ->
                     radio
@@ -87,7 +88,7 @@ defmodule ProgRadioApi.Radios do
               Map.put(acc, radio.code_name, radio)
             end)
             |> Enum.map(fn {k, r} ->
-              case Kernel.length(r.streams) do
+              case Kernel.map_size(r.streams) do
                 0 -> {k, r}
                 _ -> {k, %{r | streaming_enabled: true}}
               end
@@ -95,9 +96,10 @@ defmodule ProgRadioApi.Radios do
             |> Enum.into(%{})
 
           {:commit, result}
-        end,
-        ttl: @cache_ttl_radios
+        end
       )
+
+    Utils.set_ttl_if_none("radios", @cache_ttl_radios)
 
     radios
   end
@@ -110,7 +112,7 @@ defmodule ProgRadioApi.Radios do
         fn _key ->
           query =
             from c in Collection,
-              join: r in Radio,
+              left_join: r in Radio,
               on: r.collection_id == c.id,
               select: %{
                 code_name: c.code_name,
@@ -119,7 +121,7 @@ defmodule ProgRadioApi.Radios do
                 priority: c.priority,
                 sort_field: c.sort_field,
                 sort_order: c.sort_order,
-                radios: fragment("array_agg(?)", r.code_name)
+                radios: fragment("array_remove(array_agg(?), null)", r.code_name)
               },
               group_by: [c.id, c.priority],
               order_by: [asc: c.priority, asc: c.id]
@@ -132,9 +134,10 @@ defmodule ProgRadioApi.Radios do
             end)
 
           {:commit, result}
-        end,
-        ttl: @cache_ttl_default
+        end
       )
+
+    Utils.set_ttl_if_none("collections", @cache_ttl_default)
 
     collections
   end
@@ -158,9 +161,10 @@ defmodule ProgRadioApi.Radios do
             |> Repo.all()
 
           {:commit, result}
-        end,
-        ttl: @cache_ttl_default
+        end
       )
+
+    Utils.set_ttl_if_none("categories", @cache_ttl_default)
 
     categories
   end

@@ -12,8 +12,8 @@ import { TIMEZONE, MINUTE_PIXEL } from '../../config/config';
 export default {
   props: ['program_start', 'section'],
   data() {
-    const left = DateTime.fromSQL(this.section.start_at)
-      .diff(DateTime.fromSQL(this.program_start)).as('minutes') * MINUTE_PIXEL;
+    const left = DateTime.fromISO(this.section.start_at)
+      .diff(DateTime.fromISO(this.program_start)).as('minutes') * MINUTE_PIXEL;
 
     return {
       styleObject: {
@@ -26,7 +26,7 @@ export default {
       // @todo improve / refactor
 
       function popoverTitle(title, startAt) {
-        const start = DateTime.fromSQL(startAt)
+        const start = DateTime.fromISO(startAt)
           .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
         return `${title} - ${start}`;

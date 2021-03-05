@@ -104,9 +104,9 @@ const buildNotificationData = (radio, streamCodeName, show) => {
   data.icon = getPictureUrl(radio, show);
 
   if (show !== undefined && show !== null) {
-    const start = DateTime.fromSQL(show.start_at).setZone(config.TIMEZONE)
+    const start = DateTime.fromISO(show.start_at).setZone(config.TIMEZONE)
       .toLocaleString(DateTime.TIME_SIMPLE);
-    const end = DateTime.fromSQL(show.end_at).setZone(config.TIMEZONE)
+    const end = DateTime.fromISO(show.end_at).setZone(config.TIMEZONE)
       .toLocaleString(DateTime.TIME_SIMPLE);
 
     data.times = `${start}-${end}`;

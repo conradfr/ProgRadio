@@ -19,7 +19,7 @@ export default {
   props: ['section'],
   filters: {
     time(value) {
-      return DateTime.fromSQL(value)
+      return DateTime.fromISO(value)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
     }
   }

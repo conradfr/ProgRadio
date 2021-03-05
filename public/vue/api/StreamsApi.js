@@ -87,13 +87,6 @@ const incrementPlayCount = (stationUuid, radioBrowserUrl) => {
   }
 };
 
-const getFavorites = () => {
-  return axios.get('/streams/favorites')
-    .then((response) => {
-      return response.data.favorites;
-    });
-};
-
 const toggleFavoriteStream = (streamCodeName) => {
   axios.get(`/streams/favorite/${streamCodeName}`)
     .catch((error) => {
@@ -109,7 +102,6 @@ export default {
   getRadios,
   getRandom,
   getCountries,
-  getFavorites,
   searchRadios,
   incrementPlayCount,
   toggleFavoriteStream

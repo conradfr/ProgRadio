@@ -67,13 +67,8 @@ export default {
     };
   },
   created() {
-    setTimeout(
-      () => {
-        this.$store.dispatch('getRadiosData');
-        this.$store.dispatch('getSchedule', { radio: this.$route.params.radio });
-      },
-      50
-    );
+    this.$store.dispatch('getRadiosData');
+    this.$store.dispatch('getSchedule', { radio: this.$route.params.radio });
   },
   // TODO fix this hack
   mounted() {

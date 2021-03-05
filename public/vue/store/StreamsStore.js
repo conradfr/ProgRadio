@@ -97,15 +97,6 @@ const storeActions = {
         .finally(() => commit('setLoading', false, { root: true }));
     });
   },
-  getFavorites: ({ commit }) => {
-    // commit('setLoading', true, { root: true });
-
-    Vue.nextTick(() => {
-      StreamsApi.getFavorites()
-        .then(favorites => commit('setFavorites', favorites));
-      // .then(() => commit('setLoading', false, { root: true }));
-    });
-  },
   getStreamRadio: ({ commit }, radioId) => {
     commit('setLoading', true, { root: true });
 
@@ -148,6 +139,10 @@ const storeActions = {
         .finally(() => commit('setLoading', false, { root: true }));
     });
   },
+  setStreamFavorites: ({ commit }, favorites) => {
+    commit('setStreamFavorites', favorites);
+  },
+
   /* eslint-disable no-param-reassign */
   countrySelection: ({ getters, dispatch, commit }, country, getAfter) => {
     // if country is just country_code
@@ -194,9 +189,6 @@ const storeActions = {
         .finally(() => commit('setLoading', false, { root: true }));
     });
   },
-  toggleStreamFavorite: ({ commit }, stream) => {
-    commit('toggleStreamFavorite', stream);
-  },
   setSearchActive: ({ state, commit, dispatch }, status) => {
     commit('setSearchActive', status);
 
@@ -232,7 +224,7 @@ const storeMutations = {
     Object.freeze(value);
     Vue.set(state, 'countries', value);
   },
-  setFavorites: (state, value) => {
+  setStreamFavorites: (state, value) => {
     Vue.set(state, 'favorites', value);
   },
   setConfig: (state, data) => {
@@ -258,25 +250,6 @@ const storeMutations = {
   },
   setSearchLastTimestamp: (state, value) => {
     Vue.set(state, 'searchLastTimestamp', value);
-  },
-  toggleStreamFavorite(state, streamId) {
-    const { favorites } = state;
-    const favoriteIndex = favorites.indexOf(streamId);
-    if (favoriteIndex !== -1) {
-      favorites.splice(favoriteIndex, 1);
-      Vue.set(state, 'favorites', favorites);
-    } else {
-      favorites.push(streamId);
-      Vue.set(state, 'favorites', favorites);
-    }
-
-    setTimeout(() => {
-      if (logged === true) {
-        StreamsApi.toggleFavoriteStream(streamId);
-        return;
-      }
-      Vue.cookie.set(config.COOKIE_STREAM_FAVORITES, favorites.join('|'), config.COOKIE_PARAMS);
-    }, 500);
   }
 };
 

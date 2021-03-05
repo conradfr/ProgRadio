@@ -39,7 +39,7 @@ defmodule ProgRadioApi.DataProvider.Radionova do
           |> DateTime.to_unix()
 
         {:ok, time_end} =
-          "00:" <> Map.get(data, "duration", "00:30")
+          ("00:" <> Map.get(data, "duration", "00:30"))
           |> Time.from_iso8601()
 
         {time_end_seconds, _} =

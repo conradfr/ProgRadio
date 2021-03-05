@@ -42,16 +42,16 @@ export default {
       cursorTime: state => state.schedule.cursorTime,
     }),
     scheduleDisplay() {
-      const start = DateTime.fromSQL(this.show.start_at)
+      const start = DateTime.fromISO(this.show.start_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
-      const end = DateTime.fromSQL(this.show.end_at)
+      const end = DateTime.fromISO(this.show.end_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
       return `${start}-${end}`;
     },
     isCurrent() {
-      return Interval.fromDateTimes(DateTime.fromSQL(this.show.start_at).setZone(TIMEZONE),
-        DateTime.fromSQL(this.show.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
+      return Interval.fromDateTimes(DateTime.fromISO(this.show.start_at).setZone(TIMEZONE),
+        DateTime.fromISO(this.show.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
     },
     picture() {
       return `${THUMBNAIL_PAGE_PROGRAM_PATH}${this.show.picture_url}`;

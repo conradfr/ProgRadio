@@ -55,9 +55,9 @@ export default {
         return '';
       }
 
-      const start = DateTime.fromSQL(this.show.start_at)
+      const start = DateTime.fromISO(this.show.start_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
-      const end = DateTime.fromSQL(this.show.end_at)
+      const end = DateTime.fromISO(this.show.end_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
       return `${this.show.title} - ${start}-${end}`;

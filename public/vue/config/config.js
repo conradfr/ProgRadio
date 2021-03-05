@@ -20,9 +20,11 @@ export const DEFAULT_COLLECTION = 'nationwide';
 
 export const COLLECTION_FAVORITES = 'favorites';
 
-export const CACHE_KEY_RADIOS = 'radios_v2';
-export const CACHE_KEY_COLLECTIONS = 'collections_v2';
-export const CACHE_KEY_CATEGORIES = 'categories';
+export const CACHE_KEY_RADIOS = 'radios_v3';
+export const CACHE_KEY_COLLECTIONS = 'collections_v3';
+export const CACHE_KEY_CATEGORIES = 'categories_v3';
+export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites_v3';
+export const CACHE_KEY_STREAM_FAVORITES = 'stream_favorites_v3';
 
 export const COOKIE_PREFIX = 'progradio';
 export const COOKIE_TTL = '1Y';

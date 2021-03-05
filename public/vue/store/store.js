@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import ScheduleStore from './ScheduleStore';
 import PlayerStore from './PlayerStore';
 import StreamsStore from './StreamsStore';
+import UserStore from './UserStore';
 
 Vue.use(Vuex);
 
@@ -40,7 +41,8 @@ const store = new Vuex.Store({
   modules: {
     schedule: ScheduleStore,
     player: PlayerStore,
-    streams: StreamsStore
+    streams: StreamsStore,
+    user: UserStore
   }
 });
 

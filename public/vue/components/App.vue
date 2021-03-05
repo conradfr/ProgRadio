@@ -15,12 +15,11 @@ export default {
     Player
   },
   created() {
-    // put here so any streaming preloaded on the player will have its correct favorite status
     setTimeout(
       () => {
-        this.$store.dispatch('getFavorites');
+        this.$store.dispatch('getUserData');
       },
-      70
+      25
     );
 
     // OS hotkeys support

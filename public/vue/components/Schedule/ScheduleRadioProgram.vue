@@ -100,16 +100,16 @@ export default {
       return title;
     },
     scheduleDisplay() {
-      const start = DateTime.fromSQL(this.program.start_at)
+      const start = DateTime.fromISO(this.program.start_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
-      const end = DateTime.fromSQL(this.program.end_at)
+      const end = DateTime.fromISO(this.program.end_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
       return `${start}-${end}`;
     },
     isCurrent() {
-      return Interval.fromDateTimes(DateTime.fromSQL(this.program.start_at).setZone(TIMEZONE),
-        DateTime.fromSQL(this.program.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
+      return Interval.fromDateTimes(DateTime.fromISO(this.program.start_at).setZone(TIMEZONE),
+        DateTime.fromISO(this.program.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
     },
     isLongEnough() {
       return this.program.duration >= PROGRAM_LONG_ENOUGH;

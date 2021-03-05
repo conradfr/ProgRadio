@@ -2,7 +2,6 @@ defmodule ProgRadioApiWeb.Router do
   use ProgRadioApiWeb, :router
 
   pipeline :api do
-    #    plug CORSPlug
     plug RemoteIp,
       clients: ~w[10.0.2.2/32]
 
@@ -12,6 +11,7 @@ defmodule ProgRadioApiWeb.Router do
   scope "/", ProgRadioApiWeb do
     pipe_through :api
 
+    resources "/schedule/:day", ScheduleController
     resources "/radios", RadioController
     resources "/listening_session", ListeningSessionController, only: [:create]
   end

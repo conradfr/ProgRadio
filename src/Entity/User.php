@@ -52,6 +52,7 @@ class User implements UserInterface
     /**
      * @var Collection
      *
+     * @ORM\Cache(usage="READ_ONLY")
      * @ORM\ManyToMany(targetEntity=Radio::class)
      * @ORM\JoinTable(name="users_radios",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -63,6 +64,7 @@ class User implements UserInterface
     /**
      * @var Collection
      *
+     * @ORM\Cache(usage="READ_ONLY")
      * @ORM\ManyToMany(targetEntity=Stream::class)
      * @ORM\JoinTable(name="users_streams",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
