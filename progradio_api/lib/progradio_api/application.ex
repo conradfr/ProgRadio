@@ -11,14 +11,22 @@ defmodule ProgRadioApi.Application do
       ProgRadioApi.Repo,
       # Start the Telemetry supervisor
       ProgRadioApiWeb.Telemetry,
+      {Redix,
+       host: Application.get_env(:progradio_api, :redis_host),
+       database: Application.get_env(:progradio_api, :redis_db),
+       password: Application.get_env(:progradio_api, :redis_password),
+       name: :redix},
       {Cachex, name: :progradio_cache},
+      {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
+      {ProgRadioApi.Importer.ScheduleImporter, []},
       # Start the PubSub system
       {Phoenix.PubSub, name: ProgRadioApi.PubSub},
       ProgRadioApiWeb.Presence,
       {Registry, [keys: :unique, name: SongDataProviderRegistry]},
       {DynamicSupervisor, strategy: :one_for_one, name: ProgRadioApi.SongDynamicSupervisor},
       # Start the Endpoint (http/https)
-      ProgRadioApiWeb.Endpoint
+      ProgRadioApiWeb.Endpoint,
+      ProgRadioApi.Scheduler
       # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
       # {ProgRadioApi.Worker, arg}
     ]

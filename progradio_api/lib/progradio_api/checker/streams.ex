@@ -1,9 +1,8 @@
-defmodule Importer.Checker.Streams do
+defmodule ProgRadioApi.Checker.Streams do
   require Logger
   import Ecto.Query, only: [from: 2]
-  alias Importer.Repo
-  alias Importer.RadioStream
-  alias Importer.Radio
+  alias ProgRadioApi.Repo
+  alias ProgRadioApi.{Radio, RadioStream}
 
   @timeout 100_000
   @success_status [200, 302]
@@ -35,7 +34,7 @@ defmodule Importer.Checker.Streams do
 
   defp check_stream_of_radio(radio_stream) do
     Task.Supervisor.start_child(
-      Importer.TaskSupervisor,
+      ProgRadioApi.TaskSupervisor,
       fn ->
         Logger.info("Checking: #{radio_stream.code_name} (#{radio_stream.url})")
 

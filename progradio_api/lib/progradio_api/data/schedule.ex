@@ -7,77 +7,85 @@ defmodule ProgRadioApi.Schedule do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Utils
-  alias ProgRadioApi.Radio
-  alias ProgRadioApi.Collection
-  alias ProgRadioApi.ScheduleEntry
-  alias ProgRadioApi.SectionEntry
+  alias ProgRadioApi.{Radio, Collection, ScheduleEntry, SectionEntry}
 
   @timezone "Europe/Paris"
 
   # two days
-  @cache_ttl 172_800
+  @cache_ttl_schedule 172_800
+  @cache_prefix_schedule "schedule_"
 
-  @cache_prefix "schedule_"
+  @cache_ttl_collection 604_800
+  @cache_prefix_collection "collection_"
 
-  def list_schedule_collection(day, collection) when is_binary(collection) do
-    cache_key = "#{@cache_prefix}#{day}_#{collection}"
-
-    {_, schedule} =
-      Cachex.fetch(
-        :progradio_cache,
-        cache_key,
-        fn _key ->
-          result =
-            day
-            |> query()
-            |> join(:inner, [se, r, sc], c in Collection, on: r.collection_id == c.id)
-            |> where([se, r, sc, c], c.code_name == ^collection)
-            |> Repo.all()
-            |> format()
-
-          {:commit, result}
-        end
-      )
-
-    Utils.set_ttl_if_none(cache_key, @cache_ttl)
-    schedule
+  def list_schedule_collection(day, collection_code_name) when is_binary(collection_code_name) do
+    radio_code_names_of_collection(collection_code_name)
+    |> schedule_of_radios_and_day(day)
   end
 
   def list_schedule_radios(day, radios) when is_list(radios) and length(radios) > 0 do
-    day
-    |> query()
-    |> where([se, r, sc, c], r.code_name in ^radios)
-    |> Repo.all()
-    |> format()
+    schedule_of_radios_and_day(radios, day)
   end
+
 
   def list_schedule_radios(day, _radios) do
     list_schedule(day)
   end
 
   def list_schedule(day) do
-    cache_key = @cache_prefix <> day
+      # hopefully cached
+      ProgRadioApi.Radios.list_active_radios()
+      |> Map.keys()
+      |> schedule_of_radios_and_day(day)
+  end
 
-    {_, schedule} =
-      Cachex.fetch(
-        :progradio_cache,
-        cache_key,
-        fn _key ->
+  def list_schedule() do
+    NaiveDateTime.local_now()
+    |> DateTime.from_naive!("Europe/Paris")
+    |> DateTime.to_date()
+    |> Date.to_string()
+    |> list_schedule()
+  end
+
+  @spec schedule_of_radios_and_day(list(), String.t()) :: map()
+  defp schedule_of_radios_and_day(radio_code_names, day) do
+    cache_key = @cache_prefix_schedule <> day <> "_"
+
+    {radio_code_names_cached, radio_code_names_not_cached} = radio_code_names_cached_or_not_for_day(radio_code_names, day)
+
+    not_cached =
+      case Kernel.length(radio_code_names_not_cached) do
+        0 -> %{}
+        _ ->
           result =
             day
             |> query()
+            |> where([se, r, sc], r.code_name in ^radio_code_names_not_cached)
             |> Repo.all()
             |> format()
 
-          {:commit, result}
-        end
-      )
+          # put in cache
+          result
+          |> Enum.each(fn {k, e} ->
+            Cachex.put(:progradio_cache, cache_key <> k, e, ttl: @cache_ttl_schedule)
+          end)
 
-    Utils.set_ttl_if_none(cache_key, @cache_ttl)
-    schedule
+          result
+      end
+
+    cached =
+      radio_code_names_cached
+      |> Enum.map(fn e ->
+        {:ok, data} = Cachex.get(:progradio_cache, cache_key <> e)
+        {e, data}
+      end)
+      |> Enum.into(%{})
+
+    Map.merge(cached, not_cached)
   end
 
-  def query(day) do
+  @spec query(String.t()) :: Ecto.query()
+  defp query(day) do
     date_time_start =
       (day <> " 00:00:00")
       |> NaiveDateTime.from_iso8601!()
@@ -149,7 +157,7 @@ defmodule ProgRadioApi.Schedule do
       }
   end
 
-  def format(data) do
+  defp format(data) do
     radio_schedule =
       data
       |> Enum.map(fn e -> {e.code_name, %{}} end)
@@ -198,5 +206,43 @@ defmodule ProgRadioApi.Schedule do
       (acc[e.code_name][e.hash].sections ++ [section_entry])
       |> (&put_in(acc, [e.code_name, e.hash, :sections], &1)).()
     end)
+  end
+
+  @spec radio_code_names_cached_or_not_for_day(list(), String.t()) :: tuple()
+  defp radio_code_names_cached_or_not_for_day(radio_code_names, day) do
+    {:ok, cache_keys} = Cachex.keys(:progradio_cache)
+
+    code_names_cached =
+      radio_code_names
+      |> Enum.filter(fn e -> Enum.member?(cache_keys, "#{@cache_prefix_schedule}#{day}_#{e}") end)
+
+    {code_names_cached, radio_code_names -- code_names_cached}
+  end
+
+  @spec radio_code_names_of_collection(String.t()) :: list()
+  defp radio_code_names_of_collection(collection_code_name) do
+    cache_key_collection = "#{@cache_prefix_collection}#{collection_code_name}"
+
+    {_, code_names} =
+      Cachex.fetch(
+        :progradio_cache,
+        cache_key_collection,
+        fn _key ->
+          query =
+            from r in Radio,
+                 join: c in Collection,
+                 on: r.collection_id == c.id,
+                 where: r.active == true,
+                 where: c.code_name == ^collection_code_name,
+                 select: r.code_name
+
+          collection_code_names = Repo.all(query)
+
+          {:commit, collection_code_names}
+        end
+      )
+
+    Utils.set_ttl_if_none(cache_key_collection, @cache_ttl_collection)
+    code_names
   end
 end

@@ -1,8 +1,8 @@
-defmodule Importer.Processor.Store do
+defmodule ProgRadioApi.Importer.ScheduleImporter.Store do
   import Ecto.Query, only: [from: 2]
   alias Ecto.Multi
-  alias Importer.{ScheduleEntry, SectionEntry}
-  alias Importer.Repo
+  alias ProgRadioApi.Repo
+  alias ProgRadioApi.{ScheduleEntry, SectionEntry}
 
   @spec persist(list(map), struct, Date.t()) :: any
   def persist(shows, radio, date) do
@@ -15,7 +15,7 @@ defmodule Importer.Processor.Store do
       |> delete_schedule(to_not_delete, radio, date)
 
     multi_combine = Ecto.Multi.append(multi_delete, multi)
-    Importer.Repo.transaction(multi_combine)
+    Repo.transaction(multi_combine)
   end
 
   @spec delete_schedule(Multi.t(), list(integer), struct, Date.t()) :: any

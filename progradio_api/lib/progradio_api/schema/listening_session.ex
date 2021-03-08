@@ -25,8 +25,6 @@ defmodule ProgRadioApi.ListeningSession do
 
   # listening time must have a minimum length
   defp validate_time_minimum(%{params: params} = changeset) do
-    IO.puts("#{inspect(params)}")
-
     {:ok, date_time_start, _} =
       Map.get(params, "date_time_start")
       |> DateTime.from_iso8601()

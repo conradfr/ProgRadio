@@ -7,10 +7,7 @@ defmodule ProgRadioApi.Radios do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Utils
-  alias ProgRadioApi.Radio
-  alias ProgRadioApi.RadioStream
-  alias ProgRadioApi.Category
-  alias ProgRadioApi.Collection
+  alias ProgRadioApi.{Radio, RadioStream, Category, Collection}
 
   # one week
   @cache_ttl_default 604_800_000

@@ -1,9 +1,9 @@
-defmodule Importer.Processor.Streams.RadioBrowser do
+defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   import Ecto.Query, only: [from: 2]
   alias Ecto.Multi
-  alias Importer.Repo
-  alias Importer.Stream
-  alias Importer.ImageImporter
+  alias ProgRadioApi.Repo
+  alias ProgRadioApi.Stream
+  alias ProgRadioApi.ImageImporter
 
   @image_folder "stream"
 
@@ -118,7 +118,7 @@ defmodule Importer.Processor.Streams.RadioBrowser do
     img_to_del = Repo.all(query)
 
     Enum.each(img_to_del, fn img ->
-      "#{Application.get_env(:importer, :image_path)}#{@image_folder}/#{img}"
+      "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{img}"
       |> File.rm()
     end)
 

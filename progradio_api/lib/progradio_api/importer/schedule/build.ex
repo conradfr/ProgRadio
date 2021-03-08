@@ -1,6 +1,6 @@
-defmodule Importer.Processor.Builder do
+defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
   use Timex
-  alias Importer.ImageImporter
+  alias ProgRadioApi.Importer.ImageImporter
 
   # Build
 

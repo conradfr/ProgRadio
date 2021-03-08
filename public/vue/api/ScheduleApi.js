@@ -19,11 +19,11 @@ const getSchedule = (dateStr, params) => {
 
   if (params !== undefined && params !== null) {
     if (params.collection !== undefined) {
-      url += `?collection=${params.collection}`;
+      url += `?c=${params.collection}`;
     } else if (params.radio !== undefined) {
-      url += `?radio=${params.radio}`;
+      url += `?r=${params.radio}`;
     } else if (params.radios !== undefined && params.radios.length > 0) {
-      url += `?radios=${params.radios.join(',')}`;
+      url += `?r=${params.radios.join(',')}`;
     }
   }
   return axios.get(url)

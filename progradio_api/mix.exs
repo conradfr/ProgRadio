@@ -4,8 +4,8 @@ defmodule ProgRadioApi.MixProject do
   def project do
     [
       app: :progradio_api,
-      version: "0.1.0",
-      elixir: "~> 1.7",
+      version: "0.2.0",
+      elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -53,7 +53,15 @@ defmodule ProgRadioApi.MixProject do
       {:tzdata, "~> 1.1"},
       {:cors_plug, "~> 2.0"},
       {:remote_ip, "~> 0.2.0"},
-      {:cachex, "~> 3.3"}
+      {:cachex, "~> 3.3"},
+      {:dns, "~> 2.2.0"},
+      {:quantum, "~> 3.0"},
+      {:redix, ">= 0.11.2"},
+      {:mogrify, "~> 0.8.0"},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:broadway, "~> 0.6.0"},
+      {:off_broadway_redis, "~> 0.4.2"},
+      {:timex, "~> 3.6"}
     ]
   end
 

@@ -3,7 +3,9 @@ import Config
 # Configure your database
 config :progradio_api, ProgRadioApi.Repo,
   url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  timeout: 100_000,
+  ownership_timeout: 100_000
 
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||
@@ -22,7 +24,7 @@ config :progradio_api, ProgRadioApiWeb.Endpoint,
   secret_key_base: secret_key_base
 
 # Configure redis
-# config :progradio_api,
-#  redis_host: System.get_env("REDIS_HOST"),
-#  redis_db: System.get_env("REDIS_DB"),
-#  redis_password: System.get_env("REDIS_PASSWORD")
+config :progradio_api,
+  redis_host: System.get_env("REDIS_HOST"),
+  redis_db: System.get_env("REDIS_DB"),
+  redis_password: System.get_env("REDIS_PASSWORD")

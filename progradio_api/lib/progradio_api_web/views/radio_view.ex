@@ -1,6 +1,5 @@
 defmodule ProgRadioApiWeb.RadioView do
   use ProgRadioApiWeb, :view
-  alias ProgRadioApiWeb.RadioView
 
   def render("index.json", %{radios: radios, collections: collections, categories: categories}) do
     %{radios: radios, collections: collections, categories: categories}
