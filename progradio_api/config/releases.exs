@@ -28,3 +28,6 @@ config :progradio_api,
   redis_host: System.get_env("REDIS_HOST"),
   redis_db: System.get_env("REDIS_DB"),
   redis_password: System.get_env("REDIS_PASSWORD")
+
+config :progradio_api,
+  image_path: System.get_env("MEDIA_PATH")

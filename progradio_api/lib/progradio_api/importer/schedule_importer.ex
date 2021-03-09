@@ -13,9 +13,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
       producer: [
         module: {
           OffBroadway.Redis.Producer,
-          redis_instance: :redix,
-          list_name: @queue_list,
-          working_list_name: @queue_processing
+          redis_instance: :redix, list_name: @queue_list, working_list_name: @queue_processing
         },
         concurrency: 1
       ],
@@ -34,10 +32,12 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
 
   @impl true
   def handle_message(_, message, _) do
-    {:ok, date, radio_name} = ProgRadioApi.Importer.ScheduleImporter.Processor.process(message.data)
+    {:ok, date, radio_name} =
+      ProgRadioApi.Importer.ScheduleImporter.Processor.process(message.data)
+
     message
     |> Broadway.Message.update_data(fn m ->
-        %{key: m, date: date, radio_name: radio_name}
+      %{key: m, date: date, radio_name: radio_name}
     end)
   end
 
@@ -48,7 +48,10 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
     # delete cache
     messages
     |> Enum.each(fn m ->
-      Cachex.del(:progradio_cache, @cache_prefix <> Date.to_iso8601(m.data.date) <> "_" <> m.data.radio_name)
+      Cachex.del(
+        :progradio_cache,
+        @cache_prefix <> Date.to_iso8601(m.data.date) <> "_" <> m.data.radio_name
+      )
     end)
 
     # delete redis data entries
@@ -56,7 +59,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
     |> Enum.reduce([], fn m, acc ->
       acc ++ [m.data.key]
     end)
-    |> (&(Redix.command(:redix, ["DEL"] ++ &1))).()
+    |> (&Redix.command(:redix, ["DEL"] ++ &1)).()
 
     messages
   end

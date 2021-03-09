@@ -27,16 +27,15 @@ defmodule ProgRadioApi.Schedule do
     schedule_of_radios_and_day(radios, day)
   end
 
-
   def list_schedule_radios(day, _radios) do
     list_schedule(day)
   end
 
   def list_schedule(day) do
-      # hopefully cached
-      ProgRadioApi.Radios.list_active_radios()
-      |> Map.keys()
-      |> schedule_of_radios_and_day(day)
+    # hopefully cached
+    ProgRadioApi.Radios.list_active_radios()
+    |> Map.keys()
+    |> schedule_of_radios_and_day(day)
   end
 
   def list_schedule() do
@@ -51,11 +50,14 @@ defmodule ProgRadioApi.Schedule do
   defp schedule_of_radios_and_day(radio_code_names, day) do
     cache_key = @cache_prefix_schedule <> day <> "_"
 
-    {radio_code_names_cached, radio_code_names_not_cached} = radio_code_names_cached_or_not_for_day(radio_code_names, day)
+    {radio_code_names_cached, radio_code_names_not_cached} =
+      radio_code_names_cached_or_not_for_day(radio_code_names, day)
 
     not_cached =
       case Kernel.length(radio_code_names_not_cached) do
-        0 -> %{}
+        0 ->
+          %{}
+
         _ ->
           result =
             day
@@ -230,11 +232,11 @@ defmodule ProgRadioApi.Schedule do
         fn _key ->
           query =
             from r in Radio,
-                 join: c in Collection,
-                 on: r.collection_id == c.id,
-                 where: r.active == true,
-                 where: c.code_name == ^collection_code_name,
-                 select: r.code_name
+              join: c in Collection,
+              on: r.collection_id == c.id,
+              where: r.active == true,
+              where: c.code_name == ^collection_code_name,
+              select: r.code_name
 
           collection_code_names = Repo.all(query)
 

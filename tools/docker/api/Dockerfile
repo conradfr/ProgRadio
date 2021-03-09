@@ -8,6 +8,7 @@ ARG SECRET_KEY_BASE=${SECRET_KEY_BASE}
 ARG REDIS_HOST=${REDIS_HOST}
 ARG REDIS_DB=${REDIS_DB}
 ARG REDIS_PASSWORD=${REDIS_PASSWORD}
+ARG MEDIA_PATH=${MEDIA_PATH}
 ARG MIX_ENV=${MIX_ENV}
 ARG ORIGIN=${ORIGIN}
 ARG CORS=${CORS}
@@ -20,12 +21,21 @@ ENV DATABASE_URL=${DATABASE_URL} \
     REDIS_HOST=${REDIS_HOST} \
     REDIS_DB=${REDIS_DB} \
     REDIS_PASSWORD=${REDIS_PASSWORD} \
+    MEDIA_PATH=${MEDIA_PATH} \
     ORIGIN=${ORIGIN} \
     CORS=${CORS} \
     TZ=${TZ}
 
-COPY ./progradio_api/config ./config/
-COPY ./progradio_api/mix.* ./
+#RUN usermod -u 1000 root
+#USER www-data
+
+RUN mkdir -p /var/progradio_api
+RUN mkdir -p /var/www
+
+COPY  ./progradio_api/config /var/progradio_api/config/
+COPY  ./progradio_api/mix.* /var/progradio_api/
+
+WORKDIR /var/progradio_api/
 
 RUN rm -Rf _build && \
     mix local.hex --force && \
@@ -33,7 +43,7 @@ RUN rm -Rf _build && \
     mix deps.get --only prod \
     mix deps.compile
 
-COPY ./progradio_api .
+COPY  ./progradio_api /var/progradio_api/
 
 RUN mix release prod
 

@@ -4,7 +4,7 @@ defmodule ProgRadioApi.Checker.Streams do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Radio, RadioStream}
 
-  @timeout 100_000
+  @timeout 200_000
   @success_status [200, 302]
 
   @doc """
