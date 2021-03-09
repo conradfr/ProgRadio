@@ -16,7 +16,6 @@
 
 # Parameters
 /Scraper/scraper_parameters.yml
-/Scraper/scraper_parameters.yml
 
 # Managed by Composer
 /var/bootstrap.php.cache
@@ -74,23 +73,6 @@
 # Elixir
 
 # The directory Mix will write compiled artifacts to.
-/Importer/_build/
-# If you run "mix test --cover", coverage assets end up here.
-/Importer/cover/
-# The directory Mix downloads your dependencies sources to.
-/Importer/deps/
-# Where 3rd-party dependencies like ExDoc output generated docs.
-/Importer/doc/
-# Ignore .fetch files in case you like to edit your project deps locally.
-/Importer/.fetch
-# If the VM crashes, it generates a dump, let's ignore it too.
-/Importer/erl_crash.dump
-# Also ignore archive artifacts (built via "mix archive.build").
-/Importer/*.ez
-#Config
-/Importer/config/dev.exs
-
-# The directory Mix will write compiled artifacts to.
 /progradio_api/_build/
 # If you run "mix test --cover", coverage assets end up here.
 /progradio_api/cover/
@@ -132,19 +114,12 @@
 /work/
 
 ###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
 /var/
-/vendor/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
-.phpunit
 .phpunit.result.cache
-/phpunit.xml
 ###< symfony/phpunit-bridge ###
 
 .eslintcache

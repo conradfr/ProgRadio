@@ -57,7 +57,7 @@ defmodule ProgRadioApi.Radios do
                       id: r.id,
                       code_name: r.code_name,
                       name: r.name,
-                      share: r.share,
+                      share: Decimal.to_float(r.share),
                       category: r.category,
                       streaming_enabled: false,
                       type: "radio",
