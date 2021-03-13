@@ -26,7 +26,7 @@ defmodule ProgRadioApi.MixProject do
   def application do
     [
       mod: {ProgRadioApi.Application, []},
-      extra_applications: [:cachex, :logger, :runtime_tools]
+      extra_applications: [:cachex, :elixir_xml_to_map, :logger, :runtime_tools]
     ]
   end
 
@@ -61,7 +61,8 @@ defmodule ProgRadioApi.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:broadway, "~> 0.6.0"},
       {:off_broadway_redis, "~> 0.4.2"},
-      {:timex, "~> 3.6"}
+      {:timex, "~> 3.6"},
+      {:elixir_xml_to_map, "~> 2.0"}
     ]
   end
 

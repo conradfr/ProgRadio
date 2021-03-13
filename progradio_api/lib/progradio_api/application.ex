@@ -26,7 +26,7 @@ defmodule ProgRadioApi.Application do
       {DynamicSupervisor, strategy: :one_for_one, name: ProgRadioApi.SongDynamicSupervisor},
       # Start the Endpoint (http/https)
       ProgRadioApiWeb.Endpoint,
-      ProgRadioApi.Scheduler
+      ProgRadioApi.Scheduler,
       # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
       # {ProgRadioApi.Worker, arg}
     ]
