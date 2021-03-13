@@ -25,11 +25,11 @@ config :progradio_api, ProgRadioApi.Scheduler,
   timezone: "Europe/Paris",
   jobs: [
     check: [
-      schedule: "14 */2 * * *",
+      schedule: "25 */2 * * *",
       task: {ProgRadioApi.Checker.Streams, :check, []}
     ],
     import: [
-      schedule: "32 */12 * * *",
+      schedule: "10 10 * * *",
       task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import, []}
     ],
     warm_radios_cache: [

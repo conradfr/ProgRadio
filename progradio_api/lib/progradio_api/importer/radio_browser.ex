@@ -3,7 +3,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias Ecto.Multi
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream
-  alias ProgRadioApi.ImageImporter
+  alias ProgRadioApi.Importer.ImageImporter
 
   @image_folder "stream"
 
@@ -21,7 +21,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   defp get_radios() do
     host = get_one_random_server()
 
-    # ?limit=200&offset=7500
+    # ?limit=20&offset=7500
     HTTPoison.get!(
       "https://#{host}/json/#{@api_all_radios}",
       [{"User-Agent", "programmes-radio.com"}],
@@ -81,19 +81,25 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   defp import_image(stream) do
     case stream.img_url do
       url when is_binary(url) and url !== "" ->
-        Map.delete(stream, :img_url)
+        case String.ends_with?(url, ".svg") do
+          false ->
+            Map.delete(stream, :img_url)
 
-        try do
-          with {:ok, filename} <- ImageImporter.import_stream(url, stream) do
-            Map.put(stream, :img, filename)
-          else
-            _ -> stream
-          end
-        rescue
-          _ -> stream
-        catch
-          _ -> stream
-          :exit, _ -> stream
+            try do
+              with {:ok, filename} <- ImageImporter.import_stream(url, stream) do
+                Map.put(stream, :img, filename)
+              else
+                _ -> stream
+              end
+            rescue
+              _ -> stream
+            catch
+              _ -> stream
+              :exit, _ -> stream
+            end
+
+          true ->
+            stream
         end
 
       _ ->
