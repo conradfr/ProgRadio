@@ -22,11 +22,12 @@ defmodule ProgRadioApi.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: ProgRadioApi.PubSub},
       ProgRadioApiWeb.Presence,
-      {Registry, [keys: :unique, name: SongDataProviderRegistry]},
+      {Registry, [keys: :unique, name: SongSongProviderRegistry]},
       {DynamicSupervisor, strategy: :one_for_one, name: ProgRadioApi.SongDynamicSupervisor},
       # Start the Endpoint (http/https)
       ProgRadioApiWeb.Endpoint,
       ProgRadioApi.Scheduler,
+      ProgRadioApi.Checker.StreamsSupervisor
       # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
       # {ProgRadioApi.Worker, arg}
     ]

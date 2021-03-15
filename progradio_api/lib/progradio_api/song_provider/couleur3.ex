@@ -1,7 +1,7 @@
-defmodule ProgRadioApi.DataProvider.Ouifm do
+defmodule ProgRadioApi.SongProvider.Couleur3 do
   require Logger
 
-  @behaviour ProgRadioApi.DataProvider
+  @behaviour ProgRadioApi.SongProvider
 
   @impl true
   def has_custom_refresh(), do: true
@@ -17,18 +17,14 @@ defmodule ProgRadioApi.DataProvider.Ouifm do
           DateTime.utc_now()
           |> DateTime.to_iso8601()
 
-        {:ok, start_current_song_naive} =
+        {:ok, start_current_song, _} =
           Map.get(data, "date", now)
-          |> NaiveDateTime.from_iso8601()
-
-        {:ok, start_current_song} =
-          start_current_song_naive
-          |> DateTime.from_naive("Europe/Paris")
+          |> DateTime.from_iso8601()
 
         start_current_song_unix = DateTime.to_unix(start_current_song)
 
         start_current_song_unix
-        |> (&((&1 + Map.get(data, "length", default_refresh) / 1000 - &1) * 1000)).()
+        |> (&((&1 + 2 + Map.get(data, "duration", default_refresh) / 1000 - &1) * 1000)).()
         |> trunc()
         |> abs()
     end
@@ -37,13 +33,13 @@ defmodule ProgRadioApi.DataProvider.Ouifm do
   @impl true
   def get_data(_name) do
     HTTPoison.get!(
-      "https://player.ouifm.fr/api/songs",
+      "https://il.srgssr.ch/integrationlayer/2.0/rts/songList/radio/byChannel/8ceb28d9b3f1dd876d1df1780f908578cbefc3d7?vector=portalplay&onlyCurrentSong=true&pageSize=40",
       [],
       ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
     )
     |> Map.get(:body)
     |> Jason.decode!()
-    |> Map.get("tele", %{})
+    |> Map.get("songList", %{})
     |> List.first()
   end
 
@@ -55,7 +51,7 @@ defmodule ProgRadioApi.DataProvider.Ouifm do
         %{}
 
       _ ->
-        %{interpreter: data["artist"], title: data["title"]}
+        %{interpreter: data["artist"]["name"], title: data["title"]}
     end
   end
 end

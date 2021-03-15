@@ -9,12 +9,12 @@ defmodule ProgRadioApi.SongServer do
   # ----- Client Interface -----
 
   def start_link({song_topic, radio_code_name} = arg) do
-    name = {:via, Registry, {SongDataProviderRegistry, arg}}
+    name = {:via, Registry, {SongSongProviderRegistry, arg}}
 
     module_name =
       radio_code_name
       |> Macro.camelize()
-      |> (&("Elixir.ProgRadioApi.DataProvider." <> &1)).()
+      |> (&("Elixir.ProgRadioApi.SongProvider." <> &1)).()
       |> String.to_existing_atom()
 
     GenServer.start_link(__MODULE__, %{module: module_name, name: song_topic, song: nil},

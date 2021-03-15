@@ -1,8 +1,8 @@
-defmodule ProgRadioApi.DataProvider.Virgin do
+defmodule ProgRadioApi.SongProvider.Virgin do
   require Logger
-  alias ProgRadioApi.DataProvider
+  alias ProgRadioApi.SongProvider
 
-  @behaviour ProgRadioApi.DataProvider
+  @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
     "virgin_main" => 2
@@ -37,7 +37,7 @@ defmodule ProgRadioApi.DataProvider.Virgin do
   @impl true
   def get_data(name) do
     id =
-      DataProvider.get_stream_code_name_from_channel(name)
+      SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
     {:ok, now} = DateTime.now("Europe/Paris")
@@ -55,7 +55,9 @@ defmodule ProgRadioApi.DataProvider.Virgin do
       |> Timex.format!("{YYYY}-{0M}-{0D} {h24}:{m}:{s}")
 
     HTTPoison.get!(
-      "https://www.virginradio.fr/radio/api/get_all_events.json/argv/id_radio/#{id}/start/#{prev}/end/#{next}",
+      "https://www.virginradio.fr/radio/api/get_all_events.json/argv/id_radio/#{id}/start/#{prev}/end/#{
+        next
+      }",
       [],
       ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
     )

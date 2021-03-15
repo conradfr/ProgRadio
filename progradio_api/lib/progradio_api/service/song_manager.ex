@@ -3,7 +3,7 @@ defmodule ProgRadioApi.SongManager do
 
   @spec join(String.t(), map()) :: any()
   def join(song_topic, radio_stream_data) do
-    case Registry.lookup(SongDataProviderRegistry, song_topic) do
+    case Registry.lookup(SongSongProviderRegistry, song_topic) do
       [] ->
         DynamicSupervisor.start_child(
           ProgRadioApi.SongDynamicSupervisor,

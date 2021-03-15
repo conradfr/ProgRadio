@@ -1,8 +1,8 @@
-defmodule ProgRadioApi.DataProvider.Fip do
+defmodule ProgRadioApi.SongProvider.Fip do
   require Logger
-  alias ProgRadioApi.DataProvider
+  alias ProgRadioApi.SongProvider
 
-  @behaviour ProgRadioApi.DataProvider
+  @behaviour ProgRadioApi.SongProvider
 
   @refresh_fallback 3
 
@@ -45,7 +45,7 @@ defmodule ProgRadioApi.DataProvider.Fip do
   @impl true
   def get_data(name) do
     id =
-      DataProvider.get_stream_code_name_from_channel(name)
+      SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
     HTTPoison.get!(

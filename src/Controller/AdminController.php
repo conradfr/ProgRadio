@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Collection;
 use App\Entity\ListeningSession;
 use App\Entity\Radio;
+use App\Entity\RadioStream;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
 use App\Form\SharesType;
@@ -34,6 +35,7 @@ class AdminController extends AbstractController
     {
         $radios = $em->getRepository(Radio::class)->getActiveRadiosFull();
         $stats = $em->getRepository(ScheduleEntry::class)->getStatsByDayAndRadio();
+        $radioStreamsStatus = $em->getRepository(RadioStream::class)->getStreamsStatus();
         $users = $em->getRepository(User::class)->lastNAccounts();
         $userCount = $em->getRepository(User::class)->count([]);
 
@@ -41,6 +43,7 @@ class AdminController extends AbstractController
             'radios' => $radios,
             'stats' => $stats,
             'users' => $users,
+            'radio_streams_status' => $radioStreamsStatus,
             'userCount' => $userCount
         ]);
     }

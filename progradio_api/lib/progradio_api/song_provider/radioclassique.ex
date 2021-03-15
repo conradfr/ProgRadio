@@ -1,7 +1,7 @@
-defmodule ProgRadioApi.DataProvider.Radioclassique do
+defmodule ProgRadioApi.SongProvider.Radioclassique do
   require Logger
 
-  @behaviour ProgRadioApi.DataProvider
+  @behaviour ProgRadioApi.SongProvider
 
   @impl true
   def has_custom_refresh(), do: false

@@ -154,6 +154,7 @@ EOT;
            ':twoWeeksTime' => $dateTimeTwoWeeks->format(self::DAY_FORMAT) . ' 00:00:00'
         ]);
 
+        $query->disableResultCache();
         $result = $query->getResult();
 
         $return = [];

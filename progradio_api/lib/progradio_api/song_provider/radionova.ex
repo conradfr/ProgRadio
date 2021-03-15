@@ -1,8 +1,8 @@
-defmodule ProgRadioApi.DataProvider.Radionova do
+defmodule ProgRadioApi.SongProvider.Radionova do
   require Logger
-  alias ProgRadioApi.DataProvider
+  alias ProgRadioApi.SongProvider
 
-  @behaviour ProgRadioApi.DataProvider
+  @behaviour ProgRadioApi.SongProvider
 
   @stream_name %{
     "radionova_main" => "radio-nova",
@@ -57,7 +57,7 @@ defmodule ProgRadioApi.DataProvider.Radionova do
   @impl true
   def get_data(name) do
     name =
-      DataProvider.get_stream_code_name_from_channel(name)
+      SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_name, &1)).()
 
     HTTPoison.get!(

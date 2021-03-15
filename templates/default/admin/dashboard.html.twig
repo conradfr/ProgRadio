@@ -65,13 +65,13 @@
                             <h5>Erreurs streams</h5>
                             <table class="table table-striped schedule-stats">
                                 {% set stream_errors = 0 %}
-                                {% for radio in radios %}
-                                    {% if radio.streamingStatus == false %}
+                                {% for radioStream in radio_streams_status %}
+                                    {% if radioStream.status == false %}
                                         {% set stream_errors = stream_errors + 1 %}
                                         <tr>
-                                            <td class="radio-header"><img title="{{ radio.name }}" alt="{{ radio.name }}" src="{{ asset('img/radio/schedule/' ~ radio.codeName ~ '.png') }}"></td>
-                                            <td class="td-auto">Erreurs pour <strong>{{ radio.streamingRetries }}</strong> checks.</td>
-                                            <td><a target="_blank" href="{{ radio.streamingUrl }}">lien</a></td>
+                                            <td class="radio-header"><img title="{{ radioStream.name }}" alt="{{ radioStream.name }}" src="{{ asset('img/radio/schedule/' ~ radioStream.radio_code_name ~ '.png') }}"></td>
+                                            <td class="td-auto">Erreurs pour <strong>{{ radioStream.retries }}</strong> checks.</td>
+                                            <td><a target="_blank" href="{{ radioStream.url }}">lien</a></td>
                                         </tr>
                                     {% endif %}
                                 {% endfor %}

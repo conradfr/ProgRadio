@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.DataProvider do
+defmodule ProgRadioApi.SongProvider do
   @doc """
     Get next song refresh in seconds
   """

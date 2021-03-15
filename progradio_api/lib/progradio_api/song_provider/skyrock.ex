@@ -1,7 +1,7 @@
-defmodule ProgRadioApi.DataProvider.Skyrock do
+defmodule ProgRadioApi.SongProvider.Skyrock do
   require Logger
 
-  @behaviour ProgRadioApi.DataProvider
+  @behaviour ProgRadioApi.SongProvider
 
   @radio_lag 5
 
@@ -30,7 +30,6 @@ defmodule ProgRadioApi.DataProvider.Skyrock do
         rescue
           _ -> default_refresh
         end
-
     end
   end
 

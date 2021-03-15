@@ -1,7 +1,7 @@
-defmodule ProgRadioApi.DataProvider.Mradio do
+defmodule ProgRadioApi.SongProvider.Mradio do
   require Logger
 
-  @behaviour ProgRadioApi.DataProvider
+  @behaviour ProgRadioApi.SongProvider
 
   @radio_lag 10
 
@@ -64,27 +64,27 @@ defmodule ProgRadioApi.DataProvider.Mradio do
     |> Map.get("prog", %{})
     |> Map.get("morceau", [])
     |> Enum.find(nil, fn e ->
-        try do
-          time_start =
-            e
-            |> Map.get("#content", %{})
-            |> Map.get("date_prog")
-            |> NaiveDateTime.from_iso8601!()
-            |> DateTime.from_naive!("Europe/Paris")
-            |> DateTime.to_unix()
+      try do
+        time_start =
+          e
+          |> Map.get("#content", %{})
+          |> Map.get("date_prog")
+          |> NaiveDateTime.from_iso8601!()
+          |> DateTime.from_naive!("Europe/Paris")
+          |> DateTime.to_unix()
 
-            {duration, _} =
-            e
-            |> Map.get("#content", %{})
-            |> Map.get("duration")
-            |> Time.from_iso8601!()
-            |> Time.to_seconds_after_midnight()
+        {duration, _} =
+          e
+          |> Map.get("#content", %{})
+          |> Map.get("duration")
+          |> Time.from_iso8601!()
+          |> Time.to_seconds_after_midnight()
 
-            time_end = time_start + duration
-            now_unix >= time_start and now_unix <= time_end
-        rescue
-          _ -> nil
-        end
+        time_end = time_start + duration
+        now_unix >= time_start and now_unix <= time_end
+      rescue
+        _ -> nil
+      end
     end)
   end
 
