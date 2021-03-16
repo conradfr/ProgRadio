@@ -29,6 +29,11 @@ page:
         send: 'Send'
         sent: 'Your message has been sent.'
 
+    faq:
+        page_title: 'FAQ - Radio shows in France'
+        page_description: 'Questions about Programmmes-Radio.io'
+        title: 'Frequently Asked Questions'
+
     now:
         back: '← Back to radio guide'
         no_schedule: '<strong>Oups ...</strong> no shows to display.'
@@ -41,9 +46,19 @@ page:
         play: 'Listen to %radio%'
         title: 'Listen to %radio%'
 
-    faq:
-        page_title: 'FAQ - Radio shows in France'
-        page_description: 'Questions about Programmmes-Radio.io'
-        title: 'Frequently Asked Questions'
+    user:
+        page_title: Create an account
+
+registrationForm:
+    email: 'Email'
+    error:
+        captcha: 'Invalid Captcha, please try again.'
+        empty: This field can\'t be empty
+        password_min: 'Password must be at least 8 characters.'
+        password: 'Password and its confirmation are not the same.'
+    captcha: 'Write letters and numbers written below'
+    password: 'Password'
+    password_confirm: 'Password confirmation'
+    submit_create: 'Create an account'
 
 legal: Legal notice

@@ -30,6 +30,11 @@ page:
         send: 'Envoyer'
         sent: 'Votre message a bien été envoyé.'
 
+    faq:
+        title: 'Foire aux questions'
+        page_title: 'FAQ - Les programmes radios en France'
+        page_description: 'Questions sur Programmmes-Radio.io'
+
     now:
         back: '← Retourner à la grille des programmes'
         no_schedule: <strong>Oups ...</strong> aucuns programmes disponibles.'
@@ -44,9 +49,19 @@ page:
         play: 'Ecouter %radio%'
         title: 'Ecouter %radio% - Grille des programmes'
 
-    faq:
-        title: 'Foire aux questions'
-        page_title: 'FAQ - Les programmes radios en France'
-        page_description: 'Questions sur Programmmes-Radio.io'
+    user:
+        page_title: Créer un compte
 
-legal: Mentions légales
+registrationForm:
+    email: 'Courriel'
+    error:
+        captcha: 'Captcha invalide, merci de réessayer.'
+        empty: 'Ce champ ne peut être vide.'
+        password_min: 'Le mot de passe doit contenir au moins 8 caractères.'
+        password: 'Les mots de passes ne sont pas identiques.'
+    captcha: 'Ecrivez les lettres et chiffres inscrits ce-dessous'
+    password: 'Mot de passe'
+    password_confirm: 'Confirmation du mot de passe'
+    submit_create: 'Créer mon compte'
+
+legal: 'Mentions légales'

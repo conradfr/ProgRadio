@@ -5,6 +5,12 @@
     "brick/math": {
         "version": "0.9.2"
     },
+    "captcha-com/captcha": {
+        "version": "4.2.5"
+    },
+    "carlos-mg89/symfony-captcha-bundle": {
+        "version": "4.2.21"
+    },
     "darsyn/ip": {
         "version": "4.0.0"
     },

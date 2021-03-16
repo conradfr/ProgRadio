@@ -6,39 +6,57 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
+use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationFormType extends AbstractType
 {
+    public function __construct(protected TranslatorInterface $translator) { }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email')
+            ->add('email', EmailType::class, [
+                'label' => $this->translator->trans('registrationForm.email')
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'type' => PasswordType::class,
                 'required' => true,
-                'first_options'  => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Confirmation du mot de passe'],
-                'invalid_message' => 'Les mots de passes ne sont pas identiques.',
+                'first_options'  => ['label' => $this->translator->trans('registrationForm.password')],
+                'second_options' => ['label' => $this->translator->trans('registrationForm.password_confirm')],
+                'invalid_message' => $this->translator->trans('registrationForm.error.password'),
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Ce champ ne peut être vide.',
+                        'message' => $this->translator->trans('registrationForm.error.empty'),
                     ]),
                     new Length([
                         'min' => 8,
-                        'minMessage' => 'Le mot de passe doit contenir au moins 8 caractères.',
+                        'minMessage' => $this->translator->trans('registrationForm.error.password_min'),
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
+            ])
+            ->add('captchaCode', CaptchaType::class, [
+                'captchaConfig' => 'ExampleCaptcha',
+                'label' => $this->translator->trans('registrationForm.captcha'),
+                'mapped' => false,
+                'constraints' => [
+                    new ValidCaptcha([
+                        'message' => $this->translator->trans('registrationForm.error.captcha'),
+                    ]),
+                ]
             ])
         ;
     }
