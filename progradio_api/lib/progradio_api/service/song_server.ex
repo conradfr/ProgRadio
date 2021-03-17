@@ -46,11 +46,14 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def handle_info({:refresh, :auto}, %{module: module, name: name} = state) do
     {_data, song} = get_data_song(module, name)
+    how_many_connected =
+      Presence.list(state.name)
+      |> Kernel.map_size()
 
     ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
     Process.send_after(self(), {:refresh, :auto}, @refresh_song_interval)
 
-    Logger.info("Data provider - #{name}: song updated (timer)")
+    Logger.info("Data provider - #{name}: song updated (timer) - #{how_many_connected} clients connected")
 
     {:noreply, %{module: module, name: name, song: song}}
   end

@@ -44,7 +44,6 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
           Logger.warn("Non-status received (#{radio_stream.code_name}): #{inspect(message)}")
           update_status(radio_stream, false)
       end
-
     end)
   end
 
@@ -59,5 +58,4 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
     radio_stream = Ecto.Changeset.change(radio_stream, %{status: working, retries: retries})
     Repo.update(radio_stream)
   end
-
 end

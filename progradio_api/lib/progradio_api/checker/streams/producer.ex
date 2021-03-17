@@ -7,14 +7,14 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
   end
 
   @doc "Sends an event and returns only after the event is dispatched."
-  def sync_notify(event, timeout \\ 360000) do
+  def sync_notify(event, timeout \\ 360_000) do
     GenStage.call(__MODULE__, {:notify, event}, timeout)
   end
 
   ## Callbacks
 
   def init(:ok) do
-    {:producer, {:queue.new, 0}, dispatcher: GenStage.BroadcastDispatcher}
+    {:producer, {:queue.new(), 0}, dispatcher: GenStage.BroadcastDispatcher}
   end
 
   def handle_call({:notify, event}, from, {queue, pending_demand}) do
@@ -35,6 +35,7 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
       {{:value, {from, event}}, queue} ->
         GenStage.reply(from, :ok)
         dispatch_events(queue, demand - 1, [event | events])
+
       {:empty, queue} ->
         {:noreply, Enum.reverse(events), {queue, demand}}
     end
