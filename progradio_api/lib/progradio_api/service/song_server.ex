@@ -8,8 +8,8 @@ defmodule ProgRadioApi.SongServer do
 
   # ----- Client Interface -----
 
-  def start_link({song_topic, radio_code_name} = arg) do
-    name = {:via, Registry, {SongSongProviderRegistry, arg}}
+  def start_link({song_topic, radio_code_name} = _arg) do
+    name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
 
     module_name =
       radio_code_name
