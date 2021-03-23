@@ -3,6 +3,9 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
 
   @behaviour ProgRadioApi.SongProvider
 
+  # 15mn
+  @max_length_seconds 900
+
   @impl true
   def has_custom_refresh(), do: true
 
@@ -36,15 +39,32 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
 
   @impl true
   def get_data(_name) do
-    HTTPoison.get!(
-      "https://player.ouifm.fr/api/songs",
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
-    |> Map.get(:body)
-    |> Jason.decode!()
-    |> Map.get("tele", %{})
-    |> List.first()
+    try do
+      entry =
+        HTTPoison.get!(
+          "https://player.ouifm.fr/api/songs",
+          [],
+          ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
+        )
+        |> Map.get(:body)
+        |> Jason.decode!()
+        |> Map.get("tele", %{})
+        |> List.first()
+
+      # we filter if data is too old
+      max_end_song = entry["ts"] + @max_length_seconds
+
+      now =
+        DateTime.now!("Etc/UTC")
+        |> DateTime.to_unix()
+
+      case now > max_end_song do
+        true -> nil
+        false -> entry
+      end
+    rescue
+      _ -> nil
+    end
   end
 
   @impl true
