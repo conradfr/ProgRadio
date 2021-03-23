@@ -4,9 +4,6 @@ defmodule ProgRadioApi.Checker.Streams do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Radio, RadioStream}
 
-  @timeout 10_000
-  @success_status [200, 302]
-
   def check() do
     get_radio_streams()
     |> Enum.each(fn radio_stream ->
