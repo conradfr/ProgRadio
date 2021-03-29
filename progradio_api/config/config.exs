@@ -29,15 +29,15 @@ config :progradio_api, ProgRadioApi.Scheduler,
       task: {ProgRadioApi.Checker.Streams, :check, []}
     ],
     import: [
-      schedule: "10 10 * * *",
+      schedule: "10 03 * * *",
       task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import, []}
     ],
     warm_radios_cache: [
-      schedule: "9 0,12 * * *",
+      schedule: "4 0,12 * * *",
       task: {ProgRadioApi.Radios, :list_active_radios, []}
     ],
     warm_schedule_cache: [
-      schedule: "10 0,12 * * *",
+      schedule: "5 0,12 * * *",
       task: {ProgRadioApi.Schedule, :list_schedule, []}
     ]
   ]
