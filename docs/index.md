@@ -1,6 +1,6 @@
 # ProgRadio LiveSong
 
-[Programmes-Radio](https://www.programmes-radio.com/en/) is a website displaying French radios schedules and a stream player. This article will explore how we wrote the "currently playing song" feature for the player.
+[Programmes-Radio](https://www.programmes-radio.com/en/) is a website displaying French radios schedules and the ability to [stream radios from all over the world](https://www.programmes-radio.com/en/#/streaming/all). This article will explore how we wrote the "currently playing song" feature for French music stations.
 
 Thanks to Elixir and the Beam this needed really little code. For this feature we'll leverage the following libraries:
 
@@ -55,7 +55,7 @@ Just two functions, with get_song/2 using data from get_data/1
 
 ### 2. Writing a radio module implementing this behavior.
 
-We add HTTPoison as a dependency in your mix.exs file:
+We add HTTPoison as a dependency in mix.exs file:
 
 ```elixir
 {:httpoison, "~> 1.8"}
@@ -201,11 +201,11 @@ LiveSong.RadioServer.start_link({"song:fip", "fip"})
 ```
 
 Which should print something like:
-> [info] Radio provider - song:fip: starting ...
-> {:ok, #PID<0.430.0>}
-> iex(2)> [debug] Radio provider - song:fip: querying...
-> iex(2)> [debug] Radio provider - song:fip: querying OK
-> iex(2)> [debug] %{artist: "Alpha Blondy", title: "Les chiens"}
+> [info] Radio provider - song:fip: starting ...<br>
+> {:ok, #PID<0.430.0>}<br>
+> iex(2)> [debug] Radio provider - song:fip: querying...<br>
+> iex(2)> [debug] Radio provider - song:fip: querying OK<br>
+> iex(2)> [debug] %{artist: "Alpha Blondy", title: "Les chiens"}<br>
 > iex(2)> [info] Radio provider - > song:fip: song updated (timer)
 
 ## Enabling channels
