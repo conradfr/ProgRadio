@@ -28,8 +28,6 @@
       }">
           </div>
         </div>
-<!--        <img src="/img/list.svg" class="filter-page"/>-->
-<!--        <div class="fuu">salut</div>-->
         <p>{{ entry.name }}</p>
       </div>
     </div>
@@ -45,7 +43,7 @@
           'radio-logo-play-secondary':
             (radio.code_name === radioPlayingCodeName
               && playingStreamCodeName !== `${radio.code_name}_main`)
-      }">
+          }">
         </div>
       </div>
     </a>
@@ -99,9 +97,6 @@ export default {
     secondaryStreams() {
       return filter(this.radio.streams, r => r.main === false);
     },
-    /* mainStream() {
-
-    }, */
     isFavorite() {
       return this.$store.getters.isFavorite(this.radio.code_name);
     }
@@ -133,7 +128,7 @@ export default {
           });
         }
 
-        this.$store.dispatch('play', { radioCodeName: this.radio.code_name, streamCodeName });
+        this.$store.dispatch('playRadio', { radioCodeName: this.radio.code_name, streamCodeName });
       }
     },
     toggleFavorite() {

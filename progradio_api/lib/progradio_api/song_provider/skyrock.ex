@@ -77,7 +77,7 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
           |> List.first()
           |> Map.get("name")
 
-        %{interpreter: artist, title: data["info"]["title"]}
+        %{artist: artist, title: data["info"]["title"]}
     end
   end
 end

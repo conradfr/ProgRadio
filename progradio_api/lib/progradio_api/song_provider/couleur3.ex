@@ -51,7 +51,7 @@ defmodule ProgRadioApi.SongProvider.Couleur3 do
         %{}
 
       _ ->
-        %{interpreter: data["artist"]["name"], title: data["title"]}
+        %{artist: data["artist"]["name"], title: data["title"]}
     end
   end
 end

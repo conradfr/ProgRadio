@@ -6,6 +6,7 @@ import find from 'lodash/find';
 import * as config from '../config/config';
 import i18n from '../lang/i18n';
 import StreamsApi from '../api/StreamsApi';
+import AndroidApi from '../api/AndroidApi';
 
 const VueCookie = require('vue-cookie');
 
@@ -138,6 +139,9 @@ const storeActions = {
         .then(data => commit('updateStreamRadios', data))
         .finally(() => commit('setLoading', false, { root: true }));
     });
+  },
+  sendStreamsList: ({ state }) => {
+    AndroidApi.list(state.streamRadios);
   },
   setStreamFavorites: ({ commit }, favorites) => {
     commit('setStreamFavorites', favorites);

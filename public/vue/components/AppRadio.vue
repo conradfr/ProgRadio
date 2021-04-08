@@ -101,8 +101,7 @@ export default {
       playingStreamCodeName: state => state.player.radioStreamCodeName
     }),
     ...mapGetters([
-      'hasSchedule',
-      'radioPlayingCodeName'
+      'hasSchedule'
     ]),
     radio() {
       return this.radios[this.$route.params.radio] === undefined ? null

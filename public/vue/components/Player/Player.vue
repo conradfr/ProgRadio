@@ -20,7 +20,7 @@
             'player-muted': player.muted,
             'glyphicon-volume-up': !(player.muted || player.focus.icon) && player.volume > 4,
             'glyphicon-volume-down': !(player.muted || player.focus.icon) && player.volume <= 4
-                  }"
+          }"
           aria-hidden="true"></span>
       </div>
       <div class="player-playpause" v-on:click="togglePlay"
@@ -133,9 +133,6 @@ export default {
         this.socket = new Socket(`wss://${apiUrl}/socket`);
         this.socket.connect();
         this.socket.onError(() => {
-          this.socket.disconnect();
-          this.channel = null;
-          this.socket = null;
           this.$store.dispatch('setSong', null);
         });
 
@@ -177,14 +174,14 @@ export default {
     'player.muted': function (val) {
       if (this.player.externalPlayer === true) { return; }
 
-      if (window.audio !== null) {
+      if (window.audio !== undefined && window.audio !== null) {
         window.audio.muted = val;
       }
     },
     'player.volume': function (val) {
       if (this.player.externalPlayer === true) { return; }
 
-      if (window.audio !== null) {
+      if (window.audio !== undefined && window.audio !== null) {
         window.audio.volume = (val * 0.1);
       }
     },
@@ -230,6 +227,7 @@ export default {
     },
     /* eslint-disable no-undef */
     play(url) {
+      this.stop();
       let startPlayPromise;
 
       if (url.indexOf('.m3u8') !== -1) {
@@ -290,7 +288,11 @@ export default {
     },
     stop() {
       clearInterval(this.checkTimer);
-      window.audio.pause();
+
+      if (window.audio !== undefined && window.audio !== null) {
+        window.audio.pause();
+      }
+
       if (this.hls !== null) {
         this.hls.destroy();
         this.hls = null;

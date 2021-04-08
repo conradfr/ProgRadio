@@ -70,7 +70,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
         %{}
 
       _ ->
-        %{interpreter: data["playing_item"]["title"], title: data["playing_item"]["subtitle"]}
+        %{artist: data["playing_item"]["title"], title: data["playing_item"]["subtitle"]}
     end
   end
 end

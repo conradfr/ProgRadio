@@ -1,10 +1,15 @@
 /* eslint-disable no-undef */
 
+import forEach from 'lodash/forEach';
+
 import {
   PLAYER_TYPE_RADIO,
+  PLAYER_TYPE_STREAM,
   THUMBNAIL_NOTIFICATION_PROGRAM_PATH,
   THUMBNAIL_STREAM_PATH
 } from '../config/config';
+
+import ScheduleUtils from '../utils/ScheduleUtils';
 
 const hasAndroid = typeof Android !== 'undefined';
 // const hasAndroid = false;
@@ -25,6 +30,38 @@ const getPictureUrl = (radio, show) => {
   return null;
 };
 
+const formatRadios = (radios) => {
+  const radiosExport = [];
+  forEach(radios, (radio) => {
+    if (radio.type === PLAYER_TYPE_STREAM || radio.streaming_enabled === true) {
+      let codeName = radio.code_name;
+      let streamUrl = null;
+      if (radio.type === PLAYER_TYPE_RADIO) {
+        codeName = `${radio.code_name}_main`;
+        const stream = ScheduleUtils.getStreamFromCodeName(`${radio.code_name}_main`, radio);
+        if (stream !== null) {
+          streamUrl = stream.url;
+        }
+      } else {
+        streamUrl = radio.stream_url;
+      }
+
+      if (streamUrl !== undefined && streamUrl !== null) {
+        radiosExport.push(
+          {
+            codeName,
+            name: radio.name,
+            streamUrl,
+            pictureUrl: getPictureUrl(radio)
+          }
+        );
+      }
+    }
+  });
+
+  return radiosExport;
+};
+
 export default {
   hasAndroid,
   play(radio, stream, currentShow) {
@@ -35,12 +72,20 @@ export default {
     const radioName = stream === undefined || stream === null ? radio.name : stream.name;
     const streamUrl = stream === undefined || stream === null ? radio.stream_url : stream.url;
 
+    if (streamUrl === null || streamUrl === undefined) {
+      return;
+    }
+
     Android.play(radioCodeName, radioName, streamUrl, showTitle,
       getPictureUrl(radio, currentShow));
   },
   pause() {
     if (hasAndroid === false) { return; }
     Android.pause();
+  },
+  list(radios) {
+    if (hasAndroid === false) { return; }
+    Android.list(JSON.stringify(formatRadios(radios)));
   },
   getState() {
     if (hasAndroid === false) { return; }

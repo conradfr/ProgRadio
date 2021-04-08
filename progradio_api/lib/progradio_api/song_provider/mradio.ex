@@ -96,7 +96,7 @@ defmodule ProgRadioApi.SongProvider.Mradio do
         %{}
 
       _ ->
-        %{interpreter: data["#content"]["chanteur"], title: data["#content"]["chanson"]}
+        %{artist: data["#content"]["chanteur"], title: data["#content"]["chanson"]}
     end
   end
 end

@@ -13,6 +13,7 @@ import cache from '../utils/cache';
 import router from '../router/router';
 import ScheduleApi from '../api/ScheduleApi';
 import ScheduleUtils from '../utils/ScheduleUtils';
+import AndroidApi from '../api/AndroidApi';
 
 const VueCookie = require('vue-cookie');
 
@@ -145,6 +146,19 @@ const storeActions = {
   setFavoritesCollection: ({ commit }, radios) => {
     commit('setFavoritesCollection', radios);
   },
+  sendRadiosList: ({ state }) => {
+    if (state.collections === null || state.collections.length === 0
+        || state.currentCollection === null) {
+      return;
+    }
+
+    const collectionToIterateOn = find(state.collections,
+      { code_name: state.currentCollection });
+    const radios = ScheduleUtils.rankCollection(collectionToIterateOn,
+      state.radios, state.categoriesExcluded);
+
+    AndroidApi.list(radios);
+  },
 
   // ---------- CATEGORY ----------
 
@@ -256,18 +270,16 @@ const storeActions = {
     }
   },
   /* eslint-disable object-curly-newline */
-  tick: ({ commit, getters, rootState, dispatch }) => {
+  tick: ({ commit, rootState, dispatch }) => {
     const now = DateTime.local().setZone(config.TIMEZONE);
 
-    if (now.hour === 0 && now.minutes === 2) {
+    if (now.hour === 0 && now.minutes < 3) {
       dispatch('getSchedule');
     }
 
-    if (rootState.player.playing === true) {
-      const { radio, radioStreamCodeName } = rootState.player;
-
-      const show = getters.currentShowOnRadio(radio.code_name);
-      commit('switchRadio', { radio, streamCodeName: radioStreamCodeName, show });
+    if (rootState.player.playing === true && rootState.player.radio !== null
+      && rootState.player.radio.type === config.PLAYER_TYPE_RADIO) {
+      dispatch('updateShow');
     }
 
     commit('updateCursor', now);

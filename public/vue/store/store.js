@@ -24,6 +24,13 @@ const store = new Vuex.Store({
       } else {
         dispatch('toggleStreamFavorite', radio.code_name, { root: true });
       }
+    },
+    sendList: ({ dispatch }, radio) => {
+      if (radio.type === 'radio') {
+        dispatch('sendRadiosList', radio.code_name, { root: true });
+      } else {
+        dispatch('sendStreamsList', radio.code_name, { root: true });
+      }
     }
   },
   mutations: {

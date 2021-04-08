@@ -75,7 +75,7 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
         %{}
 
       _ ->
-        %{interpreter: data["artist"], title: data["title"]}
+        %{artist: data["artist"], title: data["title"]}
     end
   end
 end

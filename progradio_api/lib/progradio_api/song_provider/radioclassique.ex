@@ -34,7 +34,7 @@ defmodule ProgRadioApi.SongProvider.Radioclassique do
             nil
 
           _ ->
-            %{interpreter: data["auteur"], title: data["titre"]}
+            %{artist: data["auteur"], title: data["titre"]}
         end
     end
   end

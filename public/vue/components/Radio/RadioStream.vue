@@ -51,7 +51,7 @@ export default {
         });
       }
 
-      this.$store.dispatch('play', {
+      this.$store.dispatch('playRadio', {
         radioCodeName: this.radio.code_name,
         streamCodeName: this.stream.code_name
       });
