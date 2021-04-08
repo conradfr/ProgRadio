@@ -12,7 +12,8 @@ tools/vagrant/* linguist-vendored
 tools/vagrant/puphpet/puppet/modules/**/docs/* linguist-vendored
 tools/vagrant/puphpet/puppet/modules/**/doc/css/* linguist-vendored
 bin/* linguist-vendored
-Importer/_build/* linguist-generated=true
+progradio_api/_build/* linguist-generated=true
+progradio_api/deps/* linguist-vendored
 docs/* linguist-documentation
 buildjs/* linguist-generated=true
 web/build/* linguist-generated=true
