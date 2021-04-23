@@ -26,7 +26,10 @@ const initState = {
   volume: Vue.cookie.get(config.COOKIE_VOLUME)
     ? parseInt(Vue.cookie.get(config.COOKIE_VOLUME), 10) : config.DEFAULT_VOLUME,
   muted: Vue.cookie.get(config.COOKIE_MUTED) === 'true' || false,
-  sessionStart: null,
+  session: {
+    start: null,
+    id: null
+  },
   focus: {
     icon: false,
     fader: false
@@ -134,7 +137,7 @@ const storeActions = {
   },
   stop: ({ state, commit }) => {
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.radioStreamCodeName, state.sessionStart);
+      state.radio, state.radioStreamCodeName, state.session);
 
     if (state.externalPlayer === true) {
       AndroidApi.pause();
@@ -151,7 +154,7 @@ const storeActions = {
       }
 
       PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-        state.radio, state.radioStreamCodeName, state.sessionStart);
+        state.radio, state.radioStreamCodeName, state.session);
       dispatch('stop');
     } else {
       if (state.externalPlayer === true && (state.radio !== null && state.radio !== undefined)) {
@@ -173,7 +176,7 @@ const storeActions = {
     }
 
     PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.radioStreamCodeName, state.sessionStart);
+      state.radio, state.radioStreamCodeName, state.session);
 
     if (state.radio === undefined || state.radio === null) {
       return;
@@ -280,17 +283,17 @@ const storeMutations = {
     Vue.set(state, 'radioStreamCodeName', streamCodeName || null);
     Vue.set(state, 'playing', true);
     Vue.set(state, 'song', null);
-    Vue.set(state, 'sessionStart', DateTime.local().setZone(config.TIMEZONE));
+    Vue.set(state, 'session', { start: DateTime.local().setZone(config.TIMEZONE), id: null });
   },
   resume(state) {
     Vue.set(state, 'playing', true);
     Vue.set(state, 'song', null);
-    Vue.set(state, 'sessionStart', DateTime.local().setZone(config.TIMEZONE));
+    Vue.set(state, 'session', { start: DateTime.local().setZone(config.TIMEZONE), id: null });
   },
   stop(state) {
     Vue.set(state, 'playing', false);
     Vue.set(state, 'song', null);
-    Vue.set(state, 'sessionStart', null);
+    Vue.set(state, 'session', { start: null, id: null });
   },
   updateRadio(state, params) {
     state.show = params;

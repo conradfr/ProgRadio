@@ -77,7 +77,7 @@ const toggleFavoriteRadio = (radioCodeName) => {
     });
 };
 
-const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, dateTimeEnd) => {
+const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, dateTimeEnd, id) => {
   const data = {
     date_time_start: dateTimeStart.toISO(),
     date_time_end: dateTimeEnd.toISO(),
@@ -88,6 +88,11 @@ const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, date
     data.radio_stream_code_name = radioStreamCodeName;
   } else {
     data.stream_id = codeName;
+  }
+
+  if (id !== undefined && id !== null) {
+    axios.put(`https://${apiUrl}/listening_session/${id}`, data);
+    return;
   }
 
   axios.post(`https://${apiUrl}/listening_session`, data);

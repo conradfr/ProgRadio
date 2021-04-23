@@ -200,23 +200,23 @@ const showNotification = (radio, streamCodeName, show) => {
 /* ---------- API ---------- */
 
 const sendListeningSession = (externalPlayer, playing, radio, radioStreamCodeName,
-  dateTimeStart) => {
+  session) => {
   if (externalPlayer === true) {
     return;
   }
-  if (playing === true && dateTimeStart !== null) {
+  if (playing === true && session.start !== null) {
     const dateTimeEnd = DateTime.local().setZone(config.TIMEZONE);
 
-    if (dateTimeEnd.diff(dateTimeStart).as('seconds') < config.LISTENING_SESSION_MIN_SECONDS) {
+    if (dateTimeEnd.diff(session.start).as('seconds') < config.LISTENING_SESSION_MIN_SECONDS) {
       return;
     }
 
     setTimeout(
       () => {
         ScheduleApi.sendListeningSession(radio.code_name, radioStreamCodeName,
-          dateTimeStart, dateTimeEnd);
+          session.start, dateTimeEnd, session.id);
       },
-      500
+      1000
     );
   }
 };
