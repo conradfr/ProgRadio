@@ -13,7 +13,7 @@ defmodule ProgRadioApiWeb.Router do
 
     resources "/schedule/:day", ScheduleController
     resources "/radios", RadioController
-    resources "/listening_session", ListeningSessionController, only: [:create]
+    resources "/listening_session", ListeningSessionController, only: [:create, :update]
   end
 
   # Enables LiveDashboard only for development

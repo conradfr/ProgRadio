@@ -2,7 +2,6 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   use ProgRadioApiWeb, :controller
 
   alias ProgRadioApi.ListeningSessions
-  alias ProgRadioApi.ListeningSession
 
   action_fallback ProgRadioApiWeb.FallbackController
 
@@ -12,11 +11,30 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   #  end
 
   def create(conn, listening_session_params) do
-    with {:ok, %ListeningSession{}} <-
+    with {:ok, listening_session} <-
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
       conn
       |> put_status(:created)
-      |> json(%{"status" => "OK"})
+      |> json(%{"status" => "OK", "id" => listening_session.id})
+    else
+      _ ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{"status" => "Error"})
+    end
+  end
+
+  def update(conn, %{"id" => id} = listening_session_params) do
+    with existing_listening_session when not is_nil(existing_listening_session) <-
+           ListeningSessions.get_listening_session!(id, listening_session_params),
+         {:ok, updated_listening_session} <-
+           ListeningSessions.update_listening_session(
+             existing_listening_session,
+             listening_session_params
+           ) do
+      conn
+      |> put_status(:ok)
+      |> json(%{"status" => "OK", "id" => updated_listening_session.id})
     else
       _ ->
         conn
@@ -30,14 +48,6 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   #    render(conn, "show.json", listening_session: listening_session)
   #  end
   #
-  #  def update(conn, %{"id" => id, "listening_session" => listening_session_params}) do
-  #    listening_session = ListeningSessions.get_listening_session!(id)
-  #
-  #    with {:ok, %ListeningSession{} = listening_session} <-
-  #           ListeningSessions.update_listening_session(listening_session, listening_session_params) do
-  #      render(conn, "show.json", listening_session: listening_session)
-  #    end
-  #  end
   #
   #  def delete(conn, %{"id" => id}) do
   #    listening_session = ListeningSessions.get_listening_session!(id)

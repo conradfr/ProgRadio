@@ -36,7 +36,24 @@ defmodule ProgRadioApi.ListeningSessions do
   #      ** (Ecto.NoResultsError)
   #
   #  """
-  #  def get_listening_session!(id), do: Repo.get!(ListeningSession, id)
+  def get_listening_session!(id), do: Repo.get!(ListeningSession, id)
+
+  def get_listening_session!(id, %{"radio_stream_code_name" => radio_stream_code_name} = _attrs) do
+    radio_stream = Repo.get_by(RadioStream, code_name: radio_stream_code_name)
+
+    case radio_stream do
+      nil -> nil
+      _ -> Repo.get_by(ListeningSession, id: id, radio_stream_id: radio_stream.id)
+    end
+  end
+
+  def get_listening_session!(id, %{"stream_id" => stream_id} = _attrs) do
+    with stream when not is_nil(stream) <- Repo.get(Stream, stream_id) do
+      Repo.get_by(ListeningSession, id: id, stream_id: stream.id)
+    else
+      _ -> nil
+    end
+  end
 
   @doc """
   Creates a listening_session.
@@ -51,6 +68,28 @@ defmodule ProgRadioApi.ListeningSessions do
 
   """
   def create_listening_session(attrs \\ %{}, remote_ip \\ nil)
+
+  # listening session for radios
+  def create_listening_session(
+        %{"id" => id} = attrs,
+        remote_ip
+      )
+      when is_map_key(attrs, "id") do
+    case Ecto.UUID.cast(id) do
+      # not uuid, must be a radio_stream
+      :error ->
+        attrs
+        |> Map.put("radio_stream_code_name", id)
+        |> Map.delete("id")
+        |> create_listening_session(remote_ip)
+
+      _ ->
+        attrs
+        |> Map.put("stream_id", id)
+        |> Map.delete("id")
+        |> create_listening_session(remote_ip)
+    end
+  end
 
   # listening session for radios
   def create_listening_session(
@@ -75,6 +114,12 @@ defmodule ProgRadioApi.ListeningSessions do
     |> Ecto.build_assoc(:listening_session, %ListeningSession{ip_address: ip_binary})
     |> ListeningSession.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def update_listening_session(%ListeningSession{} = listening_session, attrs) do
+    listening_session
+    |> ListeningSession.changeset_update(attrs)
+    |> Repo.update()
   end
 
   #  @doc """

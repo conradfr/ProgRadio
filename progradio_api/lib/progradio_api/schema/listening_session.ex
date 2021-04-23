@@ -23,6 +23,14 @@ defmodule ProgRadioApi.ListeningSession do
     |> validate_required([:date_time_start, :date_time_end])
   end
 
+  @doc false
+  def changeset_update(listening_session, attrs) do
+    listening_session
+    |> cast(attrs, [:date_time_end])
+    |> validate_time_minimum()
+    |> validate_required([:date_time_end])
+  end
+
   # listening time must have a minimum length
   defp validate_time_minimum(%{params: params} = changeset) do
     {:ok, date_time_start, _} =
