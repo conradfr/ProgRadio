@@ -1,12 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VueToast from 'vue-toast-notification';
 
 import ScheduleStore from './ScheduleStore';
 import PlayerStore from './PlayerStore';
 import StreamsStore from './StreamsStore';
 import UserStore from './UserStore';
 
+import { TOAST_TYPE_ERROR, TOAST_POSITION, TOAST_DURATION } from '../config/config';
+
 Vue.use(Vuex);
+Vue.use(VueToast);
 
 const store = new Vuex.Store({
   // strict: process.env.NODE_ENV !== 'production',
@@ -31,6 +35,15 @@ const store = new Vuex.Store({
       } else {
         dispatch('sendStreamsList', radio.code_name, { root: true });
       }
+    },
+    /* eslint-disable no-empty-pattern */
+    toast: ({}, { message, type }) => {
+      Vue.$toast.open({
+        message,
+        type: type || TOAST_TYPE_ERROR,
+        duration: TOAST_DURATION,
+        position: TOAST_POSITION
+      });
     }
   },
   mutations: {

@@ -1,11 +1,12 @@
 @import "../bootswatch/paper/variables";
 
 @import "volume";
+@import "player-modal";
 
 @player-background: lighten(@brand-primary, 5%);
 
 .navbar-player {
-  z-index: 1200; /* to get over navbar */
+  z-index: 1260; /* to get over navbar */
   position: fixed;
   top: 0;
   left: 50%;
@@ -260,11 +261,11 @@
   .player-radio-link {
     visibility: hidden;
     opacity: 0;
-    transition: opacity 250ms ease-in-out 4500ms, background-color 300ms ease-in-out 3500ms;
+    transition: opacity 250ms ease-in-out 3000ms, background-color 250ms ease-in-out 3000ms;
 
     position: absolute;
     top: 10px;
-    right: -21px;
+    left: -21px;
     width: 21px;
 
     text-align: right;
@@ -288,4 +289,54 @@
     }
   }
 
+  .player-timer {
+    //visibility: hidden;
+    //opacity: 0;
+    //transition: opacity 250ms ease-in-out 250ms, background-color 250ms ease-in-out 250ms;
+
+    position: absolute;
+    top: 9px;
+    right: -21px;
+    width: 23px;
+
+    text-align: right;
+    line-height: 1px;
+    cursor: pointer;
+
+    padding: 4px 5px 6px 0;
+    //background-color: @brand-primary;
+    background-color: @player-background;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+
+    a {
+      color: mix(white, @player-background, 70%);
+
+      &:hover {
+        color: mix(white, @player-background, 85%);
+      }
+
+      &.player-timer-active {
+        color: @timer-active;
+      }
+
+      span {
+        font-size: 13px;
+      }
+    }
+
+/*    &.player-timer-display  {
+      visibility: visible !important;
+      opacity: 1;
+      background-color: @player-background;
+    } */
+  }
+
+  .timer-fade-enter-active, .timer-fade-leave-active {
+    transition: opacity .3s ease;
+  }
+  .timer-fade-enter, .timer-fade-leave-to
+    /* .component-fade-leave-active avant la 2.1.8 */ {
+    opacity: 0;
+  }
 }

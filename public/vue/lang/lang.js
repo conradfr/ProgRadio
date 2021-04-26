@@ -24,6 +24,25 @@ export const messages = {
         favorites: {
           add: 'Ajouter aux favoris',
           remove: 'Retirer des favoris'
+        },
+        timer: {
+          cancelled: 'Le minuteur a été annulé',
+          end_in: 'Fin du minuteur dans 0 minute | Fin du minuteur dans {minutes} minute | Fin du minuteur dans {minutes} minutes',
+          finish: 'Arrêt de la lecture (minuteur)',
+          modal: {
+            abrv: 'mn',
+            add: 'Ajouter',
+            cancel: 'Annuler le minuteur',
+            close: 'Fermer',
+            length: 'Durée',
+            placeholder: 'Minutes',
+            quick: 'Sélection rapide',
+            set: 'Lancer le minuteur',
+            title: 'Minuteur',
+            x_minutes: '{minutes} minutes'
+          },
+          set: 'Le minuteur est activé pour 0 minute | Le minuteur est activé pour {minutes} minute |Le minuteur est activé pour {minutes} minutes',
+          title: 'Minuteur'
         }
       },
       radio_page: {
@@ -74,6 +93,25 @@ export const messages = {
         favorites: {
           add: 'Add to favorites',
           remove: 'Remove from favorites'
+        },
+        timer: {
+          cancelled: 'The timer has been cancelled',
+          end_in: 'Timer ends in 0 minute | Timer ends in {minutes} minute | Timer ends in {minutes} minutes',
+          finish: 'Playing stopped (timer)',
+          modal: {
+            abrv: 'mn',
+            add: 'Add',
+            cancel: 'Cancel the current timer',
+            close: 'Close',
+            length: 'Time length',
+            placeholder: 'Minutes',
+            quick: 'Shortcut setting',
+            set: 'Set timer',
+            title: 'Timer',
+            x_minutes: '{minutes} minutes'
+          },
+          set: 'Timer has been set to {minutes} minute(s)',
+          title: 'Timer'
         }
       },
       radio_page: {

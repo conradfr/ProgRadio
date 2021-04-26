@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 
 import * as config from '../config/config';
 import AndroidApi from '../api/AndroidApi';
+import i18n from '../lang/i18n';
 // import StreamsApi from '../api/StreamsApi';
 import PlayerUtils from '../utils/PlayerUtils';
 import ScheduleUtils from '../utils/ScheduleUtils';
@@ -17,6 +18,7 @@ Vue.use(VueCookie);
 const initState = {
   playing: false,
   externalPlayer: AndroidApi.hasAndroid,
+  externalPlayerVersion: AndroidApi.getVersion(),
   radio: Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)
     ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)) : null,
   radioStreamCodeName: Vue.cookie.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED)
@@ -33,7 +35,9 @@ const initState = {
   focus: {
     icon: false,
     fader: false
-  }
+  },
+  timer: 0,
+  timerInterval: null
 };
 
 const storeGetters = {
@@ -153,8 +157,6 @@ const storeActions = {
         return;
       }
 
-      PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-        state.radio, state.radioStreamCodeName, state.session);
       dispatch('stop');
     } else {
       if (state.externalPlayer === true && (state.radio !== null && state.radio !== undefined)) {
@@ -237,7 +239,58 @@ const storeActions = {
   volumeFocus: ({ commit }, params) => {
     commit('setFocus', params);
   },
-  /* From Android app */
+  setTimer: ({ dispatch, state, commit }, minutes) => {
+    if (typeof minutes === 'number' && minutes > 0) {
+      Vue.cookie.set(config.COOKIE_LAST_TIMER, minutes, config.COOKIE_PARAMS);
+    }
+
+    if (state.externalPlayer === true) {
+      AndroidApi.timer(minutes);
+      return;
+    }
+
+    commit('setTimer', minutes);
+
+    // cancelling timer
+    if (minutes === null || minutes === 0) {
+      dispatch('toast', {
+        message: i18n.tc('message.player.timer.cancelled'),
+        type: config.TOAST_TYPE_INFO
+      });
+    }
+
+    // setting timer
+    if (minutes !== null && minutes > 0) {
+      dispatch('toast', {
+        message: i18n.tc('message.player.timer.set', minutes, { minutes }),
+        type: config.TOAST_TYPE_INFO
+      });
+
+      // silently cancelling previous active timer
+      if (state.timerInterval !== null) {
+        commit('setTimer', null);
+      }
+
+      state.timerInterval = setInterval(() => {
+        commit('setTimer', state.timer - 1);
+
+        if (state.timer === 0) {
+          dispatch('stop');
+          dispatch('toast', {
+            message: i18n.tc('message.player.timer.finish'),
+            type: config.TOAST_TYPE_INFO
+          });
+        }
+      }, 60000);
+    }
+
+    commit('setTimer', minutes);
+  },
+  /* From Android */
+  updateTimerEnding: ({ commit }, seconds) => {
+    commit('setTimer', seconds);
+  },
+  /* From Android */
   updateStatusFromExternalPlayer: ({ rootState, dispatch, commit }, params) => {
     const { playbackState, radioCodeName } = params;
 
@@ -325,6 +378,15 @@ const storeMutations = {
   },
   setFocus(state, params) {
     state.focus[params.element] = params.status;
+  },
+  setTimer(state, minutes) {
+    // excludes mobile app
+    if ((minutes === null || minutes === 0) && state.timerInterval !== null) {
+      clearInterval(state.timerInterval);
+      state.timerInterval = null;
+    }
+
+    state.timer = minutes;
   }
 };
 

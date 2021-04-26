@@ -29,7 +29,7 @@ config :progradio_api, ProgRadioApi.Scheduler,
       task: {ProgRadioApi.Checker.Streams, :check, []}
     ],
     import: [
-      schedule: "10 03 * * *",
+      schedule: "10 02 */3 * *",
       task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import, []}
     ],
     warm_radios_cache: [

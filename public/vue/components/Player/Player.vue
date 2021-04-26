@@ -3,6 +3,9 @@
     <div v-if="this.player.radio" class="player-radio-link">
       <a :href="radioLink()"><span class="glyphicon glyphicon-share"></span></a>
     </div>
+    <transition name="timer-fade" mode="out-in">
+      <timer v-if="displayTimer"></timer>
+    </transition>
     <div class="player-wrap">
       <div class="player-sound player-sound-mute"
            v-on:click="toggleMute" v-if="!player.externalPlayer">
@@ -46,23 +49,20 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import VueToast from 'vue-toast-notification';
-
 import { mapState, mapGetters } from 'vuex';
 
 import { Socket } from '../../../js/phoenix';
 
 import PlayerInfo from './PlayerInfo.vue';
+import Timer from './Timer.vue';
 import VolumeFader from './VolumeFader.vue';
 import * as config from '../../config/config';
 import AndroidApi from '../../api/AndroidApi';
 
-Vue.use(VueToast);
-
 export default {
   components: {
     PlayerInfo,
+    Timer,
     VolumeFader
   },
   data() {
@@ -122,6 +122,14 @@ export default {
       return (this.player.radio !== null
       && this.isFavorite === true
         ? this.$i18n.tc('message.player.favorites.remove') : this.$i18n.tc('message.player.favorites.add'));
+    },
+    displayTimer() {
+      if (this.player.externalPlayer === true
+        && this.player.externalPlayerVersion < config.ANDROID_TIMER_MIN_VERSION) {
+        return false;
+      }
+
+      return this.player.playing || this.player.timer > 0;
     }
   },
   /* eslint-disable func-names */
@@ -269,9 +277,9 @@ export default {
           this.$store.dispatch('stop');
 
           if (error.name === 'NotAllowedError') {
-            this.toast(this.$i18n.tc('message.player.autoplay_error'));
+            this.$store.dispatch('toast', { message: this.$i18n.tc('message.player.autoplay_error') });
           } else {
-            this.toast(this.$i18n.tc('message.player.play_error'));
+            this.$store.dispatch('toast', { message: this.$i18n.tc('message.player.play_error') });
           }
         });
       }
@@ -283,7 +291,7 @@ export default {
         this.lastUpdated = null;
         this.$store.dispatch('stop');
         clearInterval(this.checkTimer);
-        this.toast(this.$i18n.tc('message.player.play_error'));
+        this.$store.dispatch('toast', { message: this.$i18n.tc('message.player.play_error') });
       }
     },
     stop() {
@@ -320,14 +328,6 @@ export default {
         },
         200
       );
-    },
-    toast(message) {
-      Vue.$toast.open({
-        message,
-        type: config.TOAST_ERROR_COLOR,
-        duration: config.TOAST_DURATION,
-        position: config.TOAST_POSITION
-      });
     }
   }
 };

@@ -6,7 +6,8 @@ import {
   PLAYER_TYPE_RADIO,
   PLAYER_TYPE_STREAM,
   THUMBNAIL_NOTIFICATION_PROGRAM_PATH,
-  THUMBNAIL_STREAM_PATH
+  THUMBNAIL_STREAM_PATH,
+  ANDROID_TIMER_MIN_VERSION
 } from '../config/config';
 
 import ScheduleUtils from '../utils/ScheduleUtils';
@@ -64,6 +65,10 @@ const formatRadios = (radios) => {
 
 export default {
   hasAndroid,
+  getVersion() {
+    if (hasAndroid === false) { return 0; }
+    return Android.getVersion !== undefined ? Android.getVersion() : 15; // temp
+  },
   play(radio, stream, currentShow) {
     if (hasAndroid === false) { return; }
     const showTitle = currentShow === undefined || currentShow === null ? null : currentShow.title;
@@ -90,5 +95,9 @@ export default {
   getState() {
     if (hasAndroid === false) { return; }
     Android.getstate();
+  },
+  timer(minutes) {
+    if (hasAndroid === false || this.getVersion() < ANDROID_TIMER_MIN_VERSION) { return; }
+    Android.timer(minutes);
   }
 };

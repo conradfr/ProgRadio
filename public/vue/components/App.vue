@@ -1,6 +1,7 @@
 <template>
   <div>
     <player></player>
+    <timer-modal></timer-modal>
     <router-view></router-view>
   </div>
 </template>
@@ -9,10 +10,12 @@
 import throttle from 'lodash/throttle';
 
 import Player from './Player/Player.vue';
+import TimerModal from './Player/TimerModal.vue';
 
 export default {
   components: {
-    Player
+    Player,
+    TimerModal
   },
   created() {
     setTimeout(

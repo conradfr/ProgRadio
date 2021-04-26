@@ -15,6 +15,7 @@ export const THUMBNAIL_STREAM_PATH = '/media/stream/';
 export const PROGRAM_LONG_ENOUGH = 45; /* minutes */
 
 export const DEFAULT_VOLUME = 8;
+export const DEFAULT_TIMER_MINUTES = 15;
 
 export const DEFAULT_COLLECTION = 'nationwide';
 
@@ -40,6 +41,7 @@ export const COOKIE_STREAM_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}
 export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country`;
 export const COOKIE_STREAM_SORT = `${COOKIE_PREFIX}-stream-sort`;
 export const COOKIE_STREAM_RADIOBROWSER_API = `${COOKIE_PREFIX}-stream-radiobrowser_api`;
+export const COOKIE_LAST_TIMER = `${COOKIE_PREFIX}-timer`;
 
 export const COOKIE_PARAMS = { expires: COOKIE_TTL, secure: true, samesite: 'Lax' };
 
@@ -47,7 +49,8 @@ export const TIMEZONE = 'Europe/Paris';
 
 export const TOAST_POSITION = 'top-right';
 export const TOAST_DURATION = 3000; /* ms */
-export const TOAST_ERROR_COLOR = 'error';
+export const TOAST_TYPE_ERROR = 'error';
+export const TOAST_TYPE_INFO = 'success';
 
 export const PLAYER_NOTIFICATION_ID = 'progradio-play';
 export const PLAYER_NOTIFICATION_LENGTH = 3000; /* ms */
@@ -115,6 +118,18 @@ export const GTAG_ACTION_SEARCH_BUTTON = 'streaming_search';
 export const GTAG_STREAMING_FILTER_VALUE = 1;
 
 export const GTAG_CATEGORY_PLAYER = 'player';
+export const GTAG_CATEGORY_TIMER = 'timer';
 
 export const GTAG_CATEGORY_RADIOPAGE = 'radio_page';
 export const GTAG_CATEGORY_NOWPAGE = 'now_page';
+
+// timer
+
+export const GTAG_ACTION_TIMER_SET = 'timer_set';
+export const GTAG_ACTION_TIMER_QUICK_SET = 'timer_quick_set';
+export const GTAG_ACTION_TIMER_ADD = 'timer_add';
+export const GTAG_ACTION_TIMER_CANCEL = 'timer_cancel';
+
+// Android
+
+export const ANDROID_TIMER_MIN_VERSION = 16;
