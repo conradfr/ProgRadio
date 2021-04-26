@@ -96,7 +96,7 @@ defmodule ProgRadioApi.SongProvider.Mradio do
         %{}
 
       _ ->
-        %{artist: data["#content"]["chanteur"], title: data["#content"]["chanson"]}
+        %{artist: Recase.to_title(data["#content"]["chanteur"]), title: Recase.to_title(data["#content"]["chanson"])}
     end
   end
 end

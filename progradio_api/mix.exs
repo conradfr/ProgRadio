@@ -62,7 +62,8 @@ defmodule ProgRadioApi.MixProject do
       {:broadway, "~> 0.6.0"},
       {:off_broadway_redis, "~> 0.4.2"},
       {:timex, "~> 3.6"},
-      {:elixir_xml_to_map, "~> 2.0"}
+      {:elixir_xml_to_map, "~> 2.0"},
+      {:recase, "~> 0.5"}
     ]
   end
 

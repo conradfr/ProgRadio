@@ -29,7 +29,7 @@ defmodule ProgRadioApi.SongProvider.Rfm do
         %{}
 
       _ ->
-        %{artist: data["artist"], title: data["title"]}
+        %{artist: Recase.to_title(data["artist"]), title: Recase.to_title(data["title"])}
     end
   end
 end

@@ -3,7 +3,7 @@ defmodule ProgRadioApi.SongServer do
   require Logger
   alias ProgRadioApiWeb.Presence
 
-  @refresh_song_interval 30000
+  @refresh_song_interval 15000
   @refresh_presence_interval 20000
 
   # ----- Client Interface -----
