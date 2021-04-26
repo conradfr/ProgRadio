@@ -33,6 +33,10 @@ const format = dateObj => {
     newEntry.title = match[5];
     newEntry.img = `https://www.evasionfm.com/${curr.img}`;
 
+    if (curr.description !== undefined) {
+      newEntry.description = curr.description;
+    }
+
     prev.push(newEntry);
     return prev;
   }, []);
@@ -53,6 +57,7 @@ const fetch = dateObj => {
       .find(`div.row > div.col-md-12 > div.block_programme > div.row`)
       .set({
         'title': '.nomProgramme',
+        'description': '.descProgramme',
         'img': 'figure > img@src',
       })
       .data(function (listing) {
