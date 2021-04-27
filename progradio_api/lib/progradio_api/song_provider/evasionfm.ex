@@ -1,5 +1,6 @@
 defmodule ProgRadioApi.SongProvider.Evasionfm do
   require Logger
+  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -53,7 +54,7 @@ defmodule ProgRadioApi.SongProvider.Evasionfm do
         %{}
 
       _ ->
-        %{artist: Recase.to_title(data["artiste"]), title: Recase.to_title(data["titre"])}
+        %{artist: SongProvider.recase(data["artiste"]), title: SongProvider.recase(data["titre"])}
     end
   end
 end

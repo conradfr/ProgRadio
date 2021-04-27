@@ -1,5 +1,6 @@
 defmodule ProgRadioApi.SongProvider.Rfm do
   require Logger
+  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -29,7 +30,7 @@ defmodule ProgRadioApi.SongProvider.Rfm do
         %{}
 
       _ ->
-        %{artist: Recase.to_title(data["artist"]), title: Recase.to_title(data["title"])}
+        %{artist: SongProvider.recase(data["artist"]), title: SongProvider.recase(data["title"])}
     end
   end
 end

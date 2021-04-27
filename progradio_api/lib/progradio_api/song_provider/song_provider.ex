@@ -26,4 +26,10 @@ defmodule ProgRadioApi.SongProvider do
     |> String.split(":")
     |> List.last()
   end
+
+  @spec recase(String.t()|nil) :: String.t()|nil
+  def recase(data)
+
+  def recase(nil), do: nil
+  def recase(data), do: Recase.to_title(data)
 end
