@@ -83,7 +83,7 @@ const format = dateObj => {
 const fetch = dateObj => {
   dateObj.locale('fr');
   let day = utils.upperCaseWords(dateObj.format('dddd'));
-  let url = 'https://www.nrj.fr/emissions';
+  let url = 'https://www.nrj.fr/grille-emissions';
   logger.log('info', `fetching ${url}`);
 
   return new Promise(function (resolve, reject) {
@@ -95,7 +95,7 @@ const fetch = dateObj => {
         'datetime_raw_start': '.timelineShedule-header time[1]@datetime',
         'datetime_raw_end': '.timelineShedule-header time[2]@datetime',
         'img': '.timelineShedule-header picture.thumbnail-inner > img@data-src',
-        'title': '.timelineShedule-content h3.heading3',
+        'title': '.timelineShedule-content h3.a-heading-3',
         'description': '.timelineShedule-content p.description'
       })
       .data(function (listing) {
