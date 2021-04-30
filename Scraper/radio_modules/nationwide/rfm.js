@@ -8,7 +8,7 @@ const format = dateObj => {
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr) {
     // Time
-    let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s{0,1}[—|-]\s{0,1}([0-9]{1,2})[h|H]([0-9]{2})/);
+    let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s{0,1}[—|-]\s{0,1}([0-9]{1,2})[h|H]([0-9]{0,2})/);
     let match = curr.datetime_raw.match(regexp);
 
     // no time, exit
@@ -23,7 +23,12 @@ const format = dateObj => {
     startDateTime.minute(match[2]);
     startDateTime.second(0);
     endDateTime.hour(match[3]);
-    endDateTime.minute(match[4]);
+
+    if (match[4] !== undefined && match[4] !== null) {
+      endDateTime.minute(match[4]);
+    } else {
+      endDateTime.minute(0);
+    }
     endDateTime.second(0);
 
     // midnight etc
