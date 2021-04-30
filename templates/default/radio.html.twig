@@ -8,27 +8,45 @@
     <div class="row">
         <div class="col-md-2 col-xs-12">
             <div class="row">
-                <div class="col-md-12 col-xs-6">
+                <div class="col-md-12 col-xs-12">
                     <div class="schedule-day-radio center-block">
                         <img class="center-block" alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
                     </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-xs-6">
-                <div class="schedule-day-play center-block">
-                    <a href="{{ path('app') }}#/radio/{{ radio.codeName }}?play=1">
-                        <img class="schedule-day-play-button" alt="{{ 'page.radio.play'|trans({'%radio%': radio.name}) }}" src="/img/play-button-inside-a-circle.svg">
-                        <div class="schedule-day-play-text">
-                            {{ 'page.radio.play'|trans({'%radio%': radio.name}) }}
-                        </div>
-                    </a>
+                    <div class="schedule-day-radio center-block text-center">
+                        <a class="text-center" href="{{ path('app') }}#/radio/{{ radio.codeName }}?play=1">
+                                {{ 'page.radio.play'|trans({'%radio%': radio.name}) }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-10 col-xs-12">
             <div class="title">
-                <h5>{{ date | localizeddate('full', 'none', app.request.locale, timezone) | capitalize }}</h5>
-                <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <h5>{{ date |localizeddate('full', 'none', app.request.locale, timezone) | capitalize }}</h5>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12 schedule-page-datenav text-right">
+                        ←&nbsp;
+                        {% if has_prev %}
+                            <a href="{{ path('radio', {'codename': radio.codeName, 'date': prev_date |date("Y-m-d") }) }}">{{ prev_date |localizeddate('short', 'none', app.request.locale, timezone) | capitalize }}</a>
+                        {% else %}
+                            {{ prev_date |localizeddate('short', 'none', app.request.locale, timezone) | capitalize }}
+                        {% endif %} |
+<!--                        | <a href="{{ path('radio', {'codename': radio.codeName, 'date': 'now' |date('Y-m-d') }) }}">{{ 'page.radio.today'|trans }}</a> |-->
+                        {% if has_next %}
+                            <a href="{{ path('radio', {'codename': radio.codeName, 'date': next_date |date('Y-m-d')}) }}">{{ next_date |localizeddate('short', 'none', app.request.locale, timezone) | capitalize }}</a>
+                        {% else %}
+                            {{ next_date |localizeddate('short', 'none', app.request.locale, timezone) | capitalize }}
+                        {% endif %}
+                        &nbsp;→
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a>
+                    </div>
+                </div>
             </div>
 
             <div class="schedule-day-shows">
@@ -40,15 +58,15 @@
                              src="{{ asset('media/cache/page_thumb/media/program/' ~ show.picture_url) }}">
                     </div>
                 {% endif %}
-                <div class="media-body">
-                    <h6 class="media-heading show-title">{{ show.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }}-{{ show.end_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ show.title }}</h6>
-                    {% if show.host %}
-                        <div class="show-host"> {{ show.host }}</div>
-                    {% endif %}
-                    {% if show.description %}
-                        <p class="show-description">{{ show.description | nl2br  }}</p>
-                    {% endif %}
-                </div>
+                    <div class="media-body">
+                        <h6 class="media-heading show-title">{{ show.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }}-{{ show.end_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ show.title }}</h6>
+                        {% if show.host %}
+                            <div class="show-host"> {{ show.host }}</div>
+                        {% endif %}
+                        {% if show.description %}
+                            <p class="show-description">{{ show.description | nl2br  }}</p>
+                        {% endif %}
+                    </div>
 
                 {% if show.sections is defined %}
                     <div class="sections">
@@ -72,7 +90,7 @@
                 {% endif %}
             </div>
             {% else %}
-                <div class="alert alert-warning" role="alert">Programmes non disponibles.</div>
+                <div class="alert alert-warning" role="alert">{{ 'page.radio.no_schedule'|trans }}</div>
             {% endfor %}
             </div>
         </div>

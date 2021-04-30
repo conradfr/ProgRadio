@@ -27,6 +27,8 @@ use App\Entity\ListeningSession;
 
 class DefaultController extends AbstractBaseController
 {
+    protected const MIN_DATE = '2017-08-19';
+
     /**
      * LEGACY
      *
@@ -92,8 +94,8 @@ class DefaultController extends AbstractBaseController
 
     /**
      * @Route({
-     *     "en": "/{_locale}/schedule-streaming-{codename}",
-     *     "fr": "/{_locale}/grille-ecouter-{codename}"
+     *     "en": "/{_locale}/schedule-streaming-{codename}/{date}",
+     *     "fr": "/{_locale}/grille-ecouter-{codename}/{date}"
      * },
      *     name="radio",
      *     defaults={
@@ -102,11 +104,14 @@ class DefaultController extends AbstractBaseController
      *      }
      * )
      *
+     * @ParamConverter("date", options={"format": "Y-m-d"})
      * @throws \Exception
      */
-    public function radio(string $codename, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
+    public function radio(string $codename, \DateTime $date=null, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
     {
-        $dateTime = new \DateTime();
+        if ($date === null) {
+            $date = new \DateTime();
+        }
 
         // @todo check cache
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codename, 'active' => true]);
@@ -114,19 +119,44 @@ class DefaultController extends AbstractBaseController
             throw new NotFoundHttpException('Radio not found');
         }
 
-        $schedule = $scheduleManager->getDayScheduleOfRadio($dateTime, $codename);
+        $schedule = $scheduleManager->getDayScheduleOfRadio($date, $codename);
         $scheduleRadio = [];
 
         if (isset($schedule[$codename])) {
-            $scheduleRadio =$schedule[$codename];
+            $scheduleRadio = $schedule[$codename];
         }
 
-        //$schedule = $scheduleManager->getDayScheduleOfRadio($dateTime, $codename);
+        // not ideal as we do the full sql queries, but at least it will put it in cache,
+        // and it should be low traffic as it's mostly done for SEO
+
+        $prevDate = clone $date;
+        $prevDate->modify("-1 day");
+        $nextDate = clone $date;
+        $nextDate->modify("+1 day");
+
+        // data start at this date
+        if ($date->format('Y-m-d') === self::MIN_DATE) {
+            $prevSchedule = null;
+        } else {
+            $prevSchedule = $scheduleManager->getDayScheduleOfRadio($prevDate, $codename);
+        }
+
+        // don't go after tomorrow, we don't have the data
+        $tomorrow = new \DateTime('tomorrow');
+        if ($date->format('Y-m-d') === $tomorrow->format('Y-m-d')) {
+            $nextSchedule = null;
+        } else {
+            $nextSchedule = $scheduleManager->getDayScheduleOfRadio($nextDate, $codename);
+        }
 
         return $this->render('default/radio.html.twig', [
             'schedule' => $scheduleRadio,
             'radio' => $radio,
-            'date' => $dateTime
+            'date' => $date,
+            'prev_date' => $prevDate,
+            'next_date' => $nextDate,
+            'has_prev' => $prevSchedule !== null,
+            'has_next' => $nextSchedule !== null
         ]);
     }
 
