@@ -95,7 +95,7 @@ const fetch = dateObj => {
         'datetime_raw_start': '.timelineShedule-header time[1]@datetime',
         'datetime_raw_end': '.timelineShedule-header time[2]@datetime',
         'img': '.timelineShedule-header picture.thumbnail-inner > img@data-src',
-        'title': '.timelineShedule-content a-h3.heading3',
+        'title': '.timelineShedule-content h3.a-heading-3',
         'description': '.timelineShedule-content p.description'
       })
       .data(function (listing) {
