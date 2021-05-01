@@ -1,10 +1,10 @@
-defmodule ProgRadioApi.SongProvider.Alouette do
+defmodule ProgRadioApi.SongProvider.Latina do
   require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://www.alouette.fr/players/index/gettitrageplayer/idplayers/2174546520932614169"
+  @url "https://www.latina.fr/players/index/gettitrageplayer/idplayers/2174546520932614634"
 
   @impl true
   defdelegate has_custom_refresh(), to: GenericLesIndes

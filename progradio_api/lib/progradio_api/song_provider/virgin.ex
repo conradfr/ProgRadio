@@ -18,9 +18,7 @@ defmodule ProgRadioApi.SongProvider.Virgin do
 
   @impl true
   def get_refresh(_name, data, default_refresh) do
-    now_unix =
-      DateTime.now!("Europe/Paris")
-      |> DateTime.to_unix()
+    now_unix = SongProvider.now_unix()
 
     next = Map.get(data, "date_end", now_unix + default_refresh / 1000) + 2 - now_unix
 
@@ -32,7 +30,7 @@ defmodule ProgRadioApi.SongProvider.Virgin do
   end
 
   @impl true
-  def get_data(name) do
+  def get_data(name, _last_data) do
     id =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()

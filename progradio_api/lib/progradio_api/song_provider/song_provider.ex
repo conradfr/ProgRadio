@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider do
   @doc """
     Get source data as map
   """
-  @callback get_data(String.t()) :: map() | nil
+  @callback get_data(String.t(), map()|nil) :: map() | nil
 
   @doc """
     Get artist & song as map
@@ -25,6 +25,12 @@ defmodule ProgRadioApi.SongProvider do
     channel_name
     |> String.split(":")
     |> List.last()
+  end
+
+  @spec now_unix() :: integer()
+  def now_unix() do
+      DateTime.utc_now()
+      |> DateTime.to_unix()
   end
 
   @spec recase(String.t() | nil) :: String.t() | nil

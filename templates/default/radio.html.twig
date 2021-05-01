@@ -3,7 +3,6 @@
 {% block title %}{{ 'page.radio.title'|trans({'%radio%': radio.name}) }}{% endblock %}
 {% block description %}{{ 'page.radio.description'|trans({'%radio%': radio.name}) }}{% endblock %}
 
-
 {% block head_supp %}
     {{ parent() }}
     {% if schedule|length == 0 %}

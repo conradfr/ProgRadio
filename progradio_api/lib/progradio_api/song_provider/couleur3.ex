@@ -28,7 +28,7 @@ defmodule ProgRadioApi.SongProvider.Couleur3 do
   end
 
   @impl true
-  def get_data(_name) do
+  def get_data(_name, _last_data) do
     HTTPoison.get!(
       "https://il.srgssr.ch/integrationlayer/2.0/rts/songList/radio/byChannel/8ceb28d9b3f1dd876d1df1780f908578cbefc3d7?vector=portalplay&onlyCurrentSong=true&pageSize=40",
       [],

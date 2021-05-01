@@ -26,10 +26,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
 
   @impl true
   def get_refresh(_name, data, default_refresh) do
-    now_unix =
-      DateTime.utc_now()
-      |> DateTime.to_unix()
-
+    now_unix = SongProvider.now_unix()
     next = Map.get(data, "next_refresh", now_unix + default_refresh / 1000) + 5 - now_unix
 
     if next < @refresh_fallback do
@@ -40,7 +37,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
   end
 
   @impl true
-  def get_data(name) do
+  def get_data(name, _last_data) do
     id =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()

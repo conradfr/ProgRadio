@@ -36,7 +36,7 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
   end
 
   @impl true
-  def get_data(_name) do
+  def get_data(_name, _last_data) do
     try do
       entry =
         HTTPoison.get!(

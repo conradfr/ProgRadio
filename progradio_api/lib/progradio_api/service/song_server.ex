@@ -17,7 +17,7 @@ defmodule ProgRadioApi.SongServer do
       |> (&("Elixir.ProgRadioApi.SongProvider." <> &1)).()
       |> String.to_existing_atom()
 
-    GenServer.start_link(__MODULE__, %{module: module_name, name: song_topic, song: nil},
+    GenServer.start_link(__MODULE__, %{module: module_name, name: song_topic, song: nil, last_data: nil},
       name: name
     )
   end
@@ -44,8 +44,8 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_info({:refresh, :auto}, %{module: module, name: name} = state) do
-    {_data, song} = get_data_song(module, name)
+  def handle_info({:refresh, :auto}, %{module: module, name: name, last_data: last_data} = state) do
+    {data, song} = get_data_song(module, name, last_data)
 
     how_many_connected =
       Presence.list(state.name)
@@ -58,12 +58,12 @@ defmodule ProgRadioApi.SongServer do
       "Data provider - #{name}: song updated (timer) - #{how_many_connected} clients connected"
     )
 
-    {:noreply, %{module: module, name: name, song: song}}
+    {:noreply, %{state | song: song, last_data: data}}
   end
 
   @impl true
-  def handle_info({:refresh, _}, %{module: module, name: name} = state) do
-    {data, song} = get_data_song(module, name)
+  def handle_info({:refresh, _}, %{module: module, name: name, last_data: last_data} = state) do
+    {data, song} = get_data_song(module, name, last_data)
 
     ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
 
@@ -76,7 +76,7 @@ defmodule ProgRadioApi.SongServer do
       "Data provider - #{name}: song updated, next update in #{trunc(next_refresh / 1000)} seconds"
     )
 
-    {:noreply, %{module: module, name: name, song: song}}
+    {:noreply, %{state | song: song, last_data: data}}
   end
 
   @impl true
@@ -100,9 +100,9 @@ defmodule ProgRadioApi.SongServer do
 
   # ----- Internal -----
 
-  @spec get_data_song(atom(), String.t()) :: tuple()
-  defp get_data_song(module, name) do
-    data = apply(module, :get_data, [name])
+  @spec get_data_song(atom(), String.t(), map()|nil) :: tuple()
+  defp get_data_song(module, name, last_data) do
+    data = apply(module, :get_data, [name, last_data])
     song = apply(module, :get_song, [name, data]) || %{}
 
     {data, song}

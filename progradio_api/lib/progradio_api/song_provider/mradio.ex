@@ -15,9 +15,7 @@ defmodule ProgRadioApi.SongProvider.Mradio do
   @impl true
   def get_refresh(_name, data, default_refresh) do
     try do
-      now_unix =
-        DateTime.now!("Europe/Paris")
-        |> DateTime.to_unix()
+      now_unix = SongProvider.now_unix()
 
       time_start =
         data
@@ -47,10 +45,8 @@ defmodule ProgRadioApi.SongProvider.Mradio do
   end
 
   @impl true
-  def get_data(_name) do
-    now_unix =
-      DateTime.now!("Europe/Paris")
-      |> DateTime.to_unix()
+  def get_data(_name, _last_data) do
+    now_unix = SongProvider.now_unix()
 
     HTTPoison.get!(
       "https://mradio.fr/winradio/prog.xml",

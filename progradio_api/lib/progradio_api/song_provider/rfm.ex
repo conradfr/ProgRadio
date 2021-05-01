@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.Rfm do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(_name) do
+  def get_data(_name, _last_data) do
     HTTPoison.get!(
       @url,
       [],

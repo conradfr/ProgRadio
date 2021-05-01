@@ -1,5 +1,6 @@
 defmodule ProgRadioApi.SongProvider.Skyrock do
   require Logger
+  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -14,9 +15,7 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
   @impl true
   def get_refresh(_name, data, default_refresh) do
     try do
-      now_unix =
-        DateTime.now!("Europe/Paris")
-        |> DateTime.to_unix()
+      now_unix = SongProvider.now_unix()
 
       next = (Map.get(data["info"], "end_ts") |> String.to_integer()) + @radio_lag - now_unix
 
@@ -31,10 +30,8 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
   end
 
   @impl true
-  def get_data(_name) do
-    now_unix =
-      DateTime.now!("Europe/Paris")
-      |> DateTime.to_unix()
+  def get_data(_name, _last_data) do
+    now_unix = SongProvider.now_unix()
 
     HTTPoison.get!(
       "https://skyrock.fm/api/v3/player/onair/parisidf",

@@ -20,9 +20,7 @@ defmodule ProgRadioApi.SongProvider.Radionova do
 
   @impl true
   def get_refresh(_name, data, _default_refresh) do
-    now_unix =
-      DateTime.utc_now()
-      |> DateTime.to_unix()
+    now_unix = SongProvider.now_unix()
 
     {:ok, start_current_song_naive} =
       Map.get(data, "diffusion_date")
@@ -52,7 +50,7 @@ defmodule ProgRadioApi.SongProvider.Radionova do
   end
 
   @impl true
-  def get_data(name) do
+  def get_data(name, _last_data) do
     name =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_name, &1)).()
