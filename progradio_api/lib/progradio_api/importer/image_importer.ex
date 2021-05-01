@@ -96,7 +96,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
             )
           rescue
             _ ->
-              Logger.warn("Error downloading image: #{url}")
+              Logger.warn("Error downloading image: #{url} to #{dest_path}")
               {:error, nil}
           end
         end)
