@@ -27,7 +27,7 @@ defmodule ProgRadioApi.SongProvider do
     |> List.last()
   end
 
-  @spec recase(String.t()|nil) :: String.t()|nil
+  @spec recase(String.t() | nil) :: String.t() | nil
   def recase(data)
 
   def recase(nil), do: nil

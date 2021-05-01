@@ -4,6 +4,8 @@ defmodule ProgRadioApi.SongProvider.Rfm do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @url "http://directradio.rfm.fr/rfm/now/3"
+
   @impl true
   def has_custom_refresh(), do: false
 
@@ -13,7 +15,7 @@ defmodule ProgRadioApi.SongProvider.Rfm do
   @impl true
   def get_data(_name) do
     HTTPoison.get!(
-      "http://directradio.rfm.fr/rfm/now/3",
+      @url,
       [],
       ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
     )

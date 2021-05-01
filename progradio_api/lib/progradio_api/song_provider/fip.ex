@@ -22,23 +22,20 @@ defmodule ProgRadioApi.SongProvider.Fip do
   def has_custom_refresh(), do: true
 
   @impl true
+  def get_refresh(_name, nil, default_refresh), do: default_refresh
+
+  @impl true
   def get_refresh(_name, data, default_refresh) do
-    case data do
-      nil ->
-        nil
+    now_unix =
+      DateTime.utc_now()
+      |> DateTime.to_unix()
 
-      _ ->
-        now_unix =
-          DateTime.utc_now()
-          |> DateTime.to_unix()
+    next = Map.get(data, "next_refresh", now_unix + default_refresh / 1000) + 5 - now_unix
 
-        next = Map.get(data, "next_refresh", now_unix + default_refresh / 1000) + 5 - now_unix
-
-        if next < @refresh_fallback do
-          @refresh_fallback * 1000
-        else
-          next * 1000
-        end
+    if next < @refresh_fallback do
+      @refresh_fallback * 1000
+    else
+      next * 1000
     end
   end
 

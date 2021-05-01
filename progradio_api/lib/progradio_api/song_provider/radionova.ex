@@ -16,42 +16,39 @@ defmodule ProgRadioApi.SongProvider.Radionova do
   def has_custom_refresh(), do: true
 
   @impl true
+  def get_refresh(_name, nil, default_refresh), do: default_refresh
+
+  @impl true
   def get_refresh(_name, data, _default_refresh) do
-    case data do
-      nil ->
-        nil
+    now_unix =
+      DateTime.utc_now()
+      |> DateTime.to_unix()
 
-      _ ->
-        now_unix =
-          DateTime.utc_now()
-          |> DateTime.to_unix()
+    {:ok, start_current_song_naive} =
+      Map.get(data, "diffusion_date")
+      |> NaiveDateTime.from_iso8601()
 
-        {:ok, start_current_song_naive} =
-          Map.get(data, "diffusion_date")
-          |> NaiveDateTime.from_iso8601()
+    {:ok, start_current_song} =
+      start_current_song_naive
+      |> DateTime.from_naive("Europe/Paris")
 
-        {:ok, start_current_song} =
-          start_current_song_naive
-          |> DateTime.from_naive("Europe/Paris")
+    start_current_song_unix =
+      start_current_song
+      |> DateTime.to_unix()
 
-        start_current_song_unix =
-          start_current_song
-          |> DateTime.to_unix()
+    {:ok, time_end} =
+      ("00:" <> Map.get(data, "duration", "00:30"))
+      |> Time.from_iso8601()
 
-        {:ok, time_end} =
-          ("00:" <> Map.get(data, "duration", "00:30"))
-          |> Time.from_iso8601()
+    {time_end_seconds, _} =
+      time_end
+      |> Time.to_seconds_after_midnight()
 
-        {time_end_seconds, _} =
-          time_end
-          |> Time.to_seconds_after_midnight()
+    next_seconds = (start_current_song_unix + time_end_seconds - now_unix + 2) * 1000
 
-        next_seconds = (start_current_song_unix + time_end_seconds - now_unix + 2) * 1000
-
-        next_seconds
-        |> trunc()
-        |> abs()
-    end
+    next_seconds
+    |> trunc()
+    |> abs()
   end
 
   @impl true

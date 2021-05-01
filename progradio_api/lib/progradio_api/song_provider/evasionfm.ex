@@ -4,14 +4,15 @@ defmodule ProgRadioApi.SongProvider.Evasionfm do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @url "https://www.evasionfm.com/XML/morceaux.xml"
   @minutes_max 300
   @timezone "Europe/Paris"
 
   @impl true
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(), do: false
 
   @impl true
-  def get_refresh(_name, _data, default_refresh), do: default_refresh
+  def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
   def get_data(_name) do
@@ -20,7 +21,7 @@ defmodule ProgRadioApi.SongProvider.Evasionfm do
       |> DateTime.to_unix()
 
     HTTPoison.get!(
-      "https://www.evasionfm.com/XML/morceaux.xml",
+      @url,
       [],
       ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
     )

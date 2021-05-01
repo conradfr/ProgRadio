@@ -9,27 +9,24 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
   def has_custom_refresh(), do: true
 
   @impl true
+  def get_refresh(_name, nil, default_refresh), do: default_refresh
+
+  @impl true
   def get_refresh(_name, data, default_refresh) do
-    case data do
-      nil ->
-        nil
+    try do
+      now_unix =
+        DateTime.now!("Europe/Paris")
+        |> DateTime.to_unix()
 
-      _ ->
-        try do
-          now_unix =
-            DateTime.now!("Europe/Paris")
-            |> DateTime.to_unix()
+      next = (Map.get(data["info"], "end_ts") |> String.to_integer()) + @radio_lag - now_unix
 
-          next = (Map.get(data["info"], "end_ts") |> String.to_integer()) + @radio_lag - now_unix
-
-          if now_unix + next < now_unix do
-            default_refresh
-          else
-            next * 1000
-          end
-        rescue
-          _ -> default_refresh
-        end
+      if now_unix + next < now_unix do
+        default_refresh
+      else
+        next * 1000
+      end
+    rescue
+      _ -> default_refresh
     end
   end
 

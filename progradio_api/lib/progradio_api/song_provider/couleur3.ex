@@ -7,27 +7,24 @@ defmodule ProgRadioApi.SongProvider.Couleur3 do
   def has_custom_refresh(), do: true
 
   @impl true
+  def get_refresh(_name, nil, default_refresh), do: default_refresh
+
+  @impl true
   def get_refresh(_name, data, default_refresh) do
-    case data do
-      nil ->
-        nil
+    now =
+      DateTime.utc_now()
+      |> DateTime.to_iso8601()
 
-      _ ->
-        now =
-          DateTime.utc_now()
-          |> DateTime.to_iso8601()
+    {:ok, start_current_song, _} =
+      Map.get(data, "date", now)
+      |> DateTime.from_iso8601()
 
-        {:ok, start_current_song, _} =
-          Map.get(data, "date", now)
-          |> DateTime.from_iso8601()
+    start_current_song_unix = DateTime.to_unix(start_current_song)
 
-        start_current_song_unix = DateTime.to_unix(start_current_song)
-
-        start_current_song_unix
-        |> (&((&1 + 2 + Map.get(data, "duration", default_refresh) / 1000 - &1) * 1000)).()
-        |> trunc()
-        |> abs()
-    end
+    start_current_song_unix
+    |> (&((&1 + 2 + Map.get(data, "duration", default_refresh) / 1000 - &1) * 1000)).()
+    |> trunc()
+    |> abs()
   end
 
   @impl true

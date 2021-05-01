@@ -10,42 +10,39 @@ defmodule ProgRadioApi.SongProvider.Mradio do
   def has_custom_refresh(), do: true
 
   @impl true
+  def get_refresh(_name, nil, _default_refresh), do: @radio_lag * 1000
+
+  @impl true
   def get_refresh(_name, data, default_refresh) do
-    case data do
-      nil ->
+    try do
+      now_unix =
+        DateTime.now!("Europe/Paris")
+        |> DateTime.to_unix()
+
+      time_start =
+        data
+        |> Map.get("#content", %{})
+        |> Map.get("date_prog")
+        |> NaiveDateTime.from_iso8601!()
+        |> DateTime.from_naive!("Europe/Paris")
+        |> DateTime.to_unix()
+
+      {duration, _} =
+        data
+        |> Map.get("#content", %{})
+        |> Map.get("duration")
+        |> Time.from_iso8601!()
+        |> Time.to_seconds_after_midnight()
+
+      next = time_start + duration + @radio_lag - now_unix
+
+      if time_start + next < now_unix do
         @radio_lag * 1000
-
-      _ ->
-        try do
-          now_unix =
-            DateTime.now!("Europe/Paris")
-            |> DateTime.to_unix()
-
-          time_start =
-            data
-            |> Map.get("#content", %{})
-            |> Map.get("date_prog")
-            |> NaiveDateTime.from_iso8601!()
-            |> DateTime.from_naive!("Europe/Paris")
-            |> DateTime.to_unix()
-
-          {duration, _} =
-            data
-            |> Map.get("#content", %{})
-            |> Map.get("duration")
-            |> Time.from_iso8601!()
-            |> Time.to_seconds_after_midnight()
-
-          next = time_start + duration + @radio_lag - now_unix
-
-          if time_start + next < now_unix do
-            @radio_lag * 1000
-          else
-            next * 1000
-          end
-        rescue
-          _ -> default_refresh
-        end
+      else
+        next * 1000
+      end
+    rescue
+      _ -> default_refresh
     end
   end
 
@@ -97,7 +94,10 @@ defmodule ProgRadioApi.SongProvider.Mradio do
         %{}
 
       _ ->
-        %{artist: SongProvider.recase(data["#content"]["chanteur"]), title: SongProvider.recase(data["#content"]["chanson"])}
+        %{
+          artist: SongProvider.recase(data["#content"]["chanteur"]),
+          title: SongProvider.recase(data["#content"]["chanson"])
+        }
     end
   end
 end
