@@ -16,8 +16,8 @@ const format = dateObj => {
       return prev;
     }
 
-    const startDateTime = moment(curr.dateObj);
-    const endDateTime = moment(curr.dateObj);
+    const startDateTime = moment(dateObj);
+    const endDateTime = moment(dateObj);
 
     startDateTime.hour(match[1]);
     startDateTime.minute(match[2]);

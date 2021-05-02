@@ -9,7 +9,7 @@ const format = dateObj => {
   const cleanedData = scrapedData.reduce(function (prev, curr) {
 
     let match = null;
-    const startDateTime = moment(curr.dateObj);
+    const startDateTime = moment(dateObj);
     let endDateTime = null;
 
     if (typeof curr.datetime_raw !== 'undefined' && typeof curr.datetime_raw !== 'object') {  /* object to be worked out later */
@@ -22,7 +22,7 @@ const format = dateObj => {
     } else {
       startDateTime.hour(match[1]);
 
-      endDateTime = moment(curr.dateObj);
+      endDateTime = moment(dateObj);
       endDateTime.hour(match[2]);
       endDateTime.minute(0);
       endDateTime.second(0);
