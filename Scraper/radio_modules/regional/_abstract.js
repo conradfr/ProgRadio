@@ -15,9 +15,9 @@ const format = (dateObj, name, img_prefix) => {
       return;
     }
 
-    const startDateTime = moment(curr.dateObj);
+    const startDateTime = moment(dateObj);
     startDateTime.tz(dateObj.tz());
-    const endDateTime = moment(curr.dateObj);
+    const endDateTime = moment(dateObj);
     endDateTime.tz(dateObj.tz());
 
     startDateTime.hour(match[2]);
