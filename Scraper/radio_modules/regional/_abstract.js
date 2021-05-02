@@ -33,7 +33,7 @@ const format = (dateObj, name, img_prefix) => {
     }
 
     // chronique ?
-    if (endDateTime.diff(startDateTime, 'minutes') < 2) {
+    if (endDateTime.diff(startDateTime, 'minutes') < 5) {
       return;
     }
 

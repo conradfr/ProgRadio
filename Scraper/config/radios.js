@@ -89,7 +89,8 @@ const radios = {
           'forum',
           'hitwest',
           'bfmbusiness',
-          'topmusic'
+          'topmusic',
+          'vibration'
       ],
     'international':
       [
