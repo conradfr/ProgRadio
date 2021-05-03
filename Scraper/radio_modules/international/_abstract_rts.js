@@ -57,13 +57,6 @@ const format = (dateObj, name) => {
       }
     }
 
-    // Deal with radios on another timezone and convert to Paris time
-    // @todo improves tz handling across the whole app
-
-    if (startDateTime.tz() !== 'Europe/Paris') {
-      startDateTime.tz('Europe/Paris');
-    }
-
     let description = '';
 
     if (curr.sections.length > 0) {
@@ -77,7 +70,7 @@ const format = (dateObj, name) => {
 
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
-      'img': `https:${curr.img}`,
+      'img': curr.img !== undefined ? `https:${curr.img}` : null,
       'title': curr.title,
       'description': description
     };
