@@ -127,7 +127,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
           end
 
         _ ->
-          Logger.warn("Error importing image, wrong response: #{url}")
+          Logger.warn("Error importing image, wrong response: #{url} / #{dest_path}")
           {:error, nil}
       end
     rescue

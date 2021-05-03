@@ -77,11 +77,13 @@ const toggleFavoriteRadio = (radioCodeName) => {
     });
 };
 
-const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, dateTimeEnd, id) => {
+const sendListeningSession = (codeName, radioStreamCodeName,
+  dateTimeStart, dateTimeEnd, id, ctrl) => {
   const data = {
     date_time_start: dateTimeStart.toISO(),
     date_time_end: dateTimeEnd.toISO(),
-    source: LISTENING_SESSION_SOURCE
+    source: LISTENING_SESSION_SOURCE,
+    ctrl: Math.random()
   };
 
   if (radioStreamCodeName !== undefined && radioStreamCodeName !== null) {
@@ -95,7 +97,12 @@ const sendListeningSession = (codeName, radioStreamCodeName, dateTimeStart, date
     return;
   }
 
-  axios.post(`https://${apiUrl}/listening_session`, data);
+  /* eslint-disable no-underscore-dangle */
+  axios.post(`https://${apiUrl}/listening_session`, data)
+    .then((response) => {
+      document.getElementById('app').__vue__.$store.dispatch('setListeningSessionId',
+        { id: response.data.id, ctrl });
+    });
 };
 
 /* eslint-disable no-undef */

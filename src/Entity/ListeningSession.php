@@ -35,6 +35,13 @@ class ListeningSession
      */
     private $id;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="uuid", unique=true)
+     */
+    private $nextId;
+
     private ?string $type = null;
 
     /**
@@ -84,6 +91,22 @@ class ListeningSession
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNextId(): string
+    {
+        return $this->nextId;
+    }
+
+    /**
+     * @param string $nextId
+     */
+    public function setNextId(string $nextId): void
+    {
+        $this->nextId = $nextId;
     }
 
     public function getType(): ?string

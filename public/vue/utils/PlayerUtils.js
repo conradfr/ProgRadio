@@ -214,7 +214,7 @@ const sendListeningSession = (externalPlayer, playing, radio, radioStreamCodeNam
     setTimeout(
       () => {
         ScheduleApi.sendListeningSession(radio.code_name, radioStreamCodeName,
-          session.start, dateTimeEnd, session.id);
+          session.start, dateTimeEnd, session.id, session.ctrl);
       },
       1000
     );

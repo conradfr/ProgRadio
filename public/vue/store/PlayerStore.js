@@ -30,8 +30,10 @@ const initState = {
   muted: Vue.cookie.get(config.COOKIE_MUTED) === 'true' || false,
   session: {
     start: null,
-    id: null
+    id: null,
+    ctrl: null
   },
+  sessionInterval: null,
   focus: {
     icon: false,
     fader: false
@@ -104,9 +106,9 @@ const storeActions = {
           dispatch('sendList', radio);
         }, 2000);
       } else {
-        PlayerUtils.showNotification(radio, streamCodeName);
         Vue.nextTick(() => {
           commit('play', { radio, streamCodeName });
+          dispatch('startListeningSession');
         });
       }
 
@@ -134,9 +136,9 @@ const storeActions = {
       return;
     }
 
-    PlayerUtils.showNotification(stream);
     Vue.nextTick(() => {
       commit('play', { radio: stream });
+      dispatch('startListeningSession');
     });
   },
   stop: ({ state, commit }) => {
@@ -166,6 +168,7 @@ const storeActions = {
       }
 
       commit('resume');
+      dispatch('startListeningSession');
     }
   },
   playPrevious: ({ dispatch }) => {
@@ -177,8 +180,9 @@ const storeActions = {
       return;
     }
 
-    PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.radioStreamCodeName, state.session);
+    /* PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
+      state.radio, state.radioStreamCodeName, state.session); */
+    dispatch('stop');
 
     if (state.radio === undefined || state.radio === null) {
       return;
@@ -207,6 +211,17 @@ const storeActions = {
       if (nextRadio !== null) {
         dispatch('playStream', nextRadio);
       }
+    }
+  },
+  startListeningSession: ({ state }) => {
+    state.sessionInterval = setInterval(() => {
+      PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
+        state.radio, state.radioStreamCodeName, state.session);
+    }, config.LISTENING_SESSION_MIN_SECONDS * 1000);
+  },
+  setListeningSessionId: ({ state, commit }, { id, ctrl }) => {
+    if (state.playing && ctrl === state.session.ctrl) {
+      commit('setListeningSessionId', id);
     }
   },
   updateRadio: ({ commit }) => {
@@ -337,17 +352,29 @@ const storeMutations = {
     Vue.set(state, 'show', null);
     Vue.set(state, 'playing', true);
     Vue.set(state, 'song', null);
-    Vue.set(state, 'session', { start: DateTime.local().setZone(config.TIMEZONE), id: null });
+    Vue.set(state, 'session', {
+      start: DateTime.local().setZone(config.TIMEZONE),
+      id: null,
+      ctrl: Math.floor(Math.random() * 100000)
+    });
   },
   resume(state) {
     Vue.set(state, 'playing', true);
     Vue.set(state, 'song', null);
-    Vue.set(state, 'session', { start: DateTime.local().setZone(config.TIMEZONE), id: null });
+    Vue.set(state, 'session', {
+      start: DateTime.local().setZone(config.TIMEZONE),
+      id: null,
+      ctrl: Math.floor(Math.random() * 100000)
+    });
   },
   stop(state) {
     Vue.set(state, 'playing', false);
     Vue.set(state, 'song', null);
-    Vue.set(state, 'session', { start: null, id: null });
+    Vue.set(state, 'session', { start: null, id: null, ctrl: null });
+    if (state.sessionInterval !== null) {
+      clearInterval(state.sessionInterval);
+      Vue.set(state, 'sessionInterval', null);
+    }
   },
   updateRadio(state, params) {
     state.show = params;
@@ -379,6 +406,9 @@ const storeMutations = {
   },
   setFocus(state, params) {
     state.focus[params.element] = params.status;
+  },
+  setListeningSessionId(state, id) {
+    Vue.set(state.session, 'id', id);
   },
   setTimer(state, minutes) {
     // excludes mobile app

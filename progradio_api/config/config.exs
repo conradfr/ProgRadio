@@ -60,7 +60,7 @@ config :phoenix, :json_library, Jason
 config :cors_plug,
   origin: [origin],
   max_age: 86400,
-  methods: ["GET", "POST", "OPTIONS"]
+  methods: ["GET", "POST", "PUT", "OPTIONS"]
 
 # Configure redis
 config :progradio_api,
