@@ -3,6 +3,8 @@ defmodule ProgRadioApi.SongProvider.Couleur3 do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @url "https://il.srgssr.ch/integrationlayer/2.0/rts/songList/radio/byChannel/8ceb28d9b3f1dd876d1df1780f908578cbefc3d7?vector=portalplay&onlyCurrentSong=true&pageSize=40"
+
   @impl true
   def has_custom_refresh(), do: true
 
@@ -30,7 +32,7 @@ defmodule ProgRadioApi.SongProvider.Couleur3 do
   @impl true
   def get_data(_name, _last_data) do
     HTTPoison.get!(
-      "https://il.srgssr.ch/integrationlayer/2.0/rts/songList/radio/byChannel/8ceb28d9b3f1dd876d1df1780f908578cbefc3d7?vector=portalplay&onlyCurrentSong=true&pageSize=40",
+      @url,
       [],
       ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
     )
