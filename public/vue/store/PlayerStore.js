@@ -334,6 +334,7 @@ const storeMutations = {
   play(state, { radio, streamCodeName }) {
     Vue.set(state, 'radio', radio);
     Vue.set(state, 'radioStreamCodeName', streamCodeName || null);
+    Vue.set(state, 'show', null);
     Vue.set(state, 'playing', true);
     Vue.set(state, 'song', null);
     Vue.set(state, 'session', { start: DateTime.local().setZone(config.TIMEZONE), id: null });

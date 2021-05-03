@@ -58,6 +58,7 @@ import Timer from './Timer.vue';
 import VolumeFader from './VolumeFader.vue';
 import * as config from '../../config/config';
 import AndroidApi from '../../api/AndroidApi';
+import PlayerUtils from '../../utils/PlayerUtils';
 
 export default {
   components: {
@@ -130,6 +131,12 @@ export default {
       }
 
       return this.player.playing || this.player.timer > 0;
+    },
+    /* used to watch multiple properties at once (will not be necessary in Vue3) */
+    radioShowWatching() {
+      const radio = this.player.radio !== null ? this.player.radio.code_name : 'null';
+      const show = this.player.show !== null ? this.player.show.hash : 'null';
+      return `${this.player.playing}|${radio}|${show}`;
     }
   },
   /* eslint-disable func-names */
@@ -193,6 +200,32 @@ export default {
         window.audio.volume = (val * 0.1);
       }
     },
+    /* eslint-disable object-shorthand */
+    radioShowWatching: function (newVal, oldVal) {
+      if (this.player.externalPlayer === true || this.player.playing === false) { return; }
+
+      let display = false;
+      const [oldPlaying, oldRadio, oldShow] = oldVal.split('|');
+      /* eslint-disable no-unused-vars */
+      const [newPlaying, newRadio, newShow] = newVal.split('|');
+
+      if (newRadio === 'null') {
+        return;
+      }
+
+      if (oldRadio === newRadio && oldPlaying === 'false') {
+        display = true;
+      } else if (oldRadio !== newRadio) {
+        display = true;
+      } else if (oldRadio === newRadio && oldShow !== newShow && newShow !== 'null') {
+        display = true;
+      }
+
+      if (display === true) {
+        PlayerUtils.showNotification(this.player.radio,
+          this.player.radioStreamCodeName, this.player.show);
+      }
+    }
   },
   methods: {
     beforeWindowUnload() {
