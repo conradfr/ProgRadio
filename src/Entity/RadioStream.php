@@ -90,8 +90,14 @@ class RadioStream
      */
     private $listeningSessions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="radio_stream", fetch="EXTRA_LAZY")
+     */
+    private $streams;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
+        $this->streams = new ArrayCollection();
     }
 
     public function getId(): string
@@ -203,5 +209,15 @@ class RadioStream
     public function setListeningSessions(ArrayCollection $listeningSessions): void
     {
         $this->listeningSessions = $listeningSessions;
+    }
+
+    public function getStreams(): ArrayCollection
+    {
+        return $this->streams;
+    }
+
+    public function setStreams(ArrayCollection $streams): void
+    {
+        $this->streams = $streams;
     }
 }

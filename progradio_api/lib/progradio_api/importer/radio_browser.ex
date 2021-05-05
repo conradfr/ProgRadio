@@ -4,6 +4,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream
   alias ProgRadioApi.Importer.ImageImporter
+  alias ProgRadioApi.Importer.StreamsImporter.StreamMatcher
 
   @image_folder "stream"
 
@@ -14,6 +15,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     get_radios()
     |> delete_images_from_removed_stations()
     |> store()
+
+    StreamMatcher.match()
   end
 
   # Data

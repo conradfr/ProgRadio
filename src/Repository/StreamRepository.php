@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Stream;
+use App\Entity\RadioStream;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -35,8 +36,9 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type")
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel")
             ->from(Stream::class, 's')
+            ->leftJoin('s.radioStream', 'rs')
             ->setMaxResults($limit);
 
         if ($offset !== null) {
@@ -96,8 +98,9 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.tags, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type")
+        $qb->select("s.id as code_name, s.name, s.img, s.tags, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel")
             ->from(Stream::class, 's')
+            ->leftJoin('s.radioStream', 'rs')
             ->where('ILIKE(s.name, :text) = true')
             ->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)

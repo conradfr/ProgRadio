@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 import { PLAYER_TYPE_STREAM } from '../config/config';
 
@@ -32,7 +32,10 @@ export default {
       favorites: state => state.streams.favorites,
       playingRadio: state => state.player.radio,
       playing: state => state.player.playing
-    })
+    }),
+    ...mapGetters([
+      'currentSong'
+    ])
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -63,6 +66,9 @@ export default {
     playingRadio() {
       this.updateTitle();
     },
+    currentSong() {
+      this.updateTitle();
+    },
     // update the stream menu that is outside the Vue app for now
     favorites(val) {
       const menuItem = document.getElementById('streaming-menu-favorites');
@@ -79,6 +85,11 @@ export default {
       if (this.playing === true && this.playingRadio
           && this.playingRadio.type === PLAYER_TYPE_STREAM) {
         let preTitle = '♫ ';
+
+        if (this.currentSong) {
+          preTitle += `${this.currentSong} - `;
+        }
+
         preTitle += `${this.playingRadio.name} - `;
 
         document.title = `${preTitle}${this.$i18n.tc('message.streaming.title')}`;

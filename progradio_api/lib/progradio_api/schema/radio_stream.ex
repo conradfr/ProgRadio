@@ -2,6 +2,7 @@ defmodule ProgRadioApi.RadioStream do
   use Ecto.Schema
   import Ecto.Changeset
   alias ProgRadioApi.Radio
+  alias ProgRadioApi.Stream
   alias ProgRadioApi.ListeningSession
 
   schema "radio_stream" do
@@ -14,6 +15,7 @@ defmodule ProgRadioApi.RadioStream do
     field(:status, :boolean)
     field(:retries, :integer)
     belongs_to(:radio, Radio)
+    has_many(:stream, Stream)
     has_many(:listening_session, ListeningSession)
   end
 

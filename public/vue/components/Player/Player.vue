@@ -143,15 +143,20 @@ export default {
   /* eslint-disable no-undef */
   watch: {
     'player.playing': function (val) {
-      if (val === true && this.player.radio.type === config.PLAYER_TYPE_RADIO
-          && this.player.radio.streams[this.player.radioStreamCodeName].current_song === true) {
+      if ((val === true && this.player.radio.type === config.PLAYER_TYPE_RADIO
+          && this.player.radio.streams[this.player.radioStreamCodeName].current_song === true)
+          || (val === true && this.player.radio.type === config.PLAYER_TYPE_STREAM
+          && this.player.radio.current_song === true)) {
         this.socket = new Socket(`wss://${apiUrl}/socket`);
         this.socket.connect();
         this.socket.onError(() => {
           this.$store.dispatch('setSong', null);
         });
 
-        this.channel = this.socket.channel(`song:${this.player.radioStreamCodeName}`);
+        const channelName = this.player.radio.type === config.PLAYER_TYPE_RADIO
+          ? this.player.radioStreamCodeName : this.player.radio.current_song_channel;
+
+        this.channel = this.socket.channel(`song:${channelName}`);
 
         this.channel.on('playing', (song) => {
           this.$store.dispatch('setSong', song);

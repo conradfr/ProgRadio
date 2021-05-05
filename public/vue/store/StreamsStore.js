@@ -53,22 +53,33 @@ const storeGetters = {
     const countriesOptions = [];
     countriesOptions.push(
       {
-        label: i18n.tc('message.streaming.categories.favorites'),
-        code: config.STREAMING_CATEGORY_FAVORITES
-      },
-      {
         label: i18n.tc('message.streaming.categories.all_countries'),
         code: config.STREAMING_CATEGORY_ALL
       }
     );
     forEach(state.countries, (value, key) => {
-      countriesOptions.push(
-        {
-          label: value,
-          code: key
-        }
-      );
+      if (key === 'FR') {
+        countriesOptions.unshift(
+          {
+            label: value,
+            code: key
+          }
+        );
+      } else {
+        countriesOptions.push(
+          {
+            label: value,
+            code: key
+          }
+        );
+      }
     });
+    countriesOptions.unshift(
+      {
+        label: i18n.tc('message.streaming.categories.favorites'),
+        code: config.STREAMING_CATEGORY_FAVORITES
+      }
+    );
 
     return countriesOptions;
   }

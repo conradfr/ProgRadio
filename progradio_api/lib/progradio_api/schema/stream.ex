@@ -2,6 +2,7 @@ defmodule ProgRadioApi.Stream do
   use Ecto.Schema
   import Ecto.Changeset
   alias ProgRadioApi.ListeningSession
+  alias ProgRadioApi.RadioStream
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -14,6 +15,7 @@ defmodule ProgRadioApi.Stream do
     field(:language, :string)
     field(:votes, :integer, default: 0)
     field(:clicks_last_24h, :integer, default: 0)
+    belongs_to(:radio_stream, RadioStream)
     has_many(:listening_session, ListeningSession)
   end
 
@@ -31,5 +33,10 @@ defmodule ProgRadioApi.Stream do
       :clicks_last_24h
     ])
     |> validate_required([:id, :name, :stream_url])
+  end
+
+  def changeset_radio_stream_match(stream, params \\ %{}) do
+    stream
+    |> change(params)
   end
 end

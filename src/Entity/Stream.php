@@ -85,6 +85,12 @@ class Stream
      */
     private $listeningSessions;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=RadioStream::class, inversedBy="streams")
+     * @ORM\JoinColumn(name="radio_stream_id", referencedColumnName="id")
+     */
+    private $radioStream;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
     }
@@ -187,5 +193,15 @@ class Stream
     public function setListeningSessions(ArrayCollection $listeningSessions): void
     {
         $this->listeningSessions = $listeningSessions;
+    }
+
+    public function getRadioStream()
+    {
+        return $this->radioStream;
+    }
+
+    public function setRadioStream($radioStream): void
+    {
+        $this->radioStream = $radioStream;
     }
 }

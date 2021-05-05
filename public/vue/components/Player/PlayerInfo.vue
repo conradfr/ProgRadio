@@ -3,7 +3,7 @@
     <ul :style="infosUlStyle">
       <li>{{ radioName }}</li>
       <li v-if="show">{{ show.title }}</li>
-      <li v-if="currentSong" >{{ currentSong}}</li>
+      <li v-if="currentSong" >{{ currentSong }}</li>
     </ul>
   </div>
 </template>
