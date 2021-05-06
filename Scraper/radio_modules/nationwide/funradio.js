@@ -3,21 +3,84 @@ let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
+let referenceIndex = 0;
 
 const format = dateObj => {
-  const dayStr = dateObj.format('DD');
-
   // we use reduce instead of map to act as a map+filter in one pass
-  const cleanedData = scrapedData.reduce(function (prev, curr) {
-    const date = moment(parseInt(curr['datetime_raw']));
+  const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
+    let regexp = new RegExp(/^([0-9]{1,2})[h]([0-9]{2})\s-\s([0-9]{1,2})[h]([0-9]{2})/);
+    let match = curr.datetime_raw.match(regexp);
 
-    // filter other days
-    if (date.tz('Europe/Paris').format('DD') === dayStr) {
-      delete curr.datetime_raw;
-      curr.date_time_start = date.toISOString();
-
-      prev.push(curr);
+    // no time = exit
+    if (match === null) {
+      return prev;
     }
+
+    const startDateTime = moment(curr.dateObj);
+    const endDateTime = moment(curr.dateObj);
+
+    startDateTime.hour(match[1]);
+    startDateTime.minute(match[2]);
+    startDateTime.second(0);
+    endDateTime.hour(match[3]);
+    endDateTime.minute(match[4]);
+    endDateTime.second(0);
+
+    let prevMatch = null;
+    // keep only relevant time from previous day page
+    if (startDateTime.isBefore(dateObj, 'day')) {
+      if (index === 0) {
+        return prev;
+      }
+
+      prevMatch = array[0].datetime_raw.match(regexp);
+      array[0].dateObj.hour(prevMatch[1]);
+
+      if (array[0].dateObj.isBefore(startDateTime)) {
+        return prev;
+      }
+
+      // update day
+      startDateTime.add(1, 'days');
+      endDateTime.add(1, 'days');
+    }
+    // remove next day schedule from day page
+    else {
+      if (curr.dateObj !== array[index - 1].dateObj) {
+        referenceIndex = index;
+      } else {
+        prevMatch = array[referenceIndex].datetime_raw.match(regexp);
+        let prevDate = moment(array[referenceIndex].dateObj);
+        prevDate.hour(prevMatch[1]);
+
+        if (prevDate.isAfter(startDateTime)) {
+          return prev;
+        }
+      }
+
+      if (startDateTime.hour() > endDateTime.hour()) {
+        endDateTime.add(1, 'days');
+      }
+    }
+
+    newEntry = {
+      'date_time_start': startDateTime.toISOString(),
+      'date_time_end': endDateTime.toISOString(),
+      'title': curr.title.trim(),
+      'description': curr.description !== undefined ? curr.description.trim() : null,
+      'host': curr.host !== undefined ? curr.host.trim() : null
+    };
+
+    // temp has there is a ssl error on the server on img import for rtl
+    if (curr.img !== undefined && curr.img !== null) {
+      if (curr.img.startsWith('https')) {
+        newEntry.img = 'http' + curr.img.substr(5);
+      } else {
+        newEntry.img = curr.img;
+      }
+    }
+
+    prev.push(newEntry);
 
     return prev;
   }, []);
@@ -34,18 +97,21 @@ const fetch = dateObj => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find('.timeline-schedule > .post-schedule-timeline > .post-schedule.main')
+      .find('.container .card-container')
       .set({
-        'datetime_raw': 'time@datetime' /* utc */
+        'datetime_raw': 'header .schedule',
+        'title': 'div.title',
+        'img': 'div.cover@data-bg',
+        'host': 'div.subtitle'
       })
-      .select('.mdl-bvl')
-      .set({
-        'title': '.infos > h2.title',
-        'img': 'img@data-src',
-        'host': '.infos > p[1] > b',
-        'description': '.infos > .text.desc'
-      })
+      .do(
+        osmosis.follow('header > a@href')
+          .set({
+            'description': '.read-more-container'
+          })
+      )
       .data(function (listing) {
+        listing.dateObj = dateObj
         scrapedData.push(listing);
       })
       .done(function () {
