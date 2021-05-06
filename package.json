@@ -22,7 +22,7 @@
     "es6-promise": "^4.1.1",
     "express": "^4.17.1",
     "i18n-iso-countries": "^6.0.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "luxon": "^1.25.0",
     "remove": "^0.1.5",
     "request": "^2.88.2",
