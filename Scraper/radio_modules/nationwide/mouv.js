@@ -12,6 +12,7 @@ const format = dateObj => {
     if (typeof curr.json === 'undefined') {
       return prev;
     }
+
     const content = JSON.parse(curr.json.substr(21));
 
     if (content === "") {
@@ -21,11 +22,13 @@ const format = dateObj => {
     let newEntry = {
       'title': curr.title,
       'description': curr.description,
+      // 'img': curr.img
     };
 
-    // temp has there is a ssl error on the server on img import for rtl
+    // temp has there is a ssl error on the server on img import
     if (content.contentReducer.visual !== undefined && content.contentReducer.visual.url !== undefined) {
-      newEntry.img = 'http' + content.contentReducer.visual.url.substr(5);
+      // newEntry.img = 'http' + content.contentReducer.visual.url.substr(5);
+      newEntry.img = content.contentReducer.visual.url;
     }
 
     let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
@@ -35,7 +38,6 @@ const format = dateObj => {
     if (match === null) {
       return prev;
     }
-
 
     const startDateTime = moment(dateObj);
     startDateTime.hour(match[1]);
@@ -65,7 +67,7 @@ const fetch = dateObj => {
             .set({
               'datetime_raw': '.program-grid-step-timeline .time-plate',
               'title': '.program-grid-step-infos-upper-title',
-              'img': '.color-spreaded-image visible img@src'
+              'img': '.color-spreaded-image img@src'
             })
           .do(
             osmosis.follow('.program-grid-step-infos-visual a@href')
