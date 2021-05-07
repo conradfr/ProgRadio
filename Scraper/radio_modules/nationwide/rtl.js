@@ -27,11 +27,7 @@ const format = dateObj => {
 
       // temp has there is a ssl error on the server on img import for rtl
       if (element.img !== undefined && element.img !== null) {
-        if (element.img.startsWith('https')) {
-          newEntry.img = 'http' + element.img.substr(5);
-        } else {
-          newEntry.img = element.img;
-        }
+        newEntry.img = element.img.replace('https', 'http');
       }
 
       let description = '';
