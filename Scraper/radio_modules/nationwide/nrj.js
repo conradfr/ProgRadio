@@ -69,7 +69,7 @@ const format = dateObj => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,
-      'img': img,
+      'img': `${process.env.PROXY_URL}?key=${process.env.PROXY_KEY}&url=${img}`,
       'description': curr.description
     };
 
@@ -77,6 +77,7 @@ const format = dateObj => {
     return prev;
   }, []);
 
+  console.log(cleanedData);
   return Promise.resolve(cleanedData);
 };
 
@@ -86,9 +87,19 @@ const fetch = dateObj => {
   let url = 'https://www.nrj.fr/grille-emissions';
   logger.log('info', `fetching ${url}`);
 
+  const proxy = process.env.PROXY_URL;
+  const options = {
+    headers: {
+      'Proxy-Target-URL': url,
+      'Proxy-Auth': process.env.PROXY_KEY
+    }
+  };
+
   return new Promise(function (resolve, reject) {
     return osmosis
-      .get(url)
+      .get(proxy)
+      .config(options)
+      // .get(url)
       .find(`#${day}`)
       .select('.timelineShedule')
       .set({
