@@ -29,18 +29,11 @@ class ListeningSession
     /**
      * @var string
      *
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="uuid", unique=true)
-     */
-    private $nextId;
 
     private ?string $type = null;
 
@@ -88,25 +81,12 @@ class ListeningSession
      */
     protected $ipAddress;
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
     /**
      * @return string
      */
-    public function getNextId(): string
+    public function getId(): string
     {
-        return $this->nextId;
-    }
-
-    /**
-     * @param string $nextId
-     */
-    public function setNextId(string $nextId): void
-    {
-        $this->nextId = $nextId;
+        return $this->id;
     }
 
     public function getType(): ?string

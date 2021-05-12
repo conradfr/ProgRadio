@@ -269,6 +269,9 @@ class DefaultController extends AbstractBaseController
          * LEGACY
          * This route is kept for now for the non-updated mobile app
          *
+         * 12/05/2021 Not seeing calls from the old app for some days now,
+         * This code will be probably removed next month then.
+         *
          *-----
          *
          * Code is not great but it's just temporary (famous last word)

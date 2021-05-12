@@ -6,6 +6,8 @@ defmodule ProgRadioApi.ListeningSession do
 
   @time_length_minimum_seconds 30
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+
   schema "listening_session" do
 #    field(:next_id, :binary_id)
     field(:date_time_start, :utc_datetime)
