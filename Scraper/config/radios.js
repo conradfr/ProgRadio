@@ -104,7 +104,8 @@ const radios = {
         'musiq3',
         'rfi_monde',
         'rfi_afrique',
-        'lessentielradio'
+        'lessentielradio',
+        'tipik'
       ],
   'domtom':
     [

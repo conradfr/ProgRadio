@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "command-line-args": "^4.0.7",
     "js-yaml": "^3.9.1",
+    "lodash.uniqby": "^4.7.0",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
     "music-metadata": "^7.5.3",

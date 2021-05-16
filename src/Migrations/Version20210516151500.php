@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210501202518 extends AbstractMigration implements ContainerAwareInterface
+final class Version20210516151500 extends AbstractMigration implements ContainerAwareInterface
 {
     private $container;
 
@@ -46,20 +46,20 @@ final class Version20210501202518 extends AbstractMigration implements Container
 
         $radios = [
             [
-                'codename'   => 'vibration',
-                'name'       => "Vibration",
+                'codename'   => 'tipik',
+                'name'       => 'Tipik',
                 'category'   => 2,
-                'collection' => 3,
+                'collection' => 4,
                 'share'      => 0.0
             ]
         ];
 
         $stream = [
             [
-                'code_name'  => 'vibration_main',
-                'name'       => 'Vibration',
-                'radio_id'   => 99,
-                'url'        => 'https://vibration.ice.infomaniak.ch/vibration-high.mp3',
+                'code_name'  => 'tipik_main',
+                'name'       => 'Tipik',
+                'radio_id'   => 100,
+                'url'        =>  'https://radios.rtbf.be/pure-64.aac',
                 'current_song' => 'true',
                 'main' => 'true'
             ]
@@ -68,13 +68,13 @@ final class Version20210501202518 extends AbstractMigration implements Container
         for ($i = 0; $i < count($radios); $i++) {
             $connection->exec(
                 'INSERT INTO radio (id, category_id, code_name, name, share, collection_id) VALUES ('
-                .($i + 99).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['name']."',".$radios[$i]['share'].",".$radios[$i]['collection'].");"
+                .($i + 100).','.$radios[$i]['category'].",'".$radios[$i]['codename']."','".$radios[$i]['name']."',".$radios[$i]['share'].",".$radios[$i]['collection'].");"
             );
         }
 
         for ($i = 0; $i < count($stream); $i++) {
             $connection->exec("INSERT INTO radio_stream (code_name, name, url, radio_id, current_song,main) VALUES ('"
-                . $stream[$i]['code_name']."','".$stream[$i]['name']."','".$stream[$i]['url']."',".($i + 99). ','. $stream[$i]['current_song']. ','. $stream[$i]['main'].')');
+                . $stream[$i]['code_name']."','".$stream[$i]['name']."','".$stream[$i]['url']."',".$stream[$i]['radio_id']. ','. $stream[$i]['current_song']. ','. $stream[$i]['main'].')');
         }
     }
 }
