@@ -50,6 +50,13 @@ class DateUtils
             ];
         }
 
+        if ($format === 'ratings') {
+            return [
+                new \DateTime('2 months 15 days ago'),
+                new \DateTime()
+            ];
+        }
+
         return null;
     }
 }

@@ -32,6 +32,7 @@
                 <li role="presentation"{{ _self.dateRangeActive(dateRange, 'thismonth') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'thismonth'})  }}">Ce mois-ci</a></li>
                 <li role="presentation"{{ _self.dateRangeActive(dateRange, 'lastweek') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'lastweek'})  }}">Semaine dernière</a></li>
                 <li role="presentation"{{ _self.dateRangeActive(dateRange, 'lastmonth') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'lastmonth'})  }}">Mois dernier</a></li>
+                <li role="presentation"{{ _self.dateRangeActive(dateRange, 'ratings') }}><a href="{{ path(app.request.get('_route'), {'dateRange': 'ratings'})  }}">Deux derniers mois et demi</a></li>
             </ul>
         </div>
 

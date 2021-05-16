@@ -10,11 +10,23 @@
       {% set hours_display = null %}
   {% else %}
       {# output hours with a colon: #}
-      {% set hours_display = hours|number_format ~ 'h' %}
+      {% if hours < 10 %}
+          {# add a leading zero if hours are less than 10 #}
+          {% set hours_display = '0' ~ hours|number_format ~ 'h' %}
+      {% else %}
+          {% set hours_display = hours|number_format ~ 'h' %}
+      {% endif %}
   {% endif %}
 
-  {# set minutes remain but no seconds and with a colon #}
-  {% set minutes = seconds_remaining / 60 % 60  ~ 'm' %}
+  {# set minutes remain but no seconds #}
+  {% set minutes_remaining = seconds_remaining / 60 % 60 %}
+  {% set minutes = '' %}
+  {% if minutes_remaining < 10 %}
+      {# add a leading zero if minutes are less than 10 #}
+      {% set minutes = '0' %}
+  {% endif %}
+
+  {% set minutes = minutes ~ minutes_remaining ~ 'm' %}
 
   {# set seconds but no minutes or hours #}
   {% set seconds = seconds_remaining % 60 %}

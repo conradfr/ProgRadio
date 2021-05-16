@@ -64,7 +64,7 @@ class AdminController extends AbstractController
         }
 
         $radioListening = $em->getRepository(ListeningSession::class)->getRadiosData($dates[0], $dates[1]);
-        $radioListeningDevices = $em->getRepository(ListeningSession::class)->getPerDeviceRadiosData($dates[0], $dates[1]);
+        $radioListeningDevices = $em->getRepository(ListeningSession::class)->getPerDeviceData($dates[0], $dates[1]);
         $collections = $em->getRepository(Collection::class)->getCollections();
         $collections = array_filter($collections, function($collection) {
             return $collection['code_name'] !== Radio::FAVORITES;
@@ -138,10 +138,19 @@ class AdminController extends AbstractController
         }
 
         $streamListening = $em->getRepository(ListeningSession::class)->getStreamsData($dates[0], $dates[1]);
+        $streamListeningDevices = $em->getRepository(ListeningSession::class)->getPerDeviceData($dates[0], $dates[1], 'stream');
+
+        $sessionsTotal =  array_reduce($streamListening, function($acc, $ls) {
+            $acc['total_seconds'] += $ls['total_seconds'];
+            $acc['total_sessions'] += $ls['total_sessions'];
+            return $acc;
+        }, ['total_seconds' => 0, 'total_sessions' => 0]);
 
         return $this->render(
             'default/admin/listening_streams.html.twig', [
             'streams_listening' => $streamListening,
+            'sessions_device' => $streamListeningDevices,
+            'sessions_total' => $sessionsTotal,
             'dateStart' => $dates[0],
             'dateEnd' => $dates[1],
             'dateRange' => $dateRange

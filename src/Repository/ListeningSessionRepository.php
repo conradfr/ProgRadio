@@ -45,7 +45,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getPerDeviceRadiosData($startDate, $endDate=null): array
+    public function getPerDeviceData($startDate, $endDate=null, $type='radio'): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -57,8 +57,13 @@ class ListeningSessionRepository extends ServiceEntityRepository
 
         $this->addDates($qb, $startDate, $endDate);
 
-        $qb->andWhere('ls.source IS NOT NULL')
-           ->andWhere('ls.stream IS NULL');
+        $qb->andWhere('ls.source IS NOT NULL');
+
+        if ($type === 'radio') {
+            $qb->andWhere('ls.stream IS NULL');
+        } else {
+            $qb->andWhere('ls.radioStream IS NULL');
+        }
 
         $result = $qb->getQuery()->getResult();
 
