@@ -91,7 +91,7 @@ class RadioStream
     private $listeningSessions;
 
     /**
-     * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="radio_stream", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
      */
     private $streams;
 
