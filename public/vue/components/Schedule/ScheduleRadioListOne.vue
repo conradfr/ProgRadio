@@ -87,11 +87,12 @@ export default {
       'radioPlayingCodeName',
     ]),
     subMenuStyleObject() {
+      const howMany = Object.keys(this.radio.streams).length > 0
+        ? Object.keys(this.radio.streams).length - 1 : 0;
       return {
-        width: `${RADIO_MENU_WIDTH * (2 + (Object.keys(this.radio.streams).length - 1))}px`,
+        width: `${RADIO_MENU_WIDTH * (2 + howMany)}px`,
         left: this.hover ? `${RADIO_MENU_WIDTH}px`
-          : `${this.hover ? '' : '-'}${RADIO_MENU_WIDTH
-            * Object.keys(this.radio.streams).length}px`
+          : `${this.hover ? '' : '-'}${RADIO_MENU_WIDTH * (2 + howMany)}px`
       };
     },
     secondaryStreams() {
