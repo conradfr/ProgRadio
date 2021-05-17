@@ -113,6 +113,9 @@ const radios = {
       'guadeloupe_la1ere',
       'reunion_la1ere',
       'nrj_antilles',
+      'trace_reunion',
+      'trace_martinique',
+      'trace_guyane'
     ]
 };
 
