@@ -17,7 +17,9 @@ defmodule ProgRadioApi.SongServer do
       |> (&("Elixir.ProgRadioApi.SongProvider." <> &1)).()
       |> String.to_existing_atom()
 
-    GenServer.start_link(__MODULE__, %{module: module_name, name: song_topic, song: nil, last_data: nil},
+    GenServer.start_link(
+      __MODULE__,
+      %{module: module_name, name: song_topic, song: nil, last_data: nil},
       name: name
     )
   end
@@ -100,7 +102,7 @@ defmodule ProgRadioApi.SongServer do
 
   # ----- Internal -----
 
-  @spec get_data_song(atom(), String.t(), map()|nil) :: tuple()
+  @spec get_data_song(atom(), String.t(), map() | nil) :: tuple()
   defp get_data_song(module, name, last_data) do
     data = apply(module, :get_data, [name, last_data])
     song = apply(module, :get_song, [name, data]) || %{}

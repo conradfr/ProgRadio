@@ -9,7 +9,6 @@ defmodule ProgRadioApi.ListeningSession do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "listening_session" do
-#    field(:next_id, :binary_id)
     field(:date_time_start, :utc_datetime)
     field(:date_time_end, :utc_datetime)
     field(:source, :string)

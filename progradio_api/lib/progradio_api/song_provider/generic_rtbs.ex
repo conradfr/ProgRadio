@@ -8,6 +8,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
 
   def get_refresh(_name, data, default_refresh) do
     now_unix = SongProvider.now_unix()
+
     end_unix =
       data
       |> Map.get("stopTime", "0")
@@ -28,7 +29,9 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
     try do
       data =
         HTTPoison.get!(
-          "https://np.maradio.be/qp/v3/events?rpId=#{id}&nameSize=100000&serviceNameSize=100000&artistNameSize=100000&descriptionSize=100000&_=#{now_unix}",
+          "https://np.maradio.be/qp/v3/events?rpId=#{id}&nameSize=100000&serviceNameSize=100000&artistNameSize=100000&descriptionSize=100000&_=#{
+            now_unix
+          }",
           [],
           ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
         )
@@ -44,9 +47,9 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
 
       unless Map.get(data, "song", false) == false or now_unix > end_time do
         data
-        else
-          nil
-        end
+      else
+        nil
+      end
     rescue
       _ -> nil
     end
@@ -59,7 +62,10 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
         %{}
 
       _ ->
-        %{artist: SongProvider.recase(data["artistName"]), title: SongProvider.recase(data["name"])}
+        %{
+          artist: SongProvider.recase(data["artistName"]),
+          title: SongProvider.recase(data["name"])
+        }
     end
   end
 end

@@ -35,8 +35,8 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
       # But the url sends the current timestamp, so we store it the earliest one we get for a song
       # and discard it if the same artist is returned for too long (meaning it's probably not playing anymore)
 
-      if is_map(last_data) and Map.get(data, "artist") == Map.get(last_data, "artist")
-         and last_time + @minutes_max < now_unix do
+      if is_map(last_data) and Map.get(data, "artist") == Map.get(last_data, "artist") and
+           last_time + @minutes_max < now_unix do
         nil
       else
         Map.replace(data, "time", last_time)

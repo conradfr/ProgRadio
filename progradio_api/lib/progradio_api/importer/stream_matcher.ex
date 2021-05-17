@@ -6,7 +6,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.StreamMatcher do
   alias ProgRadioApi.Stream
   alias ProgRadioApi.RadioStream
 
-  @countries ["FR","BE","CH"]
+  @countries ["FR", "BE", "CH"]
 
   def match() do
     get_streams_without_match()
@@ -17,9 +17,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.StreamMatcher do
   def get_streams_without_match() do
     query =
       from s in Stream,
-      left_join: rs in assoc(s, :radio_stream),
-      left_join: r in assoc(rs, :radio),
-      where: s.country_code in ^@countries and (is_nil(rs.id))
+        left_join: rs in assoc(s, :radio_stream),
+        left_join: r in assoc(rs, :radio),
+        where: s.country_code in ^@countries and is_nil(rs.id)
 
     Repo.all(query)
     |> Repo.preload(:radio_stream)
@@ -31,13 +31,22 @@ defmodule ProgRadioApi.Importer.StreamsImporter.StreamMatcher do
       # that will not use an index but as the dataset is small and this query execute rarely is should be fine
       query =
         from rs in RadioStream,
-        join: r in assoc(rs, :radio),
-        where: fragment("LOWER(?) = ? AND ? = ?", rs.name, ^String.downcase(s.name), r.country_code, ^s.country_code)
+          join: r in assoc(rs, :radio),
+          where:
+            fragment(
+              "LOWER(?) = ? AND ? = ?",
+              rs.name,
+              ^String.downcase(s.name),
+              r.country_code,
+              ^s.country_code
+            )
 
       radio_stream = Repo.one(query)
 
       case radio_stream do
-        nil -> acc
+        nil ->
+          acc
+
         _ ->
           changeset =
             s

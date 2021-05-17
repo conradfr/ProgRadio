@@ -9,6 +9,9 @@ defmodule ProgRadioApi.Radios do
   alias ProgRadioApi.Utils
   alias ProgRadioApi.{Radio, RadioStream, Category, Collection}
 
+  # stream retries before considering it disabled
+  @retries_max 12
+
   # one week
   @cache_ttl_default 604_800_000
 
@@ -26,7 +29,7 @@ defmodule ProgRadioApi.Radios do
               join: c in Category,
               on: r.category_id == c.id,
               left_join: rs in RadioStream,
-              on: rs.radio_id == r.id,
+              on: rs.radio_id == r.id and rs.enabled == true,
               where: r.active == true,
               select: %{
                 id: r.id,
@@ -40,7 +43,9 @@ defmodule ProgRadioApi.Radios do
                 stream_name: rs.name,
                 stream_url: rs.url,
                 stream_main: rs.main,
-                stream_current_song: rs.current_song
+                stream_current_song: rs.current_song,
+                stream_status: rs.status,
+                stream_retries: rs.retries
               }
 
           result =
@@ -66,20 +71,23 @@ defmodule ProgRadioApi.Radios do
                 end
 
               radio =
-                case Map.has_key?(r, :stream_code_name) do
-                  true ->
+                case r do
+                  e when is_nil(e.stream_code_name) ->
+                    radio
+
+                  e when e.stream_status == false and e.stream_retries > @retries_max ->
+                    radio
+
+                  e ->
                     stream = %{
-                      code_name: r.stream_code_name,
-                      name: r.stream_name,
-                      url: r.stream_url,
-                      main: r.stream_main,
-                      current_song: r.stream_current_song
+                      code_name: e.stream_code_name,
+                      name: e.stream_name,
+                      url: e.stream_url,
+                      main: e.stream_main,
+                      current_song: e.stream_current_song
                     }
 
                     put_in(radio, [:streams, stream.code_name], stream)
-
-                  false ->
-                    radio
                 end
 
               Map.put(acc, radio.code_name, radio)
