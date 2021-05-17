@@ -16,12 +16,16 @@
         <img src="/img/list.svg" class="filter-page"/>
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
       </a>
+    </div>
+    <div class="radio-submenu radio-submenu-streams"
+         :style="subMenuStyleObjectStreams"
+         :class="{ 'radio-submenu': hover }">
       <div v-for="entry in secondaryStreams" :key="entry.code_name"
-         v-on:click="playStop(entry.code_name, true)" :title="entry.name"
-         class="radio-submenu-entry radio-submenu-entry-secondary">
+           v-on:click="playStop(entry.code_name, true)" :title="entry.name"
+           class="radio-submenu-entry radio-submenu-entry-secondary">
         <div class="radio-submenu-entry-secondary-logo" :style="styleObject">
           <div class="radio-logo-play"
-            :class="{
+               :class="{
         'radio-logo-play-active': (entry.code_name === playingStreamCodeName),
         'radio-logo-play-paused': (playing === false && entry.code_name === playingStreamCodeName),
         'radio-logo-play-hide': (radio.streaming_enabled === false)
@@ -87,11 +91,18 @@ export default {
       'radioPlayingCodeName',
     ]),
     subMenuStyleObject() {
+      return {
+        width: `${RADIO_MENU_WIDTH * 2}px`,
+        left: this.hover ? `${RADIO_MENU_WIDTH}px`
+          : `${this.hover ? '' : '-'}${RADIO_MENU_WIDTH * 2}px`
+      };
+    },
+    subMenuStyleObjectStreams() {
       const howMany = Object.keys(this.radio.streams).length > 0
         ? Object.keys(this.radio.streams).length - 1 : 0;
       return {
-        width: `${RADIO_MENU_WIDTH * (2 + howMany)}px`,
-        left: this.hover ? `${RADIO_MENU_WIDTH}px`
+        width: `${RADIO_MENU_WIDTH * howMany}px`,
+        left: this.hover ? `${3 * RADIO_MENU_WIDTH}px`
           : `${this.hover ? '' : '-'}${RADIO_MENU_WIDTH * (2 + howMany)}px`
       };
     },

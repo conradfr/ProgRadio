@@ -309,7 +309,7 @@ class Push {
    */
   matchReceive({status, response, ref}){
     this.recHooks.filter( h => h.status === status )
-      .forEach( h => h.callback(response) )
+                 .forEach( h => h.callback(response) )
   }
 
   /**
@@ -526,6 +526,7 @@ export class Channel {
    * @returns {Push}
    */
   push(event, payload, timeout = this.timeout){
+    payload = payload || {}
     if(!this.joinedOnce){
       throw new Error(`tried to push '${event}' to '${this.topic}' before joining. Use channel.join() before pushing events`)
     }
@@ -567,7 +568,7 @@ export class Channel {
     }
     let leavePush = new Push(this, CHANNEL_EVENTS.leave, closure({}), timeout)
     leavePush.receive("ok", () => onClose() )
-      .receive("timeout", () => onClose() )
+             .receive("timeout", () => onClose() )
     leavePush.send()
     if(!this.canPush()){ leavePush.trigger("ok", {}) }
 
@@ -845,7 +846,7 @@ export let Serializer = {
  * @param {vsn} [opts.vsn] - The serializer's protocol version to send on connect.
  *
  * Defaults to DEFAULT_VSN.
- */
+*/
 export class Socket {
   constructor(endPoint, opts = {}){
     this.stateChangeCallbacks = {open: [], close: [], error: [], message: []}
@@ -867,7 +868,7 @@ export class Socket {
       this.decode = this.defaultDecoder
     }
     if(phxWindow && phxWindow.addEventListener){
-      phxWindow.addEventListener("unload", e => {
+      phxWindow.addEventListener("beforeunload", e => {
         if(this.conn){
           this.unloaded = true
           this.abnormalClose("unloaded")

@@ -120,6 +120,13 @@
   }
 
   .radio-submenu {
+    /* on mobile, hide substreams (too large, cause overflow) */
+    @media (max-width: @screen-sm-max) {
+      &.radio-submenu-streams {
+        display: none;
+      }
+    }
+
     //display: none;
     z-index: 0;
     position: absolute;
@@ -136,6 +143,10 @@
 
     border: 1px solid black;
     border-left: none;
+
+    &:not(.radio-submenu-streams) {
+      border-right: none;
+    }
 
     cursor: pointer;
 
