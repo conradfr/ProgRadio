@@ -4,6 +4,14 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @stream_name %{
+    "ouifm_main" => "tele",
+    "ouifm_bringthenoise" => "bringthenoise",
+    "ouifm_classicrock" => "classicrock",
+    "ouifm_acoustic" => "acoustic",
+    "ouifm_rockfrancais" => "rockfrancais"
+  }
+
   # 15mn
   @max_length_seconds 900
 
@@ -36,7 +44,11 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
   end
 
   @impl true
-  def get_data(_name, _last_data) do
+  def get_data(name, _last_data) do
+    name =
+      SongProvider.get_stream_code_name_from_channel(name)
+      |> (&Map.get(@stream_name, &1)).()
+
     try do
       entry =
         HTTPoison.get!(
@@ -46,7 +58,7 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
         )
         |> Map.get(:body)
         |> Jason.decode!()
-        |> Map.get("tele", %{})
+        |> Map.get(name, %{})
         |> List.first()
 
       # we filter if data is too old

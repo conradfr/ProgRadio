@@ -73,7 +73,7 @@ defmodule ProgRadioApi.SongProvider.Radionova do
         %{}
 
       _ ->
-        %{artist: data["artist"], title: data["title"]}
+        %{artist: SongProvider.recase(data["artist"]), title: SongProvider.recase(data["title"])}
     end
   end
 end
