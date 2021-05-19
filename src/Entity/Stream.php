@@ -3,9 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StreamRepository")
@@ -81,11 +80,15 @@ class Stream
     private $clicksLast24h;
 
     /**
+     * @var ListeningSession[]
+     *
      * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="stream", fetch="EXTRA_LAZY")
      */
     private $listeningSessions;
 
     /**
+     * @var RadioStream
+     *
      * @ORM\ManyToOne(targetEntity=RadioStream::class, inversedBy="streams")
      * @ORM\JoinColumn(name="radio_stream_id", referencedColumnName="id")
      */
@@ -185,14 +188,23 @@ class Stream
         $this->clicksLast24h = $clicksLast24h;
     }
 
-    public function getListeningSessions(): ArrayCollection
+    public function getListeningSessions(): Collection
     {
         return $this->listeningSessions;
     }
 
-    public function setListeningSessions(ArrayCollection $listeningSessions): void
+    public function setListeningSessions(Collection $listeningSessions): void
     {
         $this->listeningSessions = $listeningSessions;
+    }
+
+    public function hasMainRadioStream()
+    {
+        if ($this->radioStream !== null && $this->radioStream->isMain() === true) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getRadioStream()

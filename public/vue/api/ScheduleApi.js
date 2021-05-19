@@ -69,7 +69,7 @@ const getRadiosData = () => {
 };
 
 const toggleFavoriteRadio = (radioCodeName) => {
-  axios.get(`/radios/favorite/${radioCodeName}`)
+  return axios.get(`/radios/favorite/${radioCodeName}`)
     .catch((error) => {
       if (error.response.status === 403) {
         window.location.href = '/fr/login';

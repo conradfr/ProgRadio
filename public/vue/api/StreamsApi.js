@@ -7,7 +7,8 @@ import { STREAMING_CATEGORY_ALL } from '../config/config';
 
 const getRadios = (countryOrUuid, sort, offset) => {
   const queryParamsList = [];
-  if (countryOrUuid !== null && countryOrUuid !== STREAMING_CATEGORY_ALL) {
+  if (countryOrUuid !== undefined && countryOrUuid !== null
+    && countryOrUuid !== STREAMING_CATEGORY_ALL) {
     if (countryOrUuid.indexOf('-') !== -1) {
       queryParamsList.push(`radio=${countryOrUuid}`);
     } else {
@@ -15,11 +16,11 @@ const getRadios = (countryOrUuid, sort, offset) => {
     }
   }
 
-  if (sort !== null) {
+  if (sort !== null && sort !== undefined) {
     queryParamsList.push(`sort=${sort}`);
   }
 
-  if (offset !== null) {
+  if (offset !== null && offset !== undefined) {
     queryParamsList.push(`offset=${offset}`);
   }
 
@@ -81,6 +82,13 @@ const getCountries = () => {
     });
 };
 
+const getBestFromRadio = (radioCodeName) => {
+  return axios.get(`/streams/bestradio/${radioCodeName}`)
+    .then((response) => {
+      return response.data;
+    });
+};
+
 const incrementPlayCount = (stationUuid, radioBrowserUrl) => {
   if (appEnv !== 'dev' && radioBrowserUrl !== null) {
     axios.get(`${radioBrowserUrl}/json/url/${stationUuid}`);
@@ -88,7 +96,7 @@ const incrementPlayCount = (stationUuid, radioBrowserUrl) => {
 };
 
 const toggleFavoriteStream = (streamCodeName) => {
-  axios.get(`/streams/favorite/${streamCodeName}`)
+  return axios.get(`/streams/favorite/${streamCodeName}`)
     .catch((error) => {
       if (error.response.status === 403) {
         window.location.href = '/fr/login';
@@ -102,6 +110,7 @@ export default {
   getRadios,
   getRandom,
   getCountries,
+  getBestFromRadio,
   searchRadios,
   incrementPlayCount,
   toggleFavoriteStream

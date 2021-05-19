@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\RadioStreamRepository;
@@ -37,6 +38,8 @@ class RadioStream
     private $name;
 
     /**
+     * @var Radio
+     *
      * @ORM\ManyToOne(targetEntity=Radio::class, inversedBy="streams")
      * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
      */
@@ -86,11 +89,15 @@ class RadioStream
     private $retries = 0;
 
     /**
+     * @var ListeningSession[]
+     *
      * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
      */
     private $listeningSessions;
 
     /**
+     * @var RadioStream[]
+     *
      * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
      */
     private $streams;
@@ -201,22 +208,22 @@ class RadioStream
         $this->retries = $retries;
     }
 
-    public function getListeningSessions(): ArrayCollection
+    public function getListeningSessions(): Collection
     {
         return $this->listeningSessions;
     }
 
-    public function setListeningSessions(ArrayCollection $listeningSessions): void
+    public function setListeningSessions(Collection $listeningSessions): void
     {
         $this->listeningSessions = $listeningSessions;
     }
 
-    public function getStreams(): ArrayCollection
+    public function getStreams(): Collection
     {
         return $this->streams;
     }
 
-    public function setStreams(ArrayCollection $streams): void
+    public function setStreams(Collection $streams): void
     {
         $this->streams = $streams;
     }

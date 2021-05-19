@@ -51,47 +51,103 @@ const storeActions = {
   syncRadioFavorites: ({ dispatch, state }) => {
     dispatch('setFavoritesCollection', state.favoritesRadio);
   },
-  toggleRadioFavorite: ({ dispatch, state, commit }, radioCodeName) => {
+  toggleRadioFavorite: ({ dispatch, state, commit }, params) => {
+    let radioCodeName = params;
+    let cascade = true;
+
+    if (typeof params === 'object') {
+      radioCodeName = params.radioCodeName;
+      cascade = params.cascade;
+    }
+
     const { favoritesRadio } = state;
     const radioIndex = favoritesRadio.indexOf(radioCodeName);
+    let add = false;
 
     // is favorite
     if (radioIndex !== -1) {
       favoritesRadio.splice(radioIndex, 1);
     } else {
       favoritesRadio.push(radioCodeName);
+      add = true;
     }
 
     setTimeout(() => {
       if (logged === true) {
-        ScheduleApi.toggleFavoriteRadio(radioCodeName);
+        ScheduleApi.toggleFavoriteRadio(radioCodeName)
+          .then(() => {
+            dispatch('getUserData');
+          });
         return;
       }
 
       const favoritesAsString = favoritesRadio.join('|');
       Vue.cookie.set(config.COOKIE_RADIO_FAVORITES, favoritesAsString, config.COOKIE_PARAMS);
+
+      // check if radio has a corresponding stream and add it to favorites (only non-logged)
+      if (cascade === true) {
+        StreamsApi.getBestFromRadio(radioCodeName)
+          .then((data) => {
+            if (data.stream === null
+              /* already in favorites */
+              || (add === true && state.favoritesStream.indexOf(data.stream.code_name) !== -1)) {
+              return;
+            }
+
+            dispatch('toggleStreamFavorite', { streamId: data.stream.code_name, cascade: false });
+          });
+      }
     }, 500);
 
     dispatch('setFavoritesCollection', favoritesRadio);
     commit('updateRadioFavorites', favoritesRadio);
     cache.setCache(CACHE_KEY_RADIO_FAVORITES, favoritesRadio);
   },
-  toggleStreamFavorite: ({ dispatch, commit, state }, streamId) => {
+  toggleStreamFavorite: ({ dispatch, commit, state }, params) => {
+    let streamId = params;
+    let cascade = true;
+
+    if (typeof params === 'object') {
+      streamId = params.streamId;
+      cascade = params.cascade;
+    }
+
     const { favoritesStream } = state;
     const favoriteIndex = favoritesStream.indexOf(streamId);
+    let add = false;
 
     if (favoriteIndex !== -1) {
       favoritesStream.splice(favoriteIndex, 1);
     } else {
+      add = true;
       favoritesStream.push(streamId);
     }
 
     setTimeout(() => {
       if (logged === true) {
-        StreamsApi.toggleFavoriteStream(streamId);
+        StreamsApi.toggleFavoriteStream(streamId)
+          .then(() => {
+            dispatch('getUserData');
+          });
         return;
       }
+
       Vue.cookie.set(config.COOKIE_STREAM_FAVORITES, favoritesStream.join('|'), config.COOKIE_PARAMS);
+
+      // check if stream has a radio attached and add it to favorites (only non-logged)
+      if (cascade === true) {
+        StreamsApi.getRadios(streamId)
+          .then((data) => {
+            if (data.streams.length === 0 || data.streams[0].radio_code_name === null
+              /* already in favorites */
+              || (add === true
+                && state.favoritesRadio.indexOf(data.streams[0].radio_code_name) !== -1)) {
+              return;
+            }
+
+            dispatch('toggleRadioFavorite', { radioCodeName: data.streams[0].radio_code_name, cascade: false });
+          });
+      }
     }, 500);
 
     dispatch('setStreamFavorites', favoritesStream);

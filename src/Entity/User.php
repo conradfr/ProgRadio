@@ -207,12 +207,16 @@ class User implements UserInterface
 
     public function addFavoriteRadio(Radio $favoriteRadio): void
     {
-        $this->favoriteRadios->add($favoriteRadio);
+        if ($this->favoriteRadios->contains($favoriteRadio) === false) {
+            $this->favoriteRadios->add($favoriteRadio);
+        }
     }
 
     public function removeFavoriteRadio(Radio $favoriteRadio): void
     {
-        $this->favoriteRadios->removeElement($favoriteRadio);
+        if ($this->favoriteRadios->contains($favoriteRadio) === true) {
+            $this->favoriteRadios->removeElement($favoriteRadio);
+        }
     }
 
     public function getFavoriteStreams(): Collection
@@ -227,12 +231,16 @@ class User implements UserInterface
 
     public function addFavoriteStream(Stream $favoriteStream): void
     {
-        $this->favoriteStreams->add($favoriteStream);
+        if ($this->favoriteStreams->contains($favoriteStream) === false) {
+            $this->favoriteStreams->add($favoriteStream);
+        }
     }
 
     public function removeFavoriteStream(Stream $favoriteStream): void
     {
-        $this->favoriteStreams->removeElement($favoriteStream);
+        if ($this->favoriteStreams->contains($favoriteStream) === true) {
+            $this->favoriteStreams->removeElement($favoriteStream);
+        }
     }
 
     public function getCreatedAt(): ?\Datetime

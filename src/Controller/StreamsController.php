@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Radio;
 use App\Entity\Stream;
 use App\Entity\User;
 use App\Service\RadioBrowser;
@@ -79,6 +80,27 @@ class StreamsController  extends AbstractBaseController
                 'streams' => $streams,
                 'total'   => $totalCount,
                 'timestamp' => microtime(true)
+            ]
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/bestradio/{codeName}",
+     *     name="streams_best_radio",
+     * )
+     */
+    public function bestRadio(Radio $radio, EntityManagerInterface $em): Response
+    {
+        $stream =  $em->getRepository(Stream::class)->getBestStreamForRadio($radio);
+        $streamToReturn = null;
+
+        if ($stream !== null) {
+            $streamToReturn = $em->getRepository(Stream::class)->getOneSpecificStream($stream->getId());
+        }
+
+        return $this->jsonResponse([
+                'stream' => $streamToReturn
             ]
         );
     }
@@ -182,10 +204,20 @@ class StreamsController  extends AbstractBaseController
         /** @var User $user */
         $user = $this->getUser();
 
+        // Note: we link this stream to a radio if it's attached to a main radioStream
+
         if ($user->getFavoriteStreams()->contains($stream)) {
             $user->removeFavoriteStream($stream);
+
+            if ($stream->hasMainRadioStream()) {
+                $user->removeFavoriteRadio($stream->getRadioStream()->getRadio());
+            }
         } else {
             $user->addFavoriteStream($stream);
+
+            if ($stream->hasMainRadioStream()) {
+                $user->addFavoriteRadio($stream->getRadioStream()->getRadio());
+            }
         }
 
         $em->persist($user);

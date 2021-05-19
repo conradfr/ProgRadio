@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Radio;
 use App\Entity\Stream;
 use App\Entity\RadioStream;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -36,9 +37,10 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel")
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel, r.codeName as radio_code_name")
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
+            ->leftJoin('rs.radio', 'r')
             ->setMaxResults($limit);
 
         if ($offset !== null) {
@@ -98,9 +100,10 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.tags, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel")
+        $qb->select("s.id as code_name, s.name, s.img, s.tags, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel, r.codeName as radio_code_name")
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
+            ->leftJoin('rs.radio', 'r')
             ->where('ILIKE(s.name, :text) = true')
             ->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
@@ -168,8 +171,10 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h')
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel, r.codeName as radio_code_name")
             ->from(Stream::class, 's')
+            ->leftJoin('s.radioStream', 'rs')
+            ->leftJoin('rs.radio', 'r')
             ->addOrderBy('s.name', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults(1);
@@ -209,8 +214,10 @@ class StreamRepository extends ServiceEntityRepository
     ): ?array {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h')
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel, r.codeName as radio_code_name")
             ->from(Stream::class, 's')
+            ->leftJoin('s.radioStream', 'rs')
+            ->leftJoin('rs.radio', 'r')
             ->where('s.id = :id')
             ->setMaxResults(1);
 
@@ -315,11 +322,34 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb->select('DISTINCT UPPER(s.countryCode) as countryCode')
             ->from(Stream::class, 's')
-            ->where("s.countryCode <> ''")
+            ->where('s.countryCode IS NOT NULL')
+            ->andWhere('s.countryCode <> \'\'')
             ->orderBy('countryCode', 'ASC');
 
         $qb->getQuery()->enableResultCache(self::CACHE_TTL);
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function getBestStreamForRadio(Radio $radio)
+    {
+        $radioStream = $radio->getMainStream();
+
+        if ($radioStream === null) {
+            return null;
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('s')
+            ->from(Stream::class, 's')
+            ->innerJoin('s.radioStream', 'rs')
+            ->where('rs.id = :id')
+            ->orderBy('s.clicksLast24h', 'DESC')
+            ->setFirstResult(0)
+            ->setMaxResults(1)
+            ->setParameter('id', $radioStream->getId());
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

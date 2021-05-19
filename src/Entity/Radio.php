@@ -76,6 +76,8 @@ class Radio
     private $listeningSessions;
 
     /**
+     * @var RadioStream[]
+     *
      * @ORM\OneToMany(targetEntity=RadioStream::class, mappedBy="radio", fetch="EXTRA_LAZY")
      */
     private $streams;
@@ -179,5 +181,26 @@ class Radio
     public function setListeningSessions(ArrayCollection $listeningSessions): void
     {
         $this->listeningSessions = $listeningSessions;
+    }
+
+    public function getStreams(): ArrayCollection
+    {
+        return $this->streams;
+    }
+
+    public function setStreams(ArrayCollection $streams): void
+    {
+        $this->streams = $streams;
+    }
+
+    public function getMainStream(): ?RadioStream
+    {
+        foreach ($this->streams as $stream) {
+            if ($stream->isMain() === true) {
+                return $stream;
+            }
+        }
+
+        return null;
     }
 }

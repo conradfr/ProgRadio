@@ -210,10 +210,26 @@ class DefaultController extends AbstractBaseController
         /** @var User $user */
         $user = $this->getUser();
 
-        if ( $user->getFavoriteRadios()->contains($radio)) {
+        // Note: we link this radio to a stream when applicable
+
+        if ($user->getFavoriteRadios()->contains($radio)) {
             $user->removeFavoriteRadio($radio);
+
+            $radioStream = $radio->getMainStream();
+
+            if ($radioStream !== null) {
+                foreach ($radioStream->getStreams() as $stream) {
+                    $user->removeFavoriteStream($stream);
+                }
+            }
         } else {
             $user->addFavoriteRadio($radio);
+
+            $stream =  $em->getRepository(Stream::class)->getBestStreamForRadio($radio);
+
+            if ($stream !== null) {
+                $user->addFavoriteStream($stream);
+            }
         }
 
         $em->persist($user);
