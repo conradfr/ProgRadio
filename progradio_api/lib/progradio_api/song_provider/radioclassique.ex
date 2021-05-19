@@ -1,7 +1,10 @@
 defmodule ProgRadioApi.SongProvider.Radioclassique do
   require Logger
+  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
+
+  @url "https://d3gf3bsqck8svl.cloudfront.net/direct-metadata/current.json"
 
   @impl true
   def has_custom_refresh(), do: false
@@ -11,11 +14,8 @@ defmodule ProgRadioApi.SongProvider.Radioclassique do
 
   @impl true
   def get_data(_name, _last_data) do
-    HTTPoison.get!(
-      "https://d3gf3bsqck8svl.cloudfront.net/direct-metadata/current.json",
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    @url
+    |> SongProvider.get()
     |> Map.get(:body)
     |> Jason.decode!()
   end

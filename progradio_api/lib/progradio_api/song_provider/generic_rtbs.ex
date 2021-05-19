@@ -28,13 +28,8 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
 
     try do
       data =
-        HTTPoison.get!(
-          "https://np.maradio.be/qp/v3/events?rpId=#{id}&nameSize=100000&serviceNameSize=100000&artistNameSize=100000&descriptionSize=100000&_=#{
-            now_unix
-          }",
-          [],
-          ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-        )
+        "https://np.maradio.be/qp/v3/events?rpId=#{id}&nameSize=100000&serviceNameSize=100000&artistNameSize=100000&descriptionSize=100000&_=#{now_unix}"
+        |> SongProvider.get()
         |> Map.get(:body)
         |> Jason.decode!()
         |> Map.get("results")

@@ -27,8 +27,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     # ?limit=20&offset=7500
     HTTPoison.get!(
       "https://#{host}/json/#{@api_all_radios}",
-      [{"User-Agent", "programmes-radio.com"}],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
+      [{"User-Agent", "programmes-radio.com"}]
     )
     |> Map.get(:body)
     |> Jason.decode!()

@@ -18,11 +18,8 @@ defmodule ProgRadioApi.SongProvider.Evasionfm do
   def get_data(_name, _last_data) do
     now_unix = SongProvider.now_unix()
 
-    HTTPoison.get!(
-      @url,
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    @url
+    |> SongProvider.get()
     |> Map.get(:body)
     |> XmlToMap.naive_map()
     |> Map.get("listeMorceaux", %{})

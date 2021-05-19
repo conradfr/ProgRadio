@@ -1,5 +1,6 @@
 defmodule ProgRadioApi.SongProvider.Espace2 do
   require Logger
+  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -13,11 +14,8 @@ defmodule ProgRadioApi.SongProvider.Espace2 do
 
   @impl true
   def get_data(_name, _last_data) do
-    HTTPoison.get!(
-      @url,
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    @url
+    |> SongProvider.get()
     |> Map.get(:body)
     |> Jason.decode!()
     |> Map.get("data", %{})

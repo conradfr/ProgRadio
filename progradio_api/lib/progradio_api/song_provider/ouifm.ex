@@ -4,6 +4,8 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @url "https://player.ouifm.fr/api/songs"
+
   @stream_name %{
     "ouifm_main" => "tele",
     "ouifm_bringthenoise" => "bringthenoise",
@@ -51,11 +53,8 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
 
     try do
       entry =
-        HTTPoison.get!(
-          "https://player.ouifm.fr/api/songs",
-          [],
-          ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-        )
+        @url
+        |> SongProvider.get()
         |> Map.get(:body)
         |> Jason.decode!()
         |> Map.get(name, %{})

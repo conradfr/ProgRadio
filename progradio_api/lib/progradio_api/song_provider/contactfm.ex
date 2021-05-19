@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.SongProvider.Contact do
+defmodule ProgRadioApi.SongProvider.Contactfm do
   require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes
 

@@ -4,6 +4,7 @@ defmodule ProgRadioApi.SongProvider.Mradio do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @url "https://mradio.fr/winradio/prog.xml"
   @radio_lag 10
 
   @impl true
@@ -48,11 +49,8 @@ defmodule ProgRadioApi.SongProvider.Mradio do
   def get_data(_name, _last_data) do
     now_unix = SongProvider.now_unix()
 
-    HTTPoison.get!(
-      "https://mradio.fr/winradio/prog.xml",
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    @url
+    |> SongProvider.get()
     |> Map.get(:body)
     |> XmlToMap.naive_map()
     |> Map.get("prog", %{})

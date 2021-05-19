@@ -91,7 +91,6 @@ defmodule ProgRadioApi.Importer.ImageImporter do
               [],
               hackney: [pool: :image_pool],
               follow_redirect: true,
-              ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]],
               recv_timeout: 5000
             )
           rescue

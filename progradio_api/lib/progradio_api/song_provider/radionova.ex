@@ -55,11 +55,8 @@ defmodule ProgRadioApi.SongProvider.Radionova do
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_name, &1)).()
 
-    HTTPoison.get!(
-      "https://www.nova.fr/wp-json/radios/" <> name,
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    "https://www.nova.fr/wp-json/radios/#{name}"
+    |> SongProvider.get()
     |> Map.get(:body)
     |> Jason.decode!()
     |> Map.get("currentTrack", %{})

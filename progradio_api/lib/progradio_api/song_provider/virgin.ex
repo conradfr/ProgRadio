@@ -49,13 +49,8 @@ defmodule ProgRadioApi.SongProvider.Virgin do
       |> DateTime.add(@range_minutes)
       |> Timex.format!("{YYYY}-{0M}-{0D} {h24}:{m}:{s}")
 
-    HTTPoison.get!(
-      "https://www.virginradio.fr/radio/api/get_all_events.json/argv/id_radio/#{id}/start/#{prev}/end/#{
-        next
-      }",
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    "https://www.virginradio.fr/radio/api/get_all_events.json/argv/id_radio/#{id}/start/#{prev}/end/#{next}"
+    |> SongProvider.get()
     |> Map.get(:body)
     |> Jason.decode!()
     |> Map.get("root_tab", %{})

@@ -14,11 +14,8 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
 
     try do
       data =
-        HTTPoison.get!(
-          url,
-          [],
-          ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-        )
+        url
+        |> SongProvider.get()
         |> Map.get(:body)
         |> Jason.decode!()
 

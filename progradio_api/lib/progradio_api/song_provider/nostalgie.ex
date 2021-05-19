@@ -43,11 +43,8 @@ defmodule ProgRadioApi.SongProvider.Nostalgie do
 
     try do
       item =
-        HTTPoison.get!(
-          @url,
-          [],
-          ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-        )
+        @url
+        |> SongProvider.get()
         |> Map.get(:body)
         |> Jason.decode!()
         |> Enum.find(fn e -> Map.get(e, "id", 0) == id end)

@@ -19,8 +19,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
           async: :once,
           timeout: @timeout,
           recv_timeout: @timeout,
-          hackney: [pool: :checker],
-          ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
+          hackney: [pool: :checker]
         )
       rescue
         e in HTTPoison.Error ->

@@ -4,6 +4,7 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @url "https://skyrock.fm/api/v3/player/onair/parisidf"
   @radio_lag 5
 
   @impl true
@@ -33,11 +34,8 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
   def get_data(_name, _last_data) do
     now_unix = SongProvider.now_unix()
 
-    HTTPoison.get!(
-      "https://skyrock.fm/api/v3/player/onair/parisidf",
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    @url
+    |> SongProvider.get()
     |> Map.get(:body)
     |> Jason.decode!()
     |> Map.get("schedule", [])

@@ -21,6 +21,13 @@ defmodule ProgRadioApi.SongProvider do
 
   # ----- Utils -----
 
+  def get(url) do
+    HTTPoison.get!(
+      url,
+      []
+    )
+  end
+
   def get_stream_code_name_from_channel(channel_name) do
     channel_name
     |> String.split(":")

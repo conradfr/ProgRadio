@@ -42,13 +42,11 @@ defmodule ProgRadioApi.SongProvider.Fip do
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
-    HTTPoison.get!(
-      "https://www.fip.fr/latest/api/graphql?operationName=NowList&variables={\"bannerPreset\":\"266x266\",\"stationIds\":[#{
-        id
-      }]}&extensions={\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"151ca055b816d28507dae07f9c036c02031ed54e18defc3d16feee2551e9a731\"}}",
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    url =
+      "https://www.fip.fr/latest/api/graphql?operationName=NowList&variables={\"bannerPreset\":\"266x266\",\"stationIds\":[#{id}]}&extensions={\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"151ca055b816d28507dae07f9c036c02031ed54e18defc3d16feee2551e9a731\"}}"
+
+    url
+    |> SongProvider.get()
     |> Map.get(:body)
     |> Jason.decode!()
     |> Map.get("data", %{})

@@ -26,11 +26,8 @@ defmodule ProgRadioApi.SongProvider.Rfm do
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
-    HTTPoison.get!(
-      @url <> id,
-      [],
-      ssl: [ciphers: :ssl.cipher_suites(), versions: [:"tlsv1.2", :"tlsv1.1", :tlsv1]]
-    )
+    (@url <> id)
+    |> SongProvider.get()
     |> Map.get(:body)
     |> Jason.decode!()
     |> Map.get("current", %{})
