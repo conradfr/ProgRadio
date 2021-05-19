@@ -26,8 +26,12 @@ const format = dateObj => {
       }
 
       // temp has there is a ssl error on the server on img import for rtl
+      // if (element.img !== undefined && element.img !== null) {
+      //   newEntry.img = element.img.replace('https', 'http');
+      // }
+
       if (element.img !== undefined && element.img !== null) {
-        newEntry.img = element.img.replace('https', 'http');
+        newEntry.img = `${process.env.PROXY_URL}rtl.jpg?key=${process.env.PROXY_KEY}&url=${element.img}`;
       }
 
       let description = '';

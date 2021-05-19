@@ -14,7 +14,7 @@ const format = (dateObj, name) => {
       'title': curr.title.trim(),
       'description': curr.description,
       'date_time_start': date.toISOString(),
-      'img': curr.img
+      'img': `${process.env.PROXY_URL}rfi.jpg?key=${process.env.PROXY_KEY}&url=${curr.img}`
     };
 
     if (curr.host_raw !== undefined) {

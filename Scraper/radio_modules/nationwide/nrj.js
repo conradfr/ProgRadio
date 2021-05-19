@@ -69,7 +69,7 @@ const format = dateObj => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,
-      'img': `${process.env.PROXY_URL}?key=${process.env.PROXY_KEY}&url=${img}`,
+      'img': `${process.env.PROXY_URL}nrj.jpg?key=${process.env.PROXY_KEY}&url=${img}`,
       'description': curr.description
     };
 
