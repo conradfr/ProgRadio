@@ -6,7 +6,7 @@
           <div class="col-md-12 col-xs-6">
             <div class="schedule-day-radio center-block">
               <img class="center-block" :alt="radio.name" style="width: 140px;"
-                   :src="'/img/radio/page/' + radio.code_name + '.png'">
+                   :src="picture" v-once>
             </div>
           </div>
           <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
@@ -34,12 +34,13 @@
 </template>
 
 <script>
-import findIndex from 'lodash/findIndex';
+import find from 'lodash/find';
 import { mapGetters, mapState } from 'vuex';
 import { DateTime } from 'luxon';
 
 import {
   TIMEZONE,
+  THUMBNAIL_PAGE_PATH,
   AUTOPLAY_INTERVAL_CHECK,
   AUTOPLAY_INTERVAL_MAX_RETRIES
 } from '../config/config';
@@ -98,6 +99,8 @@ export default {
       player: state => state.player,
       playing: state => state.player.playing,
       radios: state => state.schedule.radios,
+      collections: state => state.schedule.collections,
+      currentCollection: state => state.schedule.currentCollection,
       playingStreamCodeName: state => state.player.radioStreamCodeName
     }),
     ...mapGetters([
@@ -119,10 +122,19 @@ export default {
         return null;
       }
 
-      const index = findIndex(this.$store.state.schedule.collections,
-        c => c.code_name === this.radio.collection[0]);
+      // find if part of current collection to go back
+      if (this.collections[this.currentCollection].radios.indexOf(this.radio.code_name) !== -1) {
+        return this.collections[this.currentCollection];
+      }
 
-      return index === -1 ? null : this.$store.state.schedule.collections[index];
+      // find first collection to have this radio
+      const collection = find(this.collections,
+        c => c.radios.indexOf(this.radio.code_name) !== -1);
+
+      return collection === undefined ? null : collection;
+    },
+    picture() {
+      return `${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
     }
   },
   methods: {

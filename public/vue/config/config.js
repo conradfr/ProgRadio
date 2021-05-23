@@ -12,6 +12,7 @@ export const THUMBNAIL_PROGRAM_PATH = '/media/cache/program_thumb/media/program/
 export const THUMBNAIL_PAGE_PROGRAM_PATH = '/media/cache/page_thumb/media/program/';
 export const THUMBNAIL_NOTIFICATION_PROGRAM_PATH = '/media/cache/notification_thumb/media/program/';
 export const THUMBNAIL_STREAM_PATH = '/media/stream/';
+export const THUMBNAIL_PAGE_PATH = '/img/radio/page/';
 export const PROGRAM_LONG_ENOUGH = 45; /* minutes */
 
 export const DEFAULT_VOLUME = 8;
