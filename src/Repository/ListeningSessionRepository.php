@@ -74,11 +74,13 @@ class ListeningSessionRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, s.name, s.img,'
+        $qb->select('s.id, s.name, s.img, r.codeName as radio_code_name,'
             . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
             ->from(Stream::class, 's')
+            ->leftJoin('s.radioStream', 'rs')
+            ->innerJoin('rs.radio', 'r')
             ->leftJoin('s.listeningSessions', 'ls')
-            ->groupBy('s.id')
+            ->groupBy('s.id, r.codeName')
             ->addOrderBy('total_seconds', 'DESC');
 
         $this->addDates($qb, $startDate, $endDate);

@@ -23,7 +23,12 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
         )
       rescue
         e in HTTPoison.Error ->
-          Logger.warn("Error (#{radio_stream.code_name}): #{e.reason}")
+          case e.reason do
+            reason when is_binary(reason) -> Logger.warn("Error (#{radio_stream.code_name}): #{e.reason}")
+            reason when is_tuple(reason) ->
+              {_error, {_error2, error_message}} = reason
+              Logger.warn("Error (#{radio_stream.code_name}): #{to_string(error_message)}")
+          end
           update_status(radio_stream, false)
       end
 

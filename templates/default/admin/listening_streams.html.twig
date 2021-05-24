@@ -27,8 +27,10 @@
                             <div class="col-md-3">
                                 <a target="_blank" href="{{ path('app') }}#/streaming/{{ one.id }}">
                                 <img title="{{ one.name }}" alt="{{ one.name }}"
-                                {% if one.img is null %}
+                                {% if one.img is null and one.radio_code_name is null %}
                                    src="{{ asset('/img/stream-placeholder.png') }}"
+                                {% elseif one.radio_code_name is defined %}
+                                    src="{{ asset('img/radio/schedule/' ~ one.radio_code_name ~ '.png') }}"
                                 {% else %}
                                     src="{{ asset('media/stream/' ~ one.img) }}"
                                 {% endif %}>
