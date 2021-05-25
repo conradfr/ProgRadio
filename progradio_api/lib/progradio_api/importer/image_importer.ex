@@ -91,7 +91,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
               [],
               hackney: [pool: :image_pool],
               follow_redirect: true,
-              recv_timeout: 5000
+              recv_timeout: 7500
             )
           rescue
             _ ->
@@ -124,6 +124,14 @@ defmodule ProgRadioApi.Importer.ImageImporter do
               Logger.warn("Error importing image, writing failed #{url} / #{dest_path}")
               {:error, nil}
           end
+
+        {:ok, %HTTPoison.Response{status_code: status_code}} ->
+          Logger.warn("Error importing image, wrong response: #{status_code} / #{url} / #{dest_path}")
+          {:error, nil}
+
+        {:error, %HTTPoison.Error{reason: reason}} when is_atom(reason) ->
+          Logger.warn("Error importing image, wrong response: #{Atom.to_string(reason)} #{url} / #{dest_path}")
+          {:error, nil}
 
         _ ->
           Logger.warn("Error importing image, wrong response: #{url} / #{dest_path}")

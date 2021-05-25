@@ -37,6 +37,10 @@ COPY  ./progradio_api/mix.* /var/progradio_api/
 
 WORKDIR /var/progradio_api/
 
+RUN apt-get update && apt-get install -y \
+    imagemagick \
+    jpegoptim optipng pngquant gifsicle
+
 RUN rm -Rf _build && \
     mix local.hex --force && \
     mix local.rebar --force && \
