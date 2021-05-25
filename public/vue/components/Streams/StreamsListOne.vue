@@ -55,10 +55,10 @@ export default {
   data() {
     let img = '/img/stream-placeholder.png';
 
-    if (this.radio.img !== null && this.radio.img !== '') {
+    if (this.radio.img_alt !== null) {
+      img = `${config.THUMBNAIL_PAGE_PATH}${this.radio.img_alt}.png`;
+    } else if (this.radio.img !== null && this.radio.img !== '') {
       img = `${config.THUMBNAIL_STREAM_PATH}${this.radio.img}`;
-    } else if (this.radio.radio_code_name !== null) {
-      img = `${config.THUMBNAIL_PAGE_PATH}${this.radio.radio_code_name}.png`;
     }
 
     return {

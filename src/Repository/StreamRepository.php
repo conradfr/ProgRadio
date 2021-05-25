@@ -11,6 +11,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 
+/*
+ @TODO reduce code duplication for queries
+ */
 class StreamRepository extends ServiceEntityRepository
 {
     protected const CACHE_TTL = 21600; // six hours
@@ -37,10 +40,14 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel, r.codeName as radio_code_name")
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type,"
+            . 'COALESCE(r.codeName) as img_alt,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
+            . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_code_name')
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.streamSong', 'ss')
             ->setMaxResults($limit);
 
         if ($offset !== null) {
@@ -100,10 +107,14 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.tags, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel, r.codeName as radio_code_name")
+        $qb->select("s.id as code_name, s.name, s.img, s.tags, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type,"
+            . 'COALESCE(r.codeName) as img_alt,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
+            . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_code_name')
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.streamSong', 'ss')
             ->where('ILIKE(s.name, :text) = true')
             ->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
@@ -171,10 +182,14 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel, r.codeName as radio_code_name")
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type,"
+            . 'COALESCE(r.codeName) as img_alt,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
+            . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_code_name')
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.streamSong', 'ss')
             ->addOrderBy('s.name', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults(1);
@@ -214,10 +229,14 @@ class StreamRepository extends ServiceEntityRepository
     ): ?array {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, rs.currentSong as current_song, rs.codeName as current_song_channel, r.codeName as radio_code_name")
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type,"
+            . 'COALESCE(r.codeName) as img_alt,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
+            . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_code_name')
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.streamSong', 'ss')
             ->where('s.id = :id')
             ->setMaxResults(1);
 

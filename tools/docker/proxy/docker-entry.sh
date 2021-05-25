@@ -1,3 +1,3 @@
 #!/bin/sh
 
-node /home/node/app/server.js
+cd /home/node/app/ && node server.js

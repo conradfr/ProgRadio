@@ -143,44 +143,53 @@ export default {
   /* eslint-disable no-undef */
   watch: {
     'player.playing': function (val) {
-      if ((val === true && this.player.radio.type === config.PLAYER_TYPE_RADIO
-          && this.player.radio.streams[this.player.radioStreamCodeName].current_song === true)
-          || (val === true && this.player.radio.type === config.PLAYER_TYPE_STREAM
-          && this.player.radio.current_song === true)) {
+      const cleanSocket = () => {
+        this.socket.disconnect();
+        this.channel = null;
+        this.socket = null;
+        this.$store.dispatch('setSong', null);
+      };
+
+      if (val === true) {
+        let channelName = null;
+
+        if ((this.player.radio.type === config.PLAYER_TYPE_RADIO
+            && this.player.radio.streams[this.player.radioStreamCodeName].current_song === true)
+            || (this.player.radio.type === config.PLAYER_TYPE_STREAM
+            && this.player.radio.current_song === true)) {
+          const channelNameEnd = this.player.radio.type === config.PLAYER_TYPE_RADIO
+            ? this.player.radioStreamCodeName : this.player.radio.radio_code_name;
+          channelName = `song:${channelNameEnd}`;
+        } else {
+          channelName = `url:${this.streamUrl}`;
+        }
+
         this.socket = new Socket(`wss://${apiUrl}/socket`);
         this.socket.connect();
         this.socket.onError(() => {
           this.$store.dispatch('setSong', null);
         });
 
-        const channelName = this.player.radio.type === config.PLAYER_TYPE_RADIO
-          ? this.player.radioStreamCodeName : this.player.radio.current_song_channel;
-
-        this.channel = this.socket.channel(`song:${channelName}`);
+        this.channel = this.socket.channel(channelName);
 
         this.channel.on('playing', (song) => {
           this.$store.dispatch('setSong', song);
         });
 
+        this.channel.on('quit', () => {
+          cleanSocket();
+        });
+
         this.channel.join()
           // .receive('ok', ({ messages }) => console.log('catching up', messages))
           .receive('error', () => {
-            this.socket.disconnect();
-            this.channel = null;
-            this.socket = null;
-            this.$store.dispatch('setSong', null);
+            cleanSocket();
           })
           .receive('timeout', () => {
-            this.socket.disconnect();
-            this.channel = null;
-            this.socket = null;
-            this.$store.dispatch('setSong', null);
+            cleanSocket();
           });
       } else if (this.socket !== null) {
-        this.socket.disconnect();
-        this.channel = null;
-        this.socket = null;
-        this.$store.dispatch('setSong', null);
+        cleanSocket();
       }
 
       if (this.player.externalPlayer === true) { return; }

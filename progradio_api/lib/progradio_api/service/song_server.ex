@@ -8,6 +8,16 @@ defmodule ProgRadioApi.SongServer do
 
   # ----- Client Interface -----
 
+  def start_link({song_topic, nil} = _arg) do
+    name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
+
+    GenServer.start_link(
+      __MODULE__,
+      %{module: ProgRadioApi.SongProvider.Icecast, name: song_topic, song: nil, last_data: nil},
+      name: name
+    )
+  end
+
   def start_link({song_topic, radio_code_name} = _arg) do
     name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
 
@@ -47,20 +57,29 @@ defmodule ProgRadioApi.SongServer do
 
   @impl true
   def handle_info({:refresh, :auto}, %{module: module, name: name, last_data: last_data} = state) do
-    {data, song} = get_data_song(module, name, last_data)
+    with {data, song} <- get_data_song(module, name, last_data),
+         false <- data == :error do
+      how_many_connected =
+        Presence.list(state.name)
+        |> Kernel.map_size()
 
-    how_many_connected =
-      Presence.list(state.name)
-      |> Kernel.map_size()
+      ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
 
-    ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
-    Process.send_after(self(), {:refresh, :auto}, @refresh_song_interval)
+      refresh_rate = apply(module, :get_auto_refresh, [name, data, @refresh_song_interval]) || @refresh_song_interval
 
-    Logger.info(
-      "Data provider - #{name}: song updated (timer) - #{how_many_connected} clients connected"
-    )
+      Process.send_after(self(), {:refresh, :auto}, refresh_rate)
 
-    {:noreply, %{state | song: song, last_data: data}}
+      Logger.info(
+        "Data provider - #{name}: song updated (timer) - #{how_many_connected} clients connected"
+      )
+
+      {:noreply, %{state | song: song, last_data: data}}
+    else
+      _ ->
+        ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
+        Logger.info("Data provider - #{state.name}: fetching error, exiting")
+        {:stop, :normal, nil}
+    end
   end
 
   @impl true

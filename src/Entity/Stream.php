@@ -94,6 +94,21 @@ class Stream
      */
     private $radioStream;
 
+    /**
+     * @var StreamSong
+     *
+     * @ORM\ManyToOne(targetEntity=StreamSong::class, inversedBy="streams")
+     * @ORM\JoinColumn(name="stream_song_id", referencedColumnName="id")
+     */
+    private $streamSong;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=30)
+     */
+    private $streamSongCodeName;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
     }
@@ -207,7 +222,7 @@ class Stream
         return false;
     }
 
-    public function getRadioStream()
+    public function getRadioStream(): ?RadioStream
     {
         return $this->radioStream;
     }
@@ -215,5 +230,25 @@ class Stream
     public function setRadioStream($radioStream): void
     {
         $this->radioStream = $radioStream;
+    }
+
+    public function getStreamSong(): ?StreamSong
+    {
+        return $this->streamSong;
+    }
+
+    public function setStreamSong($streamSong): void
+    {
+        $this->streamSong = $streamSong;
+    }
+
+    public function getStreamSongCodeName(): string
+    {
+        return $this->streamSongCodeName;
+    }
+
+    public function setStreamSongCodeName(string $streamSongCodeName): void
+    {
+        $this->streamSongCodeName = $streamSongCodeName;
     }
 }

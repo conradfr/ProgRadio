@@ -3,6 +3,7 @@ defmodule ProgRadioApi.Stream do
   import Ecto.Changeset
   alias ProgRadioApi.ListeningSession
   alias ProgRadioApi.RadioStream
+  alias ProgRadioApi.StreamSong
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -15,7 +16,9 @@ defmodule ProgRadioApi.Stream do
     field(:language, :string)
     field(:votes, :integer, default: 0)
     field(:clicks_last_24h, :integer, default: 0)
+    field(:stream_song_code_name, :string)
     belongs_to(:radio_stream, RadioStream)
+    belongs_to(:stream_song, StreamSong)
     has_many(:listening_session, ListeningSession)
   end
 

@@ -11,6 +11,9 @@ defmodule ProgRadioApi.SongProvider.Mradio do
   def has_custom_refresh(), do: true
 
   @impl true
+  def get_auto_refresh(_name, nil, default_refresh), do: default_refresh
+
+  @impl true
   def get_refresh(_name, nil, _default_refresh), do: @radio_lag * 1000
 
   @impl true

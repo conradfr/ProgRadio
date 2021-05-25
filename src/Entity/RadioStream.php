@@ -15,7 +15,7 @@ use App\Repository\RadioStreamRepository;
 class RadioStream
 {
     /**
-     * @var string
+     * @var integer
      *
      * @ORM\Column(type="bigint")
      * @ORM\Id
@@ -107,7 +107,7 @@ class RadioStream
         $this->streams = new ArrayCollection();
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }

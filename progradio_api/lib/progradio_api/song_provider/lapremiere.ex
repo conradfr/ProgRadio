@@ -13,6 +13,9 @@ defmodule ProgRadioApi.SongProvider.Lapremiere do
   defdelegate get_refresh(name, data, default_refresh), to: GenericRtbs
 
   @impl true
+  defdelegate get_auto_refresh(name, data, default_refresh), to: GenericRtbs
+
+  @impl true
   def get_data(name, last_data) do
     GenericRtbs.get_data(@id, name, last_data)
   end

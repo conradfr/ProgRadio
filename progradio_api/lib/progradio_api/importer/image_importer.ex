@@ -126,11 +126,17 @@ defmodule ProgRadioApi.Importer.ImageImporter do
           end
 
         {:ok, %HTTPoison.Response{status_code: status_code}} ->
-          Logger.warn("Error importing image, wrong response: #{status_code} / #{url} / #{dest_path}")
+          Logger.warn(
+            "Error importing image, wrong response: #{status_code} / #{url} / #{dest_path}"
+          )
+
           {:error, nil}
 
         {:error, %HTTPoison.Error{reason: reason}} when is_atom(reason) ->
-          Logger.warn("Error importing image, wrong response: #{Atom.to_string(reason)} #{url} / #{dest_path}")
+          Logger.warn(
+            "Error importing image, wrong response: #{Atom.to_string(reason)} #{url} / #{dest_path}"
+          )
+
           {:error, nil}
 
         _ ->

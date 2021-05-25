@@ -5,6 +5,11 @@ defmodule ProgRadioApi.SongProvider do
   @callback get_refresh(String.t(), map() | nil, integer()) :: integer() | nil
 
   @doc """
+    Get auto refresh
+  """
+  @callback get_auto_refresh(String.t(), map() | nil, integer()) :: integer() | nil
+
+  @doc """
     Get source data as map
   """
   @callback get_data(String.t(), map() | nil) :: map() | nil
@@ -29,9 +34,8 @@ defmodule ProgRadioApi.SongProvider do
   end
 
   def get_stream_code_name_from_channel(channel_name) do
-    channel_name
-    |> String.split(":")
-    |> List.last()
+    [_prefix | rest] = String.split(channel_name, ":")
+    Enum.join(rest, ":")
   end
 
   @spec now_unix() :: integer()

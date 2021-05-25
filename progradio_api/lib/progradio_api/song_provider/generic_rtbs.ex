@@ -4,6 +4,8 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
 
   def has_custom_refresh(), do: true
 
+  def get_auto_refresh(_name, _data, default_refresh), do: default_refresh
+
   def get_refresh(_name, nil, default_refresh), do: default_refresh
 
   def get_refresh(_name, data, default_refresh) do
