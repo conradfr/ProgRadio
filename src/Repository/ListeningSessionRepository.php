@@ -78,7 +78,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
             . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
-            ->innerJoin('rs.radio', 'r')
+            ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.listeningSessions', 'ls')
             ->groupBy('s.id, r.codeName')
             ->addOrderBy('total_seconds', 'DESC');
