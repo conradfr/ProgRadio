@@ -1,24 +1,30 @@
 <template>
-  <div class="media"
-       v-bind:class="{ 'media-current': isCurrent }">
-    <div v-if="show.picture_url" class="media-left">
-      <img alt="" class="media-object" style="width: 64px"
-         :src="picture">
+  <div class="media-wrapper" v-bind:class="{ 'media-current': isCurrent }">
+    <div class="media-timeline">
+      .
     </div>
-    <div class="media-body">
-      <h6 class="media-heading show-title">
-        {{ scheduleDisplay }} - {{ show.title }}
-      </h6>
-      <div v-if="show.host" class="show-host"> {{ show.host }}</div>
-      <nl2br v-if="show.description" tag="p" :text="show.description"
-        class-name="show-description" />
-    </div>
+    <div class="media-inner">
+      <div class="media">
+        <div v-if="show.picture_url" class="media-left">
+          <img alt="" class="media-object" style="width: 64px"
+               :src="picture">
+        </div>
+        <div class="media-body">
+          <h6 class="media-heading show-title">
+            {{ scheduleDisplay }} - {{ show.title }}
+          </h6>
+          <div v-if="show.host" class="show-host"> {{ show.host }}</div>
+          <nl2br v-if="show.description" tag="p" :text="show.description"
+                 class-name="show-description" />
+        </div>
 
-    <div v-if="show.sections" class="sections">
-      <radio-show-section
-        v-for="entry in show.sections" :key="entry.hash"
-        :section="entry">
-      </radio-show-section>
+        <div v-if="show.sections && show.sections.length > 0" class="sections">
+          <radio-show-section
+              v-for="entry in show.sections" :key="entry.hash"
+              :section="entry">
+          </radio-show-section>
+        </div>
+      </div>
     </div>
   </div>
 </template>

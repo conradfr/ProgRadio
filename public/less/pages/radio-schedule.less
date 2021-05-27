@@ -24,15 +24,53 @@
   }
 
   .schedule-day-shows {
-    .media {
-      margin-bottom: 20px;
+    @line-color: darken(@background-color, 25%);
+
+    .media-timeline {
+      display: table-cell;
+      margin: 0 auto;
+      padding: 0;
+      width: 50px;
+      position: relative;
+
+      text-align: center;
+      color: @line-color;
+      font-size: 79px;
+      line-height: 5px;
+      vertical-align: top;
+      padding-left: 2px;
+
+      &:after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        border-left: 2px solid @line-color;
+        transform: translate(-50%);
+      }
     }
 
-    .media-current {
-      background-color: mix(white, @brand-primary, 96.5%);;
-      -webkit-box-shadow: 0px 0px 20px 5px rgba(247,251,255,1);
-      -moz-box-shadow: 0px 0px 20px 5px rgba(247,251,255,1);
-      box-shadow: 0px 0px 20px 5px rgba(247,251,255,1);
+    .media-wrapper {
+      &.media-current {
+        .media-timeline {
+          color: @brand-primary;
+
+          &:after {
+            border-color: @brand-primary;
+          }
+        }
+      }
+    }
+
+    .media-inner {
+      display: table-cell;
+      padding-bottom: 25px;
+    }
+
+    .media {
+      margin: 0;
     }
 
     .show-title {

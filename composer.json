@@ -36,6 +36,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
         "gedmo/doctrine-extensions": "^3.0",
+        "jaybizzle/crawler-detect": "^1.2",
         "liip/imagine-bundle": "^2.5",
         "oro/doctrine-extensions": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.2",
