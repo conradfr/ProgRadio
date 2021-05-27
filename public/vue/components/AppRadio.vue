@@ -35,6 +35,7 @@
 
 <script>
 import find from 'lodash/find';
+import orderBy from 'lodash/orderBy';
 import { mapGetters, mapState } from 'vuex';
 import { DateTime } from 'luxon';
 
@@ -112,7 +113,8 @@ export default {
     },
     schedule() {
       if (this.hasSchedule === true) {
-        return this.$store.state.schedule.schedule[this.$route.params.radio];
+        return orderBy(this.$store.state.schedule.schedule[this.$route.params.radio],
+          ['start_at'], ['asc']);
       }
 
       return [];
