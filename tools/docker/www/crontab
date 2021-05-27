@@ -1,0 +1,1 @@
+*/5 * * * * . /root/project_env.sh; cd / &&  goaccess /var/log/nginx/access.log -o /var/www/templates/report.html --log-format=COMBINED --ignore-crawlers 2>&1

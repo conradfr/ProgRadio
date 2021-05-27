@@ -45,10 +45,22 @@ RUN apt-get update && apt-get install -y \
     libwebp-dev \
     libcurl4-openssl-dev \
     jpegoptim \
-    sudo
+    sudo \
+    cron \
+    goaccess
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# cron goaccess
+
+ADD ./tools/docker/www/crontab /etc/cron.d/goaccess-cron
+RUN chmod 0644 /etc/cron.d/goaccess-cron
+RUN crontab /etc/cron.d/goaccess-cron
+
+RUN touch /var/log/cron.log
+
+RUN printenv | sed 's/^\(.*\)$/export \1/g' > /root/project_env.sh
 
 # nginx
 

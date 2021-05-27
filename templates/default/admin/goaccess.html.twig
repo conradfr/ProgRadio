@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Goaccess{% endblock %}
+
+{% block body %}
+    <div id="admin" class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <iframe id="iframeGoaccess" frameborder="0"
+                    style="overflow:hidden;height:100%;width:100%"
+                    height="100%" width="100%"
+                    src="{{ absolute_url('/admin/goaccessiframe') }}">
+            </iframe>
+        </div>
+    </div>
+</div>
+{% endblock %}

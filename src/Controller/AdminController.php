@@ -200,4 +200,26 @@ class AdminController extends AbstractController
 
         return $this->render('default/admin/shares.html.twig', ['form' => $form->createView()]);
     }
+
+    /**
+     * @Route(
+     *     "/admin/goaccess",
+     *     name="admin_goaccess"
+     * )
+     */
+    public function goaccess(): Response
+    {
+        return $this->render('default/admin/goaccess.html.twig');
+    }
+
+    /**
+     * @Route(
+     *     "/admin/goaccessiframe",
+     *     name="admin_goaccess_iframe"
+     * )
+     */
+    public function goaccessiframe(): Response
+    {
+        return $this->render('default/admin/goaccessiframe.html.twig');
+    }
 }

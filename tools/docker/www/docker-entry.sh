@@ -7,5 +7,6 @@ cd /var/www && php bin/console d:m:m --no-interaction --env=prod
 # will have to do better than that
 chmod -R 777 /var/www/var
 
+cron &
 php-fpm &
 nginx -g "daemon off;"
