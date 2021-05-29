@@ -16,14 +16,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @IsGranted("ROLE_ADMIN")
  */
-class AdminController extends AbstractController
+class AdminController extends AbstractBaseController
 {
     /**
      * @Route(
@@ -199,6 +198,21 @@ class AdminController extends AbstractController
         }
 
         return $this->render('default/admin/shares.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route(
+     *     "/admin/listening/webcount",
+     *     name="admin_listening_webcount"
+     * )
+     */
+    public function listeningWebCount(EntityManagerInterface $em): Response
+    {
+        $count = $em->getRepository(ListeningSession::class)->getCurrentWeb();
+
+        return $this->jsonResponse([
+            'count' => $count
+        ]);
     }
 
     /**

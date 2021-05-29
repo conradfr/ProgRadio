@@ -6,10 +6,41 @@
     {% if current == dateRange %} class="active"{% endif %}
 {% endmacro %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      const getCount = () => {
+        fetch('{{ path('admin_listening_webcount') }}')
+          .then(function(response) {
+            response.json().then(data => {
+              document.getElementById("webcount-radios").innerHTML = data.count.total_radios;
+              document.getElementById("webcount-streams").innerHTML = data.count.total_streams;
+            });
+          });
+      };
+
+      getCount();
+      setInterval(() => {
+        getCount();
+      }, 15000);
+    </script>
+{% endblock %}
+
 {% block body %}
 <div id="admin" class="container-fluid">
     <div class="row">
         <div class="col-md-2">
+            <div class="alert alert-info" role="alert">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="width:30%;"><strong>Live web</strong></td>
+                        <td style="width:35%;" class="text-center">Radios:&nbsp;<span id="webcount-radios">-</span></td>
+                        <td class="text-center">Streams:&nbsp;<span id="webcount-streams">-</span></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+
             <!-- Nav tabs -->
             <ul class="nav nav-pills nav-stacked" role="tablist">
                 <li role="presentation"{% if active_tab == 'radios' %} class="active"{% endif %}><a href="{{ path('admin_listening_radios', {'dateRange': dateRange}) }}" aria-controls="brief" role="tab">Radios</a></li>

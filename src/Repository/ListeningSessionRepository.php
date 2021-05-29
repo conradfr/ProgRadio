@@ -13,6 +13,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class ListeningSessionRepository extends ServiceEntityRepository
 {
@@ -102,5 +103,25 @@ class ListeningSessionRepository extends ServiceEntityRepository
                 'endDate'=> $endDate
             ]);
         }
+    }
+
+    public function getCurrentWeb()
+    {
+        $sql = "
+            SELECT COALESCE(SUM(CASE WHEN ls.radio_stream_id is not null THEN 1 ELSE 0 END), 0) as total_radios,
+                   COALESCE(SUM(CASE WHEN ls.stream_id is not null THEN 1 ELSE 0 END), 0) as total_streams
+            FROM listening_session ls
+            WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second') and ls.source = :source
+        ";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('total_radios', 'total_radios', 'integer')
+            ->addScalarResult('total_streams', 'total_streams', 'integer');
+
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameters(['source' => ListeningSession::SOURCE_WEB]);
+        $query->disableResultCache();
+
+        return $query->getResult()[0];
     }
 }
