@@ -2,6 +2,13 @@
   <div class="radio-list-one-wrapper"
        :class="{'radio-list-one-wrapper-hover': hover}"
        v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
+    <div class="radio-list-one-one-flag"
+        v-if="displayFlag">
+      <gb-flag
+          :code="radio.country_code"
+          size="nano"
+      />
+    </div>
     <div class="radio-submenu"
          :style="subMenuStyleObject"
          :class="{ 'radio-submenu': hover }">
@@ -55,11 +62,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
 import filter from 'lodash/filter';
+import Vue from 'vue';
+import VueFlags from '@growthbunker/vueflags';
+import { mapGetters, mapState } from 'vuex';
 
 import {
   RADIO_MENU_WIDTH,
+  RADIO_LIST_IGNORE_COUNTRY,
   GTAG_CATEGORY_SCHEDULE,
   GTAG_ACTION_FAVORITE_TOGGLE,
   GTAG_ACTION_PLAY,
@@ -68,6 +78,11 @@ import {
   GTAG_ACTION_STOP,
   GTAG_ACTION_STOP_VALUE
 } from '../../config/config';
+
+Vue.use(VueFlags, {
+  // Specify the path of the folder where the flags are stored.
+  iconPath: '/img/flags/',
+});
 
 export default {
   props: ['radio'],
@@ -111,6 +126,10 @@ export default {
     },
     isFavorite() {
       return this.$store.getters.isFavorite(this.radio.code_name);
+    },
+    displayFlag() {
+      return this.radio.country_code !== null
+        && this.radio.country_code !== RADIO_LIST_IGNORE_COUNTRY;
     }
   },
   methods: {

@@ -19,8 +19,9 @@ export const DEFAULT_VOLUME = 8;
 export const DEFAULT_TIMER_MINUTES = 15;
 
 export const DEFAULT_COLLECTION = 'nationwide';
-
 export const COLLECTION_FAVORITES = 'favorites';
+
+export const RADIO_LIST_IGNORE_COUNTRY = 'FR';
 
 export const CACHE_KEY_RADIOS = 'radios_v3';
 export const CACHE_KEY_COLLECTIONS = 'collections_v3';

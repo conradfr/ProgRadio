@@ -36,6 +36,7 @@ defmodule ProgRadioApi.Radios do
                 code_name: r.code_name,
                 name: r.name,
                 share: r.share,
+                country_code: r.country_code,
                 category: c.code_name
               },
               select_merge: %{
@@ -66,6 +67,7 @@ defmodule ProgRadioApi.Radios do
                       category: r.category,
                       streaming_enabled: false,
                       type: "radio",
+                      country_code: r.country_code,
                       streams: %{}
                     }
                 end

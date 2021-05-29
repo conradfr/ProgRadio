@@ -103,9 +103,24 @@
     }
   }
 
+  .radio-list-one-one-flag {
+    z-index: 5;
+    position: absolute;
+    top: -7px;
+    right: -2px;
+    opacity: 0.6;
+    transition: opacity 150ms;
+  }
+
   .radio-list-one-wrapper {
     position: relative;
     //z-index: 2;
+
+    &:hover {
+      .radio-list-one-one-flag {
+        opacity: 1;
+      }
+    }
   }
 
   .radio-list-one-wrapper-hover {
