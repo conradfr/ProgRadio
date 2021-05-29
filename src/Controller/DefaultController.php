@@ -41,7 +41,6 @@ class DefaultController extends AbstractBaseController
      */
     public function schedule(\DateTime $date, ScheduleManager $scheduleManager, Request $request): Response
     {
-        $schedule = null;
         $collection = $request->query->get('collection');
 
         if ($radio = $request->query->get('radio')) {
