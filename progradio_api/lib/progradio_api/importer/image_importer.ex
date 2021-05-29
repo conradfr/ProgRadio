@@ -61,6 +61,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       |> open()
       # will fail if file is not really an image
       |> verbose()
+      |> custom("flatten")
       |> custom("strip")
       |> resize_to_limit(125)
       |> custom("density", "72")
