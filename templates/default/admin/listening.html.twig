@@ -32,6 +32,7 @@
       }, 15000);
 
       // links
+      let oldActive = null;
 
       const setActive = (element) => {
         let active = element;
@@ -40,15 +41,24 @@
           if (location.hash !== '' && location.hash !== '#radios') {
             active = 'streams'
           } else {
-            active = 'radios';
+            active = '';
+          }
+
+          oldActive = active;
+        } else {
+          if (oldActive !== null && active === oldActive) {
+            location.reload();
           }
         }
+
+        oldActive = active;
 
         const el = document.getElementsByClassName('nav-pill-one');
         for (var i = 0; i < el.length; i++) {
           el[i].classList.remove('active');
         }
-        const activeEl = document.getElementById(`nav-pill-one-${active}`);
+        const activeName = active === '' ? 'radios' : active;
+        const activeEl = document.getElementById(`nav-pill-one-${activeName}`);
         activeEl.classList.add('active');
 
         const links = document.getElementsByClassName('daylink');
@@ -71,7 +81,7 @@
 {% block body %}
     <div id="admin" class="container-fluid">
         <div class="row">
-            <div class="col-md-2 admin-listening-side">
+            <div class="col-md-2 admin-listening-side test">
                 <div class="alert alert-info" role="alert">
                     <table style="width: 100%">
                         <tr>
