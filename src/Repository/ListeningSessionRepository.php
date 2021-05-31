@@ -112,8 +112,8 @@ class ListeningSessionRepository extends ServiceEntityRepository
                    COALESCE(SUM(CASE WHEN ls.stream_id is not null THEN 1 ELSE 0 END), 0) as total_streams
             FROM listening_session ls
             WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second') and ls.source = :source
-            GROUP BY ls.ip_address, ls.date_time_end
-            ORDER BY ls.date_time_end DESC;
+            /*GROUP BY ls.ip_address, ls.date_time_end
+            ORDER BY ls.date_time_end DESC*/;
         ";
 
         $rsm = new ResultSetMapping();
