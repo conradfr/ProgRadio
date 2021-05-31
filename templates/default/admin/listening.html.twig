@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% set active_tab = 'radios' %}
+
+{% block title %}Ecoutes{% endblock %}
+
+{% macro dateRangeActive(current, dateRange) %}
+    {% if current == dateRange %} class="active"{% endif %}
+{% endmacro %}
+
+{% block javascripts %}
+    {# Todo: use Vue #}
+
+    {{ parent() }}
+    <script>
+      // live
+
+      const getCount = () => {
+        fetch('{{ path('admin_listening_webcount') }}')
+          .then(function(response) {
+            response.json().then(data => {
+              document.getElementById("webcount-radios").innerHTML = data.count.total_radios;
+              document.getElementById("webcount-streams").innerHTML = data.count.total_streams;
+            });
+          });
+      };
+
+      getCount();
+
+      setInterval(() => {
+        getCount();
+      }, 15000);
+
+      // links
+
+      const setActive = (element) => {
+        let active = element;
+
+        if (element === undefined || element === null) {
+          if (location.hash !== '' && location.hash !== '#radios') {
+            active = 'streams'
+          } else {
+            active = 'radios';
+          }
+        }
+
+        const el = document.getElementsByClassName('nav-pill-one');
+        for (var i = 0; i < el.length; i++) {
+          el[i].classList.remove('active');
+        }
+        const activeEl = document.getElementById(`nav-pill-one-${active}`);
+        activeEl.classList.add('active');
+
+        const links = document.getElementsByClassName('daylink');
+        let newLink = null;
+        for (i = 0; i < links.length; i++) {
+          newLink = links[i].href;
+          const indexOfHash = links[i].href.indexOf('#');
+          if (indexOfHash > -1) {
+            newLink = newLink.substring('0', indexOfHash);
+          }
+
+          links[i].href = `${newLink}#${active}`;
+        }
+      };
+
+      setActive();
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div id="admin" class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 admin-listening-side">
+                <div class="alert alert-info" role="alert">
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="width:30%;"><strong>Live web</strong></td>
+                            <td style="width:35%;" class="text-center">Radios:&nbsp;<span id="webcount-radios">-</span></td>
+                            <td class="text-center">Streams:&nbsp;<span id="webcount-streams">-</span></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills nav-stacked" role="tablist">
+                    <li role="presentation" class="nav-pill-one" id="nav-pill-one-radios"><a href="#" aria-controls="brief" role="tab" onclick="setActive('radios')">Radios</a></li>
+                    <li role="presentation" class="nav-pill-one" id="nav-pill-one-streams"><a href="#streams" aria-controls="table" role="tab" onclick="setActive('streams')">Streams</a></li>
+                </ul>
+
+                <div class="well space-up-20">
+                    {% if dateEnd is null %}
+                        <div>Le {{ dateStart|date('d/m/Y') }}</div>
+                    {% else %}
+                        <div>Du {{ dateStart|date('d/m/Y') }}</div>
+                        <div>au {{ dateEnd|date('d/m/Y') }}</div>
+                    {% endif %}
+                </div>
+
+                <ul class="nav nav-pills nav-stacked space-up-20">
+                    <li role="presentation"{{ _self.dateRangeActive(dateRange, 'today') }}><a class="daylink" href="{{ path(app.request.get('_route'), {'dateRange': 'today'})  }}">Aujourd'hui</a></li>
+                    <li role="presentation"{{ _self.dateRangeActive(dateRange, 'yesterday') }}><a class="daylink" href="{{ path(app.request.get('_route'), {'dateRange': 'yesterday'})  }}">Hier</a></li>
+                    <li role="presentation"{{ _self.dateRangeActive(dateRange, 'thisweek') }}><a class="daylink" href="{{ path(app.request.get('_route'), {'dateRange': 'thisweek'})  }}">Cette semaine</a></li>
+                    <li role="presentation"{{ _self.dateRangeActive(dateRange, 'thismonth') }}><a class="daylink" href="{{ path(app.request.get('_route'), {'dateRange': 'thismonth'})  }}">Ce mois-ci</a></li>
+                    <li role="presentation"{{ _self.dateRangeActive(dateRange, 'lastweek') }}><a class="daylink" href="{{ path(app.request.get('_route'), {'dateRange': 'lastweek'})  }}">Semaine dernière</a></li>
+                    <li role="presentation"{{ _self.dateRangeActive(dateRange, 'lastmonth') }}><a class="daylink" href="{{ path(app.request.get('_route'), {'dateRange': 'lastmonth'})  }}">Mois dernier</a></li>
+                    <li role="presentation"{{ _self.dateRangeActive(dateRange, 'ratings') }}><a class="daylink" href="{{ path(app.request.get('_route'), {'dateRange': 'ratings'})  }}">Deux derniers mois et demi</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-10">
+                <div id="radios"></div>
+                {% include('default/admin/listening/total.html.twig') %}
+
+                {% include('default/admin/listening/radios.html.twig') %}
+                {% include('default/admin/listening/streams.html.twig') %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

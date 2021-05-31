@@ -1,0 +1,118 @@
+{% import "default/admin/macro/format.html.twig" as format %}
+
+<table class="table schedule-stats table-striped table-bordered">
+    <tr>
+        <th style="width: 33%">
+            <div class="row">
+                <div class="col-md-2">
+                    Total
+                </div>
+                <div class="col-md-3">
+                    {{ sessions_radios_total.total_sessions + sessions_streams_total.total_sessions }}
+                </div>
+                <div class="col-md-3">
+                    {% if (sessions_radios_total.total_sessions + sessions_streams_total.total_sessions) > 0 %}
+                        {{ format.secondsToMinutes((sessions_radios_total.total_seconds + sessions_radios_total.total_seconds) / (sessions_radios_total.total_sessions + sessions_streams_total.total_sessions)) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    {% if (sessions_radios_total.total_sessions + sessions_streams_total.total_sessions) > 0 %}
+                        {{ format.secondsToMinutes(sessions_radios_total.total_seconds + sessions_streams_total.total_seconds) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+        </th style="width:">
+        <td style="width: 33%">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Web</strong>
+                </div>
+                <div class="col-md-2">
+                    {% if sessions_radios_device['web'] is defined %}
+                        {%  set total_web_radios = sessions_radios_device['web'].total_sessions %}
+                        {%  set total_seconds_web_radios = sessions_radios_device['web'].total_seconds %}
+                    {%  else %}
+                        {%  set total_web_radios = 0 %}
+                        {%  set total_seconds_web_radios = 0 %}
+                    {% endif %}
+
+                    {% if sessions_streams_device['web'] is defined %}
+                        {% set total_web_streams = sessions_streams_device['web'].total_sessions %}
+                        {% set total_seconds_web_streams = sessions_streams_device['web'].total_seconds %}
+                    {%  else %}
+                        {%  set total_web_streams = 0 %}
+                        {%  set total_seconds_web_streams = 0 %}
+                    {% endif %}
+
+                    {% set total_web = total_web_radios + total_web_streams %}
+                    {% set total_seconds_web = total_seconds_web_radios + total_seconds_web_streams %}
+
+                    {{ total_web }}
+                </div>
+                <div class="col-md-3">
+                    {% if total_web > 0 %}
+                        {{ format.secondsToMinutes(total_seconds_web / total_web) }}
+                    {% else %}
+                        -
+                    {% endif %}
+
+                </div>
+                <div class="col-md-4">
+                    {% if total_web > 0 %}
+                        {{ format.secondsToMinutes(total_seconds_web) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+        </td>
+        <td style="width: 33%">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Android</strong>
+                </div>
+                <div class="col-md-2">
+                    {% if sessions_radios_device['android'] is defined %}
+                        {%  set total_android_radios = sessions_radios_device['android'].total_sessions %}
+                        {%  set total_seconds_android_radios = sessions_radios_device['android'].total_seconds %}
+                    {%  else %}
+                        {%  set total_android_radios = 0 %}
+                        {%  set total_seconds_android_radios = 0 %}
+                    {% endif %}
+
+                    {% if sessions_streams_device['android'] is defined %}
+                        {% set total_android_streams = sessions_streams_device['android'].total_sessions %}
+                        {% set total_seconds_android_streams = sessions_streams_device['android'].total_seconds %}
+                    {%  else %}
+                        {%  set total_android_streams = 0 %}
+                        {%  set total_seconds_android_streams = 0 %}
+                    {% endif %}
+
+                    {% set total_android = total_android_radios + total_android_streams %}
+                    {% set total_seconds_android = total_seconds_android_radios + total_seconds_android_streams %}
+
+                    {{ total_android }}
+                </div>
+                <div class="col-md-3">
+                    {% if total_android > 0 %}
+                        {{ format.secondsToMinutes(total_seconds_android / total_android) }}
+                    {% else %}
+                        -
+                    {% endif %}
+
+                </div>
+                <div class="col-md-4">
+                    {% if total_android > 0 %}
+                        {{ format.secondsToMinutes(total_seconds_android) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>

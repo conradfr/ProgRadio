@@ -98,8 +98,8 @@
                         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li><a href="{{ path('admin') }}">{{ 'menu.admin.dashboard'|trans }}</a></li>
-                                <li><a href="{{ path('admin_listening_radios') }}">{{ 'menu.admin.listening'|trans }}</a></li>
-                                <li><a href="{{ path('admin_goaccess_iframe') }}" target="_blank">Goaccess</a></li>
+                                <li><a href="{{ path('admin_listening') }}">{{ 'menu.admin.listening'|trans }}</a></li>
+{#                                <li><a href="{{ path('admin_goaccess_iframe') }}" target="_blank">Goaccess</a></li>#}
                                 <li><a href="{{ path('admin_shares') }}">{{ 'menu.admin.shares'|trans }}</a></li>
                                 <li role="separator" class="divider"></li>
                             {% endif %}

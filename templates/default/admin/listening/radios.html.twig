@@ -1,0 +1,156 @@
+{% import "default/admin/macro/format.html.twig" as format %}
+
+<table class="table schedule-stats table-striped table-bordered">
+    <tr>
+        {% for entry in collections_admin %}
+            <th style="width:{{ 100 / collections_admin|length }}%">{{ entry.name_FR }}</th>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for entry in collections_admin %}
+            <th>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3">Sess.</div>
+                    <div class="col-md-3">Moy.</div>
+                    <div class="col-md-4">Total</div>
+                </div>
+            </th>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for entry in collections_admin %}
+            <th>
+                <div class="row">
+                    <div class="col-md-2">Total</div>
+                    <div class="col-md-3">
+                        {% if sessions_radios_sum[entry.code_name] is defined %}
+                            {{ sessions_radios_sum[entry.code_name].total_sessions }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        {% if sessions_radios_sum[entry.code_name] is defined %}
+                            {{ format.secondsToMinutes(sessions_radios_sum[entry.code_name].total_seconds / sessions_radios_sum[entry.code_name].total_sessions) }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        {% if sessions_radios_sum[entry.code_name] is defined %}
+                            {{ format.secondsToMinutes(sessions_radios_sum[entry.code_name].total_seconds) }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                </div>
+            </th>
+        {% endfor %}
+    </tr>
+    {% for entry in collections_sessions %}
+        <tr>
+            {% for one in entry %}
+                <td>
+                    <div class="row">
+                        {% if one != 'empty' %}
+                            <div class="col-md-2"><img title="{{ one.name }}" alt="{{ one.name }}" src="{{ asset('img/radio/schedule/' ~ one.codeName ~ '.png') }}"></div>
+                            <div class="col-md-3">{{ one.total_sessions }}</div>
+                            <div class="col-md-3">
+                                {% if (one.total_sessions > 0) %}
+                                    {{ format.secondsToMinutes(one.total_seconds / one.total_sessions) }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">{{ format.secondsToMinutes(one.total_seconds) }}</div>
+                        {% endif %}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<div id="streams"></div>
+
+<table class="table schedule-stats table-striped table-bordered">
+    <tr>
+        <th style="width:{{ 100 / collections_admin|length }}%">
+            <div class="row">
+                <div class="col-md-2">
+                    Total
+                </div>
+                <div class="col-md-3">
+                    {{ sessions_radios_total.total_sessions }}
+                </div>
+                <div class="col-md-3">
+                    {% if sessions_radios_total.total_sessions > 0 %}
+                        {{ format.secondsToMinutes(sessions_radios_total.total_seconds / sessions_radios_total.total_sessions) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    {% if sessions_radios_total.total_sessions > 0 %}
+                        {{ format.secondsToMinutes(sessions_radios_total.total_seconds) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+        </th>
+        <td style="width:{{ 100 / collections_admin|length }}%">
+            <div class="col-md-3">
+                <strong>Web</strong>
+            </div>
+            <div class="col-md-2">
+                {% if sessions_radios_device['web'] is defined %}
+                    {{ sessions_radios_device['web'].total_sessions }}
+                {% endif %}
+            </div>
+            <div class="col-md-3">
+                {% if sessions_radios_device['web'] is defined and sessions_radios_device['web'].total_sessions > 0 %}
+                    {{ format.secondsToMinutes(sessions_radios_device['web'].total_seconds / sessions_radios_device['web'].total_sessions) }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                {% if sessions_radios_device['web'] is defined and sessions_radios_device['web'].total_sessions > 0 %}
+                    {{ format.secondsToMinutes(sessions_radios_device['web'].total_seconds) }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+        </td>
+        <td style="width:{{ 100 / collections_admin|length }}%">
+            <div class="col-md-3">
+                <strong>Android</strong>
+            </div>
+            <div class="col-md-2">
+                {% if sessions_radios_device['android'] is defined %}
+                    {{ sessions_radios_device['android'].total_sessions }}
+                {% endif %}
+            </div>
+            <div class="col-md-3">
+                {% if sessions_radios_device['android'] is defined and sessions_radios_device['android'].total_sessions > 0 %}
+                    {{ format.secondsToMinutes(sessions_radios_device['android'].total_seconds / sessions_radios_device['android'].total_sessions) }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                {% if sessions_radios_device['android'] is defined and sessions_radios_device['android'].total_sessions > 0 %}
+                    {{ format.secondsToMinutes(sessions_radios_device['android'].total_seconds) }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+        </td>
+        <td style="width:{{ 100 / collections_admin|length }}%">
+        </td>
+        <td style="width:{{ 100 / collections_admin|length }}%">
+        </td>
+    </tr>
+</table>

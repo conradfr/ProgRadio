@@ -49,18 +49,35 @@ class AdminController extends AbstractBaseController
 
     /**
      * @Route(
-     *     "/admin/listening/radios/{dateRange}",
-     *     requirements={"dateRange"="\w+"},
-     *     name="admin_listening_radios"
+     *     "/admin/listening/webcount",
+     *     name="admin_listening_webcount"
      * )
      */
-    public function listeningRadiosAction(DateUtils $dateUtils, EntityManagerInterface $em, string $dateRange='yesterday'): Response
+    public function listeningWebCount(EntityManagerInterface $em): Response
+    {
+        $count = $em->getRepository(ListeningSession::class)->getCurrentWeb();
+
+        return $this->jsonResponse([
+            'count' => $count
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/admin/listening/{dateRange}",
+     *     requirements={"dateRange"="\w+"},
+     *     name="admin_listening"
+     * )
+     */
+    public function listeningAction(DateUtils $dateUtils, EntityManagerInterface $em, string $dateRange='today'): Response
     {
         $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
 
         if ($dates === null) {
             throw new BadRequestHttpException('Invalid data');
         }
+
+        // RADIOS
 
         $radioListening = $em->getRepository(ListeningSession::class)->getRadiosData($dates[0], $dates[1]);
         $radioListeningDevices = $em->getRepository(ListeningSession::class)->getPerDeviceData($dates[0], $dates[1]);
@@ -93,7 +110,7 @@ class AdminController extends AbstractBaseController
 
         // sums
 
-        $sessionsSum = array_map(function ($collection) {
+        $sessionsRadiosSum = array_map(function ($collection) {
             return array_reduce($collection, function($acc, $radio) {
                 $acc['total_seconds'] += $radio['total_seconds'];
                 $acc['total_sessions'] += $radio['total_sessions'];
@@ -101,55 +118,34 @@ class AdminController extends AbstractBaseController
             }, ['total_seconds' => 0, 'total_sessions' => 0]);
         } , $radioListeningInCollections);
 
-        $sessionsTotal =  array_reduce($sessionsSum, function($acc, $collection) {
+        $sessionsRadiosTotal =  array_reduce($sessionsRadiosSum, function($acc, $collection) {
             $acc['total_seconds'] += $collection['total_seconds'];
             $acc['total_sessions'] += $collection['total_sessions'];
             return $acc;
         }, ['total_seconds' => 0, 'total_sessions' => 0]);
 
-        return $this->render(
-            'default/admin/listening_radios.html.twig', [
-            'collections_admin' => $collections,
-            'radio_listening' => $radioListening,
-            'collections_sessions' => $collectionsSessions,
-            'sessions_sum' => $sessionsSum,
-            'sessions_device' => $radioListeningDevices,
-            'sessions_total' => $sessionsTotal,
-            'dateStart' => $dates[0],
-            'dateEnd' => $dates[1],
-            'dateRange' => $dateRange
-        ]);
-    }
-
-    /**
-     * @Route(
-     *     "/admin/listening/streams/{dateRange}",
-     *     requirements={"dateRange"="\w+"},
-     *     name="admin_listening_streams"
-     * )
-     */
-    public function listeningStreamsAction(DateUtils $dateUtils, EntityManagerInterface $em, string $dateRange='yesterday'): Response
-    {
-        $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
-
-        if ($dates === null) {
-            throw new BadRequestHttpException('Invalid data');
-        }
+        // STREAMS
 
         $streamListening = $em->getRepository(ListeningSession::class)->getStreamsData($dates[0], $dates[1]);
         $streamListeningDevices = $em->getRepository(ListeningSession::class)->getPerDeviceData($dates[0], $dates[1], 'stream');
 
-        $sessionsTotal =  array_reduce($streamListening, function($acc, $ls) {
+        $sessionsStreamsTotal =  array_reduce($streamListening, function($acc, $ls) {
             $acc['total_seconds'] += $ls['total_seconds'];
             $acc['total_sessions'] += $ls['total_sessions'];
             return $acc;
         }, ['total_seconds' => 0, 'total_sessions' => 0]);
 
         return $this->render(
-            'default/admin/listening_streams.html.twig', [
+            'default/admin/listening.html.twig', [
+            'collections_admin' => $collections,
+            'radio_listening' => $radioListening,
             'streams_listening' => $streamListening,
-            'sessions_device' => $streamListeningDevices,
-            'sessions_total' => $sessionsTotal,
+            'collections_sessions' => $collectionsSessions,
+            'sessions_radios_sum' => $sessionsRadiosSum,
+            'sessions_radios_device' => $radioListeningDevices,
+            'sessions_radios_total' => $sessionsRadiosTotal,
+            'sessions_streams_device' => $streamListeningDevices,
+            'sessions_streams_total' => $sessionsStreamsTotal,
             'dateStart' => $dates[0],
             'dateEnd' => $dates[1],
             'dateRange' => $dateRange
@@ -198,21 +194,6 @@ class AdminController extends AbstractBaseController
         }
 
         return $this->render('default/admin/shares.html.twig', ['form' => $form->createView()]);
-    }
-
-    /**
-     * @Route(
-     *     "/admin/listening/webcount",
-     *     name="admin_listening_webcount"
-     * )
-     */
-    public function listeningWebCount(EntityManagerInterface $em): Response
-    {
-        $count = $em->getRepository(ListeningSession::class)->getCurrentWeb();
-
-        return $this->jsonResponse([
-            'count' => $count
-        ]);
     }
 
     /**
