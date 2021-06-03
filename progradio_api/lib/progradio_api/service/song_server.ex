@@ -65,7 +65,9 @@ defmodule ProgRadioApi.SongServer do
 
       ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
 
-      refresh_rate = apply(module, :get_auto_refresh, [name, data, @refresh_song_interval]) || @refresh_song_interval
+      refresh_rate =
+        apply(module, :get_auto_refresh, [name, data, @refresh_song_interval]) ||
+          @refresh_song_interval
 
       Process.send_after(self(), {:refresh, :auto}, refresh_rate)
 

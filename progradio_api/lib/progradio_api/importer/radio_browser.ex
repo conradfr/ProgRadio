@@ -11,8 +11,14 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   @servers_dns "all.api.radio-browser.info"
   @api_all_radios "/stations"
 
+  @max_concurrency 6
+  @task_timeout 30000
+
   def import() do
-    get_radios()
+    get_one_random_server()
+    |> get_radios()
+    |> format()
+    |> import_images()
     |> delete_images_from_removed_stations()
     |> store()
 
@@ -21,9 +27,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # Data
 
-  defp get_radios() do
-    host = get_one_random_server()
-
+  defp get_radios(host) do
     # ?limit=20&offset=7500
     HTTPoison.get!(
       "https://#{host}/json/#{@api_all_radios}",
@@ -42,8 +46,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       Map.get(s, "url") |> String.downcase() |> String.starts_with?("https") === false and
         Map.get(s, "url") |> String.downcase() |> String.ends_with?(".m3u8") === true
     end)
-    |> Enum.map(&data_mapping/1)
-    |> Enum.map(&import_image/1)
   end
 
   @spec data_mapping(struct) :: struct
@@ -77,7 +79,21 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     }
   end
 
+  defp format(data) do
+    data
+    |> Enum.map(&data_mapping/1)
+  end
+
   # Images
+
+  defp import_images(streams) do
+    streams
+    |> Task.async_stream(fn s -> import_image(s) end,
+      timeout: @task_timeout,
+      max_concurrency: @max_concurrency
+    )
+    |> Enum.reduce([], fn {:ok, s}, acc -> acc ++ [s] end)
+  end
 
   @spec import_image(struct) :: struct
   defp import_image(stream) do
