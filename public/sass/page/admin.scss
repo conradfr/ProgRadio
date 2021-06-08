@@ -1,0 +1,92 @@
+#admin {
+  margin-top: -10px;
+
+  .nav {
+/*    width: 500px;
+    margin-bottom: 20px;*/
+  }
+
+  .schedule-stats, .listening-stats {
+    width: 100%;
+
+    @include media-breakpoint-down(sm) {
+      margin-top: 10px;
+    }
+
+    th {
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    td {
+      height: 48px;
+      width: 13.5%;
+
+      vertical-align: middle;
+      text-align: center;
+
+      &.td-auto {
+        width: auto !important;
+      }
+
+      .trend {
+        &.trend-up {
+          color: darken($success, 20%);
+        }
+
+        &.trend-down {
+          color: $warning;
+          font-weight: bold;
+        }
+
+        &.trend-zero {
+          color: $danger;
+          font-weight: bold;
+        }
+      }
+
+      &.radio-header {
+        width: 53px;
+
+        img {
+          max-height: 32px;
+          max-width: 32px;
+        }
+      }
+
+      &.radio-streaming {
+        width: 48px;
+      }
+
+      &.radio-streaming, &.radio-streaming-brief {
+        .glyphicon-ok-sign {
+          font-size: 16px;
+          color: $success;
+        }
+
+        .badge {
+          background-color: $danger;
+        }
+      }
+    }
+  }
+
+  .schedule-stats {
+    td {
+      height: 60px;
+      vertical-align: middle;
+
+      img {
+        max-height: 31px;
+        max-width: 39px;
+      }
+
+    }
+  }
+}
+
+.admin-listening-side {
+  @include media-breakpoint-up(sm) {
+    position: sticky; top: 60px;
+  }
+}

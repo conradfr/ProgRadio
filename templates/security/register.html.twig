@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme registrationForm 'bootstrap_3_layout.html.twig' %}
+{% form_theme registrationForm 'bootstrap_5_layout.html.twig' %}
 
 {% block title %}{{ 'page.user.page_title'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container container-content">
+<div class="container">
     <div class="row">
-        <div class="col-md-6 col-xs-12">
-            <h3>{{ 'page.user.page_title'|trans }}</h3>
+        <div class="col-md-6 col-12">
+            <h3 class="mb-4">{{ 'page.user.page_title'|trans }}</h3>
 
             {{ form_start(registrationForm) }}
             {{ form_row(registrationForm.email) }}
@@ -20,16 +20,9 @@
             <button type="submit" class="btn btn-primary">{{ 'registrationForm.submit_create'|trans }}</button>
             {{ form_end(registrationForm) }}
         </div>
-        <div class="col-md-offset-1 col-md-5 col-xs-12">
-            <div class="well content-side-well">
-                <h5>Pourquoi s'enregistrer ?</h5>
-                <p>Un compte vous permet d'accéder à vos favoris radios et streamings depuis n'importe quel navigateur et depuis l'application</p>
-            </div>
-
-            <div class="well content-side-well">
-                <h5>Vous déjà un compte ?</h5>
-                <p><a href="{{ path('app_login') }}">Cliquez ici pour vous connecter</a></p>
-            </div>
+        <div class="offset-md-1 col-md-5 col-12 pt-4 pt-sm-0">
+            {%  include('default/boxes/whyaccount.html.twig') %}
+            {% include('default/boxes/haveaccount.html.twig') %}
         </div>
     </div>
 </div>

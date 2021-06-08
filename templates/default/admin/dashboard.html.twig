@@ -92,9 +92,9 @@
                                             <td class="radio-header"><img title="{{ radio.name }}" alt="{{ radio.name }}" src="{{ asset('img/radio/schedule/' ~ radio.codeName ~ '.png') }}"></td>
                                             <td class="td-auto">
                                                 <div class="row">
-                                                    <div class="col-md-offset-1 col-md-2">{{ self.nb(stats[radio.codeName][0].total, true) }}</div>
+                                                    <div class="offset-md-1 col-md-2">{{ self.nb(stats[radio.codeName][0].total, true) }}</div>
                                                     <div class="col-md-3">{{ self.trend(stats[radio.codeName][0].diff) }}</div>
-                                                    <div class="col-md-offset-1 col-md-2">{{ self.nb(stats[radio.codeName][0].section_total, false) }}</div>
+                                                    <div class="offset-md-1 col-md-2">{{ self.nb(stats[radio.codeName][0].section_total, false) }}</div>
                                                     <div class="col-md-3">{{ self.trend(stats[radio.codeName][0].section_diff) }}</div>
                                                 </div>
                                             </td>
@@ -159,9 +159,9 @@
                                 {% for entry in stats[radio.codeName] %}
                                     <td>
                                         <div class="row">
-                                            <div class="col-md-offset-1 col-md-2">{{ self.nb(entry.total, true) }}</div>
+                                            <div class="offset-md-1 col-md-2">{{ self.nb(entry.total, true) }}</div>
                                             <div class="col-md-3">{{ self.trend(entry.diff) }}</div>
-                                            <div class="col-md-offset-1 col-md-2">{{ self.nb(entry.section_total, false) }}</div>
+                                            <div class="offset-md-1 col-md-2">{{ self.nb(entry.section_total, false) }}</div>
                                             <div class="col-md-3">{{ self.trend(entry.section_diff) }}</div>
                                         </div>
                                     </td>

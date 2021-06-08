@@ -1,0 +1,36 @@
+#schedule-app {
+  padding: 0 0 20px !important;
+}
+
+.schedule-radio-grid {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  margin-left: $margin-from-radio-list;
+  padding-bottom: 1px; /* prevents vertical scroll bar due to sections */
+
+  position: relative;
+  //overflow: hidden;
+  white-space: nowrap;
+  cursor: ew-resize;
+  z-index: 1;
+
+  width: $viewport-width;
+  background-color: $background-color;
+
+  backface-visibility: hidden;
+  transition: transform 850ms cubic-bezier(.21,1.12,.67,.99);
+
+  .schedule-radio-grid-row {
+    display: flex;
+    align-items: stretch;
+
+    overflow: hidden;
+    white-space: nowrap;
+
+    box-sizing: border-box;
+    height: $grid-row-height;
+    padding: 2px 0;
+  }
+}
+
+

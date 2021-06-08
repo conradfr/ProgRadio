@@ -1,5 +1,5 @@
 <template>
-  <div class="program-section" :style="styleObject" :id="section.hash"
+  <div class="program-section" :style="styleObject" :id="`s-${section.hash}`"
     v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()" v-once>
   </div>
 </template>
@@ -16,6 +16,7 @@ export default {
       .diff(DateTime.fromISO(this.program_start)).as('minutes') * MINUTE_PIXEL;
 
     return {
+      popover: null,
       styleObject: {
         left: `${left}px`
       }
@@ -41,20 +42,26 @@ export default {
         if (description !== undefined && description !== null) {
           content += `<p class="section-description">${description}</p>`;
         }
+
         return content;
       }
 
       /* eslint-disable no-undef */
-      $(`#${this.section.hash}`).popover({
+      this.popover = new bootstrap.Popover(document.getElementById(`s-${this.section.hash}`), {
         content: popoverContent(this.section.presenter, this.section.description),
         title: popoverTitle(this.section.title, this.section.start_at),
         container: 'body',
+        trigger: 'focus',
         html: true
-      }).popover('show');
+      });
+
+      this.popover.show();
     },
     hoverOff() {
-      /* eslint-disable no-undef */
-      $(`#${this.section.hash}`).popover('destroy');
+      if (this.popover !== undefined && this.popover !== null) {
+        this.popover.dispose();
+        this.popover = null;
+      }
     }
   }
 };

@@ -45,8 +45,7 @@ class SiteController extends AbstractController
      *      }
      * )
      */
-    public function faq
-    (EntityManagerInterface $em, Request $request): Response
+    public function faq(EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favorites', []);
         $radios = $em->getRepository(Radio::class)->getActiveRadios();

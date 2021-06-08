@@ -1,24 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
 
 {% block body %}
-    <div class="container container-content">
+<div class="container">
     <div class="row">
-        <div class="col-md-6 col-sm-12 col-xs-12">
-            <div class="content">
-                <h3>{{ 'page.contact.title'|trans }}</h3>
+        <div class="col-md-6 col-12">
+            <h3 class="mb-4">{{ 'page.contact.title'|trans }}</h3>
 
-                {% for label, messages in app.flashes %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
-                    {% endfor %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
                 {% endfor %}
+            {% endfor %}
 
-                {{ form_start(form) }}
-                {{ form_widget(form) }}
-                {{ form_end(form) }}
-            </div>
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
         </div>
     </div>
 </div>

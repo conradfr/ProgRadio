@@ -1,0 +1,93 @@
+{% import "utils/menu.html.twig" as menu %}
+
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" onclick="scrollToCursor(this)">
+            <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios" class="d-inline-block align-text-top">Programmes Radio</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% set collections_menu = scheduleCollections(app.user, app.request.attributes) %}
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                {# Schedule #}
+                <li class="nav-item pe-0">
+                    <a class="nav-link" href="{{ path('app') }}#/schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a>
+                </li>
+                <li id="collections-top-menu-favorites" class="nav-item ps-2 pe-0 d-none d-sm-block{% if collections_menu['favorites'].radios|length == 0 %} hidden{% endif %}"
+                        title="{{ 'menu.favorites'|trans }}">
+                    <a class="nav-link" href="{{ path('app') }}#/schedule/favorites"><i class="bi bi-star-fill"></i></a>
+                </li>
+                {{ menu.collections_mobile(collections_menu) }}
+                {{ menu.collections_menu(collections_menu) }}
+
+                {# Streaming #}
+                <li class="nav-item pe-0">
+                    <a class="nav-link" href="{{ path('app') }}#/streaming/fr" style="padding-right: 0">{{ 'menu.streaming'|trans }}</a>
+                </li>
+                <li id="streams-top-menu-favorites" class="nav-item ps-2 pe-0 d-none d-sm-block{% if hasStreamFavorites(app.user, app.request.attributes) == false %} hidden{% endif %}"
+                    title="{{ 'menu.favorites'|trans }}">
+                    <a class="nav-link pr-0" href="{{ path('app') }}#/streaming/favorites"><i class="bi bi-star-fill"></i></a>
+                </li>
+                <li class="nav-item dropdown d-none d-sm-block">
+                    <a class="nav-link dropdown-toggle pe-0" href="#" id="navbarCollectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarCollectionsDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app') }}#/streaming/fr">{{ 'menu.favorites_menu.fr'|trans }}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app') }}#/streaming/all">{{ 'menu.favorites_menu.all'|trans }}</a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li id="collections-menu-favorites"{% if hasStreamFavorites(app.user, app.request.attributes) == false %} class="disabled"{% endif %}>
+                            <a class="dropdown-item" href="{{ path('app') }}#/schedule/favorites">{{ 'menu.favorites'|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {{ menu.favorites_mobile(hasStreamFavorites(app.user, app.request.attributes)) }}
+
+                {# Now #}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a>
+                </li>
+
+                {# Plus #}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ 'menu.plus'|trans}}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
+                    </ul>
+                </li>
+
+                {# User #}
+                <li class="nav-item dropdown pe-0">
+                    <a class="py-2 nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %} progradio-connected{% endif %}" style="font-size: 19px"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <li><a class="dropdown-item" href="{{ path('admin') }}">{{ 'menu.admin.dashboard'|trans }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_listening') }}">{{ 'menu.admin.listening'|trans }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_shares') }}">{{ 'menu.admin.shares'|trans }}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            {% endif %}
+
+                        <li><a class="dropdown-item" href="{{ path('user_page') }}">{{ 'menu.account'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'menu.logout'|trans }}</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="{{ path('app_login') }}">{{ 'menu.signon'|trans }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_register') }}">{{ 'menu.signup'|trans }}</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

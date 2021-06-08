@@ -21,7 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class StreamsController  extends AbstractBaseController
 {
-    protected const DEFAULT_RESULTS = 35;
+    protected const DEFAULT_RESULTS = 40;
 
     /**
      * @Route(

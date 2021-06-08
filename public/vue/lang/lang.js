@@ -32,7 +32,7 @@ export const messages = {
           modal: {
             abrv: 'mn',
             add: 'Ajouter',
-            cancel: 'Annuler le minuteur',
+            cancel: 'Annuler',
             close: 'Fermer',
             length: 'Durée',
             placeholder: 'Minutes',
@@ -101,7 +101,7 @@ export const messages = {
           modal: {
             abrv: 'mn',
             add: 'Add',
-            cancel: 'Cancel the current timer',
+            cancel: 'Cancel',
             close: 'Close',
             length: 'Time length',
             placeholder: 'Minutes',

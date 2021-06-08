@@ -9,7 +9,7 @@ module.exports = {
   // target: ['web', 'es5'],
   target: 'web',
   entry: {
-    app: [path.resolve(__dirname, '../public/vue/app.js'), path.resolve(__dirname, '../public/less/main.less')]
+    app: [path.resolve(__dirname, '../public/vue/app.js'), path.resolve(__dirname, '../public/sass/main.scss')]
   },
   output: {
     path: path.resolve(__dirname, '../public/build/js'),
@@ -37,8 +37,9 @@ module.exports = {
         use: ['file-loader']
       },*/
       {
-        test: /\.less$/,
+        test: /\.s[ac]ss$/i,
         use: [
+          // "style-loader",
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader', // translates CSS into CommonJS
@@ -46,14 +47,17 @@ module.exports = {
               url: false
             }
           },
+          // Creates `style` nodes from JS strings
+          // Translates CSS into CommonJS
+          // "css-loader",
+          // Compiles Sass to CSS
           {
-            loader: 'less-loader', // compiles Less to CSS
-            options: {
-              lessOptions: {
-                relativeUrls: false,
-              },
-            }
-          },
+            // Run postcss actions
+            loader: 'postcss-loader'
+          }, {
+            // compiles Sass to CSS
+            loader: 'sass-loader'
+          }
         ],
       }
     ],

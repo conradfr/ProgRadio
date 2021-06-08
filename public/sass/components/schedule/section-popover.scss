@@ -1,0 +1,21 @@
+/* section popover */
+.popover {
+  .section-time {
+    padding-left: 10px;
+  }
+
+  .popover-content {
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    font-size: $font-size-sm;
+
+    p {
+      margin: 0;
+
+      &.section-presenter {
+        font-style: italic;
+      }
+    }
+  }
+}

@@ -4,14 +4,14 @@
     <div class="collection-control collection-backward"
          v-on:click="clickCollectionBackward"
          v-on:mouseover="hover('backward')">
-      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <i class="bi bi-chevron-left"></i>
     </div>
     <div class="collection-control collection-forward"
          v-on:click="clickCollectionForward"
          v-on:mouseover="hover('forward')">
-      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <i class="bi bi-chevron-right"></i>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>

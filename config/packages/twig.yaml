@@ -5,3 +5,4 @@ twig:
         timezone: "%timezone%"
         streams_proxy: "%env(streams_proxy)%"
         api_url: "%env(API_URL)%"
+        legacy: "%env(LEGACY)%"

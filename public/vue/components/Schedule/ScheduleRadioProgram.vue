@@ -25,7 +25,7 @@
             <div class="program-description-short-inner">
               <span class="program-description-short-inner-song"
                   v-if="isCurrent && radioPlaying && currentSong">
-                <span class="glyphicon glyphicon-music" aria-hidden="true"></span>
+                <i class="bi bi-music-note-beamed"></i>
                 {{ currentSong }}
               </span>
               <span class="program-description-short-inner-text" v-once>

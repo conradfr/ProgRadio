@@ -1,25 +1,28 @@
 <template>
-  <div class="container schedule-page" id="schedule-day">
+  <div class="container mb-3">
     <div v-if="radio" class="row">
-      <div class="col-md-2 col-xs-12">
-        <div class="row">
-          <div class="col-md-12 col-xs-6">
-            <div class="schedule-day-radio center-block">
-              <img class="center-block" :alt="radio.name" style="width: 140px;"
+      <div class="col-md-2 col-12">
+        <div class="radio-page-side sticky-top">
+            <div class="text-center mb-4">
+              <img :alt="radio.name" style="width: 140px;"
                    :src="picture" v-once>
             </div>
-          </div>
           <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
         </div>
       </div>
-      <div v-if="radio" class="col-md-10 col-xs-12">
-        <div class="title">
-          <h5>{{ date | capitalize }}</h5>
-          <a v-if="collection" :href="'/' + locale + '/#/schedule/' + collection.code_name">
-            {{ $t('message.radio_page.back') }}</a>
+      <div v-if="radio" class="col-md-10 col-12">
+        <div class="row">
+          <div class="col-md-6 col-12 text-center text-sm-start">
+            <h4>{{ date | capitalize }}</h4>
+          </div>
         </div>
-
-        <div class="schedule-day-shows">
+        <div class="row">
+          <div class="col-md-12 mb-4 mt-2 mt-sm-0 text-center text-sm-start">
+            <a v-if="collection" :href="'/' + locale + '/#/schedule/' + collection.code_name">
+            {{ $t('message.radio_page.back') }}</a>
+          </div>
+        </div>
+        <div class="radio-page-shows">
           <radio-show
             v-for="entry in schedule" :key="entry.hash"
             :show="entry">
@@ -41,9 +44,7 @@ import { DateTime } from 'luxon';
 
 import {
   TIMEZONE,
-  THUMBNAIL_PAGE_PATH,
-  AUTOPLAY_INTERVAL_CHECK,
-  AUTOPLAY_INTERVAL_MAX_RETRIES
+  THUMBNAIL_PAGE_PATH
 } from '../config/config';
 
 import RadioShow from './Radio/RadioShow.vue';
@@ -58,8 +59,6 @@ export default {
   data() {
     return {
       locale: this.$i18n.locale,
-      autoPlayInterval: null,
-      autoPlayIntervalCounter: 0,
       date: DateTime.local().setZone(TIMEZONE).setLocale(locale)
         .toLocaleString(
           {
@@ -80,13 +79,7 @@ export default {
     const app = document.getElementById('app');
     app.classList.add('no-background');
 
-    // variable interpolation seems to not be working, no idea why
-    document.title = this.$i18n.tc('message.radio_page.title', { radio: this.radio.name });
-
-    // if autoplay
-    if (this.$route.query.play !== undefined && this.$route.query.play === '1') {
-      this.autoPlayInterval = setInterval(this.autoPlay, AUTOPLAY_INTERVAL_CHECK);
-    }
+    document.title = this.$i18n.t('message.radio_page.title', { radio: this.radio.name });
   },
   beforeDestroy() {
     const body = document.querySelector('body');
@@ -97,12 +90,9 @@ export default {
   },
   computed: {
     ...mapState({
-      player: state => state.player,
-      playing: state => state.player.playing,
       radios: state => state.schedule.radios,
       collections: state => state.schedule.collections,
       currentCollection: state => state.schedule.currentCollection,
-      playingStreamCodeName: state => state.player.radioStreamCodeName
     }),
     ...mapGetters([
       'hasSchedule'
@@ -137,21 +127,6 @@ export default {
     },
     picture() {
       return `${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
-    }
-  },
-  methods: {
-    autoPlay() {
-      if (this.radio !== null) {
-        clearInterval(this.autoPlayInterval);
-        this.play();
-        return;
-      }
-
-      if (this.autoPlayIntervalCounter > AUTOPLAY_INTERVAL_MAX_RETRIES) {
-        clearInterval(this.autoPlayInterval);
-      } else {
-        this.autoPlayIntervalCounter += 1;
-      }
     }
   },
   filters: {

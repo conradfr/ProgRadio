@@ -13,13 +13,20 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ForgottenPasswordType extends AbstractType
 {
+    public function __construct(protected TranslatorInterface $translator) { }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', EmailType::class, ['mapped' => false])
+            ->add('email', EmailType::class, [
+                'mapped' => false,
+                'label' => $this->translator->trans('registrationForm.email')
+            ])
         ;
     }
 }
+

@@ -1,29 +1,25 @@
 <template>
-  <div class="media-wrapper" v-bind:class="{ 'media-current': isCurrent }">
-    <div class="media-timeline">
+  <div class="d-flex align-items-stretch" v-bind:class="{ 'media-current': isCurrent }">
+    <div class="flex-shrink-0 media-timeline">
       .
     </div>
-    <div class="media-inner">
-      <div class="media">
-        <div v-if="show.picture_url" class="media-left">
-          <img alt="" class="media-object" style="width: 64px"
-               :src="picture">
-        </div>
-        <div class="media-body">
-          <h6 class="media-heading show-title">
-            {{ scheduleDisplay }} - {{ show.title }}
-          </h6>
-          <div v-if="show.host" class="show-host"> {{ show.host }}</div>
-          <nl2br v-if="show.description" tag="p" :text="show.description"
-                 class-name="show-description" />
-        </div>
+    <div v-if="show.picture_url" class="flex-shrink-0">
+      <img alt="" class="img-fluid" style="max-width: 64px; max-height: 64px"
+         :src="picture">
+    </div>
+    <div class="flex-fill ps-3 mb-3">
+      <h6 class="fw-bold mb-0">
+        {{ scheduleDisplay }} - {{ show.title }}
+      </h6>
+      <div v-if="show.host">{{ show.host }}</div>
+      <nl2br v-if="show.description" tag="p" :text="show.description"
+             class-name="fw-light mt-2" />
 
-        <div v-if="show.sections && show.sections.length > 0" class="sections">
-          <radio-show-section
-              v-for="entry in show.sections" :key="entry.hash"
-              :section="entry">
-          </radio-show-section>
-        </div>
+      <div v-if="show.sections && show.sections.length > 0" class="mt-1">
+        <radio-show-section
+            v-for="entry in show.sections" :key="entry.hash"
+            :section="entry">
+        </radio-show-section>
       </div>
     </div>
   </div>

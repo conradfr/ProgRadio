@@ -1,0 +1,296 @@
+$program-height: 60px;
+
+.schedule-radio-grid {
+  .schedule-radio-grid-row {
+    .program-container {
+
+/*      &:after {
+        position: absolute;
+        display: block;
+        top: 80%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        content: "...";
+        font-weight: bold;
+        font-size: 24px;
+        border: 1px solid red;
+      }*/
+
+      &.prevday::after, &.nextday::after {
+        content: "...";
+        font-weight: bold;
+        font-size: 26px;
+        letter-spacing: -2px;
+        color: darken($background-color, 35%);
+        cursor: e-resize;
+
+        position: absolute;
+        top: 60%;
+        width: 32px;
+        height: 20px;
+        display:flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &.prevday::after {
+        left: -15px;
+      }
+
+      &.nextday::after {
+        right: -10px;
+      }
+
+      position: absolute;
+
+      margin-top: 1px;
+      height: $program-height;
+      box-sizing: border-box;
+
+      user-select: none;
+
+      &.none {
+        //position: fixed; seems to work only on FF
+        position: relative;
+
+        @include width(350px);
+
+        background-color: lighten($background-color, 3%);
+
+        transition: left 200ms ease-in-out 300ms;
+
+        .program {
+          margin-right: 0 !important;
+
+          .program-inner {
+            user-select: none;
+          }
+        }
+      }
+
+      .program {
+        height: 100%;
+        box-sizing: border-box;
+
+        margin-right: 5px;
+        background-color: $program-color;
+        border: none;
+        border-left: 3px solid darken($background-color, 20%);
+
+        transition: box-shadow 20ms ease-in-out;
+        user-select: none;
+
+        &.program-current {
+          background-color: $program-hover-color;
+          border-left: 3px solid mix(darken($background-color, 20%), $timeline-cursor-color, 85%);
+        }
+
+        &.program-full {
+          visibility: hidden;
+          position: absolute;
+          //overflow-y: scroll;
+
+          transition: height 300ms ease-in-out 400ms, width 500ms ease-in-out, min-width 500ms ease-in-out;
+        }
+
+        &.long-enough {
+          @include media-breakpoint-down(sm) {
+            .schedule-display {
+              visibility: visible !important;
+              opacity: 1 !important;
+            }
+          }
+        }
+
+        &:hover {
+          z-index: 3 !important;
+          box-shadow: 0 0 9px -4px rgba(0,0,0,.25);
+
+          .schedule-display {
+            visibility: visible !important;
+            opacity: 1 !important;
+          }
+
+/*          .program-description-short-inner-song {
+            font-weight: bold;
+          }*/
+
+          .program-description-short-inner-text {
+            visibility: visible !important;
+            opacity: 1 !important;
+
+/*            padding-left: 4px;
+            margin-left: 4px;
+            border-left: 1px solid darken(@background-color, 25%);*/
+          }
+        }
+
+        &.program-current, &:hover {
+          .program-img {
+            opacity: 1 !important;
+            width: auto !important;
+          }
+
+          .program-description-short-inner {
+            &:before {
+              background: linear-gradient(to right, fade($program-hover-color, 0%) 90%, fade($program-hover-color, 88%) 95%, fade($program-hover-color, 99.9%) 99%) !important;
+            }
+          }
+        }
+
+        .program-inner {
+          $img-height: 58px;
+
+          height: 100%;
+          width: 100%;
+
+          padding: 7px 10px 0 10px;
+          border: 1px solid #e8e8e8;
+          border-left: 0;
+
+          user-select: none;
+          -moz-user-select: none;
+
+          .program-img {
+            float: left;
+            height: $img-height;
+
+            opacity: 0;
+            width: 0;
+            transition: opacity 300ms ease-in-out;
+
+            margin: -7px 10px 0 -10px;
+
+            background-repeat: no-repeat;
+            background-position: left;
+            background-size: contain;
+
+            img {
+              height: $img-height;
+
+              -webkit-user-select: none; /* Safari 3.1+ */
+              -moz-user-select: none; /* Firefox 2+ */
+              -ms-user-select: none; /* IE 10+ */
+              user-select: none; /* Standard syntax */
+              user-drag: none;
+              -webkit-user-drag: none;
+            }
+          }
+
+          .program-infos {
+            // transition: margin-left 200ms cubic-bezier(.21, 1.12, .67, .99) 200ms;
+          }
+
+          .program-title {
+            z-index: 1;
+            font-weight: bold;
+            color: #262b2f;
+            line-height: 1;
+
+            user-select: none;
+            -moz-user-select: none;
+
+            margin-bottom: 1px;
+            overflow: hidden;
+            white-space: nowrap;
+
+            .schedule-display {
+              float: right;
+
+              z-index: 2;
+              visibility: hidden;
+              opacity: 0;
+              transition: opacity 300ms ease-out;
+              background-color: white;
+
+              color: darken($background-color, 25%);
+              font-weight: normal;
+              font-size: $font-size-sm;
+            }
+          }
+
+          .program-host {
+            color: $radio-list-background;
+            font-size: 0.846rem;
+
+            user-select: none;
+            -moz-user-select: none;
+
+            overflow: hidden;
+            white-space: nowrap;
+
+            margin-bottom: 3px;
+          }
+
+          .program-description-short {
+            margin-top: -3px;
+
+            &.program-description-nohost {
+              margin-top: 8px;
+            }
+
+            .program-description-short-inner {
+              position: relative;
+
+              &:before {
+                content: '';
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background: linear-gradient(to right, rgba(255,255,255,0) 90%,rgba(255,255,255,0.88) 95%,rgba(255,255,255,1) 99%);
+              }
+
+              .program-description-short-inner-text {
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 300ms ease-out;
+
+                color: darken($background-color, 50%);
+                font-weight: normal;
+              }
+
+              .program-description-short-inner-song {
+                color: darken($background-color, 65%);
+                //font-weight: bold;
+
+                padding-right: 4px;
+                margin-right: 7px;
+                //border-right: 1px solid darken(@background-color, 25%);
+              }
+
+              font-size: 0.846rem;
+
+              user-select: none;
+              -moz-user-select: none;
+
+              overflow: hidden;
+              white-space: nowrap;
+            }
+          }
+
+          .program-section {
+            position: absolute;
+            top: calc(#{$program-height} - 4px);
+
+            height: 6px;
+            width: 6px;
+            background-color: darken($background-color, 20%);
+            border-radius: 50%;
+            display: inline-block;
+
+            cursor: pointer;
+
+            &:hover {
+             background-color: lighten($primary, 10%);
+            }
+          }
+        }
+      }
+    }
+  }
+}

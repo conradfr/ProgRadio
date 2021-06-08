@@ -1,30 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}S'enregistrer{% endblock %}
+{% block title %}{{ 'page.registered.page_title'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container container-content">
+<div class="container">
     <div class="row">
         <div class="col-md-6 col-xs-12">
-            <h3>Créer un compte</h3>
+            <h3 class="mb-4">{{ 'page.registered.page_title'|trans }}</h3>
 
             <div class="alert alert-success" role="alert">
-                <strong>Votre compte a bien été créé !</strong><br>
-                Si vous aviez des radios et streamings en favoris ceux-ci ont été automatiquement ajoutés à votre compte.
+                <strong>{{ 'page.registered.alert_1'|trans }}</strong><br>
+                {{ 'page.registered.alert_2'|trans }}
             </div>
 
             <p>
-                <strong>Que souhaitez-vous faire maintenant ?</strong><br>
-                <a href="{{ path('app') }}#/schedule">Consulter les programmes radios</a><br>
-                <a href="{{ path('app') }}#/streaming">Ecouter des radios en streaming</a>
+                <strong>{{ 'page.registered.what_now_question'|trans }}</strong><br>
+                <a href="{{ path('app') }}#/schedule">{{ 'page.registered.what_now_choice1'|trans }}</a><br>
+                <a href="{{ path('app') }}#/streaming">{{ 'page.registered.what_now_choice2'|trans }}</a>
             </p>
 
         </div>
-        <div class="col-md-offset-1 col-md-5 col-xs-12">
-            <div class="well content-side-well">
-                <h5>Pourquoi s'enregistrer ?</h5>
-                <p>Un compte vous permet d'accéder à vos favoris radios et streamings depuis n'importe quel navigateur et depuis l'application</p>
-            </div>
+        <div class="col-md-offset-1 col-md-5 col-xs-12 pt-4 pt-sm-0">
+            {%  include('default/boxes/whyaccount.html.twig') %}
         </div>
     </div>
 </div>
