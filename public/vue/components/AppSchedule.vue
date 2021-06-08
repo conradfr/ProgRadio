@@ -1,5 +1,5 @@
 <template>
-  <div v-on:keyup.f="keyupFav">
+  <div v-on:keyup.f="keyupFav" style="overflow-x: hidden; padding: 0 0 !important">
     <collection-switcher></collection-switcher>
     <timeline></timeline>
     <timeline-cursor-head></timeline-cursor-head>

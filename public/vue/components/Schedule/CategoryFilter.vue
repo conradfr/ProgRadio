@@ -5,9 +5,9 @@
       v-for="entry in categories" :key="entry.code_name"
       v-on:click="toggleExclude(entry.code_name)"
     >
-      <span class="glyphicon" aria-hidden="true"
-        :class="{ 'glyphicon-ok': !isCategoryExcluded(entry.code_name),
-                    'glyphicon-minus': isCategoryExcluded(entry.code_name) }">
+      <span class="bi"
+        :class="{ 'bi-check-lg': !isCategoryExcluded(entry.code_name),
+                  'bi-dash-lg': isCategoryExcluded(entry.code_name) }">
       </span>{{ entry.name_FR }}
     </div>
   </div>

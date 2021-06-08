@@ -1,0 +1,28 @@
+$white: #ffffff;
+
+$primary: #2196F3;
+
+$body-color: #666;
+
+$background-color: #f9f9f9;
+$player-background: lighten($primary, 5%);
+$filter-background: darken($primary, 13%);
+
+$timeline-color: #969696;
+$timeline-line-color: darken($background-color, 25%);
+
+$radio-stream: #4d6a82;
+
+$player-color: $white;
+$fader-primary: #337ab7;
+$timer-active: #5eff3b;
+
+$timeline-cursor-color-today: #2196f3;
+$timeline-cursor-color: darken($timeline-color, 5%);
+
+$collection-background: darken($primary, 10%);
+
+$radio-list-background: #343434;
+
+$program-color: $white;
+$program-hover-color: mix($white, $primary, 96.5%);

@@ -1,9 +1,8 @@
 <template>
-  <div class="btn-group" :class="{'hidden-xs': hideMobile}" role="group">
-    <a role="button" class="btn btn-info" v-on:click="addTo">
-      +{{ $t('message.player.timer.modal.x_minutes', { minutes: add }) }}
-    </a>
-  </div>
+  <button type="button" class="btn btn-info" v-on:click="addTo"
+    :class="{'d-none d-sm-block': hideMobile}">
+    +{{ $t('message.player.timer.modal.x_minutes', { minutes: add }) }}
+  </button>
 </template>
 
 <script>

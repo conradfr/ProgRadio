@@ -1,9 +1,13 @@
 <template>
   <transition appear>
-    <div v-if="isLoading" class="loading">
-      <div class="alert alert-progradio" role="alert">
-      <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
-      {{ $t('message.loading') }}
+    <div class="loading" v-if="isLoading">
+      <div class="d-flex align-items-center alert alert-progradio" role="alert">
+        <div class="alert-progradio-icon refresh-animate">
+          <i class="bi bi-arrow-repeat"></i>
+        </div>
+        <div class="flex-grow-1 alert-progradio-text text-center">
+          {{ $t('message.loading') }}
+        </div>
       </div>
     </div>
   </transition>

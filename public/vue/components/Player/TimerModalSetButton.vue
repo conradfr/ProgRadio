@@ -1,8 +1,8 @@
 <template>
-  <div class="btn-group" :class="{'hidden-xs': hideMobile}" role="group">
-    <a role="button" class="btn btn-primary" v-on:click="setTo">
-      {{ $t('message.player.timer.modal.x_minutes', { minutes: minutes }) }}</a>
-  </div>
+  <button type="button" class="btn btn-primary" v-on:click="setTo"
+    :class="{'d-none d-sm-block': hideMobile}">
+    {{ $t('message.player.timer.modal.x_minutes', { minutes: minutes }) }}
+  </button>
 </template>
 
 <script>
@@ -24,7 +24,13 @@ export default {
       });
 
       /* eslint-disable no-undef */
-      $('#timerModal').modal('hide');
+      const modalElem = document.getElementById('timerModal');
+      const modalInstance = bootstrap.Modal.getInstance(modalElem);
+
+      if (modalInstance !== undefined && modalInstance !== null) {
+        modalInstance.hide();
+      }
+
       this.$store.dispatch('setTimer', minutes);
     }
   }

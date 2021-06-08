@@ -10,30 +10,27 @@
            v-on:mouseover="filterFocus(true)"
            v-on:mouseleave="filterFocus(false)"
       >
-        <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+        <i class="bi bi-funnel"></i>
       </div>
-      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <i class="bi bi-chevron-left"></i>
     </div>
-    <div class="timeline-control timeline-calendar  hidden-xs hidden-sm">
-      <div class="timeline-calendar-inner">
-        <div class="timeline-calendar-action timeline-calendar-backward">
-          <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"
-                v-on:click="clickCalendarBackward"></span>
-        </div>
-        <div class="timeline-calendar-date">
+    <div class="timeline-control timeline-calendar d-none d-md-flex">
+      <div class="timeline-calendar-action timeline-calendar-backward align-self-start ps-2">
+        <i class="bi bi-caret-left-fill" v-on:click="clickCalendarBackward"></i>
+      </div>
+      <div class="timeline-calendar-date align-self-center flex-grow-1">
           <span
               v-bind:class="{ 'timeline-calendar-no-click': isToday }"
               v-on:click="clickCalendarToday">{{ scheduleDate }}</span>
-        </div>
-        <div class="timeline-calendar-action timeline-calendar-forward">
-          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"
-                v-bind:class="{ 'timeline-calendar-disabled': isTomorrow }"
-                v-on:click="clickCalendarForward"></span>
-        </div>
+      </div>
+      <div class="timeline-calendar-action timeline-calendar-forward align-self-end pe-2">
+        <i class="bi bi-caret-right-fill"
+           v-bind:class="{ 'timeline-calendar-disabled': isTomorrow }"
+           v-on:click="clickCalendarForward"></i>
       </div>
     </div>
     <div class="timeline-control timeline-control-right" v-on:click="clickForward">
-      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <i class="bi bi-chevron-right"></i>
     </div>
     <div v-for="hour in 24" :key="hour" class="time" v-once>
       {{ hour | toTime }}

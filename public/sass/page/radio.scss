@@ -1,0 +1,92 @@
+.radio-page-side {
+  top: $padding-top;
+}
+
+.radio-page-shows {
+  .media-timeline {
+    margin: 0 auto;
+    padding: 0;
+    width: 50px;
+    position: relative;
+
+    text-align: center;
+    color: $timeline-line-color;
+    font-size: 79px;
+    line-height: 5px;
+    vertical-align: top;
+    padding-left: 2px;
+
+    &:after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      border-left: 2px solid $timeline-line-color;
+      transform: translate(-50%);
+    }
+  }
+
+  .media-current {
+    .media-timeline {
+      color: $primary;
+
+      &:after {
+        border-color: $primary;
+      }
+    }
+  }
+}
+
+.radio-page-streams {
+  .webradios-header {
+    width: 65%;
+
+    color: #4d6a82;
+    text-align: center;
+    font-weight: bold;
+
+    margin: 17px auto 20px;
+
+    &:before, &:after {
+      content: "";
+      display: inline-block;
+      width: 50%;
+      opacity: 0.3;
+      margin: 0 .5em 0 -55%;
+      vertical-align: middle;
+      border-bottom: 1px solid;
+    }
+
+    &:after {
+      margin: 0 -55% 0 .5em;
+    }
+  }
+
+  .radio-page-play {
+    img {
+      height: 46px;
+      width: 46px;
+      filter: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
+    }
+
+    div {
+      color: $radio-stream;
+      margin-top: 2px;
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      img {
+        filter: invert(65%) sepia(47%) saturate(6464%) hue-rotate(183deg) brightness(97%) contrast(97%);
+      }
+
+      div {
+        color: $primary;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,192 @@
+.timeline {
+  z-index: 3;
+  box-sizing: border-box;
+  position: fixed;
+  top: $navbar-height;
+
+  height: $timeline-height;
+  line-height: $timeline-height;
+  display: flex;
+  align-items: stretch;
+
+  //width: @viewport-width;
+  overflow: hidden;
+  white-space: nowrap;
+
+  color: $timeline-color;
+  font-size: 0;
+
+  padding-left: $margin-from-radio-list;
+  background-color: $background-color;
+
+  backface-visibility: hidden;
+  transition: left 350ms cubic-bezier(.21,1.12,.67,.99);
+
+  .timeline-control {
+    z-index: 7;
+    display: block;
+    position: fixed;
+    top: $navbar-height;
+
+    box-sizing: border-box;
+    background-color: darken($background-color, 30%);
+
+    opacity: 0.8;
+    transition: opacity 70ms ease-out;
+
+    height: 41px;
+    padding-top: 2px;
+
+    color: darken($background-color, 55%);
+    font-size: 18px;
+    cursor: pointer;
+
+    &:hover, &.filter-icon-active {
+      opacity: 0.97;
+    }
+
+    &.timeline-calendar {
+      right: $timeline-height;
+      min-width: 110px;
+      max-width: 110px;
+
+      box-shadow: -1px 2px 4px -3px rgba(0,0,0,0.4);
+      background-color: darken($background-color, 15%);
+
+      font-size: 0.923rem;
+      text-align: center;
+      cursor: default;
+
+      i {
+        cursor: pointer;
+
+        &.timeline-calendar-disabled {
+          cursor: default;
+          opacity: 0.3;
+        }
+      }
+
+      .timeline-calendar-date {
+        span:not(.timeline-calendar-no-click) {
+          cursor: pointer;
+        }
+      }
+    }
+
+    &.timeline-control-left {
+      left: 0;
+      text-align: right;
+      box-shadow: 2px 0 5px -3px rgba(0,0,0,0.4);
+
+      @include width(71px);
+
+      padding-right: 8px;
+      margin-right: 6px;
+
+      .filter-icon {
+        font-size: 17px;
+        text-align: center;
+
+        float: left;
+        height: $timeline-height;
+        width: 32px;
+
+        padding-top: 1px;
+        margin-left: 6px;
+
+        &:hover, &.filter-icon-active {
+          color: white;
+          background-color: $filter-background;
+        }
+
+        &.filter-icon-enabled {
+          color: $filter-background;
+        }
+      }
+    }
+
+    &.timeline-control-right {
+      right: 0;
+      text-align: center;
+      box-shadow: 0 2px 4px -3px rgba(0,0,0,0.4);
+
+      @include width($timeline-height);
+
+      padding-left: -1px;
+      margin-left: 5px;
+    }
+  }
+
+  .time {
+    box-sizing: border-box;
+    $width: calc(#{$one-hour-pixel}px - 1px);
+    @include width($width);
+
+    margin-top: 11px;
+    margin-left: 1px;
+    height: 20px;
+    //line-height: normal;
+    line-height: 160%; // ??? it's working ...
+
+    font-size: 1rem;
+    user-select: none;
+
+    padding-left: 11px;
+    border-left: 1px solid $timeline-color;
+  }
+}
+
+.timeline-cursor {
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 2px;
+
+  opacity: 0.8;
+  background-color: $timeline-cursor-color;
+
+  &.timeline-cursor-today {
+    background-color: $timeline-cursor-color-today;
+  }
+}
+
+.timeline-cursor-head {
+  z-index: 8;
+  position: fixed;
+  top: calc(#{$navbar-height} + #{$timeline-height} - 3px);
+  left: 0;
+
+  height: 3px;
+  width: 2px;
+
+  backface-visibility: hidden;
+  transition: left 850ms cubic-bezier(.21,1.12,.67,.99);
+
+  background-color: $timeline-cursor-color;
+
+  &:after {
+    position: absolute;
+    top: -7px;
+    left: 1px;
+    display: block;
+    width: 0;
+    height: 0;
+    content: '';
+    -webkit-transform: translate3d(-50%,0,0);
+    transform: translate3d(-50%,0,0);
+    border: 8px solid transparent;
+    opacity: 0.8;
+    border-top-color: $timeline-cursor-color;
+  }
+
+  &.timeline-cursor-head-today {
+    background-color: $timeline-cursor-color-today;
+
+    &:after {
+      border-top-color: $timeline-cursor-color-today;
+    }
+  }
+}

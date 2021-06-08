@@ -1,12 +1,12 @@
 <template>
-  <div class="schedule-page-streams-one">
+  <div class="radio-page-streams-one text-center mb-4">
     <div
         v-if="player.playing === false || stream.code_name !== playingStreamCodeName"
         v-on:click="play"
-        class="schedule-day-play center-block">
+        class="radio-page-play">
       <img :alt="$t('message.radio_page.play', { radio: stream.name })"
-           class="schedule-day-play-button" src="/img/play-button-inside-a-circle.svg">
-      <div class="schedule-day-play-text">
+           src="/img/play-button-inside-a-circle.svg">
+      <div>
        {{ $t('message.radio_page.play', { radio: stream.name }) }}
       </div>
     </div>
@@ -14,10 +14,10 @@
     <div
         v-if="player.playing === true && stream.code_name === playingStreamCodeName"
         v-on:click="stop"
-        class="schedule-day-play center-block">
-      <img :alt="$t('message.radio_page.stop')" class="schedule-day-play-button"
+        class="radio-page-play">
+      <img :alt="$t('message.radio_page.stop')"
            src="/img/rounded-pause-button.svg">
-      <div class="schedule-day-play-text">
+      <div>
        {{ $t('message.radio_page.stop') }}
       </div>
     </div>

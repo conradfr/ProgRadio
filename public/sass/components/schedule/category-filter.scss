@@ -1,0 +1,30 @@
+#category-filter {
+  z-index: 1250; /* to get over radio list*/
+  opacity: 0.97;
+
+  position: fixed;
+  top: 91px;
+  left: 6px;
+  width: 135px;
+
+  background-color: $filter-background;
+
+  .category-one {
+    padding: 4px 10px;
+
+    color: $white;
+    cursor: pointer;
+
+    &.category-one-excluded {
+      opacity: (0.3);
+    }
+
+    &:hover {
+      background-color: darken($filter-background, 5%);
+    }
+
+    span {
+      margin-right: 10px;
+    }
+  }
+}

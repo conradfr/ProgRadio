@@ -14,7 +14,7 @@
         {{ currentSong }}
       </div>
       <div v-else-if="radio.tags" class="streams-one-tags" v-once>
-        <span class="label label-inverse"
+        <span class="badge badge-inverse"
           v-for="tag in tags()" :key="tag">
           {{ tag }}
         </span>

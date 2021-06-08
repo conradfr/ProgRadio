@@ -1,15 +1,16 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-md-12">
-        <nav aria-label="Page navigation">
+      <div class="col-md-12 pb-5 pb-sm-5 pb-md-0">
+        <nav aria-label="navigation">
           <ul class="pagination">
-            <li :class="{ 'disabled': page === 1 }">
-              <a v-on:click="gotoPage(page - 1)" aria-label="Previous">
+            <li class="page-item" :class="{ 'disabled': page === 1 }">
+              <a class="page-link" v-on:click="gotoPage(page - 1)" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
             <li
+                class="page-item"
                 v-for="(n, index) in pagesList"
                 :key="n"
                 :class="{
@@ -17,10 +18,11 @@
                   'ellipsis': pagesList[index] - pagesList[index - 1] > 1
                 }"
             >
-              <a v-on:click="gotoPage(n)">{{ n }}</a>
+              <a class="page-link"
+                 v-on:click="gotoPage(n)">{{ n }}</a>
             </li>
-            <li :class="{ 'disabled': page === pages }">
-              <a v-on:click="gotoPage(page + 1)" aria-label="Next">
+            <li class="page-item" :class="{ 'disabled': page === pages }">
+              <a class="page-link" v-on:click="gotoPage(page + 1)" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>

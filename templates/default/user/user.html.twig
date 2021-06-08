@@ -1,34 +1,32 @@
 {% extends 'base.html.twig' %}
 
 {% macro active(entry, route) %}
-    {{ entry == route ? ' class="active"' : '' }}
+    {{ entry == route ? 'class="nav-link active" aria-current="page"' : 'class="nav-link"' }}
 {% endmacro %}
 
 {% set current_path = app.request.get('_route') %}
 
 {% block body %}
-    <div class="container container-content">
+<div class="container">
     <div class="row">
-        <div class="col-md-3 col-sm-4 col-xs-12" role="navigation">
-            <ul class="nav-user-desktop nav-desktop nav hidden-xs">
-                <li role="presentation"{{ _self.active('user_page_email', current_path) }}><a href="{{ path('user_page_email')}}">Email</a></li>
-                <li role="presentation"{{ _self.active('user_page_password', current_path) }}><a href="{{ path('user_page_password') }}">Mot de passe</a></li>
-                <li role="presentation"{{ _self.active('user_page_delete', current_path) }}><a href="{{ path('user_page_delete') }}">Suppression</a></li>
+        <div class="col-md-3 col-sm-4 col-12" role="navigation">
+            <ul class="mt-3 nav flex-column d-none d-sm-block">
+                <li class="nav-item"><a {{ _self.active('user_page_email', current_path) }} href="{{ path('user_page_email') }}">Email</a></li>
+                <li class="nav-item"><a {{ _self.active('user_page_password', current_path) }} href="{{ path('user_page_password') }}">Mot de passe</a></li>
+                <li class="nav-item"><a {{ _self.active('user_page_delete', current_path) }} href="{{ path('user_page_delete') }}">Suppression</a></li>
             </ul>
 
-            <ul class="nav-user-mobile nav nav-pills visible-xs">
-                <li role="presentation"{{ _self.active('user_page_email', current_path) }}><a href="{{ path('user_page_email')}}">Email</a></li>
-                <li role="presentation"{{ _self.active('user_page_password', current_path) }}><a href="{{ path('user_page_password') }}">Mot de passe</a></li>
-                <li role="presentation"{{ _self.active('user_page_delete', current_path) }}><a href="{{ path('user_page_delete') }}">Suppression</a></li>
+            <ul class="mt-3 mb-3 nav nav-pills nav-fill d-block d-sm-none">
+                <li class="nav-item"><a {{ _self.active('user_page_email', current_path) }} href="{{ path('user_page_email') }}">Email</a></li>
+                <li class="nav-item"><a {{ _self.active('user_page_password', current_path) }} href="{{ path('user_page_password') }}">Mot de passe</a></li>
+                <li class="nav-item"><a {{ _self.active('user_page_delete', current_path) }} href="{{ path('user_page_delete') }}">Suppression</a></li>
             </ul>
         </div>
-        <div class="col-md-6 col-sm-8 col-xs-12">
-            <div class="content">
-                <h4>Mon compte » {% block section %}{% endblock %}</h4>
-                <div class="user-section">
-                    {% block content %}
-                    {% endblock %}
-                </div>
+        <div class="col-md-6 col-sm-8 col-12">
+            <h4 class="mb-3">Mon compte » {% block section %}{% endblock %}</h4>
+            <div class="user-section">
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
     </div>

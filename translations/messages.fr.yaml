@@ -12,6 +12,9 @@ menu:
     faq: Faq
 
     favorites: Mes favoris
+    favorites_menu:
+        fr: France
+        all: Monde entier
     logout: Se déconnecter
     now: En ce moment
     plus: Plus
@@ -35,9 +38,22 @@ page:
         page_title: 'FAQ - Les programmes radios en France'
         page_description: 'Questions sur Programmmes-Radio.io'
 
+    forgotten_password:
+        error: <strong>Une erreur est survenue.</strong><br>Si le lien de récupération de mot de passe est obselète merci de recommencer la procédure
+        click_here: cliquez ici
+        done_title: Réinitialisation du mot de passe
+        done: '<strong>Le mot de passe a été mis à jour.</strong><br>Vous pouvez vous connecter %link%en cliquant ici%link_end%.'
+        page_title: Mot de passe oublié
+        success: Si un compte utilisant l'email <strong>%email</strong> a été trouvé, un message avec un lien pour réinitialiser le mot de passe lui a été envoyé.
+        submit: Soumettre
+
+    login:
+        forgotten_password: Mot de passe oublié ?
+        page_title: Connexion
+
     now:
         back: '← Retourner à la grille des programmes'
-        no_schedule: <strong>Oups ...</strong> aucuns programmes disponibles.'
+        no_schedule: <strong>Oups ...</strong> aucuns programmes disponibles.
         page_description: 'Quoi écouter tout de suite ?'
         page_title: 'Programmes en ce moment à la radio'
         title: 'En ce moment à la radio'
@@ -49,8 +65,30 @@ page:
         play: 'Ecouter %radio%'
         title: 'Ecouter %radio% - Grille des programmes'
 
+    registered:
+        page_title: Créer un compte
+        alert_1: Votre compte a bien été créé !
+        alert_2: Si vous aviez des radios et streamings en favoris ceux-ci ont été automatiquement ajoutés à votre compte.
+        what_now_question: Que souhaitez-vous faire maintenant ?
+        what_now_choice1: Consulter les programmes radios
+        what_now_choice2: Ecouter des radios en streaming
+
+
     user:
         page_title: Créer un compte
+
+boxes:
+    already_account:
+        title: Vous déjà un compte ?
+        content: Cliquez ici pour vous connecter
+
+    no_account:
+        title: Pas encore de compte ?
+        content: Cliquez ici pour vous enregistrer
+
+    why_account:
+        title: Pourquoi s'enregistrer ?
+        content: Un compte vous permet d'accéder à vos favoris radios et streamings depuis n'importe quel navigateur et depuis l'application
 
 registrationForm:
     email: 'Courriel'
@@ -63,5 +101,20 @@ registrationForm:
     password: 'Mot de passe'
     password_confirm: 'Confirmation du mot de passe'
     submit_create: 'Créer mon compte'
+
+connectionForm:
+    already_logged: Vous êtes actuellement connecté en tant que %email%
+    logout: se déconnecter
+    email: 'Courriel'
+    password: 'Mot de passe'
+    remember_me: 'Se rappeler de moi'
+    submit_connect: 'Se connecter'
+
+updatePasswordForm:
+    new: Nouveau mot de passe
+    new_confirm: Confirmation du nouveau mot de passe
+    error_not_same: Les mots de passes ne sont pas identiques.
+    error_not_empty: Ce champ ne peut être vide.
+    error_length: Le mot de passe doit contenir au moins 8 caractères.
 
 legal: 'Mentions légales'

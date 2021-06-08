@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <streams-list-filters></streams-list-filters>
-          <div class="streams" v-if="radios.length">
+          <div class="streams d-flex justify-content-center" v-if="radios.length">
             <streams-list-one
               v-for="entry in radios"
               :key="entry.code_name"
@@ -12,7 +12,7 @@
             ></streams-list-one>
           </div>
           <div class="row" v-else-if="isLoading === false">
-            <div class="col-md-offset-3 col-md-6">
+            <div class="offset-md-3 col-md-6">
               <div class="alert alert-warning space-up-20 text-center" role="alert">
                 {{ $t('message.streaming.no_results') }}</div>
             </div>

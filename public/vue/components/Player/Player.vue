@@ -1,46 +1,47 @@
 <template>
   <div class="navbar-player">
     <div v-if="this.player.radio" class="player-radio-link">
-      <a :href="radioLink()"><span class="glyphicon glyphicon-share"></span></a>
+      <a :href="radioLink()"><i class="bi bi-link-45deg"></i></a>
     </div>
     <transition name="timer-fade" mode="out-in">
       <timer v-if="displayTimer"></timer>
     </transition>
     <div class="player-wrap">
-      <div class="player-sound player-sound-mute"
-           v-on:click="toggleMute" v-if="!player.externalPlayer">
-        <span class="glyphicon glyphicon-volume-off" aria-hidden="true"
-              :class="{ 'player-muted': player.muted }"></span>
-      </div>
       <div class="player-sound player-sound-fader"
            v-if="!player.externalPlayer"
            v-on:mouseover="volumeFocus(true)"
            v-on:mouseleave="volumeFocus(false)"
            v-on:click.stop="toggleMute">
-        <span class="glyphicon"
+        <i class="bi"
           :class="{
-            'glyphicon-volume-off': player.muted || player.focus.icon,
+            'bi-volume-mute-fill': player.muted || player.focus.icon,
             'player-muted': player.muted,
-            'glyphicon-volume-up': !(player.muted || player.focus.icon) && player.volume > 4,
-            'glyphicon-volume-down': !(player.muted || player.focus.icon) && player.volume <= 4
-          }"
-          aria-hidden="true"></span>
+            'bi-volume-up-fill': !(player.muted || player.focus.icon) && player.volume > 4,
+            'bi-volume-down-fill': !(player.muted || player.focus.icon) && player.volume <= 4
+          }"></i>
       </div>
       <div class="player-playpause" v-on:click="togglePlay"
         :class="{ 'player-playpause-disabled': player.radio === null }">
-        <span class="glyphicon icon-round"
-          :class="{ 'glyphicon-play': !player.playing, 'glyphicon-pause': player.playing }"
-          aria-hidden="true"></span>
+        <i class="bi"
+           :class="{
+          'bi-play-circle': !player.playing,
+          'bi-pause-circle': player.playing
+        }"></i>
       </div>
       <player-info v-if="player.radio"></player-info>
       <div v-if="!player.radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}
       </div>
       <div class="player-favorite"
-           v-if="player.radio"
-           v-on:click="toggleFavorite"
-           :title="favoriteTitle"
-           :class="{ 'player-favorite-added': isFavorite }">
+         v-if="player.radio"
+         v-on:click="toggleFavorite"
+         :title="favoriteTitle"
+         :class="{ 'player-favorite-added': isFavorite }">
+      <i class="bi"
+         :class="{
+        'bi-heart-fill': isFavorite,
+        'bi-heart': !isFavorite
+        }"></i>
       </div>
     </div>
     <volume-fader v-if="displayVolume"/>

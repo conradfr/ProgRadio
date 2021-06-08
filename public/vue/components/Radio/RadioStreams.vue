@@ -1,11 +1,13 @@
 <template>
-  <div class="col-md-12 col-xs-6 schedule-page-streams">
+  <div class="col-12 radio-page-streams">
     <radio-stream :radio="radio" :stream="primaryStream"></radio-stream>
-    <div v-if="secondaryStreams.length > 0"
-         class="webradios-header">{{ $t('message.radio_page.webradios') }}</div>
-    <radio-stream
-        v-for="stream in secondaryStreams" :key="stream.code_name"
-        :radio="radio" :stream="stream"></radio-stream>
+    <div class="d-none d-sm-block">
+      <div v-if="secondaryStreams.length > 0"
+           class="webradios-header">{{ $t('message.radio_page.webradios') }}</div>
+        <radio-stream
+            v-for="stream in secondaryStreams" :key="stream.code_name"
+            :radio="radio" :stream="stream"></radio-stream>
+    </div>
   </div>
 </template>
 

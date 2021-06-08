@@ -8,6 +8,8 @@ const fs = require('fs');
 const constants = require('./config/constants.js');
 const radiosModule = require('./config/radios.js');
 
+try {
+
 process.on('uncaughtException', function (err) {
   console.log('Caught exception: ', err);
 });
@@ -43,7 +45,6 @@ logger.log('info', 'Starting ...');
 const getResults = async (radios) => {
   const all = await radios.map(async function (radio) {
     const radio_module = require(`./radio_modules/${radio}.js`);
-
     const dateObj = moment();
     if (options['tomorrow'] === true) {
       if (radio_module.supportTomorrow !== true) {
@@ -110,3 +111,8 @@ async.series(
     process.exit(1);
   }
 );
+
+}
+catch(err) {
+  console.log(err);
+}

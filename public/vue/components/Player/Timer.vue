@@ -1,7 +1,7 @@
 <template>
-  <div class="player-timer" :title="title" data-toggle="modal" data-target="#timerModal">
+  <div class="player-timer" :title="title" data-bs-toggle="modal" data-bs-target="#timerModal">
     <a :class="{ 'player-timer-active': isActive }">
-      <span class="glyphicon glyphicon-time"></span>
+      <i class="bi bi-clock-history"></i>
     </a>
   </div>
 </template>

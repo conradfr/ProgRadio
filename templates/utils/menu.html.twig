@@ -1,16 +1,17 @@
 {% macro collections_menu(collections) %}
-    <li class="dropdown hidden-xs">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
-        <ul class="dropdown-menu">
+    <li class="nav-item dropdown d-none d-sm-block">
+        <a class="nav-link dropdown-toggle pe-0" href="#" id="navbarCollectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarCollectionsDropdown">
             {% for collection in collections %}
                 {% if collection.code_name == 'favorites' %}
-                    <li role="separator" class="divider"></li>
+                    <li><hr class="dropdown-divider"></li>
                 {% endif %}
                 <li id="collections-menu-{{ collection.code_name }}"{% if collection.radios|length == 0 %} class="disabled"{% endif %}>
                     {#                <a href="{{ path('app', {'c': collection.code_name}) }}" onclick="switchCollection(event, '{{ collection.code_name }}')">#}
                     {#                    {{ collection.name_FR }}#}
                     {#                </a>#}
-                    <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
+                    <a class="dropdown-item" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
                         {{ collection.name_FR }}
                     </a>
                 </li>
@@ -21,10 +22,28 @@
 
 {% macro collections_mobile(collections) %}
     {% for collection in collections %}
-    <li id="collections-menu-{{ collection.code_name }}" class="visible-xs{% if collection.radios|length == 0 %} disabled{% endif %}">
-        <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
+    <li id="collections-menu-{{ collection.code_name }}" class="nav-item d-block d-sm-none{% if collection.radios|length == 0 %} disabled{% endif %}">
+        <a class="nav-link nav-link-mobile py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
             &rarr; {{ collection.name_FR }}
         </a>
     </li>
     {% endfor %}
+{% endmacro %}
+
+{% macro favorites_mobile(favorites) %}
+    <li class="nav-item d-block d-sm-none">
+        <a class="nav-link nav-link-mobile py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/fr') }}">
+            &rarr; {{ 'menu.favorites_menu.fr'|trans }}
+        </a>
+    </li>
+    <li class="nav-item d-block d-sm-none">
+        <a class="nav-link nav-link-mobile py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/all') }}">
+            &rarr; {{ 'menu.favorites_menu.all'|trans }}
+        </a>
+    </li>
+    <li class="nav-item d-block d-sm-none{% if favorites == false %} disabled{% endif %}">
+        <a class="nav-link nav-link-mobile py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/favorites') }}">
+            &rarr; {{ 'menu.favorites'|trans }}
+        </a>
+    </li>
 {% endmacro %}

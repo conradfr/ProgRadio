@@ -71,12 +71,12 @@ export default {
     },
     // update the stream menu that is outside the Vue app for now
     favorites(val) {
-      const menuItem = document.getElementById('streaming-menu-favorites');
+      const menuItem = document.getElementById('streams-top-menu-favorites');
 
       if (val.length === 0) {
-        menuItem.classList.add('disabled');
+        menuItem.classList.add('hidden');
       } else {
-        menuItem.classList.remove('disabled');
+        menuItem.classList.remove('hidden');
       }
     },
   },

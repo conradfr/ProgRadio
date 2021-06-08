@@ -1,29 +1,32 @@
 <template>
-  <div class="container streams-filters-container">
+  <div class="container streams-filters-container mb-4">
     <div class="row">
-      <div class="col-md-4 col-sm-12">
-        <div class="form-group has-feedback left-inner-addon" v-if="searchActive">
-          <i class="left-inner-icon glyphicon glyphicon-search"></i>
+      <div class="col-md-4 col-sm-12 pb-3 pb-sm-3 pb-md-0">
+        <div class="input-group" v-if="searchActive">
+          <span class="input-group-text" id="search-addon1">
+            <i class="bi bi-search"></i>
+          </span>
           <input type="text"
                  class="form-control"
                  :placeholder="$t('message.streaming.search_placeholder')"
                  name="searchText"
                  ref="searchText"
+                 aria-describedby="search-addon1"
                  :value="searchText"
                  v-on:input="searchTextChange"
                  v-on:blur="searchDeactivate"
           />
-          <i class="glyphicon glyphicon-remove form-control-feedback"
-              v-on:click="searchDeactivate(true)"></i>
+          <i class="bi bi-x-lg form-control-feedback"
+             v-on:click="searchDeactivate(true)"></i>
         </div>
 
         <button v-if="!searchActive" class="btn btn-primary btn-sm" type="submit"
                 v-on:click="searchActivate">
-          <i class="glyphicon glyphicon-search"></i>
+          <i class="bi bi-search"></i>
         </button>
         <button v-if="!searchActive" class="btn btn-primary btn-sm" type="submit"
           v-on:click="playRandom">
-          <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
+          <i class="bi bi-play-circle"></i>
           {{ $t('message.streaming.random') }}
         </button>
       </div>
@@ -46,7 +49,7 @@
           </template>
         </v-select>
       </div>
-      <div class="col-select col-md-3 col-sm-6">
+      <div class="col-select col-md-3 col-sm-6 mt-2 mt-sm-0">
         <v-select
             @input="sortByChange"
             :value="selectedSortBy"

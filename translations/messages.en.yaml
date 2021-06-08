@@ -11,11 +11,14 @@ menu:
     contact: Contact
     faq: Faq
     favorites: My favorites
+    favorites_menu:
+        fr: France
+        all: World
     logout: Logout
     now: Currently on the air
     plus: More
     schedule: Radio guide
-    signon: Sign-on
+    signon: Sign-in
     signup: Sign-up
     streaming: Worldwide streaming
     app: Android App
@@ -34,6 +37,19 @@ page:
         page_description: 'Questions about Programmmes-Radio.io'
         title: 'Frequently Asked Questions'
 
+    forgotten_password:
+        error: <strong>An error occured.</strong><br>If the link was obselete please start the process again.
+        click_here: cliquez ici
+        done_title: Password reinitialization
+        done: '<strong>Your password has been updated.</strong><br>You can sign-in %link%here%link_end%.'
+        page_title: Forgotten password
+        success: If an account <strong>%email%</strong> has been found, an email with a reinitialization link has been sent.
+        submit: Submit
+
+    login:
+        forgotten_password: Forgotten password?
+        page_title: Login
+
     now:
         back: '← Back to radio guide'
         no_schedule: '<strong>Oups ...</strong> no shows to display.'
@@ -46,8 +62,29 @@ page:
         play: 'Listen to %radio%'
         title: 'Listen to %radio%'
 
+    registered:
+        page_title: Sign-up
+        alert_1: Your account has been created!
+        alert_2: Your favorites (if any) have been added to your account.
+        what_now_question: What do you want to do now?
+        what_now_choice1: Check schedules
+        what_now_choice2: Listen to streaming radios
+
     user:
         page_title: Create an account
+
+boxes:
+    already_account:
+        title: You have an account?
+        content: Click here to sign-in
+
+    no_account:
+        title: No account yet?
+        content: Click here to sign up!
+
+    why_account:
+        title: Why sign-up?
+        content: You can synchronize your favorites between your devices.
 
 registrationForm:
     email: 'Email'
@@ -60,5 +97,20 @@ registrationForm:
     password: 'Password'
     password_confirm: 'Password confirmation'
     submit_create: 'Create an account'
+
+connectionForm:
+    already_logged: You're currently logged as %email%
+    logout: logout
+    email: 'Email'
+    password: 'Password'
+    remember_me: 'Remember me'
+    submit_connect: 'Login'
+
+updatePasswordForm:
+    new: New password
+    new_confirm: New password confirmation
+    error_not_same: New passwords are not identical.
+    error_not_empty: This field can't be empty
+    error_length: The new password must be at least 8 characters.
 
 legal: Legal notice

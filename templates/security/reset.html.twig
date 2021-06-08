@@ -1,26 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
 
-{% block title %}Mot de passe oublié{% endblock %}
+{% block title %}{{ 'page.forgotten_password.done_title'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container container-content">
+<div class="container">
     <div class="row">
         <div class="col-md-6">
-            <h3>Réinitialisation du mot de passe</h3>
+            <h3 class="mb-4">{{ 'page.forgotten_password.done_title'|trans }}</h3>
 
             {% if success == true %}
             <div class="alert alert-success" role="alert">
-                Le mot de passe a été mis à jour. Vous pouvez vous connecter <a href="{{ path('app_login') }}">ici</a>.
+                {% set link = path('app_login') %}
+                {{ 'page.forgotten_password.done'|trans({'%link%': '<a href="' ~ link ~ '">', '%link_end%': '</a>'})|raw }}
             </div>
             {% else %}
                 {{ form_start(form, {'action': path('reset_password', {'token': token})}) }}
                 {{ form_row(form.plainPassword) }}
 
-                <button type="submit" class="btn btn-primary">Soumettre</button>
+                <button type="submit" class="btn btn-primary">{{ 'page.forgotten_password.submit'|trans }}</button>
                 {{ form_end(form) }}
-
             {% endif %}
         </div>
     </div>
