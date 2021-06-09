@@ -5,14 +5,14 @@ https://www.programmes-radio.com
 
 Dependencies
 --------------
+- PHP 8.0.x / Symfony 5.2
 - VueJs 2.x
-- PHP 8.0 / Symfony 5.2
-- NodeJS v10+ (Scraper)
-- Elixir 1.11+ (Api / Importer)
+- NodeJS v12.x (Scraper)
+- Elixir 1.12.x (Api / Importer)
 - PostgreSQL & Redis
 - Nginx or Apache
 - ImageMagick
-- CapRover & docker (deployment)
+- CapRover & Docker (deployment)
 
 Run
 --------------
