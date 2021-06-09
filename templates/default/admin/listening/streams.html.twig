@@ -6,9 +6,8 @@
             <th style="width: 20%">
                 <div class="row">
                     <div class="col-md-3"></div>
-                    <div class="col-md-3">Sess.</div>
-                    <div class="col-md-3">Moy.</div>
-                    <div class="col-md-3">Total</div>
+                    <div class="col-md-4">Sess.</div>
+                    <div class="col-md-5">Total</div>
                 </div>
             </th>
         {% endfor %}
@@ -17,8 +16,9 @@
     {% for entries in streams_listening|batch(5) %}
         <tr>
             {% for one in entries %}
-                <td>
+                <td class="align-middle">
                     {% if one != 'empty' %}
+                    <div class="row h-100 align-items-center">
                         <div class="col-md-3">
                             <a target="_blank" href="{{ path('app') }}#/streaming/{{ one.id }}">
                                 <img title="{{ one.name }}" alt="{{ one.name }}"
@@ -30,15 +30,9 @@
                                     src="{{ asset('media/stream/' ~ one.img) }}"
                                         {% endif %}>
                             </a></div>
-                        <div class="col-md-3">{{ one.total_sessions }}</div>
-                        <div class="col-md-3">
-                            {% if (one.total_sessions > 0) %}
-                                {{ format.secondsToMinutes(one.total_seconds / one.total_sessions) }}
-                            {% else %}
-                                0
-                            {% endif %}
-                        </div>
-                        <div class="col-md-3">{{ format.secondsToMinutes(one.total_seconds) }}</div>
+                        <div class="col-md-4">{{ one.total_sessions }}</div>
+                        <div class="col-md-5">{{ format.secondsToMinutes(one.total_seconds) }}</div>
+                    </div>
                     {% endif %}
                 </td>
             {% endfor %}
@@ -50,18 +44,11 @@
     <tr>
         <th style="width: 20%">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-3">
                     Total
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     {{ sessions_streams_total.total_sessions }}
-                </div>
-                <div class="col-md-3">
-                    {% if sessions_streams_total.total_sessions > 0 %}
-                        {{ format.secondsToMinutes(sessions_streams_total.total_seconds / sessions_streams_total.total_sessions) }}
-                    {% else %}
-                        -
-                    {% endif %}
                 </div>
                 <div class="col-md-4">
                     {% if sessions_streams_total.total_sessions > 0 %}
@@ -73,51 +60,41 @@
             </div>
         </th>
         <td style="width: 20%">
-            <div class="col-md-3">
-                <strong>Web</strong>
-            </div>
-            <div class="col-md-2">
-                {% if sessions_streams_devices['web'] is defined %}
-                    {{ sessions_streams_devices['web'].total_sessions }}
-                {% endif %}
-            </div>
-            <div class="col-md-3">
-                {% if sessions_streams_devices['web'] is defined and sessions_streams_devices['web'].total_sessions > 0 %}
-                    {{ format.secondsToMinutes(sessions_streams_devices['web'].total_seconds / sessions_streams_devices['web'].total_sessions) }}
-                {% else %}
-                    -
-                {% endif %}
-            </div>
-            <div class="col-md-4">
-                {% if sessions_streams_devices['web'] is defined and sessions_streams_devices['web'].total_sessions > 0 %}
-                    {{ format.secondsToMinutes(sessions_streams_devices['web'].total_seconds) }}
-                {% else %}
-                    -
-                {% endif %}
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Web</strong>
+                </div>
+                <div class="col-md-4">
+                    {% if sessions_streams_device['web'] is defined %}
+                        {{ sessions_streams_device['web'].total_sessions }}
+                    {% endif %}
+                </div>
+                <div class="col-md-5">
+                    {% if sessions_streams_device['web'] is defined and sessions_streams_device['web'].total_sessions > 0 %}
+                        {{ format.secondsToMinutes(sessions_streams_device['web'].total_seconds) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
             </div>
         </td>
         <td style="width: 20%">
-            <div class="col-md-3">
-                <strong>Android</strong>
-            </div>
-            <div class="col-md-2">
-                {% if sessions_streams_devices['android'] is defined %}
-                    {{ sessions_streams_devices['android'].total_sessions }}
-                {% endif %}
-            </div>
-            <div class="col-md-3">
-                {% if sessions_streams_devices['android'] is defined and sessions_streams_devices['android'].total_sessions > 0 %}
-                    {{ format.secondsToMinutes(sessions_streams_devices['android'].total_seconds / sessions_streams_devices['android'].total_sessions) }}
-                {% else %}
-                    -
-                {% endif %}
-            </div>
-            <div class="col-md-4">
-                {% if sessions_streams_devices['android'] is defined and sessions_streams_devices['android'].total_sessions > 0 %}
-                    {{ format.secondsToMinutes(sessions_streams_devices['android'].total_seconds) }}
-                {% else %}
-                    -
-                {% endif %}
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Android</strong>
+                </div>
+                <div class="col-md-4">
+                    {% if sessions_streams_device['android'] is defined %}
+                        {{ sessions_streams_device['android'].total_sessions }}
+                    {% endif %}
+                </div>
+                <div class="col-md-5">
+                    {% if sessions_streams_device['android'] is defined and sessions_streams_device['android'].total_sessions > 0 %}
+                        {{ format.secondsToMinutes(sessions_streams_device['android'].total_seconds) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
             </div>
         </td>
         <td style="width: 20%">
