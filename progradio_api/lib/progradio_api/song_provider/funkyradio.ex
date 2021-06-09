@@ -23,11 +23,20 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
   @impl true
   def get_data(name, _last_data) do
     try do
-      referer = @stream_referer[name]
+      channel = SongProvider.get_stream_code_name_from_channel(name)
+      referer = @stream_referer[channel]
+      body_post = URI.encode_query(%{"url" => referer})
 
-      @url
-      |> HTTPoison.post("{\"url\": \"#{referer}\"}", [])
-      |> Map.get(:body)
+      case HTTPoison.post(@url, body_post, %{
+             "Content-Type" => "application/x-www-form-urlencoded",
+             "Cache-Control" => "no-cache"
+           }) do
+        {:ok, %HTTPoison.Response{body: body}} ->
+          body
+
+        _ ->
+          nil
+      end
     rescue
       _ -> nil
     end
