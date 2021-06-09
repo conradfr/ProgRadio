@@ -54,7 +54,8 @@ defmodule ProgRadioApiWeb.SongChannel do
         join: r in Radio,
         on: r.id == rs.radio_id,
         select: %{radio_code_name: r.code_name, radio_stream_code_name: rs.code_name},
-        where: rs.code_name == ^code_name
+        where: rs.code_name == ^code_name,
+        limit: 1
       )
 
     Repo.one(query)
@@ -67,7 +68,9 @@ defmodule ProgRadioApiWeb.SongChannel do
         join: ss in StreamSong,
         on: ss.id == s.stream_song_id,
         select: %{radio_code_name: ss.code_name, radio_stream_code_name: s.stream_song_code_name},
-        where: s.stream_song_code_name == ^code_name and ss.enabled == true
+        where: s.stream_song_code_name == ^code_name and ss.enabled == true,
+        order_by: [desc: s.clicks_last_24h],
+        limit: 1
       )
 
     Repo.one(query)
