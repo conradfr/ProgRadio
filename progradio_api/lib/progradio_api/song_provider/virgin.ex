@@ -5,10 +5,11 @@ defmodule ProgRadioApi.SongProvider.Virgin do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "virgin_main" => 2
+    "virgin_main" => 2010,
+    "virgin_classics" => 2002,
+    "virgin_hits" => 2004,
+    "virgin_new" => 2001
   }
-
-  @range_minutes 300
 
   @impl true
   def has_custom_refresh(), do: true
@@ -39,28 +40,21 @@ defmodule ProgRadioApi.SongProvider.Virgin do
       |> (&Map.get(@stream_ids, &1)).()
 
     {:ok, now} = DateTime.now("Europe/Paris")
-
     now_unix = DateTime.to_unix(now)
 
-    prev =
-      now
-      |> DateTime.add(-@range_minutes)
-      |> Timex.format!("{YYYY}-{0M}-{0D} {h24}:{m}:{s}")
-
-    next =
-      now
-      |> DateTime.add(@range_minutes)
-      |> Timex.format!("{YYYY}-{0M}-{0D} {h24}:{m}:{s}")
-
-    "https://www.virginradio.fr/radio/api/get_all_events.json/argv/id_radio/#{id}/start/#{prev}/end/#{next}"
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> Jason.decode!()
-    |> Map.get("root_tab", %{})
-    |> Map.get("event", [])
-    |> Enum.find(nil, fn e ->
-      now_unix >= e["date_created"] and now_unix <= e["date_end"]
-    end)
+    try do
+      "https://www.virginradio.fr/radio/api/get_current_event/?id_radio=#{id}"
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> Jason.decode!()
+      |> Map.get("root_tab", %{})
+      |> Map.get("event", [])
+      |> Enum.find(nil, fn e ->
+        now_unix >= e["date_created"] and now_unix <= e["date_end"]
+      end)
+    rescue
+      _ -> nil
+    end
   end
 
   @impl true
