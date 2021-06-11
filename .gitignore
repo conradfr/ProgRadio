@@ -54,6 +54,8 @@
 !/public/build/js/app.js
 /public/build/css/*.map
 /public/build/css/main.css
+/public/build/css/main_light.css
+/public/build/css/main_dark.css
 
 # Composer PHAR
 /composer.phar

@@ -113,4 +113,7 @@ updatePasswordForm:
     error_not_empty: This field can't be empty
     error_length: The new password must be at least 8 characters.
 
+footer:
+    alternate_lang: Français
+
 legal: Legal notice

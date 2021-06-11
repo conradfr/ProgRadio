@@ -1,13 +1,10 @@
 /* bootstrap overloading */
 
 .navbar {
-
   //box-shadow: 0 1px 2px rgba(0,0,0,.3);
   background-image: none;
 
   .navbar-brand {
-    //height: $navbar-brand-height;
-    //padding-top: 13.5px;
 
     font-family: 'Lobster', cursive;
     text-shadow: -2px 2px 3px rgba(12, 124, 213, 1);
@@ -32,39 +29,16 @@
     }
   }
 
-  //.navbar-brand > {
-  //  display: inline-block;
-  //  float: left;
-  //}
-
   .navbar-brand > img {
-    //display: inline-block;
-    //float: left;
     margin: 4px 10px 0;
 
     width: 30px;
     height: 24px;
   }
 
-  #navbar {
-
-    a > img {
-      display: block;
-      opacity: 0.8;
-
-      &:hover {
-        opacity: 1;
-      }
-    }
-  }
-
   & .navbar-nav > li.nav-item {
     //padding-left: 15px;
     padding-right: 15px;
-  }
-
-  .nav-link-mobile {
-
   }
 
   #collections-top-menu-favorites.hidden {
@@ -83,28 +57,51 @@
     //color: darken(@gray-lighter, 5%);
   }
 
-  .menu-appstore-icon {
+  .menu-appstore-icon, .menu-flag-icon {
     width: 32px;
     position: absolute;
     right: 0;
     margin-top: -2px;
+
+    @include media-breakpoint-down(sm) {
+      right: 15px;
+    }
   }
 
-  .menu-appstore-icon-main{
+  .menu-appstore-icon-main {
     float: right;
-    padding-top: 12px;
+    //padding-top: 12px;
     padding-right: 5px;
   }
-}
 
+  /* taken from vue plugin */
+  .gb-flag {
+    height: 20px;
+
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    user-select: none;
+
+    &:hover {
+      filter: contrast(1.2);
+    }
+  }
+}
 
 .body-app-schedule {
   .navbar-brand {
     margin-left: 65px;
 
+    // schedule on mobile, no logo and smaller font-size to allow appstore link
     @include media-breakpoint-down(sm) {
-      font-size: ceil($font-size-base * 1.50);
-      margin-left: 70px;
+      font-size: 1.75rem;
+
+      // compensate smaller font-size to keep same height as desktop
+      padding-top: $navbar-brand-padding-y + 0.135rem;
+      padding-bottom: $navbar-brand-padding-y + 0.135rem;
+
+      margin-left: 73px;
       img {
         display: none !important;
       }
@@ -113,5 +110,5 @@
 }
 
 .progradio-connected {
-  text-shadow: 0px 0px 9px rgba(8,0,110,0.60);
+  text-shadow: 0 0 9px rgba(8,0,110,0.60);
 }

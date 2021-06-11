@@ -4,6 +4,11 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="#" onclick="scrollToCursor(this)">
             <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios" class="d-inline-block align-text-top">Programmes Radio</a>
+        {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
+            <div>
+                <a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
+            </div>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -62,6 +67,12 @@
                         <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}">
+                                <div class="menu-flag-icon">
+                                    <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flag ~ '.svg') }}" alt="{{ locale_name }}">
+                                </div>
+                            {{ locale_name }}</a>
+                        </li>
                     </ul>
                 </li>
 

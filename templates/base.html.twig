@@ -1,5 +1,9 @@
 {% import "utils/menu.html.twig" as menu %}
 
+{% set other_locale = app.request.locale == 'fr' ? 'en' : 'fr' %}
+{% set flag = app.request.locale == 'fr' ? 'gb' : 'fr' %}
+{% set locale_name = 'footer.alternate_lang'|trans %}
+
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}" class="h-100">
 <head>
@@ -10,8 +14,6 @@
     <title>{% block title %}{{ 'general.main_title'|trans }}{% endblock %} - Programmes Radio</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
 
-    <link rel="preload" href="{{ asset('build/css/main.css') }}?v={{ releaseVersion() }}" as="style">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" as="font" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap&text=Programmes%20Radio" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
@@ -22,7 +24,8 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
 
-    <link href="{{ asset('build/css/main.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
+    <link rel="preload" href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" as="style">
+    <link href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
     <style>
         {% block stylesheets %}
         {% endblock %}
@@ -42,11 +45,10 @@
 {% block body %}{% endblock %}
 
 <footer class="footer mt-auto">
-    {% set other_locale = app.request.locale == 'fr' ? 'en' : 'fr' %}
     <div class="container text-center">
             {% block footer %}
                ©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a> -
-                        <a href="{{ path('app', {'_locale': other_locale}) }}">{{ other_locale }}</a>
+                <a title="{{ locale_name }}" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}"><img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flag ~ '.svg') }}" alt="{{ locale_name }}"></a>
             {% endblock %}
     </div>
 </footer>

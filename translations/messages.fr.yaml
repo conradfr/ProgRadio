@@ -117,4 +117,7 @@ updatePasswordForm:
     error_not_empty: Ce champ ne peut être vide.
     error_length: Le mot de passe doit contenir au moins 8 caractères.
 
+footer:
+    alternate_lang: English
+
 legal: 'Mentions légales'

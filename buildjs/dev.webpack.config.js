@@ -4,6 +4,24 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
+function recursiveIssuer(m, c) {
+  const issuer = c.moduleGraph.getIssuer(m);
+  // For webpack@4 issuer = m.issuer
+
+  if (issuer) {
+    return recursiveIssuer(issuer, c);
+  }
+
+  const chunks = c.chunkGraph.getModuleChunks(m);
+  // For webpack@4 chunks = m._chunks
+
+  for (const chunk of chunks) {
+    return chunk.name;
+  }
+
+  return false;
+}
+
 module.exports = {
   mode: 'development',
   target: 'web',
@@ -12,8 +30,10 @@ module.exports = {
     app: [
       path.resolve(__dirname, '../public/vue/app.js'),
       // path.resolve(__dirname, '../public/less/main.less'),
-      path.resolve(__dirname, '../public/sass/main.scss')
-    ]
+      // path.resolve(__dirname, '../public/sass/main.scss')
+    ],
+    light: path.resolve(__dirname, '../public/sass/main_light.scss'),
+    dark: path.resolve(__dirname, '../public/sass/main_dark.scss')
   },
   output: {
     path: path.resolve(__dirname, '../public/build/js'),
@@ -68,7 +88,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '../css/main.css'
+      filename: '../css/[name].css'
     }),
     new VueLoaderPlugin(),
     new ESLintPlugin({
@@ -92,6 +112,25 @@ module.exports = {
     minimize: false,
     removeAvailableModules: false,
     removeEmptyChunks: false,
-    splitChunks: false
+    splitChunks: {
+      cacheGroups: {
+        lightStyles: {
+          name: 'main_light',
+          test: (m, c, entry = 'light') =>
+            m.constructor.name === 'CssModule' &&
+            recursiveIssuer(m, c) === entry,
+          chunks: 'all',
+          enforce: true,
+        },
+        darkStyles: {
+          name: 'main_dark',
+          test: (m, c, entry = 'dark') =>
+            m.constructor.name === 'CssModule' &&
+            recursiveIssuer(m, c) === entry,
+          chunks: 'all',
+          enforce: true,
+        },
+      },
+    },
   }
 }
