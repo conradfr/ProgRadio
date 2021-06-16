@@ -79,7 +79,7 @@ export default {
     },
     onSwipe(event) {
       this.swipeActive = true;
-      setInterval(this.swipeEnd, 1000);
+      setTimeout(this.swipeEnd, 1000);
 
       // avoid ghost click
       //  if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
