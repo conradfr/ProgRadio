@@ -23,6 +23,9 @@ import { mapState, mapGetters } from 'vuex';
 import ScheduleRadioProgram from './ScheduleRadioProgram.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: { ScheduleRadioProgram },
   props: ['radio_code_name', 'displayNoSchedule', 'schedule', 'hasSchedule'],
   computed: {

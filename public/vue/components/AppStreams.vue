@@ -12,6 +12,9 @@ import { PLAYER_TYPE_STREAM } from '../config/config';
 import StreamsList from './Streams/StreamsList.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   created() {
     this.$store.dispatch('getConfig');
   },
@@ -20,7 +23,7 @@ export default {
     body.classList.add('body-app');
     document.title = this.$i18n.tc('message.streaming.title');
   },
-  beforeDestroy() {
+  beforeUnmount() {
     const body = document.querySelector('body');
     body.classList.remove('body-app');
   },
@@ -50,6 +53,7 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     if (to.params.countryOrCategoryOrUuid) {
+      // this a radio (uuid)
       if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
         this.$store.dispatch('getStreamRadio', to.params.countryOrCategoryOrUuid);
       } else {

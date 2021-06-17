@@ -1,19 +1,18 @@
 const path = require('path')
 var webpack = require('webpack');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+// const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { VueLoaderPlugin } = require('vue-loader');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 function recursiveIssuer(m, c) {
   const issuer = c.moduleGraph.getIssuer(m);
-  // For webpack@4 issuer = m.issuer
 
   if (issuer) {
     return recursiveIssuer(issuer, c);
   }
 
   const chunks = c.chunkGraph.getModuleChunks(m);
-  // For webpack@4 chunks = m._chunks
 
   for (const chunk of chunks) {
     return chunk.name;
@@ -27,7 +26,11 @@ module.exports = {
   // target: ['web', 'es5'],
   target: 'web',
   entry: {
-    app: [path.resolve(__dirname, '../public/vue/app.js')],
+    app: [
+      path.resolve(__dirname, '../public/vue/app.js'),
+      // path.resolve(__dirname, '../public/less/main.less'),
+      // path.resolve(__dirname, '../public/sass/main.scss')
+    ],
     light: path.resolve(__dirname, '../public/sass/main_light.scss'),
     dark: path.resolve(__dirname, '../public/sass/main_dark.scss')
   },
@@ -41,6 +44,11 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
+          compilerOptions: {
+            compatConfig: {
+              MODE: 3
+            }
+          },
           preserveWhitespace: false,
           transformToRequire: {
             source: 'src'
@@ -88,6 +96,8 @@ module.exports = {
     }),
     new VueLoaderPlugin(),
     new webpack.DefinePlugin({
+      __VUE_PROD_DEVTOOLS__: false,
+      __VUE_OPTIONS_API__: true,
       'process.env': {
         NODE_ENV: '"production"'
       }
@@ -95,7 +105,8 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      // 'vue$': 'vue/dist/vue.esm.js'
+      vue: '@vue/compat'
     }
   },
   optimization: {

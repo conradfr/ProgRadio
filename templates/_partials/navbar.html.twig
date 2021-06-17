@@ -46,16 +46,11 @@
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li id="collections-menu-favorites"{% if hasStreamFavorites(app.user, app.request.attributes) == false %} class="disabled"{% endif %}>
-                            <a class="dropdown-item" href="{{ path('app') }}#/schedule/favorites">{{ 'menu.favorites'|trans }}</a>
+                            <a class="dropdown-item" href="{{ path('app') }}#/streaming/favorites">{{ 'menu.favorites'|trans }}</a>
                         </li>
                     </ul>
                 </li>
                 {{ menu.favorites_mobile(hasStreamFavorites(app.user, app.request.attributes)) }}
-
-                {# Now #}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a>
-                </li>
 
                 {# Plus #}
                 <li class="nav-item dropdown">
@@ -63,6 +58,7 @@
                         {{ 'menu.plus'|trans}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                         <li><hr class="dropdown-divider"></li>

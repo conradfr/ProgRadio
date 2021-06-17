@@ -30,7 +30,14 @@ export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites_v3';
 export const CACHE_KEY_STREAM_FAVORITES = 'stream_favorites_v3';
 
 export const COOKIE_PREFIX = 'progradio';
-export const COOKIE_TTL = '1Y';
+export const COOKIE_TTL = '31536000';
+export const COOKIE_PARAMS = {
+  path: '/',
+  'max-age': COOKIE_TTL,
+  expires: 'mage-age',
+  secure: true,
+  samesite: 'Lax'
+};
 
 export const COOKIE_EXCLUDE = `${COOKIE_PREFIX}-exclude`;
 export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection_v2`;
@@ -45,12 +52,9 @@ export const COOKIE_STREAM_SORT = `${COOKIE_PREFIX}-stream-sort`;
 export const COOKIE_STREAM_RADIOBROWSER_API = `${COOKIE_PREFIX}-stream-radiobrowser_api`;
 export const COOKIE_LAST_TIMER = `${COOKIE_PREFIX}-timer`;
 
-export const COOKIE_PARAMS = { expires: COOKIE_TTL, secure: true, samesite: 'Lax' };
-
 export const TIMEZONE = 'Europe/Paris';
 
-export const TOAST_POSITION = 'top-right';
-export const TOAST_DURATION = 3000; /* ms */
+export const TOAST_DURATION = 3500; /* ms */
 export const TOAST_TYPE_ERROR = 'error';
 export const TOAST_TYPE_INFO = 'success';
 
@@ -74,6 +78,9 @@ export const STREAMS_MAX_PAGES_DISPLAY = 9;
 
 export const STREAMING_CATEGORY_ALL = 'ALL';
 export const STREAMING_CATEGORY_FAVORITES = 'FAVORITES';
+
+/* @todo refacto */
+export const STREAMING_DEFAULT_COUNTRY = { code: 'FR', label: 'France' };
 
 export const PLAYER_STATE_NONE = 0;
 export const PLAYER_STATE_STOPPED = 1;

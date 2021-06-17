@@ -1,13 +1,13 @@
 <template>
   <div id="schedule-radio-grid" class="schedule-radio-grid" :style="styleObject">
     <timeline-cursor></timeline-cursor>
-    <v-touch
-      :enabled="{ pan: true, swipe: true }"
-      :pan-options="{ direction: 'horizontal' }"
-      :swipe-options="{ direction: 'horizontal' }"
-      v-on:swipe="onSwipe"
-      v-on:panleft="onPan" v-on:panright="onPan"
-      v-on:panstart="onPanStart" v-on:panend="onPanEnd">
+    <vue3-hammer
+        :enabled="{ pan: true, swipe: true }"
+        :panOptions="{ direction: 'horizontal' }"
+        :swipeOptions="{ direction: 'horizontal' }"
+        v-on:swipe="onSwipe"
+        v-on:panleft="onPan" v-on:panright="onPan"
+        v-on:panstart="onPanStart" v-on:panend="onPanEnd">
       <schedule-radio-grid-row
         v-for="entry in radios"
         :key="entry.code_name"
@@ -17,29 +17,25 @@
         :hasSchedule="hasSchedule(entry.code_name)"
       >
       </schedule-radio-grid-row>
-    </v-touch>
+    </vue3-hammer>
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
 import { mapGetters } from 'vuex';
 
 import { NAV_MOVE_BY } from '../../config/config';
 
+import Vue3Hammer from '../Utils/Vue3Hammer.vue';
 import TimelineCursor from './TimelineCursor.vue';
 import ScheduleRadioGridRow from './ScheduleRadioGridRow.vue';
 
-const VueTouch = require('vue-touch');
-
-VueTouch.config.pan = {
-  direction: 'horizontal'
-};
-
-Vue.use(VueTouch, { name: 'v-touch' });
-
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: {
+    Vue3Hammer,
     TimelineCursor,
     ScheduleRadioGridRow
   },
@@ -79,7 +75,7 @@ export default {
     },
     onSwipe(event) {
       this.swipeActive = true;
-      setInterval(this.swipeEnd, 1000);
+      setTimeout(this.swipeEnd, 1000);
 
       // avoid ghost click
       //  if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }

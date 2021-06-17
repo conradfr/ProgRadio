@@ -1,10 +1,10 @@
 <template>
-  <div class="d-flex align-items-stretch" v-bind:class="{ 'media-current': isCurrent }">
+  <div class="d-flex align-items-stretch" v-bind:class="{ 'media-current': isCurrent }" v-once>
     <div class="flex-shrink-0 media-timeline">
       .
     </div>
     <div v-if="show.picture_url" class="flex-shrink-0">
-      <img alt="" class="img-fluid" style="max-width: 64px; max-height: 64px"
+      <img alt="" class="img-fluid img-show mb-2"
          :src="picture">
     </div>
     <div class="flex-fill ps-3 mb-3">
@@ -13,12 +13,12 @@
       </h6>
       <div v-if="show.host">{{ show.host }}</div>
       <nl2br v-if="show.description" tag="p" :text="show.description"
-             class-name="fw-light mt-2" />
+         class-name="fw-light mt-2" />
 
       <div v-if="show.sections && show.sections.length > 0" class="mt-1">
         <radio-show-section
             v-for="entry in show.sections" :key="entry.hash"
-            :section="entry">
+            :section="entry" v-once>
         </radio-show-section>
       </div>
     </div>
@@ -28,12 +28,15 @@
 <script>
 import { mapState } from 'vuex';
 import { DateTime, Interval } from 'luxon';
-import Nl2br from 'vue-nl2br';
+import Nl2br from 'vue3-nl2br';
 
 import { TIMEZONE, THUMBNAIL_PAGE_PROGRAM_PATH } from '../../config/config';
 import RadioShowSection from './RadioShowSection.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   props: ['show'],
   components: {
     RadioShowSection,

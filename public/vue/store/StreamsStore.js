@@ -1,29 +1,26 @@
-import Vue from 'vue';
+import { nextTick } from 'vue';
 
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
 
 import * as config from '../config/config';
 import i18n from '../lang/i18n';
+import cookies from '../utils/cookies';
 import StreamsApi from '../api/StreamsApi';
 import AndroidApi from '../api/AndroidApi';
-
-const VueCookie = require('vue-cookie');
-
-Vue.use(VueCookie);
 
 const sortBySelect = [
   {
     code: 'name',
-    label: i18n.tc('message.streaming.sort.name')
+    label: i18n.global.tc('message.streaming.sort.name')
   },
   {
     code: 'popularity',
-    label: i18n.tc('message.streaming.sort.popularity')
+    label: i18n.global.tc('message.streaming.sort.popularity')
   },
   {
     code: 'random',
-    label: i18n.tc('message.streaming.sort.random')
+    label: i18n.global.tc('message.streaming.sort.random')
   },
 ];
 
@@ -32,13 +29,10 @@ const sortBySelect = [
 const initState = {
   countries: [],
   favorites: [],
-  selectedCountry: Vue.cookie.get(config.COOKIE_STREAM_COUNTRY)
-    ? JSON.parse(Vue.cookie.get(config.COOKIE_STREAM_COUNTRY)) : { code: 'FR', label: 'France' },
+  selectedCountry: cookies.getJson(config.COOKIE_STREAM_COUNTRY, config.STREAMING_DEFAULT_COUNTRY),
   streamRadios: [],
-  selectedSortBy: Vue.cookie.get(config.COOKIE_STREAM_SORT)
-    ? JSON.parse(Vue.cookie.get(config.COOKIE_STREAM_SORT)) : sortBySelect[1],
-  radioBrowserApi: Vue.cookie.get(config.COOKIE_STREAM_RADIOBROWSER_API)
-    ? Vue.cookie.get(config.COOKIE_STREAM_RADIOBROWSER_API) : null,
+  selectedSortBy: cookies.getJson(config.COOKIE_STREAM_SORT, sortBySelect[1]),
+  radioBrowserApi: cookies.get(config.COOKIE_STREAM_RADIOBROWSER_API),
   sortBy: sortBySelect,
   searchActive: false,
   searchText: null,
@@ -53,7 +47,7 @@ const storeGetters = {
     const countriesOptions = [];
     countriesOptions.push(
       {
-        label: i18n.tc('message.streaming.categories.all_countries'),
+        label: i18n.global.tc('message.streaming.categories.all_countries'),
         code: config.STREAMING_CATEGORY_ALL
       }
     );
@@ -76,7 +70,7 @@ const storeGetters = {
     });
     countriesOptions.unshift(
       {
-        label: i18n.tc('message.streaming.categories.favorites'),
+        label: i18n.global.tc('message.streaming.categories.favorites'),
         code: config.STREAMING_CATEGORY_FAVORITES
       }
     );
@@ -90,15 +84,14 @@ const storeActions = {
   getConfig: ({ commit }) => {
     StreamsApi.getConfig()
       .then((data) => {
-        Vue.cookie.set(config.COOKIE_STREAM_RADIOBROWSER_API,
-          data.radio_browser_url, config.COOKIE_PARAMS);
+        cookies.set(config.COOKIE_STREAM_RADIOBROWSER_API, data.radio_browser_url);
         commit('setConfig', data);
       });
   },
   getCountries: ({ state, dispatch, commit }) => {
     commit('setLoading', true, { root: true });
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       StreamsApi.getCountries()
         .then(countries => commit('updateCountries', countries))
         .then(() => {
@@ -114,11 +107,11 @@ const storeActions = {
 
     commit('setPage', 0);
     commit('setSelectedCountry', {
-      label: i18n.tc('message.streaming.categories.all_countries'),
+      label: i18n.global.tc('message.streaming.categories.all_countries'),
       code: config.STREAMING_CATEGORY_ALL
     });
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       StreamsApi.getRadios(radioId)
         .then(data => commit('updateStreamRadios', data))
         .finally(() => commit('setLoading', false, { root: true }));
@@ -130,7 +123,7 @@ const storeActions = {
     const offset = (state.page - 1) * config.STREAMS_DEFAULT_PER_PAGE;
 
     if (state.searchActive === true && state.searchText !== null) {
-      Vue.nextTick(() => {
+      nextTick(() => {
         StreamsApi.searchRadios(state.searchText, state.selectedCountry.code,
           state.selectedSortBy.code, offset)
           .then((data) => {
@@ -145,7 +138,7 @@ const storeActions = {
       return;
     }
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       StreamsApi.getRadios(state.selectedCountry.code, state.selectedSortBy.code, offset)
         .then(data => commit('updateStreamRadios', data))
         .finally(() => commit('setLoading', false, { root: true }));
@@ -170,11 +163,10 @@ const storeActions = {
     }
 
     commit('setSelectedCountry', country);
-    Vue.cookie.set(config.COOKIE_STREAM_COUNTRY,
-      JSON.stringify(country), config.COOKIE_PARAMS);
+    cookies.set(config.COOKIE_STREAM_COUNTRY, country);
 
     if (getAfter !== false) {
-      Vue.nextTick(() => {
+      nextTick(() => {
         dispatch('getStreamRadios');
       });
     }
@@ -182,23 +174,22 @@ const storeActions = {
   pageSelection: ({ dispatch, commit }, page) => {
     commit('setPage', page);
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       dispatch('getStreamRadios');
     });
   },
   sortBySelection: ({ dispatch, commit }, sortBy) => {
     commit('setSelectedSortBy', sortBy);
-    Vue.cookie.set(config.COOKIE_STREAM_SORT,
-      JSON.stringify(sortBy), config.COOKIE_PARAMS);
+    cookies.set(config.COOKIE_STREAM_SORT, sortBy);
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       dispatch('getStreamRadios');
     });
   },
   playRandom: ({ state, dispatch, commit }) => {
     commit('setLoading', true, { root: true });
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       StreamsApi.getRandom(state.selectedCountry.code)
         .then(data => dispatch('playStream', data))
         .finally(() => commit('setLoading', false, { root: true }));
@@ -213,7 +204,7 @@ const storeActions = {
       commit('setSearchText', null);
 
       if (oldText !== null && oldText !== '') {
-        Vue.nextTick(() => {
+        nextTick(() => {
           dispatch('getStreamRadios');
         });
       }
@@ -232,39 +223,39 @@ const storeActions = {
 const storeMutations = {
   updateStreamRadios: (state, data) => {
     Object.freeze(data.streams);
-    Vue.set(state, 'streamRadios', data.streams);
-    Vue.set(state, 'total', data.total);
+    state.streamRadios = data.streams;
+    state.total = data.total;
   },
   updateCountries: (state, value) => {
     Object.freeze(value);
-    Vue.set(state, 'countries', value);
+    state.countries = value;
   },
   setStreamFavorites: (state, value) => {
-    Vue.set(state, 'favorites', value);
+    state.favorites = value;
   },
   setConfig: (state, data) => {
     Object.freeze(data);
-    Vue.set(state, 'radioBrowserApi', data.radio_browser_url);
+    state.radioBrowserApi = data.radio_browser_url;
   },
   setSelectedCountry: (state, value) => {
-    Vue.set(state, 'selectedCountry', value);
-    Vue.set(state, 'page', 1);
+    state.selectedCountry = value;
+    state.page = 1;
   },
   setSelectedSortBy: (state, value) => {
-    Vue.set(state, 'selectedSortBy', value);
-    Vue.set(state, 'page', 1);
+    state.selectedSortBy = value;
+    state.page = 1;
   },
   setPage: (state, value) => {
-    Vue.set(state, 'page', value);
+    state.page = value;
   },
   setSearchActive: (state, status) => {
-    Vue.set(state, 'searchActive', status);
+    state.searchActive = status;
   },
   setSearchText: (state, value) => {
-    Vue.set(state, 'searchText', value);
+    state.searchText = value;
   },
   setSearchLastTimestamp: (state, value) => {
-    Vue.set(state, 'searchLastTimestamp', value);
+    state.searchLastTimestamp = value;
   }
 };
 

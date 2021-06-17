@@ -10,6 +10,9 @@ import { DateTime } from 'luxon';
 import { TIMEZONE, MINUTE_PIXEL } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   props: ['program_start', 'section'],
   data() {
     const left = DateTime.fromISO(this.section.start_at)

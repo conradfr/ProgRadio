@@ -1,9 +1,10 @@
 <template>
   <div class="streams-one"
-       :class="{
-          'streams-one-play-active': (radio.code_name === radioPlayingCodeName),
-          'streams-one-play-paused': (playing === false && radio.code_name === radioPlayingCodeName)
-  }">
+    :class="{
+     'streams-one-play-active': (radio.code_name === radioPlayingCodeName),
+     'streams-one-play-paused': (playing === false && radio.code_name === radioPlayingCodeName)
+    }
+  ">
     <div class="streams-one-img" :style="styleObject" v-on:click="playStop">
       <div class="streams-one-img-play"></div>
     </div>
@@ -38,19 +39,14 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import VueFlags from '@growthbunker/vueflags';
-
 import { mapGetters, mapState } from 'vuex';
 
 import * as config from '../../config/config';
 
-Vue.use(VueFlags, {
-  // Specify the path of the folder where the flags are stored.
-  iconPath: '/img/flags/',
-});
-
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   props: ['radio'],
   data() {
     let img = '/img/stream-placeholder.png';

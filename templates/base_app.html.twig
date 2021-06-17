@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block header_supp %}
+    <link rel="preload" href="{{ asset('build/js/app.bundle.js') }}?v={{ releaseVersion() }}" as="script">
+{% endblock %}
+
+{# now done in vue based on route #}
+{#{% block bodysupp %} class="body-app"{% endblock %}#}
+
+{% block javascript_head %}
+var baseUrl = '/';
+var appEnv = '{{ app.environment }}';
+var gtCode = '{{ analytics }}';
+var streamsProxy = '{{ streams_proxy }}';
+var apiUrl = '{{ api_url }}';
+var logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }};
+var locale = '{{ app.request.locale }}';
+
+var scrollToCursor = function(e) {
+  if (window.location.href.includes(e.getAttribute('href'))) {
+    document.getElementById('app').__vue_app__.config.globalProperties.$store.dispatch('scrollToCursor');
+  }
+};
+    {% block static_javascript_head %}
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid" id="schedule-app">
+    <div class="row" style="margin-right: 0 !important; margin-left: 0 !important">
+        <div class="col-md-12" style="padding-right: 0 !important; padding-left: 0 !important">
+            <div id="app">
+{#                <router-view></router-view>#}
+            </div>
+        </div>
+    </div>
+</div>
+    {% block static_body %}
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{#    <script src="{{ asset('build/js/app.js') }}?v={{ releaseVersion() }}"></script>#}
+    <!-- for IE, old not updated script, may work for some time ... -->
+    <script src="{{ asset('build/js/app.bundle.js') }}?v={{ releaseVersion() }}"></script>
+    <script async src="//cdn.jsdelivr.net/npm/hls.js@latest"></script>
+{% endblock %}

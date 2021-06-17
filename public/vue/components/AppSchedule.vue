@@ -20,6 +20,9 @@ import ScheduleContainer from './Schedule/ScheduleContainer.vue';
 import CategoryFilter from './Schedule/CategoryFilter.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: {
     CollectionSwitcher,
     Timeline,
@@ -37,7 +40,7 @@ export default {
 
     document.title = this.$i18n.tc('message.schedule.title');
   },
-  beforeDestroy() {
+  beforeUnmount() {
     const body = document.querySelector('body');
     body.classList.remove('body-app');
     body.classList.remove('body-app-schedule');

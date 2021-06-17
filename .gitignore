@@ -41,6 +41,7 @@
 /public/media/cache/program_thumb/media/program/*
 /public/media/cache/stream_thumb/media/program/*
 /public/media/cache/stream_thumb/media/stream/*
+/public/media/cache/notification_thumb/media/program/*
 !/public/media/program/.gitkeep
 !/public/media/stream/.gitkeep
 !/public/media/temp/.gitkeep
@@ -125,3 +126,6 @@
 ###< symfony/phpunit-bridge ###
 
 .eslintcache
+
+*.pem
+*.crt

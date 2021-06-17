@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { nextTick } from 'vue';
 
 import find from 'lodash/find';
 import { DateTime } from 'luxon';
@@ -10,24 +10,18 @@ import i18n from '../lang/i18n';
 import PlayerUtils from '../utils/PlayerUtils';
 import ScheduleUtils from '../utils/ScheduleUtils';
 import StreamsApi from '../api/StreamsApi';
-
-const VueCookie = require('vue-cookie');
-
-Vue.use(VueCookie);
+import cookies from '../utils/cookies';
 
 const initState = {
   playing: false,
   externalPlayer: AndroidApi.hasAndroid,
   externalPlayerVersion: AndroidApi.getVersion(),
-  radio: Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)
-    ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_PLAYED)) : null,
-  radioStreamCodeName: Vue.cookie.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED)
-    ? JSON.parse(Vue.cookie.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED)) : null,
+  radio: cookies.get(config.COOKIE_LAST_RADIO_PLAYED),
+  radioStreamCodeName: cookies.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED),
   show: null,
   song: null,
-  volume: Vue.cookie.get(config.COOKIE_VOLUME)
-    ? parseInt(Vue.cookie.get(config.COOKIE_VOLUME), 10) : config.DEFAULT_VOLUME,
-  muted: Vue.cookie.get(config.COOKIE_MUTED) === 'true' || false,
+  volume: parseInt(cookies.get(config.COOKIE_VOLUME, config.DEFAULT_VOLUME), 10),
+  muted: cookies.get(config.COOKIE_MUTED, 'false') === 'true',
   session: {
     start: null,
     id: null,
@@ -95,9 +89,8 @@ const storeActions = {
     const stream = ScheduleUtils.getStreamFromCodeName(streamCodeName, radio);
 
     if (stream !== null) {
-      Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(radio), config.COOKIE_PARAMS);
-      Vue.cookie.set(config.COOKIE_LAST_RADIO_STREAM_PLAYED,
-        JSON.stringify(streamCodeName), config.COOKIE_PARAMS);
+      cookies.set(config.COOKIE_LAST_RADIO_PLAYED, radio);
+      cookies.set(config.COOKIE_LAST_RADIO_STREAM_PLAYED, streamCodeName);
 
       if (state.externalPlayer === true) {
         AndroidApi.play(radio, stream);
@@ -106,13 +99,13 @@ const storeActions = {
           dispatch('sendList', radio);
         }, 2000);
       } else {
-        Vue.nextTick(() => {
+        nextTick(() => {
           commit('play', { radio, streamCodeName });
           dispatch('startListeningSession');
         });
       }
 
-      Vue.nextTick(() => {
+      nextTick(() => {
         dispatch('updateShow');
       });
     }
@@ -124,7 +117,7 @@ const storeActions = {
       StreamsApi.incrementPlayCount(stream.code_name, rootState.streams.radioBrowserApi);
     }, 500);
 
-    Vue.cookie.set(config.COOKIE_LAST_RADIO_PLAYED, JSON.stringify(stream), config.COOKIE_PARAMS);
+    cookies.set(config.COOKIE_LAST_RADIO_PLAYED, stream);
 
     if (state.externalPlayer === true) {
       AndroidApi.play(stream);
@@ -136,7 +129,7 @@ const storeActions = {
       return;
     }
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       commit('play', { radio: stream });
       dispatch('startListeningSession');
     });
@@ -244,11 +237,11 @@ const storeActions = {
     commit('setSong', song);
   },
   toggleMute: ({ state, commit }) => {
-    Vue.cookie.set(config.COOKIE_MUTED, !state.muted, config.COOKIE_PARAMS);
+    cookies.set(config.COOKIE_MUTED, !state.muted);
     commit('toggleMute');
   },
   setVolume: ({ commit }, volume) => {
-    Vue.cookie.set(config.COOKIE_VOLUME, volume, config.COOKIE_PARAMS);
+    cookies.set(config.COOKIE_VOLUME, volume);
     commit('setVolume', volume);
   },
   volumeFocus: ({ commit }, params) => {
@@ -256,7 +249,7 @@ const storeActions = {
   },
   setTimer: ({ dispatch, state, commit }, minutes) => {
     if (typeof minutes === 'number' && minutes > 0) {
-      Vue.cookie.set(config.COOKIE_LAST_TIMER, minutes, config.COOKIE_PARAMS);
+      cookies.set(config.COOKIE_LAST_TIMER, minutes);
     }
 
     if (state.externalPlayer === true) {
@@ -269,7 +262,7 @@ const storeActions = {
     // cancelling timer
     if (minutes === null || minutes === 0) {
       dispatch('toast', {
-        message: i18n.tc('message.player.timer.cancelled'),
+        message: i18n.global.tc('message.player.timer.cancelled'),
         type: config.TOAST_TYPE_INFO
       });
     }
@@ -277,7 +270,7 @@ const storeActions = {
     // setting timer
     if (minutes !== null && minutes > 0) {
       dispatch('toast', {
-        message: i18n.tc('message.player.timer.set', minutes, { minutes }),
+        message: i18n.global.tc('message.player.timer.set', minutes, { minutes }),
         type: config.TOAST_TYPE_INFO
       });
 
@@ -292,7 +285,7 @@ const storeActions = {
         if (state.timer === 0) {
           dispatch('stop');
           dispatch('toast', {
-            message: i18n.tc('message.player.timer.finish'),
+            message: i18n.global.tc('message.player.timer.finish'),
             type: config.TOAST_TYPE_INFO
           });
         }
@@ -338,7 +331,7 @@ const storeActions = {
       && config.PLAYER_STATE.indexOf(playbackState) !== -1) {
       commit('updatePlayingStatus', { radio, radioStream, playbackState });
 
-      Vue.nextTick(() => {
+      nextTick(() => {
         dispatch('updateShow');
       });
     }
@@ -347,33 +340,33 @@ const storeActions = {
 
 const storeMutations = {
   play(state, { radio, streamCodeName }) {
-    Vue.set(state, 'radio', radio);
-    Vue.set(state, 'radioStreamCodeName', streamCodeName || null);
-    Vue.set(state, 'show', null);
-    Vue.set(state, 'playing', true);
-    Vue.set(state, 'song', null);
-    Vue.set(state, 'session', {
+    state.radio = radio;
+    state.radioStreamCodeName = streamCodeName || null;
+    state.show = null;
+    state.playing = true;
+    state.song = null;
+    state.session = {
       start: DateTime.local().setZone(config.TIMEZONE),
       id: null,
       ctrl: Math.floor(Math.random() * 100000)
-    });
+    };
   },
   resume(state) {
-    Vue.set(state, 'playing', true);
-    Vue.set(state, 'song', null);
-    Vue.set(state, 'session', {
+    state.playing = true;
+    state.song = null;
+    state.session = {
       start: DateTime.local().setZone(config.TIMEZONE),
       id: null,
       ctrl: Math.floor(Math.random() * 100000)
-    });
+    };
   },
   stop(state) {
-    Vue.set(state, 'playing', false);
-    Vue.set(state, 'song', null);
-    Vue.set(state, 'session', { start: null, id: null, ctrl: null });
+    state.playing = false;
+    state.song = null;
+    state.session = { start: null, id: null, ctrl: null };
     if (state.sessionInterval !== null) {
       clearInterval(state.sessionInterval);
-      Vue.set(state, 'sessionInterval', null);
+      state.sessionInterval = null;
     }
   },
   updateRadio(state, params) {
@@ -382,11 +375,11 @@ const storeMutations = {
   updatePlayingStatus(state, params) {
     const { playbackState, radio, radioStream } = params;
 
-    Vue.set(state, 'playing', playbackState === config.PLAYER_STATE_PLAYING);
-    Vue.set(state, 'radio', radio);
-    Vue.set(state, 'radioStreamCodeName', radioStream !== null
-      && radioStream !== undefined ? radioStream.code_name : null);
-    // Vue.set(state, 'show', show);
+    state.playing = playbackState === config.PLAYER_STATE_PLAYING;
+    state.radio = radio;
+    state.radioStreamCodeName = radioStream !== null
+      && radioStream !== undefined ? radioStream.code_name : null;
+    // state.show = show;
   },
   setShow(state, show) {
     state.show = show;
@@ -408,7 +401,7 @@ const storeMutations = {
     state.focus[params.element] = params.status;
   },
   setListeningSessionId(state, id) {
-    Vue.set(state.session, 'id', id);
+    state.session.id = id;
   },
   setTimer(state, minutes) {
     // excludes mobile app

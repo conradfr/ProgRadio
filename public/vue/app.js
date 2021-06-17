@@ -1,25 +1,30 @@
 import 'es6-promise/auto';
 
-import Vue from 'vue';
+import { createApp } from 'vue';
 import VueGtag from 'vue-gtag';
+import VueFlags from '@growthbunker/vueflags';
+// import VueToast from 'vue-toast-notification';
 
 import store from './store/store';
 import router from './router/router';
 import i18n from './lang/i18n';
 
-Vue.config.productionTip = false;
-// Vue.config.performance = true;
+import App from './components/App.vue';
 
+const app = createApp(App);
+
+app.use(i18n);
+app.use(router);
+app.use(store);
+
+// app.use(VueToast);
 /* eslint-disable no-undef */
-Vue.use(VueGtag, {
-  config: { id: gtCode },
-  disableScriptLoad: true
-}, router);
+app.use(VueGtag, {
+  config: { id: gtCode }
+});
+app.use(VueFlags, {
+  // Specify the path of the folder where the flags are stored.
+  iconPath: '/img/flags/',
+});
 
-/* eslint-disable no-new */
-new Vue({
-  i18n,
-  router,
-  store,
-
-}).$mount('#app');
+app.mount('#app');

@@ -18,6 +18,9 @@ import filter from 'lodash/filter';
 import RadioStream from './RadioStream.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   props: ['radio'],
   components: {
     RadioStream

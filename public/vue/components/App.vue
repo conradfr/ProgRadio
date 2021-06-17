@@ -1,6 +1,7 @@
 <template>
   <div>
     <player></player>
+    <toast-container></toast-container>
     <timer-modal></timer-modal>
     <router-view></router-view>
   </div>
@@ -11,11 +12,16 @@ import throttle from 'lodash/throttle';
 
 import Player from './Player/Player.vue';
 import TimerModal from './Player/TimerModal.vue';
+import ToastContainer from './Toast/ToastContainer.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: {
     Player,
-    TimerModal
+    TimerModal,
+    ToastContainer
   },
   created() {
     setTimeout(
@@ -32,17 +38,6 @@ export default {
       navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
       navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
     }
-
-    // making the router works on IE 11 https://github.com/vuejs/vue-router/issues/1849
-    /* if ('-ms-scroll-limit' in document.documentElement.style
-        && '-ms-ime-align' in document.documentElement.style) { // detect it's IE11
-      window.addEventListener('hashchange', () => {
-        const currentPath = window.location.hash.slice(1);
-        if (this.$route.path !== currentPath) {
-          this.$router.push(currentPath);
-        }
-      }, false);
-    } */
   },
   methods: {
     /* eslint-disable func-names */

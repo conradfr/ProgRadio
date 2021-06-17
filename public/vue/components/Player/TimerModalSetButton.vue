@@ -12,6 +12,9 @@ import {
 } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   props: ['minutes', 'hideMobile'],
   methods: {
     setTo() {

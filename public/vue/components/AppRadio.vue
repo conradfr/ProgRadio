@@ -13,7 +13,7 @@
       <div v-if="radio" class="col-md-10 col-12">
         <div class="row">
           <div class="col-md-6 col-12 text-center text-sm-start">
-            <h4>{{ date | capitalize }}</h4>
+            <h4>{{ capitalizedDate }}</h4>
           </div>
         </div>
         <div class="row">
@@ -51,6 +51,9 @@ import RadioShow from './Radio/RadioShow.vue';
 import RadioStreams from './Radio/RadioStreams.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: {
     RadioShow,
     RadioStreams
@@ -81,7 +84,7 @@ export default {
 
     document.title = this.$i18n.t('message.radio_page.title', { radio: this.radio.name });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     const body = document.querySelector('body');
     body.classList.add('body-app');
 
@@ -127,12 +130,10 @@ export default {
     },
     picture() {
       return `${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
-    }
-  },
-  filters: {
-    capitalize(value) {
-      if (!value) return '';
-      const valueString = value.toString();
+    },
+    capitalizedDate() {
+      if (!this.date) return '';
+      const valueString = this.date.toString();
 
       return valueString.charAt(0).toUpperCase() + valueString.slice(1);
     }

@@ -3,33 +3,31 @@
 <template>
   <div id="volume-fader" v-on:mouseover="volumeFocus(true)" v-on:mouseleave="volumeFocus(false)">
     <div class="fader">
-      <v-touch
+      <vue3-hammer
           :enabled="{ pan: true }"
-          :pan-options="{ direction: 'vertical', threshold: '5' }"
+          :panOptions="{ direction: 'vertical', threshold: '5' }"
           v-on:panup="onPan" v-on:pandown="onPan" v-on:panstart="onPanStart">
         <div class="fader-track"></div>
         <div class="fader-handle" :style="styleObject"></div>
-      </v-touch>
-
+      </vue3-hammer>
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
 import { mapState } from 'vuex';
 
-const VueTouch = require('vue-touch');
-
-VueTouch.config.pan = {
-  direction: 'vertical'
-};
-
-Vue.use(VueTouch, { name: 'v-touch' });
+import Vue3Hammer from '../Utils/Vue3Hammer.vue';
 
 let initVolume = null;
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
+  components: {
+    Vue3Hammer
+  },
   computed: {
     styleObject() {
       // values are reversed as 0% = a volume of 10

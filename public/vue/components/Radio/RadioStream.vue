@@ -34,6 +34,9 @@ import {
 } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   props: ['radio', 'stream'],
   computed: {
     ...mapState({

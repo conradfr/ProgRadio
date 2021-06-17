@@ -1,11 +1,10 @@
-import Vue from 'vue';
-
 import {
   CACHE_KEY_RADIO_FAVORITES,
   CACHE_KEY_STREAM_FAVORITES
 } from '../config/config';
 
 import cache from '../utils/cache';
+import cookies from '../utils/cookies';
 
 import UserApi from '../api/UserApi';
 import * as config from '../config/config';
@@ -82,7 +81,7 @@ const storeActions = {
       }
 
       const favoritesAsString = favoritesRadio.join('|');
-      Vue.cookie.set(config.COOKIE_RADIO_FAVORITES, favoritesAsString, config.COOKIE_PARAMS);
+      cookies.set(config.COOKIE_RADIO_FAVORITES, favoritesAsString);
 
       // check if radio has a corresponding stream and add it to favorites (only non-logged)
       if (cascade === true) {
@@ -132,7 +131,7 @@ const storeActions = {
         return;
       }
 
-      Vue.cookie.set(config.COOKIE_STREAM_FAVORITES, favoritesStream.join('|'), config.COOKIE_PARAMS);
+      cookies.set(config.COOKIE_STREAM_FAVORITES, favoritesStream.join('|'));
 
       // check if stream has a radio attached and add it to favorites (only non-logged)
       if (cascade === true) {
@@ -159,13 +158,13 @@ const storeActions = {
 // mutations
 const storeMutations = {
   updateLogged: (state, value) => {
-    Vue.set(state, 'logged', value);
+    state.logged = value;
   },
   updateRadioFavorites: (state, value) => {
-    Vue.set(state, 'favoritesRadio', value);
+    state.favoritesRadio = value;
   },
   updateStreamFavorites: (state, value) => {
-    Vue.set(state, 'favoritesStream', value);
+    state.favoritesStream = value;
   }
 };
 

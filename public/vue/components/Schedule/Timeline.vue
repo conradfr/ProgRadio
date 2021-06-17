@@ -33,7 +33,7 @@
       <i class="bi bi-chevron-right"></i>
     </div>
     <div v-for="hour in 24" :key="hour" class="time" v-once>
-      {{ hour | toTime }}
+      {{ toTime(hour) }}
     </div>
   </div>
 </template>
@@ -43,12 +43,8 @@ import { mapGetters, mapState } from 'vuex';
 import { DateTime } from 'luxon';
 
 export default {
-  filters: {
-    toTime(value) {
-      // add leading 0 if < 10
-      const strTime = `0${value - 1}`;
-      return `${`${strTime.slice(-2)}`}h00`;
-    }
+  compatConfig: {
+    MODE: 3
   },
   data() {
     return {
@@ -73,6 +69,11 @@ export default {
     }
   },
   methods: {
+    toTime(value) {
+      // add leading 0 if < 10
+      const strTime = `0${value - 1}`;
+      return `${`${strTime.slice(-2)}`}h00`;
+    },
     clickBackward() {
       this.$store.dispatch('scrollBackward');
     },

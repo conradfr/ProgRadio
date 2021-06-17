@@ -9,6 +9,9 @@ import { mapGetters } from 'vuex';
 import { TICK_INTERVAL } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   data() {
     return {
       tickInterval: null
