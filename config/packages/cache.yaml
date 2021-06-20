@@ -14,8 +14,8 @@ framework:
 
         # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
 #        app: cache.adapter.apcu
-        app: cache.adapter.redis
-        system: cache.adapter.apcu
+#        app: cache.adapter.redis
+#        system: cache.adapter.apcu
 #        system: cache.adapter.redis
 #        default_redis_provider: snc_redis.default
 
