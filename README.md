@@ -5,7 +5,7 @@ https://www.programmes-radio.com
 
 Dependencies
 --------------
-- PHP 8.0.x / Symfony 5.2
+- PHP 8.0.x / Symfony 5.3
 - VueJs 3.1+
 - NodeJS v10.x (Scraper) / v12.x (front)
 - Elixir 1.12.x (Api / Importer)

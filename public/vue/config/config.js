@@ -29,7 +29,7 @@ export const CACHE_KEY_CATEGORIES = 'categories';
 export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites';
 export const CACHE_KEY_STREAM_FAVORITES = 'stream_favorites';
 
-export const COOKIE_PREFIX = 'progradio_v4_';
+export const COOKIE_PREFIX = 'progradio_v4';
 export const COOKIE_TTL = '31536000';
 export const COOKIE_PARAMS = {
   path: '/',

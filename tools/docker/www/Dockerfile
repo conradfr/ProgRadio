@@ -72,11 +72,14 @@ RUN rm -rf /etc/nginx/sites-enabled
 RUN mkdir -p /etc/nginx/sites-enabled
 
 # Install extensions
-RUN docker-php-ext-install intl pdo_pgsql pgsql \
+RUN pecl install apcu \
+ && docker-php-ext-install intl pdo_pgsql pgsql \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
  && docker-php-ext-install -j$(nproc) gd \
  && docker-php-ext-configure opcache --enable-opcache \
- && docker-php-ext-install opcache
+ && docker-php-ext-install opcache \
+ && docker-php-ext-enable apcu \
+ && pecl clear-cache
 
 COPY ./tools/docker/www/local.ini /usr/local/etc/php/conf.d/local.ini
 

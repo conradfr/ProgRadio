@@ -16,7 +16,7 @@ const initState = {
   playing: false,
   externalPlayer: AndroidApi.hasAndroid,
   externalPlayerVersion: AndroidApi.getVersion(),
-  radio: cookies.get(config.COOKIE_LAST_RADIO_PLAYED),
+  radio: cookies.getJson(config.COOKIE_LAST_RADIO_PLAYED),
   radioStreamCodeName: cookies.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED),
   show: null,
   song: null,
