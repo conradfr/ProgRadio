@@ -3,13 +3,13 @@ doctrine:
         auto_generate_proxy_classes: false
         metadata_cache_driver:
             type: pool
-            pool: cache.system
+            pool: doctrine.system_cache_pool
         query_cache_driver:
             type: pool
-            pool: cache.system
+            pool: doctrine.system_cache_pool
         result_cache_driver:
             type: pool
-            pool: cache.app
+            pool: doctrine.result_cache_pool
 
 framework:
     cache:

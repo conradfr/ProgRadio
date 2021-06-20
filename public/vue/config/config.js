@@ -23,13 +23,13 @@ export const COLLECTION_FAVORITES = 'favorites';
 
 export const RADIO_LIST_IGNORE_COUNTRY = 'FR';
 
-export const CACHE_KEY_RADIOS = 'radios_v3';
-export const CACHE_KEY_COLLECTIONS = 'collections_v3';
-export const CACHE_KEY_CATEGORIES = 'categories_v3';
-export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites_v3';
-export const CACHE_KEY_STREAM_FAVORITES = 'stream_favorites_v3';
+export const CACHE_KEY_RADIOS = 'radios';
+export const CACHE_KEY_COLLECTIONS = 'collections';
+export const CACHE_KEY_CATEGORIES = 'categories';
+export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites';
+export const CACHE_KEY_STREAM_FAVORITES = 'stream_favorites';
 
-export const COOKIE_PREFIX = 'progradio';
+export const COOKIE_PREFIX = 'progradio_v4_';
 export const COOKIE_TTL = '31536000';
 export const COOKIE_PARAMS = {
   path: '/',
@@ -40,7 +40,7 @@ export const COOKIE_PARAMS = {
 };
 
 export const COOKIE_EXCLUDE = `${COOKIE_PREFIX}-exclude`;
-export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection_v2`;
+export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
 export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;
