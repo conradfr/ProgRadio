@@ -1,15 +1,8 @@
 <template>
   <div class="program-container" :class="{ 'prevday': startsPrevDay, 'nextday': endsNextDay }"
-       :style="containerStyle" v-on:mouseup="detailClick">
-    <!--        <div class="program program-full" :style="styleObjectDetail">
-                <div class="program-inner">
-                    <div class="program-title"><span class="schedule-display">
-                      {{ scheduleDisplay}}</span>{{ program.title }}</div>
-                    <div class="program-host">{{ program.host  }}</div>
-                    <div class="program-description">{{ program.description }}</div>
-                </div>
-            </div>-->
+       :style="containerStyle" v-on:mouseup="detailClick" ref="root">
     <div class="program" v-on:mouseover.once="hover = !hover"
+         v-if="isIntersecting"
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
       <div class="program-inner" v-bind:title="title">
         <div class="program-img" v-if="program.picture_url && (hover || isCurrent)" v-once>
@@ -42,6 +35,7 @@
   </div>
 </template>
 <script>
+
 import { DateTime, Interval } from 'luxon';
 import { mapState, mapGetters } from 'vuex';
 import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../../config/config';
@@ -57,8 +51,17 @@ export default {
   data() {
     return {
       hover: false,
-      displayDetail: false
+      displayDetail: false,
+      intersectionObserver: null,
+      isIntersecting: false
     };
+  },
+  mounted() {
+    this.intersectionObserver = new IntersectionObserver(this.handleIntersection);
+    this.intersectionObserver.observe(this.$refs.root);
+  },
+  beforeUnmount() {
+    this.intersectionObserver.unobserve(this.$refs.root);
   },
   computed: {
     ...mapState({
@@ -132,6 +135,17 @@ export default {
     }
   },
   methods: {
+    handleIntersection(entries) {
+      entries.forEach((entry) => {
+        this.isIntersecting = entry.isIntersecting;
+        const className = 'visually-hidden';
+        if (entry.isIntersecting && entry.target.classList.contains(className)) {
+          entry.target.classList.remove(className);
+        } else if (!entry.isIntersecting && !entry.target.classList.contains(className)) {
+          entry.target.classList.add(className);
+        }
+      });
+    },
     shorten(value, duration) {
       if (value === null) {
         return '';
