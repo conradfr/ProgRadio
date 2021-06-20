@@ -7,17 +7,20 @@
 
 <script>
 export default {
-  props: ['value', 'add', 'hideMobile'],
+  compatConfig: {
+    MODE: 3
+  },
+  props: ['modelValue', 'add', 'hideMobile'],
   methods: {
     addTo() {
-      let { value } = this;
+      let { modelValue } = this;
       const { add } = this;
-      if (typeof value === 'string') {
-        value = parseInt(value, 10);
+      if (typeof modelValue === 'string') {
+        modelValue = parseInt(modelValue, 10);
       }
 
-      value += (typeof add === 'string' ? parseInt(add, 10) : add);
-      this.$emit('input', value);
+      modelValue += (typeof add === 'string' ? parseInt(add, 10) : add);
+      this.$emit('update:modelValue', modelValue);
     }
   }
 };

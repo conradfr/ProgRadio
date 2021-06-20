@@ -63,8 +63,6 @@
 
 <script>
 import filter from 'lodash/filter';
-import Vue from 'vue';
-import VueFlags from '@growthbunker/vueflags';
 import { mapGetters, mapState } from 'vuex';
 
 import {
@@ -79,12 +77,10 @@ import {
   GTAG_ACTION_STOP_VALUE
 } from '../../config/config';
 
-Vue.use(VueFlags, {
-  // Specify the path of the folder where the flags are stored.
-  iconPath: '/img/flags/',
-});
-
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   props: ['radio'],
   data() {
     return {

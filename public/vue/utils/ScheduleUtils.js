@@ -2,7 +2,6 @@ import forEach from 'lodash/forEach';
 import sortBy from 'lodash/sortBy';
 import findIndex from 'lodash/findIndex';
 
-import Vue from 'vue';
 import compose from 'lodash/fp/compose';
 import filter from 'lodash/fp/filter';
 import orderBy from 'lodash/fp/orderBy';
@@ -10,10 +9,6 @@ import orderBy from 'lodash/fp/orderBy';
 import { DateTime } from 'luxon';
 
 import * as config from '../config/config';
-
-const VueCookie = require('vue-cookie');
-
-Vue.use(VueCookie);
 
 /* ---------- GRID---------- */
 

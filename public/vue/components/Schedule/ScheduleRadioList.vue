@@ -17,6 +17,9 @@ import { mapGetters } from 'vuex';
 import ScheduleRadioListOne from './ScheduleRadioListOne.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: { ScheduleRadioListOne },
   computed: {
     ...mapGetters({

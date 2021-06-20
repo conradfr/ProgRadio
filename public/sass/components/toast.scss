@@ -1,0 +1,13 @@
+.toast-container {
+  z-index: 2000;
+  top: $navbar-height;
+
+  .toast {
+    .toast-icon {
+      font-size: 1.538rem;
+    }
+    .toast-body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+  }
+}

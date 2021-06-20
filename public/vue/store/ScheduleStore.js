@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import without from 'lodash/without';
 import pick from 'lodash/pick';
 import forEach from 'lodash/forEach';
@@ -7,17 +5,16 @@ import find from 'lodash/find';
 
 import { DateTime, Interval } from 'luxon';
 
+import { nextTick } from 'vue';
+
 import * as config from '../config/config';
 import cache from '../utils/cache';
+import cookies from '../utils/cookies';
 
 import router from '../router/router';
 import ScheduleApi from '../api/ScheduleApi';
 import ScheduleUtils from '../utils/ScheduleUtils';
 import AndroidApi from '../api/AndroidApi';
-
-const VueCookie = require('vue-cookie');
-
-Vue.use(VueCookie);
 
 const cursorTime = DateTime.local().setZone(config.TIMEZONE);
 
@@ -36,10 +33,9 @@ const initState = {
   cursorTime,
   scrollIndex: initialScrollIndex,
   scrollClick: false,
-  currentCollection: Vue.cookie.get(config.COOKIE_COLLECTION)
-    ? Vue.cookie.get(config.COOKIE_COLLECTION) : config.DEFAULT_COLLECTION,
-  categoriesExcluded: Vue.cookie.get(config.COOKIE_EXCLUDE)
-    ? Vue.cookie.get(config.COOKIE_EXCLUDE).split('|') : [],
+  currentCollection: cookies.get(config.COOKIE_COLLECTION, config.DEFAULT_COLLECTION),
+  categoriesExcluded: cookies.has(config.COOKIE_EXCLUDE)
+    ? cookies.get(config.COOKIE_EXCLUDE).split('|') : [],
   categoryFilterFocus: {
     icon: false,
     list: false
@@ -175,7 +171,7 @@ const storeActions = {
     const newDate = DateTime.local().setZone(config.TIMEZONE);
     commit('updateCursor', newDate);
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       dispatch('getSchedule');
     });
   },
@@ -184,7 +180,7 @@ const storeActions = {
     const newDate = state.cursorTime.minus({ days: 1 });
     commit('updateCursor', newDate);
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       dispatch('getSchedule');
     });
   },
@@ -192,7 +188,7 @@ const storeActions = {
     const newDate = state.cursorTime.plus({ days: 1 });
     commit('updateCursor', newDate);
 
-    Vue.nextTick(() => {
+    nextTick(() => {
       dispatch('getSchedule');
     });
   },
@@ -229,7 +225,7 @@ const storeActions = {
       commit('setLoading', true, { root: true });
     }
 
-    if (params !== undefined && params !== null) {
+    if (params !== undefined && params !== null && params !== '') {
       // api don't have user favorites access
       /* eslint-disable no-param-reassign */
       if (params.collection !== undefined && params.collection === config.COLLECTION_FAVORITES) {
@@ -296,27 +292,27 @@ const storeMutations = {
     const update = ScheduleUtils.getUpdatedProgramText(state);
 
     forEach(update, (data, key) => {
-      Vue.set(state.scheduleDisplay[key], 'textLeft', data);
+      state.scheduleDisplay[key].textLeft = data;
     });
   },
   scrollSet(state, x) {
-    Vue.set(state, 'scrollIndex', x);
+    state.scrollIndex = x;
   },
   scrollTo(state, x) {
     const newIndex = state.scrollIndex + x;
-    Vue.set(state, 'scrollIndex', ScheduleUtils.enforceScrollIndex(newIndex));
+    state.scrollIndex = ScheduleUtils.enforceScrollIndex(newIndex);
   },
   updateCursor(state, value) {
-    Vue.set(state, 'cursorTime', value);
+    state.cursorTime = value;
   },
   scrollClickSet: (state, value) => {
-    Vue.set(state, 'scrollClick', value);
+    state.scrollClick = value;
   },
   collectionSwitch(state, collection) {
-    Vue.set(state, 'currentCollection', collection);
+    state.currentCollection = collection;
 
     setTimeout(() => {
-      Vue.cookie.set(config.COOKIE_COLLECTION, collection, config.COOKIE_PARAMS);
+      cookies.set(config.COOKIE_COLLECTION, collection);
     }, 300);
   },
   setFavoritesCollection(state, radios) {
@@ -324,7 +320,7 @@ const storeMutations = {
       return;
     }
 
-    Vue.set(state.collections[config.COLLECTION_FAVORITES], 'radios', radios || []);
+    state.collections[config.COLLECTION_FAVORITES].radios = radios || [];
   },
   setCategoryFilterFocus(state, params) {
     state.categoryFilterFocus[params.element] = params.status;
@@ -333,12 +329,11 @@ const storeMutations = {
     if (state.categoriesExcluded.indexOf(category) === -1) {
       state.categoriesExcluded.push(category);
     } else {
-      Vue.set(state, 'categoriesExcluded', without(state.categoriesExcluded, category));
+      state.categoriesExcluded = without(state.categoriesExcluded, category);
     }
 
     setTimeout(() => {
-      Vue.cookie.set(config.COOKIE_EXCLUDE, state.categoriesExcluded.join('|'),
-        config.COOKIE_PARAMS);
+      cookies.set(config.COOKIE_EXCLUDE, state.categoriesExcluded.join('|'));
     }, 500);
   },
   updateSchedule: (state, value) => {
@@ -348,11 +343,11 @@ const storeMutations = {
     );
 
     Object.freeze(updatedSchedule);
-    Vue.set(state, 'schedule', updatedSchedule);
-    Vue.set(state, 'scheduleDisplay', scheduleDisplay);
+    state.schedule = updatedSchedule;
+    state.scheduleDisplay = scheduleDisplay;
   },
   updateRadios: (state, value) => {
-    Vue.set(state, 'radios', value);
+    state.radios = value;
   },
   updateCollections: (state, collections) => {
     forEach(collections, (collection, key) => {
@@ -361,11 +356,11 @@ const storeMutations = {
       }
     });
 
-    Vue.set(state, 'collections', collections);
+    state.collections = collections;
   },
   updateCategories: (state, value) => {
     Object.freeze(value);
-    Vue.set(state, 'categories', value);
+    state.categories = value;
   }
 };
 

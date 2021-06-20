@@ -62,6 +62,9 @@ import AndroidApi from '../../api/AndroidApi';
 import PlayerUtils from '../../utils/PlayerUtils';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: {
     PlayerInfo,
     Timer,
@@ -80,7 +83,6 @@ export default {
       */
       debounce: false,
       lastUpdated: null,
-      checkTimer: null,
       locale: this.$i18n.locale,
     };
   },
@@ -93,9 +95,6 @@ export default {
   },
   created() {
     window.addEventListener('beforeunload', this.beforeWindowUnload);
-  },
-  beforeDestroy() {
-    clearInterval(this.checkTimer);
   },
   computed: {
     ...mapState({
@@ -318,8 +317,6 @@ export default {
             this.lastUpdated = new Date();
           });
 
-          this.checkTimer = setInterval(this.check, config.PLAYER_TYPE_CHECK_INTERVAL);
-
           this.lastUpdated = new Date();
         }).catch((error) => {
           this.$store.dispatch('stop');
@@ -332,19 +329,7 @@ export default {
         });
       }
     },
-    // may be dead code due to new player promise handling
-    check() {
-      const now = new Date();
-      if (now - this.lastUpdated > config.PLAYER_TYPE_CHECK_TIMEOUT) {
-        this.lastUpdated = null;
-        this.$store.dispatch('stop');
-        clearInterval(this.checkTimer);
-        this.$store.dispatch('toast', { message: this.$i18n.tc('message.player.play_error') });
-      }
-    },
     stop() {
-      clearInterval(this.checkTimer);
-
       if (window.audio !== undefined && window.audio !== null) {
         window.audio.pause();
       }

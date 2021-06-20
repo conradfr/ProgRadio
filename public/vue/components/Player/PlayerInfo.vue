@@ -16,6 +16,9 @@ import { mapState, mapGetters } from 'vuex';
 import { TIMEZONE } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   computed: {
     ...mapState({
       radio: state => state.player.radio,

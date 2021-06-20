@@ -1,19 +1,18 @@
 const path = require('path')
 var webpack = require('webpack');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+// const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 function recursiveIssuer(m, c) {
   const issuer = c.moduleGraph.getIssuer(m);
-  // For webpack@4 issuer = m.issuer
 
   if (issuer) {
     return recursiveIssuer(issuer, c);
   }
 
   const chunks = c.chunkGraph.getModuleChunks(m);
-  // For webpack@4 chunks = m._chunks
 
   for (const chunk of chunks) {
     return chunk.name;
@@ -45,6 +44,11 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
+          compilerOptions: {
+            compatConfig: {
+              MODE: 3
+            }
+          },
           preserveWhitespace: false,
           transformToRequire: {
             source: 'src'
@@ -98,6 +102,8 @@ module.exports = {
       files: '/'
     }),
     new webpack.DefinePlugin({
+      __VUE_PROD_DEVTOOLS__: true,
+      __VUE_OPTIONS_API__: true,
       'process.env': {
         NODE_ENV: '"development"'
       }
@@ -105,7 +111,10 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      // 'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
+      // 'vue$': 'vue/dist/vue.esm-bundler.js',
+      vue: '@vue/compat'
+      // vue: 'vue/dist/vue.esm-bundler.js'
     }
   },
   optimization: {
@@ -132,5 +141,5 @@ module.exports = {
         },
       },
     },
-  }
+  },
 }

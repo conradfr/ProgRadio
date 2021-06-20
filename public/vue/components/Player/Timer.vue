@@ -8,9 +8,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import i18n from '../../lang/i18n';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   computed: {
     ...mapState({
       timer: state => state.player.timer
@@ -20,10 +22,10 @@ export default {
     },
     title() {
       if (this.timer === null || this.timer === 0) {
-        return i18n.tc('message.player.timer.title');
+        return this.$i18n.tc('message.player.timer.title');
       }
 
-      return i18n.tc('message.player.timer.end_in', this.timer, { minutes: this.timer });
+      return this.$i18n.tc('message.player.timer.end_in', this.timer, { minutes: this.timer });
     }
   }
 };

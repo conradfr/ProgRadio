@@ -77,8 +77,8 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import { mapState } from 'vuex';
+import cookies from '../../utils/cookies';
 
 import {
   DEFAULT_TIMER_MINUTES,
@@ -92,19 +92,17 @@ import {
 import TimerModalSetButton from './TimerModalSetButton.vue';
 import TimerModalAddButton from './TimerModalAddButton.vue';
 
-const VueCookie = require('vue-cookie');
-
-Vue.use(VueCookie);
-
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: {
     TimerModalSetButton,
     TimerModalAddButton
   },
   data() {
     return {
-      minutes: Vue.cookie.get(COOKIE_LAST_TIMER)
-        ? parseInt(Vue.cookie.get(COOKIE_LAST_TIMER), 10) : DEFAULT_TIMER_MINUTES,
+      minutes: parseInt(cookies.get(COOKIE_LAST_TIMER, DEFAULT_TIMER_MINUTES), 10)
     };
   },
   computed: {

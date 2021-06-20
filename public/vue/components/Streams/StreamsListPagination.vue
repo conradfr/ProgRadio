@@ -39,6 +39,9 @@ import { mapState } from 'vuex';
 import { STREAMS_DEFAULT_PER_PAGE, STREAMS_MAX_PAGES_DISPLAY } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   computed: {
     ...mapState({
       total: state => state.streams.total,

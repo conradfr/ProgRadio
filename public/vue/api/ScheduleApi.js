@@ -18,11 +18,11 @@ const getSchedule = (dateStr, params) => {
   let url = `https://${apiUrl}/schedule/${dateStr}`;
 
   if (params !== undefined && params !== null) {
-    if (params.collection !== undefined) {
+    if (params.collection !== undefined && params.collection !== null && params.collection !== '') {
       url += `?c=${params.collection}`;
-    } else if (params.radio !== undefined) {
+    } else if (params.radio !== undefined && params.radio !== null && params.radio !== '') {
       url += `?r=${params.radio}`;
-    } else if (params.radios !== undefined && params.radios.length > 0) {
+    } else if (params.radios !== undefined && params.radios !== null && params.radios.length > 0) {
       url += `?r=${params.radios.join(',')}`;
     }
   }
@@ -100,8 +100,9 @@ const sendListeningSession = (codeName, radioStreamCodeName,
   /* eslint-disable no-underscore-dangle */
   axios.post(`https://${apiUrl}/listening_session`, data)
     .then((response) => {
-      document.getElementById('app').__vue__.$store.dispatch('setListeningSessionId',
-        { id: response.data.id, ctrl });
+      document.getElementById('app')
+        .__vue_app__.config.globalProperties.$store.dispatch('setListeningSessionId',
+          { id: response.data.id, ctrl });
     });
 };
 

@@ -6,10 +6,10 @@ https://www.programmes-radio.com
 Dependencies
 --------------
 - PHP 8.0.x / Symfony 5.2
-- VueJs 2.x
-- NodeJS v12.x (Scraper)
+- VueJs 3.1+
+- NodeJS v10.x (Scraper) / v12.x (front)
 - Elixir 1.12.x (Api / Importer)
-- PostgreSQL & Redis
+- PostgreSQL 13 & Redis
 - Nginx or Apache
 - ImageMagick
 - CapRover & Docker (deployment)

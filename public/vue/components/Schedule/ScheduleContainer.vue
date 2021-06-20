@@ -9,9 +9,14 @@
 <script>
 import ScheduleRadioList from './ScheduleRadioList.vue';
 import ScheduleRadioGrid from './ScheduleRadioGrid.vue';
-import Loading from '../Loading.vue';
+import Loading from '../Utils/Loading.vue';
+
+import { DEFAULT_COLLECTION } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: {
     ScheduleRadioList,
     ScheduleRadioGrid,
@@ -39,7 +44,8 @@ export default {
     $route(to, from) {
       if (to.params.collection !== undefined && to.params.collection !== from.params.collection) {
         this.$store.dispatch('getSchedule', { collection: this.$route.params.collection });
-        this.$store.dispatch('switchCollection', to.params.collection);
+        this.$store.dispatch('switchCollection', to.params.collection === ''
+          ? DEFAULT_COLLECTION : to.params.collection);
       }
     }
   }

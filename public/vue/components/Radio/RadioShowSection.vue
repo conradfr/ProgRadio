@@ -5,7 +5,7 @@
         :src="'/media/cache/page_thumb/media/program/' + section.picture_url">
     </div>
     <div class="flex-fill ps-3 mb-3">
-      <h6 class="mt-0">{{ section.start_at | time }} - {{ section.title }}</h6>
+      <h6 class="mt-0">{{ timeStart }} - {{ section.title }}</h6>
       <div v-if="section.presenter">{{ section.presenter }}</div>
     </div>
   </div>
@@ -16,10 +16,13 @@ import { DateTime } from 'luxon';
 import { TIMEZONE } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   props: ['section'],
-  filters: {
-    time(value) {
-      return DateTime.fromISO(value)
+  computed: {
+    timeStart() {
+      return DateTime.fromISO(this.section.start_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
     }
   }

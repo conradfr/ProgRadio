@@ -1,22 +1,20 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import VueToast from 'vue-toast-notification';
+import remove from 'lodash/remove';
+
+import { createStore } from 'vuex';
 
 import ScheduleStore from './ScheduleStore';
 import PlayerStore from './PlayerStore';
 import StreamsStore from './StreamsStore';
 import UserStore from './UserStore';
 
-import { TOAST_TYPE_ERROR, TOAST_POSITION, TOAST_DURATION } from '../config/config';
+import { TOAST_TYPE_ERROR, TOAST_DURATION } from '../config/config';
 
-Vue.use(Vuex);
-Vue.use(VueToast);
-
-const store = new Vuex.Store({
+const store = createStore({
   // strict: process.env.NODE_ENV !== 'production',
   state: {
     // based on an increment to allow concurrent ajax requests and a unified display indicator
-    loading: 0
+    loading: 0,
+    toasts: []
   },
   getters: {
     isLoading: state => state.loading > 0
@@ -37,13 +35,18 @@ const store = new Vuex.Store({
       }
     },
     /* eslint-disable no-empty-pattern */
-    toast: ({}, { message, type }) => {
-      Vue.$toast.open({
+    toast: ({ commit }, { message, type }) => {
+      const toast = {
         message,
+        id: `t${Date.now()}-${Math.floor(Math.random() * 100)}`,
         type: type || TOAST_TYPE_ERROR,
-        duration: TOAST_DURATION,
-        position: TOAST_POSITION
-      });
+        duration: TOAST_DURATION
+      };
+
+      commit('addToast', toast);
+    },
+    toastConsumed: ({ commit }, id) => {
+      commit('removeToast', id);
     }
   },
   mutations: {
@@ -55,7 +58,13 @@ const store = new Vuex.Store({
         newStateValue = 0;
       }
 
-      Vue.set(state, 'loading', newStateValue);
+      state.loadingloading = newStateValue;
+    },
+    addToast: (state, toast) => {
+      state.toasts.push(toast);
+    },
+    removeToast: (state, id) => {
+      state.toast = remove(state.toasts, t => t.id === id);
     }
   },
   modules: {

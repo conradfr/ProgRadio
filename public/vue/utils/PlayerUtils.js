@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
 
@@ -7,10 +6,6 @@ import { DateTime } from 'luxon';
 import * as config from '../config/config';
 import ScheduleApi from '../api/ScheduleApi';
 import ScheduleUtils from './ScheduleUtils';
-
-const VueCookie = require('vue-cookie');
-
-Vue.use(VueCookie);
 
 /* ---------- RADIOS ---------- */
 

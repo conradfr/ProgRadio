@@ -18,8 +18,8 @@ export const messages = {
         title: 'En ce moment à la radio'
       },
       player: {
-        autoplay_error: "Votre navigateur n'autorise pas la lecture automatique de médias. Merci de cliquer sur \"Ecouter\" une fois de plus.",
-        play_error: 'Erreur de lecture.',
+        autoplay_error: "Votre navigateur n'autorise pas la lecture automatique de médias. Merci de cliquer sur \"Ecouter\" une fois de plus",
+        play_error: 'Erreur de lecture',
         placeholder: 'Cliquer sur un logo pour lancer la lecture',
         favorites: {
           add: 'Ajouter aux favoris',
@@ -87,8 +87,8 @@ export const messages = {
         title: 'Currently on the radio'
       },
       player: {
-        autoplay_error: 'Your browser does not allow autoplay. Please ckick play one more time.',
-        play_error: 'Media error.',
+        autoplay_error: 'Your browser does not allow autoplay. Please ckick play one more time',
+        play_error: 'Media error',
         placeholder: 'Click on a radio logo to start streaming',
         favorites: {
           add: 'Add to favorites',

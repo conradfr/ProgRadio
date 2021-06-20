@@ -1,19 +1,12 @@
 <template>
   <div class="program-container" :class="{ 'prevday': startsPrevDay, 'nextday': endsNextDay }"
-       :style="containerStyle" v-on:mouseup="detailClick">
-    <!--        <div class="program program-full" :style="styleObjectDetail">
-                <div class="program-inner">
-                    <div class="program-title"><span class="schedule-display">
-                      {{ scheduleDisplay}}</span>{{ program.title }}</div>
-                    <div class="program-host">{{ program.host  }}</div>
-                    <div class="program-description">{{ program.description }}</div>
-                </div>
-            </div>-->
+       :style="containerStyle" v-on:mouseup="detailClick" ref="root">
     <div class="program" v-on:mouseover.once="hover = !hover"
+         v-if="isIntersecting"
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
       <div class="program-inner" v-bind:title="title">
         <div class="program-img" v-if="program.picture_url && (hover || isCurrent)" v-once>
-          <img v-bind:src="program.picture_url | picture" alt="" @mousedown.prevent="">
+          <img v-bind:src="picturePath" alt="" @mousedown.prevent="">
         </div>
         <div class="program-infos" :style="infosStyle">
           <div class="program-title" v-once>
@@ -29,7 +22,7 @@
                 {{ currentSong }}
               </span>
               <span class="program-description-short-inner-text" v-once>
-                {{ program.description | shorten(program.duration) }}
+                {{ shorten(program.description, program.duration) }}
               </span>
             </div>
           </div>
@@ -42,6 +35,7 @@
   </div>
 </template>
 <script>
+
 import { DateTime, Interval } from 'luxon';
 import { mapState, mapGetters } from 'vuex';
 import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../../config/config';
@@ -49,13 +43,25 @@ import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../../con
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   components: { ScheduleRadioSection },
   props: ['program', 'radioPlaying'],
   data() {
     return {
       hover: false,
-      displayDetail: false
+      displayDetail: false,
+      intersectionObserver: null,
+      isIntersecting: false
     };
+  },
+  mounted() {
+    this.intersectionObserver = new IntersectionObserver(this.handleIntersection);
+    this.intersectionObserver.observe(this.$refs.root);
+  },
+  beforeUnmount() {
+    this.intersectionObserver.unobserve(this.$refs.root);
   },
   computed: {
     ...mapState({
@@ -124,13 +130,22 @@ export default {
       return this.program.end_overflow;
       // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.nextDayOverflow;
     },
-  },
-  methods: {
-    detailClick() {
-      // this.displayDetail = !this.displayDetail;
+    picturePath() {
+      return `${THUMBNAIL_PROGRAM_PATH}${this.program.picture_url}`;
     }
   },
-  filters: {
+  methods: {
+    handleIntersection(entries) {
+      entries.forEach((entry) => {
+        this.isIntersecting = entry.isIntersecting;
+        const className = 'visually-hidden';
+        if (entry.isIntersecting && entry.target.classList.contains(className)) {
+          entry.target.classList.remove(className);
+        } else if (!entry.isIntersecting && !entry.target.classList.contains(className)) {
+          entry.target.classList.add(className);
+        }
+      });
+    },
     shorten(value, duration) {
       if (value === null) {
         return '';
@@ -141,7 +156,9 @@ export default {
 
       return value.split('\n')[0];
     },
-    picture: value => `${THUMBNAIL_PROGRAM_PATH}${value}`
-  },
+    detailClick() {
+      // this.displayDetail = !this.displayDetail;
+    }
+  }
 };
 </script>

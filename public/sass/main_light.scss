@@ -10,7 +10,7 @@
 @import 'utils/mixins';
 @import 'utils/vue-select';
 
-@import '../../node_modules/vue-toast-notification/dist/theme-sugar.css';
+//@import '../../node_modules/vue-toast-notification/dist/theme-sugar.css';
 .v-toast-success{ background-color: $success !important; }
 
 @import 'utils/misc';
@@ -21,6 +21,7 @@
 // components
 
 @import "components/loader";
+@import "components/toast";
 @import "components/player/player";
 @import "components/schedule/collection-switcher";
 @import "components/schedule/category-filter";

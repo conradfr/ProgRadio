@@ -28,6 +28,11 @@
     }
   }
 
+  .img-show {
+    max-width: 64px;
+    max-height: 64px
+  }
+
   .media-current {
     .media-timeline {
       color: $primary;

@@ -20,7 +20,7 @@
              v-on:click="searchDeactivate(true)"></i>
         </div>
 
-        <button v-if="!searchActive" class="btn btn-primary btn-sm" type="submit"
+        <button v-if="!searchActive" class="btn btn-primary btn-sm me-1" type="submit"
                 v-on:click="searchActivate">
           <i class="bi bi-search"></i>
         </button>
@@ -63,7 +63,9 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 
+/* eslint-disable import/no-duplicates */
 import Vue from 'vue';
+import { nextTick } from 'vue';
 import VueFlags from '@growthbunker/vueflags';
 import vSelect from 'vue-select';
 
@@ -87,6 +89,9 @@ Vue.use(VueFlags, {
 });
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   data: () => (
     {
       code_all: STREAMING_CATEGORY_ALL,
@@ -110,7 +115,7 @@ export default {
     searchActivate() {
       this.$store.dispatch('setSearchActive', true)
         .then(() => {
-          Vue.nextTick(() => {
+          nextTick(() => {
             this.$refs.searchText.focus();
           });
         });
@@ -128,7 +133,7 @@ export default {
     searchTextChange(event) {
       this.$store.dispatch('setSearchText', event.target.value)
         .then(() => {
-          Vue.nextTick(() => {
+          nextTick(() => {
             this.$store.dispatch('getStreamRadios');
           });
         });

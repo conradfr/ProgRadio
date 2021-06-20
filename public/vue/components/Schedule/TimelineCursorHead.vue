@@ -9,6 +9,9 @@ import { mapGetters } from 'vuex';
 import { GRID_VIEW_EXTRA_LEFT } from '../../config/config';
 
 export default {
+  compatConfig: {
+    MODE: 3
+  },
   computed: {
     ...mapGetters([
       'isToday'
