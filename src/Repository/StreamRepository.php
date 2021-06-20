@@ -88,11 +88,13 @@ class StreamRepository extends ServiceEntityRepository
             }
         }
 
+        $query = $qb->getQuery();
+
         if ($sort !== 'random') {
-            $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+            $query->enableResultCache(self::CACHE_TTL);
         }
 
-        return $qb->getQuery()->getResult();
+        return $query->getResult();
     }
 
     public function searchStreams(
@@ -158,11 +160,13 @@ class StreamRepository extends ServiceEntityRepository
             }
         }
 
+        $query = $qb->getQuery();
+
         if ($sort !== 'random') {
-            $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+            $query->enableResultCache(self::CACHE_TTL);
         }
 
-        return $qb->getQuery()->getResult();
+        return $query->getResult();
     }
 
     public function getOneRandomStream(
@@ -219,9 +223,10 @@ class StreamRepository extends ServiceEntityRepository
                 ->setParameter('language', $language);
         }
 
-        $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+        $query = $qb->getQuery();
+        $query->disableResultCache();
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $query->getOneOrNullResult();
     }
 
     public function getOneSpecificStream(
@@ -242,9 +247,10 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb->setParameter('id', $id);
 
-        $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_TTL);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $query->getOneOrNullResult();
     }
 
     public function countStreams(
@@ -284,9 +290,10 @@ class StreamRepository extends ServiceEntityRepository
                 ->setParameter('language', $language);
         }
 
-        $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_TTL);
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return $query->getSingleScalarResult();
     }
 
     public function countSearchStreams(
@@ -330,9 +337,10 @@ class StreamRepository extends ServiceEntityRepository
                 ->setParameter('language', $language);
         }
 
-        $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_TTL);
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return $query->getSingleScalarResult();
     }
 
     public function getCountryCodes(): array
@@ -345,9 +353,10 @@ class StreamRepository extends ServiceEntityRepository
             ->andWhere('s.countryCode <> \'\'')
             ->orderBy('countryCode', 'ASC');
 
-        $qb->getQuery()->enableResultCache(self::CACHE_TTL);
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_TTL);
 
-        return $qb->getQuery()->getResult();
+        return $query->getResult();
     }
 
     public function getBestStreamForRadio(Radio $radio)
@@ -369,6 +378,9 @@ class StreamRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->setParameter('id', $radioStream->getId());
 
-        return $qb->getQuery()->getOneOrNullResult();
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_TTL);
+
+        return $query->getOneOrNullResult();
     }
 }

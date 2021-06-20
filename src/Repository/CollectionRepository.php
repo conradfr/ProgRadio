@@ -98,8 +98,9 @@ class CollectionRepository extends ServiceEntityRepository
         $qb->andWhere('r.codeName IN (:radios)')
             ->setParameter('radios', $favorites);
 
-        $qb->getQuery()->enableResultCache( self::CACHE_FAVORITES_TTL);
-        $result = $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_FAVORITES_TTL);
+        $result = $query->getResult();
 
         return array_column($result, 'codeName');
     }

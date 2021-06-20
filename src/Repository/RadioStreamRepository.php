@@ -42,7 +42,8 @@ class RadioStreamRepository extends EntityRepository
 
         $qb->setParameter('active', true);
 
-        $qb->getQuery()->disableResultCache();
-        return $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+        $query->disableResultCache();
+        return $query->getResult();
     }
 }

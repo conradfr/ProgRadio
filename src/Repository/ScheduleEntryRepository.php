@@ -236,9 +236,8 @@ EOT;
                ->setParameter('collection', $scheduleResource->getValue());
         }
 
-        $qb->getQuery()->disableResultCache(); // rely on app schedule cache and only get fresh data here
         $query = $qb->getQuery();
-
+        $query->disableResultCache();  // rely on app schedule cache and only get fresh data here
         return $query->getResult();
     }
 

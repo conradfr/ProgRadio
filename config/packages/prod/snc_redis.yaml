@@ -8,18 +8,18 @@
 #            alias: default
 #            dsn: "%env(REDIS_URL)%"
 
-snc_redis:
-    doctrine:
-        metadata_cache:
-            client: default
-            entity_manager: default
-            document_manager: default
-        result_cache:
-            client: default
-            entity_manager: default
-        query_cache:
-            client: default
-            entity_manager: default
-        second_level_cache:
-            client: default
-            entity_manager: default
+#snc_redis:
+#    doctrine:
+#        metadata_cache:
+#            client: default
+#            entity_manager: default
+#            document_manager: default
+#        result_cache:
+#            client: default
+#            entity_manager: default
+#        query_cache:
+#            client: default
+#            entity_manager: default
+#        second_level_cache:
+#            client: default
+#            entity_manager: default

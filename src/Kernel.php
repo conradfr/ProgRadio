@@ -11,24 +11,6 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    public function getCacheDir()
-    {
-        if (in_array($this->environment, array('dev', 'test'))) {
-            return '/dev/shm/progradio/cache/' .  $this->environment;
-        }
-
-        return $this->getProjectDir().'/var/cache/'.$this->environment;
-    }
-
-    public function getLogDir()
-    {
-        if (in_array($this->environment, array('dev', 'test'))) {
-            return '/dev/shm/progradio/logs';
-        }
-
-        return $this->getProjectDir().'/var/log';
-    }
-
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->import('../config/{packages}/*.yaml');
@@ -53,4 +35,23 @@ class Kernel extends BaseKernel
             (require $path)($routes->withPath($path), $this);
         }
     }
+
+    public function getCacheDir()
+    {
+        if (in_array($this->environment, array('dev', 'test'))) {
+            return '/dev/shm/progradio/cache/' .  $this->environment;
+        }
+
+        return $this->getProjectDir().'/var/cache/'.$this->environment;
+    }
+
+    public function getLogDir()
+    {
+        if (in_array($this->environment, array('dev', 'test'))) {
+            return '/dev/shm/progradio/logs';
+        }
+
+        return $this->getProjectDir().'/var/log';
+    }
+
 }
