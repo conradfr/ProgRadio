@@ -108,7 +108,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
 
           {:error, %HTTPoison.Error{reason: :checkout_timeout}} ->
             Logger.warn("Error importing image, checkout_timeout: #{url} - restarting pool ...")
-            :hackney_pool.stop_pool(:default)
+            :hackney_pool.stop_pool(:image_pool)
 
           {:exit, reason} ->
             Logger.warn("Error importing image, task exited: #{url} / #{reason}")
