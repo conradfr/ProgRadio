@@ -48,7 +48,7 @@
     cursor: pointer;
 
     @include media-breakpoint-down(sm) {
-      width: 155px;
+      width: 100px;
     }
 
     /* from gb-flag */
@@ -95,6 +95,10 @@
       background-repeat: no-repeat;
       background-position: center;
       background-size: 85%;
+
+      @include media-breakpoint-down(sm) {
+        height: 100px;
+      }
     }
 
     .streams-one-name {
@@ -131,6 +135,10 @@
         display: none;
         overflow: hidden;
         line-height: 1.7em;
+
+        @include media-breakpoint-down(sm) {
+          display: block;
+        }
 
         .badge {
           display: inline;
