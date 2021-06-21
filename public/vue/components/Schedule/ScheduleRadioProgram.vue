@@ -1,16 +1,16 @@
 <template>
   <div class="program-container" :data-hash="program.hash"
      :class="{ 'prevday': startsPrevDay, 'nextday': endsNextDay }"
-     :style="containerStyle" v-on:mouseup="detailClick" ref="root">
-    <div class="program" v-on:mouseover.once="hover = !hover"
+     :style="containerStyle" ref="root">
+    <div class="program" @mouseover.once="hover = !hover"
          v-if="isIntersecting === true"
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
       <div class="program-inner" v-bind:title="title">
-        <div class="program-img" v-if="program.picture_url && (hover || isCurrent)" v-once>
-          <img v-bind:src="picturePath" alt="" @mousedown.prevent="">
+        <div class="program-img" v-if="program.picture_url && (hover || isCurrent)">
+          <img v-bind:src="picturePath" alt="" @mousedown.prevent="" v-once>
         </div>
         <div class="program-infos" :style="infosStyle">
-          <div class="program-title" v-once>
+          <div class="program-title">
             <span class="schedule-display">{{ scheduleDisplay }}</span>{{ program.title }}
           </div>
           <div class="program-host">{{ program.host }}</div>
@@ -51,8 +51,7 @@ export default {
   props: ['program', 'radioPlaying', 'intersectionObserver', 'isIntersecting'],
   data() {
     return {
-      hover: false,
-      displayDetail: false
+      hover: false
     };
   },
   mounted() {
@@ -143,9 +142,6 @@ export default {
 
       return value.split('\n')[0];
     },
-    detailClick() {
-      // this.displayDetail = !this.displayDetail;
-    }
   }
 };
 </script>
