@@ -1,53 +1,40 @@
-@import "colors_dark";
-@import "variables";
+.progradio-dark:not(.progradio-nodark) {
+  @import "colors_dark";
+  @import "variables";
 
-// theme
+  // theme
 
-@import "bootswatch_materia/_variables";
-@import "../../node_modules/bootstrap/scss/bootstrap";
-@import "bootswatch_materia/_bootswatch";
+  @import "bootswatch_darkly/_variables";
+  @import "../../node_modules/bootstrap/scss/bootstrap";
+  @import "bootswatch_darkly/_bootswatch";
 
-@import 'utils/mixins';
-@import 'utils/vue-select';
+  @import "main";
 
-//@import '../../node_modules/vue-toast-notification/dist/theme-sugar.css';
-.v-toast-success{ background-color: $success !important; }
+  // dark specific
 
-@import 'utils/misc';
-
-@import "components/_navbar.scss";
-@import "components/_footer.scss";
-
-// components
-
-@import "components/loader";
-@import "components/toast";
-@import "components/player/player";
-@import "components/schedule/collection-switcher";
-@import "components/schedule/category-filter";
-@import "components/schedule/timeline";
-@import "components/schedule/schedule-grid";
-@import "components/schedule/schedule-grid-program";
-@import "components/schedule/schedule-radiolist";
-
-// pages
-
-@import "page/radio";
-@import "page/streams";
-@import "page/admin";
-
-body {
-  padding-top: $padding-top;
-  //color: grey;
-
-  &.body-app {
-    background-color: $background-color !important;
-    padding-top: 50px;
+  .program-img, .streams-one-img,
+  .radio-list-one-wrapper .radio-logo,
+  .radio-page-side img,
+  .radio-page-shows .img-show {
+    filter: brightness(.9) contrast(1.1);
   }
 
-  &.body-app-schedule {
-    #app {
-      overflow-x: hidden;
+  /* vue-select overloading, until we replace the component */
+  .vs__dropdown-toggle {
+    border-color: $gray-700 !important;
+
+    .vs__selected-options {
+      .vs__selected {
+        color: $gray-600 !important;
+      }
+    }
+
+    .vs__actions {
+      .vs__clear, .vs__open-indicator {
+        svg {
+          fill: rgba(136, 136, 136, 1) !important;
+        }
+      }
     }
   }
 }

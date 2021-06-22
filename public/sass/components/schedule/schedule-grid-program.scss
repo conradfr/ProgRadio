@@ -76,16 +76,16 @@ $program-height: 60px;
         box-sizing: border-box;
 
         margin-right: 5px;
-        background-color: $program-color;
+        background-color: $program-bg-color;
         border: none;
-        border-left: 3px solid darken($background-color, 20%);
+        border-left: 3px solid $program-border-color;
 
         transition: box-shadow 20ms ease-in-out;
         user-select: none;
 
         &.program-current {
           background-color: $program-hover-color;
-          border-left: 3px solid mix(darken($background-color, 20%), $timeline-cursor-color, 85%);
+          border-left: 3px solid mix($program-border-color, $timeline-cursor-color, 85%);
         }
 
         &.program-full {
@@ -148,7 +148,7 @@ $program-height: 60px;
           width: 100%;
 
           padding: 7px 10px 0 10px;
-          border: 1px solid #e8e8e8;
+          border: 1px solid $program-border-color;
           border-left: 0;
 
           user-select: none;
@@ -187,7 +187,7 @@ $program-height: 60px;
           .program-title {
             z-index: 1;
             font-weight: bold;
-            color: #262b2f;
+            color: $program-text-color;
             line-height: 1;
 
             user-select: none;
@@ -195,6 +195,7 @@ $program-height: 60px;
 
             margin-bottom: 1px;
             overflow: hidden;
+            //overflow-y: visible;
             white-space: nowrap;
 
             .schedule-display {
@@ -204,16 +205,16 @@ $program-height: 60px;
               visibility: hidden;
               opacity: 0;
               transition: opacity 300ms ease-out;
-              background-color: white;
+              background-color: $program-bg-color;
 
-              color: darken($background-color, 25%);
+              color: darken($program-text-color, 25%);
               font-weight: normal;
               font-size: $font-size-sm;
             }
           }
 
           .program-host {
-            color: $radio-list-background;
+            color: $program-text-color;
             font-size: 0.846rem;
 
             user-select: none;
@@ -242,7 +243,7 @@ $program-height: 60px;
                 position: absolute;
                 left: 0;
                 top: 0;
-                background: linear-gradient(to right, rgba(255,255,255,0) 90%,rgba(255,255,255,0.88) 95%,rgba(255,255,255,1) 99%);
+                background: linear-gradient(to right, $program-inner-fade-1 90%, $program-inner-fade-2 95%, $program-inner-fade-3 99%);
               }
 
               .program-description-short-inner-text {
@@ -250,12 +251,12 @@ $program-height: 60px;
                 opacity: 0;
                 transition: opacity 300ms ease-out;
 
-                color: darken($background-color, 50%);
+                color: $program-text-color;
                 font-weight: normal;
               }
 
               .program-description-short-inner-song {
-                color: darken($background-color, 65%);
+                color: $program-song-color;
                 //font-weight: bold;
 
                 padding-right: 4px;
@@ -279,14 +280,14 @@ $program-height: 60px;
 
             height: 6px;
             width: 6px;
-            background-color: darken($background-color, 20%);
+            background-color: $program-section;
             border-radius: 50%;
             display: inline-block;
 
             cursor: pointer;
 
             &:hover {
-             background-color: lighten($primary, 10%);
+             background-color: $program-section-hover;
             }
           }
         }

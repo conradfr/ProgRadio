@@ -1,0 +1,42 @@
+@import 'utils/mixins';
+@import 'utils/vue-select';
+
+@import 'utils/misc';
+
+@import "components/_navbar.scss";
+@import "components/_footer.scss";
+
+// components
+
+@import "components/loader";
+@import "components/toast";
+@import "components/player/player";
+@import "components/schedule/collection-switcher";
+@import "components/schedule/category-filter";
+@import "components/schedule/timeline";
+@import "components/schedule/schedule-grid";
+@import "components/schedule/schedule-grid-program";
+@import "components/schedule/schedule-radiolist";
+
+// pages
+
+@import "page/radio";
+@import "page/streams";
+@import "page/admin";
+@import "page/now";
+
+body {
+  padding-top: $padding-top;
+  //color: grey;
+
+  &.body-app {
+    background-color: $background-color !important;
+    padding-top: 50px;
+  }
+
+  &.body-app-schedule {
+    #app {
+      overflow-x: hidden;
+    }
+  }
+}

@@ -2,13 +2,17 @@
 
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#" onclick="scrollToCursor(this)">
+        <a class="navbar-brand" href="#" onclick="scrollToCursor(this); return false;">
             <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios" class="d-inline-block align-text-top">Programmes Radio</a>
         {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
             <div>
                 <a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
             </div>
         {% endif %}
+        <div class="d-block d-sm-none">
+            <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeTime() == false %} d-none{% endif %}" href="#" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
+            <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeTime() %} d-none{% endif %}" href="#" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
+        </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -53,7 +57,7 @@
                 {{ menu.favorites_mobile(hasStreamFavorites(app.user, app.request.attributes)) }}
 
                 {# Plus #}
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown pe-0">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ 'menu.plus'|trans}}
                     </a>
@@ -62,6 +66,15 @@
                         <li><a class="dropdown-item" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                         <li><hr class="dropdown-divider"></li>
+
+{#                        <li>#}
+{#                            <a class="dropdown-item" href="#">#}
+{#                                <div class="menu-appstore-icon">#}
+{#                                    <i class="bi bi-moon-stars-fill"></i>#}
+{#                                </div>{{ 'menu.app'|trans }}#}
+{#                            </a>#}
+{#                        </li>#}
+
                         <li><a class="dropdown-item" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}">
                                 <div class="menu-flag-icon">
@@ -70,6 +83,15 @@
                             {{ locale_name }}</a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="nav-item ps-0 pe-1">
+                    <a title="{{ 'menu.mode.light'|trans }}" class="nav-link nav-link-lightmode{% if isDarkModeTime() == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i>
+                        <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.light'|trans }}</span>
+                    </a>
+                    <a title="{{ 'menu.mode.dark'|trans }}" class="nav-link nav-link-darkmode {% if isDarkModeTime() %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i>
+                        <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.dark'|trans }}</span>
+                    </a>
                 </li>
 
                 {# User #}

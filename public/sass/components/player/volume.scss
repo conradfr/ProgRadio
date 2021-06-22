@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // grays for slider channel and disabled states
 $fader-gray-1: #BEBEBE;
 $fader-gray-2: #DFDFDF;
@@ -53,7 +55,7 @@ $fader-primary-bottom: darken($fader-primary, 5%);
     .fader-handle {
       cursor: pointer;
 
-      margin-top: (-$fader-line-height/2);
+      margin-top: (-(math.div($fader-line-height,2)));
 
       position: absolute;
       top: 0;

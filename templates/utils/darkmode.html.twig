@@ -1,0 +1,108 @@
+{% macro head_js() %}
+    const darkModeStartHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_START_HOUR') }};
+    const darkModeEndHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_END_HOUR') }};
+{% endmacro %}
+
+{% macro bottom_js() %}
+  const darkModeClassName = 'progradio-dark';
+  const navLightClassName = 'nav-link-lightmode';
+  const navDarkClassName = 'nav-link-darkmode';
+  const hiddenClassName = 'd-none';
+  const cookieName = 'progradio-darkmode';
+
+  const isCurrentlyDarkTime = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    return (hour >= darkModeStartHour) || (hour < darkModeEndHour);
+  };
+
+  const setDarkModeCookie = (state) => {
+    {# imported from vue app #}
+    const COOKIE_PARAMS = {
+      path: '/',
+      'max-age': 31536000,
+      expires: 'mage-age',
+      secure: true,
+      samesite: 'Lax'
+    };
+
+    // delete ?
+    if (state === undefined) {
+      document.cookie = `${cookieName}=;path=${COOKIE_PARAMS.path};expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+      return;
+    }
+
+    const opts = Object.keys(COOKIE_PARAMS).map(k => `;${k}=${COOKIE_PARAMS[k]}`).join('');
+    document.cookie = `${cookieName}=${state===true?'1':'0'}${opts}`;
+  };
+
+  const checkColorScheme = () => {
+    const hasCookie = document.cookie.split(';').some(item => item.trim().startsWith(`${cookieName}=`));
+
+    // we only check the time if dark mode is not set
+    if (hasCookie === true) {
+      return;
+    }
+
+    setColorSchemeMode(isCurrentlyDarkTime());
+    window.setTimeout(checkColorScheme, 3600000);
+  };
+
+  const toggleColorSchemeMode = () => {
+    document.getElementsByTagName('html')[0].classList.toggle(darkModeClassName);
+
+    // ui toggle icon
+    updateColorSchemeUI();
+
+    // it's now dark mode
+    // if not dark time we store the always dark mode choice, else set it to auto
+    if (document.getElementsByTagName('html')[0].classList.contains(darkModeClassName)) {
+      if (isCurrentlyDarkTime() === false) {
+        console.log('a');
+        setDarkModeCookie(true);
+      } else {
+        console.log('b');
+        setDarkModeCookie();
+      }
+    } else {
+      // if not dark time we store the always dark mode choice, else set it to auto
+      if (isCurrentlyDarkTime()) {
+        setDarkModeCookie(false);
+      } else {
+        setDarkModeCookie();
+      }
+    }
+  };
+
+  const setColorSchemeMode = (state) => {
+    if (state === true) {
+      document.getElementsByTagName('html')[0].classList.add(darkModeClassName);
+    } else {
+      document.getElementsByTagName('html')[0].classList.remove(darkModeClassName);
+    }
+
+    // ui toggle icon
+    updateColorSchemeUI();
+  };
+
+  const updateColorSchemeUI = () => {
+    // it's now dark mode
+    if (document.getElementsByTagName('html')[0].classList.contains(darkModeClassName)) {
+      document.getElementsByClassName(navDarkClassName)[0].classList.add(hiddenClassName);
+      document.getElementsByClassName(navLightClassName)[0].classList.remove(hiddenClassName);
+    } else {
+      document.getElementsByClassName(navDarkClassName)[0].classList.remove(hiddenClassName);
+      document.getElementsByClassName(navLightClassName)[0].classList.add(hiddenClassName);
+    }
+  };
+
+  const nextHourInMs = () => {
+    const now = new Date();
+    now_h = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0, 0);
+    return now_h - now;
+  }
+
+  // will check for dark mode time starting next hour
+  window.setTimeout(checkColorScheme, nextHourInMs());
+
+{% endmacro %}

@@ -22,6 +22,9 @@ menu:
     signup: Sign-up
     streaming: Worldwide streaming
     app: Android App
+    mode:
+        dark: Dark mode
+        light: Light mode
 
 page:
     contact:

@@ -75,7 +75,7 @@ export default {
         const menuItem = document.getElementById(`collections-menu-${COLLECTION_FAVORITES}`);
         const topMenuItem = document.getElementById(`collections-top-menu-${COLLECTION_FAVORITES}`);
 
-        if (newVal[COLLECTION_FAVORITES] === undefined
+        if (newVal === undefined || newVal[COLLECTION_FAVORITES] === undefined
             || newVal[COLLECTION_FAVORITES].radios.length === 0) {
           menuItem.classList.add('disabled');
           topMenuItem.classList.add('hidden');

@@ -29,7 +29,7 @@
     top: $navbar-height;
 
     box-sizing: border-box;
-    background-color: darken($background-color, 30%);
+    background-color: $timeline-controls-bg-color;
 
     opacity: 0.8;
     transition: opacity 70ms ease-out;
@@ -37,7 +37,7 @@
     height: 41px;
     padding-top: 2px;
 
-    color: darken($background-color, 55%);
+    color: $timeline-cursor-color;
     font-size: 18px;
     cursor: pointer;
 
@@ -51,7 +51,7 @@
       max-width: 110px;
 
       box-shadow: -1px 2px 4px -3px rgba(0,0,0,0.4);
-      background-color: darken($background-color, 15%);
+      background-color: $timeline-calendar-bg-color;
 
       font-size: 0.923rem;
       text-align: center;

@@ -23,6 +23,9 @@ menu:
     signup: Créer un compte
     streaming: Toutes les radios
     app: App Android
+    mode:
+        dark: Mode sombre
+        light: Mode clair
 
 page:
     contact:

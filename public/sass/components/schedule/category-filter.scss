@@ -20,7 +20,7 @@
     }
 
     &:hover {
-      background-color: darken($filter-background, 5%);
+      background-color: $filter-background-hover;
     }
 
     span {

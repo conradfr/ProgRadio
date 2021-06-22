@@ -1,11 +1,11 @@
-{% import "utils/menu.html.twig" as menu %}
+{% import "utils/darkmode.html.twig" as darkmode %}
 
 {% set other_locale = app.request.locale == 'fr' ? 'en' : 'fr' %}
 {% set flag = app.request.locale == 'fr' ? 'gb' : 'fr' %}
 {% set locale_name = 'footer.alternate_lang'|trans %}
 
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}" class="h-100">
+<html lang="{{ app.request.locale }}" class="h-100{% block htmlsupp %}{% endblock %}{% if isDarkModeTime() %} progradio-dark{% endif %}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,17 +24,19 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
 
-    <link rel="preload" href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" as="style">
     <link href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
+    <link href="{{ asset('build/css/main_dark.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
     <style>
         {% block stylesheets %}
         {% endblock %}
     </style>
 
     <script type="text/javascript">
+        {{ darkmode.head_js() }}
+
         {% block javascript_head %}
-        // placeholder
-        var scrollToCursor = function() {};
+            // placeholder
+            const scrollToCursor = function() {};
         {% endblock %}
     </script>
 </head>
@@ -53,13 +55,11 @@
     </div>
 </footer>
 
-{#<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>#}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-{#<script src="{{ asset('js/bootstrap.min.js') }}?v={{ releaseVersion() }}"></script>#}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script>
   // redirect IE to legacy website (while it's still working ...)
   function redirectIE() {
-    var internetExplorer = navigator.userAgent.match(/Trident.*rv[ :]*11\./i);
+    const internetExplorer = navigator.userAgent.match(/Trident.*rv[ :]*11\./i);
     if (internetExplorer) {
       setTimeout(function () {
         // redirect to Chrome download page
@@ -82,6 +82,9 @@
       }
     });
   });
+
+  // light/dark mode
+  {{ darkmode.bottom_js() }}
 </script>
 {% block javascripts %}
 {% endblock %}
@@ -95,5 +98,8 @@
       gtag('config', '{{ analytics }}');
     </script>
 {% endif %}
+
+{{ app.request.cookies.get('progradio-darkmode') }}
+
 </body>
 </html>

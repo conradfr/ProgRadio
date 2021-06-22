@@ -4,9 +4,8 @@
   background-image: none;
 
   .navbar-brand {
-
     font-family: 'Lobster', cursive;
-    text-shadow: -2px 2px 3px rgba(12, 124, 213, 1);
+    text-shadow: -2px 2px 3px $navbar-shadow;
     font-size: 26px;
 
     &:hover {
@@ -49,8 +48,18 @@
     }
   }
 
+  a.nav-top-icon {
+    color: $player-color !important;
+    font-size: 1.188rem;
+  }
+
   span.menu-connected {
 
+  }
+
+  &-nav .nav-link {
+    padding-top: .9rem;
+    padding-bottom: .9rem;
   }
 
   .menu-appstore-icon, .menu-flag-icon {
@@ -90,11 +99,11 @@
 
     // schedule on mobile, no logo and smaller font-size to allow appstore link
     @include media-breakpoint-down(sm) {
-      font-size: 1.75rem;
+      font-size: 1.615rem;
 
       // compensate smaller font-size to keep same height as desktop
-      padding-top: $navbar-brand-padding-y + 0.135rem;
-      padding-bottom: $navbar-brand-padding-y + 0.135rem;
+      padding-top: $navbar-brand-padding-y + 0.250rem;
+      padding-bottom: $navbar-brand-padding-y + 0.250rem;
 
       margin-left: 73px;
       img {

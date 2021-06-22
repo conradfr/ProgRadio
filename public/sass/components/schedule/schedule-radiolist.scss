@@ -10,7 +10,7 @@
   &:hover:not(.radio-logo-play-hide), &.radio-logo-play-active:not(.radio-logo-play-hide) {
     //opacity: 0.9;
 
-    background-color: $primary;
+    background-color: $radio-logo-play;
 
     &.radio-logo-play-secondary {
       background-color: $success;
@@ -156,7 +156,7 @@
     left: -$radio-list-width;
 
     opacity: 0.95;
-    background-color: #343434;
+    background-color: $radio-list-submenu-bg-color;
 
     border: 1px solid black;
     border-left: none;
@@ -176,7 +176,7 @@
       font-size: 9px;
       text-align: center;
       line-height: 1.0;
-      color: darken($program-color, 25%);
+      color: $radio-list-submenu-color;
 
       padding-top: 5px;
 

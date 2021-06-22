@@ -23,7 +23,14 @@ const getJson = (key, defaultValue) => {
   const cookie = get(key, defaultValue);
 
   if (cookie !== null && cookie !== defaultValue) {
-    return JSON.parse(cookie);
+    let value = null;
+    try {
+      value = JSON.parse(cookie);
+    } catch (error) {
+      // console.warn(error);
+    }
+
+    return value;
   }
 
   return cookie;

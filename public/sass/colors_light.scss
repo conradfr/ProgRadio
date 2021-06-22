@@ -1,3 +1,8 @@
+$gray-300: #dee2e6;
+$gray-800: #222 !default;
+
+// ---
+
 $white: #ffffff;
 
 $primary: #2196F3;
@@ -6,7 +11,8 @@ $body-color: #666;
 
 $background-color: #f9f9f9;
 $player-background: lighten($primary, 5%);
-$filter-background: darken($primary, 13%);
+
+$navbar-shadow: rgb(7, 99, 172);
 
 $timeline-color: #969696;
 $timeline-line-color: darken($background-color, 25%);
@@ -17,12 +23,33 @@ $player-color: $white;
 $fader-primary: #337ab7;
 $timer-active: #5eff3b;
 
+$timeline-cursor-color: darken($background-color, 55%);
 $timeline-cursor-color-today: #2196f3;
-$timeline-cursor-color: darken($timeline-color, 5%);
+$timeline-controls-bg-color: darken($background-color, 30%);
+$timeline-calendar-bg-color: darken($background-color, 15%);
 
 $collection-background: darken($primary, 10%);
+$filter-background: darken($primary, 13%);
+$filter-background-hover: darken($primary, 5%);
 
 $radio-list-background: #343434;
+$radio-list-submenu-color: darken($white, 25%);
+$radio-list-submenu-bg-color: #343434;
+$radio-logo-play: $primary;
 
-$program-color: $white;
+$program-text-color: #262b2f;
+$program-song-color: darken($background-color, 65%);
+$program-bg-color: $white;
+$program-border-color: darken($background-color, 20%);
 $program-hover-color: mix($white, $primary, 96.5%);
+$program-inner-fade-1: rgba(255,255,255,0);
+$program-inner-fade-2: rgba(255,255,255,0.88);
+$program-inner-fade-3: rgba(255,255,255,1);
+
+$program-section: darken($background-color, 20%);
+$program-section-hover: lighten($primary, 10%);
+
+$stream-text-color: $gray-800;
+$stream-play-color: $primary;
+
+$now-border-color: $gray-300;

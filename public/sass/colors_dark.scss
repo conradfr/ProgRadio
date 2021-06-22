@@ -1,15 +1,24 @@
-$white: #ffffff;
+//@import "bootswatch_materia/_variables";
 
-$primary: #2196F3;
+//$white: #ffffff;
+$white: #f8f8f8;
 
-$body-color: #666;
+$primary-source: #2196F3;
+$primary: #1c486a;
 
-$background-color: #f9f9f9;
-$player-background: lighten($primary, 5%);
-$filter-background: darken($primary, 13%);
+$body-bg: #10161c;
+//$body-bg-alt: darken($primary, 10%);
+//$body-bg-alt: mix(#1c2327, $primary-source, 90%);
+$body-bg-alt: #33383c;
 
-$timeline-color: #969696;
-$timeline-line-color: darken($background-color, 25%);
+$body-color: $white;
+
+$link-color: lighten($primary, 20%);
+
+$background-color: $body-bg;
+$player-background: lighten($primary, 4%);
+
+$navbar-shadow: rgb(8, 69, 116);
 
 $radio-stream: #4d6a82;
 
@@ -17,12 +26,38 @@ $player-color: $white;
 $fader-primary: #337ab7;
 $timer-active: #5eff3b;
 
-$timeline-cursor-color-today: #2196f3;
+$timeline-color: mix(#1c2327, $white, 55%); // lighten($background-color, 45%);
+$timeline-line-color: darken($background-color, 25%);
+
 $timeline-cursor-color: darken($timeline-color, 5%);
+$timeline-cursor-color-today: #2196f3;
+$timeline-controls-bg-color: mix($body-bg, $primary-source, 95%);
+$timeline-calendar-bg-color: mix($body-bg, $primary-source, 97%);
 
-$collection-background: darken($primary, 10%);
+$collection-background: darken($primary, 5%);
+$filter-background: darken($primary, 5%);
+$filter-background-hover: $primary;
 
-$radio-list-background: #343434;
+$radio-list-submenu-color: $white;
+$radio-list-background: $body-bg-alt;
+$radio-list-submenu-bg-color: $body-bg-alt;
+//$radio-logo-play: mix($primary-source, $body-bg-alt, 90%);
+$radio-logo-play: darken($primary-source, 10%);
 
-$program-color: $white;
-$program-hover-color: mix($white, $primary, 96.5%);
+$program-text-color: mix($body-bg, $white, 10%);
+$program-song-color: mix($body-bg, $white, 30%);
+
+$program-bg-color: #1c2327;
+$program-hover-color: mix($program-bg-color, $primary, 96.5%);
+$program-border-color: lighten($program-bg-color, 3%);
+$program-inner-fade-1: rgba(28, 35, 39, 0);
+$program-inner-fade-2: rgba(28, 35, 39, 0.8);
+$program-inner-fade-3: rgba(28, 35, 39, 1);
+
+$program-section: lighten($program-bg-color, 7%);
+$program-section-hover: $primary;
+
+$stream-text-color: $white;
+$stream-play-color: darken($primary-source, 10%);
+
+$now-border-color: darken($primary, 10%);
