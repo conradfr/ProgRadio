@@ -22,27 +22,27 @@
 
 {% macro collections_mobile(collections) %}
     {% for collection in collections %}
-    <li id="collections-menu-{{ collection.code_name }}" class="nav-item d-block d-sm-none{% if collection.radios|length == 0 %} disabled{% endif %}">
-        <a class="nav-link nav-link-mobile py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
+    <li id="collections-menu-{{ collection.code_name }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="nav-item{% if collection.radios|length == 0 %} disabled{% endif %}">
+        <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
             &rarr; {{ collection.name_FR }}
         </a>
     </li>
     {% endfor %}
 {% endmacro %}
 
-{% macro favorites_mobile(favorites) %}
-    <li class="nav-item d-block d-sm-none">
-        <a class="nav-link nav-link-mobile py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/fr') }}">
+{% macro streaming_mobile(favorites) %}
+    <li class="nav-item">
+        <a class="nav-link ps-3 py-1 " data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/fr') }}">
             &rarr; {{ 'menu.favorites_menu.fr'|trans }}
         </a>
     </li>
-    <li class="nav-item d-block d-sm-none">
-        <a class="nav-link nav-link-mobile py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/all') }}">
+    <li class="nav-item">
+        <a class="nav-link ps-3 py-1 " data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/all') }}">
             &rarr; {{ 'menu.favorites_menu.all'|trans }}
         </a>
     </li>
-    <li class="nav-item d-block d-sm-none{% if favorites == false %} disabled{% endif %}">
-        <a class="nav-link nav-link-mobile py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/favorites') }}">
+    <li class="nav-item{% if favorites == false %} disabled{% endif %}">
+        <a class="nav-link ps-3 py-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/favorites') }}">
             &rarr; {{ 'menu.favorites'|trans }}
         </a>
     </li>

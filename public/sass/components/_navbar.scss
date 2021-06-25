@@ -91,6 +91,10 @@
       filter: contrast(1.2);
     }
   }
+
+  .progradio-connected {
+    text-shadow: 0 0 9px rgba(8,0,110,0.60);
+  }
 }
 
 .body-app-schedule {
@@ -113,6 +117,3 @@
   }
 }
 
-.progradio-connected {
-  text-shadow: 0 0 9px rgba(8,0,110,0.60);
-}

@@ -23,7 +23,7 @@
       'max-age': 31536000,
       expires: 'mage-age',
       secure: true,
-      samesite: 'Lax'
+      samesite: 'lax'
     };
 
     // delete ?
@@ -58,11 +58,9 @@
     // if not dark time we store the always dark mode choice, else set it to auto
     if (document.getElementsByTagName('html')[0].classList.contains(darkModeClassName)) {
       if (isCurrentlyDarkTime() === false) {
-        console.log('a');
         setDarkModeCookie(true);
       } else {
         console.log('b');
-        setDarkModeCookie();
       }
     } else {
       // if not dark time we store the always dark mode choice, else set it to auto
@@ -88,11 +86,21 @@
   const updateColorSchemeUI = () => {
     // it's now dark mode
     if (document.getElementsByTagName('html')[0].classList.contains(darkModeClassName)) {
-      document.getElementsByClassName(navDarkClassName)[0].classList.add(hiddenClassName);
-      document.getElementsByClassName(navLightClassName)[0].classList.remove(hiddenClassName);
+      document.getElementsByClassName(navDarkClassName).forEach(element => {
+        element.classList.add(hiddenClassName);
+      });
+
+      document.getElementsByClassName(navLightClassName).forEach(element => {
+        element.classList.remove(hiddenClassName);
+      });
     } else {
-      document.getElementsByClassName(navDarkClassName)[0].classList.remove(hiddenClassName);
-      document.getElementsByClassName(navLightClassName)[0].classList.add(hiddenClassName);
+      document.getElementsByClassName(navLightClassName).forEach(element => {
+        element.classList.add(hiddenClassName);
+      });
+
+      document.getElementsByClassName(navDarkClassName).forEach(element => {
+        element.classList.remove(hiddenClassName);
+      });
     }
   };
 

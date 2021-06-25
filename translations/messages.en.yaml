@@ -8,6 +8,7 @@ menu:
         dashboard: Dashboard
         listening: Listening
         shares: Shares
+    app: Android App
     contact: Contact
     faq: Faq
     favorites: My favorites
@@ -15,16 +16,16 @@ menu:
         fr: France
         all: World
     logout: Logout
+    mode:
+        dark: Dark mode
+        light: Light mode
     now: Currently on the air
     plus: More
     schedule: Radio guide
     signon: Sign-in
     signup: Sign-up
     streaming: Worldwide streaming
-    app: Android App
-    mode:
-        dark: Dark mode
-        light: Light mode
+    title: Menu
 
 page:
     contact:

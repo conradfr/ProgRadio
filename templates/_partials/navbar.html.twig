@@ -1,5 +1,9 @@
 {% import "utils/menu.html.twig" as menu %}
 
+{% set collections_menu = scheduleCollections(app.user, app.request.attributes) %}
+
+{% include('_partials/mobilemenu.html.twig') %}
+
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
     <div class="container-fluid">
         <a class="navbar-brand" href="#" onclick="scrollToCursor(this); return false;">
@@ -13,11 +17,10 @@
             <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeTime() == false %} d-none{% endif %}" href="#" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
             <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeTime() %} d-none{% endif %}" href="#" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            {% set collections_menu = scheduleCollections(app.user, app.request.attributes) %}
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {# Schedule #}
                 <li class="nav-item pe-0">
@@ -27,7 +30,6 @@
                         title="{{ 'menu.favorites'|trans }}">
                     <a class="nav-link" href="{{ path('app') }}#/schedule/favorites"><i class="bi bi-star-fill"></i></a>
                 </li>
-                {{ menu.collections_mobile(collections_menu) }}
                 {{ menu.collections_menu(collections_menu) }}
 
                 {# Streaming #}
@@ -54,7 +56,6 @@
                         </li>
                     </ul>
                 </li>
-                {{ menu.favorites_mobile(hasStreamFavorites(app.user, app.request.attributes)) }}
 
                 {# Plus #}
                 <li class="nav-item dropdown pe-0">

@@ -56,6 +56,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 <script>
   // redirect IE to legacy website (while it's still working ...)
   function redirectIE() {
@@ -69,19 +70,6 @@
   }
 
   redirectIE();
-
-  // makes the bootstrap navbar collapse on click on mobile
-  const navLinks = document.querySelectorAll('.nav-item:not(.dropdown)');
-  const menuToggle = document.getElementById('navbarSupportedContent');
-  const bsCollapse = new bootstrap.Collapse(menuToggle, {toggle: false});
-  navLinks.forEach( function(l) {
-    l.addEventListener('click', function() {
-      // avoid flickering on desktop
-      if (menuToggle.classList.contains('show')) {
-        bsCollapse.toggle();
-      }
-    });
-  });
 
   // light/dark mode
   {{ darkmode.bottom_js() }}

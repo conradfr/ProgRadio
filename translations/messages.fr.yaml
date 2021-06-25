@@ -8,6 +8,7 @@ menu:
         dashboard: Tableau de bord
         listening: Ecoutes
         shares: Parts de marché
+    app: App Android
     contact: Contact
     faq: Faq
 
@@ -16,16 +17,17 @@ menu:
         fr: France
         all: Monde entier
     logout: Se déconnecter
+    menu: Menu
+    mode:
+        dark: Mode sombre
+        light: Mode clair
     now: En ce moment
     plus: Plus
     schedule: Grille des programmes
     signon: Se connecter
     signup: Créer un compte
     streaming: Toutes les radios
-    app: App Android
-    mode:
-        dark: Mode sombre
-        light: Mode clair
+    title: Menu
 
 page:
     contact:
