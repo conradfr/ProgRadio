@@ -1,6 +1,13 @@
 
 .alert-light {
+  background: none !important;
+  background-color: $alert-light-bg !important;
+  color: $alert-light-color;
   h5 {
-    color: $body-color;
+    color: $alert-light-color;
+  }
+
+  a:not(:hover) {
+    text-decoration: none;
   }
 }

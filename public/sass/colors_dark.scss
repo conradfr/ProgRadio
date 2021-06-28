@@ -1,6 +1,5 @@
 //@import "bootswatch_materia/_variables";
 
-//$white: #ffffff;
 $white: #f8f8f8;
 
 $primary-source: #2196F3;
@@ -21,6 +20,13 @@ $player-background: lighten($primary, 4%);
 $navbar-shadow: rgb(8, 69, 116);
 
 $offcanvas-divider: $body-bg-alt;
+
+$alert-light-bg: $body-bg-alt;
+$alert-light-color: $white;
+
+$pagination-bg:                     $primary !default;
+$pagination-hover-bg:               lighten($primary, 10%) !default;
+$pagination-disabled-bg:            darken($primary, 15%) !default;
 
 $radio-stream: #4d6a82;
 

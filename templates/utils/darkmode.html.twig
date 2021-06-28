@@ -86,19 +86,23 @@
   const updateColorSchemeUI = () => {
     // it's now dark mode
     if (document.getElementsByTagName('html')[0].classList.contains(darkModeClassName)) {
-      document.getElementsByClassName(navDarkClassName).forEach(element => {
+      const darkElems = document.getElementsByClassName(navDarkClassName);
+      Array.prototype.forEach.call(darkElems, element => {
         element.classList.add(hiddenClassName);
       });
 
-      document.getElementsByClassName(navLightClassName).forEach(element => {
+      const lightElems = document.getElementsByClassName(navLightClassName);
+      Array.prototype.forEach.call(lightElems, element => {
         element.classList.remove(hiddenClassName);
       });
     } else {
-      document.getElementsByClassName(navLightClassName).forEach(element => {
+      const lightElems = document.getElementsByClassName(navLightClassName);
+      Array.prototype.forEach.call(lightElems, element => {
         element.classList.add(hiddenClassName);
       });
 
-      document.getElementsByClassName(navDarkClassName).forEach(element => {
+      const darkElems = document.getElementsByClassName(navDarkClassName);
+      Array.prototype.forEach.call(darkElems, element => {
         element.classList.remove(hiddenClassName);
       });
     }

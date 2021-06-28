@@ -16,6 +16,9 @@ $navbar-shadow: rgb(7, 99, 172);
 
 $offcanvas-divider: $gray-300;
 
+$alert-light-bg: $background-color;
+$alert-light-color: $body-color;
+
 $timeline-color: #969696;
 $timeline-line-color: darken($background-color, 25%);
 
@@ -42,7 +45,7 @@ $radio-logo-play: $primary;
 $program-text-color: #262b2f;
 $program-song-color: darken($background-color, 65%);
 $program-bg-color: $white;
-$program-border-color: darken($background-color, 20%);
+$program-border-color: darken($background-color, 10%);
 $program-hover-color: mix($white, $primary, 96.5%);
 $program-inner-fade-1: rgba(255,255,255,0);
 $program-inner-fade-2: rgba(255,255,255,0.88);
