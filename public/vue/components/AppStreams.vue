@@ -53,7 +53,7 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     if (to.params.countryOrCategoryOrUuid) {
-      // this a radio (uuid)
+      // this is a radio (uuid)
       if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
         this.$store.dispatch('getStreamRadio', to.params.countryOrCategoryOrUuid);
       } else {

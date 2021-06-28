@@ -70,16 +70,16 @@
             <li class="nav-item offcanvas-divider mb-1"></li>
 
             <!-- schedule -->
-            <li class="nav-item">
-                <a class="nav-link pb-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" href="{{ path('app') }}#/schedule">{{ 'menu.schedule'|trans }}</a>
+            <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
+                <a class="nav-link pb-2" href="{{ path('app') }}#/schedule">{{ 'menu.schedule'|trans }}</a>
             </li>
             {{ menu.collections_mobile(collections_menu) }}
 
             <li class="nav-item offcanvas-divider mt-3 mb-1"></li>
 
             <!-- streaming -->
-            <li class="nav-item">
-                <a class="nav-link pb-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" href="{{ path('app') }}#/streaming/fr">{{ 'menu.streaming'|trans }}</a>
+            <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
+                <a class="nav-link pb-2" href="{{ path('app') }}#/streaming/fr">{{ 'menu.streaming'|trans }}</a>
             </li>
             {{ menu.streaming_mobile(collections_menu) }}
 

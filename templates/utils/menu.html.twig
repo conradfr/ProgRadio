@@ -31,18 +31,18 @@
 {% endmacro %}
 
 {% macro streaming_mobile(favorites) %}
-    <li class="nav-item">
-        <a class="nav-link ps-3 py-1 " data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/fr') }}">
+    <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
+        <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/fr') }}">
             &rarr; {{ 'menu.favorites_menu.fr'|trans }}
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link ps-3 py-1 " data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/all') }}">
+    <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
+        <a class="nav-link ps-3 py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/all') }}">
             &rarr; {{ 'menu.favorites_menu.all'|trans }}
         </a>
     </li>
-    <li class="nav-item{% if favorites == false %} disabled{% endif %}">
-        <a class="nav-link ps-3 py-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/favorites') }}">
+    <li class="nav-item{% if favorites == false %} disabled{% endif %}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
+        <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/favorites') }}">
             &rarr; {{ 'menu.favorites'|trans }}
         </a>
     </li>
