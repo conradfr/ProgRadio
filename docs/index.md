@@ -61,7 +61,7 @@ We add HTTPoison as a dependency in mix.exs file:
 {:httpoison, "~> 1.8"}
 ```
 
-We'll use the French FIP radio as an example. This radio provides and endpoint returning json.
+We'll use the French FIP radio as an example. This radio provides an endpoint returning json.
 
 We create the *lib/live_song/radio/fip.ex* file:
 
@@ -281,7 +281,7 @@ defmodule LiveSongWeb.RadioChannel do
 end
 ```
 
-We now notify yo Presence the client connection and we call a join/2 function in *radio_server.ex*.
+We now notify client connection to Presence and we call a join/2 function in *radio_server.ex*.
 
 We then update *radio_server.ex*:
 
