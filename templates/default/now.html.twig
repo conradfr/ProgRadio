@@ -24,7 +24,7 @@
             <div class="tab-content tab-now">
                 {% for entry_collection in collections %}
                 <div role="tabpanel" aria-labelledby="{{ entry_collection.code_name }}-tab" class="tab-pane {{ loop.first ? ' show active' : '' }}" id="{{ entry_collection.code_name }}">
-                    <div class="mt-3 mb-4"><a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ entry_collection.code_name) }}">{{ 'page.now.back'|trans }}</a></div>
+                    <div class="mt-3 mb-4"><a href="{{ path('app') }}#/schedule/{{ entry_collection.code_name }}">{{ 'page.now.back'|trans }}</a></div>
                     {% if schedule[entry_collection.code_name] is defined %}
                     {% for entry in schedule[entry_collection.code_name] %}
                         <div class="row mb-4 pb-2 border-bottom">

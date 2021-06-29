@@ -11,7 +11,7 @@
                     {#                <a href="{{ path('app', {'c': collection.code_name}) }}" onclick="switchCollection(event, '{{ collection.code_name }}')">#}
                     {#                    {{ collection.name_FR }}#}
                     {#                </a>#}
-                    <a class="dropdown-item" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
+                    <a class="dropdown-item" href="{{ path('app') }}#/schedule/{{ collection.code_name }}">
                         {{ collection.name_FR }}
                     </a>
                 </li>
@@ -23,7 +23,7 @@
 {% macro collections_mobile(collections) %}
     {% for collection in collections %}
     <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="nav-item">
-        <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
+        <a class="nav-link ps-3 py-1" href="{{ path('app') }}#/schedule/{{ collection.code_name }}">
             &rarr; {{ collection.name_FR }}
         </a>
     </li>
@@ -32,17 +32,17 @@
 
 {% macro streaming_mobile() %}
     <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-        <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/fr') }}">
+        <a class="nav-link ps-3 py-1" href="{{ path('app') }}#/streaming/fr">
             &rarr; {{ 'menu.favorites_menu.fr'|trans }}
         </a>
     </li>
     <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-        <a class="nav-link ps-3 py-1 " href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/all') }}">
+        <a class="nav-link ps-3 py-1 " href="{{ path('app') }}#/streaming/all">
             &rarr; {{ 'menu.favorites_menu.all'|trans }}
         </a>
     </li>
     <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-        <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/favorites') }}">
+        <a class="nav-link ps-3 py-1" href="{{ path('app') }}#/streaming/favorites">
             &rarr; {{ 'menu.favorites'|trans }}
         </a>
     </li>
