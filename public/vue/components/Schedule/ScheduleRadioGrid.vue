@@ -69,7 +69,7 @@ export default {
       currentCollection: state => state.schedule.currentCollection
     }),
     ...mapGetters({
-      radios: 'radiosRanked',
+      radios: 'rankedRadios',
       displayNoSchedule: 'hasSchedule'
     })
   },

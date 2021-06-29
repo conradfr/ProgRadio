@@ -2,7 +2,7 @@
   <div v-on:keyup.f="keyupFav" style="overflow-x: hidden; padding: 0 0 !important">
     <collection-switcher></collection-switcher>
     <timeline></timeline>
-    <timeline-cursor-head v-if="radiosRanked.length > 0"></timeline-cursor-head>
+    <timeline-cursor-head v-if="rankedRadios.length > 0"></timeline-cursor-head>
     <schedule-container ref="container"></schedule-container>
     <category-filter v-if="displayCategoryFilter"/>
   </div>
@@ -49,7 +49,7 @@ export default {
     ...mapGetters([
       'displayCategoryFilter',
       'currentSong',
-      'radiosRanked'
+      'rankedRadios'
     ]),
     ...mapState({
       playingRadio: state => state.player.radio,

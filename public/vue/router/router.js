@@ -6,6 +6,7 @@ import {
 } from 'vue-router';
 
 import AppRadio from '../components/AppRadio.vue';
+import AppNow from '../components/AppNow.vue';
 import AppSchedule from '../components/AppSchedule.vue';
 import AppStreams from '../components/AppStreams.vue';
 
@@ -42,6 +43,11 @@ const routes = [
     path: '/radio/:radio',
     name: 'radio',
     component: AppRadio
+  },
+  {
+    path: '/now',
+    name: 'now',
+    component: AppNow
   },
   {
     path: '/',

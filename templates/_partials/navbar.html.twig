@@ -62,18 +62,15 @@
                         {{ 'menu.plus'|trans}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
+                        {% if app.request.get('_route') == 'app' %}
+                            <li><a class="dropdown-item" href="{{ path('app') }}#/now">{{ 'menu.now'|trans }}</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                         <li><hr class="dropdown-divider"></li>
-
-{#                        <li>#}
-{#                            <a class="dropdown-item" href="#">#}
-{#                                <div class="menu-appstore-icon">#}
-{#                                    <i class="bi bi-moon-stars-fill"></i>#}
-{#                                </div>{{ 'menu.app'|trans }}#}
-{#                            </a>#}
-{#                        </li>#}
 
                         <li><a class="dropdown-item" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}">

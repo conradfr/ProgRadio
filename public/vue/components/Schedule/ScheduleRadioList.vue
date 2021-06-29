@@ -23,7 +23,7 @@ export default {
   components: { ScheduleRadioListOne },
   computed: {
     ...mapGetters({
-      radios: 'radiosRanked',
+      radios: 'rankedRadios',
     })
   }
 };

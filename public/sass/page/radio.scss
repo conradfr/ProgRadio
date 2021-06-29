@@ -44,7 +44,7 @@
   }
 }
 
-.radio-page-streams {
+.radio-page-streams, .now-page-streams {
   .webradios-header {
     width: 65%;
 
@@ -89,9 +89,21 @@
       }
 
       div {
-        color: $primary;
+        color: $radio-stream-hover;
       }
     }
   }
 }
 
+.now-page-streams {
+  .radio-page-play {
+    img {
+      height: 26px !important;
+      width: 26px !important;
+    }
+
+    div {
+      font-size: 0.846rem !important;
+    }
+  }
+}

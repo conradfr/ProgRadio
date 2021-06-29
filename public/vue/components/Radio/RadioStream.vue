@@ -10,7 +10,6 @@
        {{ $t('message.radio_page.play', { radio: stream.name }) }}
       </div>
     </div>
-
     <div
         v-if="player.playing === true && stream.code_name === playingStreamCodeName"
         v-on:click="stop"

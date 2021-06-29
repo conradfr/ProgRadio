@@ -2,6 +2,7 @@ import without from 'lodash/without';
 import pick from 'lodash/pick';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
+import sortBy from 'lodash/sortBy';
 
 import { DateTime, Interval } from 'luxon';
 
@@ -61,12 +62,10 @@ const storeGetters = {
   },
   gridIndexLeft: state => ({ left: `-${state.scrollIndex}px` }),
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
-  radiosRanked: (state) => {
-    if (Object.keys(state.collections).length === 0) {
-      return [];
-    }
-
-    if (state.collections[state.currentCollection] === undefined) {
+  rankedCollections: state => sortBy(state.collections, 'priority'),
+  rankedRadios: (state) => {
+    if (Object.keys(state.collections).length === 0
+      || state.collections[state.currentCollection] === undefined) {
       return [];
     }
 
