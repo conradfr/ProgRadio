@@ -26,6 +26,7 @@ class FavoritesRuntime implements RuntimeExtensionInterface
         return $this->em->getRepository(Collection::class)->getCollections($favorites);
     }
 
+    // Deprecated / not used anymore except on the legacy deployed version
     public function hasStreamFavorites($user, ParameterBag $requestAttributes)
     {
         $favorites = null;

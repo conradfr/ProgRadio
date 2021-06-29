@@ -36,7 +36,7 @@ export const COOKIE_PARAMS = {
   'max-age': COOKIE_TTL,
   expires: 'mage-age',
   secure: true,
-  samesite: 'Lax'
+  samesite: 'lax'
 };
 
 export const COOKIE_EXCLUDE = `${COOKIE_PREFIX}-exclude`;

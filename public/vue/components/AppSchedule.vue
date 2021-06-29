@@ -2,7 +2,7 @@
   <div v-on:keyup.f="keyupFav" style="overflow-x: hidden; padding: 0 0 !important">
     <collection-switcher></collection-switcher>
     <timeline></timeline>
-    <timeline-cursor-head></timeline-cursor-head>
+    <timeline-cursor-head v-if="radiosRanked.length > 0"></timeline-cursor-head>
     <schedule-container ref="container"></schedule-container>
     <category-filter v-if="displayCategoryFilter"/>
   </div>
@@ -48,10 +48,10 @@ export default {
   computed: {
     ...mapGetters([
       'displayCategoryFilter',
-      'currentSong'
+      'currentSong',
+      'radiosRanked'
     ]),
     ...mapState({
-      collections: state => state.schedule.collections,
       playingRadio: state => state.player.radio,
       playingShow: state => state.player.show,
       playing: state => state.player.playing
@@ -67,24 +67,7 @@ export default {
     },
     currentSong() {
       this.updateTitle();
-    },
-    // update the collection menu that is outside the Vue app for now
-    collections: {
-      deep: true,
-      handler(newVal) {
-        const menuItem = document.getElementById(`collections-menu-${COLLECTION_FAVORITES}`);
-        const topMenuItem = document.getElementById(`collections-top-menu-${COLLECTION_FAVORITES}`);
-
-        if (newVal === undefined || newVal[COLLECTION_FAVORITES] === undefined
-            || newVal[COLLECTION_FAVORITES].radios.length === 0) {
-          menuItem.classList.add('disabled');
-          topMenuItem.classList.add('hidden');
-        } else {
-          menuItem.classList.remove('disabled');
-          topMenuItem.classList.remove('hidden');
-        }
-      }
-    },
+    }
   },
   methods: {
     keyLeft() {

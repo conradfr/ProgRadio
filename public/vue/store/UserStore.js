@@ -149,7 +149,7 @@ const storeActions = {
       }
     }, 500);
 
-    dispatch('setStreamFavorites', favoritesStream);
+    // dispatch('setStreamFavorites', favoritesStream);
     commit('updateStreamFavorites', favoritesStream);
     cache.setCache(CACHE_KEY_STREAM_FAVORITES, favoritesStream);
   }

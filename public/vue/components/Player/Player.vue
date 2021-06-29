@@ -158,7 +158,7 @@ export default {
             || (this.player.radio.type === config.PLAYER_TYPE_STREAM
             && this.player.radio.current_song === true)) {
           const channelNameEnd = this.player.radio.type === config.PLAYER_TYPE_RADIO
-            ? this.player.radioStreamCodeName : this.player.radio.radio_code_name;
+            ? this.player.radioStreamCodeName : this.player.radio.radio_stream_code_name;
           channelName = `song:${channelNameEnd}`;
         } else {
           channelName = `url:${this.streamUrl}`;

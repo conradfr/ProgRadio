@@ -231,7 +231,9 @@ const storeMutations = {
     state.countries = value;
   },
   setStreamFavorites: (state, value) => {
-    state.favorites = value;
+    if (state.favorites.length === 0) {
+      state.favorites = value;
+    }
   },
   setConfig: (state, data) => {
     Object.freeze(data);

@@ -3,7 +3,7 @@
 }
 
 .schedule-radio-grid {
-  margin-top: 40px;
+  margin-top: $timeline-height;
   margin-bottom: 20px;
   margin-left: $margin-from-radio-list;
   padding-bottom: 1px; /* prevents vertical scroll bar due to sections */
@@ -14,6 +14,7 @@
   cursor: ew-resize;
   z-index: 1;
 
+  min-height: 350px;
   width: $viewport-width;
   background-color: $background-color;
 
@@ -30,6 +31,20 @@
     box-sizing: border-box;
     height: $grid-row-height;
     padding: 2px 0;
+  }
+
+  .schedule-radio-grid-no-radio {
+    position: fixed;
+    top: 10px;
+    transition: left 200ms ease-in-out 300ms;
+    width: 500px;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+
+    @include media-breakpoint-down(sm) {
+      width: 270px;
+    }
+
   }
 }
 

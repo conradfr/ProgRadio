@@ -7,7 +7,7 @@
                 {% if collection.code_name == 'favorites' %}
                     <li><hr class="dropdown-divider"></li>
                 {% endif %}
-                <li id="collections-menu-{{ collection.code_name }}"{% if collection.radios|length == 0 %} class="disabled"{% endif %}>
+                <li>
                     {#                <a href="{{ path('app', {'c': collection.code_name}) }}" onclick="switchCollection(event, '{{ collection.code_name }}')">#}
                     {#                    {{ collection.name_FR }}#}
                     {#                </a>#}
@@ -22,7 +22,7 @@
 
 {% macro collections_mobile(collections) %}
     {% for collection in collections %}
-    <li id="collections-menu-{{ collection.code_name }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="nav-item{% if collection.radios|length == 0 %} disabled{% endif %}">
+    <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="nav-item">
         <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ collection.code_name) }}">
             &rarr; {{ collection.name_FR }}
         </a>
@@ -30,7 +30,7 @@
     {% endfor %}
 {% endmacro %}
 
-{% macro streaming_mobile(favorites) %}
+{% macro streaming_mobile() %}
     <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
         <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/fr') }}">
             &rarr; {{ 'menu.favorites_menu.fr'|trans }}
@@ -41,7 +41,7 @@
             &rarr; {{ 'menu.favorites_menu.all'|trans }}
         </a>
     </li>
-    <li class="nav-item{% if favorites == false %} disabled{% endif %}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
+    <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
         <a class="nav-link ps-3 py-1" href="{{ absolute_url('/' ~ app.request.locale ~ '/#/streaming/favorites') }}">
             &rarr; {{ 'menu.favorites'|trans }}
         </a>

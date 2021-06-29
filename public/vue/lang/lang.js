@@ -55,6 +55,8 @@ export const messages = {
       },
       schedule: {
         no_schedule: 'Programmes non disponibles :(',
+        no_radio: 'Aucune radio dans cette catégorie',
+        no_radio_favorites: "Vous n'avez pas de radios favorites",
         title: 'Toutes les grilles radio, tous les programmes et écoute en ligne',
         today: "Aujourd'hui",
         tomorrow: 'Demain',
@@ -124,6 +126,8 @@ export const messages = {
       },
       schedule: {
         no_schedule: 'Schedule not available :(',
+        no_radio: 'No radio in this collection',
+        no_radio_favorites: 'You have no favorite radios',
         title: 'Radio schedules in France, streaming and more !',
         today: 'Today',
         tomorrow: 'Tomorrow',

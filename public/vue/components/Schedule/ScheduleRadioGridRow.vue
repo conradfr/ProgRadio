@@ -42,16 +42,14 @@ export default {
   computed: {
     ...mapState({
       playing: state => state.player.playing,
-      playingStreamCodeName: state => state.player.radioStreamCodeName
+      playingStreamCodeName: state => state.player.radioStreamCodeName,
+      noProgramStyleObject(state) {
+        return { left: `${state.schedule.scrollIndex}px` };
+      },
     }),
     ...mapGetters([
       'isLoading'
     ]),
-    ...mapState({
-      noProgramStyleObject(state) {
-        return { left: `${state.schedule.scrollIndex}px` };
-      },
-    })
   },
   methods: {
     handleIntersection(entries) {

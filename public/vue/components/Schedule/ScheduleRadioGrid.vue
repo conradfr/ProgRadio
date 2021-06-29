@@ -1,6 +1,6 @@
 <template>
   <div id="schedule-radio-grid" class="schedule-radio-grid" :style="styleObject">
-    <timeline-cursor></timeline-cursor>
+    <timeline-cursor v-if="radios.length > 0"></timeline-cursor>
     <vue3-hammer
         :enabled="{ pan: true, swipe: true }"
         :panOptions="{ direction: 'horizontal' }"
@@ -18,17 +18,22 @@
       >
       </schedule-radio-grid-row>
     </vue3-hammer>
+    <schedule-radio-grid-no-radio
+        v-if="radios.length === 0"
+        :collection="currentCollection">
+    </schedule-radio-grid-no-radio>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 import { NAV_MOVE_BY } from '../../config/config';
 
 import Vue3Hammer from '../Utils/Vue3Hammer.vue';
 import TimelineCursor from './TimelineCursor.vue';
 import ScheduleRadioGridRow from './ScheduleRadioGridRow.vue';
+import ScheduleRadioGridNoRadio from './ScheduleRadioGridNoRadio.vue';
 
 export default {
   compatConfig: {
@@ -37,7 +42,8 @@ export default {
   components: {
     Vue3Hammer,
     TimelineCursor,
-    ScheduleRadioGridRow
+    ScheduleRadioGridRow,
+    ScheduleRadioGridNoRadio
   },
   data() {
     return {
@@ -59,6 +65,9 @@ export default {
 
       return styleObject;
     },
+    ...mapState({
+      currentCollection: state => state.schedule.currentCollection
+    }),
     ...mapGetters({
       radios: 'radiosRanked',
       displayNoSchedule: 'hasSchedule'
