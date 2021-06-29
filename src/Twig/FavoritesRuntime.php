@@ -25,22 +25,4 @@ class FavoritesRuntime implements RuntimeExtensionInterface
 
         return $this->em->getRepository(Collection::class)->getCollections($favorites);
     }
-
-    // Deprecated / not used anymore except on the legacy deployed version
-    public function hasStreamFavorites($user, ParameterBag $requestAttributes)
-    {
-        $favorites = null;
-        if ($user === null) {
-            $favorites = $requestAttributes->get('favoritesStream', []);
-        }
-        else {
-            $favorites = $user->getFavoriteStreams()->map(
-                function ($stream) {
-                    return $stream->getId();
-                }
-            )->toArray();
-        }
-
-        return count($favorites) > 0;
-    }
 }

@@ -16,8 +16,7 @@ class FavoritesExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('scheduleCollections', [FavoritesRuntime::class, 'scheduleCollections']),
-            new TwigFunction('hasStreamFavorites', [FavoritesRuntime::class, 'hasStreamFavorites']),
+            new TwigFunction('scheduleCollections', [FavoritesRuntime::class, 'scheduleCollections'])
         ];
     }
 }
