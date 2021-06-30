@@ -36,7 +36,8 @@ $fader-primary: #337ab7;
 $timer-active: #5eff3b;
 
 $timeline-color: mix(#1c2327, $white, 55%); // lighten($background-color, 45%);
-$timeline-line-color: darken($background-color, 25%);
+$timeline-line-color: $primary;
+$timeline-line-current-color: $primary-source;
 
 $timeline-cursor-color: darken($timeline-color, 5%);
 $timeline-cursor-color-today: #2196f3;

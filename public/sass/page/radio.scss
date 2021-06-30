@@ -35,10 +35,10 @@
 
   .media-current {
     .media-timeline {
-      color: $primary;
+      color: $timeline-line-current-color;
 
       &:after {
-        border-color: $primary;
+        border-color: $timeline-line-current-color;
       }
     }
   }

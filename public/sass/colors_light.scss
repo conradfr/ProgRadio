@@ -21,6 +21,7 @@ $alert-light-color: $body-color;
 
 $timeline-color: #969696;
 $timeline-line-color: darken($background-color, 25%);
+$timeline-line-current-color: $primary;
 
 $radio-stream: #4d6a82;
 $radio-stream-hover: $primary;
