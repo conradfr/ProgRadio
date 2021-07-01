@@ -18,7 +18,7 @@
     {% endif %}
 
     {% if isCrawler(app.request.headers.get('User-Agent')) == false and date|date('Y-m-d') == date()|date('Y-m-d')  %}
-{#        <meta http-equiv="refresh" content="5; URL={{ path('app') }}#/radio/{{ radio.codeName }}" />#}
+{#        <meta http-equiv="refresh" content="5; URL={{ path('app') }}radio/{{ radio.codeName }}" />#}
     {% endif %}
 {% endblock %}
 
@@ -31,7 +31,7 @@
                     <img alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('/img/radio/page/' ~ radio.codename ~ '.png') }}">
                 </div>
                 <div class="text-center mb-3 mb-sm-0">
-                    <a class="text-center" href="{{ path('app') }}#/radio/{{ radio.codeName }}?play=1">
+                    <a class="text-center spa-link" href="{{ path('app') }}radio/{{ radio.codeName }}?play=1">
                         {{ 'page.radio.play'|trans({'%radio%': radio.name}) }}
                     </a>
                 </div>
@@ -60,7 +60,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 mb-4 mt-2 mt-sm-0 text-center text-sm-start">
-                    <a href="{{ absolute_url('/' ~ app.request.locale ~ '/#/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a>
+                    <a class="spa-link" href="{{ absolute_url('/' ~ app.request.locale ~ '/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a>
                 </div>
             </div>
 

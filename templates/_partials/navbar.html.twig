@@ -24,36 +24,23 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {# Schedule #}
                 <li class="nav-item pe-0">
-                    <a class="nav-link" href="{{ path('app') }}#/schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a>
+                    <a class="nav-link spa-link" href="{{ path('app') }}schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a>
                 </li>
-                <li class="nav-item ps-2 pe-0 d-none d-sm-block"
-                        title="{{ 'menu.favorites'|trans }}">
-                    <a class="nav-link" href="{{ path('app') }}#/schedule/favorites"><i class="bi bi-star-fill"></i></a>
+                <li class="nav-item ps-2 pe-0 d-none d-sm-block">
+                    <a title="{{ 'menu.favorites'|trans }}" class="nav-link spa-link" href="{{ path('app') }}schedule/favorites"><i class="bi bi-star-fill"></i></a>
                 </li>
                 {{ menu.collections_menu(collections_menu) }}
 
                 {# Streaming #}
                 <li class="nav-item pe-0">
-                    <a class="nav-link" href="{{ path('app') }}#/streaming/fr" style="padding-right: 0">{{ 'menu.streaming'|trans }}</a>
+                    <a class="nav-link spa-link" href="{{ path('app') }}streaming" style="padding-right: 0">{{ 'menu.streaming'|trans }}</a>
                 </li>
-                <li id="streams-top-menu-favorites" class="nav-item ps-2 pe-0 d-none d-sm-block" title="{{ 'menu.favorites'|trans }}">
-                    <a class="nav-link pr-0" href="{{ path('app') }}#/streaming/favorites"><i class="bi bi-star-fill"></i></a>
+                <li id="streams-top-menu-favorites" class="nav-item ps-2 pe-0 d-none d-sm-block">
+                    <a title="{{ 'menu.favorites'|trans }}" class="nav-link pr-0 spa-link" href="{{ path('app') }}streaming/favorites"><i class="bi bi-star-fill"></i></a>
                 </li>
                 <li class="nav-item dropdown d-none d-sm-block">
-                    <a class="nav-link dropdown-toggle pe-0" href="#" id="navbarCollectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarCollectionsDropdown">
-                        <li>
-                            <a class="dropdown-item" href="{{ path('app') }}#/streaming/fr">{{ 'menu.favorites_menu.fr'|trans }}</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ path('app') }}#/streaming/all">{{ 'menu.favorites_menu.all'|trans }}</a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item" href="{{ path('app') }}#/streaming/favorites">{{ 'menu.favorites'|trans }}</a>
-                        </li>
-                    </ul>
+                    <a class="nav-link dropdown-toggle pe-0" href="#" id="navbarCollectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                    {{ menu.streaming_menu() }}
                 </li>
 
                 {# Plus #}
@@ -62,11 +49,7 @@
                         {{ 'menu.plus'|trans}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        {% if app.request.get('_route') == 'app' %}
-                            <li><a class="dropdown-item" href="{{ path('app') }}#/now">{{ 'menu.now'|trans }}</a></li>
-                        {% else %}
-                            <li><a class="dropdown-item" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
-                        {% endif %}
+                        <li><a class="dropdown-item spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>

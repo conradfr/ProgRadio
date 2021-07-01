@@ -68,7 +68,7 @@ page:
         description: 'Le programme du jour de la radio %radio% !'
         no_schedule: 'Programmes non disponibles.'
         play: 'Ecouter %radio%'
-        title: 'Ecouter %radio% - Grille des programmes'
+        title: 'Ecouter %radio% en streaming'
 
     registered:
         page_title: Créer un compte

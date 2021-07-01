@@ -88,6 +88,14 @@ class DefaultController extends AbstractBaseController
      */
     public function radio_legacy(string $codename, Request $request): Response
     {
+        // if play, redirect to spa
+        if ($request->query->get('play') !== null) {
+            return $this->forward('App\Controller\DefaultController::index', [
+                '_route' => $request->attributes->get('_route'),
+                '_route_params' => $request->attributes->get('_route_params'),
+            ]);
+        }
+
         return $this->redirectToRoute('radio', ['_locale' => $request->getLocale(), 'codename' => $codename], 301);
     }
 
@@ -382,6 +390,9 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
+     * This is the spa entry point,
+     *   matching multiple urls that are then handled by the spa router
+     *
      * @Route(
      *     "/{_locale}/",
      *     name="app",
@@ -395,7 +406,7 @@ class DefaultController extends AbstractBaseController
      *     }
      * )
      */
-    public function index(): Response
+    public function index(string $collection=null): Response
     {
         return $this->render('default/index.html.twig', []);
     }

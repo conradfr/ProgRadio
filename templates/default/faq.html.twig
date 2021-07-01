@@ -10,7 +10,7 @@
     {% for collection in collections %}
         {% if collection.code_name != 'favorites' %}
             <p>
-                <a class="faq-collection-link" href="{{ path('app') }}#/schedule/{{ collection.code_name }}">{{ collection.name_FR }}</a>:
+                <a class="faq-collection-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">{{ collection.name_FR }}</a>:
 
                 {% for radioCodeName in collection.radios %}
                     {% if radios[radioCodeName] is defined  %}
@@ -50,7 +50,7 @@
         {   'question': "Liste des radios disponibles.",
             'answer': [
             self.radios_list(collections, radios, app.request.locale),
-            '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ path('app') ~ '#/streaming">la page streaming</a>.</p>'
+            '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ path('app') ~ 'streaming">la page streaming</a>.</p>'
         ]
         }
     ],
@@ -75,7 +75,7 @@
         {   'question': "Available radios:",
             'answer': [
             self.radios_list(collections, radios, app.request.locale),
-            '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ '#/streaming">the streaming page</a>.</p>'
+            '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>.</p>'
         ]
         }
     ]

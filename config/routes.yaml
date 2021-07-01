@@ -1,10 +1,17 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-
 app_logout:
     path: /logout
     methods: GET
 
 captcha_routing:
     resource: "@CaptchaBundle/Resources/config/routing.yml"
+
+# HERE WE INTERCEPT URLS THAT WILL BE HANDLED BY THE SPA ROUTER
+# The spa intercept the urls client side, here it's for external/direct access
+
+schedule_spa:
+    path: /{_locale}/schedule/{collection?}
+    controller: App\Controller\DefaultController::index
+
+streaming_spa:
+    path: /{_locale}/streaming/{collection?}
+    controller: App\Controller\DefaultController::index

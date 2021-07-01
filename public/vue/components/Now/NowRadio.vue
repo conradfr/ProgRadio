@@ -1,12 +1,12 @@
 <template>
   <div class="row mb-4 pb-2 border-bottom" v-if="currentShow">
     <div class="col-2 col-md-1">
-      <a :href="'/' + locale + '/#/radio/' + radio.code_name">
-        <img class="img-fluid"
-             :title="radio.name"
-             :alt="radio.name"
-             :src="picture">
-      </a>
+      <router-link :to="'/' + locale + '/radio/' + radio.code_name">
+      <img class="img-fluid"
+           :title="radio.name"
+           :alt="radio.name"
+           :src="picture">
+      </router-link>
       <div class="now-page-streams mt-3" v-if="radio.streaming_enabled">
         <radio-stream :radio="radio" :stream="primaryStream"></radio-stream>
       </div>

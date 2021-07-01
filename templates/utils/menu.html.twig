@@ -11,7 +11,7 @@
                     {#                <a href="{{ path('app', {'c': collection.code_name}) }}" onclick="switchCollection(event, '{{ collection.code_name }}')">#}
                     {#                    {{ collection.name_FR }}#}
                     {#                </a>#}
-                    <a class="dropdown-item" href="{{ path('app') }}#/schedule/{{ collection.code_name }}">
+                    <a class="dropdown-item spa-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">
                         {{ collection.name_FR }}
                     </a>
                 </li>
@@ -23,26 +23,41 @@
 {% macro collections_mobile(collections) %}
     {% for collection in collections %}
     <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="nav-item">
-        <a class="nav-link ps-3 py-1" href="{{ path('app') }}#/schedule/{{ collection.code_name }}">
+        <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">
             &rarr; {{ collection.name_FR }}
         </a>
     </li>
     {% endfor %}
 {% endmacro %}
 
+{% macro streaming_menu() %}
+    <ul class="dropdown-menu" aria-labelledby="navbarCollectionsDropdown">
+        <li>
+            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/fr">{{ 'menu.favorites_menu.fr'|trans }}</a>
+        </li>
+        <li>
+            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/all">{{ 'menu.favorites_menu.all'|trans }}</a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/favorites">{{ 'menu.favorites'|trans }}</a>
+        </li>
+    </ul>
+{% endmacro %}
+
 {% macro streaming_mobile() %}
     <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-        <a class="nav-link ps-3 py-1" href="{{ path('app') }}#/streaming/fr">
+        <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}streaming/fr">
             &rarr; {{ 'menu.favorites_menu.fr'|trans }}
         </a>
     </li>
     <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-        <a class="nav-link ps-3 py-1 " href="{{ path('app') }}#/streaming/all">
+        <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}streaming/all">
             &rarr; {{ 'menu.favorites_menu.all'|trans }}
         </a>
     </li>
     <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-        <a class="nav-link ps-3 py-1" href="{{ path('app') }}#/streaming/favorites">
+        <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}streaming/favorites">
             &rarr; {{ 'menu.favorites'|trans }}
         </a>
     </li>

@@ -1,5 +1,6 @@
 import {
-  createWebHashHistory,
+  // createWebHashHistory,
+  createWebHistory,
   createRouter,
   RouterLink,
   RouterView
@@ -20,43 +21,43 @@ RouterView.compatConfig = {
 
 const routes = [
   {
-    path: '/streaming',
+    path: '/:lang/streaming',
     name: 'streaming_home',
     component: AppStreams
   },
   {
-    path: '/streaming/:countryOrCategoryOrUuid?',
+    path: '/:lang/streaming/:countryOrCategoryOrUuid?',
     name: 'streaming',
     component: AppStreams
   },
   {
-    path: '/schedule',
+    path: '/:lang/schedule',
     name: 'schedule_home',
     component: AppSchedule
   },
   {
-    path: '/schedule/:collection?',
+    path: '/:lang/schedule/:collection?',
     name: 'schedule',
     component: AppSchedule
   },
   {
-    path: '/radio/:radio',
+    path: '/:lang/radio/:radio',
     name: 'radio',
     component: AppRadio
   },
   {
-    path: '/now',
+    path: '/:lang/now',
     name: 'now',
     component: AppNow
   },
   {
-    path: '/',
+    path: '/:lang/',
     name: 'default',
     component: AppSchedule
   }
 ];
 
 export default createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 });

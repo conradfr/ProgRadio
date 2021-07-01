@@ -118,7 +118,6 @@ export default {
       return this.program.duration >= PROGRAM_LONG_ENOUGH;
     },
     /* eslint-disable max-len */
-    /* eslint-disable max-len */
     startsPrevDay() {
       return this.program.start_overflow;
       // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.prevDayOverflow;

@@ -18,8 +18,10 @@
         </div>
         <div class="row">
           <div class="col-md-12 mb-4 mt-2 mt-sm-0 text-center text-sm-start">
-            <a v-if="collection" :href="'/' + locale + '/#/schedule/' + collection.code_name">
-            {{ $t('message.radio_page.back') }}</a>
+            <router-link v-if="collection"
+              :to="'/' + locale + '/schedule/' + collection.code_name">
+              {{ $t('message.radio_page.back') }}
+            </router-link>
           </div>
         </div>
         <div class="radio-page-shows">

@@ -20,7 +20,7 @@
                     {% if one != 'empty' %}
                     <div class="row h-100 align-items-center">
                         <div class="col-md-3">
-                            <a target="_blank" href="{{ path('app') }}#/streaming/{{ one.id }}">
+                            <a target="_blank" href="{{ path('app') }}streaming/{{ one.id }}">
                                 <img title="{{ one.name }}" alt="{{ one.name }}"
                                         {% if one.img is null and one.radio_code_name is null %}
                                     src="{{ asset('/img/stream-placeholder.png') }}"

@@ -38,6 +38,16 @@ export default {
       navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
       navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
     }
+
+    // links from the navbar that we want to redirect to spa router
+    /* eslint-disable no-undef */
+    const navLinks = document.getElementsByClassName('spa-link');
+    Array.prototype.forEach.call(navLinks, (element) => {
+      element.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.$router.push({ path: e.currentTarget.getAttribute('href') });
+      });
+    });
   },
   methods: {
     /* eslint-disable func-names */

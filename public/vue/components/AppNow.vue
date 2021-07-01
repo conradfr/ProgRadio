@@ -24,9 +24,9 @@
       <div class="col-md-12">
         <div class="tab-content tab-now">
           <div class="mt-3 mb-4">
-            <a :href="'/' + locale + '/#/schedule/' + currentCollection">
-            {{ $t('message.radio_page.back') }}
-            </a>
+            <router-link :to="'/' + locale + '/schedule/' + currentCollection">
+              {{ $t('message.radio_page.back') }}
+            </router-link>
           </div>
           <now-radio
               v-for="radio in rankedRadios"

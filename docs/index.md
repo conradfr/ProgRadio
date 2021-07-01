@@ -1,6 +1,6 @@
 # ProgRadio LiveSong
 
-[Programmes-Radio](https://www.programmes-radio.com/en/) is a website displaying French radios schedules and the ability to [stream radios from all over the world](https://www.programmes-radio.com/en/#/streaming/all). This article will explore how we wrote the "currently playing song" feature for French music stations.
+[Programmes-Radio](https://www.programmes-radio.com/en/) is a website displaying French radios schedules and the ability to [stream radios from all over the world](https://www.programmes-radio.com/en/streaming/all). This article will explore how we wrote the "currently playing song" feature for French music stations.
 
 Thanks to Elixir and the Beam this needed really little code. For this feature we'll leverage the following libraries:
 

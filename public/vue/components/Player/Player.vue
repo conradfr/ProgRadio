@@ -253,10 +253,10 @@ export default {
       }
 
       if (this.player.radio.type === 'radio') {
-        return `/${this.locale}/#/radio/${this.player.radio.code_name}`;
+        return `/${this.locale}/radio/${this.player.radio.code_name}`;
       }
 
-      return `/${this.locale}/#/streaming/${this.player.radio.code_name}`;
+      return `/${this.locale}/streaming/${this.player.radio.code_name}`;
     },
     toggleMute() {
       this.$store.dispatch('toggleMute');

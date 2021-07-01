@@ -3,11 +3,6 @@
 {% set collections_menu = scheduleCollections(app.user, app.request.attributes) %}
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasExampleLabel">
-{#    <div class="offcanvas-header">#}
-{#        <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ 'menu.title'|trans }}</h5>#}
-{#        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>#}
-{#    </div>#}-dismiss="offcanvas" aria-label="Close"></button>#}
-{#    </div>#}
     <div class="offcanvas-body">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <!-- account -->
@@ -72,7 +67,7 @@
 
             <!-- schedule -->
             <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-                <a class="nav-link pb-2" href="{{ path('app') }}#/schedule">{{ 'menu.schedule'|trans }}</a>
+                <a class="nav-link pb-2 spa-link" href="{{ path('app') }}schedule">{{ 'menu.schedule'|trans }}</a>
             </li>
             {{ menu.collections_mobile(collections_menu) }}
 
@@ -80,14 +75,14 @@
 
             <!-- streaming -->
             <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-                <a class="nav-link pb-2" href="{{ path('app') }}#/streaming/fr">{{ 'menu.streaming'|trans }}</a>
+                <a class="nav-link pb-2 spa-link" href="{{ path('app') }}streaming/fr">{{ 'menu.streaming'|trans }}</a>
             </li>
             {{ menu.streaming_mobile() }}
 
             <li class="nav-item offcanvas-divider mt-3 mb-1"></li>
 
             <!-- more -->
-            <li class="nav-item"><a class="nav-link pb-1" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
+            <li class="nav-item"><a class="nav-link pb-1 spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
             <li class="nav-item"><a class="nav-link py-1" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
             <li class="nav-item"><a class="nav-link py-1" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
 

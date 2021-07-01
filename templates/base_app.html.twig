@@ -17,7 +17,7 @@ const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }
 const locale = '{{ app.request.locale }}';
 
 const scrollToCursor = function(e) {
-  if (window.location.href.includes(e.getAttribute('href'))) {
+  if (window.location.href.includes('schedule')) {
     document.getElementById('app').__vue_app__.config.globalProperties.$store.dispatch('scrollToCursor');
   }
 };

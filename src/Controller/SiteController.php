@@ -26,17 +26,6 @@ class SiteController extends AbstractController
 
     /**
      * @Route(
-     *     "/faq",
-     *     name="faq_legacy"
-     * )
-     */
-    public function faq_legacy(EntityManagerInterface $em, Request $request): RedirectResponse
-    {
-        return $this->redirectToRoute('faq', ['_locale' => 'fr'], 301);
-    }
-
-    /**
-     * @Route(
      *     "/{_locale}/faq",
      *     name="faq",
      *     defaults={
@@ -159,7 +148,7 @@ class SiteController extends AbstractController
             foreach ($radios as $radio) {
                 $xml .= $this->getEntryXml('radio', $this->get('router')->getRouteCollection()->get('radio.'.$locale), $locale,  ['codename' => $radio]);
                 // spa radio page
-                $routeApp = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
+                $routeApp = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio . '?play=1']);
                 $xml .= $this->getEntryXml('app', $routeApp, $locale);
                 $this->get('router')->getRouteCollection()->get('radio.'.$locale)->setDefaults($savedRouteAppDefault);
             }
@@ -189,7 +178,7 @@ class SiteController extends AbstractController
         foreach ($bangs as $bang) {
             $url = $this->generateUrl($name, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
             if ($bang !== '') {
-                $url .= '#/' . $bang;
+                $url .= $bang;
             }
 
             $entries .= '<url>' . PHP_EOL

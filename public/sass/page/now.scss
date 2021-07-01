@@ -3,3 +3,9 @@
     border-bottom-color: $now-border-color !important;
   }
 }
+
+.now-page-show {
+  .media-timeline {
+    display: none;
+  }
+}

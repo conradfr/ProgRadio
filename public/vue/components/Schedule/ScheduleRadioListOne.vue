@@ -18,11 +18,11 @@
         <img v-if="!isFavorite" src="/img/favorite-empty.svg" class="filter-fav"/>
         <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
-      <a :href="'/' + locale + '/#/radio/' + radio.code_name"
-         class="radio-submenu-entry radio-submenu-entry-radiopage" v-once>
+      <router-link class="radio-submenu-entry radio-submenu-entry-radiopage"
+         :to="'/' + locale + '/radio/' + radio.code_name">
         <img src="/img/list.svg" class="filter-page"/>
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
-      </a>
+      </router-link>
     </div>
     <div class="radio-submenu radio-submenu-streams"
          :style="subMenuStyleObjectStreams"
