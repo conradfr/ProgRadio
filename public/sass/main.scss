@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=neILzCirqoswsqX9_oC0OoliAvSRzBR3yET4sg&skey=7ed805a363b4659c&v=v23) format('woff2');
+}
+
 @import 'utils/mixins';
 @import 'utils/vue-select';
 
