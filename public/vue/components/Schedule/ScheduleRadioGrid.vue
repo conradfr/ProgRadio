@@ -19,7 +19,7 @@
       </schedule-radio-grid-row>
     </vue3-hammer>
     <schedule-radio-grid-no-radio
-        v-if="radios.length === 0"
+        v-if="radios.length === 0 && isLoading === false"
         :collection="currentCollection">
     </schedule-radio-grid-no-radio>
   </div>
@@ -70,7 +70,8 @@ export default {
     }),
     ...mapGetters({
       radios: 'rankedRadios',
-      displayNoSchedule: 'hasSchedule'
+      displayNoSchedule: 'hasSchedule',
+      isLoading: 'isLoading'
     })
   },
   /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */

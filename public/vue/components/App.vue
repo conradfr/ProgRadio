@@ -31,14 +31,6 @@ export default {
       25
     );
 
-    // OS hotkeys support
-    if (navigator.mediaSession !== undefined) {
-      navigator.mediaSession.setActionHandler('previoustrack', this.keyPlayPrevious.bind(this));
-      navigator.mediaSession.setActionHandler('nexttrack', this.keyPlayNext.bind(this));
-      navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
-      navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
-    }
-
     // links from the navbar that we want to redirect to spa router
     /* eslint-disable no-undef */
     const navLinks = document.getElementsByClassName('spa-link');
@@ -48,6 +40,19 @@ export default {
         this.$router.push({ path: e.currentTarget.getAttribute('href') });
       });
     });
+
+    // OS hotkeys support
+    if (navigator.mediaSession !== undefined) {
+      setTimeout(
+        () => {
+          navigator.mediaSession.setActionHandler('previoustrack', this.keyPlayPrevious.bind(this));
+          navigator.mediaSession.setActionHandler('nexttrack', this.keyPlayNext.bind(this));
+          navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
+          navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
+        },
+        1000
+      );
+    }
   },
   methods: {
     /* eslint-disable func-names */

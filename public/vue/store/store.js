@@ -58,7 +58,7 @@ const store = createStore({
         newStateValue = 0;
       }
 
-      state.loadingloading = newStateValue;
+      state.loading = newStateValue;
     },
     addToast: (state, toast) => {
       state.toasts.push(toast);
