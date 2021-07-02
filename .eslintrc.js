@@ -1,4 +1,7 @@
 module.exports = {
+  parserOptions: {
+    parser: 'babel-eslint'
+  },
   root: true,
   env: {
     node: true

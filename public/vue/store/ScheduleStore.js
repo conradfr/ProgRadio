@@ -241,7 +241,8 @@ const storeActions = {
         if (state.collections[config.COLLECTION_FAVORITES] !== undefined) {
           params.radios = state.collections[config.COLLECTION_FAVORITES].radios;
         }
-        delete params.collection;      }
+        delete params.collection;
+      }
 
       setTimeout(
         () => {
