@@ -1,4 +1,4 @@
-import 'es6-promise/auto';
+// import 'es6-promise/auto';
 
 import { createApp } from 'vue';
 import VueGtag from 'vue-gtag';

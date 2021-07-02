@@ -19,7 +19,7 @@
                 }"
             >
               <a class="page-link"
-                 v-on:click="gotoPage(n)" v-once>{{ n }}</a>
+                 v-on:click="gotoPage(n)">{{ n }}</a>
             </li>
             <li class="page-item" :class="{ 'disabled': page === pages }">
               <a class="page-link" v-on:click="gotoPage(page + 1)" aria-label="Next">

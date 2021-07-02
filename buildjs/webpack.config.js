@@ -111,6 +111,7 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
+      // chunks: 'all',
       cacheGroups: {
         lightStyles: {
           name: 'main_light',
@@ -130,6 +131,7 @@ module.exports = {
         },
       },
     },
+    nodeEnv: 'production',
     minimize: true,
     minimizer: [
       new TerserPlugin({

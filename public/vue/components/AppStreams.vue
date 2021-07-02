@@ -9,6 +9,7 @@ import { mapState, mapGetters } from 'vuex';
 
 import { PLAYER_TYPE_STREAM } from '../config/config';
 
+// import StreamsStore from '../store/StreamsStore';
 import StreamsList from './Streams/StreamsList.vue';
 
 export default {
@@ -16,6 +17,7 @@ export default {
     MODE: 3
   },
   created() {
+    // this.$store.registerModule('streams', StreamsStore);
     this.$store.dispatch('getConfig');
   },
   mounted() {

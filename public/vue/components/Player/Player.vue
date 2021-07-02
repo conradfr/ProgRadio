@@ -61,6 +61,26 @@ import * as config from '../../config/config';
 import AndroidApi from '../../api/AndroidApi';
 import PlayerUtils from '../../utils/PlayerUtils';
 
+/* eslint-disable arrow-body-style */
+/* we load the hls script dynamically once, reducing initial app load */
+const loadHls = () => {
+  return new Promise((resolve, reject) => {
+    const hlsElem = document.getElementById('hls-script');
+    if (hlsElem !== null) {
+      resolve();
+      return;
+    }
+
+    const hlsScript = document.createElement('script');
+    hlsScript.type = 'text/javascript';
+    hlsScript.id = 'hls-script';
+    hlsScript.src = '/js/hls.js';
+    hlsScript.onload = resolve;
+    hlsScript.onerror = reject;
+    document.body.appendChild(hlsScript);
+  });
+};
+
 export default {
   compatConfig: {
     MODE: 3
@@ -279,20 +299,22 @@ export default {
       let startPlayPromise;
 
       if (url.indexOf('.m3u8') !== -1) {
-        if (Hls.isSupported()) {
-          window.audio = document.getElementById('videoplayer');
-          this.hls = new Hls();
-          // bind them together
-          this.hls.attachMedia(window.audio);
-          this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-            this.hls.loadSource(url);
-            this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              window.audio.muted = this.player.muted;
-              window.audio.volume = (this.player.volume * 0.1);
-              startPlayPromise = window.audio.play();
+        loadHls().then(() => {
+          if (Hls.isSupported()) {
+            window.audio = document.getElementById('videoplayer');
+            this.hls = new Hls();
+            // bind them together
+            this.hls.attachMedia(window.audio);
+            this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+              this.hls.loadSource(url);
+              this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                window.audio.muted = this.player.muted;
+                window.audio.volume = (this.player.volume * 0.1);
+                startPlayPromise = window.audio.play();
+              });
             });
-          });
-        }
+          }
+        });
       } else {
         const streamUrl = (url.substring(0, 5) !== 'https')
           ? `${streamsProxy}?stream=${url}` : url;

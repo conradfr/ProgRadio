@@ -13,6 +13,7 @@ import { mapGetters, mapState } from 'vuex';
 
 import { COLLECTION_FAVORITES, PLAYER_TYPE_RADIO } from '../config/config';
 
+// import ScheduleStore from '../store/ScheduleStore';
 import CollectionSwitcher from './Schedule/CollectionSwitcher.vue';
 import Timeline from './Schedule/Timeline.vue';
 import TimelineCursorHead from './Schedule/TimelineCursorHead.vue';
@@ -30,6 +31,9 @@ export default {
     ScheduleContainer,
     CategoryFilter
   },
+  /* created() {
+    this.$store.registerModule('schedule', ScheduleStore);
+  }, */
   mounted() {
     // set focus on the schedule container to allow key nav.
     this.$refs.container.$el.focus();

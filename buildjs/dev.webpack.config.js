@@ -122,6 +122,7 @@ module.exports = {
     removeAvailableModules: false,
     removeEmptyChunks: false,
     splitChunks: {
+      // chunks: 'all',
       cacheGroups: {
         lightStyles: {
           name: 'main_light',

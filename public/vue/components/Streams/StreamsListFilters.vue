@@ -66,7 +66,6 @@ import { mapGetters, mapState } from 'vuex';
 /* eslint-disable import/no-duplicates */
 import Vue from 'vue';
 import { nextTick } from 'vue';
-import VueFlags from '@growthbunker/vueflags';
 import vSelect from 'vue-select';
 
 import {
@@ -82,11 +81,6 @@ import {
 } from '../../config/config';
 
 Vue.component('v-select', vSelect);
-
-Vue.use(VueFlags, {
-  // Specify the path of the folder where the flags are stored.
-  iconPath: '/img/flags/',
-});
 
 export default {
   compatConfig: {
