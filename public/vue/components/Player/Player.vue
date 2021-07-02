@@ -4,7 +4,7 @@
       <a :href="radioLink()"><i class="bi bi-link-45deg"></i></a>
     </div>
     <transition name="timer-fade" mode="out-in">
-      <timer v-if="displayTimer"></timer>
+      <timer v-if="timerDisplay"></timer>
     </transition>
     <div class="player-wrap">
       <div class="player-sound player-sound-fader"
@@ -104,7 +104,8 @@ export default {
     }),
     ...mapGetters([
       'displayVolume',
-      'streamUrl'
+      'streamUrl',
+      'timerDisplay'
     ]),
     isFavorite() {
       if (this.player.radio === null) {
@@ -123,14 +124,6 @@ export default {
       return (this.player.radio !== null
       && this.isFavorite === true
         ? this.$i18n.tc('message.player.favorites.remove') : this.$i18n.tc('message.player.favorites.add'));
-    },
-    displayTimer() {
-      if (this.player.externalPlayer === true
-        && this.player.externalPlayerVersion < config.ANDROID_TIMER_MIN_VERSION) {
-        return false;
-      }
-
-      return this.player.playing || this.player.timer > 0;
     },
     /* used to watch multiple properties at once (will not be necessary in Vue3) */
     radioShowWatching() {

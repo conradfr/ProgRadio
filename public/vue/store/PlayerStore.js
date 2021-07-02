@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 import * as config from '../config/config';
 import AndroidApi from '../api/AndroidApi';
 import i18n from '../lang/i18n';
-// import StreamsApi from '../api/StreamsApi';
+
 import PlayerUtils from '../utils/PlayerUtils';
 import ScheduleUtils from '../utils/ScheduleUtils';
 import StreamsApi from '../api/StreamsApi';
@@ -39,6 +39,14 @@ const initState = {
 const storeGetters = {
   radioPlayingCodeName: state => (state.radio !== null ? state.radio.code_name : null),
   displayVolume: state => state.focus.icon || state.focus.fader || false,
+  timerDisplay: (state) => {
+    if (state.externalPlayer === true
+      && state.externalPlayerVersion < config.ANDROID_TIMER_MIN_VERSION) {
+      return false;
+    }
+
+    return state.playing || state.timer > 0;
+  },
   streamUrl: (state) => {
     if (state.radio === null) { return null; }
 
@@ -173,8 +181,6 @@ const storeActions = {
       return;
     }
 
-    /* PlayerUtils.sendListeningSession(state.externalPlayer, state.playing,
-      state.radio, state.radioStreamCodeName, state.session); */
     dispatch('stop');
 
     if (state.radio === undefined || state.radio === null) {

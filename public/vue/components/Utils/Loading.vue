@@ -5,7 +5,7 @@
         <div class="alert-progradio-icon refresh-animate">
           <i class="bi bi-arrow-repeat"></i>
         </div>
-        <div class="flex-grow-1 alert-progradio-text text-center">
+        <div class="flex-grow-1 alert-progradio-text text-center" v-once>
           {{ $t('message.loading') }}
         </div>
       </div>

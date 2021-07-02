@@ -18,8 +18,9 @@ app.use(store);
 
 /* eslint-disable no-undef */
 app.use(VueGtag, {
-  config: { id: gtCode }
-});
+  config: { id: gtCode },
+  disableScriptLoad: true
+}, router);
 app.use(VueFlags, {
   // Specify the path of the folder where the flags are stored.
   iconPath: '/img/flags/',

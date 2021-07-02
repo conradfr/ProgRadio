@@ -7,6 +7,7 @@
       <gb-flag
           :code="radio.country_code"
           size="nano"
+          v-once
       />
     </div>
     <div class="radio-submenu"
@@ -39,7 +40,7 @@
       }">
           </div>
         </div>
-        <p>{{ entry.name }}</p>
+        <p v-once>{{ entry.name }}</p>
       </div>
     </div>
     <a v-on:click="playStop(`${radio.code_name}_main`, false)" :title="radio.name">

@@ -5,15 +5,15 @@
     </div>
     <div v-if="show.picture_url" class="flex-shrink-0">
       <img alt="" class="img-fluid img-show mb-2"
-         :src="picture">
+         :src="picture" v-once>
     </div>
     <div class="flex-fill ps-3 mb-3">
       <h6 class="fw-bold mb-0">
         {{ scheduleDisplay }} - {{ show.title }}
       </h6>
-      <div v-if="show.host">{{ show.host }}</div>
+      <div v-if="show.host" v-once>{{ show.host }}</div>
       <nl2br v-if="show.description" tag="p" :text="show.description"
-         class-name="fw-light mt-2" />
+         class-name="fw-light mt-2" v-once />
 
       <div v-if="show.sections && show.sections.length > 0" class="mt-1">
         <radio-show-section

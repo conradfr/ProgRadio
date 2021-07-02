@@ -2,13 +2,15 @@
   <div>
     <player></player>
     <toast-container></toast-container>
-    <timer-modal></timer-modal>
+    <timer-modal v-if="timerDisplay"></timer-modal>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import throttle from 'lodash/throttle';
+
+import { mapGetters } from 'vuex';
 
 import Player from './Player/Player.vue';
 import TimerModal from './Player/TimerModal.vue';
@@ -53,6 +55,11 @@ export default {
         1000
       );
     }
+  },
+  computed: {
+    ...mapGetters([
+      'timerDisplay'
+    ]),
   },
   methods: {
     /* eslint-disable func-names */

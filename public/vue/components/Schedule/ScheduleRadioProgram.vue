@@ -10,10 +10,10 @@
           <img v-bind:src="picturePath" alt="" @mousedown.prevent="" v-once>
         </div>
         <div class="program-infos" :style="infosStyle">
-          <div class="program-title">
-            <span class="schedule-display">{{ scheduleDisplay }}</span>{{ program.title }}
+          <div class="program-title" v-once>
+            <span class="schedule-display" >{{ scheduleDisplay }}</span>{{ program.title }}
           </div>
-          <div class="program-host">{{ program.host }}</div>
+          <div class="program-host" v-once>{{ program.host }}</div>
           <div class="program-description-short"
                v-bind:class="{ 'program-description-nohost': !program.host }">
             <div class="program-description-short-inner">

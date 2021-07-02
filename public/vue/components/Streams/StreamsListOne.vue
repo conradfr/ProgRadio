@@ -33,6 +33,7 @@
       <gb-flag
           :code="radio.country_code"
           size="micro"
+          v-once
       />
     </div>
   </div>

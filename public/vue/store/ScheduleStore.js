@@ -23,12 +23,9 @@ const initialScrollIndex = ScheduleUtils.initialScrollIndexFunction(cursorTime);
 
 // initial state
 const initState = {
-  radios: cache.hasCache(config.CACHE_KEY_RADIOS)
-    ? cache.getCache(config.CACHE_KEY_RADIOS) : [],
-  categories: cache.hasCache(config.CACHE_KEY_CATEGORIES)
-    ? Object.freeze(cache.getCache(config.CACHE_KEY_CATEGORIES)) : [],
-  collections: cache.hasCache(config.CACHE_KEY_COLLECTIONS)
-    ? Object.freeze(cache.getCache(config.CACHE_KEY_COLLECTIONS)) : {},
+  radios: [],
+  categories: [],
+  collections: {},
   schedule: {},
   scheduleDisplay: {},
   cursorTime,
@@ -196,6 +193,23 @@ const storeActions = {
 
   /* eslint-disable no-undef */
   getRadiosData: ({ dispatch, state, commit }) => {
+    // use cache before network fetching
+    if (cache.hasCache(config.CACHE_KEY_RADIOS)) {
+      commit('updateRadios', cache.getCache(config.CACHE_KEY_RADIOS));
+    }
+
+    if (cache.hasCache(config.CACHE_KEY_CATEGORIES)) {
+      commit('updateCategories', cache.getCache(config.CACHE_KEY_CATEGORIES));
+    }
+
+    if (cache.hasCache(config.CACHE_KEY_CATEGORIES)) {
+      commit('updateCollections', cache.getCache(config.CACHE_KEY_COLLECTIONS));
+    }
+
+    if (state.radios === []) {
+      commit('setLoading', true, { root: true });
+    }
+
     setTimeout(
       () => {
         ScheduleApi.getRadiosData()
@@ -207,12 +221,8 @@ const storeActions = {
           })
           .finally(() => commit('setLoading', false, { root: true }));
       },
-      30
+      50
     );
-
-    if (state.radios === []) {
-      commit('setLoading', true, { root: true });
-    }
   },
   getSchedule: ({ state, commit }, params) => {
     const dateStr = state.cursorTime.toISODate();
@@ -228,9 +238,10 @@ const storeActions = {
       // api don't have user favorites access
       /* eslint-disable no-param-reassign */
       if (params.collection !== undefined && params.collection === config.COLLECTION_FAVORITES) {
-        params.radios = state.collections[config.COLLECTION_FAVORITES].radios;
-        delete params.collection;
-      }
+        if (state.collections[config.COLLECTION_FAVORITES] !== undefined) {
+          params.radios = state.collections[config.COLLECTION_FAVORITES].radios;
+        }
+        delete params.collection;      }
 
       setTimeout(
         () => {
