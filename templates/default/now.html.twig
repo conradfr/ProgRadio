@@ -3,8 +3,13 @@
 {% block title %}{{ 'page.now.page_title'|trans }}{% endblock %}
 {% block description %}{{ 'page.now.page_description'|trans }}{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {% include('_partials/mini_player.html.twig') %}
+{% endblock %}
+
 {% block body %}
-<div class="container">
+<div class="container now-page">
     <div class="row">
         <div class="col-md-12">
             <h4 class="mb-3">{{ 'page.now.title'|trans }}</h4>
@@ -32,6 +37,33 @@
                                 <a class="spa-link" href="{{ path('radio', {'codename': entry.radio.codeName}) }}">
                                     <img class="img-fluid" title="{{ entry.radio.name }}" alt="{{ entry.radio.name }}" src="{{ asset('img/radio/page/' ~ entry.radio.codeName ~ '.png') }}">
                                 </a>
+                                {% if entry.radio.streamingUrl is not null %}
+                                    <div class="now-page-streams mt-3" v-scope>
+                                        <div class="radio-page-streams-one text-center mb-4 d-none"
+                                             @mounted="$el.classList.remove('d-none')">
+                                            <div
+                                                v-if="playing === false"
+                                                @click="play('{{ entry.radio.streamingUrl }}')"
+                                                class="radio-page-play">
+                                                <img alt="{{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}"
+                                                     src="/img/play-button-inside-a-circle.svg">
+                                                <div>
+                                                    {{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}
+                                                </div>
+                                            </div>
+                                            <div
+                                                    v-if="playing === true"
+                                                    @click="stop"
+                                                    class="radio-page-play">
+                                                <img alt="{{ 'page.radio.stop'|trans() }}"
+                                                     src="/img/rounded-pause-button.svg">
+                                                <div>
+                                                    {{ 'page.radio.stop'|trans() }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                             <div class="col-10 col-md-11">
                                 <div class="d-flex">

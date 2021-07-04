@@ -38,8 +38,7 @@ class CollectionRepository extends ServiceEntityRepository
                 FROM App:Collection c
                 LEFT JOIN c.radios r
                 GROUP BY c.id, c.priority
-                ORDER BY c.priority asc, c.id asc
-            '
+                ORDER BY c.priority asc, c.id asc'
         );
 
         $query->enableResultCache( self::CACHE_COLLECTION_TTL, self::CACHE_COLLECTION_ID);

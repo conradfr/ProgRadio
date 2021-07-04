@@ -1,0 +1,88 @@
+<script type="module">
+  import { createApp } from 'https://unpkg.com/petite-vue?module';
+
+  const streamsProxy = '{{ streams_proxy }}';
+
+  /* we load the hls script dynamically once, reducing initial app load */
+  const loadHls = () => {
+    return new Promise((resolve, reject) => {
+      const hlsElem = document.getElementById('hls-script');
+      if (hlsElem !== null) {
+        resolve();
+        return;
+      }
+
+      const videoElem = document.createElement('video');
+      videoElem.id = 'videoplayer';
+      videoElem.style = 'display:none';
+      document.body.appendChild(videoElem);
+
+      const hlsScript = document.createElement('script');
+      hlsScript.type = 'text/javascript';
+      hlsScript.id = 'hls-script';
+      hlsScript.src = '/js/hls.js';
+      hlsScript.onload = resolve;
+      hlsScript.onerror = reject;
+      document.body.appendChild(hlsScript);
+    });
+  };
+
+  createApp({
+    playing: false,
+    lastUpdated: null,
+    hls: null,
+    play(streamingUrl) {
+      this.playing = true;
+      let startPlayPromise;
+
+      if (streamingUrl.indexOf('.m3u8') !== -1) {
+        loadHls().then(() => {
+          if (Hls.isSupported()) {
+            window.audio = document.getElementById('videoplayer');
+            this.hls = new Hls();
+            // bind them together
+            this.hls.attachMedia(window.audio);
+            this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+              this.hls.loadSource(streamingUrl);
+              this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                startPlayPromise = window.audio.play();
+              });
+            });
+          }
+        });
+      } else {
+        const streamUrl = (streamingUrl.substring(0, 5) !== 'https')
+          ? `${streamsProxy}?stream=${streamingUrl}` : streamingUrl;
+
+        window.audio = new Audio(`${streamUrl}`);
+        startPlayPromise = window.audio.play();
+      }
+
+      if (startPlayPromise !== undefined) {
+        startPlayPromise.then(() => {
+          // check if stream playing
+          window.audio.addEventListener('timeupdate', () => {
+            this.lastUpdated = new Date();
+          });
+
+          this.lastUpdated = new Date();
+        }).catch((error) => {
+          this.stop();
+        });
+      }
+    },
+    stop() {
+      this.playing = false;
+      if (window.audio !== undefined && window.audio !== null) {
+        window.audio.pause();
+      }
+
+      if (this.hls !== null) {
+        this.hls.destroy();
+        this.hls = null;
+      }
+      window.audio = null;
+      delete window.audio;
+    }
+  }).mount();
+</script>

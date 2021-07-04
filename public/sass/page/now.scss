@@ -4,8 +4,15 @@
   }
 }
 
-.now-page-show {
-  .media-timeline {
-    display: none;
+.now-page{
+  .now-page-show {
+    .media-timeline {
+      display: none;
+    }
+  }
+
+  .now-page-streams {
+    min-height: 75px;
   }
 }
+

@@ -63,7 +63,8 @@ class ScheduleEntryRepository extends EntityRepository
                 $radioData = [
                     'codeName' => $codeName,
                     'name' => $row['radio_name'],
-                    'share' => $row['radio_share']
+                    'share' => $row['radio_share'],
+                    'streamingUrl' => $row['streaming_url']
                 ];
 
                 unset($row['codeName'], $row['radio_name'], $row['radio_share']);
@@ -249,14 +250,16 @@ EOT;
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
-            ->addSelect('r.name as radio_name, r.share as radio_share, c.codeName as collectionCodeName')
+            ->addSelect('r.name as radio_name, r.share as radio_share, rs.url as streaming_url, c.codeName as collectionCodeName')
            ->from('App:ScheduleEntry', 'se')
            ->innerJoin('se.radio', 'r')
+            ->leftJoin('r.streams', 'rs')
            ->innerJoin('r.collection', 'c')
            ->leftJoin('se.sectionEntries', 'sc')
            ->where('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') <= :datetime')
            ->andWhere('AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') >= :datetime')
            ->andWhere('r.active = :active')
+           ->andWhere('rs.main = true AND rs.enabled = TRUE')
            ->addOrderBy('r.share', 'DESC')
            ->addOrderBy('r.codeName', 'ASC')
            ->addOrderBy('se.dateTimeStart', 'ASC')

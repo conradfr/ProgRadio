@@ -57,7 +57,7 @@ page:
         page_title: Connexion
 
     now:
-        back: '← Retourner à la grille des programmes'
+        back: '← Aller à la grille des programmes'
         no_schedule: <strong>Oups ...</strong> aucuns programmes disponibles.
         page_description: 'Quoi écouter tout de suite ?'
         page_title: 'Programmes en ce moment à la radio'

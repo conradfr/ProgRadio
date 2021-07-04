@@ -26,6 +26,7 @@ class RadioRepository extends EntityRepository
                   LEFT JOIN r.streams s
                 WHERE r.active = :active 
                   AND s.main = TRUE
+                ORDER BY r.codeName ASC
             "
         );
 
