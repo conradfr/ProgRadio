@@ -6,7 +6,7 @@
 
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#" onclick="scrollToCursor(this); return false;">
+        <a class="navbar-brand" href="{{ path('app') }}schedule" onclick="return scrollToCursor();">
             <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios" class="d-inline-block align-text-top">Programmes Radio</a>
         {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
             <div>

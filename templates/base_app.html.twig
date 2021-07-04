@@ -16,10 +16,11 @@ const apiUrl = '{{ api_url }}';
 const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }};
 const locale = '{{ app.request.locale }}';
 
-const scrollToCursor = function(e) {
+const scrollToCursor = function() {
   if (window.location.href.includes('schedule')) {
     document.getElementById('app').__vue_app__.config.globalProperties.$store.dispatch('scrollToCursor');
   }
+  return false;
 };
     {% block static_javascript_head %}
     {% endblock %}
