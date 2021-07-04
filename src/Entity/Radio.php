@@ -42,6 +42,41 @@ class Radio
     /**
      * @var string
      *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $description_fr = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $description_en = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $website = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $wikipedia_fr = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $wikipedia_en = null;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=50, options={"default"="Europe/Paris"})
      */
     private $timezone = 'Europe/Paris';
@@ -202,5 +237,55 @@ class Radio
         }
 
         return null;
+    }
+
+    public function getDescriptionFr(): ?string
+    {
+        return $this->description_fr;
+    }
+
+    public function setDescriptionFr(?string $description_fr): void
+    {
+        $this->description_fr = $description_fr;
+    }
+
+    public function getDescriptionEn(): ?string
+    {
+        return $this->description_en;
+    }
+
+    public function setDescriptionEn(?string $description_en): void
+    {
+        $this->description_en = $description_en;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): void
+    {
+        $this->website = $website;
+    }
+
+    public function getWikipediaFr(): ?string
+    {
+        return $this->wikipedia_fr;
+    }
+
+    public function setWikipediaFr(?string $wikipedia_fr): void
+    {
+        $this->wikipedia_fr = $wikipedia_fr;
+    }
+
+    public function getWikipediaEn(): ?string
+    {
+        return $this->wikipedia_en;
+    }
+
+    public function setWikipediaEn(?string $wikipedia_en): void
+    {
+        $this->wikipedia_en = $wikipedia_en;
     }
 }

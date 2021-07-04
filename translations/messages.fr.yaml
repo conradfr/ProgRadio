@@ -1,12 +1,12 @@
 general:
-    main_description: Ecoute en ligne et les programmes radio en France.
+    main_description: Écoute en ligne et les programmes radio en France.
     main_title: Toutes les grilles radio, tous les programmes et écoute en ligne
 
 menu:
     account: Mon compte
     admin:
         dashboard: Tableau de bord
-        listening: Ecoutes
+        listening: Écoutes
         shares: Parts de marché
     app: App Android
     contact: Contact
@@ -64,11 +64,16 @@ page:
         title: 'En ce moment à la radio'
 
     radio:
-        back: '← Retourner à la grille complète des programmes'
-        description: 'Le programme du jour de la radio %radio% !'
+        back: '← Aller à la grille des programmes de toutes les radios'
+        current: ↓ Aller à l'émission en cours
+        description: 'Les programmes de la radio %radio% & écoute en ligne'
+        more_radios: 'Plus de radios'
         no_schedule: 'Programmes non disponibles.'
-        play: 'Ecouter %radio%'
-        title: 'Ecouter %radio% en streaming'
+        play: 'Écouter %radio%'
+        stop: 'Stopper'
+        summary: 'Description'
+        title: 'Écouter %radio% en direct - streaming en ligne'
+        website: 'Site web'
 
     registered:
         page_title: Créer un compte
@@ -76,7 +81,7 @@ page:
         alert_2: Si vous aviez des radios et streamings en favoris ceux-ci ont été automatiquement ajoutés à votre compte.
         what_now_question: Que souhaitez-vous faire maintenant ?
         what_now_choice1: Consulter les programmes radios
-        what_now_choice2: Ecouter des radios en streaming
+        what_now_choice2: Écouter des radios en streaming
 
 
     user:

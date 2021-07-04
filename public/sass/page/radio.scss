@@ -1,8 +1,42 @@
 .radio-page-side {
   top: $padding-top;
+
+  .radio-page-logo {
+    width: 140px;
+
+    @include media-breakpoint-down(sm) {
+      width: 110px;
+    }
+  }
+}
+
+.radio-page-infos-description {
+  font-size: 0.923rem;
+}
+
+.radio-page-more-one {
+  margin: auto;
+  min-height: 85px;
+  min-width: 85px;
+
+  &:hover {
+    background-color: $radio-page-more-one-hover-background;
+  }
+
+  .radio-page-more-one-logo {
+    max-width: 75px;
+    max-height: 75px;
+  }
 }
 
 .radio-page-shows {
+  a.anchor {
+    display: block;
+    position: relative;
+    top: -100px;
+    visibility: hidden;
+  }
+
   .media-timeline {
     margin: 0 auto;
     padding: 0;
@@ -73,7 +107,7 @@
     img {
       height: 46px;
       width: 46px;
-      filter: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
+      filter: $radio-stream-filter;
     }
 
     div {
@@ -85,7 +119,7 @@
       cursor: pointer;
 
       img {
-        filter: invert(65%) sepia(47%) saturate(6464%) hue-rotate(183deg) brightness(97%) contrast(97%);
+        filter: $radio-stream-filter-hover;
       }
 
       div {

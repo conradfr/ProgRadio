@@ -30,6 +30,8 @@ $pagination-disabled-bg:            darken($primary, 15%) !default;
 
 $radio-stream: #4d6a82;
 $radio-stream-hover: $primary-source;
+$radio-stream-filter: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
+$radio-stream-filter-hover: invert(41%) sepia(98%) saturate(1173%) hue-rotate(185deg) brightness(99%) contrast(92%);
 
 $player-color: $white;
 $fader-primary: #337ab7;
@@ -71,3 +73,5 @@ $stream-text-color: $white;
 $stream-play-color: darken($primary-source, 10%);
 
 $now-border-color: darken($primary, 10%);
+
+$radio-page-more-one-hover-background: $body-bg-alt;

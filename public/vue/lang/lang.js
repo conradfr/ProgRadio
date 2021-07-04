@@ -47,6 +47,7 @@ export const messages = {
       },
       radio_page: {
         back: '← Retourner à la grille complète des programmes',
+        current: '↓ Aller à l\'émission en cours',
         no_schedule: 'Programmes non disponibles.',
         play: 'Ecouter {radio}',
         stop: 'Stopper',
@@ -117,9 +118,10 @@ export const messages = {
         }
       },
       radio_page: {
+        back: '← Back to radio guide',
+        current: '↓ Go to current show',
         play: 'Listen to {radio}',
         stop: 'Stop',
-        back: '← Back to radio guide',
         no_schedule: 'Schedule not available',
         title: 'Schedule of the radio {radio}',
         webradios: 'Webradios'

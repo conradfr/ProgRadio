@@ -61,10 +61,15 @@ page:
 
     radio:
         back: '← Back to radio guide'
+        current: '↓ Go to current show'
         description: 'Day schedule of radio %radio% !'
+        more_radios: 'More radios'
         no_schedule: 'Schedule not available'
         play: 'Listen to %radio%'
-        title: 'Listen to %radio%'
+        stop: 'Stop'
+        summary: 'Summary'
+        title: 'Listen to %radio% live'
+        website: 'Website'
 
     registered:
         page_title: Sign-up

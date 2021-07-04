@@ -1,5 +1,6 @@
 <template>
   <div class="d-flex align-items-stretch" v-bind:class="{ 'media-current': isCurrent }" v-once>
+    <a v-if="isCurrent" class="anchor" id="media-current"></a>
     <div class="flex-shrink-0 media-timeline">
       .
     </div>

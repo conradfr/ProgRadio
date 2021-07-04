@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\RadioStream;
 use App\Entity\Stream;
+use App\Repository\RadioStreamRepository;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
 use App\Entity\Category;
@@ -79,27 +80,6 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
-     * @Route(
-     *     "/{_locale}/radio/{codename}",
-     *     name="radio_legacy"
-     * )
-     *
-     * @throws \Exception
-     */
-    public function radio_legacy(string $codename, Request $request): Response
-    {
-        // if play, redirect to spa
-        if ($request->query->get('play') !== null) {
-            return $this->forward('App\Controller\DefaultController::index', [
-                '_route' => $request->attributes->get('_route'),
-                '_route_params' => $request->attributes->get('_route_params'),
-            ]);
-        }
-
-        return $this->redirectToRoute('radio', ['_locale' => $request->getLocale(), 'codename' => $codename], 301);
-    }
-
-    /**
      * @Route({
      *     "en": "/{_locale}/schedule-streaming-{codename}/{date}",
      *     "fr": "/{_locale}/grille-ecouter-{codename}/{date}"
@@ -120,11 +100,14 @@ class DefaultController extends AbstractBaseController
             $date = new \DateTime();
         }
 
-        // @todo check cache
+        /** @var Radio $radio */
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codename, 'active' => true]);
         if (!$radio) {
             throw new NotFoundHttpException('Radio not found');
         }
+
+        $stream = $em->getRepository(RadioStream::class)->getMainStreamOfRadio($radio->getId());
+        $moreRadios = $em->getRepository(Radio::class)->getMoreRadiosFrom($radio);
 
         $schedule = $scheduleManager->getDayScheduleOfRadio($date, $codename);
         $scheduleRadio = [];
@@ -159,11 +142,13 @@ class DefaultController extends AbstractBaseController
         return $this->render('default/radio.html.twig', [
             'schedule' => $scheduleRadio,
             'radio' => $radio,
+            'stream_url' => $stream !== null ? $stream['url'] : null,
             'date' => $date,
             'prev_date' => $prevDate,
             'next_date' => $nextDate,
             'has_prev' => $prevSchedule !== null,
-            'has_next' => $nextSchedule !== null
+            'has_next' => $nextSchedule !== null,
+            'more_radios' => $moreRadios
         ]);
     }
 

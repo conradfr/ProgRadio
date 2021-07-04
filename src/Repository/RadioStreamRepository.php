@@ -32,6 +32,26 @@ class RadioStreamRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function getMainStreamOfRadio(int $radioId): ?array
+    {
+        $query = $this->getEntityManager()->createQuery(
+            "SELECT rs.id, rs.url
+                FROM App:RadioStream rs
+                  INNER JOIN rs.radio r
+                WHERE rs.enabled = :enabled
+                  AND rs.main = true
+                  AND r.id = :radioId"
+        );
+
+        $query->setParameters([
+            'enabled' => true,
+            'radioId' => $radioId
+        ]);
+
+        $query->enableResultCache(self::CACHE_TTL);
+        return $query->getOneOrNullResult();
+    }
+
     public function getStreamsStatus(): array
     {
         $qb = $this->createQueryBuilder('rs')

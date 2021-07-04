@@ -1,10 +1,10 @@
 <template>
   <div class="container mb-3">
     <div v-if="radio" class="row">
-      <div class="col-md-2 col-12">
+      <div class="col-md-2 col-12 sticky-top">
         <div class="radio-page-side sticky-top">
             <div class="text-center mb-4">
-              <img :alt="radio.name" style="width: 140px;"
+              <img :alt="radio.name" class="radio-page-logo"
                    :src="picture" v-once>
             </div>
           <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
@@ -17,11 +17,16 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12 mb-4 mt-2 mt-sm-0 text-center text-sm-start">
+          <div class="col-md-12 mb-2 mt-2 mt-sm-0 text-center text-sm-start">
             <router-link v-if="collection"
               :to="'/' + locale + '/schedule/' + collection.code_name">
               {{ $t('message.radio_page.back') }}
             </router-link>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
+            <a href="#media-current">{{ $t('message.radio_page.current') }}</a>
           </div>
         </div>
         <div class="radio-page-shows">

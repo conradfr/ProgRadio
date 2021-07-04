@@ -6,26 +6,14 @@ namespace App\Repository;
 
 use App\Entity\Radio;
 use App\Entity\RadioStream;
-use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityRepository;
 
-class RadioRepository extends ServiceEntityRepository
+class RadioRepository extends EntityRepository
 {
     protected const CACHE_RADIO_TTL = 604800; // week
     protected const CACHE_RADIO_ACTIVE_ID = 'active_radios';
 
-    private $security;
-
-    public function __construct(Security $security, ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Radio::class);
-
-        // Avoid calling getUser() in the constructor: auth may not
-        // be complete yet. Instead, store the entire Security object.
-        $this->security = $security;
-    }
+    protected const DEFAULT_MORE_MAX = 8;
 
     public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(
@@ -142,4 +130,27 @@ class RadioRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getMoreRadiosFrom(Radio $radio, $max=self::DEFAULT_MORE_MAX): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('r.id, r.codeName, r.name')
+            ->from('App:Radio', 'r')
+            ->where('r.collection = :collection')
+            ->andWhere('r != :radio')
+            ->addOrderBy('r.share', 'DESC')
+            ->setMaxResults($max);
+
+        $qb->setParameters([
+            'radio' => $radio,
+            'collection' => $radio->getCollection()
+        ]);
+
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_RADIO_TTL);
+
+        return $query->getResult();
+    }
+
 }

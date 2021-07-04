@@ -2,9 +2,109 @@
 
 {% import _self as self %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {% if stream_url is not null %}
+    <script type="module">
+      import { createApp } from 'https://unpkg.com/petite-vue?module';
+
+      const streamingUrl = '{{ stream_url }}';
+      const streamsProxy = '{{ streams_proxy }}';
+
+      /* we load the hls script dynamically once, reducing initial app load */
+      const loadHls = () => {
+        return new Promise((resolve, reject) => {
+          const hlsElem = document.getElementById('hls-script');
+          if (hlsElem !== null) {
+            resolve();
+            return;
+          }
+
+          const videoElem = document.createElement('video');
+          videoElem.id = 'videoplayer';
+          videoElem.style = 'display:none';
+          document.body.appendChild(videoElem);
+
+          const hlsScript = document.createElement('script');
+          hlsScript.type = 'text/javascript';
+          hlsScript.id = 'hls-script';
+          hlsScript.src = '/js/hls.js';
+          hlsScript.onload = resolve;
+          hlsScript.onerror = reject;
+          document.body.appendChild(hlsScript);
+        });
+      };
+
+      createApp({
+        playing: false,
+        lastUpdated: null,
+        play() {
+          this.playing = true;
+          let startPlayPromise;
+
+          if (streamingUrl.indexOf('.m3u8') !== -1) {
+            loadHls().then(() => {
+              if (Hls.isSupported()) {
+                window.audio = document.getElementById('videoplayer');
+                this.hls = new Hls();
+                // bind them together
+                this.hls.attachMedia(window.audio);
+                this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+                  this.hls.loadSource(streamingUrl);
+                  this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    startPlayPromise = window.audio.play();
+                  });
+                });
+              }
+            });
+          } else {
+            const streamUrl = (streamingUrl.substring(0, 5) !== 'https')
+              ? `${streamsProxy}?stream=${streamingUrl}` : streamingUrl;
+
+            window.audio = new Audio(`${streamUrl}`);
+            startPlayPromise = window.audio.play();
+          }
+
+          if (startPlayPromise !== undefined) {
+            startPlayPromise.then(() => {
+              // check if stream playing
+              window.audio.addEventListener('timeupdate', () => {
+                this.lastUpdated = new Date();
+              });
+
+              this.lastUpdated = new Date();
+            }).catch((error) => {
+              this.stop();
+            });
+          }
+        },
+        stop() {
+          this.playing = false;
+          if (window.audio !== undefined && window.audio !== null) {
+            window.audio.pause();
+          }
+
+          if (this.hls !== null) {
+            this.hls.destroy();
+            this.hls = null;
+          }
+          window.audio = null;
+          delete window.audio;
+        }
+      }).mount();
+    </script>
+    {% endif %}
+{% endblock %}
+
 {% macro is_current(date_start, date_end) %}
     {% if date(date_start) < date() and date(date_end) > date() %}
         media-current
+    {% endif %}
+{% endmacro %}
+
+{% macro is_current_anchor(date_start, date_end) %}
+    {% if date(date_start) < date() and date(date_end) > date() %}
+        <a class="anchor" id="media-current"></a>
     {% endif %}
 {% endmacro %}
 
@@ -28,16 +128,52 @@
         <div class="col-md-2 col-12">
             <div class="radio-page-side sticky-top">
                 <div class="text-center mb-4">
-                    <img alt="{{ radio.name }}" style="width: 140px;" src="{{ asset('/img/radio/page/' ~ radio.codename ~ '.png') }}">
+                    <img class="radio-page-logo" alt="{{ radio.name }}" src="{{ asset('/img/radio/page/' ~ radio.codename ~ '.png') }}">
                 </div>
-                <div class="text-center mb-3 mb-sm-0">
-                    <a class="text-center spa-link" href="{{ path('app') }}radio/{{ radio.codeName }}?play=1">
-                        {{ 'page.radio.play'|trans({'%radio%': radio.name}) }}
-                    </a>
+                {% if stream_url is not null %}
+                <div class="radio-page-streams" v-scope>
+                    <div class="radio-page-streams-one text-center mb-4 d-none"
+                         @mounted="$el.classList.remove('d-none')">
+                        <div
+                            v-if="playing === false"
+                            @click="play"
+                            class="radio-page-play">
+                            <img alt="{{ 'page.radio.play'|trans({'%radio%': radio.name}) }}"
+                                 src="/img/play-button-inside-a-circle.svg">
+                            <div>
+                                {{ 'page.radio.play'|trans({'%radio%': radio.name}) }}
+                            </div>
+                        </div>
+                        <div
+                            v-if="playing === true"
+                            @click="stop"
+                            class="radio-page-play">
+                            <img alt="{{ 'page.radio.stop'|trans() }}"
+                                 src="/img/rounded-pause-button.svg">
+                            <div>
+                                {{ 'page.radio.stop'|trans() }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="radio-page-infos d-none d-sm-block mt-1">
+                    {% if radio.website %}
+                        <div class="mt-2">
+                            <strong>{{ 'page.radio.website'|trans }}:</strong> <a target="_blank" href="{{ radio.website }}">{{ radio.website }}</a>
+                        </div>
+                    {% endif %}
+                    {% if attribute(radio, 'description' ~ app.request.locale|capitalize) %}
+                        <div class="mt-2"><strong>{{ 'page.radio.summary'|trans }}:</strong></div>
+                        <p class="radio-page-infos-description mt-1">{{ attribute(radio, 'description' ~ app.request.locale|capitalize) | nl2br }}</p>
+                    {% endif %}
+                    {% if attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) %}
+                        <div class="mt-2"><a target="_blank" href="{{ attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) }}">Wikipedia</a></div>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <div class="col-md-10 col-12">
+        <div class="col-md-8 col-12 pb-3">
             <div class="row">
                 <div class="col-md-6 col-12 text-center text-sm-start">
                     <h4>{{ date |localizeddate('full', 'none', app.request.locale, timezone) | capitalize }}</h4>
@@ -59,13 +195,20 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 mb-4 mt-2 mt-sm-0 text-center text-sm-start">
-                    <a class="spa-link" href="{{ absolute_url('/' ~ app.request.locale ~ '/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a>
+                <div class="col-md-12 mb-2 mt-2 mt-sm-0 text-center text-sm-start">
+                    <a class="spa-link" href="{{ absolute_url('/' ~ app.request.locale ~ '/schedule/' ~ radio.collection.codeName) }}">{{ 'page.radio.back'|trans }}</a><br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
+                    <a href="#media-current">{{ 'page.radio.current'|trans }}</a>
                 </div>
             </div>
 
             <div class="radio-page-shows">
             {% for show in schedule %}
+                {{ self.is_current_anchor(show.start_at, show.end_at) }}
                 <div class="d-flex align-items-stretch{{ self.is_current(show.start_at, show.end_at) }}">
                     <div class="flex-shrink-0 media-timeline">
                         .
@@ -111,6 +254,20 @@
                 <div class="alert alert-warning" role="alert">{{ 'page.radio.no_schedule'|trans }}</div>
             {% endfor %}
             </div>
+        </div>
+        <div class="col-md-2 col-12">
+            <div class="d-flex flex-sm-column flex-row flex-wrap radio-page-more">
+                <div class="text-center mb-2 radio-page-more-header d-none d-sm-block">
+                    {{ 'page.radio.more_radios'|trans }}
+                </div>
+                {% for entry in more_radios %}
+                    <a class="radio-page-more-one d-flex align-items-center justify-content-center"
+                       href="{{ path('radio', {'codename': entry.codeName}) }}" title="{{ entry.name }}">
+                        <img class="radio-page-more-one-logo align-self-center" alt="{{ entry.name }}" src="{{ asset('/img/radio/page/' ~ entry.codeName ~ '.png') }}">
+                    </a>
+                {% endfor %}
+            </div>
+
         </div>
     </div>
 </div>

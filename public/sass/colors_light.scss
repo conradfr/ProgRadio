@@ -23,8 +23,10 @@ $timeline-color: #969696;
 $timeline-line-color: darken($background-color, 25%);
 $timeline-line-current-color: $primary;
 
-$radio-stream: #4d6a82;
-$radio-stream-hover: $primary;
+$radio-stream: $primary;
+$radio-stream-hover: #4d6a82;
+$radio-stream-filter: invert(41%) sepia(98%) saturate(1173%) hue-rotate(185deg) brightness(99%) contrast(92%);
+$radio-stream-filter-hover: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
 
 $player-color: $white;
 $fader-primary: #337ab7;
@@ -60,3 +62,5 @@ $stream-text-color: $gray-800;
 $stream-play-color: $primary;
 
 $now-border-color: $gray-300;
+
+$radio-page-more-one-hover-background: $gray-300;
