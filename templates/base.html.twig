@@ -1,5 +1,3 @@
-{% import "utils/darkmode.html.twig" as darkmode %}
-
 {% set other_locale = app.request.locale == 'fr' ? 'en' : 'fr' %}
 {% set flag = app.request.locale == 'fr' ? 'gb' : 'fr' %}
 {% set locale_name = 'footer.alternate_lang'|trans %}
@@ -37,7 +35,8 @@
     </style>
 
     <script type="text/javascript">
-        {{ darkmode.head_js() }}
+        const darkModeStartHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_START_HOUR') }};
+        const darkModeEndHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_END_HOUR') }};
 
         {% block javascript_head %}
             // placeholder
@@ -76,10 +75,10 @@
   }
 
   redirectIE();
-
-  // light/dark mode
-  {{ darkmode.bottom_js() }}
 </script>
+
+{% include('_partials/darkmode_script.html.twig') %}
+
 {% block javascripts %}
 {% endblock %}
 {% if app.environment == 'prod' %}

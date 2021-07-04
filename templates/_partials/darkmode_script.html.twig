@@ -1,9 +1,4 @@
-{% macro head_js() %}
-    const darkModeStartHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_START_HOUR') }};
-    const darkModeEndHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_END_HOUR') }};
-{% endmacro %}
-
-{% macro bottom_js() %}
+<script type="text/javascript">
   const darkModeClassName = 'progradio-dark';
   const navLightClassName = 'nav-link-lightmode';
   const navDarkClassName = 'nav-link-darkmode';
@@ -17,7 +12,7 @@
   };
 
   const setDarkModeCookie = (state) => {
-    {# imported from vue app #}
+      {# imported from vue app #}
     const COOKIE_PARAMS = {
       path: '/',
       'max-age': 31536000,
@@ -33,7 +28,7 @@
     }
 
     const opts = Object.keys(COOKIE_PARAMS).map(k => `;${k}=${COOKIE_PARAMS[k]}`).join('');
-    document.cookie = `${cookieName}=${state===true?'1':'0'}${opts}`;
+    document.cookie = `${cookieName}=${state === true ? '1' : '0'}${opts}`;
   };
 
   const checkColorScheme = () => {
@@ -116,5 +111,4 @@
 
   // will check for dark mode time starting next hour
   window.setTimeout(checkColorScheme, nextHourInMs());
-
-{% endmacro %}
+</script>
