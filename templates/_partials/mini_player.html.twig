@@ -31,7 +31,15 @@
     playing: false,
     lastUpdated: null,
     hls: null,
-    play(streamingUrl) {
+    play(streamingUrl, codeName) {
+      const sendGaEvent = (mode, auto) => {
+        gtag('event', 'play', {
+          'event_category': 'SSR',
+          'event_label': codeName,
+          'value': 3
+        });
+      }
+
       this.playing = true;
       let startPlayPromise;
 
@@ -71,8 +79,14 @@
         });
       }
     },
-    stop() {
+    stop(codeName) {
       this.playing = false;
+      gtag('event', 'stop', {
+        'event_category': 'SSR',
+        'event_label': codeName,
+        'value': 1
+      });
+
       if (window.audio !== undefined && window.audio !== null) {
         window.audio.pause();
       }

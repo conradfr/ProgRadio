@@ -43,7 +43,7 @@
                                              @mounted="$el.classList.remove('d-none')">
                                             <div
                                                 v-if="playing === false"
-                                                @click="play('{{ entry.radio.streamingUrl }}')"
+                                                @click="play('{{ entry.radio.streamingUrl }}', '{{ entry.radio.codeName }}')"
                                                 class="radio-page-play">
                                                 <img alt="{{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}"
                                                      src="/img/play-button-inside-a-circle.svg">
@@ -53,7 +53,7 @@
                                             </div>
                                             <div
                                                     v-if="playing === true"
-                                                    @click="stop"
+                                                    @click="stop('{{ entry.radio.codeName }}')"
                                                     class="radio-page-play">
                                                 <img alt="{{ 'page.radio.stop'|trans() }}"
                                                      src="/img/rounded-pause-button.svg">
