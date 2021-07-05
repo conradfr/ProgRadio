@@ -33,11 +33,13 @@
     hls: null,
     play(streamingUrl, codeName) {
       const sendGaEvent = (mode, auto) => {
-        gtag('event', 'play', {
-          'event_category': 'SSR',
-          'event_label': codeName,
-          'value': 3
-        });
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'play', {
+            'event_category': 'SSR',
+            'event_label': codeName,
+            'value': 3
+          });
+        }
       }
 
       this.playing = true;
@@ -81,11 +83,13 @@
     },
     stop(codeName) {
       this.playing = false;
-      gtag('event', 'stop', {
-        'event_category': 'SSR',
-        'event_label': codeName,
-        'value': 1
-      });
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'stop', {
+          'event_category': 'SSR',
+          'event_label': codeName,
+          'value': 1
+        });
+      }
 
       if (window.audio !== undefined && window.audio !== null) {
         window.audio.pause();

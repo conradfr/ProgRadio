@@ -6,10 +6,12 @@
   const cookieName = 'progradio-darkmode';
 
   const sendGaEvent = (mode, auto) => {
-    gtag('event', `toggle_${mode}${auto === true?'_auto':''}`, {
-      'event_category': 'UI',
-      'value': 1
+    if (typeof gtag !== 'undefined') {
+      gtag('event', `toggle_${mode}${auto === true?'_auto':''}`, {
+        'event_category': 'UI',
+        'value': 1
       });
+    }
   }
 
   const isCurrentlyDarkTime = () => {

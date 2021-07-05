@@ -72,7 +72,7 @@
                                          src="{{ asset('/media/cache/page_thumb/media/program/' ~ entry.show.picture_url) }}">
                                     {% endif %}
                                     <div>
-                                        <h6 class="fw-bold">{{ entry.show.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }}-{{ entry.show.end_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ entry.show.title }}</h6>
+                                        <h6 class="fw-bold">{{ entry.show.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }}-{{ entry.show.end_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ entry.show.title }}</h6>
                                         {% if entry.show.host %}
                                             <div> {{ entry.show.host }}</div>
                                         {% endif %}
@@ -89,7 +89,7 @@
                                                                  src="{{ asset('/media/cache/page_thumb/media/program/' ~ section.picture_url) }}">
                                                         {% endif %}
                                                         <div>
-                                                            <h6 class="fw-bold">{{ section.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ section.title }}</h6>
+                                                            <h6 class="fw-bold">{{ section.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ section.title }}</h6>
                                                             {% if section.presenter %}
                                                                 <div>{{ section.presenter }}</div>
                                                             {% endif %}

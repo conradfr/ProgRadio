@@ -89,20 +89,20 @@
         <div class="col-md-8 col-12 pb-3">
             <div class="row">
                 <div class="col-md-6 col-12 text-center text-sm-start">
-                    <h4>{{ date |localizeddate('full', 'none', app.request.locale, timezone) | capitalize }}</h4>
+                    <h4>{{ date |format_date('full', locale=app.request.locale, timezone=timezone) | capitalize }}</h4>
                 </div>
                 <div class="col-md-6 col-12 schedule-page-datenav mt-2 mt-sm-0 text-center text-sm-end">
                     ←&nbsp;
                     {% if has_prev %}
-                        <a href="{{ path('radio', {'codename': radio.codeName, 'date': prev_date |date("Y-m-d") }) }}">{{ prev_date |localizeddate('short', 'none', app.request.locale, timezone) | capitalize }}</a>
+                        <a href="{{ path('radio', {'codename': radio.codeName, 'date': prev_date |date("Y-m-d") }) }}">{{ prev_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}</a>
                     {% else %}
-                        {{ prev_date |localizeddate('short', 'none', app.request.locale, timezone) | capitalize }}
+                        {{ prev_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}
                     {% endif %} |
 <!--                        | <a href="{{ path('radio', {'codename': radio.codeName, 'date': 'now' |date('Y-m-d') }) }}">{{ 'page.radio.today'|trans }}</a> |-->
                     {% if has_next %}
-                        <a href="{{ path('radio', {'codename': radio.codeName, 'date': next_date |date('Y-m-d')}) }}">{{ next_date |localizeddate('short', 'none', app.request.locale, timezone) | capitalize }}</a>
+                        <a href="{{ path('radio', {'codename': radio.codeName, 'date': next_date |date('Y-m-d')}) }}">{{ next_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}</a>
                     {% else %}
-                        {{ next_date |localizeddate('short', 'none', app.request.locale, timezone) | capitalize }}
+                        {{ next_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}
                     {% endif %}
                     &nbsp;→
                 </div>
@@ -133,7 +133,7 @@
                     </div>
                     {% endif %}
                     <div class="flex-fill ps-3 mb-3">
-                        <h6 class="fw-bold mb-0">{{ show.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }}-{{ show.end_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ show.title }}</h6>
+                        <h6 class="fw-bold mb-0">{{ show.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }}-{{ show.end_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ show.title }}</h6>
                         {% if show.host %}
                             <div>{{ show.host }}</div>
                         {% endif %}
@@ -152,7 +152,7 @@
                                     </div>
                                     {% endif %}
                                     <div class="flex-fill ps-3 mb-3">
-                                        <h6 class="mt-0">{{ section.start_at | localizeddate('none', 'short', 'fr_FR', timezone) | capitalize }} - {{ section.title }}</h6>
+                                        <h6 class="mt-0">{{ section.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ section.title }}</h6>
                                         {% if section.presenter %}
                                             <div>{{ section.presenter }}</div>
                                         {% endif %}
