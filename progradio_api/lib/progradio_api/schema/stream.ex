@@ -12,6 +12,7 @@ defmodule ProgRadioApi.Stream do
     field(:img, :string)
     field(:stream_url, :string)
     field(:tags, :string)
+    field(:website, :string)
     field(:country_code, :string)
     field(:language, :string)
     field(:votes, :integer, default: 0)
@@ -28,6 +29,7 @@ defmodule ProgRadioApi.Stream do
       :id,
       :name,
       :img,
+      :website,
       :stream_url,
       :tags,
       :country_code,

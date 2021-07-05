@@ -1,0 +1,46 @@
+.stream-page {
+  h4 {
+    @include media-breakpoint-down(sm) {
+      text-align: center;
+    }
+  }
+
+  .stream-page-stream {
+    @include media-breakpoint-down(sm) {
+      text-align: center;
+      margin: auto;
+    }
+  }
+
+  .stream-one-tags {
+    .badge {
+      display: inline-flex;
+      margin: 5px 2px;
+
+      &.badge-inverse {
+        color: $gray-600;
+        border: 1px solid $gray-600;
+      }
+    }
+  }
+
+  .more-streams {
+    .more-streams-one {
+      width: 100px;
+      height: 155px;
+
+      font-size: 0.769rem;
+      color: $more-stream-text-color;
+
+      img {
+        max-width: 75px;
+        max-height: 75px;
+      }
+    }
+
+    .more-link {
+      font-size: 0.923rem;
+    }
+  }
+}
+

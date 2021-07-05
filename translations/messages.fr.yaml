@@ -83,6 +83,14 @@ page:
         what_now_choice1: Consulter les programmes radios
         what_now_choice2: Écouter des radios en streaming
 
+    stream:
+        country: Pays
+        description: 'Écoutez les radios du monde entier'
+        discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
+        suggested: Radios suggérées
+        tags: Tags
+        title: 'Écouter %radio% en direct'
+        website: Site web
 
     user:
         page_title: Créer un compte

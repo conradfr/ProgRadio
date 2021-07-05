@@ -153,6 +153,28 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
+     * @Route({
+     *     "en": "/{_locale}/stream/{id}/listen-{codename}",
+     *     "fr": "/{_locale}/stream/{id}/ecouter-{codename}"
+     * },
+     *     name="streams_one",
+     *     defaults={
+     *      "priority": "0.7",
+     *      "changefreq": "monthly"
+     *      }
+     * )
+     */
+    public function one(Stream $stream, EntityManagerInterface $em, Request $request): Response
+    {
+        $moreStreams = $em->getRepository(Stream::class)->getMoreStreams($stream);
+
+        return $this->render('default/stream.html.twig', [
+            'stream' => $stream,
+            'more_streams' => $moreStreams
+        ]);
+    }
+
+    /**
      * @Route(
      *     "/user",
      *     name="user_config",

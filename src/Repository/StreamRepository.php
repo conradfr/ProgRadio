@@ -18,6 +18,8 @@ class StreamRepository extends ServiceEntityRepository
 {
     protected const CACHE_TTL = 21600; // six hours
 
+    protected const DEFAULT_MORE_LIMIT = 8;
+
     private $security;
 
     public function __construct(Security $security, ManagerRegistry $registry)
@@ -27,6 +29,46 @@ class StreamRepository extends ServiceEntityRepository
         // Avoid calling getUser() in the constructor: auth may not
         // be complete yet. Instead, store the entire Security object.
         $this->security = $security;
+    }
+
+    public function getMoreStreams(Stream $stream, int $limit=self::DEFAULT_MORE_LIMIT)
+    {
+        $limitHalf = $limit / 2;
+
+        // country
+
+        $qbCountry = $this->getMoreStreamQuery($stream->getId(), $limitHalf);
+
+        if ($stream->getCountryCode() !== null) {
+            $qbCountry->andWhere('s.countryCode = :countryCode')
+               ->setParameter('countryCode', $stream->getCountryCode());
+        }
+
+        $resultCountry = $qbCountry->getQuery()->getResult();
+
+        // random
+
+        $qbRandom = $this->getMoreStreamQuery($stream->getId(), $limitHalf);
+        $resultRandom = $qbRandom->getQuery()->getResult();
+
+        return array_merge($resultCountry, $resultRandom);
+    }
+
+    protected function getMoreStreamQuery(string $id, int $limit) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select("s.id as code_name, s.name, s.img, COALESCE(r.codeName) as img_alt")
+            ->from(Stream::class, 's')
+            ->leftJoin('s.radioStream', 'rs')
+            ->leftJoin('rs.radio', 'r')
+            ->where("s.img is not null")
+            ->andWhere("RANDOM() < 0.01")
+            ->andWhere('s.id != :id')
+            ->setMaxResults($limit);
+
+        $qb->setParameter('id', $id);
+
+        return $qb;
     }
 
     public function getStreams(

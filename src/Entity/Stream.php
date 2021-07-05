@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Intl\Countries;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StreamRepository")
@@ -64,6 +65,13 @@ class Stream
      * @ORM\Column(type="string", length=255)
      */
     private $language;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $website = null;
 
     /**
      * @var int
@@ -133,7 +141,7 @@ class Stream
         $this->name = $name;
     }
 
-    public function getImg(): string
+    public function getImg(): ?string
     {
         return $this->img;
     }
@@ -251,4 +259,25 @@ class Stream
     {
         $this->streamSongCodeName = $streamSongCodeName;
     }
+
+    public function getCountry(string $locale): ?string
+    {
+        if ($this->getCountryCode() === null) {
+            return null;
+        }
+
+        return Countries::getName($this->getCountryCode(), $locale);
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): void
+    {
+        $this->website = $website;
+    }
+
+
 }

@@ -79,6 +79,15 @@ page:
         what_now_choice1: Check schedules
         what_now_choice2: Listen to streaming radios
 
+    stream:
+        country: Country
+        description: 'Listen to radios from all over the world'
+        discover: Discover more radios, search by country and style ...
+        suggested: Suggested radios
+        tags: Tags
+        title: 'Listen to %radio%'
+        website: Website
+
     user:
         page_title: Create an account
 

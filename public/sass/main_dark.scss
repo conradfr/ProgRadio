@@ -17,8 +17,9 @@
   .radio-page-side img,
   .radio-page-shows .img-show,
   .now-page-show .img-show,
-  .radio-page-more-one-logo {
-    filter: brightness(.9) contrast(1.1);
+  .radio-page-more-one-logo,
+  .more-streams-one img{
+    filter: brightness(.88) contrast(1.1);
   }
 
   /* vue-select overloading, until we replace the component */

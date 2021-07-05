@@ -11,8 +11,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   @servers_dns "all.api.radio-browser.info"
   @api_all_radios "/stations"
 
-  @max_concurrency 6
-  @task_timeout 30000
+  @max_concurrency 4
+  @task_timeout 1000000
 
   def import() do
     get_one_random_server()
@@ -70,6 +70,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       name: name,
       img_url: Map.get(stream, "favicon"),
       img: nil,
+      website: Map.get(stream, "homepage"),
       stream_url: stream_url,
       tags: Map.get(stream, "tags"),
       country_code: Map.get(stream, "countrycode"),
@@ -177,6 +178,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             img: s.img,
             country_code: s.country_code,
             tags: s.tags,
+            website: s.website,
             language: s.language,
             stream_url: s.stream_url,
             votes: s.votes,

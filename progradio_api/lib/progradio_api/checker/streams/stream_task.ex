@@ -2,7 +2,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
   require Logger
   alias ProgRadioApi.Repo
 
-  @timeout 50_000
+  @timeout 100_000
   @success_status [200, 302]
 
   def start_link(radio_stream) do
