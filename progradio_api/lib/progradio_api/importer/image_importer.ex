@@ -90,7 +90,10 @@ defmodule ProgRadioApi.Importer.ImageImporter do
             HTTPoison.get(
               url_encoded,
               [],
-              hackney: [pool: :image_pool],
+              # testing disabling pool for now
+              # hackney: [pool: :image_pool],
+              # we have ssl errors that do not happen in a browser ...
+              hackney: [:insecure],
               follow_redirect: true,
               recv_timeout: 7500
             )
@@ -109,6 +112,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
           {:error, %HTTPoison.Error{reason: :checkout_timeout}} ->
             Logger.warn("Error importing image, checkout_timeout: #{url} - restarting pool ...")
             :hackney_pool.stop_pool(:image_pool)
+            nil
 
           {:exit, reason} ->
             Logger.warn("Error importing image, task exited: #{url} / #{reason}")

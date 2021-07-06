@@ -19,13 +19,17 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
           async: :once,
           timeout: @timeout,
           recv_timeout: @timeout,
-          hackney: [pool: :checker]
+          hackney: [pool: :checker, insecure: true]
         )
       rescue
         e in HTTPoison.Error ->
           case e.reason do
             reason when is_binary(reason) ->
               Logger.warn("Error (#{radio_stream.code_name}): #{e.reason}")
+
+            reason when reason == :checkout_timeout ->
+              Logger.warn("Error (#{radio_stream.code_name}): checkout_timeout - restarting pool ...")
+              :hackney_pool.stop_pool(:checker)
 
             reason when is_tuple(reason) ->
               {_error, {_error2, error_message}} = reason
