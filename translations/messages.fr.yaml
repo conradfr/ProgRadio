@@ -67,8 +67,10 @@ page:
         back: '← Aller à la grille des programmes de toutes les radios'
         current: ↓ Aller à l'émission en cours
         description: 'Les programmes de la radio %radio% & écoute en ligne'
+        goto_today: Voir les programmes d'aujourd'hui
         more_radios: 'Plus de radios'
         no_schedule: 'Programmes non disponibles.'
+        not_today: Vous consultez les programmes d'un autre jour qu'aujourd'hui
         play: 'Écouter %radio%'
         stop: 'Stopper'
         summary: 'Description'

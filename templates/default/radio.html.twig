@@ -30,9 +30,9 @@
         <meta name="robots" content="noindex">
     {% endif %}
 
-    {% if isCrawler(app.request.headers.get('User-Agent')) == false and date|date('Y-m-d') == date()|date('Y-m-d')  %}
+{#    {% if isCrawler(app.request.headers.get('User-Agent')) == false and date|date('Y-m-d') == date()|date('Y-m-d')  %}#}
 {#        <meta http-equiv="refresh" content="5; URL={{ path('app') }}radio/{{ radio.codeName }}" />#}
-    {% endif %}
+{#    {% endif %}#}
 {% endblock %}
 
 {% block body %}
@@ -113,11 +113,29 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
-                    <a href="#media-current">{{ 'page.radio.current'|trans }}</a>
+            {% set is_today = date|date("mdY") == "now"|date("mdY") %}
+
+            {% if is_today %}
+                <div class="row">
+                    <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
+                        <a href="#media-current">{{ 'page.radio.current'|trans }}</a>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
+
+            {% if is_today == false %}
+                <div class="row">
+                    <div class="col-md-12 mb-3 mt-2 text-center text-sm-start">
+                        <div class="alert alert-light">
+                            <i class="bi bi-exclamation-circle-fill"></i>&nbsp;
+                            {{ 'page.radio.not_today'|trans }}:
+                            <a href="{{ path('radio_spa', {'collection': radio.codeName }) }}">
+                                {{ 'page.radio.goto_today'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
 
             <div class="radio-page-shows">
             {% for show in schedule %}
