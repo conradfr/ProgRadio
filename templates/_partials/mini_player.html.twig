@@ -32,15 +32,7 @@
     lastUpdated: null,
     hls: null,
     play(streamingUrl, codeName) {
-      const sendGaEvent = (mode, auto) => {
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'play', {
-            'event_category': 'SSR',
-            'event_label': codeName,
-            'value': 3
-          });
-        }
-      }
+      sendGaEvent('play', 'SSR', codeName, 3);
 
       this.playing = true;
       let startPlayPromise;
@@ -83,13 +75,7 @@
     },
     stop(codeName) {
       this.playing = false;
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'stop', {
-          'event_category': 'SSR',
-          'event_label': codeName,
-          'value': 1
-        });
-      }
+      sendGaEvent('stop', 'SSR', codeName, 1);
 
       if (window.audio !== undefined && window.audio !== null) {
         window.audio.pause();

@@ -5,13 +5,8 @@
   const hiddenClassName = 'd-none';
   const cookieName = 'progradio-darkmode';
 
-  const sendGaEvent = (mode, auto) => {
-    if (typeof gtag !== 'undefined') {
-      gtag('event', `toggle_${mode}${auto === true?'_auto':''}`, {
-        'event_category': 'UI',
-        'value': 1
-      });
-    }
+  const sendDarkModeGaEvent = (mode, auto) => {
+    sendGaEvent(`toggle_${mode}${auto === true?'_auto':''}`, 'UI', null, '1');
   }
 
   const isCurrentlyDarkTime = () => {
@@ -63,19 +58,19 @@
     if (document.getElementsByTagName('html')[0].classList.contains(darkModeClassName)) {
       if (isCurrentlyDarkTime() === false) {
         setDarkModeCookie(true);
-        sendGaEvent('dark', false);
+          sendDarkModeGaEvent('dark', false);
       } else {
         setDarkModeCookie();
-        sendGaEvent('dark', true);
+        sendDarkModeGaEvent('dark', true);
       }
     } else {
       // if not dark time we store the always dark mode choice, else set it to auto
       if (isCurrentlyDarkTime()) {
         setDarkModeCookie(false);
-        sendGaEvent('light', false);
+        sendDarkModeGaEvent('light', false);
       } else {
         setDarkModeCookie();
-        sendGaEvent('light', true);
+        sendDarkModeGaEvent('light', true);
       }
     }
   };

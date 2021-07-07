@@ -63,7 +63,7 @@
 <script async src="{{ asset('js/bootstrap.bundle.min.js') }}?v={{ releaseVersion() }}"></script>
 
 <script>
-  // redirect IE to legacy website (while it's still working ...)
+  {# redirect IE to legacy website (while it's still working ...)  #}
   function redirectIE() {
     const internetExplorer = navigator.userAgent.match(/Trident.*rv[ :]*11\./i);
     if (internetExplorer) {
@@ -75,6 +75,16 @@
   }
 
   redirectIE();
+
+  const sendGaEvent = (event, category, label, value) => {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', event, {
+        'event_category': category,
+        'event_label': label,
+        'value': value
+      });
+    }
+  };
 </script>
 
 {% include('_partials/darkmode_script.html.twig') %}
