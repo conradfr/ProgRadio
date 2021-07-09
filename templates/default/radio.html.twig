@@ -45,8 +45,7 @@
                 </div>
                 {% if stream_url is not null %}
                 <div class="radio-page-streams" v-scope>
-                    <div class="radio-page-streams-one text-center mb-4 d-none"
-                         @mounted="$el.classList.remove('d-none')">
+                    <div class="radio-page-streams-one text-center mb-4 v-cloak">
                         <div
                             v-if="playing === false"
                             @click="play('{{ stream_url }}', '{{ radio.codename }}')"

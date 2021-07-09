@@ -69,6 +69,7 @@ export const PLAYER_TYPE_CHECK_TIMEOUT = 7000; /* ms */
 
 export const LISTENING_SESSION_MIN_SECONDS = 30;
 export const LISTENING_SESSION_SOURCE = 'web';
+export const LISTENING_SESSION_SOURCE_SSR = 'seo';
 
 export const AUTOPLAY_INTERVAL_CHECK = 100;
 export const AUTOPLAY_INTERVAL_MAX_RETRIES = 50;

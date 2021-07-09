@@ -3,8 +3,8 @@
     [
       "@babel/preset-env",
       {
-        "targets": "> 0.5%, not dead, not ie 11, firefox 60, Opera 60, Edge 16, safari 11, Chrome 85",
-        "corejs": { version: 3, proposals: true },
+        "targets": "> 0.5%, not dead, not IE 11, Firefox >= 60, Opera >= 60, Edge >= 16, safari >= 11, Chrome >= 85",
+        "corejs": { version: 3.7, proposals: true },
         "useBuiltIns": "usage"
       }
     ]

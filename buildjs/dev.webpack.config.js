@@ -28,8 +28,6 @@ module.exports = {
   entry: {
     app: [
       path.resolve(__dirname, '../public/vue/app.js'),
-      // path.resolve(__dirname, '../public/less/main.less'),
-      // path.resolve(__dirname, '../public/sass/main.scss')
     ],
     light: path.resolve(__dirname, '../public/sass/main_light.scss'),
     dark: path.resolve(__dirname, '../public/sass/main_dark.scss')

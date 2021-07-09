@@ -9,7 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --watch --config buildjs/dev.webpack.config.js",
-    "build": "webpack --config buildjs/webpack.config.js"
+    "build": "webpack --config buildjs/webpack.config.js",
+    "player": "webpack --config buildjs/webpack.player.config.js",
+    "playerdev": "webpack --config buildjs/dev.webpack.player.config.js"
   },
   "dependencies": {
     "@babel/plugin-proposal-object-rest-spread": "^7.12.1",

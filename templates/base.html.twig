@@ -38,6 +38,9 @@
         const darkModeStartHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_START_HOUR') }};
         const darkModeEndHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_END_HOUR') }};
 
+        const streamsProxy = '{{ streams_proxy }}';
+        const apiUrl = '{{ api_url }}';
+
         {% block javascript_head %}
             // placeholder
             const scrollToCursor = function() { return true; };
