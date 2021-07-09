@@ -18,7 +18,7 @@
             {% for one in entries %}
                 <td class="align-middle">
                     {% if one != 'empty' %}
-                    <div class="row h-100 align-items-center">
+                    <div class="row align-items-center">
                         <div class="col-md-3">
                             <a target="_blank" href="{{ path('app') }}streaming/{{ one.id }}">
                                 <img title="{{ one.name }}" alt="{{ one.name }}"
@@ -98,6 +98,23 @@
             </div>
         </td>
         <td style="width: 20%">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>SEO</strong>
+                </div>
+                <div class="col-md-4">
+                    {% if sessions_streams_device['seo'] is defined %}
+                        {{ sessions_streams_device['seo'].total_sessions }}
+                    {% endif %}
+                </div>
+                <div class="col-md-5">
+                    {% if sessions_streams_device['seo'] is defined and sessions_streams_device['seo'].total_sessions > 0 %}
+                        {{ format.secondsToMinutes(sessions_streams_device['seo'].total_seconds) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
         </td>
         <td style="width: 20%">
         </td>

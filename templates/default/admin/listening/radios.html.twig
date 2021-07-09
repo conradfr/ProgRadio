@@ -117,6 +117,23 @@
             </div>
         </td>
         <td style="width:{{ 100 / collections_admin|length }}%">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>SEO</strong>
+                </div>
+                <div class="col-md-4">
+                    {% if sessions_radios_device['seo'] is defined %}
+                        {{ sessions_radios_device['seo'].total_sessions }}
+                    {% endif %}
+                </div>
+                <div class="col-md-5">
+                    {% if sessions_radios_device['seo'] is defined and sessions_radios_device['seo'].total_sessions > 0 %}
+                        {{ format.secondsToMinutes(sessions_radios_device['seo'].total_seconds) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
         </td>
         <td style="width:{{ 100 / collections_admin|length }}%">
         </td>

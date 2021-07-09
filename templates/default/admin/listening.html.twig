@@ -18,8 +18,10 @@
         fetch('{{ path('admin_listening_webcount') }}')
           .then(function(response) {
             response.json().then(data => {
-              document.getElementById("webcount-radios").innerHTML = data.count.total_radios;
-              document.getElementById("webcount-streams").innerHTML = data.count.total_streams;
+              document.getElementById("webcount-webapp-radios").innerHTML = data.count.web.total_radios;
+              document.getElementById("webcount-webapp-streams").innerHTML = data.count.web.total_streams;
+              document.getElementById("webcount-seo-radios").innerHTML = data.count.seo.total_radios;
+              document.getElementById("webcount-seo-streams").innerHTML = data.count.seo.total_streams;
             });
           });
       };
@@ -39,9 +41,15 @@
                 <div class="alert alert-info" role="alert">
                     <table style="width: 100%">
                         <tr>
-                            <td style="width:30%;"><strong>Live web</strong></td>
-                            <td style="width:35%;" class="text-center">Radios:&nbsp;<span id="webcount-radios">-</span></td>
-                            <td class="text-center">Streams:&nbsp;<span id="webcount-streams">-</span></td>
+                            <td style="width:40%;"><strong>Live web app</strong></td>
+                            <td style="width:30%;" class="text-center">Radios:&nbsp;<span id="webcount-webapp-radios">-</span></td>
+                            <td class="text-center">Streams:&nbsp;<span id="webcount-webapp-streams">-</span></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="width:40%;"><strong>Live seo pages</strong></td>
+                            <td style="width:30%;" class="text-center">Radios:&nbsp;<span id="webcount-seo-radios">-</span></td>
+                            <td class="text-center">Streams:&nbsp;<span id="webcount-seo-streams">-</span></td>
                             <td></td>
                         </tr>
                     </table>

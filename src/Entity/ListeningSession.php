@@ -20,6 +20,7 @@ class ListeningSession
 
     public const SOURCE_WEB = 'web';
     public const SOURCE_ANDROID = 'android';
+    public const SOURCE_SEO = 'seo';
 
     public const SOURCES = [
         self::SOURCE_WEB,

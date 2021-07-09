@@ -2,7 +2,7 @@
 
 <table class="table schedule-stats table-striped table-bordered">
     <tr>
-        <th style="width: 33%">
+        <th style="width: 25%">
             <div class="row">
                 <div class="col-md-2">
                     Total
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </th>
-        <td style="width: 33%">
+        <td style="width: 25%">
             <div class="row">
                 <div class="col-md-3">
                     <strong>Web</strong>
@@ -70,7 +70,7 @@
                 </div>
             </div>
         </td>
-        <td style="width: 33%">
+        <td style="width: 25%">
             <div class="row">
                 <div class="col-md-3">
                     <strong>Android</strong>
@@ -108,6 +108,50 @@
                 <div class="col-md-4">
                     {% if total_android > 0 %}
                         {{ format.secondsToMinutes(total_seconds_android) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+        </td>
+        <td style="width: 25%">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>SEO</strong>
+                </div>
+                <div class="col-md-2">
+                    {% if sessions_radios_device['seo'] is defined %}
+                        {%  set total_seo_radios = sessions_radios_device['seo'].total_sessions %}
+                        {%  set total_seconds_seo_radios = sessions_radios_device['seo'].total_seconds %}
+                    {%  else %}
+                        {%  set total_seo_radios = 0 %}
+                        {%  set total_seconds_seo_radios = 0 %}
+                    {% endif %}
+
+                    {% if sessions_streams_device['seo'] is defined %}
+                        {% set total_seo_streams = sessions_streams_device['seo'].total_sessions %}
+                        {% set total_seconds_seo_streams = sessions_streams_device['seo'].total_seconds %}
+                    {%  else %}
+                        {%  set total_seo_streams = 0 %}
+                        {%  set total_seconds_seo_streams = 0 %}
+                    {% endif %}
+
+                    {% set total_seo = total_seo_radios + total_seo_streams %}
+                    {% set total_seconds_seo = total_seconds_seo_radios + total_seconds_seo_streams %}
+
+                    {{ total_seo }}
+                </div>
+                <div class="col-md-3">
+                    {% if total_seo > 0 %}
+                        {{ format.secondsToMinutes(total_seconds_seo / total_seo) }}
+                    {% else %}
+                        -
+                    {% endif %}
+
+                </div>
+                <div class="col-md-4">
+                    {% if total_seo > 0 %}
+                        {{ format.secondsToMinutes(total_seconds_seo) }}
                     {% else %}
                         -
                     {% endif %}

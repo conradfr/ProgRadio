@@ -107,32 +107,42 @@ class ListeningSessionRepository extends ServiceEntityRepository
 
     public function getCurrentWeb()
     {
+        $baseResults = [
+            'seo' => [
+                'total_radios' => 0,
+                'total_streams' => 0
+            ],
+            'web' => [
+                'total_radios' => 0,
+                'total_streams' => 0
+            ]
+        ];
+
         $sql = "
             SELECT COALESCE(SUM(CASE WHEN ls.radio_stream_id is not null THEN 1 ELSE 0 END), 0) as total_radios,
-                   COALESCE(SUM(CASE WHEN ls.stream_id is not null THEN 1 ELSE 0 END), 0) as total_streams
+                   COALESCE(SUM(CASE WHEN ls.stream_id is not null THEN 1 ELSE 0 END), 0) as total_streams,
+                   ls.source                   
             FROM listening_session ls
-            WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second') and ls.source = :source
+            WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second') and ls.source IN (:source1, :source2)
+            GROUP BY ls.source
             /*GROUP BY ls.ip_address, ls.date_time_end
             ORDER BY ls.date_time_end DESC*/;
         ";
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('total_radios', 'total_radios', 'integer')
-            ->addScalarResult('total_streams', 'total_streams', 'integer');
+            ->addScalarResult('total_streams', 'total_streams', 'integer')
+            ->addScalarResult('source', 'source', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        $query->setParameters(['source' => ListeningSession::SOURCE_WEB]);
+        $query->setParameters([
+            'source1' => ListeningSession::SOURCE_WEB,
+            'source2' => ListeningSession::SOURCE_SEO
+        ]);
         $query->disableResultCache();
 
         $result = $query->getResult();
 
-        if (count($result) === 0) {
-            return [
-                'total_radios' => 0,
-                'total_streams' => 0
-            ];
-        }
-
-        return $result[0];
+        return array_merge($baseResults, array_column($result, null, 'source'));
     }
 }
