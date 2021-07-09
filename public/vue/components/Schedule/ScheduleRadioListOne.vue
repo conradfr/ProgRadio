@@ -40,7 +40,7 @@
       }">
           </div>
         </div>
-        <p v-once>{{ entry.name }}</p>
+        <p>{{ entry.name }}</p>
       </div>
     </div>
     <a v-on:click="playStop(`${radio.code_name}_main`, false)" :title="radio.name">
