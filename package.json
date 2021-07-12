@@ -46,7 +46,6 @@
     "vue-i18n": "^9.1.6",
     "vue-router": "4",
     "vue-select": "^3.10.3",
-    "vue-toast-notification": "https://github.com/ankurk91/vue-toast-notification.git#next",
     "vue3-nl2br": "^0.1.5",
     "vue3-touch-events": "^4.1.0",
     "vuex": "^4.0.1"

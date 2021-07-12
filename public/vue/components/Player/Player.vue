@@ -60,6 +60,7 @@ import VolumeFader from './VolumeFader.vue';
 import * as config from '../../config/config';
 import AndroidApi from '../../api/AndroidApi';
 import PlayerUtils from '../../utils/PlayerUtils';
+import tooltip from '../../utils/tooltip';
 
 /* eslint-disable arrow-body-style */
 /* we load the hls script dynamically once, reducing initial app load */
@@ -333,6 +334,7 @@ export default {
           });
 
           this.lastUpdated = new Date();
+          tooltip.set('player-timer', config.COOKIE_TOOLTIP_TIMER);
         }).catch((error) => {
           this.$store.dispatch('stop');
 

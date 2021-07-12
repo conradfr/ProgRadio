@@ -51,6 +51,10 @@ export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country`;
 export const COOKIE_STREAM_SORT = `${COOKIE_PREFIX}-stream-sort`;
 export const COOKIE_STREAM_RADIOBROWSER_API = `${COOKIE_PREFIX}-stream-radiobrowser_api`;
 export const COOKIE_LAST_TIMER = `${COOKIE_PREFIX}-timer`;
+export const COOKIE_TOOLTIP_COLLECTION = `${COOKIE_PREFIX}-tooltip-collection`;
+export const COOKIE_TOOLTIP_TIMER = `${COOKIE_PREFIX}-tooltip-timer`;
+
+export const COOKIE_TOOLTIP_SHOW_MS = 3500;
 
 export const TIMEZONE = 'Europe/Paris';
 

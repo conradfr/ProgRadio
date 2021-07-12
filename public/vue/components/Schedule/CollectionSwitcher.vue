@@ -7,6 +7,7 @@
       <i class="bi bi-chevron-left"></i>
     </div>
     <div class="collection-control collection-forward"
+         :title="$t('message.schedule.tooltip')"
          v-on:click="clickCollectionForward"
          v-on:mouseover="hover('forward')">
       <i class="bi bi-chevron-right"></i>
@@ -19,8 +20,10 @@ import { mapState } from 'vuex';
 import find from 'lodash/find';
 
 import ScheduleUtils from '../../utils/ScheduleUtils';
+import tooltip from '../../utils/tooltip';
 
 import {
+  COOKIE_TOOLTIP_COLLECTION,
   GTAG_CATEGORY_SCHEDULE,
   GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION,
   GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
@@ -34,6 +37,10 @@ export default {
     return {
       nextCollection: ''
     };
+  },
+  mounted() {
+    // help tooltip
+    tooltip.set('collection-forward', COOKIE_TOOLTIP_COLLECTION);
   },
   computed: {
     ...mapState({

@@ -42,7 +42,8 @@ export const messages = {
             x_minutes: '{minutes} minutes'
           },
           set: 'Le minuteur est activé pour 0 minute | Le minuteur est activé pour {minutes} minute |Le minuteur est activé pour {minutes} minutes',
-          title: 'Minuteur'
+          title: 'Minuteur',
+          tooltip: 'Cliquer ici pour activer le minuteur'
         }
       },
       radio_page: {
@@ -61,6 +62,7 @@ export const messages = {
         title: 'Toutes les grilles radio, tous les programmes et écoute en ligne',
         today: "Aujourd'hui",
         tomorrow: 'Demain',
+        tooltip: 'Plus de radios ici',
         radio_list: {
           page: 'Page des programmes'
         }
@@ -114,7 +116,8 @@ export const messages = {
             x_minutes: '{minutes} minutes'
           },
           set: 'Timer has been set to {minutes} minute(s)',
-          title: 'Timer'
+          title: 'Timer',
+          tooltip: 'Click here to set the timer'
         }
       },
       radio_page: {
@@ -133,6 +136,7 @@ export const messages = {
         title: 'Radio schedules in France, streaming and more !',
         today: 'Today',
         tomorrow: 'Tomorrow',
+        tooltip: 'More radios here',
         radio_list: {
           page: 'Schedule page'
         }
