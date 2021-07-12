@@ -8,6 +8,7 @@ const PLACEMENT = 'right';
 const DELAY = 5000;
 
 const set = (className, cookieName) => {
+  /* eslint-disable no-undef */
   if (cookies.has(cookieName) === true || logged === true) {
     return;
   }
