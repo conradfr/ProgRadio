@@ -51,9 +51,12 @@ class DateUtils
         }
 
         if ($format === 'ratings') {
+            $monthYear = new \DateTime();
+            $monthYear->sub(new \DateInterval('P3M'));
+
             return [
-                new \DateTime('2 months 15 days ago'),
-                new \DateTime()
+                new \DateTime('first day of ' . $monthYear->format('F Y')),
+                new \DateTime('last day of last month')
             ];
         }
 

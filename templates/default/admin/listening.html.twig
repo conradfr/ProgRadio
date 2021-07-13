@@ -71,7 +71,7 @@
                     <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'thismonth') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'thismonth'})  }}">Ce mois-ci</a></li>
                     <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'lastweek') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'lastweek'})  }}">Semaine dernière</a></li>
                     <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'lastmonth') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'lastmonth'})  }}">Mois dernier</a></li>
-                    <li class="nav-item d-none d-sm-block"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'ratings') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'ratings'})  }}">Deux derniers mois et demi</a></li>
+                    <li class="nav-item d-none d-sm-block"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'ratings') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'ratings'})  }}">Sondages</a></li>
                 </ul>
             </div>
 
