@@ -7,7 +7,6 @@ const { convert } = require('html-to-text');
 
 let scrapedData = [];
 
-// gonna be messy
 const format = dateObj => {
   const startDateTime = moment(dateObj);
   startDateTime.hour(0);
