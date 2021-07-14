@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 class RadioRepository extends EntityRepository
 {
     protected const CACHE_RADIO_TTL = 604800; // week
+    protected const CACHE_MORE_TTL = 60;
     protected const CACHE_RADIO_ACTIVE_ID = 'active_radios';
 
     protected const DEFAULT_MORE_MAX = 8;
@@ -132,24 +133,30 @@ class RadioRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getMoreRadiosFrom(Radio $radio, $max=self::DEFAULT_MORE_MAX): array
+    public function getMoreRadiosFrom(Radio $radio, bool $inverse=false, $max=self::DEFAULT_MORE_MAX): array
     {
+        $sort = random_int(0,1) === 1 ? 'DESC' : 'ASC';
+        $sort2 = random_int(0,1) === 1 ? 'DESC' : 'ASC';
+        $equality = $inverse === false ? '=' : '!=';
+
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('r.id, r.codeName, r.name')
             ->from('App:Radio', 'r')
-            ->where('r.collection = :collection')
+            ->where('r.collection ' . $equality . ' :collection')
+            ->andWhere('r.active = TRUE')
             ->andWhere('r != :radio')
-            ->addOrderBy('r.share', 'DESC')
+            ->addOrderBy('r.share', $sort)
+            ->addOrderBy('r.codeName', $sort2)
             ->setMaxResults($max);
 
         $qb->setParameters([
             'radio' => $radio,
-            'collection' => $radio->getCollection()
+            'collection' => $radio->getCollection(),
         ]);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(self::CACHE_RADIO_TTL);
+        $query->enableResultCache(self::CACHE_MORE_TTL);
 
         return $query->getResult();
     }

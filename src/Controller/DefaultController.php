@@ -108,6 +108,7 @@ class DefaultController extends AbstractBaseController
 
         $stream = $em->getRepository(RadioStream::class)->getMainStreamOfRadio($radio->getId());
         $moreRadios = $em->getRepository(Radio::class)->getMoreRadiosFrom($radio);
+        $moreRadios2 = $em->getRepository(Radio::class)->getMoreRadiosFrom($radio, true);
 
         $schedule = $scheduleManager->getDayScheduleOfRadio($date, $codename);
         $scheduleRadio = [];
@@ -148,7 +149,8 @@ class DefaultController extends AbstractBaseController
             'next_date' => $nextDate,
             'has_prev' => $prevSchedule !== null,
             'has_next' => $nextSchedule !== null,
-            'more_radios' => $moreRadios
+            'more_radios' => $moreRadios,
+            'more_radios2' => $moreRadios2
         ]);
     }
 
