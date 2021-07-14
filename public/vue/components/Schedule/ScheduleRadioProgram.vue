@@ -22,7 +22,9 @@
                 <i class="bi bi-music-note-beamed"></i>
                 {{ currentSong }}
               </span>
-              <span class="program-description-short-inner-text" v-once>
+              <span class="program-description-short-inner-text"
+                    v-bind:class="{ 'program-description-short-inner-text-current': isCurrent }"
+                    v-once>
                 {{ shorten(program.description, program.duration) }}
               </span>
             </div>

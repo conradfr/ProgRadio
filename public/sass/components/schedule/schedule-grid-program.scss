@@ -253,6 +253,13 @@ $program-height: 60px;
 
                 color: $program-text-color;
                 font-weight: normal;
+
+                &.program-description-short-inner-text-current {
+                  @include media-breakpoint-down(sm) {
+                    visibility: visible;
+                    opacity: 0.85;
+                  }
+                }
               }
 
               .program-description-short-inner-song {
