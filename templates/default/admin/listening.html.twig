@@ -8,29 +8,68 @@
     {% if current == dateRange %}active{% endif %}
 {% endmacro %}
 
+{% block head_supp %}
+    <meta http-equiv="refresh" content="60">
+{% endblock %}
+
 {% block javascripts %}
-    {# Todo: use Vue #}
-
     {{ parent() }}
-    <script>
-      // live
-      const getCount = () => {
-        fetch('{{ path('admin_listening_webcount') }}')
-          .then(function(response) {
-            response.json().then(data => {
-              document.getElementById("webcount-webapp-radios").innerHTML = data.count.web.total_radios;
-              document.getElementById("webcount-webapp-streams").innerHTML = data.count.web.total_streams;
-              document.getElementById("webcount-seo-radios").innerHTML = data.count.seo.total_radios;
-              document.getElementById("webcount-seo-streams").innerHTML = data.count.seo.total_streams;
-            });
+
+    <script type="module">
+      import { createApp } from 'https://unpkg.com/petite-vue?module'
+
+      // @url https://stackoverflow.com/questions/2631001/test-for-existence-of-nested-javascript-object-key
+      const checkNested = (obj, level,  ...rest) => {
+        if (obj === undefined || obj === null) return false
+        if (rest.length == 0 && obj.hasOwnProperty(level)) return true
+        return checkNested(obj[level], ...rest)
+      }
+
+      const sources = ['web', 'seo'];
+
+      createApp({
+        data: null,
+        // getters
+        get totalWebRadios() {
+          return checkNested(this.data, 'count', 'web', 'total_radios') ? this.data.count.web.total_radios : '-';
+        },
+        get totalWebStreams() {
+          return checkNested(this.data, 'count', 'web', 'total_streams') ? this.data.count.web.total_streams : '-';
+        },
+        get totalSeoRadios() {
+          return checkNested(this.data, 'count', 'seo', 'total_radios') ? this.data.count.seo.total_radios : '-';
+        },
+        get totalSeoStreams() {
+          return checkNested(this.data, 'count', 'seo', 'total_streams') ? this.data.count.seo.total_streams : '-';
+        },
+        totalOfRadio(type, radio_id) {
+          let count = 0;
+
+          sources.forEach((source) => {
+            if (checkNested(this.data, 'count', source, `list_${type}s`, radio_id)) {
+              count += this.data.count[source][`list_${type}s`][radio_id];
+            }
           });
-      };
 
-      getCount();
-
-      setInterval(() => {
-        getCount();
-      }, 15000);
+          return count;
+        },
+        // methods
+        updateData() {
+          fetch('{{ path('admin_listening_webcount') }}')
+            .then((response) => {
+              response.json().then(data => {
+                console.log(data);
+                this.data = data;
+              });
+            });
+        },
+        start() {
+          this.updateData();
+          setInterval(() => {
+            this.updateData();
+          }, 10000);
+        }
+      }).mount()
     </script>
 {% endblock %}
 
@@ -38,22 +77,25 @@
     <div id="admin" class="container-fluid">
         <div class="row">
             <div class="col-md-2 admin-listening-side test">
-                <div class="alert alert-info" role="alert">
+                {% verbatim %}
+                <div class="alert alert-info" role="alert" v-scope v-cloak
+                  @mounted="start">
                     <table style="width: 100%">
                         <tr>
                             <td style="width:40%;"><strong>Live web app</strong></td>
-                            <td style="width:30%;" class="text-center">Radios:&nbsp;<span id="webcount-webapp-radios">-</span></td>
-                            <td class="text-center">Streams:&nbsp;<span id="webcount-webapp-streams">-</span></td>
+                            <td style="width:30%;" class="text-center">Radios:&nbsp;<span>{{ totalWebRadios }}</span></td>
+                            <td class="text-center">Streams:&nbsp;<span>{{ totalWebStreams }}</span></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td style="width:40%;"><strong>Live seo pages</strong></td>
-                            <td style="width:30%;" class="text-center">Radios:&nbsp;<span id="webcount-seo-radios">-</span></td>
-                            <td class="text-center">Streams:&nbsp;<span id="webcount-seo-streams">-</span></td>
+                            <td style="width:30%;" class="text-center">Radios:&nbsp;<span>{{ totalSeoRadios }}</span></td>
+                            <td class="text-center">Streams:&nbsp;<span>{{  totalSeoStreams }}</span></td>
                             <td></td>
                         </tr>
                     </table>
                 </div>
+                {% endverbatim %}
 
                 <div class="alert alert-light mt-3">
                     {% if dateEnd is null %}

@@ -16,8 +16,12 @@
     {% for entries in streams_listening|batch(5) %}
         <tr>
             {% for one in entries %}
-                <td class="align-middle">
+                <td class="align-middle position-relative" v-scope v-cloak>
                     {% if one != 'empty' %}
+                    <span v-if="totalOfRadio('stream', '{{ one.id }}') > 0"
+                        class="admin-ls-badge position-absolute top-25 translate-middle badge rounded-pill bg-success">
+                        {%  verbatim %}{{{% endverbatim %} totalOfRadio('stream', '{{ one.id }}') {%  verbatim %}}}{% endverbatim %}
+                    </span>
                     <div class="row align-items-center">
                         <div class="col-md-3">
                             <a target="_blank" href="{{ path('app') }}streaming/{{ one.id }}">
