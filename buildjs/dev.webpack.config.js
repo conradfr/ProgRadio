@@ -4,6 +4,7 @@ var webpack = require('webpack');
 const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function recursiveIssuer(m, c) {
   const issuer = c.moduleGraph.getIssuer(m);
@@ -106,6 +107,7 @@ module.exports = {
         NODE_ENV: '"development"'
       }
     }),
+    // new BundleAnalyzerPlugin()
   ],
   resolve: {
     alias: {

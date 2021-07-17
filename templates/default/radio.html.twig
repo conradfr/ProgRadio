@@ -68,6 +68,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="text-center">
+                    <a href="{{ path('radio_spa', {collection: radio.codeName }) }}"><small>{{ 'page.radio.advanced'|trans|raw }}</small> </a>
+                </div>
+
                 {% endif %}
                 <div class="radio-page-infos d-none d-sm-block mt-1">
                     {% if radio.website %}
@@ -202,7 +206,7 @@
     </div>
     <div class="row d-none d-sm-block">
         <div class="col-8 offset-2">
-            <div class="text-left mt-2 mb-4 radio-page-more-header">
+            <div class="text-left mt-3 mb-3 radio-page-more-header">
                 {{ 'page.radio.more_radios'|trans }}
             </div>
             <div class="d-flex flex-row justify-content-evenly align-items-center mt-3">

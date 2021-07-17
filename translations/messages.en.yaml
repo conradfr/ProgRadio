@@ -60,6 +60,7 @@ page:
         title: 'Currently on the radio'
 
     radio:
+        advanced: Use the advanced player<br>(webradios, current track ...)
         back: '← Back to radio guide'
         current: '↓ Go to current show'
         description: 'Day schedule of radio %radio% !'

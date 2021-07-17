@@ -34,7 +34,7 @@
             v-for="entry in schedule" :key="entry.hash"
             :show="entry">
           </radio-show>
-          <div v-if="!schedule" class="alert alert-warning" role="alert">
+          <div v-if="schedule.length === 0" class="alert alert-warning" role="alert">
             {{ $t('message.radio_page.no_schedule') }}
           </div>
         </div>

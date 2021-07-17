@@ -13,9 +13,7 @@
         {{ scheduleDisplay }} - {{ show.title }}
       </h6>
       <div v-if="show.host" v-once>{{ show.host }}</div>
-      <nl2br v-if="show.description" tag="p" :text="show.description"
-         class-name="fw-light mt-2" v-once />
-
+      <p class="fw-light mt-2" v-if="show.description" v-once>{{ show.description }}</p>
       <div v-if="show.sections && show.sections.length > 0" class="mt-1">
         <radio-show-section
             v-for="entry in show.sections" :key="entry.hash"
@@ -29,7 +27,6 @@
 <script>
 import { mapState } from 'vuex';
 import { DateTime, Interval } from 'luxon';
-import Nl2br from 'vue3-nl2br';
 
 import { TIMEZONE, THUMBNAIL_PAGE_PROGRAM_PATH } from '../../config/config';
 import RadioShowSection from './RadioShowSection.vue';
@@ -40,8 +37,7 @@ export default {
   },
   props: ['show'],
   components: {
-    RadioShowSection,
-    Nl2br
+    RadioShowSection
   },
   computed: {
     ...mapState({

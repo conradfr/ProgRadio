@@ -64,6 +64,7 @@ page:
         title: 'En ce moment à la radio'
 
     radio:
+        advanced: Utiliser le lecteur avancé<br>(webradios, titres en cours ...)
         back: '← Aller à la grille des programmes de toutes les radios'
         current: ↓ Aller à l'émission en cours
         description: 'Les programmes de la radio %radio% & écoute en ligne'

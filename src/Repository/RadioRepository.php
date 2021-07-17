@@ -143,9 +143,11 @@ class RadioRepository extends EntityRepository
 
         $qb->select('r.id, r.codeName, r.name')
             ->from('App:Radio', 'r')
+            ->innerJoin('r.streams', 'rs')
             ->where('r.collection ' . $equality . ' :collection')
             ->andWhere('r.active = TRUE')
             ->andWhere('r != :radio')
+            ->andWhere('(rs.main = TRUE and rs.enabled = TRUE)')
             ->addOrderBy('r.share', $sort)
             ->addOrderBy('r.codeName', $sort2)
             ->setMaxResults($max);

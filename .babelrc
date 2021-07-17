@@ -3,16 +3,15 @@
     [
       "@babel/preset-env",
       {
-        "targets": "> 0.5%, not dead, not IE 11, Firefox >= 60, Opera >= 60, Edge >= 16, safari >= 11, Chrome >= 85",
+        "targets": ">= 1%, not dead, not IE 11, Firefox >= 60, Opera >= 60, Edge >= 16, safari >= 11, Chrome >= 85",
         "corejs": { version: 3.7, proposals: true },
-        "useBuiltIns": "usage"
+        "useBuiltIns": "entry",
+        "modules": false
       }
     ]
   ],
   "plugins": [
     "@babel/plugin-transform-runtime",
-    "@babel/plugin-transform-classes",
-    "@babel/plugin-transform-arrow-functions",
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-syntax-dynamic-import",
     "lodash"
