@@ -136,7 +136,7 @@ const getScrap = dateObj => {
 
 const scrapModule = {
   getName: 'europe1',
-  supportTomorrow: false,
+  supportTomorrow: true,
   getScrap
 };
 

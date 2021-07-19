@@ -1,10 +1,10 @@
 const scrapAbstract = require('./_abstract_lesindes2.js');
 
-const name = 'hitwest';
+const name = 'goldfm';
 
 const getScrap = dateObj => {
-  const url = 'https://www.hitwest.com/emissions';
-  const description_prefix = 'https://www.hitwest.com';
+  const url = 'https://www.goldfm.fr/emissions';
+  const description_prefix = 'https://www.goldfm.fr';
   return scrapAbstract.getScrap(dateObj, url, name, description_prefix);
 };
 

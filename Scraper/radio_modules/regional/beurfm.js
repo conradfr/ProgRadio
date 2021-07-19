@@ -1,4 +1,4 @@
-const scrapAbstract = require('./_abstract.js');
+const scrapAbstract = require('./_abstract_lesindes.js');
 
 const name = 'beurfm';
 

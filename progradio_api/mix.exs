@@ -64,7 +64,8 @@ defmodule ProgRadioApi.MixProject do
       {:timex, "~> 3.6"},
       {:elixir_xml_to_map, "~> 2.0"},
       {:recase, "~> 0.5"},
-      {:shoutcast, "~> 0.1.0"}
+      {:shoutcast, "~> 0.1.0"},
+      {:floki, "~> 0.31.0"}
     ]
   end
 

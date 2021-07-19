@@ -90,8 +90,14 @@ const radios = {
           'hitwest',
           'bfmbusiness',
           'topmusic',
-          'vibration'
+          'vibration',
+          'goldfm'
       ],
+    'local_web':
+    [
+      'blackbox',
+      'bideetmusique'
+    ],
     'international':
       [
         'couleur3',

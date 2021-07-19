@@ -360,6 +360,11 @@ find-replace@^1.0.3:
     array-back "^1.0.4"
     test-value "^2.1.0"
 
+fix-utf8@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/fix-utf8/-/fix-utf8-1.1.1.tgz#8abd2ef2e2a4b40b247c52f50b2d2fe6e75b80f6"
+  integrity sha512-nP8pVJ8xjZ12f7oHW3cnjlGbxdIcy1xEC21IrJuIUcttThmj8vpwE7ZNVPwekgnjtjNmYWDGINVQdxdET7lG3g==
+
 fn.name@1.x.x:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
