@@ -1,9 +1,9 @@
-const scrapAbstract = require('./_abstract_alpes1');
+const scrapAbstract = require('./_abstract_espacegroup');
 
-const name = 'alpes1_grenoble';
+const name = 'virageradio';
 
 const getScrap = dateObj => {
-  const url = 'https://grandgrenoble.alpes1.com/radio/emissions';
+  const url = 'https://www.virageradio.com/radio/grille-programme';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

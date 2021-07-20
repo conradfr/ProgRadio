@@ -1,9 +1,9 @@
-const scrapAbstract = require('./_abstract_alpes1');
+const scrapAbstract = require('./_abstract_espacegroup');
 
-const name = 'generations';
+const name = 'alpes1_grenoble';
 
 const getScrap = dateObj => {
-  const url = 'https://generations.fr/radio/grille-programme';
+  const url = 'https://grandgrenoble.alpes1.com/radio/emissions';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

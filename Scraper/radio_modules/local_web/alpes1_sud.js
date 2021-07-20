@@ -1,4 +1,4 @@
-const scrapAbstract = require('./_abstract_alpes1');
+const scrapAbstract = require('./_abstract_espacegroup');
 
 const name = 'alpes1_sud';
 

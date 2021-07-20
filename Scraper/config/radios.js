@@ -78,14 +78,11 @@ const radios = {
       [
           'africaradio',
           'alouette',
-          'alpes1_grenoble',
-          'alpes1_sud',
           'beurfm',
           'contactfm',
           'evasionfm',
           'latina',
           'voltage',
-          'generations',
           'forum',
           'hitwest',
           'bfmbusiness',
@@ -96,7 +93,13 @@ const radios = {
     'local_web':
     [
       'blackbox',
-      'bideetmusique'
+      'bideetmusique',
+      'bergerac95',
+      'virageradio',
+      'generations',
+      'alpes1_grenoble',
+      'alpes1_sud',
+      'tropiquesfm'
     ],
     'international':
       [
