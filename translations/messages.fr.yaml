@@ -14,8 +14,11 @@ menu:
 
     favorites: Mes favoris
     favorites_menu:
-        fr: France
         all: Monde entier
+        be: Belgique
+        ch: Suisse
+        fr: France
+        usa: Etats-Unis
     logout: Se déconnecter
     menu: Menu
     mode:

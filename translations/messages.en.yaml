@@ -13,8 +13,11 @@ menu:
     faq: Faq
     favorites: My favorites
     favorites_menu:
+        all: Worldwide
+        be: Belgium
+        ch: Switzerland
         fr: France
-        all: World
+        usa: United States
     logout: Logout
     mode:
         dark: Dark mode
