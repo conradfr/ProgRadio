@@ -124,8 +124,8 @@ class ListeningSessionRepository extends ServiceEntityRepository
 
         $sql = "
             select ls.source,
-                    COALESCE(SUM(CASE WHEN ls.code_name is not null THEN 1 ELSE 0 END), 0) as total_radios,
-                    COALESCE(SUM(CASE WHEN ls.stream_id is not null THEN 1 ELSE 0 END), 0) as total_streams,
+                    COALESCE(SUM(ls.total_radios), 0) as total_radios,
+                    COALESCE(SUM(ls.total_streams), 0) as total_streams,
                     COALESCE(json_agg(json_build_object('radio', ls.code_name, 'total', ls.total_radios))
                         FILTER (WHERE ls.code_name IS NOT NULL), '[]') as list_radios,
                     COALESCE(json_agg(json_build_object('stream', ls.stream_id, 'total', ls.total_streams))
@@ -136,7 +136,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
                     left join radio_stream rs on ls.radio_stream_id = rs.id
                     left join radio r on rs.radio_id = r.id
                     left join stream s on ls.stream_id = s.id
-                     WHERE ls.date_time_end > (now() at time zone 'utc' - interval '31 second')
+                     WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second')
                        AND ls.source IN (:source1, :source2)
                      GROUP BY ls.source, r.code_name, s.id
             ) ls

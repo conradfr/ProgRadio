@@ -30,7 +30,8 @@ module.exports = {
       path.resolve(__dirname, '../public/vue/app.js'),
     ],
     light: path.resolve(__dirname, '../public/sass/main_light.scss'),
-    dark: path.resolve(__dirname, '../public/sass/main_dark.scss')
+    dark: path.resolve(__dirname, '../public/sass/main_dark.scss'),
+    global: path.resolve(__dirname, '../public/sass/main_global.scss')
   },
   output: {
     path: path.resolve(__dirname, '../public/build/js'),
@@ -122,6 +123,14 @@ module.exports = {
         darkStyles: {
           name: 'main_dark',
           test: (m, c, entry = 'dark') =>
+            m.constructor.name === 'CssModule' &&
+            recursiveIssuer(m, c) === entry,
+          chunks: 'all',
+          enforce: true,
+        },
+        globalStyles: {
+          name: 'main_global',
+          test: (m, c, entry = 'global') =>
             m.constructor.name === 'CssModule' &&
             recursiveIssuer(m, c) === entry,
           chunks: 'all',
