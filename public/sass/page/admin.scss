@@ -73,7 +73,7 @@
 
   .schedule-stats {
     td {
-      height: 60px;
+      height: 45px;
       vertical-align: middle;
 
       img {
@@ -92,6 +92,6 @@
 }
 
 .admin-ls-badge {
-  left: -5px;
+  left: 5px !important;
   width: 25px;
 }

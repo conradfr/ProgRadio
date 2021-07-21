@@ -69,7 +69,7 @@ class AdminController extends AbstractBaseController
      *     name="admin_listening"
      * )
      */
-    public function listeningAction(DateUtils $dateUtils, EntityManagerInterface $em, string $dateRange='today'): Response
+    public function listeningAction(DateUtils $dateUtils, EntityManagerInterface $em, Request $request, string $dateRange='today'): Response
     {
         $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
 
@@ -139,6 +139,7 @@ class AdminController extends AbstractBaseController
             'default/admin/listening.html.twig', [
             'collections_admin' => $collections,
             'radio_listening' => $radioListening,
+            'radio_collections_listening' => $radioListeningInCollections,
             'streams_listening' => $streamListening,
             'collections_sessions' => $collectionsSessions,
             'sessions_radios_sum' => $sessionsRadiosSum,
@@ -148,7 +149,8 @@ class AdminController extends AbstractBaseController
             'sessions_streams_total' => $sessionsStreamsTotal,
             'dateStart' => $dates[0],
             'dateEnd' => $dates[1],
-            'dateRange' => $dateRange
+            'dateRange' => $dateRange,
+            'old_view' => $request->query->get('old', null) !== null
         ]);
     }
 

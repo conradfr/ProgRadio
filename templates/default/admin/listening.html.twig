@@ -9,7 +9,7 @@
 {% endmacro %}
 
 {% block head_supp %}
-    <meta http-equiv="refresh" content="60">
+    <meta http-equiv="refresh" content="130">
 {% endblock %}
 
 {% block javascripts %}
@@ -58,7 +58,6 @@
           fetch('{{ path('admin_listening_webcount') }}')
             .then((response) => {
               response.json().then(data => {
-                console.log(data);
                 this.data = data;
               });
             });
@@ -120,7 +119,11 @@
             <div class="col-md-10">
                 {% include('default/admin/listening/total.html.twig') %}
 
-                {% include('default/admin/listening/radios.html.twig') %}
+                {% if old_view == true %}
+                    {% include('default/admin/listening/radios_old.html.twig') %}
+                {% else %}
+                    {% include('default/admin/listening/radios.html.twig') %}
+                {% endif %}
                 {% include('default/admin/listening/streams.html.twig') %}
             </div>
         </div>
