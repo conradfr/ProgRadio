@@ -1,6 +1,8 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const uniqBy = require('lodash.uniqby');
+const orderBy = require('lodash.orderby');
+const srcset = require('srcset');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
@@ -8,6 +10,10 @@ let scrapedData = [];
 const format = dateObj => {
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr) {
+    if (Object.keys(curr).length === 0) {
+      return prev;
+    }
+
     // Time
     let regexp = new RegExp(/([0-9]{1,2})[:]([0-9]{2})\s{0,1}[—|-]\s{0,1}([0-9]{1,2})[:]([0-9]{0,2})/);
     let match = curr.datetime_raw_text.match(regexp);
@@ -42,6 +48,14 @@ const format = dateObj => {
           newEntry.host = element.replace(' , ', ', ').trim();
         }
       });
+    }
+
+    if (curr.img !== undefined && curr.img !== null && curr.img.trim() !== '') {
+      const images = srcset.parse(curr.img);
+      if (images.length > 0) {
+        imagesSorted = orderBy(images, ['width'], ['desc']);
+        newEntry.img = imagesSorted[0].url;
+      }
     }
 
     prev.push(newEntry);
@@ -79,7 +93,8 @@ const fetch = dateObj => {
           osmosis.follow('h3 a.js-showMore@href')
             .set({
               'description': '.rtbf-article-main__content p',
-              'host': ['.rtbf-article-main__content ul.list-unstyled[2] li text()']
+              'host': ['.rtbf-article-main__content ul.list-unstyled[2] li text()'],
+              'img': '.rtbf-article-main__img-cover img@data-srcset'
             })
         )
         .data(function (listing) {
