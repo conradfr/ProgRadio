@@ -41,7 +41,7 @@ defmodule ProgRadioApi.MixProject do
     [
       {:phoenix, "~> 1.5.7"},
       {:phoenix_ecto, "~> 4.1"},
-      {:ecto_sql, "~> 3.4"},
+      {:ecto_sql, "~> 3.6.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_live_dashboard, "~> 0.4"},
       {:telemetry_metrics, "~> 0.4"},
@@ -52,11 +52,11 @@ defmodule ProgRadioApi.MixProject do
       {:httpoison, "~> 1.8"},
       {:tzdata, "~> 1.1"},
       {:cors_plug, "~> 2.0"},
-      {:remote_ip, "~> 0.2.0"},
+      {:remote_ip, "~> 1.0.0"},
       {:cachex, "~> 3.3"},
       {:dns, "~> 2.2.0"},
       {:quantum, "~> 3.0"},
-      {:redix, ">= 0.11.2"},
+      {:redix, "~> 1.0.0"},
       {:mogrify, "~> 0.8.0"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:broadway, "~> 0.6.0"},
@@ -65,7 +65,8 @@ defmodule ProgRadioApi.MixProject do
       {:elixir_xml_to_map, "~> 2.0"},
       {:recase, "~> 0.5"},
       {:shoutcast, "~> 0.1.0"},
-      {:floki, "~> 0.31.0"}
+      {:floki, "~> 0.31.0"},
+      {:canada, "~> 2.0"}
     ]
   end
 

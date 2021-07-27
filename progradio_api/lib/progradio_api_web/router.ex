@@ -6,12 +6,14 @@ defmodule ProgRadioApiWeb.Router do
       clients: ~w[10.0.2.2/32]
 
     plug :accepts, ["json"]
+    plug ProgRadioApiWeb.Plugs.Auth
   end
 
   scope "/", ProgRadioApiWeb do
     pipe_through :api
 
     resources "/schedule/:day", ScheduleController
+    resources "/schedule", ScheduleController, only: [:create]
     resources "/radios", RadioController
     resources "/listening_session", ListeningSessionController, only: [:create, :update]
   end

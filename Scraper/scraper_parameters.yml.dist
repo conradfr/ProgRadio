@@ -1,4 +1,5 @@
-redis_dsn: redis://127.0.0.1/0
+api_url: 'http://localhost:4000/schedule/'
+api_key:
 
 logmail:
     enable: false

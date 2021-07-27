@@ -38,13 +38,13 @@ defmodule ProgRadioApi.SongProvider.Virageradio do
           |> DateTime.from_naive!("Europe/Paris")
           |> DateTime.to_unix()
 
-          # this is currently empty, will revisit later
-#        {duration, _} =
-#          e
-#          |> Map.get("#content", %{})
-#          |> Map.get("duration")
-#          |> Time.from_iso8601!()
-#          |> Time.to_seconds_after_midnight()
+        # this is currently empty, will revisit later
+        #        {duration, _} =
+        #          e
+        #          |> Map.get("#content", %{})
+        #          |> Map.get("duration")
+        #          |> Time.from_iso8601!()
+        #          |> Time.to_seconds_after_midnight()
 
         time_end = time_start + @max_length_seconds
         now_unix >= time_start and now_unix <= time_end
