@@ -15,11 +15,11 @@ const format = dateObj => {
     curr.date_time_start = date.toISOString();
 
     // host is string as "par <host>"
-    const regexp = new RegExp(/par ([\'\w\s\A-zÀ-ÿ\|]+)/);
+    const regexp = new RegExp(/par(\n){0,1} (?<host>[\'\w\s\A-zÀ-ÿ\|]+)/);
     const match = curr.host_raw.match(regexp);
 
-    if (match !== null) {
-      curr.host = match[1];
+    if (match !== null && match.groups.host !== undefined) {
+      curr.host = match.groups.host.trim();
     }
     delete curr.host_raw;
 
@@ -28,6 +28,34 @@ const format = dateObj => {
       curr.img = 'https://www.radioclassique.fr' + curr.img;
     }
 
+    // sections
+    if (curr.subs !== undefined && curr.subs !== null && curr.subs.length > 0) {
+      curr.sections = [];
+      curr.subs.forEach(function (sub) {
+        if (typeof sub === 'string') {
+          return;
+        }
+
+        const newSub = {
+          title: sub.title
+        }
+
+        // the offset outputted by the site is wrong (+00:00 instead of Europe/Paris' offset)
+        const date_time_start = moment(sub.datetime_raw.replace('+00:00', '')).tz('Europe/Paris');
+        newSub.date_time_start = date_time_start.toISOString()
+
+        // host is string as "par <host>"
+        const match = sub.host_raw.match(regexp);
+
+        if (match !== null && match.groups.host !== undefined) {
+           newSub.presenter = match.groups.host.trim();
+        }
+
+        curr.sections.push(newSub);
+      });
+    }
+
+    delete curr.subs;
     prev.push(curr);
 
     return prev;
@@ -47,7 +75,15 @@ const fetch = dateObj => {
       .get(url)
       .find('.timeline__block__row')
       .set({
-        'datetime_raw': 'time@data-time' /* utc */
+        'datetime_raw': 'time@data-time', /* utc */
+        'subs': [
+          osmosis.find('.timeline__block__content__sub_item')
+            .set({
+              'datetime_raw': 'time@datetime',
+              'title': 'p a',
+              'host_raw': 'p em'
+            })
+        ]
       })
       .select('.timeline__block__content > .timeline__block__content__item > p')
       .set({
@@ -59,7 +95,7 @@ const fetch = dateObj => {
         osmosis.follow('a@href')
           .find('.program__block')
           .set({
-            'img': '.block-image > img@src',
+            'img': '.block-image > img@data-lazy-src',
             'description': '.program__block__content > p[2]'
           })
       )
