@@ -2,10 +2,9 @@ const commandLineArgs = require('command-line-args');
 const moment = require('moment-timezone');
 const async = require('async');
 const yaml = require('js-yaml');
-const redis = require("redis");
 const fs = require('fs');
+const axios = require('axios');
 
-const constants = require('./config/constants.js');
 const radiosModule = require('./config/radios.js');
 
 try {
@@ -24,13 +23,6 @@ try {
 
 const logger = require('./lib/logger.js');
 logger.init(config.logmail);
-
-const redisClient = redis.createClient(process.env.REDIS_URL || config.redis_dsn);
-
-redisClient.on("error", function (err) {
-  logger.log('error', err);
-  process.exit(1);
-});
 
 // command line
 const optionDefinitions = [
@@ -54,22 +46,28 @@ const getResults = async (radios) => {
     }
     dateObj.tz('Europe/Paris');
     return await radio_module.getScrap(dateObj)
-      .then(function (data) {
+      .then(async function (data) {
         const dateFormat = 'DD-MM-YYYY';
         logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
 
         if (data.length > 0) {
-          const redisKey = `${constants.QUEUE_SCHEDULE_ONE_PREFIX}${radio_module.getName}:${dateObj.format(dateFormat)}`;
-
           const dataExport = {
             'radio': radio_module.getName,
             'date': dateObj.format(dateFormat),
             'items': data
           };
 
-          redisClient.setex(redisKey, constants.QUEUE_SCHEDULE_ONE_TTL, JSON.stringify(dataExport));
-          redisClient.LREM(constants.QUEUE_LIST, 1, redisKey);
-          redisClient.RPUSH(constants.QUEUE_LIST, redisKey);
+          await axios.post(process.env.API_URL || config.api_url, dataExport, {
+            headers: {
+              'X-Api-Key': process.env.API_KEY || config.api_key
+            }
+          })
+            .then(function (response) {
+              logger.log('debug', `${radio_module.getName} - api request done.`)
+              return true;
+            }).catch((error) => {
+              logger.log('warn', `${radio_module.getName} - api request failed.`)
+            });
         } else {
           // Log specifically when no data is found, in case of website change etc
           logger.log('warn', `${radio_module.getName} - NO DATA`);
@@ -106,7 +104,6 @@ async.series(
   funList,
   function (err, results) {
     // console.log(err);
-    redisClient.quit();
     logger.log('info', 'All done, exiting ...');
     process.exit(1);
   }

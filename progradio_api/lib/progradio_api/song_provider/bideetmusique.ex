@@ -55,7 +55,6 @@ defmodule ProgRadioApi.SongProvider.Bideetmusique do
             _ -> nil
           end
 
-
         artist =
           try do
             html

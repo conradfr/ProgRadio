@@ -28,7 +28,10 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
               Logger.warn("Error (#{radio_stream.code_name}): #{e.reason}")
 
             reason when reason == :checkout_timeout ->
-              Logger.warn("Error (#{radio_stream.code_name}): checkout_timeout - restarting pool ...")
+              Logger.warn(
+                "Error (#{radio_stream.code_name}): checkout_timeout - restarting pool ..."
+              )
+
               :hackney_pool.stop_pool(:checker)
 
             reason when is_tuple(reason) ->

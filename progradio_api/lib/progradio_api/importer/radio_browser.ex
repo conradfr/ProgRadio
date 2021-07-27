@@ -12,7 +12,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   @api_all_radios "/stations"
 
   @max_concurrency 4
-  @task_timeout 1000000
+  @task_timeout 1_000_000
 
   def import() do
     get_one_random_server()
