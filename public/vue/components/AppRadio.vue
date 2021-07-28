@@ -1,8 +1,8 @@
 <template>
   <div class="container mb-3">
     <div v-if="radio" class="row">
-      <div class="col-md-2 col-12 sticky-top">
-        <div class="radio-page-side sticky-top">
+      <div class="col-md-2 col-12">
+        <div class="radio-page-side">
             <div class="text-center mb-4">
               <img :alt="radio.name" class="radio-page-logo"
                    :src="picture" v-once>
