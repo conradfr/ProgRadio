@@ -3,6 +3,7 @@ defmodule ProgRadioApi.ApiKeyRight do
   alias ProgRadioApi.ApiKey
 
   @primary_key false
+  @foreign_key_type Ecto.UUID
 
   schema "api_key_right" do
     belongs_to(:api_key, ApiKey, primary_key: true)

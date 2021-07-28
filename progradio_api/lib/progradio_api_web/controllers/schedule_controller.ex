@@ -36,7 +36,7 @@ defmodule ProgRadioApiWeb.ScheduleController do
   def create(conn, %{"radio" => radio_code_name} = schedule_params) do
     with api_user when api_user != nil <- Map.get(conn.private, :api_user),
          radio when radio != nil <- Repo.get_by(Radio, code_name: radio_code_name),
-         api_status when api_status == true <- conn.private[:api_user] |> can?(add(radio)) do
+         api_status when api_status == true <- conn.private[:api_key] |> can?(add(radio)) do
       ProgRadioApi.Schedules.add_schedule_to_queue(radio, schedule_params)
 
       conn

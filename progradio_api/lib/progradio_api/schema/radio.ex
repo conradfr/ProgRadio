@@ -14,7 +14,6 @@ defmodule ProgRadioApi.Radio do
     field(:country_code, :string)
     has_many(:schedule_entry, ScheduleEntry)
     has_many(:radio_stream, RadioStream)
-    has_many(:api_user_radio, ApiUserRadio)
     belongs_to(:category, Category)
     belongs_to(:collection, Collection)
   end

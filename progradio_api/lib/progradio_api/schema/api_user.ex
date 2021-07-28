@@ -1,6 +1,7 @@
 defmodule ProgRadioApi.ApiUser do
   use Ecto.Schema
   alias ProgRadioApi.ApiKey
+  alias ProgRadioApi.Radio
 
   schema "api_user" do
     field(:name, :string)
@@ -8,12 +9,6 @@ defmodule ProgRadioApi.ApiUser do
     field(:created_at, :utc_datetime)
     field(:deleted_at, :utc_datetime)
     has_many(:api_key, ApiKey)
-  end
-end
-
-defimpl Canada.Can, for: ProgRadioApi.ApiUser do
-  def can?(api_user, action, radio)
-      when action in [:add, :update] do
-    true
+    many_to_many :radio, Radio, join_through: "api_user_radio"
   end
 end
