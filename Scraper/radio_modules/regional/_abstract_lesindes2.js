@@ -66,7 +66,7 @@ const format = async (dateObj, name, description_prefix) => {
       endDateTime.add(1, 'days');
     }
 
-    let description = curr.chapo;
+    let description = curr.chapo || '';
     let descriptionSupp = await fetchDesc(`${description_prefix}${curr.slug}`);
 
     if (utils.checkNested(descriptionSupp, 'description') === true && descriptionSupp.description.length > 0) {
@@ -88,14 +88,44 @@ const format = async (dateObj, name, description_prefix) => {
       // nothing
     }
 
+    let host = null;
+    if (curr.animatorsNames !== undefined && curr.animatorsNames !== null && curr.animatorsNames.length > 0) {
+      host = curr.animatorsNames.join(', ');
+    }
+
     newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,
       'description': description || null,
       'img': img,
-      // 'host': curr.animatorsNames !== null ? curr.animatorsNames.join(', ') : null
+      'host': host,
+      'sections': []
     };
+
+    // should work be data differs from scrapped ? @todo check
+    if (curr.chronicles !== undefined && curr.chronicles !== null && curr.chronicles.length > 0) {
+      curr.chronicles.forEach(function (chronicle) {
+        const startDateTime = moment(dateObj);
+
+        startDateTime.hour(parseInt(chronicle.startHours));
+        startDateTime.minute(parseInt(chronicle.startMinutes));
+        startDateTime.second(0);
+
+        let presenter = null;
+        if (chronicle.animatorsNames !== undefined && chronicle.animatorsNames !== null && chronicle.animatorsNames.length > 0) {
+          presenter = chronicle.animatorsNames.join(', ');
+        }
+
+        newEntry.sections.push(
+          {
+            date_time_start: startDateTime.toISOString(),
+            title: chronicle.title,
+            presenter: presenter
+          }
+        );
+      });
+    }
 
     prev.push(newEntry);
 

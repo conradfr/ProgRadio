@@ -1,11 +1,11 @@
-const scrapAbstract = require('./_abstract_lesindes.js');
+const scrapAbstract = require('./_abstract_lesindes2.js');
 
 const name = 'vibration';
 
 const getScrap = dateObj => {
-  const url = 'https://www.vibration.fr/programs';
-  const img_prefix = 'https://www.vibration.fr';
-  return scrapAbstract.getScrap(dateObj, url, name, img_prefix)
+  const url = 'https://www.vibration.fr/emissions';
+  const description_prefix = 'https://www.vibration.fr';
+  return scrapAbstract.getScrap(dateObj, url, name, description_prefix);
 };
 
 const scrapModule = {
