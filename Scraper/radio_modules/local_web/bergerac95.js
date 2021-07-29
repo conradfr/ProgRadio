@@ -22,7 +22,7 @@ const format = dateObj => {
 
   const cleanedData = scrapedData.reduce(function (prev, entry) {
     // this show is more a section that is not correctly listed, remove it for now
-    if (entry.title === 'Votre journal') {
+    if (entry.title === 'Votre journal' || entry.title === 'Agenda sportif') {
       return prev;
     }
 

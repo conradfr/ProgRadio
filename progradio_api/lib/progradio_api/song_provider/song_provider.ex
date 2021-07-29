@@ -33,6 +33,14 @@ defmodule ProgRadioApi.SongProvider do
     )
   end
 
+  def post(url, body) do
+    HTTPoison.post!(
+      url,
+      body,
+      [{"Content-type", "application/json"}]
+    )
+  end
+
   def get_stream_code_name_from_channel(channel_name) do
     [_prefix | rest] = String.split(channel_name, ":")
     Enum.join(rest, ":")
@@ -42,6 +50,12 @@ defmodule ProgRadioApi.SongProvider do
   def now_unix() do
     DateTime.utc_now()
     |> DateTime.to_unix()
+  end
+
+  @spec now_iso() :: String.t()
+  def now_iso() do
+    DateTime.utc_now()
+    |> DateTime.to_iso8601()
   end
 
   @spec recase(String.t() | nil) :: String.t() | nil
