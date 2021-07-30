@@ -1,1 +1,1 @@
-This Elixir app has been inttegrated in /progradio_api
+This Elixir app has been foisted to /progradio_api
