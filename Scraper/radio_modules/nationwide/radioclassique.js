@@ -8,6 +8,11 @@ const format = dateObj => {
 
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr) {
+    // apparently sometimes it's empty
+    if (curr['datetime_raw'] === "") {
+      return prev;
+    }
+
     const date = moment.unix(parseInt(curr['datetime_raw']));
     date.second(0);
 
