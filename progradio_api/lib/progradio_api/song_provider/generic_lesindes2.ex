@@ -5,7 +5,6 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes2 do
   # 5mn
   @minutes_max 300
 
-
   def has_custom_refresh(), do: false
 
   def get_refresh(_name, _data, _default_refresh), do: nil
@@ -17,43 +16,46 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes2 do
     now_iso = SongProvider.now_iso()
 
     try do
-      SongProvider.post(url,
+      SongProvider.post(
+        url,
         %{
-            operationName: "TitleDiffusions",
-            variables: %{radioStreamId: radio_id, date: now_iso, size: 3},
-            query: """
-                  query TitleDiffusions($size: Int!, $radioStreamId: String!, $date: DateTime!)
-                  {TitleDiffusions(size: $size, radioStreamId: $radioStreamId, date: $date) {
-                  id
-                  timestamp
-                  title {
-                    id
-                    title
-                    artist
-                  }
-                }}
-              """
-        } |> Jason.encode!())
-        |> Map.get(:body)
-        |> Jason.decode!()
-        |> Map.get("data")
-        |> Map.get("TitleDiffusions")
-        |> Enum.find(nil, fn e ->
-          try do
-            {:ok, time_start, _} =
-              e
-              |> Map.get("timestamp")
-              |> DateTime.from_iso8601()
+          operationName: "TitleDiffusions",
+          variables: %{radioStreamId: radio_id, date: now_iso, size: 3},
+          query: """
+              query TitleDiffusions($size: Int!, $radioStreamId: String!, $date: DateTime!)
+              {TitleDiffusions(size: $size, radioStreamId: $radioStreamId, date: $date) {
+              id
+              timestamp
+              title {
+                id
+                title
+                artist
+              }
+            }}
+          """
+        }
+        |> Jason.encode!()
+      )
+      |> Map.get(:body)
+      |> Jason.decode!()
+      |> Map.get("data")
+      |> Map.get("TitleDiffusions")
+      |> Enum.find(nil, fn e ->
+        try do
+          {:ok, time_start, _} =
+            e
+            |> Map.get("timestamp")
+            |> DateTime.from_iso8601()
 
-            time_start_iso = DateTime.to_unix(time_start)
+          time_start_iso = DateTime.to_unix(time_start)
 
-            # We don't have the end time so we put a time limit to check against
-            time_end = time_start_iso + @minutes_max
-            now_unix >= time_start_iso and now_unix <= time_end
-          rescue
-            _ -> false
-          end
-        end)
+          # We don't have the end time so we put a time limit to check against
+          time_end = time_start_iso + @minutes_max
+          now_unix >= time_start_iso and now_unix <= time_end
+        rescue
+          _ -> false
+        end
+      end)
     rescue
       _ -> nil
     end
@@ -66,7 +68,10 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes2 do
         %{}
 
       _ ->
-        %{artist: SongProvider.recase(data["title"]["artist"]), title: SongProvider.recase(data["title"]["title"])}
+        %{
+          artist: SongProvider.recase(data["title"]["artist"]),
+          title: SongProvider.recase(data["title"]["title"])
+        }
     end
   end
 end

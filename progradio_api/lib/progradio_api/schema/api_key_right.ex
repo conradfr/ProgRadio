@@ -8,8 +8,7 @@ defmodule ProgRadioApi.ApiKeyRight do
   schema "api_key_right" do
     belongs_to(:api_key, ApiKey, primary_key: true)
     field(:type, :string, primary_key: true)
-    field(:read, :boolean)
-    field(:write, :boolean)
+    field(:action, :string, primary_key: true)
     field(:created_at, :utc_datetime)
     field(:deleted_at, :utc_datetime)
   end
