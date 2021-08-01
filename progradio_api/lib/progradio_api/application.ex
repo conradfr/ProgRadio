@@ -7,6 +7,7 @@ defmodule ProgRadioApi.Application do
 
   def start(_type, _args) do
     children = [
+      ProgRadioApi.Cache,
       # Start the Ecto repository
       ProgRadioApi.Repo,
       # Start the Telemetry supervisor
@@ -16,7 +17,6 @@ defmodule ProgRadioApi.Application do
        database: Application.get_env(:progradio_api, :redis_db),
        password: Application.get_env(:progradio_api, :redis_password),
        name: :redix},
-      {Cachex, name: :progradio_cache},
       {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
       {ProgRadioApi.Importer.ScheduleImporter, []},
       # Start the PubSub system

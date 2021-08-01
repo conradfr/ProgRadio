@@ -27,13 +27,12 @@ defimpl Canada.Can, for: ProgRadioApi.ApiKey do
 
   # Step 1 : check if radio is allowed for this user
   defp check_radio(api_key_user, radio) do
-    radios =
-      api_key_user
-      |> Repo.preload(:radio)
-      |> Map.get(:radio)
-      |> Enum.any?(fn e ->
-        e.id == radio.id
-      end)
+    api_key_user
+    |> Repo.preload(:radio)
+    |> Map.get(:radio)
+    |> Enum.any?(fn e ->
+      e.id == radio.id
+    end)
   end
 
   # Step 2 : check if key is allowed to write schedules

@@ -4,9 +4,10 @@ defmodule ProgRadioApi.Schedule do
   """
 
   import Ecto.Query
+  use Nebulex.Caching
   alias ProgRadioApi.Repo
 
-  alias ProgRadioApi.Utils
+  alias ProgRadioApi.Cache
   alias ProgRadioApi.{Radio, Collection, ScheduleEntry, SectionEntry}
 
   @timezone "Europe/Paris"
@@ -69,7 +70,7 @@ defmodule ProgRadioApi.Schedule do
           # put in cache
           result
           |> Enum.each(fn {k, e} ->
-            Cachex.put(:progradio_cache, cache_key <> k, e, ttl: @cache_ttl_schedule)
+            Cache.put(cache_key <> k, e, ttl: @cache_ttl_schedule)
           end)
 
           result
@@ -78,7 +79,7 @@ defmodule ProgRadioApi.Schedule do
     cached =
       radio_code_names_cached
       |> Enum.map(fn e ->
-        {:ok, data} = Cachex.get(:progradio_cache, cache_key <> e)
+        data = Cache.get(cache_key <> e)
         {e, data}
       end)
       |> Enum.into(%{})
@@ -212,7 +213,7 @@ defmodule ProgRadioApi.Schedule do
 
   @spec radio_code_names_cached_or_not_for_day(list(), String.t()) :: tuple()
   defp radio_code_names_cached_or_not_for_day(radio_code_names, day) do
-    {:ok, cache_keys} = Cachex.keys(:progradio_cache)
+    cache_keys = Cache.all(nil, return: :key)
 
     code_names_cached =
       radio_code_names
@@ -222,29 +223,16 @@ defmodule ProgRadioApi.Schedule do
   end
 
   @spec radio_code_names_of_collection(String.t()) :: list()
+  @decorate cacheable(cache: Cache, key: "#{@cache_prefix_collection}#{collection_code_name}", opts: [ttl: @cache_ttl_collection])
   defp radio_code_names_of_collection(collection_code_name) do
-    cache_key_collection = "#{@cache_prefix_collection}#{collection_code_name}"
+    query =
+      from r in Radio,
+        join: c in Collection,
+        on: r.collection_id == c.id,
+        where: r.active == true,
+        where: c.code_name == ^collection_code_name,
+        select: r.code_name
 
-    {_, code_names} =
-      Cachex.fetch(
-        :progradio_cache,
-        cache_key_collection,
-        fn _key ->
-          query =
-            from r in Radio,
-              join: c in Collection,
-              on: r.collection_id == c.id,
-              where: r.active == true,
-              where: c.code_name == ^collection_code_name,
-              select: r.code_name
-
-          collection_code_names = Repo.all(query)
-
-          {:commit, collection_code_names}
-        end
-      )
-
-    Utils.set_ttl_if_none(cache_key_collection, @cache_ttl_collection)
-    code_names
+    Repo.all(query)
   end
 end

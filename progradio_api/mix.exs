@@ -26,7 +26,7 @@ defmodule ProgRadioApi.MixProject do
   def application do
     [
       mod: {ProgRadioApi.Application, []},
-      extra_applications: [:cachex, :elixir_xml_to_map, :logger, :runtime_tools]
+      extra_applications: [:elixir_xml_to_map, :logger, :runtime_tools]
     ]
   end
 
@@ -53,7 +53,6 @@ defmodule ProgRadioApi.MixProject do
       {:tzdata, "~> 1.1"},
       {:cors_plug, "~> 2.0"},
       {:remote_ip, "~> 1.0.0"},
-      {:cachex, "~> 3.3"},
       {:dns, "~> 2.2.0"},
       {:quantum, "~> 3.0"},
       {:redix, "~> 1.0.0"},
@@ -66,7 +65,9 @@ defmodule ProgRadioApi.MixProject do
       {:recase, "~> 0.5"},
       {:shoutcast, "~> 0.1.0"},
       {:floki, "~> 0.31.0"},
-      {:canada, "~> 2.0"}
+      {:canada, "~> 2.0"},
+      {:nebulex, "~> 2.1"},
+      {:decorator, "~> 1.3"}
     ]
   end
 

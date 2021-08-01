@@ -4,7 +4,6 @@ defmodule ProgRadioApi.Radio do
   alias ProgRadioApi.ScheduleEntry
   alias ProgRadioApi.Category
   alias ProgRadioApi.Collection
-  alias ProgRadioApi.ApiUserRadio
 
   schema "radio" do
     field(:code_name, :string)

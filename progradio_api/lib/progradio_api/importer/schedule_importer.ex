@@ -2,6 +2,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
   require Logger
   use Broadway
   alias ProgRadioApi.Importer.ScheduleCache
+  alias ProgRadioApi.Cache
 
   @queue_list "schedule_input:queue"
   @queue_processing "schedule_input:processing"
@@ -49,11 +50,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
     # delete cache
     messages
     |> Enum.each(fn m ->
-      Cachex.del(
-        :progradio_cache,
-        @cache_prefix <> Date.to_iso8601(m.data.date) <> "_" <> m.data.radio_name
-      )
-
+      Cache.delete(@cache_prefix <> Date.to_iso8601(m.data.date) <> "_" <> m.data.radio_name)
       ScheduleCache.remove(m.data.date, m.data.radio_name)
     end)
 
