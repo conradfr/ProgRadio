@@ -15,7 +15,8 @@ const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }
 const locale = '{{ app.request.locale }}';
 
 const scrollToCursor = function() {
-  if (window.location.href.includes('schedule')) {
+  const homePaths = ['/fr/', '/en/'];
+  if (window.location.href.includes('schedule') || (homePaths.indexOf(window.location.pathname) !== -1)) {
     document.getElementById('app').__vue_app__.config.globalProperties.$store.dispatch('scrollToCursor');
   }
   return false;

@@ -30,9 +30,10 @@ const format = async dateObj => {
   const cleanedData = scrapedData.reduce(async function (prevP, entry) {
     const prev = await prevP;
     if (entry.day_col !== undefined) {
-      const dayFormat = dateObj.format('dddd DD MMMM');
+      const dayFormat = dateObj.format('dddd D');
 
-      if (dayFormat === entry.day_col.toLowerCase()) {
+      // substr because encoding problem apparently with accents in months
+      if (dayFormat === entry.day_col.toLowerCase().substring(0, dayFormat.length)) {
         currentDay = true;
       } else {
         currentDay = false;
