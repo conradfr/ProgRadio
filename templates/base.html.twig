@@ -83,8 +83,8 @@
   redirectIE();
 </script>
 
-<script type="module">
-  const sendGaEvent = (event, category, label, value) => {
+<script>
+  var sendGaEvent = (event, category, label, value) => {
     if (typeof gtag !== 'undefined') {
       gtag('event', event, {
         'event_category': category,
