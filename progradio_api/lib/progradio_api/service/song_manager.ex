@@ -9,7 +9,7 @@ defmodule ProgRadioApi.SongManager do
       [] ->
         DynamicSupervisor.start_child(
           ProgRadioApi.SongDynamicSupervisor,
-          {ProgRadioApi.SongServer, {"url:" <> song_topic, nil}}
+          {ProgRadioApi.SongServer, {"url:" <> song_topic, nil, nil}}
         )
 
       [{pid, _value}] ->
@@ -22,7 +22,7 @@ defmodule ProgRadioApi.SongManager do
       [] ->
         DynamicSupervisor.start_child(
           ProgRadioApi.SongDynamicSupervisor,
-          {ProgRadioApi.SongServer, {song_topic, radio_stream_data.radio_code_name}}
+          {ProgRadioApi.SongServer, {song_topic, radio_stream_data.radio_code_name, radio_stream_data}}
         )
 
       [{pid, _value}] ->

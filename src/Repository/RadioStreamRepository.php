@@ -66,4 +66,20 @@ class RadioStreamRepository extends EntityRepository
         $query->disableResultCache();
         return $query->getResult();
     }
+
+    public function getCurrentSongStatus(): array
+    {
+        $qb = $this->createQueryBuilder('rs')
+            ->select('rs.id, rs.codeName, rs.name, rs.enabled, rs.currentSongRetries, rs.url, r.codeName as radio_code_name')
+            ->innerJoin('rs.radio', 'r')
+            ->where('r.active = :active')
+            ->andWhere('rs.currentSongRetries > 0')
+            ->orderBy('rs.currentSongRetries', 'DESC');
+
+        $qb->setParameter('active', true);
+
+        $query = $qb->getQuery();
+        $query->disableResultCache();
+        return $query->getResult();
+    }
 }

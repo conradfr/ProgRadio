@@ -1,6 +1,7 @@
 defmodule ProgRadioApi.RadioStream do
   use Ecto.Schema
   import Ecto.Changeset
+  alias ProgRadioApi.Repo
   alias ProgRadioApi.Radio
   alias ProgRadioApi.Stream
   alias ProgRadioApi.ListeningSession
@@ -23,5 +24,19 @@ defmodule ProgRadioApi.RadioStream do
     radio_stream
     |> cast(params, [:status, :retries])
     |> validate_required([:status, :retries])
+  end
+
+  @spec update_status(integer, boolean) :: any
+  def update_status(id, increment) do
+    query_end =
+      case increment do
+        false -> "0"
+        true -> "current_song_retries + 1"
+      end
+
+    Repo.query(
+      "UPDATE radio_stream SET current_song_retries = " <> query_end <> " WHERE id = $1;",
+      [id]
+    )
   end
 end

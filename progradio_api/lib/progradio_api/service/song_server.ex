@@ -2,23 +2,25 @@ defmodule ProgRadioApi.SongServer do
   use GenServer, restart: :transient
   require Logger
   alias ProgRadioApiWeb.Presence
+  alias ProgRadioApi.StreamSong
+  alias ProgRadioApi.RadioStream
 
   @refresh_song_interval 15000
   @refresh_presence_interval 20000
 
   # ----- Client Interface -----
 
-  def start_link({song_topic, nil} = _arg) do
+  def start_link({song_topic, nil, nil} = _arg) do
     name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
 
     GenServer.start_link(
       __MODULE__,
-      %{module: ProgRadioApi.SongProvider.Icecast, name: song_topic, song: nil, last_data: nil},
+      %{module: ProgRadioApi.SongProvider.Icecast, name: song_topic, song: nil, last_data: nil, db_data: nil},
       name: name
     )
   end
 
-  def start_link({song_topic, radio_code_name} = _arg) do
+  def start_link({song_topic, radio_code_name, db_data} = _arg) do
     name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
 
     module_name =
@@ -29,7 +31,7 @@ defmodule ProgRadioApi.SongServer do
 
     GenServer.start_link(
       __MODULE__,
-      %{module: module_name, name: song_topic, song: nil, last_data: nil},
+      %{module: module_name, name: song_topic, song: nil, last_data: nil, db_data: db_data},
       name: name
     )
   end
@@ -56,9 +58,11 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_info({:refresh, :auto}, %{module: module, name: name, last_data: last_data} = state) do
+  def handle_info({:refresh, :auto}, %{module: module, name: name, last_data: last_data, db_data: db_data} = state) do
     with {data, song} <- get_data_song(module, name, last_data),
          false <- data == :error do
+      spawn(fn -> update_status(song, db_data) end)
+
       how_many_connected =
         Presence.list(state.name)
         |> Kernel.map_size()
@@ -85,8 +89,9 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_info({:refresh, _}, %{module: module, name: name, last_data: last_data} = state) do
+  def handle_info({:refresh, _}, %{module: module, name: name, last_data: last_data, db_data: db_data} = state) do
     {data, song} = get_data_song(module, name, last_data)
+    spawn(fn -> update_status(song, db_data) end)
 
     ProgRadioApiWeb.Endpoint.broadcast!(state.name, "playing", song)
 
@@ -130,4 +135,24 @@ defmodule ProgRadioApi.SongServer do
 
     {data, song}
   end
+
+  @spec update_status(map(), map() | nil) :: any()
+  defp update_status(song, db_data)
+
+  defp update_status(song, %{:type => "radio_stream"} = db_data) do
+    if (song == %{} or db_data == nil or (song.artist == nil or song.artist == "") and (song.title == nil or song.title == "")) do
+      RadioStream.update_status(db_data.id, true)
+    else
+      RadioStream.update_status(db_data.id, false)
+    end
+  end
+
+  defp update_status(song, %{:type => "stream_song"} = db_data) do
+    if (song == %{} or db_data == nil or (song.artist == nil or song.artist == "") and (song.title == nil or song.title == "")) do
+      StreamSong.update_status(db_data.id, true)
+    else
+      StreamSong.update_status(db_data.id, false)
+    end
+  end
+
 end

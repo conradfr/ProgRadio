@@ -89,6 +89,13 @@ class RadioStream
     private $retries = 0;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", options={"default"=0})
+     */
+    private $currentSongRetries = 0;
+
+    /**
      * @var ListeningSession[]
      *
      * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
@@ -226,5 +233,15 @@ class RadioStream
     public function setStreams(Collection $streams): void
     {
         $this->streams = $streams;
+    }
+
+    public function getCurrentSongRetries(): int
+    {
+        return $this->currentSongRetries;
+    }
+
+    public function setCurrentSongRetries(int $currentSongRetries): void
+    {
+        $this->currentSongRetries = $currentSongRetries;
     }
 }

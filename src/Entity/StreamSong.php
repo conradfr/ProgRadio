@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\StreamSongRepository;
 
 /**
  * @ORM\Entity(repositoryClass=StreamSongRepository::class)
@@ -34,6 +35,14 @@ class StreamSong
      * @ORM\Column(type="boolean", options={"default"=true})
      */
     private $enabled = true;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", options={"default"=0})
+     */
+    private $retries = 0;
+
 
     /**
      * @var Stream[]
@@ -79,5 +88,15 @@ class StreamSong
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    public function getRetries(): int
+    {
+        return $this->retries;
+    }
+
+    public function setRetries(int $retries): void
+    {
+        $this->retries = $retries;
     }
 }
