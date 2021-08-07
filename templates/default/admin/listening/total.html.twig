@@ -12,7 +12,7 @@
                 </div>
                 <div class="col-md-3">
                     {% if (sessions_radios_total.total_sessions + sessions_streams_total.total_sessions) > 0 %}
-                        {{ format.secondsToMinutes((sessions_radios_total.total_seconds + sessions_radios_total.total_seconds) / (sessions_radios_total.total_sessions + sessions_streams_total.total_sessions)) }}
+                        {{ format.secondsToMinutes((sessions_radios_total.total_seconds + sessions_streams_total.total_seconds) / (sessions_radios_total.total_sessions + sessions_streams_total.total_sessions)) }}
                     {% else %}
                         -
                     {% endif %}
