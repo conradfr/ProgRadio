@@ -13,10 +13,10 @@ defmodule ProgRadioApi.Schedule do
   @timezone "Europe/Paris"
 
   # two days
-  @cache_ttl_schedule 172_800
+  @cache_ttl_schedule 172_800_000
   @cache_prefix_schedule "schedule_"
 
-  @cache_ttl_collection 604_800
+  @cache_ttl_collection 604_800_000
   @cache_prefix_collection "collection_"
 
   def list_schedule_collection(day, collection_code_name) when is_binary(collection_code_name) do
@@ -217,7 +217,9 @@ defmodule ProgRadioApi.Schedule do
 
     code_names_cached =
       radio_code_names
-      |> Enum.filter(fn e -> Enum.member?(cache_keys, "#{@cache_prefix_schedule}#{day}_#{e}") end)
+      |> Enum.filter(fn e ->
+        Enum.member?(cache_keys, "#{@cache_prefix_schedule}#{day}_#{e}")
+      end)
 
     {code_names_cached, radio_code_names -- code_names_cached}
   end
