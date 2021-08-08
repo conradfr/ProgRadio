@@ -15,7 +15,13 @@ defmodule ProgRadioApi.SongServer do
 
     GenServer.start_link(
       __MODULE__,
-      %{module: ProgRadioApi.SongProvider.Icecast, name: song_topic, song: nil, last_data: nil, db_data: nil},
+      %{
+        module: ProgRadioApi.SongProvider.Icecast,
+        name: song_topic,
+        song: nil,
+        last_data: nil,
+        db_data: nil
+      },
       name: name
     )
   end
@@ -58,7 +64,10 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_info({:refresh, :auto}, %{module: module, name: name, last_data: last_data, db_data: db_data} = state) do
+  def handle_info(
+        {:refresh, :auto},
+        %{module: module, name: name, last_data: last_data, db_data: db_data} = state
+      ) do
     with {data, song} <- get_data_song(module, name, last_data),
          false <- data == :error do
       spawn(fn -> update_status(song, db_data) end)
@@ -89,7 +98,10 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_info({:refresh, _}, %{module: module, name: name, last_data: last_data, db_data: db_data} = state) do
+  def handle_info(
+        {:refresh, _},
+        %{module: module, name: name, last_data: last_data, db_data: db_data} = state
+      ) do
     {data, song} = get_data_song(module, name, last_data)
     spawn(fn -> update_status(song, db_data) end)
 
@@ -140,7 +152,8 @@ defmodule ProgRadioApi.SongServer do
   defp update_status(song, db_data)
 
   defp update_status(song, %{:type => "radio_stream"} = db_data) do
-    if (song == %{} or db_data == nil or (song.artist == nil or song.artist == "") and (song.title == nil or song.title == "")) do
+    if song == %{} or db_data == nil or
+         ((song.artist == nil or song.artist == "") and (song.title == nil or song.title == "")) do
       RadioStream.update_status(db_data.id, true)
     else
       RadioStream.update_status(db_data.id, false)
@@ -148,7 +161,8 @@ defmodule ProgRadioApi.SongServer do
   end
 
   defp update_status(song, %{:type => "stream_song"} = db_data) do
-    if (song == %{} or db_data == nil or (song.artist == nil or song.artist == "") and (song.title == nil or song.title == "")) do
+    if song == %{} or db_data == nil or
+         ((song.artist == nil or song.artist == "") and (song.title == nil or song.title == "")) do
       StreamSong.update_status(db_data.id, true)
     else
       StreamSong.update_status(db_data.id, false)
@@ -157,6 +171,6 @@ defmodule ProgRadioApi.SongServer do
 
   defp update_status(song, db_data) do
     # nothing
-    Logger.debug("Updating status, no match: #{inspect song} - #{inspect db_data}")
+    Logger.debug("Updating status, no match: #{inspect(song)} - #{inspect(db_data)}")
   end
 end

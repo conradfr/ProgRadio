@@ -53,7 +53,12 @@ defmodule ProgRadioApiWeb.SongChannel do
       from(rs in RadioStream,
         join: r in Radio,
         on: r.id == rs.radio_id,
-        select: %{radio_code_name: r.code_name, radio_stream_code_name: rs.code_name, id: rs.id, type: "radio_stream"},
+        select: %{
+          radio_code_name: r.code_name,
+          radio_stream_code_name: rs.code_name,
+          id: rs.id,
+          type: "radio_stream"
+        },
         where: rs.code_name == ^code_name,
         limit: 1
       )
@@ -67,7 +72,12 @@ defmodule ProgRadioApiWeb.SongChannel do
       from(s in Stream,
         join: ss in StreamSong,
         on: ss.id == s.stream_song_id,
-        select: %{radio_code_name: ss.code_name, radio_stream_code_name: s.stream_song_code_name, id: ss.id, type: "stream_song"},
+        select: %{
+          radio_code_name: ss.code_name,
+          radio_stream_code_name: s.stream_song_code_name,
+          id: ss.id,
+          type: "stream_song"
+        },
         where: s.stream_song_code_name == ^code_name and ss.enabled == true,
         order_by: [desc: s.clicks_last_24h],
         limit: 1

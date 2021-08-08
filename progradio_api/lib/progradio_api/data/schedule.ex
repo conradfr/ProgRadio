@@ -225,7 +225,11 @@ defmodule ProgRadioApi.Schedule do
   end
 
   @spec radio_code_names_of_collection(String.t()) :: list()
-  @decorate cacheable(cache: Cache, key: "#{@cache_prefix_collection}#{collection_code_name}", opts: [ttl: @cache_ttl_collection])
+  @decorate cacheable(
+              cache: Cache,
+              key: "#{@cache_prefix_collection}#{collection_code_name}",
+              opts: [ttl: @cache_ttl_collection]
+            )
   defp radio_code_names_of_collection(collection_code_name) do
     query =
       from r in Radio,
