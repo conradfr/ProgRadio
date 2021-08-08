@@ -155,4 +155,8 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
+  defp update_status(song, db_data) do
+    # nothing
+    Logger.debug("Updating status, no match: #{inspect song} - #{inspect db_data}")
+  end
 end
