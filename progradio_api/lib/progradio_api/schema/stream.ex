@@ -18,6 +18,7 @@ defmodule ProgRadioApi.Stream do
     field(:votes, :integer, default: 0)
     field(:clicks_last_24h, :integer, default: 0)
     field(:stream_song_code_name, :string)
+    field(:enabled, :boolean)
     belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream_song, StreamSong)
     has_many(:listening_session, ListeningSession)
@@ -35,7 +36,8 @@ defmodule ProgRadioApi.Stream do
       :country_code,
       :language,
       :votes,
-      :clicks_last_24h
+      :clicks_last_24h,
+      :enabled
     ])
     |> validate_required([:id, :name, :stream_url])
   end
@@ -43,5 +45,13 @@ defmodule ProgRadioApi.Stream do
   def changeset_radio_stream_match(stream, params \\ %{}) do
     stream
     |> change(params)
+  end
+
+  def changeset_enabled(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :enabled
+    ])
+    |> validate_required([:id, :enabled])
   end
 end

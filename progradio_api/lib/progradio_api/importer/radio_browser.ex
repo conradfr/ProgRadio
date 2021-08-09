@@ -30,7 +30,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   defp get_radios(host) do
     # ?limit=20&offset=7500
     HTTPoison.get!(
-      "https://#{host}/json/#{@api_all_radios}",
+      "https://#{host}/json/#{@api_all_radios}?limit=100&offset=7500",
       [{"User-Agent", "programmes-radio.com"}]
     )
     |> Map.get(:body)
@@ -76,7 +76,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       country_code: Map.get(stream, "countrycode"),
       language: Map.get(stream, "language"),
       votes: Map.get(stream, "votes"),
-      clicks_last_24h: Map.get(stream, "clickcount")
+      clicks_last_24h: Map.get(stream, "clickcount"),
+      enabled: true
     }
   end
 
@@ -182,7 +183,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             language: s.language,
             stream_url: s.stream_url,
             votes: s.votes,
-            clicks_last_24h: s.clicks_last_24h
+            clicks_last_24h: s.clicks_last_24h,
+            enabled: true
           ]
         ],
         conflict_target: :id
@@ -192,13 +194,15 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   @spec delete_streams(Multi.t(), list()) :: any
   defp delete_streams(multi, to_not_delete) do
+    # soft delete
     q =
       from(
         s in "stream",
-        where: s.id not in ^to_not_delete
+        where: s.id not in ^to_not_delete,
+        update: [set: [enabled: false]]
       )
 
-    Multi.delete_all(multi, :delete, q, [])
+    Multi.update_all(multi, :update_enabled, q, [])
   end
 
   # API

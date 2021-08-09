@@ -64,6 +64,7 @@ class StreamRepository extends ServiceEntityRepository
             ->where("s.img is not null")
             ->andWhere("RANDOM() < 0.01")
             ->andWhere('s.id != :id')
+            ->andWhere('s.enabled = true')
             ->setMaxResults($limit);
 
         $qb->setParameter('id', $id);
@@ -90,6 +91,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
+            ->where('s.enabled = true')
             ->setMaxResults($limit);
 
         if ($offset !== null) {
@@ -159,8 +161,9 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('ILIKE(s.name, :text) = true')
-            ->orWhere('ILIKE(s.tags, :text) = true')
+            ->where('s.enabled = true')
+            ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
+            //->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
             ->setParameter('text', '%' . $text . '%');
 
@@ -236,6 +239,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
+            ->where('s.enabled = true')
             ->addOrderBy('s.name', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults(1);
@@ -285,6 +289,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.id = :id')
+            ->andWhere('s.enabled = true')
             ->setMaxResults(1);
 
         $qb->setParameter('id', $id);
@@ -350,8 +355,8 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb->select('count(s.id)')
             ->from(Stream::class, 's')
-            ->where('ILIKE(s.name, :text) = true')
-            ->orWhere('ILIKE(s.tags, :text) = true')
+            ->where('s.enabled = true')
+            ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
             ->setParameter('text', '%' . $text . '%');
 
         if ($countryOrCategory !== null) {
@@ -415,6 +420,7 @@ class StreamRepository extends ServiceEntityRepository
             ->from(Stream::class, 's')
             ->innerJoin('s.radioStream', 'rs')
             ->where('rs.id = :id')
+            ->andWhere('s.enabled = true')
             ->orderBy('s.clicksLast24h', 'DESC')
             ->setFirstResult(0)
             ->setMaxResults(1)

@@ -117,6 +117,13 @@ class Stream
      */
     private $streamSongCodeName;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", options={"default"=true})
+     */
+    private $enabled = true;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
     }
@@ -279,5 +286,13 @@ class Stream
         $this->website = $website;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
 
+    public function setEnabled(bool $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
 }
