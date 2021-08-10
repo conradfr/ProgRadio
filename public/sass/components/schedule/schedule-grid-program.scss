@@ -21,7 +21,7 @@ $program-height: 60px;
       &.prevday::after, &.nextday::after {
         content: "...";
         font-weight: bold;
-        font-size: 26px;
+        font-size: 2rem;
         letter-spacing: -2px;
         color: darken($background-color, 35%);
         cursor: e-resize;
