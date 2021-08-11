@@ -30,7 +30,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   defp get_radios(host) do
     # ?limit=20&offset=7500
     HTTPoison.get!(
-      "https://#{host}/json/#{@api_all_radios}?limit=100&offset=7500",
+      "https://#{host}/json/#{@api_all_radios}",
       [{"User-Agent", "programmes-radio.com"}]
     )
     |> Map.get(:body)
