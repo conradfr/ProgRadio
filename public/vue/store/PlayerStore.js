@@ -223,6 +223,11 @@ const storeActions = {
       commit('setListeningSessionId', id);
     }
   },
+  setListeningSession: ({ state, commit }, { data, ctrl }) => {
+    if (state.playing && ctrl === state.session.ctrl) {
+      commit('setListeningSession', data);
+    }
+  },
   updateRadio: ({ commit }) => {
     commit('updateRadio', {});
   },
@@ -408,6 +413,10 @@ const storeMutations = {
   },
   setListeningSessionId(state, id) {
     state.session.id = id;
+  },
+  setListeningSession(state, session) {
+    state.session.id = session.id;
+    state.session.start = DateTime.fromISO(session.date_time_start).setZone(config.TIMEZONE);
   },
   setTimer(state, minutes) {
     // excludes mobile app

@@ -9,6 +9,8 @@ defmodule ProgRadioApi.ListeningSessions do
   alias ProgRadioApi.RadioStream
   alias ProgRadioApi.ListeningSession
 
+  @last_update_max_minutes 15
+
   #  @doc """
   #  Returns the list of listening_session.
   #
@@ -116,10 +118,31 @@ defmodule ProgRadioApi.ListeningSessions do
     |> Repo.insert()
   end
 
-  def update_listening_session(%ListeningSession{} = listening_session, attrs) do
-    listening_session
-    |> ListeningSession.changeset_update(attrs)
-    |> Repo.update()
+  def update_listening_session(%ListeningSession{} = listening_session, attrs, remote_ip) do
+    {:ok, new_date_time_end, _} =
+      attrs
+      |> Map.get("date_time_end")
+      |> DateTime.from_iso8601()
+
+    # we check the delta between last update and this one, if above a threshold we create a new
+    # listening session instead (mostly to avoid computers waking up from sleep and resuming playing)
+    case DateTime.diff(new_date_time_end, listening_session.date_time_end) do
+      diff when diff / 60 > @last_update_max_minutes ->
+        date_time_start =
+          new_date_time_end
+          |> DateTime.add(-30)
+          |> DateTime.to_iso8601()
+
+        attrs
+        |> Map.put("date_time_start", date_time_start)
+        |> Map.delete("id")
+        |> create_listening_session(remote_ip)
+
+      _ ->
+        listening_session
+        |> ListeningSession.changeset_update(attrs)
+        |> Repo.update()
+    end
   end
 
   #  @doc """

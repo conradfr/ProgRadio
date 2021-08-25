@@ -15,7 +15,12 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
       conn
       |> put_status(:created)
-      |> json(%{"status" => "OK", "id" => listening_session.id})
+      |> json(%{
+        "status" => "OK",
+        "id" => listening_session.id,
+        "date_time_start" => listening_session.date_time_start,
+        "date_time_end" => listening_session.date_time_end
+      })
     else
       _ ->
         conn
@@ -30,11 +35,17 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
          {:ok, updated_listening_session} <-
            ListeningSessions.update_listening_session(
              existing_listening_session,
-             listening_session_params
+             listening_session_params,
+             conn.remote_ip
            ) do
       conn
       |> put_status(:ok)
-      |> json(%{"status" => "OK", "id" => updated_listening_session.id})
+      |> json(%{
+        "status" => "OK",
+        "id" => updated_listening_session.id,
+        "date_time_start" => updated_listening_session.date_time_start,
+        "date_time_end" => updated_listening_session.date_time_end
+      })
     else
       _ ->
         conn

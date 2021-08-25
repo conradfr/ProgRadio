@@ -93,7 +93,16 @@ const sendListeningSession = (codeName, radioStreamCodeName,
   }
 
   if (id !== undefined && id !== null) {
-    axios.put(`https://${apiUrl}/listening_session/${id}`, data);
+    /* eslint-disable no-underscore-dangle */
+    axios.put(`https://${apiUrl}/listening_session/${id}`, data)
+      .then((response) => {
+        // Api determined it was a new session instead of updating the current one
+        if (response.data.id !== id) {
+          document.getElementById('app')
+            .__vue_app__.config.globalProperties.$store.dispatch('setListeningSession',
+              { data: response.data, ctrl });
+        }
+      });
     return;
   }
 

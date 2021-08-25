@@ -3,7 +3,7 @@
 // import { createApp } from 'https://unpkg.com/petite-vue@0.2.2/dist/petite-vue.es.js';
 import { createApp } from '../../public/vue/utils/petite-vue.es';
 
-//from config
+// from config
 import {
   LISTENING_SESSION_MIN_SECONDS,
   LISTENING_SESSION_SOURCE_SSR
@@ -37,6 +37,10 @@ const loadHls = () => {
 };
 
 const updateListeningSession = (radioId, dateTimeStart, sessionId) => {
+  if (dateTimeStart === undefined || dateTimeStart === null) {
+    return;
+  }
+
   const dateTimeEnd = new Date();
 
   if (dateTimeEnd.getTime() - dateTimeStart.getTime() < LISTENING_INTERVAL) {
@@ -71,7 +75,7 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId) => {
     .then(response => response.json())
     .then((json) => {
       if (typeof json.id !== 'undefined') {
-        return json.id;
+        return json;
       }
       return null;
     });
@@ -128,9 +132,10 @@ createApp({
         this.playingStart = new Date();
 
         this.listeningInterval = setInterval(() => {
-          updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((id) => {
-            if (id !== null) {
-              this.sessionId = id;
+          updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((data) => {
+            if (data.id !== null) {
+              this.sessionId = data.id;
+              this.playingStart = new Date(data.date_time_start);
             }
           });
         }, LISTENING_INTERVAL);
