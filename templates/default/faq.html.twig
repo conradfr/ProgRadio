@@ -26,57 +26,63 @@
     "fr": [
         {   'question': "Qu'est-ce que Programmes-Radio.com ?",
             'answer': [
-            "Programmes-Radio.com est un site indépendant centralisant les grilles de programmes de radios françaises et internationales.",
-            "Les données sont réactualisées chaque jour en provenance des sites des radios.",
-            "Vous pouvez aussi écouter en streaming n'importe quelle radio en cliquant sur son logo."
-        ]
+                "Programmes-Radio.com est un site indépendant centralisant les grilles de programmes de radios françaises et internationales.",
+                "Les données sont réactualisées chaque jour en provenance des sites des radios.",
+                "Vous pouvez aussi écouter en streaming n'importe quelle radio en cliquant sur son logo."
+            ]
         },
         {   'question': "Comment sont classées les radios ?",
             'answer': [
-            "Suivant les catégories, le classement est basé sur la part d'audience cumulée de la dernière vague Médiamétrie ou alors par ordre alphabétique."
-        ]
+                "Suivant les catégories, le classement est basé sur la part d'audience cumulée de la dernière vague Médiamétrie ou alors par ordre alphabétique."
+            ]
         },
         {   'question': "Certaines radios ont une publicité en début de lecture.",
             'answer': [
-            "Ces publicités sont ajoutées par les radios elles-mêmes et non pas par Programmes-Radio.com.",
-            "Dans certains cas le bloqueur de publicité peut bloquer la lecture de la radio (exemple: RMC)."
-        ]
+                "Ces publicités sont ajoutées par les radios elles-mêmes et non pas par Programmes-Radio.com.",
+                "Dans certains cas le bloqueur de publicité peut bloquer la lecture de la radio (exemple: RMC)."
+            ]
         },
         {   'question': "Il n'y a pas ma radio favorite.",
             'answer': [
-            "Des radios sont ajoutées au fur et à mesure, indiquez-nous dans la page Contact la radio que vous voulez voir ajoutée."
-        ]
+                "Des radios sont ajoutées au fur et à mesure, indiquez-nous dans la page Contact la radio que vous voulez voir ajoutée."
+            ]
+        },
+        {   'question': "Je souhaite ajouter ma (web)radio, comment faire ?",
+            'answer': [
+                'Pour la partie "Toutes les radios", nous utilisons l\'API Radio-Browser. Pour y soumettre votre radio, <a target="_blank" href="https://www.radio-browser.info/#/add">cliquez ici</a>.',
+                'Si vous possédez une radio avec une grille de programmes, écrivez-nous avec le formulaire de contact.'
+            ]
         },
         {   'question': "Liste des radios disponibles.",
             'answer': [
-            self.radios_list(collections, radios, app.request.locale),
-            '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ path('app') ~ 'streaming">la page streaming</a>, comme par exemple <a href="' ~ path('streams_one', {'id': 'c77c45c4-cf37-414c-ae34-868f7d9cd944', 'codename': 'HFUNKY RADIO - Only Funk Music (60\'s 70\'s) '|slug }) ~ '">Funky Radio</a> (Italie) ou <a href="' ~ path('streams_one', {'id': '961635b3-0601-11e8-ae97-52543be04c81', 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Allemagne)</p>'
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ path('app') ~ 'streaming">la page streaming</a>, comme par exemple <a href="' ~ path('streams_one', {'id': 'c77c45c4-cf37-414c-ae34-868f7d9cd944', 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s) '|slug }) ~ '">Funky Radio</a> (Italie) ou <a href="' ~ path('streams_one', {'id': '961635b3-0601-11e8-ae97-52543be04c81', 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Allemagne)</p>'
             ]
         }
     ],
     "en": [
         {   'question': "What is Programmes-Radio.com?",
             'answer': [
-            "Programmes-Radio.com is an independant website displaying schedules from French and more broadly French speaking radios.",
-            "Data are updated each day from radios' websites.",
-            "You can also listen to any radio by clicking on its logo."
-        ]
+                "Programmes-Radio.com is an independant website displaying schedules from French and more broadly French speaking radios.",
+                "Data are updated each day from radios' websites.",
+                "You can also listen to any radio by clicking on its logo."
+            ]
         },
         {   'question': "How are radios sorted?",
             'answer': [
-            "Radios are sorted by their ratings or alphabetically depending on the category."
-        ]
+                "Radios are sorted by their ratings or alphabetically depending on the category."
+            ]
         },
         {   'question': "Some radios have an ad at the start of their streaming.",
             'answer': [
-            "These ads are added by the radios themselves and not Programmes-Radio.com."
-        ]
+                "These ads are added by the radios themselves and not Programmes-Radio.com."
+            ]
         },
         {   'question': "Available radios:",
             'answer': [
             self.radios_list(collections, radios, app.request.locale),
-            '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>, comme par exemple <a href="' ~ path('streams_one', {'id': 'c77c45c4-cf37-414c-ae34-868f7d9cd944', 'codename': 'HFUNKY RADIO - Only Funk Music (60\'s 70\'s) '|slug }) ~ '">Funky Radio</a> (Italie) ou <a href="' ~ path('streams_one', {'id': '961635b3-0601-11e8-ae97-52543be04c81', 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germany)</p>'
-        ]
+                '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>, comme par exemple <a href="' ~ path('streams_one', {'id': 'c77c45c4-cf37-414c-ae34-868f7d9cd944', 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s) '|slug }) ~ '">Funky Radio</a> (Italie) ou <a href="' ~ path('streams_one', {'id': '961635b3-0601-11e8-ae97-52543be04c81', 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germany)</p>'
+            ]
         }
     ]
 }
