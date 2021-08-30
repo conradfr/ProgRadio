@@ -19,6 +19,9 @@ $offcanvas-divider: $gray-300;
 $alert-light-bg: $background-color;
 $alert-light-color: $body-color;
 
+$loader-text: darken($background-color, 55%);
+$loader-background: darken($background-color, 15%);
+
 $timeline-color: #969696;
 $timeline-line-color: darken($background-color, 25%);
 $timeline-line-current-color: $primary;
@@ -60,6 +63,12 @@ $program-section-hover: lighten($primary, 10%);
 
 $stream-text-color: $gray-800;
 $stream-play-color: $primary;
+
+$stream-select-selected-text: lighten($stream-text-color, 10%);
+$stream-select-option-text: lighten($stream-text-color, 10%);
+$stream-select-border: rgba(60, 60, 60, 0.27);
+$stream-select-background-hover: $primary;
+$stream-select-search: $stream-text-color;
 
 $now-border-color: $gray-300;
 

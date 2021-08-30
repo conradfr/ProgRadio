@@ -45,6 +45,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (to.params.countryOrCategoryOrUuid) {
+        // this is a radio (uuid)
         if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
           vm.$store.dispatch('getStreamRadio', to.params.countryOrCategoryOrUuid);
         } else {

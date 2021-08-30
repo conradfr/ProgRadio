@@ -1124,6 +1124,11 @@
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.2.6.tgz#2c22bae88fe2b7b59fa68a9c9c4cd60bae2c1794"
   integrity sha512-uwX0Qs2e6kdF+WmxwuxJxOnKs/wEkMArtYpHSm7W+VY/23Tl8syMRyjnzEeXrNCAP0/8HZxEGkHJsjPEDNRuHw==
 
+"@vueform/multiselect@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@vueform/multiselect/-/multiselect-2.1.2.tgz#1e183e356c0feea00f868800124b35eb3598a9f5"
+  integrity sha512-iiMc7EmvCJ64zE1hChOfJloX3z0DrO05gucTjYXkJ03C0+Kh6wXB6Re9fnmC1ErsFBRBqS45J5H7HakpNE1zgQ==
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"

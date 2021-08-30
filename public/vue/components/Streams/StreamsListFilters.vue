@@ -31,13 +31,33 @@
         </button>
       </div>
       <div class="col-select col-md-4 col-sm-6">
-        <v-select
-          @input="countryChange"
-          :value="selectedCountry"
-          :options="countriesOptions"
-          :selectable="option => option.code !== code_favorites || this.favorites.length > 0"
+        <Multiselect
+            @change="countryChange"
+            v-model="selectedCountry"
+            :options="countriesOptions"
+            :canClear="false"
+            :valueProp="'code'"
+            :label="'label'"
+            :searchable="true"
+            :strict="false"
+            :noResultsText="$tc('message.streaming.country_search_no_result')"
+            ref="multicountry"
+            id="multicountry"
         >
-          <template v-slot:option="option">
+          <template v-slot:singlelabel="{ value }">
+            <div class="multiselect-single-label">
+              <img v-if="value.code === code_all || value.code === code_favorites"
+                   class="gb-flag gb-flag--mini"
+                   :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
+              <gb-flag
+                  v-else
+                  :code="value.code"
+                  size="mini"
+              />&nbsp;&nbsp;{{ value.label }}
+            </div>
+          </template>
+
+          <template v-slot:option="{ option }">
             <img v-if="option.code === code_all || option.code === code_favorites"
                  class="gb-flag gb-flag--mini"
                  :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
@@ -47,14 +67,17 @@
                 size="mini"
             />&nbsp;&nbsp;{{ option.label }}
           </template>
-        </v-select>
+        </Multiselect>
       </div>
       <div class="col-select col-md-3 col-sm-6 mt-2 mt-sm-0">
-        <v-select
-            @input="sortByChange"
-            :value="selectedSortBy"
-            :options="sortByOptions">
-        </v-select>
+        <Multiselect
+            @change="sortByChange"
+            v-model="selectedSortBy"
+            :options="sortByOptions"
+            :canClear="false"
+            ref="multisort"
+            id="multisort"
+        />
       </div>
     </div>
   </div>
@@ -62,11 +85,8 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-
-/* eslint-disable import/no-duplicates */
-import Vue from 'vue';
 import { nextTick } from 'vue';
-import vSelect from 'vue-select';
+import Multiselect from '@vueform/multiselect';
 
 import {
   STREAMING_CATEGORY_FAVORITES,
@@ -80,30 +100,88 @@ import {
   GTAG_ACTION_SEARCH_BUTTON
 } from '../../config/config';
 
-Vue.component('v-select', vSelect);
-
 export default {
   compatConfig: {
     MODE: 3
   },
-  data: () => (
-    {
-      code_all: STREAMING_CATEGORY_ALL,
-      code_favorites: STREAMING_CATEGORY_FAVORITES
+  components: {
+    Multiselect,
+  },
+  mounted() {
+    // for some reasons the multiselect component don't get the initial value,
+    // so we set them here instead
+    // (selected country is set in the watcher below)
+    if (this.selectedSortBy !== undefined && this.selectedSortBy !== null) {
+      this.$refs.multisort.select(this.selectedSortBy);
     }
-  ),
+  },
+  data() {
+    return {
+      code_all: STREAMING_CATEGORY_ALL,
+      code_favorites: STREAMING_CATEGORY_FAVORITES,
+      sortByOptions: [
+        {
+          value: 'name',
+          label: this.$i18n.t('message.streaming.sort.name')
+        },
+        {
+          value: 'popularity',
+          label: this.$i18n.t('message.streaming.sort.popularity')
+        },
+        {
+          value: 'random',
+          label: this.$i18n.t('message.streaming.sort.random')
+        }
+      ]
+    };
+  },
+  watch: {
+    // for some reasons the multiselect component don't get the initial value,
+    // so we set them here instead, when the full list has been loaded
+    countriesOptions(newValue, oldValue) {
+      // 4 is an arbitrary value, the initial list is 2
+      // but in case we add more in the future, let's get a bit of headroom ...
+      if ((oldValue.length < 4 && newValue.length > 4)
+          && (this.selectedCountry !== undefined && this.selectedCountry !== null)) {
+        nextTick(() => {
+          this.$refs.multicountry.select(this.selectedCountry);
+        });
+      }
+    }
+  },
   computed: {
     ...mapGetters([
       'countriesOptions'
     ]),
     ...mapState({
       favorites: state => state.streams.favorites,
-      selectedCountry: state => state.streams.selectedCountry,
-      selectedSortBy: state => state.streams.selectedSortBy,
-      sortByOptions: state => state.streams.sortBy,
       searchText: state => state.streams.searchText,
       searchActive: state => state.streams.searchActive
-    })
+    }),
+    selectedCountry: {
+      get() {
+        return this.$store.state.streams.selectedCountry;
+      },
+      set(country) {
+        if (country === undefined || country === null) {
+          return;
+        }
+        this.$router.push(
+          {
+            name: 'streaming',
+            params: { countryOrCategoryOrUuid: country.toLowerCase() }
+          }
+        );
+      }
+    },
+    selectedSortBy: {
+      get() {
+        return this.$store.state.streams.selectedSortBy;
+      },
+      set(value) {
+        this.$store.dispatch('sortBySelection', value);
+      }
+    }
   },
   methods: {
     searchActivate() {
@@ -133,22 +211,24 @@ export default {
         });
     },
     countryChange(country) {
-      this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
-        event_category: GTAG_CATEGORY_STREAMING,
-        event_label: country.code.toLowerCase(),
-        value: GTAG_STREAMING_FILTER_VALUE
-      });
-
-      this.$router.push({ name: 'streaming', params: { countryOrCategoryOrUuid: country.code.toLowerCase() } });
+      // otherwise it's just the setup
+      if (country !== this.selectedCountry) {
+        this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
+          event_category: GTAG_CATEGORY_STREAMING,
+          event_label: country.toLowerCase(),
+          value: GTAG_STREAMING_FILTER_VALUE
+        });
+      }
     },
     sortByChange(sortBy) {
-      this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {
-        event_category: GTAG_CATEGORY_STREAMING,
-        event_label: sortBy.code,
-        value: GTAG_STREAMING_FILTER_VALUE
-      });
-
-      this.$store.dispatch('sortBySelection', sortBy);
+      // otherwise it's just the setup
+      if (sortBy !== this.selectedSortBy) {
+        this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {
+          event_category: GTAG_CATEGORY_STREAMING,
+          event_label: sortBy.code,
+          value: GTAG_STREAMING_FILTER_VALUE
+        });
+      }
     },
     playRandom() {
       this.$gtag.event(GTAG_ACTION_PLAY_RANDOM, {

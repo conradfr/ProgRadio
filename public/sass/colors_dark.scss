@@ -1,4 +1,4 @@
-//@import "bootswatch_materia/_variables";
+// @import "bootswatch_materia/_variables";
 
 $white: #f8f8f8;
 
@@ -6,8 +6,6 @@ $primary-source: #2196F3;
 $primary: #1c486a;
 
 $body-bg: #10161c;
-//$body-bg-alt: darken($primary, 10%);
-//$body-bg-alt: mix(#1c2327, $primary-source, 90%);
 $body-bg-alt: #33383c;
 
 $body-color: $white;
@@ -23,6 +21,9 @@ $offcanvas-divider: $body-bg-alt;
 
 $alert-light-bg: $body-bg-alt;
 $alert-light-color: $white;
+
+$loader-text: $white;
+$loader-background: $body-bg-alt;
 
 $pagination-bg:                     $primary !default;
 $pagination-hover-bg:               lighten($primary, 10%) !default;
@@ -71,6 +72,13 @@ $program-section-hover: $primary;
 
 $stream-text-color: $white;
 $stream-play-color: darken($primary-source, 10%);
+
+// select
+$stream-select-selected-text: darken($white, 20%);
+$stream-select-option-text: $body-bg-alt;
+$stream-select-border: $body-bg-alt;
+$stream-select-background-hover: $radio-stream;
+$stream-select-search: $white;
 
 $now-border-color: darken($primary, 10%);
 

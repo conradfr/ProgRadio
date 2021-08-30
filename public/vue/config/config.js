@@ -28,6 +28,7 @@ export const CACHE_KEY_COLLECTIONS = 'collections';
 export const CACHE_KEY_CATEGORIES = 'categories';
 export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites';
 export const CACHE_KEY_STREAM_FAVORITES = 'stream_favorites';
+export const CACHE_KEY_STREAM_COUNTRIES = 'stream_countries';
 
 export const COOKIE_PREFIX = 'progradio_v4';
 export const COOKIE_TTL = '31536000';
@@ -47,8 +48,8 @@ export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;
 export const COOKIE_LAST_RADIO_STREAM_PLAYED = `${COOKIE_PREFIX}-stream-lastplayed`;
 export const COOKIE_RADIO_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
 export const COOKIE_STREAM_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}_streams`;
-export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country`;
-export const COOKIE_STREAM_SORT = `${COOKIE_PREFIX}-stream-sort`;
+export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country-3`;
+export const COOKIE_STREAM_SORT = `${COOKIE_PREFIX}-stream-sort-3`;
 export const COOKIE_STREAM_RADIOBROWSER_API = `${COOKIE_PREFIX}-stream-radiobrowser_api`;
 export const COOKIE_LAST_TIMER = `${COOKIE_PREFIX}-timer`;
 export const COOKIE_TOOLTIP_COLLECTION = `${COOKIE_PREFIX}-tooltip-collection`;
@@ -84,8 +85,8 @@ export const STREAMS_MAX_PAGES_DISPLAY = 9;
 export const STREAMING_CATEGORY_ALL = 'ALL';
 export const STREAMING_CATEGORY_FAVORITES = 'FAVORITES';
 
-/* @todo refacto */
-export const STREAMING_DEFAULT_COUNTRY = { code: 'FR', label: 'France' };
+export const STREAMING_DEFAULT_COUNTRY = 'FR';
+export const STREAMING_DEFAULT_SORT = 'popularity';
 
 export const PLAYER_STATE_NONE = 0;
 export const PLAYER_STATE_STOPPED = 1;

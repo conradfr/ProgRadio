@@ -28,7 +28,7 @@
     <div
         class="streams-one-flag"
         v-on:click.stop="flagClick"
-        v-if="(selectedCountry.code ===code_all || selectedCountry.code === code_favorites)
+        v-if="(selectedCountry.code === code_all || selectedCountry.code === code_favorites)
                 && radio.country_code !== null">
       <gb-flag
           :code="radio.country_code"

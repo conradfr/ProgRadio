@@ -6,34 +6,19 @@ import find from 'lodash/find';
 import * as config from '../config/config';
 import i18n from '../lang/i18n';
 import cookies from '../utils/cookies';
+// import cache from '../utils/cache';
 import StreamsApi from '../api/StreamsApi';
 import AndroidApi from '../api/AndroidApi';
-
-const sortBySelect = [
-  {
-    code: 'name',
-    label: i18n.global.tc('message.streaming.sort.name')
-  },
-  {
-    code: 'popularity',
-    label: i18n.global.tc('message.streaming.sort.popularity')
-  },
-  {
-    code: 'random',
-    label: i18n.global.tc('message.streaming.sort.random')
-  },
-];
 
 // initial state
 /* eslint-disable no-undef */
 const initState = {
   countries: [],
   favorites: [],
-  selectedCountry: cookies.getJson(config.COOKIE_STREAM_COUNTRY, config.STREAMING_DEFAULT_COUNTRY),
+  selectedCountry: cookies.get(config.COOKIE_STREAM_COUNTRY, config.STREAMING_DEFAULT_COUNTRY),
   streamRadios: [],
-  selectedSortBy: cookies.getJson(config.COOKIE_STREAM_SORT, sortBySelect[1]),
+  selectedSortBy: cookies.get(config.COOKIE_STREAM_SORT, config.STREAMING_DEFAULT_SORT),
   radioBrowserApi: cookies.get(config.COOKIE_STREAM_RADIOBROWSER_API),
-  sortBy: sortBySelect,
   searchActive: false,
   searchText: null,
   searchLastTimestamp: 0,
@@ -71,7 +56,8 @@ const storeGetters = {
     countriesOptions.unshift(
       {
         label: i18n.global.tc('message.streaming.categories.favorites'),
-        code: config.STREAMING_CATEGORY_FAVORITES
+        code: config.STREAMING_CATEGORY_FAVORITES,
+        disabled: state.favorites.length === 0
       }
     );
 
@@ -91,12 +77,22 @@ const storeActions = {
   getCountries: ({ state, dispatch, commit }) => {
     commit('setLoading', true, { root: true });
 
+    // use cache before network fetching
+    /* if (cache.hasCache(config.CACHE_KEY_STREAM_COUNTRIES)) {
+      commit('updateCountries', cache.getCache(config.CACHE_KEY_STREAM_COUNTRIES));
+      dispatch('countrySelection', state.selectedCountry);
+    }
+
+    if (state.countries === []) {
+      commit('setLoading', true, { root: true });
+    } */
+
     nextTick(() => {
       StreamsApi.getCountries()
         .then(countries => commit('updateCountries', countries))
         .then(() => {
-          if (state.selectedCountry.label === null) {
-            dispatch('countrySelection', state.selectedCountry.code);
+          if (state.selectedCountry === null) {
+            dispatch('countrySelection', state.selectedCountry);
           }
         })
         .finally(() => commit('setLoading', false, { root: true }));
@@ -106,10 +102,7 @@ const storeActions = {
     commit('setLoading', true, { root: true });
 
     commit('setPage', 0);
-    commit('setSelectedCountry', {
-      label: i18n.global.tc('message.streaming.categories.all_countries'),
-      code: config.STREAMING_CATEGORY_ALL
-    });
+    commit('setSelectedCountry', config.STREAMING_CATEGORY_ALL);
 
     nextTick(() => {
       StreamsApi.getRadios(radioId)
@@ -124,8 +117,8 @@ const storeActions = {
 
     if (state.searchActive === true && state.searchText !== null) {
       nextTick(() => {
-        StreamsApi.searchRadios(state.searchText, state.selectedCountry.code,
-          state.selectedSortBy.code, offset)
+        StreamsApi.searchRadios(state.searchText, state.selectedCountry,
+          state.selectedSortBy, offset)
           .then((data) => {
             if (data.timestamp > state.searchLastTimestamp) {
               commit('setSearchLastTimestamp', data.timestamp);
@@ -139,7 +132,7 @@ const storeActions = {
     }
 
     nextTick(() => {
-      StreamsApi.getRadios(state.selectedCountry.code, state.selectedSortBy.code, offset)
+      StreamsApi.getRadios(state.selectedCountry, state.selectedSortBy, offset)
         .then(data => commit('updateStreamRadios', data))
         .finally(() => commit('setLoading', false, { root: true }));
     });
@@ -162,8 +155,8 @@ const storeActions = {
       }
     }
 
-    commit('setSelectedCountry', country);
-    cookies.set(config.COOKIE_STREAM_COUNTRY, country);
+    commit('setSelectedCountry', country.code.toUpperCase());
+    cookies.set(config.COOKIE_STREAM_COUNTRY, country.code.toUpperCase());
 
     if (getAfter !== false) {
       nextTick(() => {
@@ -190,7 +183,7 @@ const storeActions = {
     commit('setLoading', true, { root: true });
 
     nextTick(() => {
-      StreamsApi.getRandom(state.selectedCountry.code)
+      StreamsApi.getRandom(state.selectedCountry)
         .then(data => dispatch('playStream', data))
         .finally(() => commit('setLoading', false, { root: true }));
     });

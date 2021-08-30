@@ -1,6 +1,9 @@
 import axios from 'axios';
 
+// import { STREAMING_CATEGORY_ALL, CACHE_KEY_STREAM_COUNTRIES } from '../config/config';
 import { STREAMING_CATEGORY_ALL } from '../config/config';
+
+// import cache from '../utils/cache';
 
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-undef */
@@ -78,6 +81,10 @@ const getConfig = () => {
 const getCountries = () => {
   return axios.get(`/streams/countries?locale=${locale}`)
     .then((response) => {
+      /* if (response.data.countries !== undefined) {
+        cache.setCache(CACHE_KEY_STREAM_COUNTRIES, response.data.countries);
+      } */
+
       return response.data.countries;
     });
 };
