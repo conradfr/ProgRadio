@@ -155,6 +155,124 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
+     * @Route(
+     *     "/listen",
+     *     name="listen",
+     *     methods={"POST"}
+     * )
+     */
+    public function listen(EntityManagerInterface $em, Request $request): Response
+    {
+        /**
+         * @todo move to new api
+         * edit: we did it ;)
+         *
+         * 01/09/2021 Code restored as it seems there's still access to it (IE, old Android app ?)
+         *
+         * LEGACY
+         * This route is kept for now for the non-updated mobile app
+         *
+         * 12/05/2021 Not seeing calls from the old app for some days now,
+         * This code will be probably removed next month then.
+         *
+         *-----
+         *
+         * Code is not great but it's just temporary (famous last word)
+         *
+         */
+
+        //$json = $this->getJson($request);
+        $data = $this->getJson($request);
+
+        $now = new \DateTime('UTC');
+
+        $listeningSession = new ListeningSession();
+
+        $dateTimeStart = new \DateTime($data['date_time_start']);
+        $dateTimeStart->setTimezone(new \DateTimeZone('UTC'));
+
+        $dateTimeEnd = new \DateTime($data['date_time_end']);
+        $dateTimeEnd->setTimezone(new \DateTimeZone('UTC'));
+
+        $listeningSession->setDateTimeStart($dateTimeStart);
+        $listeningSession->setDateTimeEnd($dateTimeEnd);
+
+        $listeningSession->setSource($data['source'] ?: null);
+
+        try {
+            $ip = Multi::factory($request->getClientIp());
+            $listeningSession->setIpAddress($ip);
+
+            if ($listeningSession->getDateTimeEnd()->getTimestamp() - $listeningSession->getDateTimeStart()->getTimestamp() < ListeningSession::MINIMUM_SECONDS
+                || abs($now->getTimestamp() - $listeningSession->getDateTimeEnd()->getTimestamp()) > ListeningSession::MAX_DIFFERENCE_WITH_CURRENT_SECONDS) {
+                return $this->jsonResponse([
+                    'status' => 'Ignored',
+                ]);
+            }
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        if(
+            (!isset($data['id']) || !is_string($data['id']))
+            && (!isset($data['radio_stream_id']) || !is_string($data['radio_stream_id']))
+            && (!isset($data['stream_id']) || !is_string($data['stream_id']))
+        )
+        {
+            throw new BadRequestHttpException('Invalid data');
+        }
+
+        $id = null;
+        $isStream = false;
+
+        if (isset($data['id']) && is_string($data['id'])) {
+            $id = $data['id'];
+            if (Uuid::isValid($id)) {
+                $isStream = true;
+            }
+        } elseif (isset($data['radio_stream_id']) && is_string($data['radio_stream_id'])) {
+            $id = $data['radio_stream_id'];
+        } else {
+            $id = $data['stream_id'];
+            $isStream = true;
+        }
+
+        if ($isStream === true) {
+            $stream = $em->getRepository(Stream::class)->findOneBy(['id' => $id]);
+            if (!$stream) {
+                throw new NotFoundHttpException('Stream not found');
+            }
+
+            $listeningSession->setStream($stream);
+        } else {
+            $radioStream = $em->getRepository(RadioStream::class)->findOneBy(['codeName' => $id]);
+            if (!$radioStream) {
+                $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $id, 'active' => true]);
+                if (!$radio) {
+                    throw new NotFoundHttpException('Radio not found');
+                }
+
+                $radioStream = $em->getRepository(RadioStream::class)->findOneBy(['radio' => $radio]);
+                if (!$radioStream) {
+                    throw new NotFoundHttpException('Radio not found');
+                }
+            }
+
+            $listeningSession->setRadioStream($radioStream);
+        }
+
+        $uuid = Uuid::uuid4();
+        $listeningSession->setId($uuid->toString());
+
+        $em->persist($listeningSession);
+        $em->flush();
+
+        return $this->jsonResponse([
+            'status' => 'OK'
+        ]);
+    }
+
+    /**
      * @Route({
      *     "en": "/{_locale}/stream/{id}/listen-{codename}",
      *     "fr": "/{_locale}/stream/{id}/ecouter-{codename}"

@@ -15,7 +15,6 @@ defmodule ProgRadioApi.ListeningSession do
     field(:ip_address, :binary)
     belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream, Stream, type: :binary_id)
-    timestamps()
   end
 
   @doc false

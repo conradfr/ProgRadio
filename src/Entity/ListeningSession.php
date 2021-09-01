@@ -32,17 +32,11 @@ class ListeningSession
      *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $id;
 
     private ?string $type = null;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Radio::class, inversedBy="listeningSessions")
-     * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
-     */
-    private $radio;
 
     /**
      * @ORM\ManyToOne(targetEntity=RadioStream::class, inversedBy="listeningSessions")
@@ -82,9 +76,11 @@ class ListeningSession
      */
     protected $ipAddress;
 
-    /**
-     * @return string
-     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getId(): string
     {
         return $this->id;
@@ -108,16 +104,6 @@ class ListeningSession
     public function setType(string $type): void
     {
         $this->type = $type;
-    }
-
-    public function getRadio(): ?Radio
-    {
-        return $this->radio;
-    }
-
-    public function setRadio(Radio $radio): void
-    {
-        $this->radio = $radio;
     }
 
     public function getRadioStream(): ?RadioStream
