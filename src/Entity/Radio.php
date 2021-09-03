@@ -104,11 +104,6 @@ class Radio
     private $active = true;
 
     /**
-     * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="radio", fetch="EXTRA_LAZY")
-     */
-    private $listeningSessions;
-
-    /**
      * @var RadioStream[]
      *
      * @ORM\OneToMany(targetEntity=RadioStream::class, mappedBy="radio", fetch="EXTRA_LAZY")
@@ -116,7 +111,6 @@ class Radio
     private $streams;
 
     public function __construct() {
-        $this->listeningSessions = new ArrayCollection();
         $this->streams = new ArrayCollection();
     }
 
@@ -204,16 +198,6 @@ class Radio
     public function setActive(bool $active): void
     {
         $this->active = $active;
-    }
-
-    public function getListeningSessions(): ArrayCollection
-    {
-        return $this->listeningSessions;
-    }
-
-    public function setListeningSessions(ArrayCollection $listeningSessions): void
-    {
-        $this->listeningSessions = $listeningSessions;
     }
 
     public function getStreams(): ArrayCollection

@@ -89,7 +89,7 @@ class ListeningSession
     public function getType(): ?string
     {
         if ($this->type === null) {
-            if ($this->radio !== null) {
+            if ($this->radioStream !== null) {
                 return self::TYPE_RADIO;
             }
 

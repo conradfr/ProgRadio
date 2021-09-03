@@ -88,7 +88,8 @@ const radios = {
           'bfmbusiness',
           'topmusic',
           'vibration',
-          'goldfm'
+          'goldfm',
+          'rts'
       ],
     'local_web':
     [
@@ -126,7 +127,8 @@ const radios = {
       'nrj_antilles',
       'trace_reunion',
       'trace_martinique',
-      'trace_guyane'
+      'trace_guyane',
+      'hitfm'
     ]
 };
 
