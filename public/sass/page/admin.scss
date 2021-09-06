@@ -81,6 +81,21 @@
         max-width: 39px;
       }
 
+      .gb-flag--micro {
+        height: 13px !important;
+      }
+
+      .gb-flag {
+        //filter: grayscale(50%);
+        display: inline-block;
+        background-size: cover;
+        background-repeat: no-repeat;
+        user-select: none;
+
+        &:hover {
+          //filter: grayscale(0);
+        }
+      }
     }
   }
 }
