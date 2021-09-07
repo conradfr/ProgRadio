@@ -3,19 +3,13 @@
   "main": "server.js",
   "license": "NPOSL-3.0",
   "description": "stream-proxy",
-  "directories": {
-
-  },
-  "scripts": {
-
-  },
+  "directories": {},
+  "scripts": {},
   "dependencies": {
     "express": "^4.17.1",
     "request": "^2.88.2"
   },
-  "devDependencies": {
-
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">= 12.0.0",
     "npm": ">= 6.0.0"
