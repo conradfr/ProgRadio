@@ -1,6 +1,6 @@
 # --------------- NODE ---------------
 
-FROM node:12.20.1 as buildjs
+FROM node:14.17.6 as buildjs
 
 WORKDIR /tmp
 RUN mkdir /tmp/public/

@@ -21,23 +21,4 @@
   .more-streams-one img{
     filter: brightness(.88) contrast(1.1);
   }
-
-  /* vue-select overloading, until we replace the component */
-  .vs__dropdown-toggle {
-    border-color: $gray-700 !important;
-
-    .vs__selected-options {
-      .vs__selected {
-        color: $gray-600 !important;
-      }
-    }
-
-    .vs__actions {
-      .vs__clear, .vs__open-indicator {
-        svg {
-          fill: rgba(136, 136, 136, 1) !important;
-        }
-      }
-    }
-  }
 }
