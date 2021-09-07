@@ -45,6 +45,7 @@ const getResults = async (radios) => {
       dateObj.add(1, 'days');
     }
     dateObj.tz('Europe/Paris');
+
     return await radio_module.getScrap(dateObj)
       .then(async function (data) {
         const dateFormat = 'DD-MM-YYYY';
