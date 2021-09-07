@@ -1,7 +1,6 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
-const {list} = require("postcss");
 
 let scrapedData = [];
 
