@@ -21,6 +21,7 @@ export const messages = {
         autoplay_error: "Votre navigateur n'autorise pas la lecture automatique de médias. Merci de cliquer sur \"Ecouter\" une fois de plus",
         play_error: 'Erreur de lecture',
         placeholder: 'Cliquer sur un logo pour lancer la lecture',
+        previous: 'Ecouter {radio} de nouveau',
         favorites: {
           add: 'Ajouter aux favoris',
           remove: 'Retirer des favoris'
@@ -96,6 +97,7 @@ export const messages = {
         autoplay_error: 'Your browser does not allow autoplay. Please ckick play one more time',
         play_error: 'Media error',
         placeholder: 'Click on a radio logo to start streaming',
+        previous: 'Play {radio} again',
         favorites: {
           add: 'Add to favorites',
           remove: 'Remove from favorites'

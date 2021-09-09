@@ -18,6 +18,8 @@ const initState = {
   externalPlayerVersion: AndroidApi.getVersion(),
   radio: cookies.getJson(config.COOKIE_LAST_RADIO_PLAYED),
   radioStreamCodeName: cookies.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED),
+  prevRadio: cookies.getJson(config.COOKIE_PREV_RADIO_PLAYED),
+  prevRadioStreamCodeName: cookies.get(config.COOKIE_PREV_RADIO_STREAM_PLAYED),
   show: null,
   song: null,
   volume: parseInt(cookies.get(config.COOKIE_VOLUME, config.DEFAULT_VOLUME), 10),
@@ -98,7 +100,9 @@ const storeActions = {
 
     if (stream !== null) {
       cookies.set(config.COOKIE_LAST_RADIO_PLAYED, radio);
-      cookies.set(config.COOKIE_LAST_RADIO_STREAM_PLAYED, streamCodeName);
+      cookies.set(config.COOKIE_LAST_RADIO_STREAM_PLAYED, stream.code_name);
+
+      dispatch('setPrevious', { radio, streamCodeName: stream.code_name });
 
       if (state.externalPlayer === true) {
         AndroidApi.play(radio, stream);
@@ -108,7 +112,7 @@ const storeActions = {
         }, 2000);
       } else {
         nextTick(() => {
-          commit('play', { radio, streamCodeName });
+          commit('play', { radio, streamCodeName: stream.code_name });
           dispatch('startListeningSession');
         });
       }
@@ -126,6 +130,8 @@ const storeActions = {
     }, 500);
 
     cookies.set(config.COOKIE_LAST_RADIO_PLAYED, stream);
+
+    dispatch('setPrevious', { radio: stream });
 
     if (state.externalPlayer === true) {
       AndroidApi.play(stream);
@@ -172,9 +178,11 @@ const storeActions = {
       dispatch('startListeningSession');
     }
   },
+  // Previous in collection
   playPrevious: ({ dispatch }) => {
     dispatch('playNext', 'backward');
   },
+  // Next in collection
   playNext: ({ rootState, state, dispatch }, way) => {
     // should not happen, maybe with old Android version so it's kept for now as a safeguard
     if (state.externalPlayer === true) {
@@ -202,14 +210,45 @@ const storeActions = {
       const nextRadio = PlayerUtils.getNextRadio(state.radio, radios, way || 'forward');
 
       if (nextRadio !== null) {
+        dispatch('setPrevious', { radio: nextRadio, streamCodeName: `${nextRadio.code_name}_main` });
         dispatch('playRadio', { radioCodeName: nextRadio.code_name, streamCodeName: `${nextRadio.code_name}_main` });
       }
     } else if (state.radio.type === config.PLAYER_TYPE_STREAM) {
       const nextRadio = PlayerUtils.getNextStream(state.radio, rootState.streams.streamRadios, way || 'forward');
 
       if (nextRadio !== null) {
+        dispatch('setPrevious', { radio: nextRadio });
         dispatch('playStream', nextRadio);
       }
+    }
+  },
+  // Previously played radio
+  togglePrevious: ({ state, dispatch }) => {
+    if (state.prevRadio === undefined || state.prevRadio === null) {
+      return;
+    }
+
+    const currentRadio = state.radio;
+    const currentStreamCodeName = state.radioStreamCodeName;
+
+    if (state.prevRadio.type === config.PLAYER_TYPE_RADIO) {
+      dispatch('playRadio', { radioCodeName: state.prevRadio.code_name, streamCodeName: state.prevRadioStreamCodeName });
+    } else if (state.radio.type === config.PLAYER_TYPE_STREAM) {
+      dispatch('playStream', state.prevRadio);
+    }
+
+    dispatch('setPrevious', { radio: currentRadio, streamCodeName: currentStreamCodeName });
+  },
+  setPrevious: ({ state, commit }, { radio, streamCodeName }) => {
+    if (state.radio !== null && (state.radio.code_name !== radio.code_name
+      || state.radioStreamCodeName !== (streamCodeName || null))) {
+      cookies.set(config.COOKIE_PREV_RADIO_PLAYED, state.radio);
+      cookies.set(config.COOKIE_PREV_RADIO_STREAM_PLAYED, state.radioStreamCodeName);
+
+      commit('setPreviousRadio', {
+        radio: state.radio,
+        streamCodeName: state.radioStreamCodeName
+      });
     }
   },
   startListeningSession: ({ state }) => {
@@ -379,6 +418,10 @@ const storeMutations = {
       clearInterval(state.sessionInterval);
       state.sessionInterval = null;
     }
+  },
+  setPreviousRadio(state, { radio, streamCodeName }) {
+    state.prevRadio = radio;
+    state.prevRadioStreamCodeName = streamCodeName || null;
   },
   updateRadio(state, params) {
     state.show = params;

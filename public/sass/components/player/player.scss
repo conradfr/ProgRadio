@@ -201,13 +201,50 @@ $icon-play-size-hover: 1.846rem;
     }
   }
 
+  .player-radio-previous {
+    position: absolute;
+    top: 8px;
+    left: -21px;
+    width: 23px;
+
+    text-align: right;
+    line-height: 1em;
+    cursor: pointer;
+
+    padding: 5px 20px 6px 5px;
+    background-color: $player-background;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    i {
+      color: mix($player-color, $player-background, 70%);
+      font-size: 1rem;
+
+      &:hover {
+        color: $player-color;
+      }
+    }
+
+    a {
+      color: mix($player-color, $player-background, 70%);
+
+      &:hover {
+        color: $player-color;
+      }
+
+      i {
+        font-size: 1rem;
+      }
+    }
+  }
+
   .player-timer {
     //visibility: hidden;
     //opacity: 0;
     //transition: opacity 250ms ease-in-out 250ms, background-color 250ms ease-in-out 250ms;
 
     position: absolute;
-    top: 9px;
+    top: 8px;
     right: -21px;
     width: 23px;
 
@@ -215,7 +252,7 @@ $icon-play-size-hover: 1.846rem;
     line-height: 1px;
     cursor: pointer;
 
-    padding: 5px 5px 6px 1px;
+    padding: 5px 5px 6px 6px;
     background-color: $player-background;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -232,15 +269,17 @@ $icon-play-size-hover: 1.846rem;
       }
 
       i {
-        font-size: 0.923rem;
+        font-size: 1em;
       }
     }
   }
 
-  .timer-fade-enter-active, .timer-fade-leave-active {
+  .timer-fade-enter-active, .timer-fade-leave-active,
+  .play-prev-fade-enter-active, .play-prev-fade-leave-active {
     transition: opacity .3s ease;
   }
-  .timer-fade-enter, .timer-fade-leave-to {
+  .timer-fade-enter, .timer-fade-leave-to,
+  .play-prev-fade-enter, .play-prev-fade-leave-to {
     opacity: 0;
   }
 }

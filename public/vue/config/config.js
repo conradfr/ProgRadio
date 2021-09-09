@@ -46,6 +46,8 @@ export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
 export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;
 export const COOKIE_LAST_RADIO_STREAM_PLAYED = `${COOKIE_PREFIX}-stream-lastplayed`;
+export const COOKIE_PREV_RADIO_PLAYED = `${COOKIE_PREFIX}-prevplayed`;
+export const COOKIE_PREV_RADIO_STREAM_PLAYED = `${COOKIE_PREFIX}-stream-prevplayed`;
 export const COOKIE_RADIO_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
 export const COOKIE_STREAM_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}_streams`;
 export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country-3`;
@@ -109,10 +111,12 @@ export const PLAYER_STATE = [
 export const GTAG_ACTION_PLAY = 'play';
 export const GTAG_ACTION_STOP = 'pause';
 export const GTAG_ACTION_TOGGLE_PLAY = 'toggle_play';
+export const GTAG_ACTION_TOGGLE_PREVIOUS = 'toggle_previous';
 
 export const GTAG_ACTION_PLAY_VALUE = 3;
 export const GTAG_ACTION_STOP_VALUE = 1;
 export const GTAG_ACTION_TOGGLE_PLAY_VALUE = 2;
+export const GTAG_ACTION_TOGGLE_PREVIOUS_VALUE = 1;
 
 export const GTAG_ACTION_FAVORITE_TOGGLE = 'favorite_toggle';
 export const GTAG_ACTION_FAVORITE_TOGGLE_VALUE = 2;

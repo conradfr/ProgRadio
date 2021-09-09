@@ -1,8 +1,15 @@
 <template>
   <div class="navbar-player">
-    <div v-if="this.player.radio" class="player-radio-link">
+    <div v-if="this.player.radio && !this.player.prevRadio" class="player-radio-link">
       <a :href="radioLink()"><i class="bi bi-link-45deg"></i></a>
     </div>
+    <transition name="play-prev-fade" mode="out-in">
+    <div v-if="this.player.prevRadio" class="player-radio-previous"
+         v-on:click="togglePrevious"
+         :title="$i18n.t('message.player.previous', { radio: player.prevRadio.name })">
+      <i class="bi-arrow-left-right"></i>
+    </div>
+    </transition>
     <transition name="timer-fade" mode="out-in">
       <timer v-if="timerDisplay"></timer>
     </transition>
@@ -378,6 +385,15 @@ export default {
         },
         200
       );
+    },
+    togglePrevious() {
+      this.$gtag.event(config.GTAG_ACTION_TOGGLE_PREVIOUS, {
+        event_category: config.GTAG_CATEGORY_PLAYER,
+        event_label: this.player.prevRadio.code_name,
+        value: config.GTAG_ACTION_TOGGLE_PREVIOUS_VALUE
+      });
+
+      this.$store.dispatch('togglePrevious');
     }
   }
 };
