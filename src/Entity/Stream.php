@@ -9,7 +9,7 @@ use Symfony\Component\Intl\Countries;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StreamRepository")
- * @ORM\Table(name="`stream`", indexes={@ORM\Index(name="name_idx", columns={"name"}), @ORM\Index(name="click24_idx", columns={"clicks_last_24h"}), @ORM\Index(name="country_code_idx", columns={"country_code"}), @ORM\Index(name="stream_tags_idx", columns={"tags"})})
+ * @ORM\Table(name="`stream`", indexes={@ORM\Index(name="name_idx", columns={"name"}), @ORM\Index(name="click24_idx", columns={"clicks_last_24h"}), @ORM\Index(name="countrycode_idx", columns={"country_code"}), @ORM\Index(name="stream_tags_idx", columns={"tags"})})
  */
 class Stream
 {

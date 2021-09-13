@@ -100,7 +100,24 @@ export default {
   },
   data() {
     return {
-      audio: null,
+      audio: {
+        current: null,
+        player1: {
+          url: null,
+          timer: null,
+          hls: null,
+          element: null
+        },
+        player2: {
+          url: null,
+          timer: null,
+          hls: null,
+          element: null
+        }
+      },
+      allowTwoFeeds: false,
+      // delay before parallel muted stream is stopped
+      delayBeforeStop: 0,
       hls: null,
       socket: null,
       channel: null,
@@ -115,10 +132,15 @@ export default {
     };
   },
   mounted() {
-    // window.togglePlaybackStatus = this.togglePlay;
     // we refresh the state if the app is running
     if (this.player.externalPlayer === true) {
       AndroidApi.getState();
+    } else {
+      // detect if the connection can support two audio feeds to allow fast toggling
+      this.updateConnectionStatus();
+      if (window.navigator.connection !== undefined) {
+        window.navigator.connection.onchange = this.updateConnectionStatus;
+      }
     }
   },
   created() {
@@ -135,6 +157,13 @@ export default {
       'streamUrl',
       'timerDisplay'
     ]),
+    currentPlayer() {
+      if (this.audio.current === null) {
+        return null;
+      }
+
+      return this.audio[`player${this.audio.current}`];
+    },
     isFavorite() {
       if (this.player.radio === null) {
         return false;
@@ -218,21 +247,30 @@ export default {
       if (val === true) {
         this.play(this.streamUrl);
       } else {
-        this.stop();
+        this.pause();
+        // this.stop();
       }
     },
     'player.muted': function (val) {
       if (this.player.externalPlayer === true) { return; }
 
-      if (window.audio !== undefined && window.audio !== null) {
+      /* if (window.audio !== undefined && window.audio !== null) {
         window.audio.muted = val;
+      } */
+
+      if (this.currentPlayer !== null) {
+        this.currentPlayer.element.muted = val;
       }
     },
     'player.volume': function (val) {
       if (this.player.externalPlayer === true) { return; }
 
-      if (window.audio !== undefined && window.audio !== null) {
+      /* if (window.audio !== undefined && window.audio !== null) {
         window.audio.volume = (val * 0.1);
+      } */
+
+      if (this.currentPlayer !== null) {
+        this.currentPlayer.element.volume = (val * 0.1);
       }
     },
     /* eslint-disable object-shorthand */
@@ -267,6 +305,32 @@ export default {
       if (this.player.externalPlayer === false && this.player.playing === true) {
         this.$store.dispatch('stop');
       }
+    },
+    updateConnectionStatus() {
+      // detect if the connection can support two audio feeds to allow fast toggling
+      if (window.navigator.connection !== undefined
+          && (window.navigator.connection.effectiveType !== undefined
+              && window.navigator.connection.effectiveType === config.PLAYER_MULTI_ALLOWED_TYPE)
+          && (window.navigator.connection.downlink !== undefined)) {
+        if (window.navigator.connection.downlink
+            >= config.PLAYER_STOP_DELAY_LOWER_BANDWIDTH_THRESHOLD_MBPS) {
+          this.allowTwoFeeds = true;
+
+          if (window.navigator.connection.downlink
+              >= config.PLAYER_STOP_DELAY_HIGH_BANDWIDTH_THRESHOLD_MBPS
+            // for mobile connections we only allow the short delay time to reduce data consumption
+            && window.navigator.connection.type !== config.PLAYER_MULTI_DISABLED_TYPE) {
+            this.delayBeforeStop = config.PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS;
+          } else {
+            this.delayBeforeStop = config.PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS;
+          }
+
+          return;
+        }
+      }
+
+      this.allowTwoFeeds = false;
+      this.delayBeforeStop = 0;
     },
     radioLink() {
       if (this.player.radio === null) {
@@ -303,22 +367,50 @@ export default {
     },
     /* eslint-disable no-undef */
     play(url) {
-      this.stop();
+      // this.stop();
+      // if (this.player.playing === true) {
+      //   this.pause();
+      // } else {
+      // this stream was the previously paused one
+      if (this.currentPlayer !== null && this.currentPlayer.url === url) {
+        if (this.currentPlayer.timer !== null) {
+          clearTimeout(this.currentPlayer.timer);
+          this.currentPlayer.timer = null;
+        }
+        this.currentPlayer.element.volume = (this.player.volume * 0.1);
+        return;
+      }
+      // }
+
       let startPlayPromise;
+      this.setNextPlayer();
+
+      if (this.currentPlayer.timer !== null) {
+        clearTimeout(this.currentPlayer.timer);
+        this.currentPlayer.timer = null;
+      }
+
+      // previous stream is the same a this one
+      if (this.currentPlayer.url === url) {
+        this.currentPlayer.element.volume = (this.player.volume * 0.1);
+        return;
+      }
+
+      this.currentPlayer.url = url;
 
       if (url.indexOf('.m3u8') !== -1) {
         loadHls().then(() => {
           if (Hls.isSupported()) {
-            window.audio = document.getElementById('videoplayer');
-            this.hls = new Hls();
+            this.currentPlayer.element = document.getElementById('videoplayer');
+            this.currentPlayer.hls = new Hls();
             // bind them together
-            this.hls.attachMedia(window.audio);
-            this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-              this.hls.loadSource(url);
-              this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                window.audio.muted = this.player.muted;
-                window.audio.volume = (this.player.volume * 0.1);
-                startPlayPromise = window.audio.play();
+            this.currentPlayer.hls.attachMedia(this.currentPlayer.element);
+            this.currentPlayer.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+              this.currentPlayer.hls.loadSource(url);
+              this.currentPlayer.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                this.currentPlayer.element.muted = this.player.muted;
+                this.currentPlayer.element.volume = (this.player.volume * 0.1);
+                startPlayPromise = this.currentPlayer.element.play();
               });
             });
           }
@@ -327,16 +419,16 @@ export default {
         const streamUrl = (url.substring(0, 5) !== 'https')
           ? `${streamsProxy}?stream=${url}` : url;
 
-        window.audio = new Audio(`${streamUrl}`);
-        window.audio.muted = this.player.muted;
-        window.audio.volume = (this.player.volume * 0.1);
-        startPlayPromise = window.audio.play();
+        this.currentPlayer.element = new Audio(`${streamUrl}`);
+        this.currentPlayer.element.muted = this.player.muted;
+        this.currentPlayer.element.volume = (this.player.volume * 0.1);
+        startPlayPromise = this.currentPlayer.element.play();
       }
 
       if (startPlayPromise !== undefined) {
         startPlayPromise.then(() => {
           // check if stream playing
-          window.audio.addEventListener('timeupdate', () => {
+          this.currentPlayer.element.addEventListener('timeupdate', () => {
             this.lastUpdated = new Date();
           });
 
@@ -353,17 +445,75 @@ export default {
         });
       }
     },
-    stop() {
-      if (window.audio !== undefined && window.audio !== null) {
-        window.audio.pause();
+    pause() {
+      if (this.currentPlayer === null) {
+        return;
       }
 
-      if (this.hls !== null) {
-        this.hls.destroy();
-        this.hls = null;
+      if (this.allowTwoFeeds === false) {
+        this.stop();
+        return;
       }
-      window.audio = null;
-      delete window.audio;
+
+      if (this.currentPlayer.element !== undefined && this.currentPlayer.element !== null) {
+        this.currentPlayer.element.volume = 0;
+
+        this.currentPlayer.timer = setTimeout(
+          this.resetPlayer,
+          this.delayBeforeStop,
+          this.audio.current
+        );
+      }
+    },
+    stop() {
+      if (this.currentPlayer === null) {
+        return;
+      }
+
+      if (this.currentPlayer.element !== undefined && this.currentPlayer.element !== null) {
+        this.currentPlayer.element.pause();
+      }
+
+      if (this.currentPlayer.timer !== null) {
+        clearTimeout(this.currentPlayer.timer);
+      }
+
+      if (this.currentPlayer.hls !== null) {
+        this.currentPlayer.hls.destroy();
+        this.currentPlayer.hls = null;
+      }
+
+      this.currentPlayer.element = null;
+      this.currentPlayer.url = null;
+
+      // delete window.audio;
+    },
+    /* eslint-disable no-param-reassign */
+    resetPlayer(playerNumber) {
+      const player = this.audio[`player${playerNumber}`];
+
+      if (player === undefined || player === null) {
+        return;
+      }
+
+      if (player.element !== undefined && player.element !== null) {
+        player.element.pause();
+      }
+
+      if (player.timer !== null) {
+        clearTimeout(player.timer);
+        player.timer = null;
+      }
+
+      if (player.hls !== null) {
+        player.hls.destroy();
+        player.hls = null;
+      }
+
+      player.element = null;
+      player.url = null;
+
+      // delete window.audio;
     },
     toggleFavorite() {
       if (this.player.radio !== null) {
@@ -394,6 +544,9 @@ export default {
       });
 
       this.$store.dispatch('togglePrevious');
+    },
+    setNextPlayer() {
+      this.audio.current = this.audio.current === 1 ? 2 : 1;
     }
   }
 };
