@@ -106,13 +106,15 @@ export default {
           url: null,
           timer: null,
           hls: null,
-          element: null
+          element: null,
+          startedAt: null
         },
         player2: {
           url: null,
           timer: null,
           hls: null,
-          element: null
+          element: null,
+          startedAt: null
         }
       },
       allowTwoFeeds: false,
@@ -396,6 +398,7 @@ export default {
         return;
       }
 
+      this.currentPlayer.startedAt = Date.now();
       this.currentPlayer.url = url;
 
       if (url.indexOf('.m3u8') !== -1) {
@@ -455,6 +458,11 @@ export default {
         return;
       }
 
+      // allow quick real stop at stream' start
+      if ((Date.now() - this.currentPlayer.startedAt) / 1000 <= config.PLAYER_MAX_SECONDS_TO_STOP) {
+        this.stop();
+        return;
+      }
       if (this.currentPlayer.element !== undefined && this.currentPlayer.element !== null) {
         this.currentPlayer.element.volume = 0;
 
@@ -485,6 +493,7 @@ export default {
 
       this.currentPlayer.element = null;
       this.currentPlayer.url = null;
+      this.currentPlayer.startedAt = null;
 
       // delete window.audio;
     },
@@ -512,7 +521,7 @@ export default {
 
       player.element = null;
       player.url = null;
-
+      player.startedAt = null;
       // delete window.audio;
     },
     toggleFavorite() {
