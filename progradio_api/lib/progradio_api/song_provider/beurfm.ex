@@ -1,11 +1,11 @@
-defmodule ProgRadioApi.SongProvider.Tropiquesfm do
+defmodule ProgRadioApi.SongProvider.Beurfm do
   require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes2
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://api.tropiquesfm.com/graphql"
-  @radio_id "2174546520932614828"
+  @url "https://api.beurfm.net/graphql"
+  @radio_id "2174546520932614189"
 
   @impl true
   defdelegate has_custom_refresh(), to: GenericLesIndes2
