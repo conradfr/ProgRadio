@@ -33,12 +33,19 @@ const format = async (dateObj, name, description_prefix) => {
     const content = JSON.parse(scrapedData[name][0].json);
     schedule = content.props.pageProps.fetchedContent;
 
-    if (Object.keys(schedule)[0].startsWith('grilleDesProgrammes') === false) {
-      return Promise.resolve([]);
-    } else {
-      schedule = schedule[Object.keys(schedule)[0]]['programmation'];
+    let found = false;
+
+    for (let i = 0; i < Object.keys(schedule).length; i++) {
+      if (Object.keys(schedule)[i].startsWith('grilleDesProgrammes') === true) {
+        found = true;
+        schedule = schedule[Object.keys(schedule)[i]]['programmation'];
+        break;
+      }
     }
 
+    if (found === false) {
+      return Promise.resolve([]);
+    }
   } catch (error) {
     return Promise.resolve([]);
   }
