@@ -114,6 +114,7 @@ const fetch = (url, name, dateObj) => {
                           })
                   )*/
       .data(function (listing) {
+        console.log(listing);
         scrapedData[name].push(listing);
       })
       .done(function () {

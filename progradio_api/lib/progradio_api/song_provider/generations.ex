@@ -1,14 +1,13 @@
-defmodule ProgRadioApi.SongProvider.Mradio do
+defmodule ProgRadioApi.SongProvider.Generations do
   require Logger
   alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://mradio.fr/winradio/prog.xml"
+  @url "https://generations.fr/winradio/prog.xml"
 #  @radio_lag 10
   # 5mn
   @max_length_seconds 300
-
 
   @impl true
   def has_custom_refresh(), do: true

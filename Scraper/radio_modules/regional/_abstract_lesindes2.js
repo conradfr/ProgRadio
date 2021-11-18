@@ -23,6 +23,24 @@ const fetchDesc = async (url) => {
   });
 };
 
+const fetchDescAlt = async (url) => {
+  let data = null;
+  return new Promise(function (resolve, reject) {
+    return osmosis
+      .get(url)
+      // .select('div:not(.Aside)')
+      .set({
+        'description': '#emissionProgrammation'
+      })
+      .data(function(listing) {
+        data = listing;
+      })
+      .done(function () {
+        resolve(data);
+      });
+  });
+};
+
 const format = async (dateObj, name, description_prefix) => {
   if (scrapedData[name] === undefined || scrapedData[name][0] === undefined || scrapedData[name][0].json === 'undefined') {
     return Promise.resolve([]);
@@ -76,6 +94,7 @@ const format = async (dateObj, name, description_prefix) => {
     let description = curr.chapo || '';
     let descriptionSupp = await fetchDesc(`${description_prefix}${curr.slug}`);
 
+
     if (utils.checkNested(descriptionSupp, 'description') === true && descriptionSupp.description.length > 0) {
       const descriptionAdd = descriptionSupp.description.join(' ').trim();
       if (descriptionAdd.length > 0) {
@@ -83,10 +102,26 @@ const format = async (dateObj, name, description_prefix) => {
       }
     }
 
+    try {
+      if (descriptionSupp === undefined || descriptionSupp === null || descriptionSupp === '') {
+        descriptionSupp = await fetchDescAlt(`${description_prefix}${curr.slug}`);
+        if (descriptionSupp !== undefined && descriptionSupp !== null
+          && typeof descriptionSupp === 'object') {
+          description += descriptionSupp.description;
+        }
+      }
+    }
+    catch (error) {
+        // nothing
+      }
+
     let img = null;
 
     try {
-      img  = curr.imagePrincipale.medias.find(element => element.format === '16by9').url;
+      img = curr.imagePrincipale.medias.find(element => element.format === '16by9');
+      if (img !== undefined){
+        img = curr.imagePrincipale.medias.find(element => element.format === '16by9').url;
+      }
 
       if (img === undefined && curr.imagePrincipale.medias.length > 0) {
         img = curr.imagePrincipale.medias[curr.imagePrincipale.medias.length - 1].url;
