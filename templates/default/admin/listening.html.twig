@@ -16,7 +16,8 @@
     {{ parent() }}
 
     <script type="module">
-      import { createApp } from 'https://unpkg.com/petite-vue?module'
+      // import { createApp } from 'https://unpkg.com/petite-vue?module'
+      import { createApp } from 'https://unpkg.com/petite-vue@0.4.0/dist/petite-vue.es.js'
 
       // @url https://stackoverflow.com/questions/2631001/test-for-existence-of-nested-javascript-object-key
       const checkNested = (obj, level,  ...rest) => {
@@ -67,7 +68,7 @@
       }
 
       const sources = ['web', 'seo'];
-
+console.log('ho');
       createApp({
         data: null,
         // getters
@@ -120,7 +121,7 @@
             <div class="col-md-2 admin-listening-side test">
                 {% verbatim %}
                 <div class="alert alert-info" role="alert" v-scope v-cloak
-                  @mounted="start">
+                  @vue:mounted="start">
                     <table style="width: 100%">
                         <tr>
                             <td style="width:40%;"><strong>Live web app</strong></td>
