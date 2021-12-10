@@ -52,7 +52,7 @@ page:
         done_title: Réinitialisation du mot de passe
         done: '<strong>Le mot de passe a été mis à jour.</strong><br>Vous pouvez vous connecter %link%en cliquant ici%link_end%.'
         page_title: Mot de passe oublié
-        success: Si un compte utilisant l'email <strong>%email</strong> a été trouvé, un message avec un lien pour réinitialiser le mot de passe lui a été envoyé.
+        success: Si un compte utilisant l'email <strong>%email%</strong> a été trouvé, un message avec un lien pour réinitialiser le mot de passe lui a été envoyé.
         submit: Soumettre
 
     login:
@@ -86,8 +86,9 @@ page:
         alert_1: Votre compte a bien été créé !
         alert_2: Si vous aviez des radios et streamings en favoris ceux-ci ont été automatiquement ajoutés à votre compte.
         what_now_question: Que souhaitez-vous faire maintenant ?
-        what_now_choice1: Consulter les programmes radios
-        what_now_choice2: Écouter des radios en streaming
+        what_now_choice1: Me connecter à mon compte
+        what_now_choice2: Consulter les programmes radios
+        what_now_choice3: Écouter des radios en streaming
 
     stream:
         country: Pays

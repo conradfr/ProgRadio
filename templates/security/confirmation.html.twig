@@ -14,9 +14,12 @@
             </div>
 
             <p>
-                <strong>{{ 'page.registered.what_now_question'|trans }}</strong><br>
-                <a href="{{ path('app') }}schedule">{{ 'page.registered.what_now_choice1'|trans }}</a><br>
-                <a href="{{ path('app') }}streaming">{{ 'page.registered.what_now_choice2'|trans }}</a>
+                <strong>{{ 'page.registered.what_now_question'|trans }}</strong>
+            </p>
+            <p>
+                <a href="{{ path('app_login') }}">{{ 'page.registered.what_now_choice1'|trans }}</a><hr />
+                <a href="{{ path('app') }}schedule">{{ 'page.registered.what_now_choice2'|trans }}</a><br>
+                <a href="{{ path('app') }}streaming">{{ 'page.registered.what_now_choice3'|trans }}</a>
             </p>
 
         </div>

@@ -29,10 +29,6 @@
     {% if schedule|length == 0 %}
         <meta name="robots" content="noindex">
     {% endif %}
-
-{#    {% if isCrawler(app.request.headers.get('User-Agent')) == false and date|date('Y-m-d') == date()|date('Y-m-d')  %}#}
-{#        <meta http-equiv="refresh" content="5; URL={{ path('app') }}radio/{{ radio.codeName }}" />#}
-{#    {% endif %}#}
 {% endblock %}
 
 {% block body %}

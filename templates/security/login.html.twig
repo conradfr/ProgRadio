@@ -20,13 +20,13 @@
                 {% endif %}
 
                 <div class="mb-3">
-                    <label for="inputEmail">{{ 'connectionForm.email'|trans }}</label>
-                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
+                    <label for="inputUsername">{{ 'connectionForm.email'|trans }}</label>
+                    <input type="text" value="{{ last_username }}" name="_username" id="inputUsername" class="form-control" required autofocus>
                 </div>
 
                 <div class="mb-3">
                     <label for="inputPassword">{{ 'connectionForm.password'|trans }}</label>
-                    <input type="password" name="password" id="inputPassword" class="form-control" required>
+                    <input type="password" name="_password" id="inputPassword" class="form-control" required>
                 </div>
 
                 <input type="hidden" name="_csrf_token"

@@ -8,6 +8,8 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use App\Validator\Constraints as AppAssert;
@@ -17,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`", indexes={@ORM\Index(name="user_token_idx", columns={"password_reset_token"}), @ORM\Index(name="user_email_idx", columns={"email"})})
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     protected const TOKEN_LENGTH = 25;
     protected const TOKEN_EXPIRATION = 24; // hours
@@ -138,9 +140,14 @@ class User implements UserInterface
      *
      * @see UserInterface
      */
-    public function getUsername(): string
+    public function getUserIdentifier(): string
     {
         return (string) $this->email;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->getUserIdentifier();
     }
 
     /**

@@ -82,8 +82,9 @@ page:
         alert_1: Your account has been created!
         alert_2: Your favorites (if any) have been added to your account.
         what_now_question: What do you want to do now?
-        what_now_choice1: Check schedules
-        what_now_choice2: Listen to streaming radios
+        what_now_choice1: Connect to my account
+        what_now_choice2: Check schedules
+        what_now_choice3: Listen to streaming radios
 
     stream:
         country: Country

@@ -2,3 +2,4 @@ framework:
     cache:
         app: cache.adapter.redis
         system: cache.adapter.apcu
+        default_redis_provider: snc_redis.default

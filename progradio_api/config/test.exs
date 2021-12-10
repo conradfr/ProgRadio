@@ -7,7 +7,7 @@ use Mix.Config
 # Run `mix help test` for more information.
 config :progradio_api, ProgRadioApi.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "123",
   database: "progradio_api_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

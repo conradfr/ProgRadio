@@ -13,7 +13,7 @@ use Twig\TwigFunction;
 
 class FavoritesExtension extends AbstractExtension
 {
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('scheduleCollections', [FavoritesRuntime::class, 'scheduleCollections'])

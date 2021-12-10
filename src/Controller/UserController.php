@@ -15,9 +15,8 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @Route("/my-account")
@@ -28,7 +27,7 @@ class UserController extends AbstractBaseController
 {
     protected const SESSION_DELETE_ATTR = 'delete-id';
 
-    public function __construct(private SessionInterface $session) { }
+    public function __construct(private RequestStack $requestStack) { }
 
     /**
      * @Route(
@@ -77,7 +76,7 @@ class UserController extends AbstractBaseController
 
                 // to new address
                 $email = (new TemplatedEmail())
-                    ->from(Address::fromString($from))
+                    ->from($from)
                     ->to($user->getEmail())
                     ->subject("Programmes-Radio.com - Modification de l'adresse email")
                     ->htmlTemplate('emails/user_email_change_new.html.twig')
@@ -92,7 +91,7 @@ class UserController extends AbstractBaseController
 
                 // to old address
                 $email = (new TemplatedEmail())
-                    ->from(Address::fromString($from))
+                    ->from($from)
                     ->to($userEmailChange->getEmail())
                     ->subject("Programmes-Radio.com - Modification de l'adresse email")
                     ->htmlTemplate('emails/user_email_change.html.twig')
@@ -123,7 +122,7 @@ class UserController extends AbstractBaseController
     public function passwordUpdate(
         Request $request,
         EntityManagerInterface $em,
-        UserPasswordEncoderInterface $passwordEncoder,
+        UserPasswordHasherInterface $passwordHasher,
         MailerInterface  $mailer): Response
     {
         /** @var \App\Entity\User $user */
@@ -134,13 +133,13 @@ class UserController extends AbstractBaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $plaintextPassword = $form->get('plainPassword')->getData();
             // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $plaintextPassword
             );
+            $user->setPassword($hashedPassword);
 
             $user->generatePasswordResetToken();
             $user->setPasswordResetExpiration();
@@ -182,7 +181,8 @@ class UserController extends AbstractBaseController
     public function delete(): Response
     {
         $token = uniqid();
-        $this->session->set(self::SESSION_DELETE_ATTR, $token);
+        $session = $this->requestStack->getSession();
+        $session->set(self::SESSION_DELETE_ATTR, $token);
 
         return $this->render('default/user/delete.html.twig', [
             'token' => $token
@@ -197,11 +197,12 @@ class UserController extends AbstractBaseController
      */
     public function deleteConfirm(string $token, Request $request, EntityManagerInterface $em): Response
     {
-        if ($token !== $this->session->get(self::SESSION_DELETE_ATTR)) {
+        $session = $this->requestStack->getSession();
+        if ($token !== $session->get(self::SESSION_DELETE_ATTR)) {
             throw new \Exception('Error');
         }
 
-        $this->session->remove(self::SESSION_DELETE_ATTR);
+        $session->remove(self::SESSION_DELETE_ATTR);
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -209,8 +210,8 @@ class UserController extends AbstractBaseController
         $em->remove($user);
         $em->flush();
 
-        $this->session = new Session();
-        $this->session->invalidate();
+        $session->clear();
+        $session->invalidate();
 
         return $this->redirectToRoute('user_deleted');
     }

@@ -38,16 +38,16 @@
     </style>
 
     <script type="text/javascript">
-        const darkModeStartHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_START_HOUR') }};
-        const darkModeEndHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_END_HOUR') }};
+      const darkModeStartHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_START_HOUR') }};
+      const darkModeEndHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_END_HOUR') }};
 
-        const streamsProxy = '{{ streams_proxy }}';
-        const apiUrl = '{{ api_url }}';
+      const streamsProxy = '{{ streams_proxy }}';
+      const apiUrl = '{{ api_url }}';
 
-        {% block javascript_head %}
-            // placeholder
-            const scrollToCursor = function() { return true; };
-        {% endblock %}
+      {% block javascript_head %}
+      // placeholder
+      const scrollToCursor = function() { return true; };
+      {% endblock %}
     </script>
 </head>
 <body class="d-flex flex-column h-100"{% block bodysupp %}{% endblock %}>
@@ -58,10 +58,10 @@
 
 <footer class="footer mt-auto">
     <div class="container text-center">
-            {% block footer %}
-               ©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a> -
-                <a title="{{ locale_name }}" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}"><img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flag ~ '.svg') }}" alt="{{ locale_name }}"></a>
-            {% endblock %}
+        {% block footer %}
+            ©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a> -
+            <a title="{{ locale_name }}" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}"><img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flag ~ '.svg') }}" alt="{{ locale_name }}"></a>
+        {% endblock %}
     </div>
 </footer>
 
@@ -69,18 +69,18 @@
 <script type="module" async src="{{ asset('js/bootstrap.bundle.min.js') }}?v={{ releaseVersion() }}"></script>
 
 <script nomodule>
-  {# redirect IE to legacy website (while it's still working ...)  #}
-  function redirectIE() {
-    const internetExplorer = navigator.userAgent.match(/Trident.*rv[ :]*11\./i);
-    if (internetExplorer) {
-      setTimeout(function () {
-        // redirect to Chrome download page
-        window.location.replace('{{ legacy }}');
-      }, 250);
+    {# redirect IE to legacy website (while it's still working ...)  #}
+    function redirectIE() {
+      const internetExplorer = navigator.userAgent.match(/Trident.*rv[ :]*11\./i);
+      if (internetExplorer) {
+        setTimeout(function () {
+          // redirect to Chrome download page
+          window.location.replace('{{ legacy }}');
+        }, 250);
+      }
     }
-  }
 
-  redirectIE();
+    redirectIE();
 </script>
 
 <script>

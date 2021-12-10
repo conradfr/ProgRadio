@@ -6,3 +6,7 @@ twig:
         streams_proxy: "%env(streams_proxy)%"
         api_url: "%env(API_URL)%"
         legacy: "%env(LEGACY)%"
+
+when@test:
+    twig:
+        strict_variables: true

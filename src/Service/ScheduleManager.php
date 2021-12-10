@@ -9,7 +9,7 @@ use App\Entity\ScheduleEntry;
 use App\Entity\Radio;
 use App\ValueObject\ScheduleResource;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
 class ScheduleManager
@@ -20,7 +20,7 @@ class ScheduleManager
     protected const CACHE_KEY_DAY_FORMAT = 'Y-m-d';
     protected const CACHE_KEY_SERIALIZER_FORMAT = 'json';
 
-    public function __construct(protected EntityManagerInterface $em, protected AdapterInterface $cache) { }
+    public function __construct(protected EntityManagerInterface $em, protected CacheItemPoolInterface $cache) { }
 
     /*
     * Basically there would be a bug is any radio would have the same name as a collection
@@ -72,7 +72,7 @@ class ScheduleManager
             return $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($scheduleResource);
         }
 
-        return $this->cache->get(self::getKey($scheduleResource), function (ItemInterface $item) use($scheduleResource) {
+        return $this->cache->getItem(self::getKey($scheduleResource), function (ItemInterface $item) use($scheduleResource) {
             $item->expiresAfter(self::CACHE_SCHEDULE_TTL);
 
             return $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($scheduleResource);

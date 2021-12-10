@@ -22,7 +22,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->security = $security;
     }
 
-    public function loadUserByUsername($email)
+    public function loadUserByIdentifier($email): ?UserInterface
     {
         return $this->getEntityManager()->createQuery(
             'SELECT u
@@ -31,6 +31,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         )
         ->setParameter('email', $email)
         ->getOneOrNullResult();
+    }
+
+    public function loadUserByUsername($email): ?UserInterface
+    {
+        return $this->loadUserByIdentifier($email);
     }
 
     public function findFromToken($token)

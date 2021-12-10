@@ -16,7 +16,7 @@ class ReleaseVersion extends AbstractExtension
     protected const DEFAULT_VERSION = 'progradio';
     protected const ENV_VAR = 'RELEASE_ID';
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('releaseVersion', [$this, 'releaseVersion']),

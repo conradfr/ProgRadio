@@ -11,15 +11,13 @@ use App\Entity\UserEmailChange;
 use App\Form\ForgottenPasswordType;
 use App\Form\RegistrationFormType;
 use App\Form\UpdatePasswordType;
-use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Mailer\MailerInterface;
@@ -64,20 +62,20 @@ class SecurityController extends AbstractController
      *     name="app_register"
      * )
      */
-    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator, MailerInterface $mailer): Response
+    public function register(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $plaintextPassword = $form->get('plainPassword')->getData();
             // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $plaintextPassword
             );
+            $user->setPassword($hashedPassword);
 
             $user->setRoles(['ROLE_USER']);
 
@@ -99,7 +97,7 @@ class SecurityController extends AbstractController
             // email
             $from = $this->getParameter('email_from');
             $email = (new TemplatedEmail())
-                ->from(Address::fromString($from))
+                ->from($from)
                 ->to($user->getEmail())
                 ->subject('Programmes-Radio.com - Inscription')
                 ->htmlTemplate('emails/signup.html.twig')
@@ -107,13 +105,7 @@ class SecurityController extends AbstractController
 
             $mailer->send($email);
 
-            $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
-
+            //return $this->redirectToRoute('app');
             return $this->redirectToRoute('signup_success');
         }
 
@@ -136,7 +128,7 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $userEmail = $form->get('email')->getData();
-            $user = $em->getRepository(User::class)->loadUserByUsername($userEmail);
+            $user = $em->getRepository(User::class)->loadUserByIdentifier($userEmail);
 
             if ($user !== null) {
                 $user->generatePasswordResetToken();
@@ -148,7 +140,7 @@ class SecurityController extends AbstractController
                 // email
                 $from = $this->getParameter('email_from');
                 $email = (new TemplatedEmail())
-                    ->from(Address::fromString($from))
+                    ->from($from)
                     ->to($user->getEmail())
                     ->subject('Programmes-Radio.com - Réinitialisation du mot de passe')
                     ->htmlTemplate('emails/reset.html.twig')
@@ -170,7 +162,7 @@ class SecurityController extends AbstractController
      *     name="reset_password"
      * )
      */
-    public function resetPassword(string $token, Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function resetPassword(string $token, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
     {
         /** @var \App\Entity\User $user */
         $user = $em->getRepository(User::class)->findFromToken($token);
@@ -187,13 +179,13 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $success = true;
 
+            $plaintextPassword = $form->get('plainPassword')->getData();
             // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $plaintextPassword
             );
+            $user->setPassword($hashedPassword);
 
             $user->setPasswordResetToken(null);
 
