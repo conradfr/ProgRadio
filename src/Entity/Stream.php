@@ -269,7 +269,7 @@ class Stream
 
     public function getCountry(string $locale): ?string
     {
-        if ($this->getCountryCode() === null) {
+        if ($this->getCountryCode() === null || $this->getCountryCode() === '') {
             return null;
         }
 
