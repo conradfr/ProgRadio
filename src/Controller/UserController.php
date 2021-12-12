@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -153,7 +152,7 @@ class UserController extends AbstractBaseController
 
             $from = $this->getParameter('email_from');
             $email = (new TemplatedEmail())
-                ->from(Address::fromString($from))
+                ->from($from)
                 ->to($user->getEmail())
                 ->subject("Programmes-Radio.com - Modification du mot de passe")
                 ->htmlTemplate('emails/user_password_update.html.twig')
