@@ -93,14 +93,14 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-  const url = 'http://mradio.fr/radio/grille-programme';
+  const url = 'https://mradio.fr/radio/grille-programme';
 
   logger.log('info', `fetching ${url}`);
 
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find(`.strict-block > .blog-style-square > .item`)
+      .find('.post')
       // .select('.item')
       .set({
         'img': '.item-header > .item-photo > img@src'
