@@ -11,31 +11,11 @@
     color: $loader-text;
     padding: 0.923rem;
     width: 11.154rem;
-  }
 
-  .alert-progradio-icon {
-    font-size: 1.385rem;
-  }
-
-  .refresh-animate {
-    -animation: spin .8s infinite linear;
-    -webkit-animation: spin2 .8s infinite linear;
-  }
-
-  @-webkit-keyframes spin2 {
-    from { -webkit-transform: rotate(0deg);}
-    to { -webkit-transform: rotate(360deg);}
-  }
-
-  @keyframes spin {
-    from { transform: scale(1) rotate(0deg);}
-    to { transform: scale(1) rotate(360deg);}
-  }
-
-  &.v-enter-active, &.v-leave-active {
-    transition: opacity 300ms;
-  }
-  &.v-enter, &.v-leave-to {
-    opacity: 0;
+    .spinner-border {
+      width: 1.231rem;
+      height: 1.231rem;
+      border-width: .2em;
+    }
   }
 }
