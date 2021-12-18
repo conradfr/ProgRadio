@@ -6,7 +6,8 @@
     </div>
     <div class="flex-fill ps-3 mb-3">
       <h6 class="mt-0" v-once>{{ timeStart }} - {{ section.title }}</h6>
-      <div v-if="section.presenter" v-once>{{ section.presenter }}</div>
+      <div v-if="section.presenter" v-once><i>{{ section.presenter }}</i></div>
+      <div class="mt-1" v-if="section.description" v-once>{{ section.description }}</div>
     </div>
   </div>
 </template>
