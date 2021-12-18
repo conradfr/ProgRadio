@@ -1,7 +1,8 @@
-import { nextTick } from 'vue';
+import { nextTick, toRaw, reactive } from 'vue';
 
 import find from 'lodash/find';
 import { DateTime } from 'luxon';
+import { Socket } from '../../js/phoenix';
 
 import * as config from '../config/config';
 import AndroidApi from '../api/AndroidApi';
@@ -13,6 +14,8 @@ import StreamsApi from '../api/StreamsApi';
 import cookies from '../utils/cookies';
 
 const initState = {
+  socket: null,
+  channels: {},
   playing: false,
   externalPlayer: AndroidApi.hasAndroid,
   externalPlayerVersion: AndroidApi.getVersion(),
@@ -21,7 +24,7 @@ const initState = {
   prevRadio: cookies.getJson(config.COOKIE_PREV_RADIO_PLAYED),
   prevRadioStreamCodeName: cookies.get(config.COOKIE_PREV_RADIO_STREAM_PLAYED),
   show: null,
-  song: null,
+  song: {},
   volume: parseInt(cookies.get(config.COOKIE_VOLUME, config.DEFAULT_VOLUME), 10),
   muted: cookies.get(config.COOKIE_MUTED, 'false') === 'true',
   session: {
@@ -58,33 +61,27 @@ const storeGetters = {
 
     return state.radio.streams[state.radioStreamCodeName].url;
   },
-  currentSong: (state) => {
-    if (state.song === undefined || state.song === null) {
+  liveSong: state => (radio, radioStreamCodeName) => {
+    const channelName = PlayerUtils.getChannelName(toRaw(radio), radioStreamCodeName);
+
+    if (state.song === null || state.song === undefined
+      || !Object.prototype.hasOwnProperty.call(state.song, channelName)) {
       return null;
     }
 
-    let song = '';
-    let hasArtist = false;
-    if (state.song.artist !== undefined && state.song.artist !== null
-      && state.song.artist !== '') {
-      song += state.song.artist;
-      hasArtist = true;
+    return PlayerUtils.formatSong(state.song[channelName].song);
+  },
+  currentSong: (state, getters) => {
+    if (state.radio === null || state.radio === undefined) {
+      return null;
     }
 
-    if (state.song.title !== undefined && state.song.title !== null
-      && state.song.title !== '') {
-      if (hasArtist === true) {
-        song += ' - ';
-      }
-
-      song += state.song.title;
-    }
-
-    return song === '' ? null : song;
+    return getters.liveSong(state.radio, state.radioStreamCodeName);
   }
 };
 
 /* eslint-disable object-curly-newline */
+/* eslint-disable no-prototype-builtins */
 const storeActions = {
   playRadio: ({ state, dispatch, commit, rootState }, params) => {
     dispatch('stop');
@@ -283,8 +280,49 @@ const storeActions = {
 
     commit('setShow', show);
   },
-  setSong: ({ commit }, song) => {
-    commit('setSong', song);
+  joinChannel: ({ commit, state, dispatch }, topicName) => {
+    // Channel already exists?
+    if (Object.prototype.hasOwnProperty.call(state.channels, topicName)) {
+      return false;
+    }
+
+    if (state.socket === null) {
+      commit('connectSocket');
+      state.socket.connect();
+      state.socket.onError(() => {
+        commit('disconnectSocket');
+      });
+    }
+
+    nextTick(() => {
+      commit('joinChannel', topicName);
+
+      state.channels[topicName].on('playing', (songData) => {
+        dispatch('setSong', songData);
+      });
+
+      state.channels[topicName].on('quit', () => {
+        dispatch('setSong', { topicName, song: null });
+        commit('leaveChannel', topicName);
+      });
+
+      state.channels[topicName].join()
+        // .receive('ok', ({ messages }) => console.log('catching up', messages))
+        .receive('error', () => {
+          dispatch('setSong', { topicName, song: null });
+          commit('leaveChannel', topicName);
+        })
+        .receive('timeout', () => {
+          dispatch('setSong', { topicName, song: null });
+          commit('leaveChannel', topicName);
+        });
+    });
+  },
+  leaveChannel: ({ commit }, topicName) => {
+    commit('leaveChannel', topicName);
+  },
+  setSong: ({ commit }, songData) => {
+    commit('setSong', songData);
   },
   toggleMute: ({ state, commit }) => {
     cookies.set(config.COOKIE_MUTED, !state.muted);
@@ -394,7 +432,7 @@ const storeMutations = {
     state.radioStreamCodeName = streamCodeName || null;
     state.show = null;
     state.playing = true;
-    state.song = null;
+    // state.song = {};
     state.session = {
       start: DateTime.local().setZone(config.TIMEZONE),
       id: null,
@@ -403,7 +441,7 @@ const storeMutations = {
   },
   resume(state) {
     state.playing = true;
-    state.song = null;
+    // state.song = null;
     state.session = {
       start: DateTime.local().setZone(config.TIMEZONE),
       id: null,
@@ -412,7 +450,7 @@ const storeMutations = {
   },
   stop(state) {
     state.playing = false;
-    state.song = null;
+    // state.song = null;
     state.session = { start: null, id: null, ctrl: null };
     if (state.sessionInterval !== null) {
       clearInterval(state.sessionInterval);
@@ -438,12 +476,61 @@ const storeMutations = {
   setShow(state, show) {
     state.show = show;
   },
-  setSong(state, song) {
-    if (song === null || song === undefined) {
-      state.song = null;
+  /* eslint-disable no-undef */
+  connectSocket(state) {
+    if (state.socket === null) {
+      state.socket = new Socket(`wss://${apiUrl}/socket`);
+    }
+  },
+  disconnectSocket(state) {
+    if (state.socket !== null) {
+      state.socket.disconnect();
+      state.channels = {};
+      state.song = {};
+      state.socket = null;
+    }
+  },
+  joinChannel(state, topicName) {
+    if (Object.prototype.hasOwnProperty.call(state.channels, topicName)) {
+      return;
     }
 
-    state.song = song;
+    state.channels[topicName] = state.socket.channel(topicName);
+  },
+  leaveChannel(state, topicName) {
+    if (!Object.prototype.hasOwnProperty.call(state.channels, topicName)) {
+      return;
+    }
+
+    state.channels[topicName].leave();
+    delete state.channels[topicName];
+
+    // remove songs when they came from this channel
+    Object.entries(state.song).forEach(
+      ([key, value]) => {
+        if (value.topic === topicName) {
+          delete state.song[key];
+        }
+      }
+    );
+  },
+  setSong(state, songParams) {
+    if (songParams === null || songParams === undefined) {
+      state.song = {};
+      return;
+    }
+
+    const { topic, name, song } = songParams;
+
+    if (song === null) {
+      delete state.song[name];
+      return;
+    }
+
+    state.song = {
+      ...state.song,
+      [name]: reactive({ topic, song })
+    };
   },
   toggleMute(state) {
     state.muted = !state.muted;

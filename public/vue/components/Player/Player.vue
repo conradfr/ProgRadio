@@ -59,8 +59,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 
-import { Socket } from '../../../js/phoenix';
-
 import PlayerInfo from './PlayerInfo.vue';
 import Timer from './Timer.vue';
 import VolumeFader from './VolumeFader.vue';
@@ -121,7 +119,6 @@ export default {
       // delay before parallel muted stream is stopped
       delayBeforeStop: 0,
       hls: null,
-      socket: null,
       channel: null,
       /*
         As the volume icon may be shown instead of the mute icon on tablets and a click event
@@ -192,16 +189,8 @@ export default {
     }
   },
   /* eslint-disable func-names */
-  /* eslint-disable no-undef */
   watch: {
     'player.playing': function (val) {
-      const cleanSocket = () => {
-        this.socket.disconnect();
-        this.channel = null;
-        this.socket = null;
-        this.$store.dispatch('setSong', null);
-      };
-
       if (val === true) {
         let channelName = null;
 
@@ -216,33 +205,10 @@ export default {
           channelName = `url:${this.streamUrl}`;
         }
 
-        this.socket = new Socket(`wss://${apiUrl}/socket`);
-        this.socket.connect();
-        this.socket.onError(() => {
-          this.$store.dispatch('setSong', null);
-        });
-
-        this.channel = this.socket.channel(channelName);
-
-        this.channel.on('playing', (song) => {
-          this.$store.dispatch('setSong', song);
-        });
-
-        this.channel.on('quit', () => {
-          cleanSocket();
-        });
-
-        this.channel.join()
-          // .receive('ok', ({ messages }) => console.log('catching up', messages))
-          .receive('error', () => {
-            cleanSocket();
-          })
-          .receive('timeout', () => {
-            cleanSocket();
-          });
-      } else if (this.socket !== null) {
+        this.$store.dispatch('joinChannel', channelName);
+      } /* else if (this.socket !== null) {
         cleanSocket();
-      }
+      } */
 
       if (this.player.externalPlayer === true) { return; }
 

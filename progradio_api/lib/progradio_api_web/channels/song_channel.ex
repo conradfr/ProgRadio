@@ -7,18 +7,27 @@ defmodule ProgRadioApiWeb.SongChannel do
   alias ProgRadioApi.StreamSong
   alias ProgRadioApi.Stream
   alias ProgRadioApi.Radio
+  alias ProgRadioApi.Collection
 
-  def join("song:" <> radio_stream_codename, _params, socket) do
+  def join("collection:" <> _collection_code_name, _params, socket) do
+    {:ok, socket}
+  end
+
+  def join("songs", _params, socket) do
+    {:ok, socket}
+  end
+
+  def join("song:" <> radio_stream_code_name, _params, socket) do
     # check radio first, if null, check stream
     radio_stream_data =
-      case get_radio_stream(radio_stream_codename) do
-        data when is_nil(data) -> get_stream_song(radio_stream_codename)
+      case get_radio_stream(radio_stream_code_name) do
+        data when is_nil(data) -> get_stream_song(radio_stream_code_name)
         data -> data
       end
 
     case radio_stream_data !== nil do
       true ->
-        send(self(), {:after_join, "song:" <> radio_stream_codename, radio_stream_data})
+        send(self(), {:after_join, "song:" <> radio_stream_code_name, radio_stream_data})
         {:ok, socket}
 
       false ->
@@ -53,11 +62,14 @@ defmodule ProgRadioApiWeb.SongChannel do
       from(rs in RadioStream,
         join: r in Radio,
         on: r.id == rs.radio_id,
+        join: c in Collection,
+        on: c.id == r.collection_id,
         select: %{
           radio_code_name: r.code_name,
           radio_stream_code_name: rs.code_name,
           id: rs.id,
-          type: "radio_stream"
+          type: "radio_stream",
+          collection_code_name: c.code_name
         },
         where: rs.code_name == ^code_name,
         limit: 1

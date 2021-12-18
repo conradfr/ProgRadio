@@ -17,7 +17,7 @@ defmodule ProgRadioApi.SongProvider do
   @doc """
     Get artist & song as map
   """
-  @callback get_song(String.t(), map() | nil) :: map()
+  @callback get_song(String.t(), map() | nil) :: map() | nil
 
   @doc """
     Indicates if it can refreshes based on metadata or not

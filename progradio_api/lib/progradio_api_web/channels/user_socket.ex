@@ -2,6 +2,7 @@ defmodule ProgRadioApiWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
+  channel "collection:*", ProgRadioApiWeb.SongChannel
   channel "song:*", ProgRadioApiWeb.SongChannel
   channel "url:*", ProgRadioApiWeb.SongChannel
 

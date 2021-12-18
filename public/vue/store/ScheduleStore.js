@@ -280,7 +280,7 @@ const storeActions = {
   tick: ({ commit, rootState, dispatch }) => {
     const now = DateTime.local().setZone(config.TIMEZONE);
 
-    if (now.hour === 0 && now.minutes < 3) {
+    if (now.hour === 0 && now.minutes < 2) {
       dispatch('getSchedule');
     }
 

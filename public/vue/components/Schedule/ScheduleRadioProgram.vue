@@ -18,9 +18,9 @@
                v-bind:class="{ 'program-description-nohost': !program.host }">
             <div class="program-description-short-inner">
               <span class="program-description-short-inner-song"
-                  v-if="isCurrent && radioPlaying && currentSong">
+                  v-if="isCurrent && liveSong">
                 <i class="bi bi-music-note-beamed"></i>
-                {{ currentSong }}
+                {{ liveSong }}
               </span>
               <span class="program-description-short-inner-text"
                     v-bind:class="{ 'program-description-short-inner-text-current': isCurrent }"
@@ -50,7 +50,7 @@ export default {
     MODE: 3
   },
   components: { ScheduleRadioSection },
-  props: ['program', 'radioPlaying', 'intersectionObserver', 'isIntersecting'],
+  props: ['radio', 'program', 'radioPlaying', 'intersectionObserver', 'isIntersecting'],
   data() {
     return {
       hover: false
@@ -111,6 +111,15 @@ export default {
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
       return `${start}-${end}`;
+    },
+    liveSong() {
+      // current song of playing radio
+      if (this.isCurrent && this.radioPlaying && this.currentSong) {
+        return this.currentSong;
+      }
+
+      // else check if live song of this radio main steam
+      return this.$store.getters.liveSong(this.radio, `${this.radio.code_name}_main`);
     },
     isCurrent() {
       return Interval.fromDateTimes(DateTime.fromISO(this.program.start_at).setZone(TIMEZONE),

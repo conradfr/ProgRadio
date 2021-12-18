@@ -27,9 +27,13 @@ defmodule ProgRadioApi.Application do
       # Start the Endpoint (http/https)
       ProgRadioApiWeb.Endpoint,
       ProgRadioApi.Scheduler,
-      ProgRadioApi.Checker.StreamsSupervisor
+      ProgRadioApi.Checker.StreamsSupervisor,
       # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
       # {ProgRadioApi.Worker, arg}
+      Supervisor.child_spec({Task, &ProgRadioApi.SongManager.join_permanent/0},
+        id: StartupTask,
+        restart: :temporary
+      )
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

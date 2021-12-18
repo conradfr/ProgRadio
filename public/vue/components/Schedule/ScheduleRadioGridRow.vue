@@ -10,10 +10,11 @@
       <schedule-radio-program
         v-for="(entry, key) in schedule"
         :key="key"
+        :radio="radio"
         :program="entry"
         :intersectionObserver="intersectionObserver"
         :isIntersecting="intersected.indexOf(entry.hash) !== -1"
-        :radioPlaying="playing && playingStreamCodeName === `${radio_code_name}_main`">
+        :radioPlaying="playing && playingStreamCodeName === `${radio.code_name}_main`">
       </schedule-radio-program>
     </template>
   </div>
@@ -29,7 +30,7 @@ export default {
     MODE: 3
   },
   components: { ScheduleRadioProgram },
-  props: ['radio_code_name', 'displayNoSchedule', 'schedule', 'hasSchedule'],
+  props: ['radio', 'displayNoSchedule', 'schedule', 'hasSchedule'],
   data() {
     return {
       intersected: [],

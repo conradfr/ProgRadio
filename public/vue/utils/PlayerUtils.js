@@ -80,6 +80,48 @@ const getNextStream = (currentStream, streams, way) => {
   return streams[newIndex];
 };
 
+const getStreamUrl = (radio, radioStreamCodeName) => {
+  if (radio.type === config.PLAYER_TYPE_STREAM || radioStreamCodeName === null) {
+    return radio.stream_url;
+  }
+
+  return radio.streams[radioStreamCodeName].url;
+};
+
+const getChannelName = (radio, radioStreamCodeName) => {
+  if ((radio.type === config.PLAYER_TYPE_RADIO
+    && radio.streams[radioStreamCodeName].current_song === true)
+    || (radio.type === config.PLAYER_TYPE_STREAM
+      && radio.current_song === true)) {
+    const channelNameEnd = radio.type === config.PLAYER_TYPE_RADIO
+      ? radioStreamCodeName : radio.radio_stream_code_name;
+    return `song:${channelNameEnd}`;
+  }
+
+  return `url:${getStreamUrl(radio, radioStreamCodeName)}`;
+};
+
+const formatSong = (songData) => {
+  let song = '';
+  let hasArtist = false;
+  if (songData.artist !== undefined && songData.artist !== null
+    && songData.artist !== '') {
+    song += songData.artist;
+    hasArtist = true;
+  }
+
+  if (songData.title !== undefined && songData.title !== null
+    && songData.title !== '') {
+    if (hasArtist === true) {
+      song += ' - ';
+    }
+
+    song += songData.title;
+  }
+
+  return song === '' ? null : song;
+};
+
 /* ---------- NOTIFICATION ---------- */
 
 const buildNotificationData = (radio, streamCodeName, show) => {
@@ -220,6 +262,8 @@ export default {
   getPictureUrl,
   getNextRadio,
   getNextStream,
+  getChannelName,
+  formatSong,
   showNotification,
   sendListeningSession
 };
