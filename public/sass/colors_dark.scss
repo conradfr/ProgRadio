@@ -16,6 +16,7 @@ $background-color: $body-bg;
 $player-background: lighten($primary, 4%);
 
 $navbar-shadow: rgb(8, 69, 116);
+$nav-link-disabled-color: darken($link-color, 15%);
 
 $offcanvas-divider: $body-bg-alt;
 

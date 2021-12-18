@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   compatConfig: {
@@ -18,9 +18,9 @@ export default {
     ...mapState({
       timer: state => state.player.timer
     }),
-    isActive() {
-      return this.timer !== undefined && this.timer !== null && this.timer !== 0;
-    },
+    ...mapGetters({
+      isActive: 'timerIsActive'
+    }),
     title() {
       if (this.timer === null || this.timer === 0) {
         return this.$i18n.tc('message.player.timer.title');

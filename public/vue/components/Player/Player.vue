@@ -149,12 +149,14 @@ export default {
     ...mapState({
       player: state => state.player,
       collections: state => state.schedule.collections,
-      streamFavorites: state => state.streams.favorites
+      streamFavorites: state => state.streams.favorites,
+      timer: state => state.player.timer
     }),
     ...mapGetters([
       'displayVolume',
       'streamUrl',
-      'timerDisplay'
+      'timerDisplay',
+      'timerIsActive'
     ]),
     currentPlayer() {
       if (this.audio.current === null) {
@@ -189,6 +191,7 @@ export default {
     }
   },
   /* eslint-disable func-names */
+  /* eslint-disable operator-linebreak */
   watch: {
     'player.playing': function (val) {
       if (val === true) {
@@ -206,9 +209,23 @@ export default {
         }
 
         this.$store.dispatch('joinChannel', channelName);
-      } /* else if (this.socket !== null) {
-        cleanSocket();
-      } */
+
+        // timer on mobile menu
+        const mobileTimerElems =
+          document.getElementsByClassName(config.MOBILE_MENU_TIMER_CLASSNAME);
+        Array.prototype.forEach.call(mobileTimerElems, (element) => {
+          element.classList.remove('disabled');
+        });
+      } else if (this.socket !== null) {
+        // timer on mobile menu
+        if (this.timerIsActive !== true) {
+          const mobileTimerElems =
+            document.getElementsByClassName(config.MOBILE_MENU_TIMER_CLASSNAME);
+          Array.prototype.forEach.call(mobileTimerElems, (element) => {
+            element.classList.add('disabled');
+          });
+        }
+      }
 
       if (this.player.externalPlayer === true) { return; }
 
