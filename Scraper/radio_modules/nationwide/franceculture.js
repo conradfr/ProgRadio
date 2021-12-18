@@ -18,34 +18,49 @@ const format = dateObj => {
       return;
     }
 
-    delete curr.date_time_start_raw;
+    const newEntry = {};
+
+    newEntry.date_time_start = dateStart.toISOString();
 
 /*    if (typeof curr.img !== 'undefined' && curr.img.substr(0, 4) !== 'http') {
       delete curr.img;
     }*/
 
-    curr.date_time_start = dateStart.toISOString();
-
     let main = true;
     if (typeof curr.title_main !== 'undefined') {
-      curr.sections = [];
-      curr.title = curr.title_main;
-      delete curr.title_main;
+
+      newEntry.sections = [];
+      newEntry.title = curr.title_main;
 
       const dateEnd = moment.unix(parseInt(curr['date_time_end_raw']));
-      curr.date_time_end = dateEnd.toISOString();
+      newEntry.date_time_end = dateEnd.toISOString();
+
+      if ((curr.description === undefined || curr.description === null || curr.description === '')
+        && (curr.description_short !== undefined && curr.description_short !== null && curr.description_short !== '')) {
+        newEntry.description = curr.description_short;
+      } else {
+        newEntry.description = curr.description;
+      }
     } else {
       main = false;
-      curr.title = curr.title_section;
-      delete curr.title_section;
+      newEntry.title = curr.title_section;
+
+      console.log(curr);
+
+      if ((curr.description === undefined || curr.description === null || curr.description === '')
+        && (curr.description_section !== undefined && curr.description_section !== null && curr.description_section !== '')) {
+        console.log('lol');
+        console.log(curr.description_short);
+        newEntry.description = curr.description_section;
+      } else {
+        newEntry.description = curr.description;
+      }
     }
 
-    delete curr.date_time_end_raw;
-
     if (main === true) {
-      mains.push(curr);
+      mains.push(newEntry);
     } else {
-      sections.push(curr);
+      sections.push(newEntry);
     }
   });
 
@@ -105,7 +120,9 @@ const fetch = dateObj => {
       })
       .set({
         'title_main': '.level1 .program-item-content-elements-title',
+        'description_short': '.level1 .program-item-content-elements-subtitle',
         'title_section': '.level2 .program-item-content-elements-title',
+        'description_section': '.level2 .program-item-content-elements-subtitle',
       })
       .do(
         osmosis.follow('a.program-item-content-elements-infos@href')
