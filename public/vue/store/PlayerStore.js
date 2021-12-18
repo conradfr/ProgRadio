@@ -62,6 +62,10 @@ const storeGetters = {
     return state.radio.streams[state.radioStreamCodeName].url;
   },
   liveSong: state => (radio, radioStreamCodeName) => {
+    if (radio.streaming_enabled === false) {
+      return false;
+    }
+
     const channelName = PlayerUtils.getChannelName(toRaw(radio), radioStreamCodeName);
 
     if (state.song === null || state.song === undefined
@@ -294,7 +298,7 @@ const storeActions = {
       });
     }
 
-    nextTick(() => {
+    return nextTick(() => {
       commit('joinChannel', topicName);
 
       state.channels[topicName].on('playing', (songData) => {

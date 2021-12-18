@@ -18,7 +18,7 @@
                v-bind:class="{ 'program-description-nohost': !program.host }">
             <div class="program-description-short-inner">
               <span class="program-description-short-inner-song"
-                  v-if="isCurrent && liveSong">
+                  v-if="radio.streaming_enabled === true && isCurrent && liveSong">
                 <i class="bi bi-music-note-beamed"></i>
                 {{ liveSong }}
               </span>
@@ -113,6 +113,10 @@ export default {
       return `${start}-${end}`;
     },
     liveSong() {
+      if (this.radio.streaming_enabled === false) {
+        return null;
+      }
+
       // current song of playing radio
       if (this.isCurrent && this.radioPlaying && this.currentSong) {
         return this.currentSong;

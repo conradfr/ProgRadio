@@ -25,17 +25,17 @@ export default {
   created() {
     setTimeout(
       () => {
-        const collection = this.$route.params.collection
-          ? this.$route.params.collection : this.$store.state.schedule.currentCollection;
-
         this.$store.dispatch('getRadiosData');
-        this.$store.dispatch('getSchedule', { collection });
+        this.$store.dispatch('getSchedule', {
+          collection: this.$route.params.collection
+            ? this.$route.params.collection : this.$store.state.schedule.currentCollection
+        });
 
         if (this.$route.params.collection) {
           this.$store.dispatch('switchCollection', this.$route.params.collection);
+        } else {
+          this.$store.dispatch('joinChannel', `collection:${this.$store.state.schedule.currentCollection}`);
         }
-
-        this.$store.dispatch('joinChannel', `collection:${collection}`);
       },
       25
     );
@@ -56,14 +56,6 @@ export default {
         const toCollection = to.params.collection === '' ? DEFAULT_COLLECTION : to.params.collection;
         this.$store.dispatch('getSchedule', { collection: toCollection });
         this.$store.dispatch('switchCollection', toCollection);
-
-        console.log(from.params.collection);
-        if (from.params.collection !== null && from.params.collection !== undefined
-          && from.params.collection !== '') {
-          this.$store.dispatch('leaveChannel', `collection:${from.params.collection}`);
-        }
-
-        this.$store.dispatch('joinChannel', `collection:${toCollection}`);
       }
     }
   }

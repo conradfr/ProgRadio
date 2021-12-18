@@ -6,11 +6,11 @@ defmodule ProgRadioApi.SongServer do
   alias ProgRadioApi.RadioStream
 
   @refresh_song_interval 15000
-  @refresh_presence_interval 20000
+  @refresh_presence_interval 60000
 
   # ----- Client Interface -----
 
-  def start_link({song_topic, nil, permanent, nil} = _arg) do
+  def start_link({song_topic, nil, nil} = _arg) do
     name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
 
     GenServer.start_link(
@@ -18,17 +18,16 @@ defmodule ProgRadioApi.SongServer do
       %{
         module: ProgRadioApi.SongProvider.Icecast,
         name: song_topic,
-        permanent: permanent,
         song: nil,
         last_data: nil,
-        collection_code_name: nil,
+        collection_topic: nil,
         db_data: nil
       },
       name: name
     )
   end
 
-  def start_link({song_topic, radio_code_name, permanent, db_data} = _arg) do
+  def start_link({song_topic, radio_code_name, db_data} = _arg) do
     name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
 
     module_name =
@@ -37,15 +36,20 @@ defmodule ProgRadioApi.SongServer do
       |> (&("Elixir.ProgRadioApi.SongProvider." <> &1)).()
       |> String.to_existing_atom()
 
+    collection_topic =
+      case Map.get(db_data, :collection_code_name, nil) do
+        nil -> nil
+        collection_code_name -> "collection:" <> collection_code_name
+      end
+
     GenServer.start_link(
       __MODULE__,
       %{
         module: module_name,
         name: song_topic,
-        permanent: permanent,
         song: nil,
         last_data: nil,
-        collection_code_name: Map.get(db_data, :collection_code_name, nil),
+        collection_topic: collection_topic,
         db_data: db_data
       },
       name: name
@@ -69,7 +73,7 @@ defmodule ProgRadioApi.SongServer do
 
   @impl true
   def handle_cast(:broadcast, state) do
-    broadcast_song(state.name, state.song, state.collection_code_name)
+    broadcast_song(state.name, state.song, state.collection_topic)
     {:noreply, state}
   end
 
@@ -82,11 +86,9 @@ defmodule ProgRadioApi.SongServer do
          false <- data == :error do
       spawn(fn -> update_status(song, db_data) end)
 
-      how_many_connected =
-        Presence.list(name)
-        |> Kernel.map_size()
+      how_many_connected = how_many_connected(name, state.collection_topic)
 
-      broadcast_song(name, song, state.collection_code_name)
+      broadcast_song(name, song, state.collection_topic)
 
       refresh_rate =
         apply(module, :get_auto_refresh, [name, data, @refresh_song_interval]) ||
@@ -115,7 +117,7 @@ defmodule ProgRadioApi.SongServer do
     {data, song} = get_data_song(module, name, last_data)
     spawn(fn -> update_status(song, db_data) end)
 
-    broadcast_song(name, song, state.collection_code_name)
+    broadcast_song(name, song, state.collection_topic)
 
     next_refresh =
       apply(module, :get_refresh, [name, data, @refresh_song_interval]) || @refresh_song_interval
@@ -130,18 +132,16 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_info(:presence, state) do
-    how_many_connected =
-      Presence.list(state.name)
-      |> Kernel.map_size()
+  def handle_info(:presence, %{name: name, collection_topic: collection_topic} = state) do
+    how_many_connected = how_many_connected(name, collection_topic)
 
     case how_many_connected do
-      0 when state.permanent == false ->
-        Logger.info("Data provider - #{state.name}: no client connected, exiting")
+      0 ->
+        Logger.info("Data provider - #{name}: no client connected, exiting")
         {:stop, :normal, nil}
 
       _ ->
-        Logger.debug("Data provider - #{state.name}: #{how_many_connected} clients connected")
+        Logger.debug("Data provider - #{name}: #{how_many_connected} clients connected")
 
         Process.send_after(self(), :presence, @refresh_presence_interval)
         {:noreply, state}
@@ -151,15 +151,15 @@ defmodule ProgRadioApi.SongServer do
   # ----- Internal -----
 
   @spec broadcast_song(String.t(), map() | nil, String.t() | nil) :: none()
-  defp broadcast_song(name, song, collection_code_name) do
+  defp broadcast_song(name, song, collection_topic) do
     data = %{name: name, song: song}
 
-    unless collection_code_name == nil,
+    unless collection_topic == nil,
       do:
         ProgRadioApiWeb.Endpoint.broadcast!(
-          "collection:" <> collection_code_name,
+          collection_topic,
           "playing",
-          Map.put(data, :topic, "collection:" <> collection_code_name)
+          Map.put(data, :topic, collection_topic)
         )
 
     ProgRadioApiWeb.Endpoint.broadcast!(
@@ -201,5 +201,23 @@ defmodule ProgRadioApi.SongServer do
   defp update_status(song, db_data) do
     # nothing
     Logger.debug("Updating status, no match: #{inspect(song)} - #{inspect(db_data)}")
+  end
+
+  defp how_many_connected(topic, collection_topic) do
+    [
+      how_many_connected_stream(topic),
+      how_many_connected_collection(collection_topic)
+    ]
+    |> Enum.max()
+  end
+
+  defp how_many_connected_stream(topic) do
+    Presence.list(topic)
+    |> Kernel.map_size()
+  end
+
+  defp how_many_connected_collection(collection_topic) do
+    Presence.list(collection_topic)
+    |> Kernel.map_size()
   end
 end

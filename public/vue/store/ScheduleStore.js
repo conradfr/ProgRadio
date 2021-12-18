@@ -61,7 +61,8 @@ const storeGetters = {
   gridIndexTransform: state => ({ transform: `translateX(-${state.scrollIndex}px)` }),
   rankedCollections: state => sortBy(state.collections, 'priority'),
   rankedRadios: (state) => {
-    if (Object.keys(state.collections).length === 0
+    if (state.collections === undefined || state.collections === null
+      || Object.keys(state.collections).length === 0
       || state.collections[state.currentCollection] === undefined) {
       return [];
     }
@@ -132,7 +133,11 @@ const storeActions = {
 
     router.push({ name: 'schedule', params: { collection: nextCollection } });
   },
-  switchCollection: ({ commit }, collection) => {
+  switchCollection: ({ state, commit, dispatch }, collection) => {
+    if (state.currentCollection !== null && state.currentCollection !== undefined) {
+      dispatch('leaveChannel', `collection:${state.currentCollection}`);
+    }
+    dispatch('joinChannel', `collection:${collection}`);
     commit('collectionSwitch', collection);
   },
   setFavoritesCollection: ({ commit }, radios) => {
