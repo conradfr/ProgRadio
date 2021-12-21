@@ -1,7 +1,8 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
-// import { createApp } from 'https://unpkg.com/petite-vue@0.2.2/dist/petite-vue.es.js';
+// import { createApp } from 'https://unpkg.com/petite-vue@0.4.0/dist/petite-vue.es.js';
 import { createApp } from '../../public/vue/utils/petite-vue.es';
+import { Socket } from '../js/phoenix';
 
 // from config
 import {
@@ -83,13 +84,16 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId) => {
 
 createApp({
   hls: null,
+  socket: null,
+  channel: null,
   playing: false,
+  song: null,
   lastUpdated: null,
   radioId: null,
   playingStart: null,
   sessionId: null,
   listeningInterval: null,
-  play(streamingUrl, codeName) {
+  play(streamingUrl, codeName, topic) {
     /* eslint-disable no-undef */
     sendGaEvent('play', 'SSR', codeName, 3);
 
@@ -130,6 +134,9 @@ createApp({
 
         this.lastUpdated = new Date();
         this.playingStart = new Date();
+
+        this.connectSocket();
+        this.joinChannel(topic);
 
         this.listeningInterval = setInterval(() => {
           updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((data) => {
@@ -172,5 +179,64 @@ createApp({
     this.listeningInterval = null;
     this.sessionId = null;
     this.playingStart = null;
+  },
+  connectSocket() {
+    if (this.socket !== null) {
+      return;
+    }
+
+    this.socket = new Socket(`wss://${apiUrl}/socket`);
+    this.socket.connect();
+    this.socket.onError(() => {
+      this.song = null;
+      this.socket = null;
+    });
+  },
+  joinChannel(topic) {
+    this.channel = this.socket.channel(topic, {});
+
+    this.channel.join()
+      .receive("error", resp => {
+        this.song = null;
+        this.channel = null;
+      })
+      .receive('timeout', () => {
+        this.song = null;
+        this.channel = null;
+      });
+
+    this.channel.on('playing', (songData) => {
+      this.formatSong(songData);
+    });
+
+    this.channel.on('quit', () => {
+      this.song = null;
+      this.channel = null;
+    });
+  },
+  formatSong(songData) {
+    if (songData === null || songData.song === undefined) {
+      this.song = null;
+      return;
+    }
+
+    let song = '';
+    let hasArtist = false;
+    if (songData.song.artist !== undefined && songData.song.artist !== null
+      && songData.song.artist !== '') {
+      song += songData.song.artist;
+      hasArtist = true;
+    }
+
+    if (songData.song.title !== undefined && songData.song.title !== null
+      && songData.song.title !== '') {
+      if (hasArtist === true) {
+        song += ' - ';
+      }
+
+      song += songData.song.title;
+    }
+
+    this.song = song === '' ? null : song;
   }
 }).mount();

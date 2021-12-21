@@ -20,6 +20,8 @@
     {% endif %}
 {% endmacro %}
 
+{% macro topic(stream) %}url:{{ stream.streamUrl }}{% endmacro %}
+
 {% block body %}
 <div class="container stream-page">
     <div class="row">
@@ -41,15 +43,15 @@
                             <div>
                                 <div
                                         v-if="playing === false"
-                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}')"
+                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}')"
                                         class="radio-page-play">
                                     <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
                                          src="/img/play-button-inside-a-circle.svg">
                                 </div>
                                 <div
-                                        v-if="playing === true"
-                                        @click="stop('{{ stream.id }}')"
-                                        class="radio-page-play">
+                                    v-if="playing === true"
+                                    @click="stop('{{ stream.id }}')"
+                                    class="radio-page-play">
                                     <img alt="{{ 'page.radio.stop'|trans() }}"
                                          src="/img/rounded-pause-button.svg">
                                 </div>
@@ -69,6 +71,13 @@
                                     <div>{{ 'page.radio.stop'|trans() }}</div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="mt-4" v-if="song !== null">
+                            <strong>{{ 'page.stream.playing'|trans }}:</strong>
+                            {% verbatim %}
+                                ♫ {{ song }}
+                            {% endverbatim %}
                         </div>
                     </div>
 

@@ -93,6 +93,7 @@ page:
         country: Country
         description: 'Listen to radios from all over the world'
         discover: Discover more radios, search by country and style ...
+        playing: Playing
         suggested: Suggested radios
         tags: Tags
         title: 'Listen to %radio%'

@@ -97,6 +97,7 @@ page:
         country: Pays
         description: 'Écoutez les radios du monde entier'
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
+        playing: En cours
         suggested: Radios suggérées
         tags: Tags
         title: 'Écouter %radio% en direct'
