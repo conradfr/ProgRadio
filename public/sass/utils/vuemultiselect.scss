@@ -73,6 +73,8 @@
   border-radius: var(--ms-radius, 4px);
   padding-left: var(--ms-px, 0.875rem);
   color: $stream-select-search;
+
+  box-shadow: none !important;
 }
 
 .multiselect-tags {
