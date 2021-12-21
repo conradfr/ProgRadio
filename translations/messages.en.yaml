@@ -18,6 +18,8 @@ menu:
         ch: Switzerland
         fr: France
         usa: United States
+        mx: Mexico
+
     logout: Logout
     mode:
         dark: Dark mode
@@ -47,7 +49,7 @@ page:
 
     forgotten_password:
         error: <strong>An error occured.</strong><br>If the link was obselete please start the process again.
-        click_here: cliquez ici
+        click_here: click here
         done_title: Password reinitialization
         done: '<strong>Your password has been updated.</strong><br>You can sign-in %link%here%link_end%.'
         page_title: Forgotten password
@@ -99,6 +101,33 @@ page:
     user:
         page_title: Create an account
 
+    account:
+        prefix: My account
+        menu:
+            email: Email
+            password: Password
+            delete: Delete
+        email:
+            page_title: Update my email
+            info_1: This will update the email used as login.
+            info_2: A confirmation will be sent to the former email address.
+            success: The email has been updated.
+            new_email: 'New email address:'
+            new_email_placeholder: example@email.com
+            update_btn: Update
+        password:
+            page_title: Update my password
+            success: The password has been updated.
+            update_btn: Update
+        delete:
+            page_title: Delete my account
+            warning: This operation is irreversible. Your favorites will be deleted.
+            confirm: Are you sure you want to delete your account?
+            delete_btn: Delete my account
+        delete_confirm:
+            success: Your account has been succesfully deleted.
+
+
 boxes:
     already_account:
         title: You have an account?
@@ -133,7 +162,7 @@ connectionForm:
     submit_connect: 'Login'
 
 updatePasswordForm:
-    new: New password
+    new: 'New password:'
     new_confirm: New password confirmation
     error_not_same: New passwords are not identical.
     error_not_empty: This field can't be empty

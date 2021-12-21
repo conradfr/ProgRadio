@@ -1,18 +1,20 @@
-<h3>Bienvenue !</h3>
+{% trans_default_domain 'email' %}
+
+<h3>{{ 'signup.welcome'|trans }}</h3>
 
 <p>
-    Bonjour,
+    {{ 'general.hello'|trans }}
 </p>
 
 <p>
-    Vous êtes désormais inscrit(e) sur <a href="https://www.programmes-radio.com">Programmes-Radio.com</a>
+    {{ 'signup.text_1'|trans({'%link%': '<a href="https://www.programmes-radio.com">Programmes-Radio.com</a>'})|raw }}
 </p>
 
 <p>
-    Si vous aviez des radios ou streamings favoris ceux-ci sont désormais enregistrés dans votre compte.
+    {{ 'signup.text2'|trans }}
 </p>
 
 <p>
-    Cordialement,<br>
-    Programmes-Radio.com
+    {{ 'signature.regards'|trans }}<br>
+    {{ 'signature.name'|trans }}
 </p>

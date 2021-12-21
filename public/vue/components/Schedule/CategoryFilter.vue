@@ -8,7 +8,7 @@
       <span class="bi"
         :class="{ 'bi-check-lg': !isCategoryExcluded(entry.code_name),
                   'bi-dash-lg': isCategoryExcluded(entry.code_name) }">
-      </span>{{ entry.name_FR }}
+      </span>{{ entry[`name_${locale.toUpperCase()}`] }}
     </div>
   </div>
 </template>
@@ -27,7 +27,9 @@ export default {
     MODE: 3
   },
   data() {
-    return {};
+    return {
+      locale: this.$i18n.locale
+    };
   },
   computed: {
     ...mapState({

@@ -12,7 +12,7 @@
                     {#                    {{ collection.name_FR }}#}
                     {#                </a>#}
                     <a class="dropdown-item spa-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">
-                        {{ collection.name_FR }}
+                        {{ collection["name_" ~ app.request.locale|upper] }}
                     </a>
                 </li>
             {% endfor %}
@@ -45,6 +45,9 @@
         <li><hr class="dropdown-divider"></li>
         <li>
             <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.usa'|trans }}</a>
+        </li>
+        <li>
+            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/mx">{{ 'menu.favorites_menu.mx'|trans }}</a>
         </li>
         <li>
             <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/all">{{ 'menu.favorites_menu.all'|trans }}</a>

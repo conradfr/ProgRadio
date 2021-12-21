@@ -3,19 +3,21 @@
 {% form_theme form 'bootstrap_5_layout.html.twig' %}
 
 {% block section %}
-Changer mon email
+{{ 'page.account.email.page_title'|trans }}
 {% endblock %}
 
 {% block content %}
-    <div class="alert  alert-info" role="alert">Cela mettra à jour l'email utilisé pour se connecter au site.<br>Une confirmation sera envoyée à l'ancienne et à la nouvelle adresse.</div>
+    <div class="alert  alert-info" role="alert">{{ 'page.account.email.info_1'|trans }}<br>{{ 'page.account.email.info_2'|trans }}</div>
 
     {% if success == true %}
-        <div class="alert  alert-success" role="alert">L'adresse email a été mise à jour.</div>
+        <div class="alert  alert-success" role="alert">
+            {{ 'page.account.email.success'|trans }}
+        </div>
     {% endif %}
 
     {{ form_start(form) }}
     {{ form_row(form.email) }}
 
-    <button type="submit" class="btn btn-primary">Mettre à jour</button>
+    <button type="submit" class="btn btn-primary">{{ 'page.account.email.update_btn'|trans }}</button>
     {{ form_end(form) }}
 {% endblock %}

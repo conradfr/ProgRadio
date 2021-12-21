@@ -1,11 +1,11 @@
 {% extends 'default/user/user.html.twig' %}
 
 {% block section %}
-Suppression du compte
+{{ 'page.account.delete.page_title'|trans }}
 {% endblock %}
 
 {% block content %}
-    <div class="alert  alert- alert-warning" role="alert">Attention cette opération est irréversible. Vos favoris seront supprimés.</div>
-    <a class="btn btn-danger" href="{{ path('user_page_delete_confirm', {'token': token }) }}" role="button" onclick="return confirm('Etes-vous sur de vouloir supprimer votre compte ?')">Supprimer mon compte</a>
+    <div class="alert  alert- alert-warning" role="alert">{{ 'page.account.delete.warning'|trans }}</div>
+    <a class="btn btn-danger" href="{{ path('user_page_delete_confirm', {'token': token }) }}" role="button" onclick="return confirm('{{ 'page.account.delete.confirm'|trans }}')">{{ 'page.account.delete.delete_btn'|trans }}</a>
 </div>
 {% endblock %}

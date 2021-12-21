@@ -1,19 +1,25 @@
-<h3>Réinitialisation du mot de passe</h3>
+{% trans_default_domain 'email' %}
+
+<h3>{{ 'reset.header'|trans }}</h3>
 
 <p>
-    Bonjour,<br>
-    Une demande de réinitialisation du mot de passe a été faite sur https://www.programmes-radio.com
+    {{ 'general.hello'|trans }}<br>
 </p>
 
 <p>
-    Pour mettre à jour votre mot de passe, cliquez sur ce lien (valide 24h) : <a href="{{ url('reset_password', {'token': token}, false) }}">{{ url('reset_password', {'token': token}, false) }}</a>
+    {{ 'reset.text_1'|trans }}
 </p>
 
 <p>
-    Si vous n'êtes pas à l'origine de cette demande vous pouvez ignorer cet email.
+    {% set link = '<a href="' ~ url('reset_password', {'token': token}, false) ~ '">' ~ url('reset_password', {'token': token}, false) ~ '</a>' %}
+    {{ 'reset.text_2'|trans({'%link%': link})|raw }}
 </p>
 
 <p>
-    Cordialement,<br>
-    Programmes-Radio.com
+    {{ 'reset.text_3'|trans }}
+</p>
+
+<p>
+    {{ 'signature.regards'|trans }}<br>
+    {{ 'signature.name'|trans }}
 </p>

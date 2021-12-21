@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Suppression du compte{% endblock %}
+{% block title %}{{ 'page.account.delete.page_title'|trans }}{% endblock %}
 
 {% block body %}
 <div class="container container-content">
     <div class="row">
         <div class="col-md-6 col-12">
-            <h3 class="mb-4">Suppression du compte</h3>
-            <div class="alert alert-success" role="alert">Votre compte a bien été supprimé.</div>
+            <h3 class="mb-4">{{ 'page.account.delete.page_title'|trans }}</h3>
+            <div class="alert alert-success" role="alert">{{ 'page.account.delete_confirm.success'|trans }}</div>
             <p>
-                <strong>Que souhaitez-vous faire maintenant ?</strong><br>
-                <a href="{{ path('app') }}schedule">Consulter les programmes radios</a><br>
-                <a href="{{ path('app') }}streaming">Ecouter des radios en streaming</a>
+                <strong>{{ 'page.registered.what_now_question'|trans }}</strong><br>
+                <a href="{{ path('app') }}schedule">{{ 'page.registered.what_now_choice2'|trans }}</a><br>
+                <a href="{{ path('app') }}streaming">{{ 'page.registered.what_now_choice3'|trans }}</a>
             </p>
         </div>
     </div>

@@ -11,9 +11,9 @@
     <div class="row">
         <div class="col-md-3 col-sm-4 col-12" role="navigation">
             <ul class="mt-3 nav flex-column d-none d-sm-block">
-                <li class="nav-item"><a {{ _self.active('user_page_email', current_path) }} href="{{ path('user_page_email') }}">Email</a></li>
-                <li class="nav-item"><a {{ _self.active('user_page_password', current_path) }} href="{{ path('user_page_password') }}">Mot de passe</a></li>
-                <li class="nav-item"><a {{ _self.active('user_page_delete', current_path) }} href="{{ path('user_page_delete') }}">Suppression</a></li>
+                <li class="nav-item"><a {{ _self.active('user_page_email', current_path) }} href="{{ path('user_page_email') }}">{{ 'page.account.menu.email'|trans }}</a></li>
+                <li class="nav-item"><a {{ _self.active('user_page_password', current_path) }} href="{{ path('user_page_password') }}">{{ 'page.account.menu.password'|trans }}</a></li>
+                <li class="nav-item"><a {{ _self.active('user_page_delete', current_path) }} href="{{ path('user_page_delete') }}">{{ 'page.account.menu.delete'|trans }}</a></li>
             </ul>
 
             <ul class="mt-3 mb-3 nav nav-pills nav-fill d-block d-sm-none">
@@ -23,7 +23,7 @@
             </ul>
         </div>
         <div class="col-md-6 col-sm-8 col-12">
-            <h4 class="mb-3">Mon compte » {% block section %}{% endblock %}</h4>
+            <h4 class="mb-3">{{ 'page.account.prefix'|trans }} » {% block section %}{% endblock %}</h4>
             <div class="user-section">
                 {% block content %}
                 {% endblock %}

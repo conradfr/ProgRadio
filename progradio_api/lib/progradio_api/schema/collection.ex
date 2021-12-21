@@ -4,6 +4,9 @@ defmodule ProgRadioApi.Collection do
   schema "collection" do
     field(:code_name, :string)
     field(:name, :string)
+    field(:name_fr, :string)
+    field(:name_en, :string)
+    field(:name_es, :string)
     field(:priority, :integer)
     field(:sort_field, :string)
     field(:sort_order, :string)

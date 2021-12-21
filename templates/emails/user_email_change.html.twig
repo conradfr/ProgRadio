@@ -1,22 +1,27 @@
-<h3>Changement d'adresse email</h3>
+{% trans_default_domain 'email' %}
+
+<h3>{{ 'email_change.header'|trans }}</h3>
 
 <p>
-    Bonjour,
-</p>
-<p>
-    Une demande de changement d'email pour {{ new_email }} a été faite sur https://www.programmes-radio.com.<br>
-    Vous ne pouvez-donc plus vous connecter avec l'identifiant {{ old_email }}.
+    {{ 'general.hello'|trans }}
 </p>
 
 <p>
-    Si cela n'est pas de votre fait vous pouvez annuler ce changement en cliquant sur ce lien (valide 24h) : <a href="{{ url('revert_email', {'token': token}, false) }}">{{ url('revert_email', {'token': token}, false) }}</a>.
+<p>
+    {{ 'reset.text_1'|trans({'%new_email%': new_email}) }}<br>
+    {{ 'email_change.text_2'|trans({'%old_email%': old_email}) }}
 </p>
 
 <p>
-    Nous vous conseillons également de changer votre mot de passe.
+    {% set link = '<a href="' ~ url('revert_email', {'token': token}, false) ~ '">' ~ url('revert_email', {'token': token}, false) ~ '</a>' %}
+    {{ 'email_change.text_3'|trans({'%link%': link, '%old_email%': old_email, '%new_email%': new_email})|raw }}
 </p>
 
 <p>
-    Cordialement,<br>
-    Programmes-Radio.com
+    {{ 'email_change.text_4'|trans }}
+</p>
+
+<p>
+    {{ 'signature.regards'|trans }}<br>
+    {{ 'signature.name'|trans }}
 </p>

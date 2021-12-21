@@ -107,7 +107,9 @@ defmodule ProgRadioApi.Radios do
         on: r.collection_id == c.id,
         select: %{
           code_name: c.code_name,
-          name_FR: c.name,
+          name_FR: c.name_fr,
+          name_EN: c.name_en,
+          name_ES: c.name_es,
           short_name: c.short_name,
           priority: c.priority,
           sort_field: c.sort_field,
@@ -130,7 +132,9 @@ defmodule ProgRadioApi.Radios do
       from c in Category,
         select: %{
           code_name: c.code_name,
-          name_FR: c.name
+          name_FR: c.name_fr,
+          name_EN: c.name_en,
+          name_ES: c.name_es
         },
         order_by: [asc: c.id]
 

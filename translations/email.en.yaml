@@ -1,0 +1,29 @@
+general:
+    hello: Hello,
+
+signature:
+    regards: Regards,
+    name: Programmes-Radio.com
+
+signup:
+    welcome: Welcome !
+    text_1: Your are now registered on %link%
+    text2: Your favorites (if any) have been transferred to your account.
+
+reset:
+    header: Password reset
+    text_1: A request for resetting the password associated to this email has been made on  https://www.programmes-radio.com
+    text_2: "To update your password clicke here (valid for 24h) : %link%"
+    text_3: If you didn't make any request you can ignore this email.
+
+email_change:
+    header: Email update
+    text_1: A request to update an account's email to %new_email% has been made on https://www.programmes-radio.com.
+    text_2:
+    text_3: "If you didn't initiate it you can cancel this request by clicking here (valid for 24h) : %link%"
+    text_4: You should also update your password.
+
+password_update:
+    header: Password update
+    text_1: The password associated with this account has been made on https://www.programmes-radio.com
+    text_2: "If you didn't initiate it you can cancel this request and set a new password by clicking here (valid for 24h) : %link%"

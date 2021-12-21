@@ -19,6 +19,8 @@ menu:
         ch: Suisse
         fr: France
         usa: Etats-Unis
+        mx: Mexique
+
     logout: Se déconnecter
     menu: Menu
     mode:
@@ -102,6 +104,32 @@ page:
 
     user:
         page_title: Créer un compte
+
+    account:
+        prefix: Mon compte
+        menu:
+            email: Email
+            password: Mot de passe
+            delete: Suppression
+        email:
+            page_title: Changer mon email
+            info_1: Cela mettra à jour l'email utilisé pour se connecter au site.
+            info_2: Une confirmation sera envoyée à l'ancienne et à la nouvelle adresse.
+            success: L'adresse email a été mise à jour.
+            new_email: 'Nouvelle adresse email:'
+            new_email_placeholder: exemple@email.com
+            update_btn: Mettre à jour
+        password:
+            page_title: Changer mon mot de passe
+            success: Le mot de passe a été mis à jour.
+            update_btn: Mettre à jour
+        delete:
+            page_title: Suppression du compte
+            warning: Attention cette opération est irréversible. Vos favoris seront supprimés
+            confirm: Etes-vous sur de vouloir supprimer votre compte ?
+            delete_btn: Supprimer mon compte
+        delete_confirm:
+            success: Votre compte a bien été supprimé.
 
 boxes:
     already_account:

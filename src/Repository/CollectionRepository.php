@@ -32,7 +32,7 @@ class CollectionRepository extends ServiceEntityRepository
         $user = $this->security->getUser();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT c.codeName as code_name, c.name as name_FR, c.shortName as short_name, 
+            'SELECT c.codeName as code_name, c.name_fr as name_FR, c.name_en as name_EN, c.name_es as name_ES, c.shortName as short_name, 
                 c.priority, c.sortField as sort_field, c.sortOrder as sort_order,
                 GROUP_CONCAT(r.codeName) as radios
                 FROM App:Collection c

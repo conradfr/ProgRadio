@@ -13,7 +13,7 @@
               :aria-controls="entry.code_name"
               v-on:click="setActiveCollection(entry.code_name)"
             >
-              {{ entry.name_FR }}
+              {{ entry[`name_${locale.toUpperCase()}`] }}
             </button>
           </li>
         </ul>

@@ -41,6 +41,30 @@ class Collection
     /**
      * @var string
      *
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"export"})
+     */
+    private $name_fr;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"export"})
+     */
+    private $name_en;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"export"})
+     */
+    private $name_es;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=25)
      * @Groups({"export"})
      */
