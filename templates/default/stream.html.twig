@@ -31,74 +31,83 @@
             </div>
         </div>
         <div class="col-sm-10 col-10 offset-1 offset-sm-0 pb-3">
-            <h4 class="mb-4">{{ stream.name | capitalize }}</h4>
+            <div class="row">
+                <div class="col-sm-10 col-12">
+                    <h4 class="mb-4">{{ stream.name | capitalize }}</h4>
 
-            <div class="stream-page-stream mt-3 mb-4" v-scope>
-                <div class="radio-page-streams-one d-none d-flex align-items-center justify-content-center justify-content-sm-start"
-                     @mounted="$el.classList.remove('d-none')">
-                    <div>
-                        <div
-                            v-if="playing === false"
-                            @click="play('{{ stream.streamUrl }}', '{{ stream.id }}')"
-                            class="radio-page-play">
-                            <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
-                                 src="/img/play-button-inside-a-circle.svg">
-                        </div>
-                        <div
-                            v-if="playing === true"
-                            @click="stop('{{ stream.id }}')"
-                            class="radio-page-play">
-                            <img alt="{{ 'page.radio.stop'|trans() }}"
-                                 src="/img/rounded-pause-button.svg">
-                        </div>
-                    </div>
+                    <div class="stream-page-stream mt-3 mb-4" v-scope>
+                        <div class="radio-page-streams-one d-none d-flex align-items-center justify-content-center justify-content-sm-start"
+                             @mounted="$el.classList.remove('d-none')">
+                            <div>
+                                <div
+                                        v-if="playing === false"
+                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}')"
+                                        class="radio-page-play">
+                                    <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
+                                         src="/img/play-button-inside-a-circle.svg">
+                                </div>
+                                <div
+                                        v-if="playing === true"
+                                        @click="stop('{{ stream.id }}')"
+                                        class="radio-page-play">
+                                    <img alt="{{ 'page.radio.stop'|trans() }}"
+                                         src="/img/rounded-pause-button.svg">
+                                </div>
+                            </div>
 
-                    <div class="ps-2">
-                        <div
-                            v-if="playing === false"
-                            @click="play('{{ stream.streamUrl }}', '{{ stream.id }}')"
-                            class="radio-page-play">
-                            <div>{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
-                        </div>
-                        <div
-                            v-if="playing === true"
-                            @click="stop('{{ stream.id }}')"
-                            class="radio-page-play">
-                            <div>{{ 'page.radio.stop'|trans() }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {% if stream.countryCode is not null and stream.countryCode != '' %}
-                <div class="mb-3">
-                    <strong>{{ 'page.stream.country'|trans }}:</strong>
-                    {{ stream.getCountry(app.request.locale) }}
-                </div>
-            {% endif %}
-
-            {% if stream.website is defined and stream.website is not null %}
-            <div class="mb-3">
-                <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a>
-            </div>
-            {% endif %}
-
-            {% if stream.tags is not null and stream.tags != '' %}
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <div class="stream-one-tags">
-                            <div class="mb-1"><strong>{{ 'page.stream.tags'|trans }}:</strong></div>
-                            <div class="d-flex flex-wrap">
-                                {% for tag in stream.tags|split(',') %}
-                                    <span class="badge badge-inverse">
-                                        {{ tag }}
-                                    </span>
-                                 {% endfor %}
+                            <div class="ps-2">
+                                <div
+                                        v-if="playing === false"
+                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}')"
+                                        class="radio-page-play">
+                                    <div>{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
+                                </div>
+                                <div
+                                        v-if="playing === true"
+                                        @click="stop('{{ stream.id }}')"
+                                        class="radio-page-play">
+                                    <div>{{ 'page.radio.stop'|trans() }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    {% if stream.countryCode is not null and stream.countryCode != '' %}
+                        <div class="mb-3">
+                            <strong>{{ 'page.stream.country'|trans }}:</strong>
+                            {{ stream.getCountry(app.request.locale) }}
+                        </div>
+                    {% endif %}
+
+                    {% if stream.website is defined and stream.website is not null %}
+                        <div class="mb-3">
+                            <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a>
+                        </div>
+                    {% endif %}
+
+                    {% if stream.tags is not null and stream.tags != '' %}
+                        <div class="row">
+                            <div class="col-12 col-sm-9">
+                                <div class="stream-one-tags">
+                                    <div class="mb-1"><strong>{{ 'page.stream.tags'|trans }}:</strong></div>
+                                    <div class="d-flex flex-wrap">
+                                        {% for tag in stream.tags|split(',') %}
+                                            <a href="{{ path('streaming_spa') }}/all?s={{ tag }}">
+                                            <span class="badge badge-inverse badge-link">
+                                                {{ tag }}
+                                            </span>
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
+                <div class="col-12 col-sm-2 pt-4 pt-sm-2 text-center">
+                    {{ oneAffiliateLink(app.request.locale)|raw }}
+                </div>
+            </div>
 
             <div class="more-streams">
                 <div class="mt-5 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>

@@ -8,12 +8,12 @@ use App\Twig\AppRuntime;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class FavoritesExtension extends AbstractExtension
+class AffiliateExtension extends AbstractExtension
 {
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('scheduleCollections', [FavoritesRuntime::class, 'scheduleCollections'])
+            new TwigFunction('oneAffiliateLink', [AffiliateRuntime::class, 'oneAffiliateLink'])
         ];
     }
 }

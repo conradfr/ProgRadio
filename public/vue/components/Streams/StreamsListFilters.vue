@@ -114,6 +114,11 @@ export default {
     if (this.selectedSortBy !== undefined && this.selectedSortBy !== null) {
       this.$refs.multisort.select(this.selectedSortBy);
     }
+
+    if (this.$route.query.s !== undefined) {
+      this.searchActivate();
+      this.searchTextChange({ target: { value: this.$route.query.s } });
+    }
   },
   data() {
     return {
