@@ -120,22 +120,28 @@
                 </div>
             </li>
 
+            <li class="nav-item offcanvas-divider mt-3 mb-1"></li>
+
             {# bottom margin helps when the player is displayed #}
             <!-- lang -->
-            <li class="nav-item  {% if not is_granted('ROLE_ADMIN') %}mb-5{% endif %}">
-                <div class="d-flex flex-row align-items-center">
-                    <div class="align-self-center offmenu-item-icon">
-                        <a class="nav-link" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}">
-                            <img style="max-width: 22px" class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flag ~ '.svg') }}" alt="{{ locale_name }}">
-                        </a>
-                    </div>
-                    <div>
-                        <a class="nav-link" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}">
-                            {{ locale_name }}
-                        </a>
-                    </div>
-                </div>
-            </li>
+            {% for locale in locales %}
+                {% if app.request.locale != locale %}
+                    <li class="nav-item  {% if not is_granted('ROLE_ADMIN') and loop.last == true %}mb-5{% endif %}">
+                        <div class="d-flex flex-row align-items-center">
+                            <div class="align-self-center offmenu-item-icon">
+                                <a class="nav-link" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}">
+                                    <img style="max-width: 22px" class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                                </a>
+                            </div>
+                            <div>
+                                <a class="nav-link" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}">
+                                    {{ "footer.#{locale}"|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
 
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item offcanvas-divider mt-2 mb-1"></li>

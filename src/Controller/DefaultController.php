@@ -82,7 +82,8 @@ class DefaultController extends AbstractBaseController
     /**
      * @Route({
      *     "en": "/{_locale}/schedule-streaming-{codename}/{date}",
-     *     "fr": "/{_locale}/grille-ecouter-{codename}/{date}"
+     *     "fr": "/{_locale}/grille-ecouter-{codename}/{date}",
+     *     "es": "/{_locale}/escuchar-{codename}/{date}",
      * },
      *     name="radio",
      *     defaults={
@@ -275,7 +276,8 @@ class DefaultController extends AbstractBaseController
     /**
      * @Route({
      *     "en": "/{_locale}/stream/{id}/listen-{codename}",
-     *     "fr": "/{_locale}/stream/{id}/ecouter-{codename}"
+     *     "fr": "/{_locale}/stream/{id}/ecouter-{codename}",
+     *     "es": "/{_locale}/stream/{id}/escuchar-{codename}",
      * },
      *     name="streams_one",
      *     defaults={
@@ -416,11 +418,11 @@ class DefaultController extends AbstractBaseController
      *      "bangs": "schedule,streaming"
      *     },
      *     requirements={
-     *      "_locale": "en|fr",
+     *      "_locale": "en|fr|es",
      *     }
      * )
      */
-    public function index(string $collection=null): Response
+    public function index(string $collection=null, Request $request): Response
     {
         return $this->render('default/index.html.twig', []);
     }
@@ -431,8 +433,13 @@ class DefaultController extends AbstractBaseController
      *     name="app_legacy"
      * )
      */
-    public function indexLegacy(): RedirectResponse
+    public function indexLegacy(Request $request): RedirectResponse
     {
-        return $this->redirectToRoute('app', ['_locale' => 'fr'], 301);
+        $locale = 'fr';
+        if ($request->getPreferredLanguage() !== null && in_array($request->getPreferredLanguage(), SiteController::LANG)) {
+            $locale = $request->getPreferredLanguage();
+        }
+
+        return $this->redirectToRoute('app', ['_locale' => $locale], 301);
     }
 }

@@ -22,7 +22,7 @@ use App\Form\ContactType;
 
 class SiteController extends AbstractController
 {
-    protected const LANG = ['fr', 'en'];
+   public const LANG = ['fr', 'en', 'es'];
 
     /**
      * @Route(

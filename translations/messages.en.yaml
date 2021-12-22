@@ -44,7 +44,7 @@ page:
 
     faq:
         page_title: 'FAQ - Radio shows in France'
-        page_description: 'Questions about Programmmes-Radio.io'
+        page_description: 'Questions about Programmmes-Radio.com'
         title: 'Frequently Asked Questions'
 
     forgotten_password:
@@ -171,5 +171,8 @@ updatePasswordForm:
 
 footer:
     alternate_lang: Français
+    es: Español
+    en: English
+    fr: Français
 
 legal: Legal notice

@@ -56,12 +56,18 @@
                         <li><hr class="dropdown-divider"></li>
 
                         <li><a class="dropdown-item" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
-                        <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}">
-                                <div class="menu-flag-icon">
-                                    <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flag ~ '.svg') }}" alt="{{ locale_name }}">
-                                </div>
-                            {{ locale_name }}</a>
-                        </li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        {% for locale in locales %}
+                            {% if app.request.locale != locale %}
+                                <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}">
+                                        <div class="menu-flag-icon">
+                                            <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                                        </div>
+                                        {{ "footer.#{locale}"|trans }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
                     </ul>
                 </li>
 

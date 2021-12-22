@@ -1,6 +1,5 @@
-{% set other_locale = app.request.locale == 'fr' ? 'en' : 'fr' %}
-{% set flag = app.request.locale == 'fr' ? 'gb' : 'fr' %}
-{% set locale_name = 'footer.alternate_lang'|trans %}
+{% set locales = ['fr', 'en', 'es'] %}
+{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es'} %}
 
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}" class="h-100{% block htmlsupp %}{% endblock %}{% if isDarkModeTime() %} progradio-dark{% endif %}">
@@ -60,7 +59,13 @@
     <div class="container text-center">
         {% block footer %}
             ©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a> -
-            <a title="{{ locale_name }}" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': other_locale})) }}"><img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flag ~ '.svg') }}" alt="{{ locale_name }}"></a>
+
+            {% for locale in locales %}
+                {% if app.request.locale != locale %}
+                    <a title="{{ "footer.#{locale}"|trans }}" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}"><img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}"></a>
+                {% endif %}
+            {% endfor %}
+
         {% endblock %}
     </div>
 </footer>

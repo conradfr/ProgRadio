@@ -1,0 +1,181 @@
+general:
+    main_description: Écoute en ligne et les programmes radio en France.
+    main_title: Toutes les grilles radio, tous les programmes et écoute en ligne
+
+menu:
+    account: Mi cuenta
+    admin:
+        dashboard: Tableau de bord
+        listening: Écoutes
+        shares: Parts de marché
+    app: App Android
+    contact: Contactar
+    faq: Pmf
+
+    favorites: Mis preferidos
+    favorites_menu:
+        all: Mundo entero
+        be: Bélgica
+        ch: Suiza
+        fr: Francia
+        usa: Estados Unidos
+        mx: México
+
+    logout: Desconectarse
+    menu: Menu
+    mode:
+        dark: Modo sueño
+        light: modo día
+    now: Actualmente
+    plus: Más
+    schedule: Horario de radio
+    signon: Conectarse
+    signup: Crear una cuenta
+    streaming: Todas las radios
+    timer: Temporizador
+    title: Menú
+
+page:
+    contact:
+        title: 'Contactar'
+        email: 'Email'
+        message: 'Mensaje *'
+        name: 'Apellido *'
+        send: 'Enviar a'
+        sent: 'Su mensaje ha sido enviado correctamente'
+
+    faq:
+        title: 'Preguntas más frecuentes'
+        page_title: 'PMF - Programas de radios en Francia '
+        page_description: 'Pregunta sobre Programmmes-Radio.com'
+
+    forgotten_password:
+        error: <strong>Se ha producido un error.</strong><br>Si el enlace de recuperación de contraseña está obselete, gracias por repetir el procedimiento.
+        click_here: Haga clic aquí
+        done_title: Restablecer la contraseña
+        done: '<strong>a contraseña ha sido actualizada.</strong><br>Puedes iniciar sesión %link%haciendo clic aquí%link_end%.'
+        page_title: contraseña olvidada
+        success: Si se ha encontrado una cuenta utilizando el correo electrónico de <strong>%email%</strong>  se ha enviado un mensaje con un enlace para restablecer la contraseña.
+        submit: Enviar
+
+    login:
+        forgotten_password: Contraseña olvidada ?
+        page_title: Conexión
+
+    now:
+        back: '← Ir a programas de radio'
+        no_schedule: <strong>Uy ...</strong> no hay programas disponibles.
+        page_description: '¿Qué escuchar de inmediato?'
+        page_title: 'Programas en este momento en la radio'
+        title: 'En este momento en la radio'
+
+    radio:
+        advanced: Usa el jugador avanzado <br>(webradios, Títulos en progreso ...)
+        back: '← Ir a la programación de todas las emisoras de radio.'
+        current: ↓ Ir al espectáculo actual
+        description: 'Programas de radio %radio% y escucha en línea'
+        goto_today: Ver los programas de hoy.
+        more_radios: 'Más radios '
+        no_schedule: 'Programas no disponibles.'
+        not_today: Usted está revisando los programas en otro día que hoy
+        play: 'Reproducir %radio%'
+        stop: 'Detener'
+        summary: 'Descripción'
+        title: 'Reproducir %radio% en vivo - streaming'
+        website: 'Sitio web'
+
+    registered:
+        page_title: Crear una cuenta
+        alert_1: Tu cuenta ha sido creada !
+        alert_2: Si tuvo radios y streamings en favoritos, estos se agregaron automáticamente a su cuenta.
+        what_now_question: Qué quieres hacer ahora ?
+        what_now_choice1: Inicia sesión en mi cuenta
+        what_now_choice2: Consultar programas de radios.
+        what_now_choice3: Escuchar streamings
+
+    stream:
+        country: País
+        description: 'Escuchar radios de todo el mundo'
+        discover: Descubra más radios, busque por país y estilos de música ...
+        playing: Título
+        suggested: Radios sugeridos
+        tags: Tags
+        title: 'Reproducir %radio% en vivo'
+        website: 'Sitio web'
+
+    user:
+        page_title: Crear una cuenta
+
+    account:
+        prefix: Mi cuenta
+        menu:
+            email: Email
+            password: Contraseña
+            delete: Supresión
+        email:
+            page_title: Cambia mi email
+            info_1: Esto actualizará el correo electrónico utilizado para conectarse al sitio.
+            info_2: Se enviará una confirmación al email antiguo y nuevo.
+            success: El email se ha actualizado.
+            new_email: 'Nuevo email :'
+            new_email_placeholder: ejemplo @email.com
+            update_btn: Poner al día
+        password:
+            page_title: Cambia mi contraseña
+            success: La contraseña ha sido actualizada.
+            update_btn: Poner al día
+        delete:
+            page_title: Remoción de la cuenta
+            warning: Atención Esta operación es irreversible. Tus favoritos serán eliminados.
+            confirm: ¿Está seguro de que desea eliminar su cuenta?
+            delete_btn: Borrar mi cuenta
+        delete_confirm:
+            success: Tu cuenta ha sido eliminada.
+
+boxes:
+    already_account:
+        title: ¿Ya eres una cuenta?
+        content: Haga clic aquí para ingresar
+
+    no_account:
+        title: Aún no tiene cuenta?
+        content: Pulse aquí para registrarse
+
+    why_account:
+        title: ¿Por qué registrarse?
+        content: Una cuenta le permite acceder a sus favoritos radios y streamings desde cualquier navegador y de la aplicación
+
+registrationForm:
+    email: 'Correo electrónico '
+    error:
+        captcha: 'Captcha inválido Por favor intente nuevamente.'
+        empty: 'Este formulario no puede estar vacío.'
+        password_min: 'La contraseña debe contener al menos 8 caracteres.'
+        password: 'Las contraseñas no son idénticas.'
+    captcha: 'Escribe las letras y números grabados a continuación.'
+    password: 'Contraseña'
+    password_confirm: 'contraseña de nuevo'
+    submit_create: 'Crear mi cuenta '
+
+connectionForm:
+    already_logged: Actualmente estás conectado como %email%
+    logout: desconectarse
+    email: 'Email'
+    password: 'Contraseña'
+    remember_me: Recuérdame
+    submit_connect: 'Conectarse'
+
+updatePasswordForm:
+    new: Nueva contraseña
+    new_confirm: 'contraseña de nuevo'
+    error_not_same: 'Las contraseñas no son idénticas.'
+    error_not_empty: 'Este formulario no puede estar vacío.'
+    error_length: 'La contraseña debe contener al menos 8 caracteres.'
+
+footer:
+    alternate_lang: English
+    es: Español
+    en: English
+    fr: Français
+
+legal: 'Notas legales'

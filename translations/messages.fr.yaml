@@ -47,7 +47,7 @@ page:
     faq:
         title: 'Foire aux questions'
         page_title: 'FAQ - Les programmes radios en France'
-        page_description: 'Questions sur Programmmes-Radio.io'
+        page_description: 'Questions sur Programmmes-Radio.com'
 
     forgotten_password:
         error: <strong>Une erreur est survenue.</strong><br>Si le lien de récupération de mot de passe est obselète merci de recommencer la procédure
@@ -97,7 +97,7 @@ page:
         country: Pays
         description: 'Écoutez les radios du monde entier'
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
-        playing: En cours
+        playing: Titre
         suggested: Radios suggérées
         tags: Tags
         title: 'Écouter %radio% en direct'
@@ -174,5 +174,8 @@ updatePasswordForm:
 
 footer:
     alternate_lang: English
+    es: Español
+    en: English
+    fr: Français
 
 legal: 'Mentions légales'

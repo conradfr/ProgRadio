@@ -161,5 +161,81 @@ export const messages = {
         title: 'Stream radios from all over the world!'
       }
     }
-  }
+  },
+  es: {
+    message: {
+      loading: 'Cargando ...',
+      now_page: {
+        back: '← Ir al programa Grid de todas las radios.',
+        title: 'En este momento en la radio'
+      },
+      player: {
+        autoplay_error: "Su navegador no permite la reproducción automática de medios. Gracias por hacer clic en \"Escuchar\" una vez más ",
+        play_error: 'error de reproducción',
+        placeholder: 'Haga clic en un logotipo para reproducir',
+        previous: 'Escucha {radio} de nuevo',
+        favorites: {
+          add: 'Agregar a los favoritos',
+          remove: 'eliminar de los favoritos'
+        },
+        timer: {
+          cancelled: 'El temporizador ha sido cancelado',
+          end_in: 'Fin del temporizador en 0 minuto. | Fin del temporizador en {minutes} minuto. | Fin del temporizador en {minutes} minutos.',
+          finish: 'Parar la reproducción (temporizador)',
+          modal: {
+            abrv: 'mn',
+            add: 'Agregar',
+            cancel: 'Anular',
+            close: 'Cerrar',
+            length: 'Duración',
+            placeholder: 'Minutos',
+            quick: 'Selección rápida',
+            set: 'Iniciar el temporizador',
+            title: 'Temporizador',
+            x_minutes: '{minutes} minutos'
+          },
+          set: 'El temporizador se activa durante 0 minutos | El temporizador se activa durante {minutes} minutos | El temporizador se activa durante {minutes} minutos',
+          title: 'Minuteur',
+          tooltip: 'Haga clic aquí para activar el temporizador'
+        }
+      },
+      radio_page: {
+        back: '← Ir a la programación de todas las emisoras de radio.',
+        current: '↓ Ir al programa actual',
+        no_schedule: 'Programas no disponibles.',
+        play: 'Escuchar {radio}',
+        stop: 'Detener',
+        title: 'Programas de {radio} y streaming',
+        webradios: 'Radios web'
+      },
+      schedule: {
+        no_schedule: 'Programas no disponibles :(',
+        no_radio: 'No hay radio en esta categoría',
+        no_radio_favorites: "No tienes emisoras de radio favoritas",
+        title: 'Todos los horarios de la radio, todos los programas y la escucha en línea',
+        today: "Hoy en día",
+        tomorrow: 'Mañana',
+        tooltip: 'Más radios aquí',
+        radio_list: {
+          page: 'Página de programas'
+        }
+      },
+      streaming: {
+        categories: {
+          all_countries: 'Todos los países',
+          favorites: 'Favoritos',
+        },
+        country_search_no_result: 'No se ha encontrado ningún país',
+        no_results: 'No hay radio',
+        random: 'Reproducción de una radio aleatoria',
+        search_placeholder: 'Búsqueda por nombre, estilo y contenido ...',
+        sort: {
+          name: 'Por orden alfabético',
+          popularity: 'Por popularidad ',
+          random: 'Orden aleatorio'
+        },
+        title: 'Emisoras de radio de todo el mundo en streaming'
+      }
+    }
+  },
 };
