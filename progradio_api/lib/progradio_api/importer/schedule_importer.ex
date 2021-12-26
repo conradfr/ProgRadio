@@ -15,7 +15,9 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
       producer: [
         module: {
           OffBroadway.Redis.Producer,
-          redis_instance: :redix, list_name: @queue_list, working_list_name: @queue_processing
+          redis_instance: :redix,
+          list_name: @queue_list,
+          working_list_name: @queue_processing
         },
         concurrency: 1
       ],

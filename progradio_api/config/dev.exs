@@ -19,6 +19,7 @@ config :progradio_api, ProgRadioApi.Repo,
 # with webpack to recompile .js and .css sources.
 config :progradio_api, ProgRadioApiWeb.Endpoint,
   http: [port: 4000],
+  secret_key_base: "AR9JT6+oU/tgmN46k4MfK8IJvZmVm2bPJcMmCGTEHw8TzgInAs6SKVaHxx4wR9Gc",
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

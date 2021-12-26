@@ -16,7 +16,11 @@ config :progradio_api, ProgRadioApi.Repo,
 # you can enable the server option below.
 config :progradio_api, ProgRadioApiWeb.Endpoint,
   http: [port: 4002],
+  secret_key_base: "vtEZ8VazcB8inLfW8yhvbRSnuWn4pbig3Q4zB+ablJtka2tvCHi+0wV8EQo8C05y",
   server: false
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Initialize plugs at runtime for faster test compilation
+config :phoenix, :plug_init_mode, :runtime

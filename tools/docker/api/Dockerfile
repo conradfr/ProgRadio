@@ -1,9 +1,10 @@
-FROM hexpm/elixir:1.12.2-erlang-24.1.4-ubuntu-bionic-20210325
+FROM hexpm/elixir:1.13.1-erlang-24.2-ubuntu-bionic-20210325
 
 EXPOSE 80
 
 ARG DATABASE_URL=${DATABASE_URL}
 ARG PORT=${PORT}
+ARG HOST=${HOST}
 ARG SECRET_KEY_BASE=${SECRET_KEY_BASE}
 ARG REDIS_HOST=${REDIS_HOST}
 ARG REDIS_DB=${REDIS_DB}
@@ -16,6 +17,7 @@ ARG TZ=${TZ}
 
 ENV DATABASE_URL=${DATABASE_URL} \
     PORT=${PORT} \
+    HOST=${HOST} \
     SECRET_KEY_BASE=${SECRET_KEY_BASE} \
     MIX_ENV=${MIX_ENV} \
     REDIS_HOST=${REDIS_HOST} \
@@ -29,6 +31,13 @@ ENV DATABASE_URL=${DATABASE_URL} \
 #RUN usermod -u 1000 root
 #USER www-data
 
+RUN apt-get update && apt-get install --no-install-suggests -y \
+    imagemagick \
+    jpegoptim optipng pngquant gifsicle
+
+# For temp forked dep
+RUN apt-get install --no-install-recommends --no-install-suggests -y git ca-certificates
+
 RUN mkdir -p /var/progradio_api
 RUN mkdir -p /var/www
 
@@ -36,10 +45,6 @@ COPY  ./progradio_api/config /var/progradio_api/config/
 COPY  ./progradio_api/mix.* /var/progradio_api/
 
 WORKDIR /var/progradio_api/
-
-RUN apt-get update && apt-get install -y \
-    imagemagick \
-    jpegoptim optipng pngquant gifsicle
 
 RUN rm -Rf _build && \
     mix local.hex --force && \

@@ -16,7 +16,6 @@ config :progradio_api,
 # Configures the endpoint
 config :progradio_api, ProgRadioApiWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "AR9JT6+oU/tgmN46k4MfK8IJvZmVm2bPJcMmCGTEHw8TzgInAs6SKVaHxx4wR9Gc",
   render_errors: [view: ProgRadioApiWeb.ErrorView, accepts: ~w(json), layout: false],
   pubsub_server: ProgRadioApi.PubSub,
   live_view: [signing_salt: "LI4gelTF"]
