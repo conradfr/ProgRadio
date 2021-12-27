@@ -45,12 +45,8 @@ const format = dateObj => {
       main = false;
       newEntry.title = curr.title_section;
 
-      console.log(curr);
-
       if ((curr.description === undefined || curr.description === null || curr.description === '')
         && (curr.description_section !== undefined && curr.description_section !== null && curr.description_section !== '')) {
-        console.log('lol');
-        console.log(curr.description_short);
         newEntry.description = curr.description_section;
       } else {
         newEntry.description = curr.description;
