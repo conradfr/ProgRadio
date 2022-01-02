@@ -2,6 +2,11 @@
 
 {% import _self as self %}
 
+{% block head_supp %}
+    {{ parent() }}
+    {% include '_partials/adsense.html.twig' %}
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     {% if stream_url is not null %}
