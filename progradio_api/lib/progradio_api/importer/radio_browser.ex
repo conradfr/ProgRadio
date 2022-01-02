@@ -3,6 +3,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias Ecto.Multi
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream
+  alias ProgRadioApi.StreamOverloading
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Importer.StreamsImporter.StreamMatcher
 
@@ -90,6 +91,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   defp import_images(streams) do
     streams
+    |> overload_image_if_one()
     |> Task.async_stream(fn s -> import_image(s) end,
       timeout: @task_timeout,
       max_concurrency: @max_concurrency
@@ -149,6 +151,32 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     end)
 
     {ids_to_keep, streams}
+  end
+
+  defp overload_image_if_one(streams) do
+    # not used for now has overloading data is tiny
+    # streams_ids = Enum.map(streams, fn s -> s.id end)
+
+    query =
+      from so in StreamOverloading,
+           where: not is_nil(so.img),
+           select: %{
+             id: so.id,
+             img: so.img,
+           }
+
+    stream_overloading_img =
+      Repo.all(query)
+      |> Enum.map(fn so -> {so.id, so.img} end)
+      |> Enum.into(%{})
+
+    streams
+    |> Enum.map(fn s ->
+      case Map.has_key?(stream_overloading_img, s.id) do
+        true -> %{s | img: Map.get(stream_overloading_img, s.id)}
+        false -> s
+      end
+    end)
   end
 
   # Store

@@ -124,6 +124,14 @@ class Stream
      */
     private $enabled = true;
 
+    /**
+     * @var StreamOverloading
+     *
+     * @ORM\OneToOne(targetEntity=StreamOverloading::class)
+     * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     */
+    private $streamOverloading;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
     }
@@ -294,5 +302,15 @@ class Stream
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    public function getStreamOverloading(): StreamOverloading
+    {
+        return $this->streamOverloading;
+    }
+
+    public function setStreamOverloading(StreamOverloading $streamOverloading): void
+    {
+        $this->streamOverloading = $streamOverloading;
     }
 }

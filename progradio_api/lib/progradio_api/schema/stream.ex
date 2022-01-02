@@ -4,6 +4,7 @@ defmodule ProgRadioApi.Stream do
   alias ProgRadioApi.ListeningSession
   alias ProgRadioApi.RadioStream
   alias ProgRadioApi.StreamSong
+  alias ProgRadioApi.StreamOverloading
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -22,6 +23,7 @@ defmodule ProgRadioApi.Stream do
     belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream_song, StreamSong)
     has_many(:listening_session, ListeningSession)
+    has_one(:stream_overloading, StreamOverloading, foreign_key: :id)
   end
 
   def changeset(stream, params \\ %{}) do
