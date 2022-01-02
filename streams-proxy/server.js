@@ -10,17 +10,11 @@ const hostname = os.hostname();
 
 const serverPort = (process.env.PORT || process.env.PROXY_PORT || 3000);
 
-app.get('/icecast_metadata_worker.min.js', (req, res) => {
-  res.sendFile(__dirname + '/icecast_metadata_worker.min.js');
-});
-
 app.get('/', (req, res) => {
   process.stdout.write(`Request: ${req.query.stream}\n`);
-  const stream_url = req.query.stream;
 
   const options = {
-    url: req.query.stream/*,
-    headers: {"Icy-Metadata": "1"}*/
+    url: req.query.stream
   };
 
   request.get(options)

@@ -5,7 +5,18 @@
 </template>
 
 <script>
-/* This is a thin layer for Hammerjs, specific to this app */
+/*
+  Thin layer for HammerJs specific to this app
+
+  !! NOTE !!
+
+  As it seems this file is getting views on GitHub please note that I created it when converting
+  this codebase to Vue3 as vue-touch had no support for it.
+
+  I did the minimum amount of work to make it work for my use case so this is NOT a general
+  implementation of HammerJs for Vue3. I did not know Vue3 well when coding it and I have NOT
+  revisited the code since (but it works).
+*/
 
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import Hammer from 'hammerjs';

@@ -170,7 +170,7 @@ export const messages = {
         title: 'En este momento en la radio'
       },
       player: {
-        autoplay_error: "Su navegador no permite la reproducción automática de medios. Gracias por hacer clic en \"Escuchar\" una vez más ",
+        autoplay_error: 'Su navegador no permite la reproducción automática de medios. Gracias por hacer clic en "Escuchar" una vez más',
         play_error: 'error de reproducción',
         placeholder: 'Haga clic en un logotipo para reproducir',
         previous: 'Escucha {radio} de nuevo',
@@ -211,9 +211,9 @@ export const messages = {
       schedule: {
         no_schedule: 'Programas no disponibles :(',
         no_radio: 'No hay radio en esta categoría',
-        no_radio_favorites: "No tienes emisoras de radio favoritas",
+        no_radio_favorites: 'No tienes emisoras de radio favoritas',
         title: 'Todos los horarios de la radio, todos los programas y la escucha en línea',
-        today: "Hoy en día",
+        today: 'Hoy en día',
         tomorrow: 'Mañana',
         tooltip: 'Más radios aquí',
         radio_list: {
