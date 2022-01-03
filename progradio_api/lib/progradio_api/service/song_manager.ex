@@ -1,8 +1,5 @@
 defmodule ProgRadioApi.SongManager do
-  import Ecto.Query, only: [from: 2]
   require Logger
-  alias ProgRadioApi.Repo
-  alias ProgRadioApi.{Radio, RadioStream, Collection}
 
   @spec join(String.t(), map()) :: any()
   def join(song_topic, radio_stream_data)

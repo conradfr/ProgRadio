@@ -173,7 +173,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     streams
     |> Enum.map(fn s ->
       case Map.has_key?(stream_overloading_img, s.id) do
-        true -> %{s | img: Map.get(stream_overloading_img, s.id)}
+        true -> %{s | img_url: Map.get(stream_overloading_img, s.id)}
         false -> s
       end
     end)
