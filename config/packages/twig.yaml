@@ -7,6 +7,7 @@ twig:
         api_url: "%env(API_URL)%"
         legacy: "%env(LEGACY)%"
         adsense_key: "%env(ADSENSE_KEY)%"
+        adsense_tag_radio_key: "%env(ADSENSE_TAG_RADIO_KEY)%"
 
 when@test:
     twig:

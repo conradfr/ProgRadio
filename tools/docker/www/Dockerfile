@@ -97,6 +97,9 @@ ARG analytics=${analytics}
 ARG streams_proxy=${streams_proxy}
 ARG DATABASE_URL=${DATABASE_URL}
 ARG APP_SECRET=${APP_SECRET}
+ARG ADSENSE_KEY=${ADSENSE_KEY}
+ARG ADSENSE_TAG_RADIO_KEY=${ADSENSE_TAG_RADIO_KEY}
+
 
 ENV APP_ENV=${APP_ENV} \
   REDIS_URL=${REDIS_URL} \
@@ -104,7 +107,9 @@ ENV APP_ENV=${APP_ENV} \
   analytics=${analytics} \
   streams_proxy=${streams_proxy} \
   DATABASE_URL=${DATABASE_URL} \
-  APP_SECRET=${APP_SECRET}
+  APP_SECRET=${APP_SECRET} \
+  ADSENSE_KEY=${ADSENSE_KEY} \
+  ADSENSE_TAG_RADIO_KEY=${ADSENSE_TAG_RADIO_KEY}
 
 # Set working directory
 WORKDIR /var/www

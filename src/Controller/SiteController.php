@@ -110,6 +110,17 @@ class SiteController extends AbstractController
     }
 
     /**
+     * @Route("/ads.txt", stateless=true)
+     */
+    public function adsTxt(EntityManagerInterface $em): Response
+    {
+        $txt = 'google.com, ' .  getenv('ADSENSE_KEY') .', DIRECT, f08c47fec0942fa0';
+        $response = new Response($txt);
+        $response->headers->set('Content-Type', 'text/plain');
+        return $response;
+    }
+
+    /**
      * Simple sitemap generator
      *
      * Doesn't use the serializer.
@@ -120,7 +131,8 @@ class SiteController extends AbstractController
      *     defaults={"_format": "xml"},
      *     requirements={
      *         "_format": "xml"
-     *     }
+     *     },
+     *     stateless=true
      * )
      */
     public function sitemap(EntityManagerInterface $em): Response
