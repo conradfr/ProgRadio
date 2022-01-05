@@ -277,11 +277,15 @@ class Stream
 
     public function getCountry(string $locale): ?string
     {
-        if ($this->getCountryCode() === null || $this->getCountryCode() === '') {
-            return null;
-        }
+        try {
+            if ($this->getCountryCode() === null || $this->getCountryCode() === '') {
+                return null;
+            }
 
-        return Countries::getName($this->getCountryCode(), $locale);
+            return Countries::getName($this->getCountryCode(), $locale);
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     public function getWebsite(): ?string
