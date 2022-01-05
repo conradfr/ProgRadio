@@ -13,7 +13,7 @@ class KernelExceptionListener
     public function onKernelException(ExceptionEvent $event): void
     {
         // only check master request
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
