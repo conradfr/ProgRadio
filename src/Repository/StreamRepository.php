@@ -57,7 +57,7 @@ class StreamRepository extends ServiceEntityRepository
     protected function getMoreStreamQuery(string $id, int $limit) {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img COALESCE(r.codeName) as img_alt")
+        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(r.codeName) as img_alt")
             ->from(Stream::class, 's')
             ->leftJoin('s.streamOverloading', 'so')
             ->leftJoin('s.radioStream', 'rs')
