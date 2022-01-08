@@ -7,7 +7,6 @@
     {% if schedule|length == 0 %}
         <meta name="robots" content="noindex">
     {% endif %}
-    {% include '_partials/adsense.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
@@ -221,7 +220,7 @@
 
     <div class="row">
         <div class="offset-1 col-10 offset-sm-2 col-sm-8 mt-5 mb-3">
-            {{ include('_partials/adblock.html.twig', {'no_affil': true}) }}
+            {{ include('_partials/adblock.html.twig', {'no_affil': true, vertical: false}) }}
         </div>
     </div>
 </div>
