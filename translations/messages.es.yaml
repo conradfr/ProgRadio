@@ -179,3 +179,9 @@ footer:
     fr: Français
 
 legal: 'Notas legales'
+
+cookie:
+    accept: Aceptar
+    allow: ¿Permitir anuncios personalizados?
+    deny: Denegar
+    disclaimer: (Este sitio web no rastrea a sus visitantes ni vende datos)

@@ -65,7 +65,6 @@
                     <a title="{{ "footer.#{locale}"|trans }}" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}"><img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}"></a>
                 {% endif %}
             {% endfor %}
-
         {% endblock %}
     </div>
 </footer>
@@ -89,7 +88,7 @@
 </script>
 
 <script>
-  var sendGaEvent = (event, category, label, value) => {
+  const sendGaEvent = (event, category, label, value) => {
     if (typeof gtag !== 'undefined') {
       gtag('event', event, {
         'event_category': category,
@@ -98,12 +97,33 @@
       });
     }
   };
+
+  const setCookie = (name, state) => {
+  {# imported from vue app #}
+    const COOKIE_PARAMS = {
+      path: '/',
+      'max-age': 31536000,
+      expires: 'mage-age',
+      secure: true,
+      SameSite: 'Lax'
+    };
+
+    // delete ?
+    if (state === undefined || state === null) {
+      document.cookie = `${name}=;path=${COOKIE_PARAMS.path};SameSite=${COOKIE_PARAMS.SameSite};secure=true;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+      return;
+    }
+
+    const opts = Object.keys(COOKIE_PARAMS).map(k => `;${k}=${COOKIE_PARAMS[k]}`).join('');
+    document.cookie = `${name}=${state === true ? '1' : '0'}${opts}`;
+  };
 </script>
 
 {% include('_partials/darkmode_script.html.twig') %}
 
 {% block javascripts %}
 {% endblock %}
+
 {% if app.environment == 'prod' %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ analytics }}&l=dataLayer"></script>

@@ -5,6 +5,7 @@
 {% block javascripts %}
     {{ parent() }}
     {% include('_partials/mini_player.html.twig') %}
+    {{ include('_partials/adsense.html.twig') }}
 {% endblock %}
 
 {% block title %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endblock %}

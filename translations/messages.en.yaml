@@ -176,3 +176,10 @@ footer:
     fr: Français
 
 legal: Legal notice
+
+cookie:
+    accept: Accept
+    allow: Allow personalized ads?
+    deny: Deny
+    disclaimer: (This website does not track its visitors or sell data)
+

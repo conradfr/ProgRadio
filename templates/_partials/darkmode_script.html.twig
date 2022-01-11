@@ -16,23 +16,7 @@
   };
 
   const setDarkModeCookie = (state) => {
-      {# imported from vue app #}
-    const COOKIE_PARAMS = {
-      path: '/',
-      'max-age': 31536000,
-      expires: 'mage-age',
-      secure: true,
-      SameSite: 'Lax'
-    };
-
-    // delete ?
-    if (state === undefined) {
-      document.cookie = `${cookieName}=;path=${COOKIE_PARAMS.path};SameSite=${COOKIE_PARAMS.SameSite};secure=true;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
-      return;
-    }
-
-    const opts = Object.keys(COOKIE_PARAMS).map(k => `;${k}=${COOKIE_PARAMS[k]}`).join('');
-    document.cookie = `${cookieName}=${state === true ? '1' : '0'}${opts}`;
+    setCookie(cookieName, state);
   };
 
   const checkColorScheme = () => {
