@@ -96,10 +96,10 @@ const fetch = (url, name, dateObj) => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find(`.strict-block > .blog-style-square > .status-publish`)
+      .find(`.row > .post`)
       // .select('.item')
       .set({
-        'img': '.item-header > .item-photo > img@src'
+        'img': '.item-header > a > img@data-src'
       })
       .set({
         'title': '.item-content > h3 > a',
