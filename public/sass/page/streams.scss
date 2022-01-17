@@ -1,7 +1,50 @@
+@mixin img_play {
+  background-color: $stream-play-color;
+
+  mask-image: url('../../img/play-button-inside-a-circle.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 75% 75%;
+
+  -webkit-mask-image: url('../../img/play-button-inside-a-circle.svg');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 70% 70%;
+
+  /* IE only, default to black icon */
+  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    background-color: transparent;
+
+    background-image: url('../../img/play-button-inside-a-circle.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75% 75%;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  margin: 5px 2px;
+
+  cursor: pointer;
+
+  &.badge-inverse {
+    color: $badge-color;
+    border: 1px solid $badge-color;
+
+    &:hover {
+      color: $badge-color-hover;
+      border: 1px solid $badge-color-hover;
+    }
+  }
+}
 
 .streams-filters-container {
-  margin-top: 20px;
-  margin-bottom: 15px;
+  @include media-breakpoint-down(sm) {
+    .multiselect-div {
+      width: 100% !important;
+    }
+  }
 
   .input-group-text {
     padding-top: 0;
@@ -27,7 +70,6 @@
     &:hover {
       opacity: 1;
     }
-
   }
 }
 
@@ -44,8 +86,6 @@
 
     margin-bottom: 10px;
     margin-right: 10px;
-
-    cursor: pointer;
 
     @include media-breakpoint-down(sm) {
       width: 100px;
@@ -96,6 +136,8 @@
       background-position: center;
       background-size: 85%;
 
+      cursor: pointer;
+
       @include media-breakpoint-down(sm) {
         height: 100px;
       }
@@ -112,6 +154,8 @@
       line-height: 1.5em;
       color: $stream-text-color;
       font-size: 0.923rem;
+
+      cursor: pointer;
 
       padding-left: 10px;
       padding-right: 10px;
@@ -145,8 +189,13 @@
           margin: 0 1px;
 
           &.badge-inverse {
-            color: $gray-500;
-            border: 1px solid $gray-500;
+            color: $stream-badge-color;
+            border: 1px solid $stream-badge-color;
+
+            &:hover {
+              color: $stream-badge-color-hover;
+              border: 1px solid $stream-badge-color-hover;
+            }
           }
         }
       }
@@ -155,6 +204,10 @@
     .streams-one-img-play {
       width: 100%;
       height: 100%;
+
+      &:hover {
+        @include img_play;
+      }
     }
 
     &:hover {
@@ -167,32 +220,16 @@
       }
     }
 
+    &.streams-one-play-active:not(.streams-one-play-hide) {
+      .streams-one-img-play {
+        @include img_play;
+      }
+    }
+
     &:hover:not(.streams-one-play-hide), &.streams-one-play-active:not(.streams-one-play-hide) {
       box-shadow: 0 0 7px 0 rgba(0,0,0,.35);
 
-      .streams-one-img-play {
-        background-color: $stream-play-color;
 
-        mask-image: url('../../img/play-button-inside-a-circle.svg');
-        mask-repeat: no-repeat;
-        mask-position: center;
-        mask-size: 75% 75%;
-
-        -webkit-mask-image: url('../../img/play-button-inside-a-circle.svg');
-        -webkit-mask-repeat: no-repeat;
-        -webkit-mask-position: center;
-        -webkit-mask-size: 70% 70%;
-
-        /* IE only, default to black icon */
-        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-          background-color: transparent;
-
-          background-image: url('../../img/play-button-inside-a-circle.svg');
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: 75% 75%;
-        }
-      }
 
       &.streams-one-play-active:not(:hover) {
         .streams-one-img-play {
@@ -229,20 +266,20 @@
 
 ul.pagination {
 
-  li a {
-    cursor: default;
-  }
+li a {
+  cursor: default;
+}
 
-  li.ellipsis {
-    padding-left: 32px;
+li.ellipsis {
+  padding-left: 32px;
 
-    & a:before {
-      content: "\2026";
-      font-size: 1.846rem;
-      position: absolute;
-      top: 0;
-      left: -25px;
-      color: $body-color;
-    }
+  & a:before {
+    content: "\2026";
+    font-size: 1.846rem;
+    position: absolute;
+    top: 0;
+    left: -25px;
+    color: $body-color;
   }
+}
 }

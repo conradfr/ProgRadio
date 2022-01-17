@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% import _self as self %}
+
+{% block title %}{{ 'page.faq.page_title'|trans }}{% endblock %}
+{% block description %}{{ 'page.faq.page_description'|trans }}{% endblock %}
+
+{% set faq = {
+    "fr": [
+        {   'question': "Qu'est-ce que Radio-Addict.com ?",
+            'answer': [
+                "Radio-Addict.com est un site indépendant d'écoute de radios du monde entier."
+            ]
+        },
+        {   'question': "Certaines radios ont une publicité en début de lecture.",
+            'answer': [
+                "Ces publicités sont ajoutées par les radios elles-mêmes et non pas par Radio-Addict.com.",
+                "Le lecteur de Radio-Addict essaye de minimiser ces publicités quand vous alternez entre deux radios ou mettez une radio en pause.",
+                "Dans certains cas le bloqueur de publicité peut bloquer la lecture de la radio (exemple: RMC)."
+            ]
+        },
+        {   'question': "Je souhaite ajouter ma (web)radio, comment faire ?",
+            'answer': [
+                'Pour la partie "Toutes les radios", nous utilisons l\'API Radio-Browser. Pour y soumettre votre radio, <a target="_blank" href="https://www.radio-browser.info/#/add">cliquez ici</a>.'
+            ]
+        }
+    ],
+    "en": [
+        {   'question': "What is Radio-Addict.com?",
+            'answer': [
+                "Radio-Addict.com is an independant radio streaming website."
+            ]
+        },
+        {   'question': "Some radios have an ad at the start of their streaming.",
+            'answer': [
+                "These ads are added by the radios themselves and not Radio-Addict.com."
+            ]
+        },
+    ],
+    "es": [
+        {   'question': "¿Qué es Radio-Addict.com?",
+            'answer': [
+            "Radio-Addict.com es un sitio web independiente de streaming radio."
+        ]
+        },
+        {   'question': "Algunas radios tienen un anuncio al comienzo de su transmisión.",
+            'answer': [
+            "Estos anuncios son añadidos por las propias radios y no por Radio-Addict.com."
+        ]
+        }
+    ]
+}
+%}
+
+{% block body %}
+<div class="container page-faq">
+    <div class="row">
+        <div class="col-md-8 col-sm-12">
+            <h3 class="mb-4">{{ 'page.faq.title'|trans }}</h3>
+            {% for entry in faq[app.request.locale] %}
+                <dl>
+                    <dt>{{ entry.question }}</dt>
+                    {% for line in entry.answer %}
+                        <dd>{{ line  | raw }}</dd>
+                    {% endfor %}
+                </dl>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

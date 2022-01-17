@@ -8,7 +8,8 @@
     <div class="streams-one-img" :style="styleObject" v-on:click="playStop">
       <div class="streams-one-img-play"></div>
     </div>
-    <div class="streams-one-name" :title="radio.name" v-on:click="playStop">
+    <div class="streams-one-name" :title="$t('message.streaming.more')"
+      v-on:click="nameClick(radio.code_name)">
       {{ radio.name }}
       <div v-if="playing === true && radio.code_name === radioPlayingCodeName
         && currentSong !== null" class="streams-one-song">
@@ -16,17 +17,19 @@
       </div>
       <div v-else-if="radio.tags" class="streams-one-tags" v-once>
         <span class="badge badge-inverse"
-          v-for="tag in tags()" :key="tag">
+          v-for="tag in tags()" :key="tag"
+          v-on:click="tagClick(tag)">
           {{ tag }}
         </span>
       </div>
     </div>
-    <div class="streams-one-fav" :class="{ 'streams-one-fav-isfavorite': isFavorite() }"
+    <div class="streams-one-fav cursor-pointer"
+      :class="{ 'streams-one-fav-isfavorite': isFavorite() }"
          v-on:click.stop="toggleFavorite">
       <img class="streams-one-icon" src="/img/favorites_streams.svg">
     </div>
     <div
-        class="streams-one-flag"
+        class="streams-one-flag cursor-pointer"
         v-on:click.stop="flagClick"
         v-if="(selectedCountry === code_all || selectedCountry === code_favorites)
                 && radio.country_code !== null">
@@ -41,8 +44,10 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { nextTick } from 'vue';
 
 import * as config from '../../config/config';
+import StreamsUtils from '../../utils/StreamsUtils';
 
 export default {
   compatConfig: {
@@ -50,13 +55,7 @@ export default {
   },
   props: ['radio'],
   data() {
-    let img = '/img/stream-placeholder.png';
-
-    if (this.radio.img_alt !== null) {
-      img = `${config.THUMBNAIL_PAGE_PATH}${this.radio.img_alt}.png`;
-    } else if (this.radio.img !== null && this.radio.img !== '') {
-      img = `${config.THUMBNAIL_STREAM_PATH}${this.radio.img}`;
-    }
+    const img = StreamsUtils.getPictureUrl(this.radio);
 
     return {
       code_all: config.STREAMING_CATEGORY_ALL,
@@ -115,6 +114,28 @@ export default {
       });
 
       this.$store.dispatch('countrySelection', this.radio.country_code);
+    },
+    tagClick(tag) {
+      this.$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
+        event_category: config.GTAG_CATEGORY_STREAMING,
+        event_label: tag.toLowerCase(),
+        value: config.GTAG_STREAMING_FILTER_VALUE
+      });
+
+      this.$store.dispatch('setSearchText', tag);
+      this.$store.dispatch('setSearchActive', true)
+        .then(() => {
+          nextTick(() => {
+            // this.$refs.searchText.focus();
+            this.$store.dispatch('getStreamRadios');
+          });
+        });
+    },
+    nameClick(id) {
+      this.$router.push({
+        name: 'streaming',
+        params: { countryOrCategoryOrUuid: id }
+      });
     },
     toggleFavorite() {
       this.$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {

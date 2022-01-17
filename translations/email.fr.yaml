@@ -3,27 +3,30 @@ general:
 
 signature:
     regards: Cordialement,
-    name: Programmes-Radio.com
 
 signup:
+    subject: '%name% - Inscription'
     welcome: Bienvenue !
     text_1: Vous êtes désormais inscrit(e) sur %link%
     text2: Si vous aviez des radios ou streamings favoris ceux-ci sont désormais enregistrés dans votre compte.
 
 reset:
+    subject: '%name% - Réinitialisation du mot de passe'
     header: Réinitialisation du mot de passe
-    text_1: Une demande de réinitialisation du mot de passe a été faite sur https://www.programmes-radio.com
+    text_1: Une demande de réinitialisation du mot de passe a été faite sur %url%
     text_2: "Pour mettre à jour votre mot de passe, cliquez sur ce lien (valide 24h) : %link%"
     text_3: Si vous n'êtes pas à l'origine de cette demande vous pouvez ignorer cet email.
 
 email_change:
+    subject: "%name% - Changement d'adresse email"
     header: Changement d'adresse email
-    text_1: Une demande de changement d'email pour %new_email% a été faite sur https://www.programmes-radio.com.
+    text_1: Une demande de changement d'email pour %new_email% a été faite sur %url%.
     text_2: Vous ne pouvez-donc plus vous connecter avec l'identifiant %old_email%.
     text_3: "Si cela n'est pas de votre fait vous pouvez annuler ce changement en cliquant sur ce lien (valide 24h) : %link%"
     text_4: Nous vous conseillons également de changer votre mot de passe.
 
 password_update:
+    subject: '%name% - Modification du mot de passe'
     header: Modification du mot de passe
-    text_1: Le mot de passe du compte associé à cette adresse à été modifié sur https://www.programmes-radio.com
+    text_1: Le mot de passe du compte associé à cette adresse à été modifié sur %url%
     text_2: "Si cela n'est pas de votre fait vous pouvez annuler ce changement et choisir un nouveau mot de passe en cliquant sur ce lien (valide 24h) : %link%"

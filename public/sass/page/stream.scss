@@ -12,23 +12,6 @@
     }
   }
 
-  .stream-one-tags {
-    .badge {
-      display: inline-flex;
-      margin: 5px 2px;
-
-      &:hover {
-        color: lighten($gray-600, 25%);
-        border: 1px solid lighten($gray-600, 25%);
-      }
-
-      &.badge-inverse {
-        color: $gray-600;
-        border: 1px solid $gray-600;
-      }
-    }
-  }
-
   .more-streams {
     .more-streams-one {
       width: 100px;
@@ -48,4 +31,3 @@
     }
   }
 }
-

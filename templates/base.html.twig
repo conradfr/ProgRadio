@@ -1,6 +1,5 @@
 {% set locales = ['fr', 'en', 'es'] %}
 {% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es'} %}
-
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}" class="h-100{% block htmlsupp %}{% endblock %}{% if isDarkModeTime() %} progradio-dark{% endif %}">
 <head>
@@ -8,18 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}{{ 'general.main_title'|trans }}{% endblock %} - Programmes Radio</title>
+    <title>{% block title %}{{ 'general.main_title'|trans }}{% endblock %} - {{ getDomainName(app.request) }}</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="preload" href="https://fonts.gstatic.com/l/font?kit=neILzCirqoswsqX9_oC0OoliAvSRzBR3yET4sg&skey=7ed805a363b4659c&v=v23" as="font" crossorigin>
+{#    <link rel="preload" href="https://fonts.gstatic.com/l/font?kit=neILzCirqoswsqX9_oC0OoliAvSRzBR3yET4sg&skey=7ed805a363b4659c&v=v23" as="font" crossorigin>#}
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Lobster&text=AdictRadoProgmes&display=swap" as="font" crossorigin>
 
     {#    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap&text=Programmes%20Radio" rel="stylesheet">#}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-
 
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"></noscript>
 

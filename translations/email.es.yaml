@@ -3,27 +3,30 @@ general:
 
 signature:
     regards: Sinceramente,
-    name: Programmes-Radio.com
 
 signup:
+    subject: '%name% - Bienvenido'
     welcome: Bienvenido.
     text_1: Ya está registrado) en %link%
     text2: Si tienes radios o transmisiones favoritas, ahora están guardadas en tu cuenta.
 
 reset:
+    subject: '%name% - Restablecer contraseña'
     header: Restablecer contraseña
-    text_1: Se ha solicitado el restablecimiento de la contraseña a https://www.programmes-radio.com
+    text_1: Se ha solicitado el restablecimiento de la contraseña a %url%
     text_2: "Para actualizar su contraseña, haga clic en este enlace (válido durante 24 horas) : %link%"
     text_3: Si no ha iniciado esta solicitud, puede ignorar este correo electrónico.
 
 email_change:
+    subject: '%name% - Cambio de dirección de correo electrónico'
     header: Cambio de dirección de correo electrónico
-    text_1: Se ha solicitado cambiar el correo electrónico a %new_email% en https://www.programmes-radio.com.
+    text_1: Se ha solicitado cambiar el correo electrónico a %new_email% en %url%.
     text_2: Por lo tanto, ya no puede iniciar la sesión con el login %old_email%.
     text_3: "Si esto no es culpa suya, puede cancelar este cambio haciendo clic en este enlace  (válido durante 24 horas) : %link%"
     text_4: También le aconsejamos que cambie su contraseña.
 
 password_update:
+    subject: '%name% - Cambiar la contraseña'
     header: Cambiar la contraseña
-    text_1: La contraseña de la cuenta asociada a esta dirección ha sido modificada en https://www.programmes-radio.com
+    text_1: La contraseña de la cuenta asociada a esta dirección ha sido modificada en %url%
     text_2: "Si esto no es culpa suya, puede cancelar este cambio y elegir una nueva contraseña haciendo clic en este enlace (válido durante 24 horas) : %link%"

@@ -1,4 +1,6 @@
 $gray-300: #dee2e6;
+$gray-500: #bbb !default;
+$gray-600: #666 !default;
 $gray-800: #222 !default;
 
 // ---
@@ -69,6 +71,12 @@ $stream-select-option-text: lighten($stream-text-color, 10%);
 $stream-select-border: rgba(60, 60, 60, 0.27);
 $stream-select-background-hover: $primary;
 $stream-select-search: $stream-text-color;
+
+$badge-color: $gray-600;
+$badge-color-hover: $gray-800;
+
+$stream-badge-color: $gray-500;
+$stream-badge-color-hover: $gray-600;
 
 $now-border-color: $gray-300;
 

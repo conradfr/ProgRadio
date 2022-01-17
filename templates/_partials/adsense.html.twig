@@ -6,7 +6,7 @@
         <div class="toast-body p-2 d-flex flex-row justify-content-between align-items-center">
             <p class="flex-fill m-0 px-2 fs-6">
               {{ 'cookie.allow'|trans }}<br>
-                <small>{{ 'cookie.disclaimer'|trans }}</small>
+                <small>{{ 'cookie.disclaimer'|trans({'%name%': getField('name', app.request) }) }}</small>
             </p>
             <div>
                 <button type="button" class="btn btn-sm btn-outline-warning mr-3" id="btnCookieDeny">{{ 'cookie.deny'|trans }}</button>

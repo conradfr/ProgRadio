@@ -1,20 +1,20 @@
 <template>
-  <div class="container streams-filters-container mb-4">
-    <div class="row">
-      <div class="col-md-4 col-sm-12 pb-3 pb-sm-3 pb-md-0">
+  <div class="streams-filters-container mt-3 mb-0 d-flex flex-row flex-wrap">
+      <div class="mb-3 me-auto">
         <div class="input-group" v-if="searchActive">
           <span class="input-group-text" id="search-addon1">
             <i class="bi bi-search"></i>
           </span>
           <input type="text"
-                 class="form-control"
-                 :placeholder="$t('message.streaming.search_placeholder')"
-                 name="searchText"
-                 ref="searchText"
-                 aria-describedby="search-addon1"
-                 :value="searchText"
-                 v-on:input="searchTextChange"
-                 v-on:blur="searchDeactivate"
+            class="form-control"
+            style="min-width: 275px"
+            :placeholder="$t('message.streaming.search_placeholder')"
+            name="searchText"
+            ref="searchText"
+            aria-describedby="search-addon1"
+            :value="searchText"
+            v-on:input="searchTextChange"
+            v-on:blur="searchDeactivate"
           />
           <i class="bi bi-x-lg form-control-feedback"
              v-on:click="searchDeactivate(true)"></i>
@@ -30,56 +30,64 @@
           {{ $t('message.streaming.random') }}
         </button>
       </div>
-      <div class="col-select col-md-4 col-sm-6">
-        <Multiselect
-            @change="countryChange"
-            v-model="selectedCountry"
-            :options="countriesOptions"
-            :canClear="false"
-            :valueProp="'code'"
-            :label="'label'"
-            :searchable="true"
-            :strict="false"
-            :noResultsText="$tc('message.streaming.country_search_no_result')"
-            ref="multicountry"
-            id="multicountry"
-        >
-          <template v-slot:singlelabel="{ value }">
-            <div class="multiselect-single-label">
-              <img v-if="value.code === code_all || value.code === code_favorites"
+      <div class="me-1 mb-3">
+        <button type="submit"
+          class="btn btn-primary btn-sm me-1"
+          v-on:click="geoloc">
+          <i class="bi bi-geo-alt"></i>
+        </button>
+      </div>
+      <div class="d-flex d-row flex-wrap">
+        <div class="pe-3 mb-3 me-1 multiselect-div" style="min-width: 300px;">
+          <Multiselect
+              @change="countryChange"
+              :model-value="selectedCountry"
+              :options="countriesOptions"
+              :canClear="false"
+              :valueProp="'code'"
+              :label="'label'"
+              :searchable="true"
+              :strict="false"
+              :noResultsText="$tc('message.streaming.country_search_no_result')"
+              ref="multicountry"
+              id="multicountry"
+          >
+            <template v-slot:singlelabel="{ value }">
+              <div class="multiselect-single-label">
+                <img v-if="value.code === code_all || value.code === code_favorites"
+                     class="gb-flag gb-flag--mini"
+                     :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
+                <gb-flag
+                    v-else
+                    :code="value.code"
+                    size="mini"
+                />&nbsp;&nbsp;{{ value.label }}
+              </div>
+            </template>
+
+            <template v-slot:option="{ option }">
+              <img v-if="option.code === code_all || option.code === code_favorites"
                    class="gb-flag gb-flag--mini"
-                   :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
+                   :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
               <gb-flag
                   v-else
-                  :code="value.code"
+                  :code="option.code"
                   size="mini"
-              />&nbsp;&nbsp;{{ value.label }}
-            </div>
-          </template>
-
-          <template v-slot:option="{ option }">
-            <img v-if="option.code === code_all || option.code === code_favorites"
-                 class="gb-flag gb-flag--mini"
-                 :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
-            <gb-flag
-                v-else
-                :code="option.code"
-                size="mini"
-            />&nbsp;&nbsp;{{ option.label }}
-          </template>
-        </Multiselect>
+              />&nbsp;&nbsp;{{ option.label }}
+            </template>
+          </Multiselect>
+        </div>
+        <div class="pe-3 mb-3 multiselect-div" style="min-width: 250px">
+          <Multiselect
+              @change="sortByChange"
+              :model-value="selectedSortBy"
+              :options="sortByOptions"
+              :canClear="false"
+              ref="multisort"
+              id="multisort"
+          />
+        </div>
       </div>
-      <div class="col-select col-md-3 col-sm-6 mt-2 mt-sm-0">
-        <Multiselect
-            @change="sortByChange"
-            v-model="selectedSortBy"
-            :options="sortByOptions"
-            :canClear="false"
-            ref="multisort"
-            id="multisort"
-        />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -87,6 +95,7 @@
 import { mapGetters, mapState } from 'vuex';
 import { nextTick } from 'vue';
 import Multiselect from '@vueform/multiselect';
+import StreamsApi from '../../api/StreamsApi';
 
 import {
   STREAMING_CATEGORY_FAVORITES,
@@ -94,6 +103,7 @@ import {
   GTAG_CATEGORY_STREAMING,
   GTAG_STREAMING_ACTION_FILTER_COUNTRY,
   GTAG_STREAMING_ACTION_FILTER_SORT,
+  GTAG_STREAMING_ACTION_GEOLOC,
   GTAG_ACTION_PLAY_RANDOM,
   GTAG_STREAMING_FILTER_VALUE,
   GTAG_ACTION_PLAY_VALUE,
@@ -108,13 +118,6 @@ export default {
     Multiselect,
   },
   mounted() {
-    // for some reasons the multiselect component don't get the initial value,
-    // so we set them here instead
-    // (selected country is set in the watcher below)
-    if (this.selectedSortBy !== undefined && this.selectedSortBy !== null) {
-      this.$refs.multisort.select(this.selectedSortBy);
-    }
-
     if (this.$route.query.s !== undefined) {
       this.searchActivate();
       this.searchTextChange({ target: { value: this.$route.query.s } });
@@ -140,20 +143,6 @@ export default {
       ]
     };
   },
-  watch: {
-    // for some reasons the multiselect component don't get the initial value,
-    // so we set them here instead, when the full list has been loaded
-    countriesOptions(newValue, oldValue) {
-      // 4 is an arbitrary value, the initial list is 2
-      // but in case we add more in the future, let's get a bit of headroom ...
-      if ((oldValue.length < 4 && newValue.length > 4)
-          && (this.selectedCountry !== undefined && this.selectedCountry !== null)) {
-        nextTick(() => {
-          this.$refs.multicountry.select(this.selectedCountry);
-        });
-      }
-    }
-  },
   computed: {
     ...mapGetters([
       'countriesOptions'
@@ -166,25 +155,11 @@ export default {
     selectedCountry: {
       get() {
         return this.$store.state.streams.selectedCountry;
-      },
-      set(country) {
-        if (country === undefined || country === null) {
-          return;
-        }
-        this.$router.push(
-          {
-            name: 'streaming',
-            params: { countryOrCategoryOrUuid: country.toLowerCase() }
-          }
-        );
       }
     },
     selectedSortBy: {
       get() {
         return this.$store.state.streams.selectedSortBy;
-      },
-      set(value) {
-        this.$store.dispatch('sortBySelection', value);
       }
     }
   },
@@ -216,6 +191,10 @@ export default {
         });
     },
     countryChange(country) {
+      if (country === undefined || country === null) {
+        return;
+      }
+
       // otherwise it's just the setup
       if (country !== this.selectedCountry) {
         this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
@@ -223,9 +202,18 @@ export default {
           event_label: country.toLowerCase(),
           value: GTAG_STREAMING_FILTER_VALUE
         });
+
+        this.$router.push({
+          name: 'streaming',
+          params: { countryOrCategoryOrUuid: country.toLowerCase() }
+        });
       }
     },
     sortByChange(sortBy) {
+      if (sortBy === undefined || sortBy === null) {
+        return;
+      }
+
       // otherwise it's just the setup
       if (sortBy !== this.selectedSortBy) {
         this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {
@@ -233,6 +221,8 @@ export default {
           event_label: sortBy.code,
           value: GTAG_STREAMING_FILTER_VALUE
         });
+
+        this.$store.dispatch('sortBySelection', sortBy);
       }
     },
     playRandom() {
@@ -243,6 +233,29 @@ export default {
       });
 
       this.$store.dispatch('playRandom');
+    },
+    geoloc() {
+      this.$gtag.event(GTAG_STREAMING_ACTION_GEOLOC, {
+        event_category: GTAG_CATEGORY_STREAMING,
+        event_label: null,
+        value: GTAG_STREAMING_FILTER_VALUE
+      });
+
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          StreamsApi.getCountryFromLatLong(
+            position.coords.latitude,
+            position.coords.longitude
+          ).then((geoData) => {
+            if (geoData.countryCode !== undefined && geoData.countryCode !== null) {
+              this.$router.push({
+                name: 'streaming',
+                params: { countryOrCategoryOrUuid: geoData.countryCode.toLowerCase() }
+              });
+            }
+          });
+        });
+      }
     }
   }
 };

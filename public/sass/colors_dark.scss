@@ -1,5 +1,11 @@
 // @import "bootswatch_materia/_variables";
 
+$gray-300: #dee2e6 !default;
+$gray-500: #adb5bd !default;
+$gray-800: #303030 !default;
+
+// ---
+
 $white: #f8f8f8;
 
 $primary-source: #2196F3;
@@ -80,6 +86,12 @@ $stream-select-option-text: $body-bg-alt;
 $stream-select-border: $body-bg-alt;
 $stream-select-background-hover: $radio-stream;
 $stream-select-search: $white;
+
+$badge-color: $gray-500;
+$badge-color-hover: $white;
+
+$stream-badge-color: $gray-500;
+$stream-badge-color-hover: $white;
 
 $now-border-color: darken($primary, 10%);
 

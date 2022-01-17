@@ -8,7 +8,7 @@
 
 <p>
 <p>
-    {{ 'reset.text_1'|trans({'%new_email%': new_email}) }}<br>
+    {{ 'email_change.text_1'|trans({'%new_email%': new_email, '%url%': url}) }}<br>
     {{ 'email_change.text_2'|trans({'%old_email%': old_email}) }}
 </p>
 
@@ -23,5 +23,5 @@
 
 <p>
     {{ 'signature.regards'|trans }}<br>
-    {{ 'signature.name'|trans }}
+    {{ name }}
 </p>

@@ -6,13 +6,6 @@ import {
   RouterView
 } from 'vue-router';
 
-/*
-const AppRadio = () => import('../components/AppRadio.vue');
-const AppNow = () => import('../components/AppNow.vue');
-const AppSchedule = () => import('../components/AppSchedule.vue');
-const AppStreams = () => import('../components/AppStreams.vue');
-*/
-
 import AppRadio from '../components/AppRadio.vue';
 import AppNow from '../components/AppNow.vue';
 import AppSchedule from '../components/AppSchedule.vue';

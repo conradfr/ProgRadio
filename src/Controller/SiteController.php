@@ -7,8 +7,8 @@ namespace App\Controller;
 use App\Entity\Collection;
 use App\Entity\Contact;
 use App\Entity\Radio;
+use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +23,24 @@ use App\Form\ContactType;
 class SiteController extends AbstractController
 {
    public const LANG = ['fr', 'en', 'es'];
+
+    /**
+     * @Route(
+     *     "/{_locale}/faq",
+     *     name="faq_radio_addict",
+     *     host="{subdomain}.radio-addict.com",
+     *     defaults={"subdomain"="www"},
+     *     requirements={"subdomain"="www|local"},
+     *     defaults={
+     *      "priority": "0.2",
+     *      "changefreq": "monthly"
+     *      }
+     * )
+     */
+    public function faqRadioAddict(EntityManagerInterface $em, Request $request): Response
+    {
+        return $this->render('default/faq_radio_addict.html.twig', []);
+    }
 
     /**
      * @Route(
@@ -135,8 +153,10 @@ class SiteController extends AbstractController
      *     stateless=true
      * )
      */
-    public function sitemap(EntityManagerInterface $em): Response
+    public function sitemap(Host $host, Request $request, EntityManagerInterface $em): Response
     {
+        // @todo move to service
+
         // @todo if route list grows, get collection & filter
         $routesToExport = ['app', 'now', 'faq', 'contact'];
         $routes = [];
@@ -150,20 +170,24 @@ class SiteController extends AbstractController
 
         foreach (self::LANG as $locale) {
             foreach ($routes as $name => $route) {
-                $xml .= $this->getEntryXml($name, $route, $locale);
+                $xml .= $this->getEntryXml($host, $request, $name, $route, $locale);
             }
 
             // radio/schedule page
-            $radios = $em->getRepository(Radio::class)->getAllCodename();
+            if ($host->isProgRadio($request) === true) {
+                $radios = $em->getRepository(Radio::class)->getAllCodename();
 
-            $savedRouteAppDefault = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->getDefaults();
-            foreach ($radios as $radio) {
-                $xml .= $this->getEntryXml('radio', $this->get('router')->getRouteCollection()->get('radio.'.$locale), $locale,  ['codename' => $radio]);
-                // spa radio page
-                $routeApp = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
-                $xml .= $this->getEntryXml('app', $routeApp, $locale);
-                $this->get('router')->getRouteCollection()->get('radio.'.$locale)->setDefaults($savedRouteAppDefault);
+                $savedRouteAppDefault = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->getDefaults();
+                foreach ($radios as $radio) {
+                    $xml .= $this->getEntryXml($host, $request,'radio', $this->get('router')->getRouteCollection()->get('radio.'.$locale), $locale,  ['codename' => $radio]);
+                    // spa radio page
+                    $routeApp = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
+                    $xml .= $this->getEntryXml($host, $request,'app', $routeApp, $locale);
+                    $this->get('router')->getRouteCollection()->get('radio.'.$locale)->setDefaults($savedRouteAppDefault);
+                }
             }
+
+            // @todo add streams
         }
 
         $xml .= '</urlset>';
@@ -177,14 +201,15 @@ class SiteController extends AbstractController
     /**
      * @throws \Exception
      */
-    protected function getEntryXml(string $name, RouteObject $route, string $locale, array $parameters=[]): string
+    protected function getEntryXml(Host $host, Request $request, string $name, RouteObject $route, string $locale, array $parameters=[]): string
     {
         $lastMod = new \DateTime();
         $lastModFormat = $lastMod->format('Y-m-d');
 
         $parameters['_locale'] = $locale;
 
-        $bangs = isset($route->getDefaults()['bangs']) ? explode(',', $route->getDefaults()['bangs']) : [''] ;
+        $bangsAll = $host->getField('bangs', $request);
+        $bangs = isset($bangsAll[$name]) ? $bangsAll[$name] : [''] ;
 
         $entries = '';
         foreach ($bangs as $bang) {

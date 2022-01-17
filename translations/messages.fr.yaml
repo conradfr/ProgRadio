@@ -184,5 +184,5 @@ cookie:
     accept: Oui
     allow: Accepter les pubs personnalisées ?
     deny: Non
-    disclaimer: (Programmes-Radio ne vend pas les données de ses visiteurs)
+    disclaimer: (%name% ne vend pas les données de ses visiteurs)
 

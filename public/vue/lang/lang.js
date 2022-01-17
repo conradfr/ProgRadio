@@ -73,16 +73,23 @@ export const messages = {
           all_countries: 'Tous les pays',
           favorites: 'Favoris',
         },
+        close: 'Fermer',
+        country: 'Pays',
         country_search_no_result: 'Aucun pays trouvé',
+        more: 'Voir plus',
         no_results: 'Aucune radio',
+        play: 'Ecouter {radio}',
+        playing: 'Titre',
         random: 'Jouer une radio au hasard',
         search_placeholder: 'Chercher par nom, style, contenu ...',
+        stop: 'Stopper',
         sort: {
           name: 'Par ordre alphabétique',
           popularity: 'Par popularité',
           random: 'Par ordre aléatoire'
         },
-        title: 'Les radios du monde entier en streaming'
+        title: 'Les radios du monde entier en streaming',
+        website: 'Site web'
       }
     }
   },
@@ -149,16 +156,23 @@ export const messages = {
           all_countries: 'All countries',
           favorites: 'Favorites',
         },
+        close: 'Close',
+        country: 'Country',
         country_search_no_result: 'No country found',
+        more: 'See more',
         no_results: 'No radio',
+        play: 'Listen to {radio}',
+        playing: 'Playing',
         random: 'Play a random radio',
         search_placeholder: 'Search by name, style, content ...',
+        stop: 'Stop',
         sort: {
           name: 'By alphabetical order',
           popularity: 'By popularity',
           random: 'By random order'
         },
-        title: 'Stream radios from all over the world!'
+        title: 'Stream radios from all over the world!',
+        website: 'Website'
       }
     }
   },
@@ -225,16 +239,23 @@ export const messages = {
           all_countries: 'Todos los países',
           favorites: 'Favoritos',
         },
+        close: 'Cerrar',
+        country: 'País',
         country_search_no_result: 'No se ha encontrado ningún país',
+        more: 'Ver más',
         no_results: 'No hay radio',
+        play: 'Escuchar {radio}',
+        playing: 'Título',
         random: 'Reproducción de una radio aleatoria',
         search_placeholder: 'Búsqueda por nombre, estilo y contenido ...',
+        stop: 'Detener',
         sort: {
           name: 'Por orden alfabético',
           popularity: 'Por popularidad ',
           random: 'Orden aleatorio'
         },
-        title: 'Emisoras de radio de todo el mundo en streaming'
+        title: 'Emisoras de radio de todo el mundo en streaming',
+        website: 'Sitio web'
       }
     }
   },

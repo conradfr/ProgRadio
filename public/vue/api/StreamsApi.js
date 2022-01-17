@@ -111,6 +111,18 @@ const toggleFavoriteStream = (streamCodeName) => {
     });
 };
 
+const getCountryFromLatLong = (latitude, longitude) => {
+  return axios.get(`https://secure.geonames.org/countryCodeJSON?lat=${latitude}&lng=${longitude}&username=${geocode}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      if (error.response.status === 403) {
+        window.location.href = '/fr/login';
+      }
+    });
+};
+
 /* eslint-disable no-undef */
 export default {
   getConfig,
@@ -120,5 +132,6 @@ export default {
   getBestFromRadio,
   searchRadios,
   incrementPlayCount,
-  toggleFavoriteStream
+  toggleFavoriteStream,
+  getCountryFromLatLong
 };

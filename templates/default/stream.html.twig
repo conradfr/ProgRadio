@@ -99,7 +99,6 @@
                         <div class="row">
                             <div class="col-12 col-sm-9">
                                 <div class="stream-one-tags">
-                                    <div class="mb-1"><strong>{{ 'page.stream.tags'|trans }}:</strong></div>
                                     <div class="d-flex flex-wrap">
                                         {% for tag in stream.tags|split(',') %}
                                             <a href="{{ path('streaming_spa') }}/all?s={{ tag }}">

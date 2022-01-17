@@ -17,6 +17,7 @@ const initState = {
   favorites: [],
   selectedCountry: cookies.get(config.COOKIE_STREAM_COUNTRY, config.STREAMING_DEFAULT_COUNTRY),
   streamRadios: [],
+  soloExtended: null,
   selectedSortBy: cookies.get(config.COOKIE_STREAM_SORT, config.STREAMING_DEFAULT_SORT),
   radioBrowserApi: cookies.get(config.COOKIE_STREAM_RADIOBROWSER_API),
   searchActive: false,
@@ -62,7 +63,9 @@ const storeGetters = {
     );
 
     return countriesOptions;
-  }
+  },
+  getOneStream: state => id => find(state.streamRadios, ['code_name', id]) || null,
+  getCountryName: state => key => state.countries[key] || ''
 };
 
 // actions
@@ -98,18 +101,6 @@ const storeActions = {
         .finally(() => commit('setLoading', false, { root: true }));
     });
   },
-  getStreamRadio: ({ commit }, radioId) => {
-    commit('setLoading', true, { root: true });
-
-    commit('setPage', 0);
-    commit('setSelectedCountry', config.STREAMING_CATEGORY_ALL);
-
-    nextTick(() => {
-      StreamsApi.getRadios(radioId)
-        .then(data => commit('updateStreamRadios', data))
-        .finally(() => commit('setLoading', false, { root: true }));
-    });
-  },
   getStreamRadios: ({ state, commit }) => {
     commit('setLoading', true, { root: true });
 
@@ -137,6 +128,17 @@ const storeActions = {
         .finally(() => commit('setLoading', false, { root: true }));
     });
   },
+  setSoloExtended: ({ getters, dispatch, commit }, codeName) => {
+    if (codeName !== null) {
+      const streamisLoaded = getters.getOneStream(codeName);
+
+      if (streamisLoaded === null) {
+        dispatch('getStreamRadios', codeName);
+      }
+    }
+
+    commit('setSoloExtended', codeName);
+  },
   sendStreamsList: ({ state }) => {
     AndroidApi.list(state.streamRadios);
   },
@@ -150,9 +152,9 @@ const storeActions = {
     if (typeof country !== 'object') {
       country = find(getters.countriesOptions, ['code', country.toUpperCase()])
         || { code: country, label: null };
-      if (country.label === null) {
-        getAfter = false;
-      }
+      // if (country.label === null) {
+      //   getAfter = false;
+      // }
     }
 
     commit('setSelectedCountry', country.code.toUpperCase());
@@ -172,6 +174,7 @@ const storeActions = {
     });
   },
   sortBySelection: ({ dispatch, commit }, sortBy) => {
+    commit('setSoloExtended', null);
     commit('setSelectedSortBy', sortBy);
     cookies.set(config.COOKIE_STREAM_SORT, sortBy);
 
@@ -205,6 +208,7 @@ const storeActions = {
   },
   setSearchText: ({ commit }, text) => {
     if (text !== null && text.trim() !== '') {
+      commit('setSoloExtended', null);
       commit('setSearchText', text);
     } else {
       commit('setSearchText', null);
@@ -233,12 +237,18 @@ const storeMutations = {
     state.radioBrowserApi = data.radio_browser_url;
   },
   setSelectedCountry: (state, value) => {
-    state.selectedCountry = value;
-    state.page = 1;
+    // preserve page if no actual change
+    if (state.selectedCountry !== value) {
+      state.selectedCountry = value;
+      state.page = 1;
+    }
   },
   setSelectedSortBy: (state, value) => {
-    state.selectedSortBy = value;
-    state.page = 1;
+    // preserve page if no actual change
+    if (state.selectedSortBy !== value) {
+      state.selectedSortBy = value;
+      state.page = 1;
+    }
   },
   setPage: (state, value) => {
     state.page = value;
@@ -251,7 +261,10 @@ const storeMutations = {
   },
   setSearchLastTimestamp: (state, value) => {
     state.searchLastTimestamp = value;
-  }
+  },
+  setSoloExtended: (state, value) => {
+    state.soloExtended = value;
+  },
 };
 
 export default {

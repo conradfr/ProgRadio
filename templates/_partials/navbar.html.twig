@@ -6,16 +6,16 @@
 
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('app') }}schedule" onclick="return scrollToCursor();">
-            <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="Programmes radios" class="d-inline-block align-text-top">Programmes Radio</a>
-        {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
+        <a class="navbar-brand" href="{{ path('app') }}{% if isProgRadio(app.request) == true %}schedule{% else %}streaming{% endif %}" onclick="return scrollToCursor();">
+            <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="{{ getDomainName(app.request) }}" class="d-inline-block align-text-top">{{ getDomainName(app.request) }}</a>
+        {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') and isProgRadio(app.request) == true %}
             <div>
                 <a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
             </div>
         {% endif %}
         <div class="d-block d-sm-none">
-            <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeTime() == false %} d-none{% endif %}" href="#" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
-            <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeTime() %} d-none{% endif %}" href="#" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
+            <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeTime() == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
+            <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeTime() %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
             <span class="navbar-toggler-icon"></span>
@@ -23,6 +23,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {# Schedule #}
+                {% if isProgRadio(app.request) == true %}
                 <li class="nav-item pe-0">
                     <a class="nav-link spa-link" href="{{ path('app') }}schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a>
                 </li>
@@ -30,6 +31,7 @@
                     <a title="{{ 'menu.favorites'|trans }}" class="nav-link spa-link" href="{{ path('app') }}schedule/favorites"><i class="bi bi-star-fill"></i></a>
                 </li>
                 {{ menu.collections_menu(collections_menu) }}
+                {% endif %}
 
                 {# Streaming #}
                 <li class="nav-item pe-0">
@@ -49,14 +51,18 @@
                         {{ 'menu.plus'|trans}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        {% if isProgRadio(app.request) == true %}
+                            <li><a class="dropdown-item spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                        {% endif %}
                         <li><a class="dropdown-item" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                         <li><hr class="dropdown-divider"></li>
 
-                        <li><a class="dropdown-item" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        {% if isProgRadio(app.request) == true %}
+                            <li><a class="dropdown-item" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                        {% endif %}
 
                         {% for locale in locales %}
                             {% if app.request.locale != locale %}

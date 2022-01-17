@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\UserEmailChange;
 use App\Form\UpdateEmailType;
 use App\Form\UpdatePasswordType;
+use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/my-account")
@@ -45,7 +47,7 @@ class UserController extends AbstractBaseController
      *     name="user_page_email",
      * )
      */
-    public function emailChange(Request $request, EntityManagerInterface $em, MailerInterface  $mailer): Response
+    public function emailChange(Host $host, Request $request, EntityManagerInterface $em, MailerInterface $mailer,         TranslatorInterface $translator): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -71,18 +73,21 @@ class UserController extends AbstractBaseController
 
                 // email
 
-                $from = $this->getParameter('email_from');
+                $from = $host->getField('name_host', $request) . ' <noreply@' . $host->getRootDomain($request) . '>';
 
                 // to new address
                 $email = (new TemplatedEmail())
                     ->from($from)
                     ->to($user->getEmail())
-                    ->subject("Programmes-Radio.com - Modification de l'adresse email")
+                    ->subject($translator->trans('email_change.subject', ['%name%' => $host->getField('name_host', $request)], 'email'))
                     ->htmlTemplate('emails/user_email_change_new.html.twig')
                     ->context(
                         [
                             'token' => $userEmailChange->getToken(),
-                            'new_email' => $user->getEmail()
+                            'new_email' => $user->getEmail(),
+                            'name' => $host->getField('name_host', $request),
+                            'url' => $host->getField('url', $request)
+
                         ]
                     );
 
@@ -92,13 +97,15 @@ class UserController extends AbstractBaseController
                 $email = (new TemplatedEmail())
                     ->from($from)
                     ->to($userEmailChange->getEmail())
-                    ->subject("Programmes-Radio.com - Modification de l'adresse email")
+                    ->subject($translator->trans('email_change.subject', ['%name%' => $host->getField('name_host', $request)], 'email'))
                     ->htmlTemplate('emails/user_email_change.html.twig')
                     ->context(
                         [
                             'token' => $userEmailChange->getToken(),
                             'old_email' => $userEmailChange->getEmail(),
-                            'new_email' => $user->getEmail()
+                            'new_email' => $user->getEmail(),
+                            'name' => $host->getField('name_host', $request),
+                            'url' => $host->getField('url', $request)
                         ]
                     );
 
@@ -119,9 +126,11 @@ class UserController extends AbstractBaseController
      * )
      */
     public function passwordUpdate(
+        Host $host,
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
+        TranslatorInterface $translator,
         MailerInterface  $mailer): Response
     {
         /** @var \App\Entity\User $user */
@@ -150,15 +159,17 @@ class UserController extends AbstractBaseController
 
             // email
 
-            $from = $this->getParameter('email_from');
+            $from = $host->getField('name_host', $request) . ' <noreply@' . $host->getRootDomain($request) . '>';
             $email = (new TemplatedEmail())
                 ->from($from)
                 ->to($user->getEmail())
-                ->subject("Programmes-Radio.com - Modification du mot de passe")
+                ->subject($translator->trans('password_update.subject', ['%name%' => $host->getField('name_host', $request)], 'email'))
                 ->htmlTemplate('emails/user_password_update.html.twig')
                 ->context(
                     [
-                        'token' => $user->getPasswordResetToken()
+                        'token' => $user->getPasswordResetToken(),
+                        'name' => $host->getField('name_host', $request),
+                        'url' => $host->getField('url', $request)
                     ]
                 );
 

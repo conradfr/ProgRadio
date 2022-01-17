@@ -11,6 +11,7 @@ use App\Entity\UserEmailChange;
 use App\Form\ForgottenPasswordType;
 use App\Form\RegistrationFormType;
 use App\Form\UpdatePasswordType;
+use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +22,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -61,7 +63,7 @@ class SecurityController extends AbstractController
      *     name="app_register"
      * )
      */
-    public function register(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer): Response
+    public function register(Host $host, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer, TranslatorInterface $translator): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -94,13 +96,16 @@ class SecurityController extends AbstractController
             $em->flush();
 
             // email
-            $from = $this->getParameter('email_from');
+            $from = $host->getField('name_host', $request) . ' <noreply@' . $host->getRootDomain($request) . '>';
             $email = (new TemplatedEmail())
                 ->from($from)
                 ->to($user->getEmail())
-                ->subject('Programmes-Radio.com - Inscription')
+                ->subject($translator->trans('email_change.subject', ['%name%' => $host->getField('name_host', $request)], 'email'))
                 ->htmlTemplate('emails/signup.html.twig')
-                ->context([]);
+                ->context([
+                    'url' => $host->getField('url', $request),
+                    'name' => $host->getField('name_host', $request)
+                ]);
 
             $mailer->send($email);
 
@@ -119,7 +124,7 @@ class SecurityController extends AbstractController
      *     name="forgotten_password"
      * )
      */
-    public function forgottenPassword(Request $request, EntityManagerInterface $em, MailerInterface  $mailer): Response
+    public function forgottenPassword(Host $host, Request $request, EntityManagerInterface $em, MailerInterface $mailer, TranslatorInterface $translator): Response
     {
         $userEmail = null;
         $form = $this->createForm(ForgottenPasswordType::class);
@@ -137,13 +142,17 @@ class SecurityController extends AbstractController
                 $em->flush();
 
                 // email
-                $from = $this->getParameter('email_from');
+                $from = $host->getField('name_host', $request) . ' <noreply@' . $host->getRootDomain($request) . '>';
                 $email = (new TemplatedEmail())
                     ->from($from)
                     ->to($user->getEmail())
-                    ->subject('Programmes-Radio.com - Réinitialisation du mot de passe')
+                    ->subject($translator->trans('reset.subject', ['%name%' => $host->getField('name_host', $request)], 'email'))
                     ->htmlTemplate('emails/reset.html.twig')
-                    ->context(['token' => $user->getPasswordResetToken()]);
+                    ->context([
+                        'token' => $user->getPasswordResetToken(),
+                        'name' => $host->getField('name_host', $request),
+                        'url' => $host->getField('url', $request)
+                    ]);
 
                 $mailer->send($email);
             }

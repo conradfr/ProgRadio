@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\RadioStream;
 use App\Entity\Stream;
 use App\Repository\RadioStreamRepository;
+use App\Service\Host;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
 use App\Entity\Category;
@@ -406,6 +407,36 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
+     * @Route("/",
+     *     name="index_radio_addict",
+     *     host="{subdomain}.radio-addict.com",
+     *     defaults={"subdomain"="www"},
+     *     requirements={"subdomain"="www|local"}
+     * )
+     */
+    public function indexRadioAddict(): Response
+    {
+        return $this->redirectToRoute('streaming_spa');
+    }
+
+    /**
+     * @Route(
+     *     "/{_locale}/",
+     *     name="index_radio_addict_locale",
+     *     host="{subdomain}.radio-addict.com",
+     *     defaults={"subdomain"="www"},
+     *     requirements={
+     *       "subdomain"="www|local",
+     *       "_locale": "en|fr|es"
+     *     }
+     * )
+     */
+    public function indexRadioAddictLocale(): Response
+    {
+        return $this->redirectToRoute('streaming_spa');
+    }
+
+    /**
      * This is the spa entry point,
      *   matching multiple urls that are then handled by the spa router
      *
@@ -414,8 +445,7 @@ class DefaultController extends AbstractBaseController
      *     name="app",
      *     defaults={
      *      "priority": "1.0",
-     *      "changefreq": "daily",
-     *      "bangs": "schedule,streaming"
+     *      "changefreq": "daily"
      *     },
      *     requirements={
      *      "_locale": "en|fr|es",
@@ -433,9 +463,9 @@ class DefaultController extends AbstractBaseController
      *     name="app_legacy"
      * )
      */
-    public function indexLegacy(Request $request): RedirectResponse
+    public function indexLegacy(Host $host, Request $request): RedirectResponse
     {
-        $locale = 'fr';
+        $locale = $host->getDefaultLocale($request);
         if ($request->getPreferredLanguage() !== null && in_array($request->getPreferredLanguage(), SiteController::LANG)) {
             $locale = $request->getPreferredLanguage();
         }

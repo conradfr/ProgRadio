@@ -7,7 +7,7 @@
 </p>
 
 <p>
-    {{ 'signup.text_1'|trans({'%link%': '<a href="https://www.programmes-radio.com">Programmes-Radio.com</a>'})|raw }}
+    {{ 'signup.text_1'|trans({'%link%': '<a href="' ~ url ~ '">' ~ name ~'</a>'})|raw }}
 </p>
 
 <p>
@@ -16,5 +16,5 @@
 
 <p>
     {{ 'signature.regards'|trans }}<br>
-    {{ 'signature.name'|trans }}
+    {{ name }}
 </p>
