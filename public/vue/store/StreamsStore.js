@@ -101,6 +101,15 @@ const storeActions = {
         .finally(() => commit('setLoading', false, { root: true }));
     });
   },
+  getStreamRadio: ({ commit }, radioId) => {
+    commit('setLoading', true, { root: true });
+
+    nextTick(() => {
+      StreamsApi.getRadios(radioId)
+        .then(data => commit('updateStreamRadios', data))
+        .finally(() => commit('setLoading', false, { root: true }));
+    });
+  },
   getStreamRadios: ({ state, commit }) => {
     commit('setLoading', true, { root: true });
 
@@ -130,10 +139,10 @@ const storeActions = {
   },
   setSoloExtended: ({ getters, dispatch, commit }, codeName) => {
     if (codeName !== null) {
-      const streamisLoaded = getters.getOneStream(codeName);
+      const streamIsLoaded = getters.getOneStream(codeName);
 
-      if (streamisLoaded === null) {
-        dispatch('getStreamRadios', codeName);
+      if (streamIsLoaded === null) {
+        dispatch('getStreamRadio', codeName);
       }
     }
 
