@@ -22,17 +22,20 @@
       // @url https://stackoverflow.com/questions/2631001/test-for-existence-of-nested-javascript-object-key
       const checkNested = (obj, level,  ...rest) => {
         if (obj === undefined || obj === null) return false
-        if (rest.length == 0 && obj.hasOwnProperty(level)) return true
+        if (rest.length === 0 && obj.hasOwnProperty(level)) return true
         return checkNested(obj[level], ...rest)
+      }
+
+      const getTotal = (data) => {
+        return (checkNested(data, 'count', 'web', 'total_radios') ? data.count.web.total_radios : 0)
+          + (checkNested(data, 'count', 'web', 'total_streams') ? data.count.web.total_streams : 0)
+          + (checkNested(data, 'count', 'seo', 'total_radios') ? data.count.seo.total_radios : 0)
+          + (checkNested(data, 'count', 'seo', 'total_streams') ? data.count.seo.total_streams : 0);
       }
 
       // @url https://medium.com/@alperen.talaslioglu/building-dynamic-favicon-with-javascript-223ad7999661
       const setFavicon = (data) => {
-        const total =
-          (checkNested(data, 'count', 'web', 'total_radios') ? data.count.web.total_radios : 0)
-        + (checkNested(data, 'count', 'web', 'total_streams') ? data.count.web.total_streams : 0)
-        + (checkNested(data, 'count', 'seo', 'total_radios') ? data.count.seo.total_radios : 0)
-        + (checkNested(data, 'count', 'seo', 'total_streams') ? data.count.seo.total_streams : 0)
+        const total = getTotal(data);
 
         const favicon = document.getElementById('favicon');
         const faviconSize = 16;
@@ -72,6 +75,9 @@
       createApp({
         data: null,
         // getters
+        get total() {
+          return getTotal(this.data);
+        },
         get totalWebRadios() {
           return checkNested(this.data, 'count', 'web', 'total_radios') ? this.data.count.web.total_radios : '-';
         },

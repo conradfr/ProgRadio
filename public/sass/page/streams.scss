@@ -22,19 +22,21 @@
   }
 }
 
-.badge {
-  display: inline-flex;
-  margin: 5px 2px;
+.stream-one-tags {
+  .badge {
+    display: inline-flex;
+    margin: 5px 2px;
 
-  cursor: pointer;
+    cursor: pointer;
 
-  &.badge-inverse {
-    color: $badge-color;
-    border: 1px solid $badge-color;
+    &.badge-inverse {
+      color: $badge-color;
+      border: 1px solid $badge-color;
 
-    &:hover {
-      color: $badge-color-hover;
-      border: 1px solid $badge-color-hover;
+      &:hover {
+        color: $badge-color-hover;
+        border: 1px solid $badge-color-hover;
+      }
     }
   }
 }

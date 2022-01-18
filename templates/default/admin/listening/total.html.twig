@@ -2,7 +2,10 @@
 
 <table class="table schedule-stats table-striped table-bordered">
     <tr>
-        <th style="width: 25%">
+        <th style="width: 25%; position: relative;" v-scope v-cloak>
+            <span class="admin-ls-badge position-absolute top-0 start-0 translate-middle badge rounded-pill bg-success">
+                {%  verbatim %}{{{% endverbatim %} total{%  verbatim %}}}{% endverbatim %}
+            </span>
             <div class="row">
                 <div class="col-md-2">
                     Total
