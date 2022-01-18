@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Entity\RadioStream;
 use App\Entity\Stream;
-use App\Repository\RadioStreamRepository;
 use App\Service\Host;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
@@ -26,6 +25,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Entity\ListeningSession;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class DefaultController extends AbstractBaseController
 {
@@ -287,8 +288,20 @@ class DefaultController extends AbstractBaseController
      *      }
      * )
      */
-    public function one(Stream $stream, EntityManagerInterface $em, Request $request): Response
+    public function one(Stream $stream, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
     {
+        // redirect non-fr stream seo pages to new host
+        if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
+            $redirectUrl = $router->generate('streams_one', [
+                '_locale' => $request->getLocale(),
+                'id' => $stream->getId(),
+                'codename' => $codename
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
         $moreStreams = $em->getRepository(Stream::class)->getMoreStreams($stream);
 
         return $this->render('default/stream.html.twig', [

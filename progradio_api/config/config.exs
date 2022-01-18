@@ -53,7 +53,8 @@ config :logger,
 config :phoenix, :json_library, Jason
 
 {:ok, origin} =
-  System.get_env("CORS", ".*")
+#  System.get_env("CORS", ".*")
+  System.get_env("CORS", "https?.*(programmes-radio|radioo-addict)\.(com|fr)")
   |> Regex.compile()
 
 config :cors_plug,

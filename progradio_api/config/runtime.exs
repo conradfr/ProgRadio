@@ -28,7 +28,7 @@ if config_env() == :prod do
       port: String.to_integer(System.get_env("PORT") || "4000")
       #    transport_options: [socket_opts: [:inet6]]
     ],
-    check_origin: [System.get_env("ORIGIN")],
+    check_origin: [System.get_env("ORIGIN"), System.get_env("ORIGIN2")],
     secret_key_base: secret_key_base,
     url: [host: System.get_env("HOST"), port: 443, scheme: "https"]
 

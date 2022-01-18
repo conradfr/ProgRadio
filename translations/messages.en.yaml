@@ -1,6 +1,6 @@
 general:
-    main_description: Check all shows on the radio in France, stream from all over the world.
-    main_title: Radio schedules in France, streaming and more !
+    main_description: Radio streaming done right
+    main_title: Stream radios from all over the world.
 
 menu:
     account: My account
@@ -44,7 +44,7 @@ page:
 
     faq:
         page_title: 'FAQ - Radio shows in France'
-        page_description: 'Questions about Programmmes-Radio.com'
+        page_description: 'Questions'
         title: 'Frequently Asked Questions'
 
     forgotten_password:

@@ -1,6 +1,6 @@
 general:
-    main_description: Écoute en ligne et les programmes radio en France.
-    main_title: Toutes les grilles radio, tous les programmes et écoute en ligne
+    main_description: El mejor sitio web de streaming
+    main_title: Radio de todo el mundo
 
 menu:
     account: Mi cuenta
@@ -46,8 +46,8 @@ page:
 
     faq:
         title: 'Preguntas más frecuentes'
-        page_title: 'PMF - Programas de radios en Francia '
-        page_description: 'Pregunta sobre Programmmes-Radio.com'
+        page_title: 'PMF'
+        page_description: 'Pregunta'
 
     forgotten_password:
         error: <strong>Se ha producido un error.</strong><br>Si el enlace de recuperación de contraseña está obselete, gracias por repetir el procedimiento.
