@@ -17,6 +17,7 @@ class Host
             'name_host' => 'Programmes-Radio.com',
             'url' => 'https://www.programmes-radio.com',
             'locale' => 'fr',
+            'default_country' => 'FR',
             'bangs' => [
                 'app' => ['schedule','streaming']
             ]
@@ -26,6 +27,7 @@ class Host
             'name' => 'Radio Addict',
             'name_host' => 'Radio-Addict.com',
             'url' => 'https://www.radio-addict.com',
+            'default_country' => 'ALL',
             'locale' => 'en',
             'bangs' => [
                 'app' => ['streaming']

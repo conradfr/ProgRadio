@@ -14,6 +14,7 @@ const gtCode = '{{ analytics }}';
 const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }};
 const locale = '{{ app.request.locale }}';
 const geocode = '{{ geocode }}';
+const defaultCountry ='{{ getField('default_country', app.request) }}';
 
 const scrollToCursor = function() {
   const homePaths = ['/fr/', '/en/'];

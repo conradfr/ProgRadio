@@ -15,7 +15,7 @@ import AndroidApi from '../api/AndroidApi';
 const initState = {
   countries: [],
   favorites: [],
-  selectedCountry: cookies.get(config.COOKIE_STREAM_COUNTRY, config.STREAMING_DEFAULT_COUNTRY),
+  selectedCountry: cookies.get(config.COOKIE_STREAM_COUNTRY, defaultCountry),
   streamRadios: [],
   soloExtended: null,
   selectedSortBy: cookies.get(config.COOKIE_STREAM_SORT, config.STREAMING_DEFAULT_SORT),
