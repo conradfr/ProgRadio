@@ -17,6 +17,20 @@ export const messages = {
         back: '← Retourner à la grille complète des programmes',
         title: 'En ce moment à la radio'
       },
+      params_page: {
+        automatic: 'Automatique',
+        automatic_help: 'Basé sur votre type de connexion (ADSL, fibre, 4g ...) et votre bande passante.',
+        deactivated: 'Désactivé',
+        description: 'Pour réduire les publicités présentes en début de streaming et les délais de chargement le lecteur peut continuer de lire le précédent flux pendant plusieurs minutes quand vous changez de radio ou quand mettez la lecture en pause.',
+        duration_10: 'Pendant 10mn',
+        duration_30: 'Pendant 30mn',
+        no_support: 'Votre navigateur ne supporte pas la détection automatique.',
+        save: 'Sauvegarder',
+        sub_title: 'Lectures de flux simultanés',
+        title: 'Configuration du lecteur',
+        two_flux: 'Deux flux simultanés',
+        updated: 'Paramètres mis à jour'
+      },
       player: {
         autoplay_error: "Votre navigateur n'autorise pas la lecture automatique de médias. Merci de cliquer sur \"Ecouter\" une fois de plus",
         play_error: 'Erreur de lecture',
@@ -100,6 +114,20 @@ export const messages = {
         back: '← Back to radio guide',
         title: 'Currently on the radio'
       },
+      params_page: {
+        automatic: 'Automatic',
+        automatic_help: 'Based on your connection and bandwidth.',
+        deactivated: 'Deactivated',
+        description: 'To reduce ads at the start of a radio stream and loading times the player can read two simultaneous streams when you switch radio or pause it.',
+        duration_10: 'During 10mn',
+        duration_30: 'During 30mn',
+        no_support: 'Your browser does not support automatic detection.',
+        save: 'Save',
+        sub_title: 'Stream multiplex',
+        title: 'Player parameters',
+        two_flux: 'Two simultaneous streams',
+        updated: 'Parameters has been updated.'
+      },
       player: {
         autoplay_error: 'Your browser does not allow autoplay. Please ckick play one more time',
         play_error: 'Media error',
@@ -182,6 +210,20 @@ export const messages = {
       now_page: {
         back: '← Ir al programa Grid de todas las radios.',
         title: 'En este momento en la radio'
+      },
+      params_page: {
+        automatic: 'Automático (',
+        automatic_help: 'Basado en su conexión y ancho de banda. ',
+        deactivated: 'Desactivado',
+        description: 'Para reducir los anuncios al inicio de un flujo de radio y los tiempos de carga, el reproductor puede leer dos flujos simultáneos cuando cambia la radio o la pausa.',
+        duration_10: 'Durante 10mn',
+        duration_30: 'Durante 30mn',
+        no_support: 'Su navegador no admite la detección automática.',
+        save: 'Actualizar ',
+        sub_title: 'Stream multiplex',
+        title: 'Parámetros del reproductor',
+        two_flux: 'Dos streams simultáneos.',
+        updated: 'Los parámetros se han actualizado.'
       },
       player: {
         autoplay_error: 'Su navegador no permite la reproducción automática de medios. Gracias por hacer clic en "Escuchar" una vez más',

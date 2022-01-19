@@ -8,6 +8,10 @@ captcha_routing:
 # HERE WE INTERCEPT URLS THAT WILL BE HANDLED BY THE SPA ROUTER
 # The spa intercept the urls client side, here it's for external/direct access
 
+params_spa:
+    path: /{_locale}/params
+    controller: App\Controller\DefaultController::index
+
 schedule_spa:
     path: /{_locale}/schedule/{collection?}
     controller: App\Controller\DefaultController::index

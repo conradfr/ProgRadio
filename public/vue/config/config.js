@@ -59,6 +59,8 @@ export const COOKIE_STREAM_RADIOBROWSER_API = `${COOKIE_PREFIX}-stream-radiobrow
 export const COOKIE_LAST_TIMER = `${COOKIE_PREFIX}-timer`;
 export const COOKIE_TOOLTIP_COLLECTION = `${COOKIE_PREFIX}-tooltip-collection`;
 export const COOKIE_TOOLTIP_TIMER = `${COOKIE_PREFIX}-tooltip-timer`;
+export const COOKIE_PLAYER_FLUX = `${COOKIE_PREFIX}-player-flux`;
+export const COOKIE_PLAYER_FLUX_DURATION = `${COOKIE_PREFIX}-player-flux-duration`;
 
 export const COOKIE_TOOLTIP_SHOW_MS = 3500;
 

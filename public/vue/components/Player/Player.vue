@@ -115,9 +115,6 @@ export default {
           startedAt: null
         }
       },
-      allowTwoFeeds: false,
-      // delay before parallel muted stream is stopped
-      delayBeforeStop: 0,
       hls: null,
       channel: null,
       /*
@@ -134,12 +131,8 @@ export default {
     // we refresh the state if the app is running
     if (this.player.externalPlayer === true) {
       AndroidApi.getState();
-    } else {
-      // detect if the connection can support two audio feeds to allow fast toggling
-      this.updateConnectionStatus();
-      if (window.navigator.connection !== undefined) {
-        window.navigator.connection.onchange = this.updateConnectionStatus;
-      }
+    } else if (window.navigator.connection !== undefined) {
+      window.navigator.connection.onchange = this.$store.dispatch('updateFlux');
     }
   },
   created() {
@@ -148,6 +141,7 @@ export default {
   computed: {
     ...mapState({
       player: state => state.player,
+      flux: state => state.player.flux,
       collections: state => state.schedule.collections,
       streamFavorites: state => state.streams.favorites,
       timer: state => state.player.timer
@@ -291,32 +285,6 @@ export default {
         this.$store.dispatch('stop');
       }
     },
-    updateConnectionStatus() {
-      // detect if the connection can support two audio feeds to allow fast toggling
-      if (window.navigator.connection !== undefined
-          && (window.navigator.connection.effectiveType !== undefined
-              && window.navigator.connection.effectiveType === config.PLAYER_MULTI_ALLOWED_TYPE)
-          && (window.navigator.connection.downlink !== undefined)) {
-        if (window.navigator.connection.downlink
-            >= config.PLAYER_STOP_DELAY_LOWER_BANDWIDTH_THRESHOLD_MBPS) {
-          this.allowTwoFeeds = true;
-
-          if (window.navigator.connection.downlink
-              >= config.PLAYER_STOP_DELAY_HIGH_BANDWIDTH_THRESHOLD_MBPS
-            // for mobile connections we only allow the short delay time to reduce data consumption
-            && window.navigator.connection.type !== config.PLAYER_MULTI_DISABLED_TYPE) {
-            this.delayBeforeStop = config.PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS;
-          } else {
-            this.delayBeforeStop = config.PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS;
-          }
-
-          return;
-        }
-      }
-
-      this.allowTwoFeeds = false;
-      this.delayBeforeStop = 0;
-    },
     radioLink() {
       if (this.player.radio === null) {
         return '#';
@@ -436,7 +404,7 @@ export default {
         return;
       }
 
-      if (this.allowTwoFeeds === false) {
+      if (this.flux.allowTwoFeeds === false) {
         this.stop();
         return;
       }
@@ -451,7 +419,7 @@ export default {
 
         this.currentPlayer.timer = setTimeout(
           this.resetPlayer,
-          this.delayBeforeStop,
+          this.flux.delayBeforeStop,
           this.audio.current
         );
       }

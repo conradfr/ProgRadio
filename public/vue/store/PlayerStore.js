@@ -25,6 +25,7 @@ const initState = {
   prevRadioStreamCodeName: cookies.get(config.COOKIE_PREV_RADIO_STREAM_PLAYED),
   show: null,
   song: {},
+  flux: PlayerUtils.calculatedFlux(),
   volume: parseInt(cookies.get(config.COOKIE_VOLUME, config.DEFAULT_VOLUME), 10),
   muted: cookies.get(config.COOKIE_MUTED, 'false') === 'true',
   session: {
@@ -387,6 +388,9 @@ const storeActions = {
 
     commit('setTimer', minutes);
   },
+  updateFlux: ({ commit }) => {
+    commit('updateFlux', PlayerUtils.calculatedFlux());
+  },
   /* From Android */
   updateTimerEnding: ({ commit }, seconds) => {
     commit('setTimer', seconds);
@@ -561,6 +565,9 @@ const storeMutations = {
     }
 
     state.timer = minutes;
+  },
+  updateFlux: (state, data) => {
+    state.flux = data;
   }
 };
 

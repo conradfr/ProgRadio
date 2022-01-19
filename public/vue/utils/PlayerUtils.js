@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import * as config from '../config/config';
 import ScheduleApi from '../api/ScheduleApi';
 import ScheduleUtils from './ScheduleUtils';
+import cookies from './cookies';
 
 /* ---------- RADIOS ---------- */
 
@@ -236,6 +237,44 @@ const showNotification = (radio, streamCodeName, show) => {
 
 /* ---------- API ---------- */
 
+const calculatedFlux = () => {
+  const data = {
+    supported: window.navigator.connection !== undefined,
+    selected:
+      cookies.get(config.COOKIE_PLAYER_FLUX,
+        window.navigator.connection !== undefined ? 'automatic' : 'disabled'),
+    allowTwoFeeds: false,
+    delayBeforeStop: cookies.get(config.COOKIE_PLAYER_FLUX_DURATION,
+      parseInt(config.PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS, 10))
+  };
+
+  if (data.selected === 'enabled') {
+    data.allowTwoFeeds = true;
+  } else if (data.selected !== 'disabled'
+    && window.navigator.connection !== undefined
+    && (window.navigator.connection.effectiveType !== undefined
+      && window.navigator.connection.effectiveType === config.PLAYER_MULTI_ALLOWED_TYPE)
+    && (window.navigator.connection.downlink !== undefined)) {
+    if (window.navigator.connection.downlink
+      >= config.PLAYER_STOP_DELAY_LOWER_BANDWIDTH_THRESHOLD_MBPS) {
+      data.allowTwoFeeds = true;
+
+      if (window.navigator.connection.downlink
+        >= config.PLAYER_STOP_DELAY_HIGH_BANDWIDTH_THRESHOLD_MBPS
+        // for mobile connections we only allow the short delay time to reduce data consumption
+        && window.navigator.connection.type !== config.PLAYER_MULTI_DISABLED_TYPE) {
+        data.delayBeforeStop = config.PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS;
+      } else {
+        data.delayBeforeStop = config.PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS;
+      }
+    }
+  }
+
+  return data;
+};
+
+/* ---------- API ---------- */
+
 const sendListeningSession = (externalPlayer, playing, radio, radioStreamCodeName,
   session) => {
   if (externalPlayer === true) {
@@ -265,5 +304,6 @@ export default {
   getChannelName,
   formatSong,
   showNotification,
-  sendListeningSession
+  sendListeningSession,
+  calculatedFlux
 };

@@ -8,6 +8,7 @@ import {
 
 import AppRadio from '../components/AppRadio.vue';
 import AppNow from '../components/AppNow.vue';
+import AppParams from '../components/AppParams.vue';
 import AppSchedule from '../components/AppSchedule.vue';
 import AppStreams from '../components/AppStreams.vue';
 
@@ -49,6 +50,11 @@ const routes = [
     path: '/:lang/now',
     name: 'now',
     component: AppNow
+  },
+  {
+    path: '/:lang/params',
+    name: 'params',
+    component: AppParams
   },
   {
     path: '/:lang/',

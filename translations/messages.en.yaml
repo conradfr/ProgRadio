@@ -25,6 +25,7 @@ menu:
         dark: Dark mode
         light: Light mode
     now: Currently on the air
+    params: Params
     plus: More
     schedule: Radio guide
     signon: Sign-in
