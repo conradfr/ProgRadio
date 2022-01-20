@@ -7,7 +7,7 @@ signature:
 signup:
     subject: '%name% - Welcome !'
     welcome: Welcome !
-    text_1: Your are now registered on %link%
+    text_1: You are now registered on %link%
     text2: Your favorites (if any) have been transferred to your account.
 
 reset:

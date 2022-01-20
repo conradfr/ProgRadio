@@ -100,7 +100,7 @@ class SecurityController extends AbstractController
             $email = (new TemplatedEmail())
                 ->from($from)
                 ->to($user->getEmail())
-                ->subject($translator->trans('email_change.subject', ['%name%' => $host->getField('name_host', $request)], 'email'))
+                ->subject($translator->trans('signup.subject', ['%name%' => $host->getField('name_host', $request)], 'email'))
                 ->htmlTemplate('emails/signup.html.twig')
                 ->context([
                     'url' => $host->getField('url', $request),
