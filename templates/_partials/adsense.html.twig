@@ -17,57 +17,59 @@
 </div>
 {% endif %}
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_key }}"
-        crossorigin="anonymous"></script>
-<script type="text/javascript">(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;</script>
-<script type="text/javascript">
-  const consentCookieName = 'progradio-consent';
-  const getConsentCookie = () => {
-    const match = document.cookie.match(new RegExp(`(^| )${consentCookieName}=([^;]+)`));
-    if (match) {
-      return match[2] === '1';
-    } else {
-      return null;
-    }
-  }
+{% if app.environment == 'prod' %}
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_key }}"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript">(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;</script>
+    <script type="text/javascript">
+      const consentCookieName = 'progradio-consent';
+      const getConsentCookie = () => {
+        const match = document.cookie.match(new RegExp(`(^| )${consentCookieName}=([^;]+)`));
+        if (match) {
+          return match[2] === '1';
+        } else {
+          return null;
+        }
+      }
 
-  window.addEventListener('load', function() {
-    (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;
-    if (getConsentCookie() === null) {
-      if (typeof bootstrap === 'undefined') {
-        (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
-      } else {
+      window.addEventListener('load', function() {
         (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;
-        const toastCookieElem = document.getElementsByClassName('toast-cookie')[0];
-        const toast = new bootstrap.Toast(toastCookieElem);
-
-        const allowBtnElem = document.getElementById('btnCookieAccept');
-        const denyBtnElem = document.getElementById('btnCookieDeny');
-
-        if (allowBtnElem) {
-          allowBtnElem.addEventListener('click', () => {
-            toast.hide();
-            (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;
+        if (getConsentCookie() === null) {
+          if (typeof bootstrap === 'undefined') {
             (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
-            setCookie(consentCookieName, true);
-          });
-        }
+          } else {
+            (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;
+            const toastCookieElem = document.getElementsByClassName('toast-cookie')[0];
+            const toast = new bootstrap.Toast(toastCookieElem);
 
-        if (denyBtnElem) {
-          denyBtnElem.addEventListener('click', () => {
-            toast.hide();
-            (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
-            setCookie(consentCookieName, false);
-          });
-        }
+            const allowBtnElem = document.getElementById('btnCookieAccept');
+            const denyBtnElem = document.getElementById('btnCookieDeny');
 
-        toast.show();
-      }
-    } else {
-      if (getConsentCookie() === true) {
-        (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
-      }
-      (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
-    }
-  })
-</script>
+            if (allowBtnElem) {
+              allowBtnElem.addEventListener('click', () => {
+                toast.hide();
+                (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;
+                (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+                setCookie(consentCookieName, true);
+              });
+            }
+
+            if (denyBtnElem) {
+              denyBtnElem.addEventListener('click', () => {
+                toast.hide();
+                (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+                setCookie(consentCookieName, false);
+              });
+            }
+
+            toast.show();
+          }
+        } else {
+          if (getConsentCookie() === true) {
+            (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
+          }
+          (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+        }
+      })
+    </script>
+{% endif %}

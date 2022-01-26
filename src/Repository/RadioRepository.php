@@ -14,7 +14,7 @@ class RadioRepository extends EntityRepository
     protected const CACHE_MORE_TTL = 60;
     protected const CACHE_RADIO_ACTIVE_ID = 'active_radios';
 
-    protected const DEFAULT_MORE_MAX = 8;
+    protected const DEFAULT_MORE_MAX = 6;
 
     public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(

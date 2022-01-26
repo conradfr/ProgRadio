@@ -77,6 +77,13 @@ const toggleFavoriteRadio = (radioCodeName) => {
     });
 };
 
+const getAffiliate = (locale) => {
+  return axios.get(`/${locale}/affiliate`)
+    .then((response) => {
+      return response.data;
+    });
+};
+
 const sendListeningSession = (codeName, radioStreamCodeName,
   dateTimeStart, dateTimeEnd, id, ctrl) => {
   const data = {
@@ -120,5 +127,6 @@ export default {
   getSchedule,
   getRadiosData,
   toggleFavoriteRadio,
+  getAffiliate,
   sendListeningSession
 };

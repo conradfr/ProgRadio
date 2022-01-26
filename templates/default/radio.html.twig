@@ -189,30 +189,41 @@
             </div>
         </div>
         <div class="col-md-2 col-12">
-            <div class="d-flex flex-sm-column flex-row flex-wrap radio-page-more">
-                <div class="text-center mb-2 radio-page-more-header d-none d-sm-block">
-                    {{ 'page.radio.more_radios'|trans }}
-                </div>
+            {% if app.environment == 'prod' %}
+                {{ include('_partials/adblock.html.twig', {vertical: true}) }}
+            {% endif %}
+{#            <div class="mt-2 d-flex flex-sm-column flex-row flex-wrap radio-page-more">#}
+{#                <div class="text-center mb-2 radio-page-more-header d-none d-sm-block">#}
+{#                    {{ 'page.radio.more_radios'|trans }}#}
+{#                </div>#}
+{#                {% for entry in more_radios %}#}
+{#                    <a class="radio-page-more-one d-flex align-items-center justify-content-center"#}
+{#                       href="{{ path('radio', {'codename': entry.codeName}) }}" title="{{ entry.name }}">#}
+{#                        <img class="radio-page-more-one-logo align-self-center" alt="{{ entry.name }}" src="{{ asset('/img/radio/page/' ~ entry.codeName ~ '.png') }}">#}
+{#                    </a>#}
+{#                {% endfor %}#}
+{#            </div>#}
+        </div>
+    </div>
+
+{#    <div class="row">#}
+{#        <div class="offset-1 col-10 offset-sm-2 col-sm-8 mt-5 mb-3">#}
+{#            {{ include('_partials/adblock.html.twig', {'no_affil': true, vertical: false}) }}#}
+{#        </div>#}
+{#    </div>#}
+
+    <div class="row d-none d-sm-block">
+        <div class="col-8 offset-2">
+            <div class="text-left mt-3 mb-3 radio-page-more-header">
+                {{ 'page.radio.more_radios'|trans }}
+            </div>
+            <div class="d-flex flex-row justify-content-evenly align-items-center mt-3">
                 {% for entry in more_radios %}
                     <a class="radio-page-more-one d-flex align-items-center justify-content-center"
                        href="{{ path('radio', {'codename': entry.codeName}) }}" title="{{ entry.name }}">
                         <img class="radio-page-more-one-logo align-self-center" alt="{{ entry.name }}" src="{{ asset('/img/radio/page/' ~ entry.codeName ~ '.png') }}">
                     </a>
                 {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="offset-1 col-10 offset-sm-2 col-sm-8 mt-5 mb-3">
-            {{ include('_partials/adblock.html.twig', {'no_affil': true, vertical: false}) }}
-        </div>
-    </div>
-
-    <div class="row d-none d-sm-block">
-        <div class="col-8 offset-2">
-            <div class="text-left mt-3 mb-3 radio-page-more-header">
-                {{ 'page.radio.more_radios'|trans }}
             </div>
             <div class="d-flex flex-row justify-content-evenly align-items-center mt-3">
                 {% for entry in more_radios2 %}

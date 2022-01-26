@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Affiliate;
 use App\Entity\RadioStream;
 use App\Entity\Stream;
 use App\Service\Host;
@@ -416,6 +417,25 @@ class DefaultController extends AbstractBaseController
             'schedule' => $schedule,
             'collections' => $collections,
             'date' => $dateTime,
+        ]);
+    }
+
+    /**
+     * @Route("/{_locale}/affiliate",
+     *     name="affiliate",
+     * )
+     */
+    public function affiliate(EntityManagerInterface $em, Request $request): Response
+    {
+        $result = $em->getRepository(Affiliate::class)->getOneAffiliate($request->getLocale());
+        $affiliate = '';
+
+        if ($result !== null && is_array($result)) {
+            $affiliate = $result['htmlLink'];
+        }
+
+        return $this->render('default/affiliate.html.twig', [
+            'affiliate' => $affiliate
         ]);
     }
 

@@ -5,9 +5,9 @@
 {% block javascripts %}
     {{ parent() }}
     {% include('_partials/mini_player.html.twig') %}
-    {% if app.request.locale != 'fr' %}
+{#    {% if app.request.locale != 'fr' %}#}
         {{ include('_partials/adsense.html.twig') }}
-    {% endif %}
+{#    {% endif %}#}
 {% endblock %}
 
 {% block title %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endblock %}

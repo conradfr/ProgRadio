@@ -10,7 +10,7 @@
           <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
         </div>
       </div>
-      <div v-if="radio" class="col-md-10 col-12">
+      <div v-if="radio" class="col-md-8 col-12 mb-3">
         <div class="row">
           <div class="col-md-6 col-12 text-center text-sm-start">
             <h4>{{ capitalizedDate }}</h4>
@@ -39,6 +39,8 @@
           </div>
         </div>
       </div>
+      <div class="col-md-2 col-12 text-center" v-html="affiliateLink"
+        v-if="affiliateLink != null && affiliateLink !== '' && userLogged !== true"></div>
     </div>
   </div>
 </template>
@@ -54,6 +56,7 @@ import {
   THUMBNAIL_PAGE_PATH
 } from '../config/config';
 
+import ScheduleApi from '../api/ScheduleApi';
 import RadioShow from './Radio/RadioShow.vue';
 import RadioStreams from './Radio/RadioStreams.vue';
 
@@ -69,6 +72,7 @@ export default {
   data() {
     return {
       locale: this.$i18n.locale,
+      affiliateLink: null,
       date: DateTime.local().setZone(TIMEZONE).setLocale(locale)
         .toLocaleString(
           {
@@ -80,6 +84,7 @@ export default {
   created() {
     this.$store.dispatch('getRadiosData');
     this.$store.dispatch('getSchedule', { radio: this.$route.params.radio });
+    this.getAffiliateLink();
   },
   // TODO fix this hack
   mounted() {
@@ -103,6 +108,7 @@ export default {
       radios: state => state.schedule.radios,
       collections: state => state.schedule.collections,
       currentCollection: state => state.schedule.currentCollection,
+      userLogged: state => state.user.logged
     }),
     ...mapGetters([
       'hasSchedule'
@@ -143,6 +149,14 @@ export default {
       const valueString = this.date.toString();
 
       return valueString.charAt(0).toUpperCase() + valueString.slice(1);
+    }
+  },
+  methods: {
+    getAffiliateLink() {
+      return ScheduleApi.getAffiliate(this.$i18n.locale)
+        .then((response) => {
+          this.affiliateLink = response;
+        });
     }
   }
 };
