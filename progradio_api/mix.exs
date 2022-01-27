@@ -61,7 +61,8 @@ defmodule ProgRadioApi.MixProject do
       {:broadway, "~> 1.0.0"},
       # {:off_broadway_redis, "~> 0.4.3"},
       # Until off_broadway_redis 1.0.0 is fixed and tagged
-      {:off_broadway_redis, git: "https://github.com/conradfr/off_broadway_redis.git", branch: "1.0.0"},
+      {:off_broadway_redis,
+       git: "https://github.com/conradfr/off_broadway_redis.git", branch: "1.0.0"},
       {:timex, "~> 3.7"},
       {:elixir_xml_to_map, "~> 2.0"},
       {:recase, "~> 0.5"},

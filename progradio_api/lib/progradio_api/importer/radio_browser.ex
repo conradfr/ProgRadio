@@ -159,11 +159,11 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
     query =
       from so in StreamOverloading,
-           where: not is_nil(so.img),
-           select: %{
-             id: so.id,
-             img: so.img,
-           }
+        where: not is_nil(so.img),
+        select: %{
+          id: so.id,
+          img: so.img
+        }
 
     stream_overloading_img =
       Repo.all(query)

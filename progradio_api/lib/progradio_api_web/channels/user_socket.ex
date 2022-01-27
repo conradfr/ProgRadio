@@ -5,6 +5,7 @@ defmodule ProgRadioApiWeb.UserSocket do
   channel "collection:*", ProgRadioApiWeb.SongChannel
   channel "song:*", ProgRadioApiWeb.SongChannel
   channel "url:*", ProgRadioApiWeb.SongChannel
+  channel "songs", ProgRadioApiWeb.SongChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

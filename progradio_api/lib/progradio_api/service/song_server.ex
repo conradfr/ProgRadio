@@ -103,6 +103,7 @@ defmodule ProgRadioApi.SongServer do
       {:noreply, %{state | song: song, last_data: data}}
     else
       _ ->
+        broadcast_song(name, nil, nil)
         ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
         Logger.error("Data provider - #{state.name}: fetching error, exiting")
         {:stop, :normal, nil}
@@ -137,6 +138,7 @@ defmodule ProgRadioApi.SongServer do
 
     case how_many_connected do
       0 ->
+        broadcast_song(name, nil, nil)
         Logger.info("Data provider - #{name}: no client connected, exiting")
         {:stop, :normal, nil}
 
@@ -164,6 +166,12 @@ defmodule ProgRadioApi.SongServer do
 
     ProgRadioApiWeb.Endpoint.broadcast!(
       name,
+      "playing",
+      Map.put(data, :topic, name)
+    )
+
+    ProgRadioApiWeb.Endpoint.broadcast!(
+      "songs",
       "playing",
       Map.put(data, :topic, name)
     )

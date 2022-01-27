@@ -91,7 +91,8 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
             {_error, {_error2, error_message}} = reason
             Logger.warn("Error (#{radio_stream.code_name}): #{to_string(error_message)}")
 
-          unknown -> Logger.warn("Error (#{radio_stream.code_name}): #{to_string(unknown)}")
+          unknown ->
+            Logger.warn("Error (#{radio_stream.code_name}): #{to_string(unknown)}")
         end
 
         update_status(radio_stream, false)
