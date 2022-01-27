@@ -9,7 +9,13 @@ defmodule ProgRadioApi.SongProvider.Nostalgie do
   @discarded_artist "NOSTALGIE"
 
   @stream_ids %{
-    "nostalgie_main" => "197"
+    "nostalgie_main" => "197",
+    "nostalgie_60" => "50",
+    "nostalgie_70" => "51",
+    "nostalgie_80" => "26",
+    "nostalgie_90" => "32",
+    "nostalgie_jazz" => "40",
+    "nostalgie_funk" => "27"
   }
 
   @impl true

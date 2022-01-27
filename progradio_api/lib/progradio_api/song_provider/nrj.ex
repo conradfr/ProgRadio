@@ -9,7 +9,10 @@ defmodule ProgRadioApi.SongProvider.Nrj do
   @discarded_artist "NRJ"
 
   @stream_ids %{
-    "nrj_main" => "158"
+    "nrj_main" => "158",
+    "nrj_hists" => "1",
+    "nrj_madeinfrance" => "331",
+    "nrj_nouveautes" => "27"
   }
 
   @impl true

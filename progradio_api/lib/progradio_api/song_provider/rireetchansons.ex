@@ -9,7 +9,14 @@ defmodule ProgRadioApi.SongProvider.Rireetchansons do
   @discarded_artist "RIRE & CHANSONS"
 
   @stream_ids %{
-    "rireetchansons_main" => "200"
+    "rireetchansons_main" => "200",
+    "rireetchansons_blagues" => "5",
+    "rireetchansons_canulars" => "4",
+    "rireetchansons_chansons_droles" => "12",
+    "rireetchansons_duos" => "8",
+    "rireetchansons_collectors" => "14",
+    "rireetchansons_nouvelle_generation" => "2",
+    "rireetchansons_one_woman_show" => "11"
   }
 
   @impl true

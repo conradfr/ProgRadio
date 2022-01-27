@@ -9,7 +9,11 @@ defmodule ProgRadioApi.SongProvider.Cherie do
   @discarded_artist "CHERIE FM"
 
   @stream_ids %{
-    "cherie_main" => "190"
+    "cherie_main" => "190",
+    "cherie_zen" => "16",
+    "cherie_nouveautes" => "19",
+    "cherie_frenchy" => "17",
+    "cherie_happy" => "556"
   }
 
   @impl true
