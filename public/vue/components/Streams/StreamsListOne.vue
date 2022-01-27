@@ -1,24 +1,24 @@
 <template>
   <div class="streams-one"
+    @mouseover="hover = true"
+    @mouseleave="hover = false"
     :class="{
      'streams-one-play-active': (radio.code_name === radioPlayingCodeName),
      'streams-one-play-paused': (playing === false && radio.code_name === radioPlayingCodeName)
-    }
-  ">
+    }">
     <div class="streams-one-img" :style="styleObject" v-on:click="playStop">
       <div class="streams-one-img-play"></div>
     </div>
     <div class="streams-one-name" :title="$t('message.streaming.more')"
       v-on:click="nameClick(radio.code_name)">
-      {{ radio.name }}
-      <div v-if="playing === true && radio.code_name === radioPlayingCodeName
-        && currentSong !== null" class="streams-one-song">
-        {{ currentSong }}
+      <span v-once>{{ radio.name }}</span>
+      <div v-if="hover === false && currentSong" class="streams-one-song">
+        ♫ {{ currentSong }}
       </div>
       <div v-else-if="radio.tags" class="streams-one-tags" v-once>
         <span class="badge badge-inverse"
           v-for="tag in tags()" :key="tag"
-          v-on:click="tagClick(tag)">
+          v-on:click.stop="tagClick(tag)">
           {{ tag }}
         </span>
       </div>
@@ -44,10 +44,11 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { nextTick } from 'vue';
+import { nextTick, toRaw } from 'vue';
 
 import * as config from '../../config/config';
 import StreamsUtils from '../../utils/StreamsUtils';
+import PlayerUtils from '../../utils/PlayerUtils';
 
 export default {
   compatConfig: {
@@ -58,6 +59,9 @@ export default {
     const img = StreamsUtils.getPictureUrl(this.radio);
 
     return {
+      channelName: PlayerUtils.getChannelName(this.radio, this.radio.radio_stream_code_name),
+      currentSong: null,
+      hover: false,
       code_all: config.STREAMING_CATEGORY_ALL,
       code_favorites: config.STREAMING_CATEGORY_FAVORITES,
       styleObject: {
@@ -65,17 +69,44 @@ export default {
       }
     };
   },
+  beforeMount() {
+    this.$store.dispatch('joinChannel', this.channelName);
+  },
+  beforeUnmount() {
+    this.$store.dispatch('leaveChannel', this.channelName);
+  },
   computed: {
     ...mapState({
       playing: state => state.player.playing,
       externalPlayer: state => state.player.externalPlayer,
       selectedCountry: state => state.streams.selectedCountry,
-      favorites: state => state.streams.favorites
+      favorites: state => state.streams.favorites,
+      song: state => state.player.song,
     }),
     ...mapGetters([
-      'radioPlayingCodeName',
-      'currentSong'
+      'radioPlayingCodeName'
     ]),
+    liveSong() {
+      if (!Object.prototype.hasOwnProperty.call(this.song, this.channelName)) {
+        return null;
+      }
+
+      return this.song[this.channelName];
+    }
+  },
+  // We do not use the getter player.liveSong due to performance as it would be called each time
+  // a song update for any radio by each instances of this component
+  watch: {
+    liveSong(newVal) {
+      const newValObject = toRaw(newVal);
+
+      if (newValObject === null) {
+        this.currentSong = null;
+        return;
+      }
+
+      this.currentSong = PlayerUtils.formatSong(newValObject.song);
+    },
   },
   methods: {
     isFavorite() {

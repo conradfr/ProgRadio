@@ -54,9 +54,9 @@
               </div>
 
               <div class="mt-4"
-                 v-if="stream.code_name === radioPlayingCodeName && currentSong !== null">
+                 v-if="liveSong">
                 <strong>{{ $t('message.streaming.playing') }}:</strong>&nbsp;
-                ♫ {{ currentSong }}
+                ♫ {{ liveSong }}
               </div>
             </div>
 
@@ -105,7 +105,7 @@ export default {
   props: ['codeName'],
   data() {
     return {
-      locale: this.$i18n.locale,
+      locale: this.$i18n.locale
     };
   },
   computed: {
@@ -114,8 +114,7 @@ export default {
       selectedCountry: state => state.streams.selectedCountry
     }),
     ...mapGetters([
-      'radioPlayingCodeName',
-      'currentSong',
+      'radioPlayingCodeName'
     ]),
     stream() {
       return this.$store.getters.getOneStream(this.codeName);
@@ -125,7 +124,10 @@ export default {
     },
     country() {
       return this.$store.getters.getCountryName(this.stream.country_code);
-    }
+    },
+    liveSong() {
+      return this.$store.getters.liveSong(this.stream, this.stream.radio_stream_code_name);
+    },
   },
   methods: {
     playStop() {

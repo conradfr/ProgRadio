@@ -65,7 +65,7 @@ const storeGetters = {
   },
   liveSong: state => (radio, radioStreamCodeName) => {
     if (radio.streaming_enabled === false) {
-      return false;
+      return null;
     }
 
     const channelName = PlayerUtils.getChannelName(toRaw(radio), radioStreamCodeName);

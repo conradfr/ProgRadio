@@ -26,6 +26,8 @@ export const COLLECTION_FAVORITES = 'favorites';
 
 export const RADIO_LIST_IGNORE_COUNTRY = 'FR';
 
+export const LIVE_SONG_ALL_CHANNEL = 'songs';
+
 export const CACHE_KEY_RADIOS = 'radios';
 export const CACHE_KEY_COLLECTIONS = 'collections';
 export const CACHE_KEY_CATEGORIES = 'categories';

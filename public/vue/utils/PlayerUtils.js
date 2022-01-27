@@ -103,6 +103,13 @@ const getChannelName = (radio, radioStreamCodeName) => {
 };
 
 const formatSong = (songData) => {
+  if ((songData.artist === undefined || songData.artist === null
+    || songData.artist === '')
+    && (songData.title === undefined || songData.title === null
+      || songData.title === '')) {
+    return null;
+  }
+
   let song = '';
   let hasArtist = false;
   if (songData.artist !== undefined && songData.artist !== null
