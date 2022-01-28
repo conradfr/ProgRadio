@@ -4,6 +4,7 @@ defmodule ProgRadioApiWeb.ApiParams.Streams do
 
   embedded_schema do
     field(:radio, :string)
+    field(:text, :string)
     field(:country, :string)
     field(:sort, :string)
     field(:offset, :integer)
@@ -13,6 +14,7 @@ defmodule ProgRadioApiWeb.ApiParams.Streams do
     streams
     |> cast(params, [
       :radio,
+      :text,
       :country,
       :sort,
       :offset

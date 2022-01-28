@@ -31,11 +31,11 @@ defmodule ProgRadioApi.Streams do
   # avoid caching random sort
   def get(%{:sort => "random"} = params), do: build_query(params)
 
-#  @decorate cacheable(
-#              cache: Cache,
-#              key: [@cache_prefix_stream, params],
-#              opts: [ttl: @cache_ttl_stream]
-#            )
+  @decorate cacheable(
+              cache: Cache,
+              key: [@cache_prefix_stream, params],
+              opts: [ttl: @cache_ttl_stream]
+            )
   def get(params), do: build_query(params)
 
   @decorate cacheable(
@@ -46,12 +46,14 @@ defmodule ProgRadioApi.Streams do
   def count(params) do
     base_count_query()
     |> add_country(params)
+    |> add_text(params)
     |> Repo.one()
   end
 
   defp build_query(params) do
     base_query()
     |> add_country(params)
+    |> add_text(params)
     |> add_offset(params)
     |> add_sort(params)
     |> Repo.all()
@@ -132,6 +134,17 @@ defmodule ProgRadioApi.Streams do
   end
 
   defp add_sort(query, _) do
+    query
+  end
+
+  defp add_text(query, %{:text => text}) when is_binary(text) do
+    text_search = "%" <> text <> "%"
+
+    query
+    |> where([s], fragment("? ILIKE ? or ? ILIKE ?", s.name, ^text_search, s.tags, ^text_search))
+  end
+
+  defp add_text(query, _) do
     query
   end
 

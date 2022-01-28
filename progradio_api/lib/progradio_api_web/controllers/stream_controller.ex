@@ -37,7 +37,7 @@ defmodule ProgRadioApiWeb.StreamController do
           []
         end
 
-      render(conn, "index.json", streams: streams, total: total)
+      render(conn, "index.json", streams: streams, total: total, timestamp: System.os_time(:microsecond))
     else
       _ ->
         conn

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// import { STREAMING_CATEGORY_ALL, CACHE_KEY_STREAM_COUNTRIES } from '../config/config';
-import { STREAMING_CATEGORY_ALL } from '../config/config';
+import { STREAMING_CATEGORY_ALL, STREAMING_CATEGORY_FAVORITES } from '../config/config';
 
 // import cache from '../utils/cache';
 
@@ -27,7 +26,12 @@ const getRadios = (countryOrUuid, sort, offset) => {
     queryParamsList.push(`offset=${offset}`);
   }
 
-  return axios.get(`/streams/list?${queryParamsList.join('&')}`)
+  let baseUrl = '/streams/list';
+  if (countryOrUuid !== STREAMING_CATEGORY_FAVORITES) {
+    baseUrl = `https://${apiUrl}/stream`;
+  }
+
+  return axios.get(`${baseUrl}?${queryParamsList.join('&')}`)
     .then((response) => {
       return response.data;
     });
@@ -53,7 +57,12 @@ const searchRadios = (text, country, sort, offset) => {
     queryParamsList.push(`offset=${offset}`);
   }
 
-  return axios.get(`/streams/search?${queryParamsList.join('&')}`)
+  let baseUrl = '/streams/search';
+  if (country !== STREAMING_CATEGORY_FAVORITES) {
+    baseUrl = `https://${apiUrl}/stream`;
+  }
+
+  return axios.get(`${baseUrl}?${queryParamsList.join('&')}`)
     .then((response) => {
       return response.data;
     });
@@ -123,7 +132,6 @@ const getCountryFromLatLong = (latitude, longitude) => {
     });
 };
 
-/* eslint-disable no-undef */
 export default {
   getConfig,
   getRadios,
