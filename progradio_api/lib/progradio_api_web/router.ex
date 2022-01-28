@@ -13,6 +13,7 @@ defmodule ProgRadioApiWeb.Router do
     pipe_through :api
 
     resources "/schedule/:day", ScheduleController
+    resources "/stream", StreamController
     resources "/schedule", ScheduleController, only: [:create]
     resources "/radios", RadioController
     resources "/listening_session", ListeningSessionController, only: [:create, :update]
