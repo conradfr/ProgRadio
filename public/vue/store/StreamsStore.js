@@ -38,7 +38,21 @@ const storeGetters = {
       }
     );
     forEach(state.countries, (value, key) => {
-      if (key === 'FR') {
+      if (i18n.global.locale === 'fr' && ['FR', 'BE', 'CH'].indexOf(key) !== -1) {
+        countriesOptions.unshift(
+          {
+            label: value,
+            code: key
+          }
+        );
+      } else if (i18n.global.locale === 'es' && ['MX', 'ES', 'CO'].indexOf(key) !== -1) {
+        countriesOptions.unshift(
+          {
+            label: value,
+            code: key
+          }
+        );
+      } else if (i18n.global.locale === 'en' && ['US', 'GB', 'CA'].indexOf(key) !== -1) {
         countriesOptions.unshift(
           {
             label: value,
