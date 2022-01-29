@@ -17,7 +17,7 @@ defmodule ProgRadioApiWeb.StreamController do
         |> Map.get(:radio)
         |> Streams.get_one()
 
-      render(conn, "index.json", streams: streams)
+      render(conn, "index.json", streams: [streams])
     else
       _ ->
         conn
