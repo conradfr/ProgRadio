@@ -6,6 +6,7 @@
 {% block javascripts %}
     {{ parent() }}
     {% include('_partials/mini_player.html.twig') %}
+    {{ include('_partials/adsense.html.twig') }}
 {% endblock %}
 
 {% block body %}
@@ -24,7 +25,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12 col-md-10">
             <div class="tab-content tab-now">
                 {% for entry_collection in collections %}
                 <div role="tabpanel" aria-labelledby="{{ entry_collection.code_name }}-tab" class="tab-pane {{ loop.first ? ' show active' : '' }}" id="{{ entry_collection.code_name }}">
@@ -109,6 +110,13 @@
                 </div>
                 {% endfor %}
             </div>
+        </div>
+        <div class="col-12 col-md-2">
+        {% if app.environment == 'prod' %}
+            <div class="sticky-md-top" style="top: 70px">
+                {{ include('_partials/adblock.html.twig', {vertical: true}) }}
+            </div>
+        {% endif %}
         </div>
     </div>
 </div>

@@ -137,7 +137,9 @@
                     </div>
                 </div>
                 <div class="offset-1 col-10 offset-sm-0 col-sm-3 pt-4 pt-sm-2 text-center">
-                    {{ include('_partials/adblock.html.twig', {vertical: true}) }}
+                    {% if app.environment == 'prod' %}
+                        {{ include('_partials/adblock.html.twig', {vertical: true}) }}
+                    {% endif %}
                 </div>
             </div>
 

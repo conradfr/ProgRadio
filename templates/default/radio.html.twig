@@ -188,10 +188,13 @@
             {% endfor %}
             </div>
         </div>
-        <div class="col-md-2 col-12">
+        <div class="col-md-2 col-12" >
             {% if app.environment == 'prod' %}
+                <div class="sticky-md-top" style="top: 60px">
                 {{ include('_partials/adblock.html.twig', {vertical: true}) }}
+                </div>
             {% endif %}
+
 {#            <div class="mt-2 d-flex flex-sm-column flex-row flex-wrap radio-page-more">#}
 {#                <div class="text-center mb-2 radio-page-more-header d-none d-sm-block">#}
 {#                    {{ 'page.radio.more_radios'|trans }}#}
