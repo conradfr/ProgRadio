@@ -86,7 +86,7 @@ export const messages = {
         categories: {
           all_countries: 'Tous les pays',
           favorites: 'Favoris',
-          last: 'Radio écoutées en ce moment ...',
+          last: 'Radios écoutées dernièrement ...',
         },
         close: 'Fermer',
         country: 'Pays',

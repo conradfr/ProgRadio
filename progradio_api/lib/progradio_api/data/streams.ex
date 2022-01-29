@@ -87,7 +87,7 @@ defmodule ProgRadioApi.Streams do
         img: s.img,
         stream_url: fragment("COALESCE(?, ?)", so.stream_url, s.stream_url),
         tags: s.tags,
-        country_code: s.country_code,
+        country_code: fragment("COALESCE(?, ?)", so.country_code, s.country_code),
         clicks_last_24h: s.clicks_last_24h,
         type: "stream",
         radio_code_name: fragment("COALESCE(?)", r.code_name),
@@ -112,6 +112,8 @@ defmodule ProgRadioApi.Streams do
 
   defp base_count_query() do
     from s in Stream,
+      left_join: so in StreamOverloading,
+      on: so.id == s.id,
       where: s.enabled == true,
       select: count()
   end
@@ -119,7 +121,7 @@ defmodule ProgRadioApi.Streams do
   defp add_country(query, %{:country => country_code}) when is_binary(country_code) do
     with country_code_upper <- String.upcase(country_code) do
       query
-      |> where([s], s.country_code == ^country_code_upper)
+      |> where([s, so], s.country_code == ^country_code_upper or so.country_code == ^country_code_upper)
     else
       _ -> query
     end
@@ -160,7 +162,8 @@ defmodule ProgRadioApi.Streams do
           ss.code_name,
           ss.enabled,
           rs.current_song,
-          rs.code_name
+          rs.code_name,
+          so.country_code
         ])
 
       "random" ->

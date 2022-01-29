@@ -52,12 +52,15 @@ const searchRadios = (text, country, sort, offset) => {
     return getRadios(country, sort, offset);
   }
 
-  if (country !== null && country !== STREAMING_CATEGORY_ALL) {
+  if (country !== null && country !== STREAMING_CATEGORY_ALL
+    && country !== STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`country=${country}`);
   }
 
-  if (sort !== null) {
+  if (sort !== null && sort !== undefined && country !== STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${sort}`);
+  } else if (country === STREAMING_CATEGORY_LAST) {
+    queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);
   }
 
   if (offset !== null) {

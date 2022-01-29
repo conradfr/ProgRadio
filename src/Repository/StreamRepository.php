@@ -84,7 +84,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(so.streamUrl, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name,"
+        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(so.streamUrl, s.streamUrl) as stream_url, s.tags, COALESCE(so.countryCode, s.countryCode) as country_code, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name,"
             . 'COALESCE(r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_stream_code_name')
@@ -135,7 +135,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
                        //->distinct()
                        ->leftJoin('s.listeningSessions', 'ls')
-                       ->groupBy('s.id, so.name, so.streamUrl, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName')
+                       ->groupBy('s.id, so.name, so.streamUrl, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName, so.countryCode')
                        ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
                     break;
             }
@@ -162,7 +162,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(so.streamUrl, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name,"
+        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(so.streamUrl, s.streamUrl) as stream_url, s.tags, COALESCE(so.countryCode, s.countryCode) as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name,"
             . 'COALESCE(r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_stream_code_name')
@@ -216,7 +216,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
                         //->distinct()
                         ->leftJoin('s.listeningSessions', 'ls')
-                        ->groupBy('s.id, so.name, so.streamUrl, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName')
+                        ->groupBy('s.id, so.name, so.streamUrl, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName, so.countryCode')
                         ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
                     break;
             }
@@ -248,7 +248,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(so.streamUrl, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name,"
+        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(so.streamUrl, s.streamUrl) as stream_url, s.tags, COALESCE(so.countryCode, s.countryCode) as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name,"
             . 'COALESCE(r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_stream_code_name')
@@ -298,7 +298,7 @@ class StreamRepository extends ServiceEntityRepository
     ): ?array {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(so.streamUrl, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name,"
+        $qb->select("s.id as code_name, COALESCE(so.name, s.name) as name, s.img, COALESCE(so.streamUrl, s.streamUrl) as stream_url, s.tags, COALESCE(so.countryCode, s.countryCode) as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name,"
             . 'COALESCE(r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_stream_code_name')

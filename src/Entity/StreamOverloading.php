@@ -40,6 +40,15 @@ class StreamOverloading
      */
     private $streamUrl;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=2, nullable=true))
+     */
+    private $countryCode;
+
+
+
     public function getId(): string
     {
         return $this->id;
@@ -79,4 +88,15 @@ class StreamOverloading
     {
         $this->streamUrl = $streamUrl;
     }
+
+    public function getCountryCode(): string
+    {
+        return $this->countryCode;
+    }
+
+    public function setCountryCode(string $countryCode): void
+    {
+        $this->countryCode = $countryCode;
+    }
+
 }
