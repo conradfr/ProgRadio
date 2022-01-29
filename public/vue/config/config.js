@@ -90,6 +90,7 @@ export const STREAMS_MAX_PAGES_DISPLAY = 9;
 
 export const STREAMING_CATEGORY_ALL = 'ALL';
 export const STREAMING_CATEGORY_FAVORITES = 'FAVORITES';
+export const STREAMING_CATEGORY_LAST = 'LAST';
 
 export const STREAMING_DEFAULT_SORT = 'popularity';
 

@@ -27,7 +27,7 @@ class Host
             'name' => 'Radio Addict',
             'name_host' => 'Radio-Addict.com',
             'url' => 'https://www.radio-addict.com',
-            'default_country' => 'ALL',
+            'default_country' => 'LAST',
             'locale' => 'en',
             'bangs' => [
                 'app' => ['streaming']

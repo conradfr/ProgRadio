@@ -92,7 +92,7 @@ defmodule ProgRadioApi.SongServer do
       broadcast_song(name, song, state.collection_topic)
 
       refresh_rate =
-        if (apply(state.module, :has_custom_refresh, []) == true) do
+        if apply(state.module, :has_custom_refresh, []) == true do
           apply(module, :get_auto_refresh, [name, data, @refresh_song_interval_long]) ||
             @refresh_song_interval_long
         else
@@ -176,11 +176,11 @@ defmodule ProgRadioApi.SongServer do
       Map.put(data, :topic, name)
     )
 
-#    ProgRadioApiWeb.Endpoint.broadcast!(
-#      "songs",
-#      "playing",
-#      Map.put(data, :topic, name)
-#    )
+    #    ProgRadioApiWeb.Endpoint.broadcast!(
+    #      "songs",
+    #      "playing",
+    #      Map.put(data, :topic, name)
+    #    )
   end
 
   @spec get_data_song(atom(), String.t(), map() | nil) :: tuple()

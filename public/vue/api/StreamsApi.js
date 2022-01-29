@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-import { STREAMING_CATEGORY_ALL, STREAMING_CATEGORY_FAVORITES } from '../config/config';
+import {
+  STREAMING_CATEGORY_ALL,
+  STREAMING_CATEGORY_FAVORITES,
+  STREAMING_CATEGORY_LAST
+} from '../config/config';
 
 // import cache from '../utils/cache';
 
@@ -10,7 +14,8 @@ import { STREAMING_CATEGORY_ALL, STREAMING_CATEGORY_FAVORITES } from '../config/
 const getRadios = (countryOrUuid, sort, offset) => {
   const queryParamsList = [];
   if (countryOrUuid !== undefined && countryOrUuid !== null
-    && countryOrUuid !== STREAMING_CATEGORY_ALL) {
+    && countryOrUuid !== STREAMING_CATEGORY_ALL
+    && countryOrUuid !== STREAMING_CATEGORY_LAST) {
     if (countryOrUuid.indexOf('-') !== -1) {
       queryParamsList.push(`radio=${countryOrUuid}`);
     } else {
@@ -18,8 +23,10 @@ const getRadios = (countryOrUuid, sort, offset) => {
     }
   }
 
-  if (sort !== null && sort !== undefined) {
+  if (sort !== null && sort !== undefined && countryOrUuid !== STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${sort}`);
+  } else if (countryOrUuid === STREAMING_CATEGORY_LAST) {
+    queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);
   }
 
   if (offset !== null && offset !== undefined) {

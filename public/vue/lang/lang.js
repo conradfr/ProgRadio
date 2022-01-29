@@ -86,6 +86,7 @@ export const messages = {
         categories: {
           all_countries: 'Tous les pays',
           favorites: 'Favoris',
+          last: 'Radio écoutées en ce moment ...',
         },
         close: 'Fermer',
         country: 'Pays',
@@ -100,7 +101,8 @@ export const messages = {
         sort: {
           name: 'Par ordre alphabétique',
           popularity: 'Par popularité',
-          random: 'Par ordre aléatoire'
+          random: 'Par ordre aléatoire',
+          last: 'Par dernière écoute'
         },
         title: 'Les radios du monde entier en streaming',
         website: 'Site web'
@@ -183,6 +185,7 @@ export const messages = {
         categories: {
           all_countries: 'All countries',
           favorites: 'Favorites',
+          last: 'People currently listen to ...',
         },
         close: 'Close',
         country: 'Country',
@@ -197,7 +200,8 @@ export const messages = {
         sort: {
           name: 'By alphabetical order',
           popularity: 'By popularity',
-          random: 'By random order'
+          random: 'By random order',
+          last: 'By last played'
         },
         title: 'Stream radios from all over the world!',
         website: 'Website'
@@ -280,6 +284,7 @@ export const messages = {
         categories: {
           all_countries: 'Todos los países',
           favorites: 'Favoritos',
+          last: 'Radios actualmente escuchadas ...',
         },
         close: 'Cerrar',
         country: 'País',
@@ -294,7 +299,8 @@ export const messages = {
         sort: {
           name: 'Por orden alfabético',
           popularity: 'Por popularidad ',
-          random: 'Orden aleatorio'
+          random: 'Orden aleatorio',
+          last: 'Por la escucha reciente'
         },
         title: 'Emisoras de radio de todo el mundo en streaming',
         website: 'Sitio web'

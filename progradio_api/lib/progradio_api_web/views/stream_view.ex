@@ -8,5 +8,4 @@ defmodule ProgRadioApiWeb.StreamView do
   def render("index.json", %{streams: streams}) do
     %{streams: streams}
   end
-
 end

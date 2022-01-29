@@ -131,12 +131,19 @@ class StreamRepository extends ServiceEntityRepository
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
                     break;
+                case 'last':
+                    $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
+                       //->distinct()
+                       ->leftJoin('s.listeningSessions', 'ls')
+                       ->groupBy('s.id, so.name, so.streamUrl, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName')
+                       ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
+                    break;
             }
         }
 
         $query = $qb->getQuery();
 
-        if ($sort !== 'random') {
+        if ($sort !== 'random' && $sort !== 'last') {
             $query->enableResultCache(self::CACHE_TTL);
         }
 
@@ -204,6 +211,13 @@ class StreamRepository extends ServiceEntityRepository
                     break;
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
+                    break;
+                case 'last':
+                    $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
+                        //->distinct()
+                        ->leftJoin('s.listeningSessions', 'ls')
+                        ->groupBy('s.id, so.name, so.streamUrl, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName')
+                        ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
                     break;
             }
         }

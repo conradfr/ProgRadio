@@ -20,5 +20,4 @@ defmodule ProgRadioApiWeb.ApiParams.Streams do
       :offset
     ])
   end
-
 end

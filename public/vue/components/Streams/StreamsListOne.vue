@@ -31,8 +31,9 @@
     <div
         class="streams-one-flag cursor-pointer"
         v-on:click.stop="flagClick"
-        v-if="(selectedCountry === code_all || selectedCountry === code_favorites)
-                && radio.country_code !== null">
+        v-if="(selectedCountry === code_all
+          || selectedCountry === code_favorites || selectedCountry === code_last)
+            && radio.country_code !== null">
       <gb-flag
           :code="radio.country_code"
           size="micro"
@@ -63,6 +64,7 @@ export default {
       currentSong: null,
       hover: false,
       code_all: config.STREAMING_CATEGORY_ALL,
+      code_last: config.STREAMING_CATEGORY_LAST,
       code_favorites: config.STREAMING_CATEGORY_FAVORITES,
       styleObject: {
         backgroundImage: `url("${img}")`

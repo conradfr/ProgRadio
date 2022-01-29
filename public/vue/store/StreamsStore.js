@@ -70,6 +70,12 @@ const storeGetters = {
     });
     countriesOptions.unshift(
       {
+        label: i18n.global.tc('message.streaming.categories.last'),
+        code: config.STREAMING_CATEGORY_LAST
+      }
+    );
+    countriesOptions.unshift(
+      {
         label: i18n.global.tc('message.streaming.categories.favorites'),
         code: config.STREAMING_CATEGORY_FAVORITES,
         disabled: state.favorites.length === 0

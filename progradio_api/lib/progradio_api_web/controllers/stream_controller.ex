@@ -30,6 +30,7 @@ defmodule ProgRadioApiWeb.StreamController do
     with changeset <- StreamsApiParams.changeset(%StreamsApiParams{}, conn_params),
          {:ok, api_params} <- Ecto.Changeset.apply_action(changeset, :insert) do
       total = Streams.count(api_params)
+
       streams =
         unless total == 0 do
           Streams.get(api_params)
@@ -37,7 +38,11 @@ defmodule ProgRadioApiWeb.StreamController do
           []
         end
 
-      render(conn, "index.json", streams: streams, total: total, timestamp: System.os_time(:microsecond))
+      render(conn, "index.json",
+        streams: streams,
+        total: total,
+        timestamp: System.os_time(:microsecond)
+      )
     else
       _ ->
         conn
@@ -45,5 +50,4 @@ defmodule ProgRadioApiWeb.StreamController do
         |> json(%{"status" => "Error"})
     end
   end
-
 end

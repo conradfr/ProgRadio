@@ -56,7 +56,12 @@
               <div class="multiselect-single-label">
                 <img v-if="value.code === code_all || value.code === code_favorites"
                      class="gb-flag gb-flag--mini"
+                     style="max-height: 20px; max-width: 25px;"
                      :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
+                <img v-else-if="value.code === code_last"
+                     class="gb-flag gb-flag--mini"
+                     style="max-height: 20px; max-width: 24px;"
+                     :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
                 <gb-flag
                     v-else
                     :code="value.code"
@@ -68,7 +73,12 @@
             <template v-slot:option="{ option }">
               <img v-if="option.code === code_all || option.code === code_favorites"
                    class="gb-flag gb-flag--mini"
+                   style="max-height: 20px; max-width: 25px;"
                    :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
+              <img v-else-if="option.code === code_last"
+                   class="gb-flag gb-flag--mini"
+                   style="max-height: 20px; max-width: 24px;"
+                   :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
               <gb-flag
                   v-else
                   :code="option.code"
@@ -83,6 +93,7 @@
               :model-value="selectedSortBy"
               :options="sortByOptions"
               :canClear="false"
+              :disabled="selectedCountry === code_last"
               ref="multisort"
               id="multisort"
           />
@@ -100,6 +111,7 @@ import StreamsApi from '../../api/StreamsApi';
 import {
   STREAMING_CATEGORY_FAVORITES,
   STREAMING_CATEGORY_ALL,
+  STREAMING_CATEGORY_LAST,
   GTAG_CATEGORY_STREAMING,
   GTAG_STREAMING_ACTION_FILTER_COUNTRY,
   GTAG_STREAMING_ACTION_FILTER_SORT,
@@ -126,6 +138,7 @@ export default {
   data() {
     return {
       code_all: STREAMING_CATEGORY_ALL,
+      code_last: STREAMING_CATEGORY_LAST,
       code_favorites: STREAMING_CATEGORY_FAVORITES,
       sortByOptions: [
         {
@@ -135,6 +148,10 @@ export default {
         {
           value: 'popularity',
           label: this.$i18n.t('message.streaming.sort.popularity')
+        },
+        {
+          value: 'last',
+          label: this.$i18n.t('message.streaming.sort.last')
         },
         {
           value: 'random',
@@ -159,6 +176,10 @@ export default {
     },
     selectedSortBy: {
       get() {
+        if (this.selectedCountry === STREAMING_CATEGORY_LAST) {
+          return null;
+        }
+
         return this.$store.state.streams.selectedSortBy;
       }
     }

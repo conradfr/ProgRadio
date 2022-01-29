@@ -10,10 +10,13 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.Cache
   alias ProgRadioApi.{Radio, RadioStream, Stream, StreamSong, StreamOverloading}
 
-  @default_limit 40;
+  @default_limit 40
 
-  # one day
-  @cache_ttl_stream 86_400_000
+  # 6h
+  @cache_ttl_stream 21_600_000
+  # 30s
+  @cache_ttl_stream_last 30_000
+
   @cache_prefix_stream "stream_"
   @cache_prefix_stream_count "stream_count_"
 
@@ -30,6 +33,13 @@ defmodule ProgRadioApi.Streams do
 
   # avoid caching random sort
   def get(%{:sort => "random"} = params), do: build_query(params)
+
+  @decorate cacheable(
+              cache: Cache,
+              key: [@cache_prefix_stream, params],
+              opts: [ttl: @cache_ttl_stream_last]
+            )
+  def get(%{:sort => "last"} = params), do: build_query(params)
 
   @decorate cacheable(
               cache: Cache,
@@ -61,30 +71,43 @@ defmodule ProgRadioApi.Streams do
 
   defp base_query() do
     from s in Stream,
-         left_join: so in StreamOverloading,
-         on: so.id == s.id,
-         left_join: rs in RadioStream,
-         on: rs.id == s.radio_stream_id,
-         left_join: r in Radio,
-         on: r.id == rs.radio_id,
-         left_join: ss in StreamSong,
-         on: ss.id == s.stream_song_id,
-         where: s.enabled == true,
-         limit: @default_limit,
-         select: %{
-           code_name: s.id,
-           name: fragment("COALESCE(?, ?)", so.name, s.name),
-           img: s.img,
-           stream_url: fragment("COALESCE(?, ?)", so.stream_url, s.stream_url),
-           tags: s.tags,
-           country_code: s.country_code,
-           clicks_last_24h: s.clicks_last_24h,
-           type: "stream",
-           radio_code_name: fragment("COALESCE(?)", r.code_name),
-           img_alt: fragment("COALESCE(?)", r.code_name),
-           current_song: fragment("CASE WHEN(? IS NOT NULL and ? = TRUE) THEN TRUE ELSE ? END", ss.code_name, ss.enabled, rs.current_song),
-           radio_stream_code_name: fragment("CASE WHEN(? IS NOT NULL and ? = TRUE) THEN ? ELSE ? END", s.stream_song_code_name, ss.enabled, s.stream_song_code_name, rs.code_name)
-         }
+      left_join: so in StreamOverloading,
+      on: so.id == s.id,
+      left_join: rs in RadioStream,
+      on: rs.id == s.radio_stream_id,
+      left_join: r in Radio,
+      on: r.id == rs.radio_id,
+      left_join: ss in StreamSong,
+      on: ss.id == s.stream_song_id,
+      where: s.enabled == true,
+      limit: @default_limit,
+      select: %{
+        code_name: s.id,
+        name: fragment("COALESCE(?, ?)", so.name, s.name),
+        img: s.img,
+        stream_url: fragment("COALESCE(?, ?)", so.stream_url, s.stream_url),
+        tags: s.tags,
+        country_code: s.country_code,
+        clicks_last_24h: s.clicks_last_24h,
+        type: "stream",
+        radio_code_name: fragment("COALESCE(?)", r.code_name),
+        img_alt: fragment("COALESCE(?)", r.code_name),
+        current_song:
+          fragment(
+            "CASE WHEN(? IS NOT NULL and ? = TRUE) THEN TRUE ELSE ? END",
+            ss.code_name,
+            ss.enabled,
+            rs.current_song
+          ),
+        radio_stream_code_name:
+          fragment(
+            "CASE WHEN(? IS NOT NULL and ? = TRUE) THEN ? ELSE ? END",
+            s.stream_song_code_name,
+            ss.enabled,
+            s.stream_song_code_name,
+            rs.code_name
+          )
+      }
   end
 
   defp base_count_query() do
@@ -119,17 +142,33 @@ defmodule ProgRadioApi.Streams do
     case sort do
       "name" ->
         query
-        |> order_by([s], [asc: s.name])
+        |> order_by([s], asc: s.name)
 
       "popularity" ->
         query
-        |> order_by([s], [desc: s.clicks_last_24h])
+        |> order_by([s], desc: s.clicks_last_24h)
+
+      "last" ->
+        query
+        |> join(:inner, [ls], s in assoc(ls, :listening_session))
+        |> order_by([s, so, rs, r, ss, ls], desc: max(ls.date_time_start))
+        |> group_by([s, so, rs, r, ss, ls], [
+          s.id,
+          so.name,
+          so.stream_url,
+          r.code_name,
+          ss.code_name,
+          ss.enabled,
+          rs.current_song,
+          rs.code_name
+        ])
 
       "random" ->
         query
         |> order_by(fragment("RANDOM()"))
 
-      _ -> query
+      _ ->
+        query
     end
   end
 
@@ -147,5 +186,4 @@ defmodule ProgRadioApi.Streams do
   defp add_text(query, _) do
     query
   end
-
 end
