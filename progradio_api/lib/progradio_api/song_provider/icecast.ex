@@ -20,10 +20,22 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     url = SongProvider.get_stream_code_name_from_channel(name)
 
     try do
-      {:ok, %Shoutcast.Meta{data: data}} = Shoutcast.read_meta(url)
-      data
-    rescue
-      _ ->
+      # We put it in a task to try to countering hackney increasing clients (ghost process ?)
+      task = Task.async(fn ->
+        try do
+          {:ok, %Shoutcast.Meta{data: data}} = Shoutcast.read_meta(url)
+          #      {:ok, %Shoutcast.Meta{data: data}} = ProgRadioApi.Icecast.read_meta(url)
+
+          data
+        rescue
+          _ ->
+            :error
+        end
+      end)
+
+      Task.await(task)
+    catch
+      :exit, _ ->
         :error
     end
   end

@@ -70,7 +70,8 @@ defmodule ProgRadioApi.MixProject do
       {:floki, "~> 0.32.0"},
       {:canada, "~> 2.0"},
       {:nebulex, "~> 2.3"},
-      {:decorator, "~> 1.3"}
+      {:decorator, "~> 1.3"},
+      {:observer_cli, "~> 1.7"}
     ]
   end
 

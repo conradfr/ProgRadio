@@ -106,7 +106,7 @@ defmodule ProgRadioApi.SongServer do
         "Data provider - #{name}: song updated (timer) - #{how_many_connected} clients connected"
       )
 
-      {:noreply, %{state | song: song, last_data: data}}
+      {:noreply, %{state | song: song, last_data: data}, :hibernate}
     else
       _ ->
         broadcast_song(name, nil, nil)
@@ -128,6 +128,7 @@ defmodule ProgRadioApi.SongServer do
 
     next_refresh =
       apply(module, :get_refresh, [name, data, @refresh_song_interval]) || @refresh_song_interval
+      |> Kernel.+(Enum.random(-5..5))
 
     Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 
