@@ -1,16 +1,23 @@
-const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const axios = require('axios');
+const node_fetch = require('node-fetch');
 
 let scrapedData = [];
+
+const fetchSections = async (id) => {
+  const response = await node_fetch(`https://www.radiofrance.fr/api/v1.6/stations/francemusique/programs/${id}/chronicles`);
+  return await response.json();
+};
 
 const format = dateObj => {
   const dayStr = dateObj.format('DD');
   const datetimeStored = [];
 
   // we use reduce instead of map to act as a map+filter in one pass
-  const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
-    const date = moment.unix(parseInt(curr['datetime_raw']));
+  const cleanedData = scrapedData.reduce(async function (prevP, curr, index, array) {
+    const prev = await prevP;
+    const date = moment.unix(curr.startTime);
 
     // as we have to analyze two pages and can get results from previous and next days ...
     // 1. filter other days
@@ -22,89 +29,60 @@ const format = dateObj => {
       return prev;
     }
 
-    datetimeStored.push(curr['datetime_raw']);
+    const newEntry = {
+      'date_time_start': date.toISOString(),
+      'date_time_end': moment.unix(curr.endTime).toISOString(),
+      'title': curr.concept.title,
+      'description': curr.expression.title !== undefined ? curr.expression.title : null,
+      'host': curr.concept.producers !== undefined ? curr.concept.producers : null,
+      'sections': []
+    };
 
-    delete curr.datetime_raw;
+    datetimeStored.push(moment.unix(curr.startTime));
 
-    curr.date_time_start = date.toISOString();
+    const sections = await fetchSections(curr.id);
 
-    if (curr.host) {
-      curr.host = curr.host.substr(3);
-    }
-
-    curr.sections = [];
-
-    curr.sub.forEach(function (entry) {
-      if (typeof entry.datetime_raw === 'undefined') {
-        return true;
-      }
-
-      let secEntry = {
-        date_time_start: moment.unix(parseInt(entry.datetime_raw)).toISOString(),
-        title: entry.title,
-        description: entry.description,
-        img: entry.img
+    sections.steps.forEach(function (entry) {
+      const secEntry = {
+        date_time_start: moment.unix(entry.startTime).toISOString(),
+        title: entry.concept !== null && entry.concept.title !== undefined ? entry.concept.title : null,
+        description: entry.expression !== null && entry.expression.title !== undefined ? entry.expression.title : null,
+        presenter: entry.concept !== null && entry.concept.producers !== undefined ? entry.concept.producers : null,
+        img: entry.concept !== null && entry.concept.visual !== undefined ? entry.concept.visual.src : null
       };
 
-      if (secEntry.presenter) {
-        secEntry.presenter = secEntry.presenter.substr(3);
-      }
-
-      curr.sections.push(secEntry);
+      newEntry.sections.push(secEntry);
     });
 
-    delete curr.sub;
-
-    prev.push(curr);
+    prev.push(newEntry);
     return prev;
   }, []);
+
 
   return Promise.resolve(cleanedData);
 };
 
 const fetch = dateStr => {
-  let url = `https://www.francemusique.fr/programmes/${dateStr}`;
+  let url = `https://www.radiofrance.fr/api/v1.6/stations/francemusique/programs?date=${dateStr}`;
 
   logger.log('info', `fetching ${url}`);
 
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .select('.program-grid > .step-list > .step-list-element-wrapper')
-      .set({
-        'datetime_raw': '@data-start-time', /* utc */
-        'img': 'figure img@data-dejavu-src',
-        'title': '.step-list-element .step-list-element-content-editorial-infos-title > h2',
-        'description': '.step-list-element .step-list-element-content-editorial-infos-title > h3',
-        'host': '.step-list-element .step-list-element-content-editorial-infos-producer',
-        'datetime_alt': '.step-list-element .step-list-element-meta-start-date',
-        'sub': [
-          osmosis.find('.step-list-element-children .step-list-element-wrapper')
-            .set({
-              'datetime_raw': '@data-start-time', /* utc */
-              'img': 'figure img@data-dejavu-src',
-              'title': '.step-list-element-content-editorial-infos-title h2',
-              'description': '.step-list-element-content-editorial-infos-title h3',
-              'presenter': '.step-list-element-content-editorial-infos-producer'
-            })
-        ]
-      })
-      .data(function (listing) {
-        scrapedData.push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
-  });
+  return axios.get(url)
+    .then(function (response) {
+      // console.log(response.data.steps);
+      scrapedData = scrapedData.concat(response.data.steps);
+      // return resolve(true);
+    // }).catch(() => resolve(true));
+    });
 };
 
 const fetchAll = dateObj => {
   const previousDay = moment(dateObj);
   previousDay.subtract(1, 'days');
 
-  return fetch(previousDay.format('YYYY-MM-DD'))
+  return fetch(previousDay.format('DD-MM-YYYY'))
     .then(() => {
-      return fetch(dateObj.format('YYYY-MM-DD'));
+      return fetch(dateObj.format('DD-MM-YYYY'));
     });
 };
 
