@@ -9,6 +9,7 @@ defmodule ProgRadioApi.StreamOverloading do
     field(:img, :string)
     field(:stream_url, :string)
     field(:country_code, :string)
+    field(:enabled, :boolean)
   end
 
   def changeset(stream, params \\ %{}) do

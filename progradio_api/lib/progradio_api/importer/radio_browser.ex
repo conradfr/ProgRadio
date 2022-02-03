@@ -49,49 +49,59 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     end)
   end
 
-  @spec data_mapping(struct) :: struct
-  defp data_mapping(stream) do
-    stream_url =
-      case Map.get(stream, "url_resolved") do
-        "" -> Map.get(stream, "url")
-        value -> value
-      end
-      # found in some entries, not sure of a better way to remove them
-      |> String.trim("\u0000")
-      |> String.trim()
-
-    name =
-      Map.get(stream, "name")
-      |> String.trim("\u0000")
-      |> String.trim()
-
-    %{
-      id: Map.get(stream, "stationuuid"),
-      code_name: Map.get(stream, "stationuuid"),
-      name: name,
-      img_url: Map.get(stream, "favicon"),
-      img: nil,
-      website: Map.get(stream, "homepage"),
-      stream_url: stream_url,
-      tags: Map.get(stream, "tags"),
-      country_code: Map.get(stream, "countrycode"),
-      language: Map.get(stream, "language"),
-      votes: Map.get(stream, "votes"),
-      clicks_last_24h: Map.get(stream, "clickcount"),
-      enabled: true
-    }
-  end
-
   defp format(data) do
+    stream_overloading = Repo.all(StreamOverloading)
+
     data
-    |> Enum.map(&data_mapping/1)
+    |> Enum.map(fn stream ->
+      id = Map.get(stream, "stationuuid")
+      overloading =
+        case Enum.find(stream_overloading, fn s -> s.id == id end) do
+          nil -> %StreamOverloading{}
+          data -> data
+        end
+
+      stream_url =
+        case Map.get(stream, "url_resolved") do
+          "" -> Map.get(stream, "url")
+          value -> value
+        end
+        # found in some entries, not sure of a better way to remove them
+        |> String.trim("\u0000")
+        |> String.trim()
+
+      name =
+        stream
+        |> Map.get("name")
+        |> String.trim("\u0000")
+        |> String.trim()
+
+      img_url = Map.get(stream, "favicon")
+      country_code = Map.get(stream, "countrycode")
+
+      %{
+        id: id,
+        code_name: id,
+        name: Map.get(overloading, :name) || name,
+        img_url: Map.get(overloading, :img) || img_url,
+        img: nil,
+        website: Map.get(stream, "homepage"),
+        stream_url: Map.get(overloading, :stream_url) || stream_url,
+        tags: Map.get(stream, "tags"),
+        country_code: Map.get(overloading, :country_code) || country_code,
+        language: Map.get(stream, "language"),
+        votes: Map.get(stream, "votes"),
+        clicks_last_24h: Map.get(stream, "clickcount"),
+        enabled: true,
+        has_overloading: overloading !== nil
+      }
+    end)
   end
 
   # Images
 
   defp import_images(streams) do
     streams
-    |> overload_image_if_one()
     |> Task.async_stream(fn s -> import_image(s) end,
       timeout: @task_timeout,
       max_concurrency: @max_concurrency
@@ -139,7 +149,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     query =
       from(
         s in "stream",
-        where: s.id not in ^ids_to_keep,
+        left_join: so in StreamOverloading,
+        on: so.id == s.id,
+        where: s.id not in ^ids_to_keep and so.enabled != true,
         select: s.img
       )
 
@@ -151,32 +163,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     end)
 
     {ids_to_keep, streams}
-  end
-
-  defp overload_image_if_one(streams) do
-    # not used for now has overloading data is tiny
-    # streams_ids = Enum.map(streams, fn s -> s.id end)
-
-    query =
-      from so in StreamOverloading,
-        where: not is_nil(so.img),
-        select: %{
-          id: so.id,
-          img: so.img
-        }
-
-    stream_overloading_img =
-      Repo.all(query)
-      |> Enum.map(fn so -> {so.id, so.img} end)
-      |> Enum.into(%{})
-
-    streams
-    |> Enum.map(fn s ->
-      case Map.has_key?(stream_overloading_img, s.id) do
-        true -> %{s | img_url: Map.get(stream_overloading_img, s.id)}
-        false -> s
-      end
-    end)
   end
 
   # Store
@@ -222,11 +208,22 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   @spec delete_streams(Multi.t(), list()) :: any
   defp delete_streams(multi, to_not_delete) do
+    ids_to_keep =
+      from(so in StreamOverloading,
+        where: so.enabled == true,
+        select: so.id
+      )
+      |> Repo.all()
+      |> Enum.map(fn stream_id ->
+        Ecto.UUID.dump!(stream_id)
+      end)
+      |> Enum.concat(to_not_delete)
+
     # soft delete
     q =
       from(
         s in "stream",
-        where: s.id not in ^to_not_delete,
+        where: s.id not in ^ids_to_keep,
         update: [set: [enabled: false]]
       )
 

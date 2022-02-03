@@ -8,7 +8,7 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamSong, StreamOverloading}
+  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamSong}
 
   @default_limit 40
 
@@ -71,8 +71,6 @@ defmodule ProgRadioApi.Streams do
 
   defp base_query() do
     from s in Stream,
-      left_join: so in StreamOverloading,
-      on: so.id == s.id,
       left_join: rs in RadioStream,
       on: rs.id == s.radio_stream_id,
       left_join: r in Radio,
@@ -83,11 +81,11 @@ defmodule ProgRadioApi.Streams do
       limit: @default_limit,
       select: %{
         code_name: s.id,
-        name: fragment("COALESCE(?, ?)", so.name, s.name),
+        name: s.name,
         img: s.img,
-        stream_url: fragment("COALESCE(?, ?)", so.stream_url, s.stream_url),
+        stream_url: s.stream_url,
         tags: s.tags,
-        country_code: fragment("COALESCE(?, ?)", so.country_code, s.country_code),
+        country_code: s.country_code,
         clicks_last_24h: s.clicks_last_24h,
         type: "stream",
         radio_code_name: fragment("COALESCE(?)", r.code_name),
@@ -112,8 +110,6 @@ defmodule ProgRadioApi.Streams do
 
   defp base_count_query() do
     from s in Stream,
-      left_join: so in StreamOverloading,
-      on: so.id == s.id,
       where: s.enabled == true,
       select: count()
   end
@@ -121,7 +117,7 @@ defmodule ProgRadioApi.Streams do
   defp add_country(query, %{:country => country_code}) when is_binary(country_code) do
     with country_code_upper <- String.upcase(country_code) do
       query
-      |> where([s, so], s.country_code == ^country_code_upper or so.country_code == ^country_code_upper)
+      |> where([s], s.country_code == ^country_code_upper)
     else
       _ -> query
     end
@@ -153,17 +149,14 @@ defmodule ProgRadioApi.Streams do
       "last" ->
         query
         |> join(:inner, [ls], s in assoc(ls, :listening_session))
-        |> order_by([s, so, rs, r, ss, ls], desc: max(ls.date_time_start))
-        |> group_by([s, so, rs, r, ss, ls], [
+        |> order_by([s, rs, r, ss, ls], desc: max(ls.date_time_start))
+        |> group_by([s, rs, r, ss, ls], [
           s.id,
-          so.name,
-          so.stream_url,
           r.code_name,
           ss.code_name,
           ss.enabled,
           rs.current_song,
-          rs.code_name,
-          so.country_code
+          rs.code_name
         ])
 
       "random" ->
