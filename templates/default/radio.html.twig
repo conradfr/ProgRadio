@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8 col-12 pb-3">
+        <div class="col-sm-7 col-12 pb-3">
             <div class="row">
                 <div class="col-md-6 col-12 text-center text-sm-start">
                     <h4>{{ date |format_date('full', locale=app.request.locale, timezone=timezone) | capitalize }}</h4>
@@ -188,7 +188,7 @@
             {% endfor %}
             </div>
         </div>
-        <div class="col-md-2 col-12" >
+        <div class="offset-1 offset-sm-0 col-sm-3 col-10" >
             {% if app.environment == 'prod' %}
                 <div class="sticky-md-top" style="top: 60px">
                 {{ include('_partials/adblock.html.twig', {vertical: true}) }}

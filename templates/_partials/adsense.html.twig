@@ -1,6 +1,6 @@
 {% set cookie_consent = app.request.cookies.get('progradio-consent')  %}
 
-{% if (cookie_consent == '') %}
+{% if (isAdProtected(app.request) != false and cookie_consent == '') %}
 <div class="fixed-bottom p-4 toast-cookie-container">
     <div class="toast toast-cookie bg-dark text-white w-100 w-sm-25" role="alert" data-bs-autohide="false">
         <div class="toast-body p-2 d-flex flex-row justify-content-between align-items-center">
@@ -34,7 +34,7 @@
 
       window.addEventListener('load', function() {
         (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;
-        if (getConsentCookie() === null) {
+        if (isAdProtected === true && getConsentCookie() === null) {
           if (typeof bootstrap === 'undefined') {
             (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
           } else {
@@ -65,7 +65,7 @@
             toast.show();
           }
         } else {
-          if (getConsentCookie() === true) {
+          if (isAdProtected !== true || getConsentCookie() === true) {
             (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
           }
           (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;

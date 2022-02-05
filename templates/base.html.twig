@@ -41,6 +41,7 @@
 
       const streamsProxy = '{{ streams_proxy }}';
       const apiUrl = '{{ api_url }}';
+      const isAdProtected = {{ isAdProtected(app.request) == true ? 'true' : 'false' }};
 
       {% block javascript_head %}
       // placeholder
