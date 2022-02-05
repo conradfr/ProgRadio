@@ -3,21 +3,6 @@ $program-height: 60px;
 .schedule-radio-grid {
   .schedule-radio-grid-row {
     .program-container {
-
-/*      &:after {
-        position: absolute;
-        display: block;
-        top: 80%;
-        -webkit-transform: translateY(-50%);
-        -moz-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
-        content: "...";
-        font-weight: bold;
-        font-size: 24px;
-        border: 1px solid red;
-      }*/
-
       &.prevday::after, &.nextday::after {
         content: "...";
         font-weight: bold;
@@ -136,8 +121,12 @@ $program-height: 60px;
 
           .program-description-short-inner {
             &:before {
-              background: linear-gradient(to right, fade($program-hover-color, 0%) 90%, fade($program-hover-color, 88%) 95%, fade($program-hover-color, 99.9%) 99%) !important;
+              background: linear-gradient(to right, $program-inner-fade-1-hover 90%, $program-inner-fade-2-hover 95%, $program-inner-fade-3-hover 99%) !important;
             }
+          }
+
+          .schedule-display {
+            background-color: $program-hover-color !important;
           }
         }
 
@@ -230,7 +219,7 @@ $program-height: 60px;
             margin-top: -3px;
 
             &.program-description-nohost {
-              margin-top: 8px;
+              margin-top: 10px;
             }
 
             .program-description-short-inner {

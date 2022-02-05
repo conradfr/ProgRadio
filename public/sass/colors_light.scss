@@ -53,12 +53,16 @@ $radio-logo-play: $primary;
 
 $program-text-color: #262b2f;
 $program-song-color: darken($background-color, 65%);
+
 $program-bg-color: $white;
 $program-border-color: darken($background-color, 10%);
 $program-hover-color: mix($white, $primary, 96.5%);
 $program-inner-fade-1: rgba(255,255,255,0);
 $program-inner-fade-2: rgba(255,255,255,0.88);
 $program-inner-fade-3: rgba(255,255,255,1);
+$program-inner-fade-1-hover: rgba(255,255,255,0);
+$program-inner-fade-2-hover: rgba(247,251,255,0.88);
+$program-inner-fade-3-hover: rgba(247,251,255,1);
 
 $program-section: darken($background-color, 20%);
 $program-section-hover: lighten($primary, 10%);

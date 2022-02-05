@@ -65,7 +65,7 @@ $radio-list-submenu-bg-color: $body-bg-alt;
 $radio-logo-play: darken($primary-source, 10%);
 
 $program-text-color: mix($body-bg, $white, 10%);
-$program-song-color: mix($body-bg, $white, 30%);
+$program-song-color: mix($body-bg, $white, 50%);
 
 $program-bg-color: #1c2327;
 $program-hover-color: mix($program-bg-color, $primary, 96.5%);
@@ -73,6 +73,9 @@ $program-border-color: lighten($program-bg-color, 3%);
 $program-inner-fade-1: rgba(28, 35, 39, 0);
 $program-inner-fade-2: rgba(28, 35, 39, 0.8);
 $program-inner-fade-3: rgba(28, 35, 39, 1);
+$program-inner-fade-1-hover: rgba(28, 35, 39, 0);
+$program-inner-fade-2-hover: rgba(28, 35, 39, 0.8);
+$program-inner-fade-3-hover: rgba(28, 35, 39, 1);
 
 $program-section: lighten($program-bg-color, 7%);
 $program-section-hover: $primary;

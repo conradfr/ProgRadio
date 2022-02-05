@@ -13,7 +13,7 @@
           <div class="program-title" v-once>
             <span class="schedule-display" >{{ scheduleDisplay }}</span>{{ program.title }}
           </div>
-          <div class="program-host" v-once>{{ program.host }}</div>
+          <div class="program-host" v-if="program.host" v-once>{{ program.host }}</div>
           <div class="program-description-short"
                v-bind:class="{ 'program-description-nohost': !program.host }">
             <div class="program-description-short-inner">
@@ -24,7 +24,7 @@
               </span>
               <span class="program-description-short-inner-text"
                     v-bind:class="{ 'program-description-short-inner-text-current': isCurrent }"
-                    v-once>
+                    v-if="program.description" v-once>
                 {{ shorten(program.description, program.duration) }}
               </span>
             </div>
