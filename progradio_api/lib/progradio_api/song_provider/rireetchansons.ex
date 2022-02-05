@@ -10,13 +10,13 @@ defmodule ProgRadioApi.SongProvider.Rireetchansons do
 
   @stream_ids %{
     "rireetchansons_main" => "200",
-    "rireetchansons_blagues" => "5",
-    "rireetchansons_canulars" => "4",
-    "rireetchansons_chansons_droles" => "12",
-    "rireetchansons_duos" => "8",
-    "rireetchansons_collectors" => "14",
-    "rireetchansons_nouvelle_generation" => "2",
-    "rireetchansons_one_woman_show" => "11"
+    "rireetchansons_blagues" => "42",
+    "rireetchansons_canulars" => "43",
+    "rireetchansons_chansons_droles" => "1311",
+    "rireetchansons_duos" => "925",
+    "rireetchansons_collectors" => "41",
+    "rireetchansons_nouvelle_generation" => "40",
+    "rireetchansons_one_woman_show" => "907"
   }
 
   @impl true
