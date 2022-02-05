@@ -94,6 +94,10 @@ createApp({
   sessionId: null,
   listeningInterval: null,
   play(streamingUrl, codeName, topic) {
+    if (this.playing === true) {
+      this.stop();
+    }
+
     /* eslint-disable no-undef */
     sendGaEvent('play', 'SSR', codeName, 3);
 
@@ -240,3 +244,4 @@ createApp({
     this.song = song === '' ? null : song;
   }
 }).mount();
+

@@ -42,7 +42,7 @@
 
                     <div class="stream-page-stream mt-3 mb-4" v-scope>
                         <div class="radio-page-streams-one d-none d-flex align-items-center justify-content-center justify-content-sm-start"
-                             @mounted="$el.classList.remove('d-none')">
+                             @vue:mounted="$el.classList.remove('d-none')">
                             <div>
                                 <div
                                         v-if="playing === false"

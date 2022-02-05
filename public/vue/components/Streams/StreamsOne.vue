@@ -8,7 +8,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-10 col-10 offset-1 offset-sm-0 pb-3">
+      <div class="col-sm-7 col-10 offset-1 offset-sm-0 pb-3">
         <div class="row">
           <div class="col-sm-9 col-12">
             <div class="float-end cursor-pointer"
@@ -87,6 +87,9 @@
           </div>
         </div>
       </div>
+      <div class="col-sm-3 col-12 text-center" v-if="!userLogged">
+        <adsense></adsense>
+      </div>
     </div>
   </div>
 </template>
@@ -97,10 +100,14 @@ import { nextTick } from 'vue';
 
 import * as config from '../../config/config';
 import StreamsUtils from '../../utils/StreamsUtils';
+import Adsense from '../Utils/Adsense.vue';
 
 export default {
   compatConfig: {
     MODE: 3
+  },
+  components: {
+    Adsense
   },
   props: ['codeName'],
   data() {
@@ -111,7 +118,8 @@ export default {
   computed: {
     ...mapState({
       playing: state => state.player.playing,
-      selectedCountry: state => state.streams.selectedCountry
+      selectedCountry: state => state.streams.selectedCountry,
+      userLogged: state => state.user.logged
     }),
     ...mapGetters([
       'radioPlayingCodeName'

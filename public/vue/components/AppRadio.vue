@@ -1,7 +1,7 @@
 <template>
   <div class="container mb-3">
     <div v-if="radio" class="row">
-      <div class="col-md-2 col-12">
+      <div class="col-sm-2 col-12">
         <div class="radio-page-side">
             <div class="text-center mb-4">
               <img :alt="radio.name" class="radio-page-logo"
@@ -10,7 +10,7 @@
           <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
         </div>
       </div>
-      <div v-if="radio" class="col-md-8 col-12 mb-3">
+      <div v-if="radio" class="col-sm-7 col-12 mb-3">
         <div class="row">
           <div class="col-md-6 col-12 text-center text-sm-start">
             <h4>{{ capitalizedDate }}</h4>
@@ -39,8 +39,11 @@
           </div>
         </div>
       </div>
-      <div class="col-md-2 col-12 text-center" v-html="affiliateLink"
-        v-if="affiliateLink != null && affiliateLink !== '' && userLogged !== true"></div>
+      <div class="col-sm-3 col-12 text-center" v-if="!userLogged">
+        <adsense></adsense>
+      </div>
+<!--      <div class="col-md-2 col-12 text-center" v-html="affiliateLink"
+        v-if="affiliateLink != null && affiliateLink !== '' && userLogged !== true"></div>-->
     </div>
   </div>
 </template>
@@ -59,6 +62,7 @@ import {
 import ScheduleApi from '../api/ScheduleApi';
 import RadioShow from './Radio/RadioShow.vue';
 import RadioStreams from './Radio/RadioStreams.vue';
+import Adsense from './Utils/Adsense.vue';
 
 export default {
   compatConfig: {
@@ -66,7 +70,8 @@ export default {
   },
   components: {
     RadioShow,
-    RadioStreams
+    RadioStreams,
+    Adsense
   },
   /* eslint-disable no-undef */
   data() {

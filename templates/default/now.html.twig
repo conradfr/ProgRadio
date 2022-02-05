@@ -27,7 +27,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12 col-md-10">
+        <div class="col-12 col-sm-9">
             <div class="tab-content tab-now">
                 {% for entry_collection in collections %}
                 <div role="tabpanel" aria-labelledby="{{ entry_collection.code_name }}-tab" class="tab-pane {{ loop.first ? ' show active' : '' }}" id="{{ entry_collection.code_name }}">
@@ -43,9 +43,9 @@
                                 {% if entry.radio.streamingUrl is not null %}
                                     <div class="now-page-streams mt-3" v-scope>
                                         <div class="radio-page-streams-one text-center mb-4 d-none"
-                                             @mounted="$el.classList.remove('d-none')">
+                                             @vue:mounted="$el.classList.remove('d-none')">
                                             <div
-                                                v-if="playing === false"
+                                                v-if="playing === false || radioId !== '{{ entry.radio.codeName }}'"
                                                 @click="play('{{ entry.radio.streamingUrl }}', '{{ entry.radio.codeName }}')"
                                                 class="radio-page-play">
                                                 <img alt="{{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}"
@@ -55,7 +55,7 @@
                                                 </div>
                                             </div>
                                             <div
-                                                    v-if="playing === true"
+                                                    v-if="playing === true && radioId === '{{ entry.radio.codeName }}'"
                                                     @click="stop('{{ entry.radio.codeName }}')"
                                                     class="radio-page-play">
                                                 <img alt="{{ 'page.radio.stop'|trans() }}"
@@ -113,7 +113,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-12 col-md-2">
+        <div class="col-12 col-sm-3">
         {% if app.environment == 'prod' %}
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false %}
             <div class="sticky-md-top" style="top: 70px">

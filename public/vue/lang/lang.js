@@ -12,6 +12,12 @@ export const dateTimeFormats = {
 export const messages = {
   fr: {
     message: {
+      consent: {
+        accept: 'Oui',
+        allow: 'Préférer les pubs personnalisées ?',
+        deny: 'Non',
+        disclaimer: '(Nous ne vendons pas les données de nos utilisateurs)'
+      },
       loading: 'Chargement ...',
       now_page: {
         back: '← Retourner à la grille complète des programmes',
@@ -111,6 +117,12 @@ export const messages = {
   },
   en: {
     message: {
+      consent: {
+        accept: 'Accept',
+        allow: 'Prefer personalized ads?',
+        deny: 'Deny',
+        disclaimer: '(This website does not track its visitors or sell data)'
+      },
       loading: 'Loading ...',
       now_page: {
         back: '← Back to radio guide',
@@ -210,6 +222,12 @@ export const messages = {
   },
   es: {
     message: {
+      consent: {
+        accept: 'Aceptar',
+        allow: '¿Prefiere los anuncios personalizados?',
+        deny: 'Denegar',
+        disclaimer: '(Este sitio web no rastrea a sus visitantes ni vende datos)'
+      },
       loading: 'Cargando ...',
       now_page: {
         back: '← Ir al programa Grid de todas las radios.',

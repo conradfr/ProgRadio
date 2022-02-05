@@ -2,7 +2,7 @@
 
 {% if (isAdProtected(app.request) != false and cookie_consent == '') %}
 <div class="fixed-bottom p-4 toast-cookie-container">
-    <div class="toast toast-cookie bg-dark text-white w-100 w-sm-25" role="alert" data-bs-autohide="false">
+    <div class="toast toast-cookie bg-dark text-white" role="alert" data-bs-autohide="false">
         <div class="toast-body p-2 d-flex flex-row justify-content-between align-items-center">
             <p class="flex-fill m-0 px-2 fs-6">
               {{ 'cookie.allow'|trans }}<br>
@@ -17,7 +17,7 @@
 </div>
 {% endif %}
 
-{% if app.environment == 'prod' %}
+{#{% if app.environment == 'prod' %}#}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_key }}"
             crossorigin="anonymous"></script>
     <script type="text/javascript">(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;</script>
@@ -37,8 +37,10 @@
         if (isAdProtected === true && getConsentCookie() === null) {
           if (typeof bootstrap === 'undefined') {
             (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+            (adsbygoogle = window.adsbygoogle || []).push({});
           } else {
             (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;
+            (adsbygoogle = window.adsbygoogle || []).push({});
             const toastCookieElem = document.getElementsByClassName('toast-cookie')[0];
             const toast = new bootstrap.Toast(toastCookieElem);
 
@@ -50,6 +52,7 @@
                 toast.hide();
                 (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;
                 (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+                (adsbygoogle = window.adsbygoogle || []).push({});
                 setCookie(consentCookieName, true);
               });
             }
@@ -58,6 +61,7 @@
               denyBtnElem.addEventListener('click', () => {
                 toast.hide();
                 (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+                (adsbygoogle = window.adsbygoogle || []).push({});
                 setCookie(consentCookieName, false);
               });
             }
@@ -69,7 +73,8 @@
             (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
           }
           (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+          (adsbygoogle = window.adsbygoogle || []).push({});
         }
       })
     </script>
-{% endif %}
+{#{% endif %}#}

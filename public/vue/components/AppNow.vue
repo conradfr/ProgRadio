@@ -21,7 +21,7 @@
     </div>
 
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-12 col-sm-9">
         <div class="tab-content tab-now">
           <div class="mt-3 mb-4">
             <router-link :to="'/' + locale + '/schedule/' + currentCollection">
@@ -35,6 +35,9 @@
           ></now-radio>
         </div>
       </div>
+      <div class="col-12 col-sm-3 text-center" v-if="!userLogged">
+        <adsense></adsense>
+      </div>
     </div>
   </div>
 </template>
@@ -43,13 +46,15 @@
 import { mapGetters, mapState } from 'vuex';
 
 import NowRadio from './Now/NowRadio.vue';
+import Adsense from './Utils/Adsense.vue';
 
 export default {
   compatConfig: {
     MODE: 3
   },
   components: {
-    NowRadio
+    NowRadio,
+    Adsense
   },
   /* eslint-disable no-undef */
   data() {
@@ -101,6 +106,7 @@ export default {
     ...mapState({
       radios: state => state.schedule.radios,
       currentCollection: state => state.schedule.currentCollection,
+      userLogged: state => state.user.logged
     }),
     ...mapGetters([
       'rankedCollections',

@@ -49,6 +49,7 @@ export const COOKIE_EXCLUDE = `${COOKIE_PREFIX}-exclude`;
 export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
+export const COOKIE_CONSENT = 'progradio-consent';
 export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;
 export const COOKIE_LAST_RADIO_STREAM_PLAYED = `${COOKIE_PREFIX}-stream-lastplayed`;
 export const COOKIE_PREV_RADIO_PLAYED = `${COOKIE_PREFIX}-prevplayed`;
