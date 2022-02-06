@@ -87,7 +87,6 @@ export default {
 
       const adScript = document.createElement('script');
       adScript.text = '(adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;(adsbygoogle = window.adsbygoogle || []).push({});';
-      adScript.text = text;
       this.$refs.adtag.appendChild(adScript);
     },
     clickNo() {

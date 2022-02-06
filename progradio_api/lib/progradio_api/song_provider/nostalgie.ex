@@ -10,12 +10,12 @@ defmodule ProgRadioApi.SongProvider.Nostalgie do
 
   @stream_ids %{
     "nostalgie_main" => "197",
-    "nostalgie_60" => "50",
-    "nostalgie_70" => "51",
-    "nostalgie_80" => "26",
-    "nostalgie_90" => "32",
-    "nostalgie_jazz" => "40",
-    "nostalgie_funk" => "27"
+    "nostalgie_60" => "15",
+    "nostalgie_70" => "32",
+    "nostalgie_80" => "9",
+    "nostalgie_90" => "824",
+    "nostalgie_jazz" => "1276",
+    "nostalgie_funk" => "33"
   }
 
   @impl true

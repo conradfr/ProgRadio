@@ -49,20 +49,20 @@
 
             if (allowBtnElem) {
               allowBtnElem.addEventListener('click', () => {
+                setCookie(consentCookieName, true);
                 toast.hide();
                 (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;
                 (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
                 (adsbygoogle = window.adsbygoogle || []).push({});
-                setCookie(consentCookieName, true);
               });
             }
 
             if (denyBtnElem) {
               denyBtnElem.addEventListener('click', () => {
+                setCookie(consentCookieName, false);
                 toast.hide();
                 (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
                 (adsbygoogle = window.adsbygoogle || []).push({});
-                setCookie(consentCookieName, false);
               });
             }
 

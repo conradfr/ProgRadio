@@ -8,7 +8,8 @@ defmodule ProgRadioApi.SongProvider.Virgin do
     "virgin_main" => 2010,
     "virgin_classics" => 2002,
     "virgin_hits" => 2004,
-    "virgin_new" => 2001
+    "virgin_new" => 2001,
+    "virgin_rock" => 2005
   }
 
   @impl true

@@ -10,7 +10,7 @@ defmodule ProgRadioApi.SongProvider.Nrj do
 
   @stream_ids %{
     "nrj_main" => "158",
-    "nrj_hists" => "1",
+    "nrj_hits" => "1",
     "nrj_madeinfrance" => "331",
     "nrj_nouveautes" => "27"
   }
