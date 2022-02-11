@@ -8,6 +8,10 @@ const has = (key) => {
   return false;
 };
 
+const remove = (key) => {
+  document.cookie = `${key}=;path=${COOKIE_PARAMS.path};SameSite=${COOKIE_PARAMS.SameSite};secure=true;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+};
+
 const get = (key, defaultValue) => {
   if (!has(key)) {
     return defaultValue || null;
@@ -52,5 +56,6 @@ export default {
   has,
   get,
   getJson,
-  set
+  set,
+  remove
 };

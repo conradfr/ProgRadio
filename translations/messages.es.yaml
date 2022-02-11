@@ -21,6 +21,9 @@ menu:
         usa: Estados Unidos
         mx: México
 
+    home:
+        enable: Seleccione esta página como página de inicio del sitio
+        disable: Eliminar la página de inicio personalizada
     logout: Desconectarse
     menu: Menu
     mode:

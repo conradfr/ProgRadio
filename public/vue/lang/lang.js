@@ -112,8 +112,14 @@ export const messages = {
         },
         title: 'Les radios du monde entier en streaming',
         website: 'Site web'
+      },
+      toast: {
+        home: {
+          enabled: "La page a été activée comme page d'accueil.",
+          disabled: "La page a été retirée comme page d'accueil."
+        }
       }
-    }
+    },
   },
   en: {
     message: {
@@ -217,8 +223,14 @@ export const messages = {
         },
         title: 'Stream radios from all over the world!',
         website: 'Website'
-      }
-    }
+      },
+      toast: {
+        home: {
+          enabled: 'This page has been set as homescreen.',
+          disabled: 'This page has been removed as homescreen.'
+        }
+      },
+    },
   },
   es: {
     message: {
@@ -322,7 +334,13 @@ export const messages = {
         },
         title: 'Emisoras de radio de todo el mundo en streaming',
         website: 'Sitio web'
-      }
+      },
+      toast: {
+        home: {
+          enabled: 'Esta página se ha establecido como pantalla de inicio.',
+          disabled: 'Esta página ha sido eliminada como pantalla de inicio.'
+        }
+      },
     }
   },
 };

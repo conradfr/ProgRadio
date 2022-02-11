@@ -21,6 +21,9 @@ menu:
         usa: Etats-Unis
         mx: Mexique
 
+    home:
+        enable: Sélectionner comme page d'accueil
+        disable: Supprimer la page d'accueil personnalisée
     logout: Se déconnecter
     menu: Menu
     mode:

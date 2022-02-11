@@ -3,7 +3,7 @@
   const navLightClassName = 'nav-link-lightmode';
   const navDarkClassName = 'nav-link-darkmode';
   const hiddenClassName = 'd-none';
-  const cookieName = 'progradio-darkmode';
+  const cookieDarkModeName = 'progradio-darkmode';
 
   const sendDarkModeGaEvent = (mode, auto) => {
     sendGaEvent(`toggle_${mode}${auto === true?'_auto':''}`, 'UI', null, '1');
@@ -16,11 +16,11 @@
   };
 
   const setDarkModeCookie = (state) => {
-    setCookie(cookieName, state);
+    setCookie(cookieDarkModeName, state);
   };
 
   const checkColorScheme = () => {
-    const hasCookie = document.cookie.split(';').some(item => item.trim().startsWith(`${cookieName}=`));
+    const hasCookie = document.cookie.split(';').some(item => item.trim().startsWith(`${cookieDarkModeName}=`));
 
     // we only check the time if dark mode is not set
     if (hasCookie === true) {

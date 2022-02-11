@@ -50,6 +50,7 @@ export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
 export const COOKIE_CONSENT = 'progradio-consent';
+export const COOKIE_HOME = 'progradio-home';
 export const COOKIE_LAST_RADIO_PLAYED = `${COOKIE_PREFIX}-lastplayed`;
 export const COOKIE_LAST_RADIO_STREAM_PLAYED = `${COOKIE_PREFIX}-stream-lastplayed`;
 export const COOKIE_PREV_RADIO_PLAYED = `${COOKIE_PREFIX}-prevplayed`;
@@ -159,6 +160,7 @@ export const GTAG_CATEGORY_TIMER = 'timer';
 
 export const GTAG_CATEGORY_RADIOPAGE = 'radio_page';
 export const GTAG_CATEGORY_NOWPAGE = 'now_page';
+export const GTAG_CATEGORY_MENU = 'menu';
 
 // timer
 
@@ -166,6 +168,12 @@ export const GTAG_ACTION_TIMER_SET = 'timer_set';
 export const GTAG_ACTION_TIMER_QUICK_SET = 'timer_quick_set';
 export const GTAG_ACTION_TIMER_ADD = 'timer_add';
 export const GTAG_ACTION_TIMER_CANCEL = 'timer_cancel';
+
+// set home
+
+export const GTAG_ACTION_HOME_SET = 'timer_set';
+export const GTAG_ACTION_HOME_REMOVE = 'timer_quick_set';
+export const GTAG_ACTION_HOME_VALUE = 1;
 
 // Android
 

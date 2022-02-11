@@ -20,6 +20,9 @@ menu:
         usa: United States
         mx: Mexico
 
+    home:
+        enable: Set this page as homescreen
+        disable: Delete the custom homescreen
     logout: Logout
     mode:
         dark: Dark mode

@@ -66,6 +66,22 @@
             <li class="nav-item mt-1">
                 <div class="d-flex flex-row align-items-center mb-1 disabled">
                     <div class="align-self-center pe-3 offmenu-item-icon">
+                        <a class="nav-link pb-2 nav-set-home d-none">
+                            <i class="bi bi-house-heart-fill"></i>
+                        </a>
+                    </div>
+                    <div class="align-self-center flex-fill">
+                        <a class="nav-link pb-2 nav-set-home d-none">
+                            <span class="nav-set-home-enable d-none">{{ 'menu.home.enable'|trans }}</span>
+                            <span class="nav-set-home-disable d-none">{{ 'menu.home.disable'|trans }}</span>
+                        </a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item mt-0">
+                <div class="d-flex flex-row align-items-center mb-1 disabled">
+                    <div class="align-self-center pe-3 offmenu-item-icon">
                         <a class="nav-link nav-link-timer disabled"
                            href="#" title="{{ 'menu.timer'|trans }}"
                            data-bs-toggle="modal" data-bs-target="#timerModal"
@@ -84,8 +100,18 @@
             <!-- schedule -->
             {% if isProgRadio(app.request) == true %}
                 <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-                    <a class="nav-link pb-2 spa-link" href="{{ path('app') }}schedule">{{ 'menu.schedule'|trans }}</a>
+                    <div class="d-flex flex-row align-items-center mb-1 disabled">
+                        <div class="align-self-center pe-3 offmenu-item-icon">
+                            <a class="nav-link pb-2">
+                                <i class="bi bi-list-ul"></i>
+                            </a>
+                        </div>
+                        <div class="align-self-center flex-fill">
+                            <a class="nav-link pb-2 spa-link" href="{{ path('app') }}schedule">{{ 'menu.schedule'|trans }}</a>
+                        </div>
+                    </div>
                 </li>
+
                 {{ menu.collections_mobile(collections_menu) }}
 
                 <li class="nav-item offcanvas-divider mt-3 mb-1"></li>
@@ -93,7 +119,16 @@
 
             <!-- streaming -->
             <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
-                <a class="nav-link pb-2 spa-link" href="{{ path('app') }}streaming/fr">{{ 'menu.streaming'|trans }}</a>
+                <div class="d-flex flex-row align-items-center mb-1 disabled">
+                    <div class="align-self-center pe-3 offmenu-item-icon">
+                        <a class="nav-link pb-2">
+                            <i class="bi bi-music-note-list"></i>
+                        </a>
+                    </div>
+                    <div class="align-self-center flex-fill">
+                        <a class="nav-link pb-2 spa-link" href="{{ path('app') }}streaming/fr">{{ 'menu.streaming'|trans }}</a>
+                    </div>
+                </div>
             </li>
             {{ menu.streaming_mobile() }}
 

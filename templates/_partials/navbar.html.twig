@@ -56,9 +56,17 @@
                             <li><hr class="dropdown-divider"></li>
                         {% endif %}
 
+                        <li>
+                            <a class="dropdown-item nav-set-home d-none">
+                                <span class="nav-set-home-enable d-none">{{ 'menu.home.enable'|trans }}</span>
+                                <span class="nav-set-home-disable d-none">{{ 'menu.home.disable'|trans }}</span>
+                            </a>
+                        </li>
+                        <li><a class="dropdown-item d-none nav-set-home-disabled">{{ 'menu.home.disabled'|trans }}</a></li>
                         {% if 'progradio' not in app.request.headers.get('User-Agent') %}
                             <li><a class="dropdown-item spa-link" href="{{ path('params_spa') }}">{{ 'menu.params'|trans }}</a></li>
                         {% endif %}
+                        <li><hr class="dropdown-divider"></li>
 
                         <li><a class="dropdown-item" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
                         <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>

@@ -6,6 +6,10 @@ import {
   RouterView
 } from 'vue-router';
 
+import cookies from '../utils/cookies';
+
+import { COOKIE_HOME } from '../config/config';
+
 import AppRadio from '../components/AppRadio.vue';
 import AppNow from '../components/AppNow.vue';
 import AppParams from '../components/AppParams.vue';
@@ -22,23 +26,23 @@ RouterView.compatConfig = {
 
 const routes = [
   {
-    path: '/:lang/streaming',
-    name: 'streaming_home',
-    component: AppStreams
-  },
-  {
     path: '/:lang/streaming/:countryOrCategoryOrUuid?',
     name: 'streaming',
     component: AppStreams
   },
   {
-    path: '/:lang/schedule',
-    name: 'schedule_home',
-    component: AppSchedule
+    path: '/:lang/streaming',
+    name: 'streaming_home',
+    component: AppStreams
   },
   {
     path: '/:lang/schedule/:collection?',
     name: 'schedule',
+    component: AppSchedule
+  },
+  {
+    path: '/:lang/schedule',
+    name: 'schedule_home',
     component: AppSchedule
   },
   {
@@ -59,7 +63,14 @@ const routes = [
   {
     path: '/:lang/',
     name: 'default',
-    component: AppSchedule
+    component: AppSchedule,
+    beforeEnter: () => {
+      if (cookies.has(COOKIE_HOME)) {
+        return { path: decodeURIComponent(cookies.get(COOKIE_HOME)) };
+      }
+
+      return true;
+    },
   }
 ];
 
