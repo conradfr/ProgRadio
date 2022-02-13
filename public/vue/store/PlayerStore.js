@@ -125,8 +125,10 @@ const storeActions = {
       });
     }
   },
+  /* eslint-disable no-param-reassign */
   playStream: ({ rootState, dispatch, state, commit }, stream) => {
     dispatch('stop');
+    rootState = toRaw(rootState);
 
     setTimeout(() => {
       StreamsApi.incrementPlayCount(stream.code_name, rootState.streams.radioBrowserApi);
@@ -396,31 +398,39 @@ const storeActions = {
     commit('setTimer', seconds);
   },
   /* From Android */
+  /* eslint-disable no-param-reassign */
   updateStatusFromExternalPlayer: ({ rootState, dispatch, commit }, params) => {
     const { playbackState, radioCodeName } = params;
+    const schedule = typeof toRaw(rootState).schedule !== 'undefined'
+      ? toRaw(rootState.schedule) : undefined;
+    const streams = typeof toRaw(rootState).streams !== 'undefined'
+      ? toRaw(rootState.streams) : undefined;
 
-    let radio = find(rootState.schedule.radios, { code_name: radioCodeName });
+    let radio = find(schedule.radios, { code_name: radioCodeName });
     let radioStream = null;
 
     // if not radio, maybe radio substream, or maybe stream
     // @todo better handling of types
     if (radio === undefined || radio === null) {
       let found = false;
-      const radios = Object.keys(rootState.schedule.radios);
+      const radios = Object.keys(schedule.radios);
       let i = 0;
       do {
-        radioStream = find(rootState.schedule.radios[radios[i]].streams,
-          { code_name: radioCodeName });
+        radioStream = schedule.radios[radios[i]] !== undefined
+          && schedule.radios[radios[i]].streams !== undefined
+          ? find(schedule.radios[radios[i]].streams,
+            { code_name: radioCodeName }) : undefined;
 
         if (radioStream !== undefined) {
-          radio = rootState.schedule.radios[radios[i]];
+          radio = schedule.radios[radios[i]];
           found = true;
         }
         i += 1;
       } while (found === false && i < radios.length);
 
       if (radio === undefined) {
-        radio = find(rootState.streams.streamRadios, { code_name: radioCodeName });
+        radio = streams !== undefined
+          ? find(streams.streamRadios, { code_name: radioCodeName }) : undefined;
       }
     }
 
