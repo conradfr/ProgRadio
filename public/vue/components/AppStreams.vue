@@ -67,10 +67,16 @@ export default {
         if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
           vm.$store.dispatch('setSoloExtended', to.params.countryOrCategoryOrUuid);
         } else {
+          if (to.params.page) {
+            vm.$store.dispatch('pageSet', to.params.page);
+          }
           vm.$store.dispatch('countrySelection', to.params.countryOrCategoryOrUuid);
           vm.$store.dispatch('setSoloExtended', null);
         }
       } else {
+        if (to.params.page) {
+          vm.$store.dispatch('pageSet', to.params.page);
+        }
         vm.$store.dispatch('getStreamRadios');
       }
     });
@@ -81,6 +87,9 @@ export default {
       if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
         this.$store.dispatch('setSoloExtended', to.params.countryOrCategoryOrUuid);
       } else {
+        if (to.params.page) {
+          this.$store.dispatch('pageSet', to.params.page);
+        }
         this.$store.dispatch('countrySelection', to.params.countryOrCategoryOrUuid);
         this.$store.dispatch('setSoloExtended', null);
       }

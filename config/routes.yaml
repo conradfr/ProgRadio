@@ -17,7 +17,7 @@ schedule_spa:
     controller: App\Controller\DefaultController::index
 
 streaming_spa:
-    path: /{_locale}/streaming/{collection?}
+    path: /{_locale}/streaming/{collection?}/{page?}
     controller: App\Controller\DefaultController::index
 
 radio_spa:

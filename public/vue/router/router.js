@@ -26,7 +26,7 @@ RouterView.compatConfig = {
 
 const routes = [
   {
-    path: '/:lang/streaming/:countryOrCategoryOrUuid?',
+    path: '/:lang/streaming/:countryOrCategoryOrUuid/:page?',
     name: 'streaming',
     component: AppStreams
   },

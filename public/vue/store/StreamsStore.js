@@ -176,24 +176,19 @@ const storeActions = {
   },
 
   /* eslint-disable no-param-reassign */
-  countrySelection: ({ getters, dispatch, commit }, country, getAfter) => {
+  countrySelection: ({ getters, dispatch, commit }, country) => {
     // if country is just country_code
     if (typeof country !== 'object') {
       country = find(getters.countriesOptions, ['code', country.toUpperCase()])
         || { code: country, label: null };
-      // if (country.label === null) {
-      //   getAfter = false;
-      // }
     }
 
     commit('setSelectedCountry', country.code.toUpperCase());
     cookies.set(config.COOKIE_STREAM_COUNTRY, country.code.toUpperCase());
 
-    if (getAfter !== false) {
-      nextTick(() => {
-        dispatch('getStreamRadios');
-      });
-    }
+    nextTick(() => {
+      dispatch('getStreamRadios');
+    });
   },
   pageSelection: ({ dispatch, commit }, page) => {
     commit('setPage', page);
@@ -201,6 +196,10 @@ const storeActions = {
     nextTick(() => {
       dispatch('getStreamRadios');
     });
+  },
+  // TODO refactore page selection
+  pageSet: ({ commit }, page) => {
+    commit('setPage', page);
   },
   sortBySelection: ({ dispatch, commit }, sortBy) => {
     commit('setSoloExtended', null);
