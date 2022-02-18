@@ -3,7 +3,7 @@
 {% import _self as self %}
 {% import "utils/countries.html.twig" as countries %}
 
-{% block bodysupp %} class="body-app"{% endblock %}
+{% block bodyclasssupp %} body-app{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -35,12 +35,10 @@
 {% endmacro %}
 
 {% block body %}
-<h2 class="mb-4 text-center">{{ 'page.top.page_title'|trans({'%country%': country}) }}</h2>
+<h2 class="my-4 text-center">{{ 'page.top.page_title'|trans({'%country%': country}) }}</h2>
 
 <div>
-{#    {% if app.environment == 'prod' %}#}
     {{ include('_partials/adblock.html.twig', {vertical: false}) }}
-{#    {% endif %}#}
 </div>
 
 <div class="app-streams">

@@ -47,7 +47,7 @@
       {% endblock %}
     </script>
 </head>
-<body class="d-flex flex-column h-100"{% block bodysupp %}{% endblock %}>
+<body class="d-flex flex-column h-100{% block bodyclasssupp %}{% endblock %}"{% block bodysupp %}{% endblock %}>
 
 {% include('_partials/navbar.html.twig') %}
 
