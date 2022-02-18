@@ -1,0 +1,9 @@
+{% macro list(locale) %}
+    {% set countries = country_list(locale) %}
+    {% for code, country  in countries %}
+        <a href="{{ path('streams_top', {'countryCode': code|lower}) }}">{{ 'page.top.page_title'|trans({'%country%': country}) }}</a>
+        {% if loop.last == false %}
+            &nbsp;|&nbsp;
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

@@ -63,7 +63,7 @@
                             <div class="ps-2">
                                 <div
                                         v-if="playing === false"
-                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}')"
+                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}')"
                                         class="radio-page-play">
                                     <div>{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
                                 </div>

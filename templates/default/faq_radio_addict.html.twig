@@ -1,52 +1,90 @@
 {% extends 'base.html.twig' %}
 
 {% import _self as self %}
+{% import "utils/countries.html.twig" as countries %}
 
 {% block title %}{{ 'page.faq.page_title'|trans }}{% endblock %}
 {% block description %}{{ 'page.faq.page_description'|trans }}{% endblock %}
 
 {% set faq = {
     "fr": [
-        {   'question': "Qu'est-ce que Radio-Addict.com ?",
+        {
+            'question': "Qu'est-ce que Radio-Addict.com ?",
             'answer': [
                 "Radio-Addict.com est un site indépendant d'écoute de radios du monde entier."
             ]
         },
-        {   'question': "Certaines radios ont une publicité en début de lecture.",
+        {
+            'question': "Certaines radios ont une publicité en début de lecture.",
             'answer': [
                 "Ces publicités sont ajoutées par les radios elles-mêmes et non pas par Radio-Addict.com.",
                 "Le lecteur de Radio-Addict essaye de minimiser ces publicités quand vous alternez entre deux radios ou mettez une radio en pause.",
                 "Dans certains cas le bloqueur de publicité peut bloquer la lecture de la radio (exemple: RMC)."
             ]
         },
-        {   'question': "Je souhaite ajouter ma (web)radio, comment faire ?",
+        {
+            'question': "Je souhaite ajouter ma (web)radio, comment faire ?",
             'answer': [
-                'Pour la partie "Toutes les radios", nous utilisons l\'API Radio-Browser. Pour y soumettre votre radio, <a target="_blank" href="https://www.radio-browser.info/#/add">cliquez ici</a>.'
+                'Nous utilisons l\'API Radio-Browser. Pour y soumettre votre radio, <a target="_blank" href="https://www.radio-browser.info/#/add">cliquez ici</a>.'
+            ]
+        },
+        {
+            'question': "Top des radios par pays:",
+            'answer': [
+                countries.list(app.request.locale)
             ]
         }
     ],
     "en": [
-        {   'question': "What is Radio-Addict.com?",
+        {
+            'question': "What is Radio-Addict.com?",
             'answer': [
                 "Radio-Addict.com is an independant radio streaming website."
             ]
         },
-        {   'question': "Some radios have an ad at the start of their streaming.",
+        {
+            'question': "Some radios have an ad at the start of their streaming.",
             'answer': [
                 "These ads are added by the radios themselves and not Radio-Addict.com."
             ]
         },
+        {
+            'question': "I want to add my (web)radio:",
+            'answer': [
+                'We use the Radio-Browser API. To add your radio in it, <a target="_blank" href="https://www.radio-browser.info/#/add">click here</a>.'
+            ]
+        },
+        {
+            'question': "Top radios from around the world:",
+            'answer': [
+                countries.list(app.request.locale)
+            ]
+        }
     ],
     "es": [
-        {   'question': "¿Qué es Radio-Addict.com?",
+        {
+            'question': "¿Qué es Radio-Addict.com?",
             'answer': [
             "Radio-Addict.com es un sitio web independiente de streaming radio."
         ]
         },
-        {   'question': "Algunas radios tienen un anuncio al comienzo de su transmisión.",
+        {
+            'question': "Algunas radios tienen un anuncio al comienzo de su transmisión.",
             'answer': [
-            "Estos anuncios son añadidos por las propias radios y no por Radio-Addict.com."
-        ]
+                "Estos anuncios son añadidos por las propias radios y no por Radio-Addict.com."
+            ]
+        },
+        {
+            'question': "Quiero añadir mi (web)radio:",
+            'answer': [
+                'Utilizamos la API de Radio-Browser. Para añadir su radio en ella, <a target="_blank" href="https://www.radio-browser.info/#/add">haga clic aquí</a>.'
+            ]
+        },
+        {
+            'question': "Las mejores radios del mundo:",
+            'answer': [
+                countries.list(app.request.locale)
+            ]
         }
     ]
 }

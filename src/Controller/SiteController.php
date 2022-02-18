@@ -37,7 +37,7 @@ class SiteController extends AbstractController
      *      }
      * )
      */
-    public function faqRadioAddict(EntityManagerInterface $em, Request $request): Response
+    public function faqRadioAddict(): Response
     {
         return $this->render('default/faq_radio_addict.html.twig', []);
     }

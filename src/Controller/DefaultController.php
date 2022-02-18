@@ -20,6 +20,7 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -308,6 +309,46 @@ class DefaultController extends AbstractBaseController
         return $this->render('default/stream.html.twig', [
             'stream' => $stream,
             'more_streams' => $moreStreams
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/{_locale}/top/{countryCode}",
+     *     name="streams_top",
+     *     defaults={
+     *       "priority": "0.5",
+     *       "changefreq": "weekly"
+     *     },
+     *     requirements={
+     *      "_locale": "en|fr|es",
+     *     }
+     * )
+     */
+    public function top(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
+    {
+        // redirect non-fr stream seo pages to new host
+        if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
+            $redirectUrl = $router->generate('streams_top', [
+                '_locale' => $request->getLocale(),
+                'countryCode' => $countryCode
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
+        $howMany = StreamsController::DEFAULT_RESULTS;
+        $offset = 0;
+
+        $streams = $em->getRepository(Stream::class)->getStreams($howMany, $offset, $countryCode, 'popularity');
+        $totalCount = $em->getRepository(Stream::class)->countStreams($countryCode);
+
+        return $this->render('default/top.html.twig', [
+            'streams' => $streams,
+            'total'   => $totalCount,
+            'country' => $countryCode !== null ? Countries::getName(strtoupper($countryCode), $request->getLocale()) : null,
+            'country_code' => $countryCode
         ]);
     }
 

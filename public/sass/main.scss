@@ -56,6 +56,10 @@ body {
       overflow-x: hidden;
     }
   }
+
+  ins.adsbygoogle[data-ad-status="unfilled"] {
+    display: none !important;
+  }
 }
 
 .tooltip {

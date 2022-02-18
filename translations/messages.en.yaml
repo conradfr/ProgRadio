@@ -103,6 +103,11 @@ page:
         title: 'Listen to %radio%'
         website: Website
 
+    top:
+        page_title: Top radios in %country%
+        description: 'Listen to the best radios from %country%'
+        more: More radios from %country%
+
     user:
         page_title: Create an account
 

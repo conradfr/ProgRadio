@@ -139,8 +139,10 @@ createApp({
         this.lastUpdated = new Date();
         this.playingStart = new Date();
 
-        this.connectSocket();
-        this.joinChannel(topic);
+        if (topic !== undefined && topic !== null && topic !== '') {
+          this.connectSocket();
+          this.joinChannel(topic);
+        }
 
         this.listeningInterval = setInterval(() => {
           updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((data) => {

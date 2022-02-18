@@ -107,6 +107,11 @@ page:
         title: 'Reproducir %radio% en vivo'
         website: 'Sitio web'
 
+    top:
+        page_title: Las mejores radios en %country%
+        description: 'Escuche las mejores radios de %country%'
+        more: Más radios de %country%
+
     user:
         page_title: Crear una cuenta
 

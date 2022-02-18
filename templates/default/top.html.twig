@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% import _self as self %}
+{% import "utils/countries.html.twig" as countries %}
+
+{% block bodysupp %} class="body-app"{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include('_partials/mini_player.html.twig') %}
+{#    {% if app.request.locale != 'fr' %}#}
+        {{ include('_partials/adsense.html.twig') }}
+{#    {% endif %}#}
+{% endblock %}
+
+{% block title %}{{ 'page.top.page_title'|trans({'%country%': country}) }}{% endblock %}
+{% block description %}{{ 'page.top.description'|trans({'%country%': country}) }}{% endblock %}
+
+{% macro picture(stream) %}
+    {% if stream.img_alt is not null %}
+'/img/radio/page/{{ stream.img_alt }}.png'
+    {% elseif stream.img is not null and stream.img != '' %}
+'/media/stream/{{ stream.img }}'
+    {% else %}
+'/img/stream-placeholder.png'
+    {% endif %}
+{% endmacro %}
+
+{% macro topic(stream) %}
+    {% if stream.current_song == true and stream.radio_stream_code_name is not null %}
+        song:{{ stream.radio_stream_code_name }}
+    {% else %}
+        url:{{ stream.stream_url }}
+    {% endif %}
+{% endmacro %}
+
+{% block body %}
+<h2 class="mb-4 text-center">{{ 'page.top.page_title'|trans({'%country%': country}) }}</h2>
+
+<div>
+{#    {% if app.environment == 'prod' %}#}
+    {{ include('_partials/adblock.html.twig', {vertical: false}) }}
+{#    {% endif %}#}
+</div>
+
+<div class="app-streams">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="streams d-flex justify-content-center">
+                    {% for stream in streams %}
+                        <div class="streams-one"
+                             :class="{
+     'streams-one-play-active': '{{ stream.code_name }}' === radioId,
+     'streams-one-play-paused': playing === false && '{{ stream.code_name }}' === radioId
+    }">
+                            <div class="streams-one-img" style="background-image: url({{ self.picture(stream) }})"
+                                 v-if="playing === false || radioId !== '{{ stream.code_name }}'"
+                                 @click="play('{{ stream.stream_url }}', '{{ stream.code_name }}', '{{ self.topic(stream)|spaceless }}')">
+                                <div class="streams-one-img-play"></div>
+                            </div>
+
+                            <div class="streams-one-img" style="background-image: url({{ self.picture(stream) }})"
+                                 v-if="playing === true && radioId === '{{ stream.code_name }}'"
+                                 @click="stop('{{ stream.stream_url }}', '{{ stream.code_name }}')">
+                                <div class="streams-one-img-play"></div>
+                            </div>
+
+                            <div class="streams-one-name" title="{{ stream.name }}">
+                                <a class="streams-one-name-detail" href="{{ path('streams_one', {'id': stream.code_name, 'codename': stream.name|slug}) }}">{{ stream.name }}</a>
+                                <div class="streams-one-song" v-if="playing === true && radioId === '{{ stream.code_name }}' && song !== null">
+                                    {% verbatim %}
+                                        ♫ {{ song }}
+                                    {% endverbatim %}
+                                </div>
+                                {% if stream.tags != null %}
+                                <div class="streams-one-tags" v-if="playing === false || radioId !== '{{ stream.code_name }}' || song === null">
+                                        {% for tag in stream.tags|split(',') %}
+                                            <a style="text-decoration: none" href="{{ path('streaming_spa') }}/all?s={{ tag }}">
+                                            <span class="badge badge-inverse" >
+                                                {{ tag }}
+                                            </span>
+                                            </a>
+                                        {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if total > constant('App\\Controller\\StreamsController::DEFAULT_RESULTS') %}
+                    <div class="text-center mt-4 mb-5"><a href="{{ path('streaming_spa') }}/{{ country_code }}/2">{{ 'page.top.more'|trans({'%country%': country}) }}</a></div>
+                {% endif %}
+                <hr class="mb-5">
+                <div class="mb-3">
+                    {{ countries.list(app.request.locale) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

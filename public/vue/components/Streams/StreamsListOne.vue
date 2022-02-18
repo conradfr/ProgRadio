@@ -11,7 +11,7 @@
     </div>
     <div class="streams-one-name" :title="$t('message.streaming.more')"
       v-on:click="nameClick(radio.code_name)">
-      <span v-once>{{ radio.name }}</span>
+      <span class="streams-one-name-detail" v-once>{{ radio.name }}</span>
       <div v-if="hover === false && currentSong" class="streams-one-song">
         ♫ {{ currentSong }}
       </div>

@@ -107,6 +107,11 @@ page:
         title: 'Écouter %radio% en direct'
         website: Site web
 
+    top:
+        page_title: Top des radios en %country%
+        description: 'Ecoutez les meilleurs radio de %country%'
+        more: Voir plus de radios en %country%
+
     user:
         page_title: Créer un compte
 
