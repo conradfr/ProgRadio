@@ -137,6 +137,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
                     left join radio r on rs.radio_id = r.id
                     left join stream s on ls.stream_id = s.id
                      WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second')
+                       AND ls.date_time_end < (now() at time zone 'utc' + interval '32 second')
                        AND ls.source IN (:source1, :source2)
                      GROUP BY ls.source, r.code_name, s.id
             ) ls
