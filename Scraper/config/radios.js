@@ -108,14 +108,9 @@ const radios = {
         'espace2',
         'la1ere',
         'optionmusique',
-        'lapremiere',
-        'classic21',
-        'vivacite',
-        'musiq3',
         'rfi_monde',
         'rfi_afrique',
         'lessentielradio',
-        'tipik',
         'fm93',
         'ici_premiere'
       ],
@@ -129,6 +124,16 @@ const radios = {
       'trace_martinique',
       'trace_guyane',
       'hitfm'
+    ],
+    'belgium':
+    [
+      'radio_contact',
+      'bel_rtl',
+      'classic21',
+      'lapremiere',
+      'vivacite',
+      'musiq3',
+      'tipik'
     ]
 };
 
