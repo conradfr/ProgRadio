@@ -1,24 +1,25 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const orderBy = require('lodash.orderby');
+const srcset = require('srcset');
 
 let scrapedData = [];
 let scrapedShows = {};
+let dayNumber = null;
+let referenceIndex = 0;
 
-const format = (dateObj) => {
+const format = dateObj => {
   dateObj.tz("Europe/Paris");
   dateObj.locale('fr');
-
   // we use reduce instead of map to act as a map+filter in one pass
-  const cleanedData = scrapedData.reduce(function (prev, curr) {
+  const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
+    let startDateTime = moment(curr.dateObj);
 
-    let startDateTime = null;
-
-    regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
+    regexp = new RegExp(/([0-9]{1,2}):([0-9]{2})/);
     match_time = curr.time.match(regexp);
 
     if (match_time !== null) {
-      startDateTime = moment(dateObj);
       startDateTime.hour(match_time[1]);
       startDateTime.minute(match_time[2]);
       startDateTime.second(0);
@@ -26,16 +27,69 @@ const format = (dateObj) => {
       return prev;
     }
 
-    delete curr.time;
+    let prevMatch = null;
+    // keep only relevant time from previous day page
+    if (startDateTime.isBefore(dateObj, 'day')) {
+      if (index === 0) {
+        return prev;
+      }
 
-    curr.date_time_start = startDateTime.toISOString();
+      prevMatch = array[0].time.match(regexp);
+      array[0].dateObj.hour(prevMatch[1]);
 
-    // host ?
-    if (scrapedShows[curr.title] !== undefined) {
-      curr.host = scrapedShows[curr.title].join(", ");
+      if (array[0].dateObj.isBefore(startDateTime)) {
+        return prev;
+      }
+
+      // update day
+      startDateTime.add(1, 'days');
+      // endDateTime.add(1, 'days');
+    }
+    // remove next day schedule from day page
+    else {
+      if (curr.dateObj !== array[index - 1].dateObj) {
+        referenceIndex = index;
+      } else {
+        prevMatch = array[referenceIndex].time.match(regexp);
+        let prevDate = moment(array[referenceIndex].dateObj);
+        prevDate.hour(prevMatch[1]);
+
+        if (prevDate.isAfter(startDateTime)) {
+          return prev;
+        }
+      }
+
+      // if (startDateTime.hour() > endDateTime.hour()) {
+      //   endDateTime.add(1, 'days');
+      // }
     }
 
-    prev.push(curr);
+    newEntry = {
+      'date_time_start': startDateTime.toISOString(),
+      'title': curr.title
+    };
+
+    if (curr.img !== undefined && curr.img !== null && curr.img.trim() !== '') {
+      const images = srcset.parse(curr.img);
+      if (images.length > 0) {
+        imagesSorted = orderBy(images, ['width'], ['desc']);
+        newEntry.img = imagesSorted[0].url;
+      }
+    }
+
+    // host  ?
+    if (scrapedShows[curr.title.toLowerCase()] !== undefined && scrapedShows[curr.title.toLowerCase()].host !== undefined
+      && scrapedShows[curr.title.toLowerCase()].host !== null && scrapedShows[curr.title.toLowerCase()].host !== '') {
+      newEntry.host = scrapedShows[curr.title.toLowerCase()].host;
+    }
+
+    // description ?
+    if (scrapedShows[curr.title.toLowerCase()] !== undefined && scrapedShows[curr.title.toLowerCase()].description !== undefined
+      && scrapedShows[curr.title.toLowerCase()].description !== null && scrapedShows[curr.title.toLowerCase()].description !== '') {
+      newEntry.description = scrapedShows[curr.title.toLowerCase()].description;
+    }
+
+    prev.push(newEntry);
     return prev;
   }, []);
 
@@ -51,15 +105,22 @@ const fetchShows = () => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find('ul.list-unstyled.row')
-      .select('li.bloc.col-md-1000-4 > ul.list-unstyled.et-wrapper')
-      .set({
-        'title': 'li[1] h2.title-medium.cap',
-        'host': ['li[2] ul.list-depeche-2 > li[2] > ul > li']
-      })
+      .find('.replay_wrapper')
+      .select('.replay_item')
+      .do(
+        osmosis
+          .follow('a:first@href')
+          .find('.emissions_content')
+          .set({
+            'title': '.emissions_title',
+            'datetime_raw': 'time',
+            'host': '.emissions_presenter span',
+            'description': ".emissions_description_text"
+          })
+      )
       .data(function (listing) {
-        if (listing.host.length > 0) {
-          scrapedShows[listing.title] = listing.host;
+        if (listing.title !== undefined) {
+          scrapedShows[listing.title.toLowerCase()] = listing;
         }
       })
       .done(function () {
@@ -68,42 +129,81 @@ const fetchShows = () => {
   });
 };
 
-const fetch = dateObj => {
-  const url = 'https://rmc.bfmtv.com/grille-radio/';
+const find_day_nb = dateObj => {
   dateObj.locale('fr');
+  const url = 'https://rmc.bfmtv.com/grille-radio/';
+
   const day = dateObj.format('dddd').toLowerCase();
-  const dayUcfirst = day.charAt(0).toUpperCase() + day.slice(1);
+  let number = 0;
+
+  // logger.log('info', `fetching ${url}`);
+
+  return new Promise(function (resolve, reject) {
+    return osmosis
+      .get(url)
+      .select('.grille_days > li')
+      .set({
+        'day': '.day_title'
+      })
+      .data(function (listing) {
+        if (listing.day === day) {
+          dayNumber = number;
+        }
+        number++;
+      })
+      .done(function () {
+        if (dayNumber !== null) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+  });
+};
+
+const fetch = async dateObj => {
+  dateObj.locale('fr');
+
+  await find_day_nb(dateObj);
+
+  if (dayNumber === null) {
+    return null;
+  }
+
+  const url = 'https://rmc.bfmtv.com/grille-radio/';
 
   logger.log('info', `fetching ${url}`);
 
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find(`#${dayUcfirst}`)
-      .select('.row')
+      .find(`.grille_programmes:range(${dayNumber + 1}, ${dayNumber + 1})`)
+      .select('.grille_hours_content')
       .set({
-        'time': '.text-center > time',
-      })
-      // .select('div[2]')
-      .set({
-        'img': 'div[2] figure img.img-responsive-l@src',
-        'title': 'div[2] figure img.img-responsive-l@alt',
-      })
-      .select('div[3]')
-      .set({
-        'description': 'p[1]'
+        'time': '.grille_date',
+        'img': '.grille_picture img@srcset',
+        'img_alt': '.grille_picture img@src',
+        'title': '.grille_content .grille_title'
       })
       .data(function (listing) {
+        listing.dateObj = dateObj;
         scrapedData.push(listing);
       })
       .done(function () {
         resolve(true);
-      })
+      });
   });
 };
 
+
 const fetchAll = dateObj => {
-  return fetch(dateObj);
+  const previousDay = moment(dateObj);
+  previousDay.subtract(1, 'days');
+
+  return fetch(previousDay)
+    .then(() => {
+      return fetch(dateObj);
+    }).catch(() => fetch(dateObj));
 };
 
 const getScrap = dateObj => {
