@@ -25,6 +25,7 @@ const radios = {
         'mradio',
         'mouv',
         'fip',
+        'jazzradio'
       ],
     'francebleu':
       [
