@@ -1,10 +1,11 @@
 <template>
-  <div v-on:keyup.f="keyupFav" style="overflow-x: hidden; padding: 0 0 !important">
+  <div v-on:keyup.f="keyupFav" style="overflow: hidden; padding: 0 0 !important">
     <collection-switcher></collection-switcher>
     <timeline></timeline>
     <timeline-cursor-head v-if="rankedRadios.length > 0"></timeline-cursor-head>
     <schedule-container ref="container"></schedule-container>
     <category-filter v-if="displayCategoryFilter"/>
+    <adsense v-if="!userLogged" mode="horizontal_fix"></adsense>
   </div>
 </template>
 
@@ -19,6 +20,7 @@ import Timeline from './Schedule/Timeline.vue';
 import TimelineCursorHead from './Schedule/TimelineCursorHead.vue';
 import ScheduleContainer from './Schedule/ScheduleContainer.vue';
 import CategoryFilter from './Schedule/CategoryFilter.vue';
+import Adsense from './Utils/Adsense.vue';
 
 export default {
   compatConfig: {
@@ -29,7 +31,8 @@ export default {
     Timeline,
     TimelineCursorHead,
     ScheduleContainer,
-    CategoryFilter
+    CategoryFilter,
+    Adsense
   },
   /* created() {
     this.$store.registerModule('schedule', ScheduleStore);
@@ -58,7 +61,8 @@ export default {
     ...mapState({
       playingRadio: state => state.player.radio,
       playingShow: state => state.player.show,
-      playing: state => state.player.playing
+      playing: state => state.player.playing,
+      userLogged: state => state.user.logged
     })
   },
   /* eslint-disable func-names */

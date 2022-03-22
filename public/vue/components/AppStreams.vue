@@ -7,6 +7,7 @@
           <streams-list-filters></streams-list-filters>
           <streams-one v-if="solo" :code-name="solo"></streams-one>
           <streams-list v-if="solo === null"></streams-list>
+          <adsense v-if="!userLogged" mode="horizontal_fix"></adsense>
         </div>
       </div>
     </div>
@@ -21,6 +22,7 @@ import { PLAYER_TYPE_STREAM } from '../config/config';
 import StreamsListFilters from './Streams/StreamsListFilters.vue';
 import StreamsList from './Streams/StreamsList.vue';
 import StreamsOne from './Streams/StreamsOne.vue';
+import Adsense from './Utils/Adsense.vue';
 import Loading from './Utils/Loading.vue';
 
 export default {
@@ -31,7 +33,8 @@ export default {
     StreamsListFilters,
     StreamsList,
     StreamsOne,
-    Loading
+    Loading,
+    Adsense
   },
   created() {
     // this.$store.registerModule('streams', StreamsStore);
@@ -53,7 +56,8 @@ export default {
       playingRadio: state => state.player.radio,
       playing: state => state.player.playing,
       radios: state => state.streams.streamRadios,
-      solo: state => state.streams.soloExtended
+      solo: state => state.streams.soloExtended,
+      userLogged: state => state.user.logged
     }),
     ...mapGetters([
       'currentSong',

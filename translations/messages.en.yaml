@@ -149,7 +149,8 @@ boxes:
 
     why_account:
         title: Why sign-up?
-        content: You can synchronize your favorites between your devices.
+        content: "- You can synchronize your favorites between your devices."
+        content2: "- No ads"
 
 registrationForm:
     email: 'Email'

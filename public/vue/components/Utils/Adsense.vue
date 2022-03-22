@@ -1,7 +1,7 @@
 <template>
-  <div ref="adtag">
+  <div ref="adtag" style="margin:auto;">
     <div v-if="showToast" class="fixed-bottom p-4 toast-cookie-container-app">
-      <div class="toast toast-cookie-app bg-dark text-white w-100 w-sm-25"
+      <div class="toast toast-cookie-app bg-dark text-white"
         role="alert" data-bs-autohide="false">
         <div class="toast-body p-2 d-flex flex-row justify-content-between align-items-center">
           <p class="flex-fill m-0 px-2 fs-6">
@@ -19,12 +19,21 @@
         </div>
       </div>
     </div>
-    <ins class="adsbygoogle"
-         style="display:block; margin:auto;"
-         :data-ad-client="adsense_key"
-         :data-ad-slot="adsense_tag_key "
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
+    <div v-if="mode === 'auto'">
+      <ins class="adsbygoogle"
+        style="display:block; margin:auto;"
+        :data-ad-client="adsense_key"
+        :data-ad-slot="adsense_tag_key"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    </div>
+    <div class="mt-2" v-if="mode === 'horizontal_fix'">
+      <ins class="adsbygoogle"
+        style="display:block;min-width:360px;max-width:728px;height:100px;margin:auto;"
+        :data-ad-client="adsense_key"
+        :data-ad-slot="adsense_tag_horiz_fix_key"
+        data-full-width-responsive="true"></ins>
+    </div>
   </div>
 </template>
 
@@ -39,6 +48,11 @@ import { COOKIE_CONSENT } from '../../config/config';
 export default {
   compatConfig: {
     MODE: 3
+  },
+  props: {
+    mode: {
+      default: 'auto'
+    }
   },
   data() {
     return {
@@ -62,6 +76,13 @@ export default {
     if (this.consent === true) {
       text += '(adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;';
       text += '(adsbygoogle = window.adsbygoogle || []).push({});';
+
+      /*
+        data-ad-test="on"
+        data-adtest="on"
+        data-adbreak-test="on"
+      */
+      // text += 'const adBreak = adConfig = function(o) {adsbygoogle.push(o);}';
     } else if (this.showToast === false) {
       text += '(adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;';
       text += '(adsbygoogle = window.adsbygoogle || []).push({});';

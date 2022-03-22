@@ -152,7 +152,8 @@ boxes:
 
     why_account:
         title: Pourquoi s'enregistrer ?
-        content: Un compte vous permet d'accéder à vos favoris radios et streamings depuis n'importe quel navigateur et depuis l'application
+        content: "- Un compte vous permet d'accéder à vos favoris radios et streamings depuis n'importe quel navigateur et depuis l'application"
+        content2: "- Pas de publicités !"
 
 registrationForm:
     email: 'Courriel'

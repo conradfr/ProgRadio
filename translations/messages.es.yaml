@@ -152,7 +152,8 @@ boxes:
 
     why_account:
         title: ¿Por qué registrarse?
-        content: Una cuenta le permite acceder a sus favoritos radios y streamings desde cualquier navegador y de la aplicación
+        content: "- Una cuenta le permite acceder a sus favoritos radios y streamings desde cualquier navegador y de la aplicación"
+        content2: "- Sin publicidad"
 
 registrationForm:
     email: 'Correo electrónico '
