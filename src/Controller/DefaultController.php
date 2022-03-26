@@ -85,9 +85,9 @@ class DefaultController extends AbstractBaseController
 
     /**
      * @Route({
-     *     "en": "/{_locale}/schedule-streaming-{codename}/{date}",
-     *     "fr": "/{_locale}/grille-ecouter-{codename}/{date}",
-     *     "es": "/{_locale}/escuchar-{codename}/{date}",
+     *     "en": "/{_locale}/schedule-streaming-{codename}/{date?}",
+     *     "fr": "/{_locale}/grille-ecouter-{codename}/{date?}",
+     *     "es": "/{_locale}/escuchar-{codename}/{date?}",
      * },
      *     name="radio",
      *     defaults={
