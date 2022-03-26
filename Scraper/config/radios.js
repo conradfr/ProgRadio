@@ -93,16 +93,16 @@ const radios = {
           'rts'
       ],
     'local_web':
-    [
-      'blackbox',
-      'bideetmusique',
-      'bergerac95',
-      'virageradio',
-      'generations',
-      'alpes1_grenoble',
-      'alpes1_sud',
-      'tropiquesfm'
-    ],
+      [
+        'blackbox',
+        'bideetmusique',
+        'bergerac95',
+        'virageradio',
+        'generations',
+        'alpes1_grenoble',
+        'alpes1_sud',
+        'tropiquesfm'
+      ],
     'international':
       [
         'couleur3',
@@ -115,27 +115,27 @@ const radios = {
         'fm93',
         'ici_premiere'
       ],
-  'domtom':
-    [
-      'martinique_la1ere',
-      'guadeloupe_la1ere',
-      'reunion_la1ere',
-      'nrj_antilles',
-      'trace_reunion',
-      'trace_martinique',
-      'trace_guyane',
-      'hitfm'
-    ],
+    'domtom':
+      [
+        'martinique_la1ere',
+        'guadeloupe_la1ere',
+        'reunion_la1ere',
+        'nrj_antilles',
+        'trace_reunion',
+        'trace_martinique',
+        'trace_guyane',
+        'hitfm'
+      ],
     'belgium':
-    [
-      'radio_contact',
-      'bel_rtl',
-      'classic21',
-      'lapremiere',
-      'vivacite',
-      'musiq3',
-      'tipik'
-    ]
+      [
+        'radio_contact',
+        'bel_rtl',
+        'classic21',
+        'lapremiere',
+        'vivacite',
+        'musiq3',
+        'tipik'
+      ]
 };
 
 const radiosModule = {
