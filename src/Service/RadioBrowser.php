@@ -44,6 +44,11 @@ class RadioBrowser
     protected function getServers(): array
     {
         $serversFromDns = dns_get_record(self::SERVERS_DNS, DNS_ANY);
+
+        if ($serversFromDns === false) {
+            return [];
+        }
+
         $serversAll = array_reduce($serversFromDns, function ($result, $record) {
             $ip = isset($record['ip']) ? $record['ip'] : $record['ipv6'];
             $host = gethostbyaddr($ip);
