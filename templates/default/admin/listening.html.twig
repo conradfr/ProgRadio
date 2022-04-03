@@ -157,9 +157,7 @@
                 <ul class="nav nav-pills flex-column mt-3">
                     <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'today') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'today'})  }}">Aujourd'hui</a></li>
                     <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'yesterday') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'yesterday'})  }}">Hier</a></li>
-                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'thisweek') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'thisweek'})  }}">Cette semaine</a></li>
                     <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'thismonth') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'thismonth'})  }}">Ce mois-ci</a></li>
-                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'lastweek') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'lastweek'})  }}">Semaine dernière</a></li>
                     <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'lastmonth') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'lastmonth'})  }}">Mois dernier</a></li>
                     <li class="nav-item d-none d-sm-block"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'ratings') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'ratings'})  }}">Sondages</a></li>
                 </ul>
