@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.Virgin do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "virgin_main" => 2010,
+    "virgin_main" => 2,
     "virgin_classics" => 2002,
     "virgin_hits" => 2004,
     "virgin_new" => 2001,
@@ -23,14 +23,36 @@ defmodule ProgRadioApi.SongProvider.Virgin do
 
   @impl true
   def get_refresh(_name, data, default_refresh) do
-    now_unix = SongProvider.now_unix()
+    try do
+      now_unix = SongProvider.now_unix()
 
-    next = Map.get(data, "date_end", now_unix + default_refresh / 1000) + 2 - now_unix
+      time_start_naive =
+        data
+        |> Map.get("time")
+        |> NaiveDateTime.from_iso8601!()
 
-    if now_unix + next < now_unix do
-      default_refresh
-    else
-      next * 1000
+      [hours, minutes, seconds] =
+        data
+        |> Map.get("duration", 0)
+        |> String.split(":")
+
+      next_time =
+        time_start_naive
+        |> NaiveDateTime.add(String.to_integer(hours) * 3600, :second)
+        |> NaiveDateTime.add(String.to_integer(minutes) * 60, :second)
+        |> NaiveDateTime.add(String.to_integer(seconds), :second)
+        |> DateTime.from_naive!("UTC")
+        |> DateTime.to_unix()
+
+      next = next_time - now_unix
+
+      if now_unix + next < now_unix do
+        default_refresh
+      else
+        next * 1000
+      end
+    rescue
+      _ -> default_refresh
     end
   end
 
@@ -44,15 +66,44 @@ defmodule ProgRadioApi.SongProvider.Virgin do
     now_unix = DateTime.to_unix(now)
 
     try do
-      "https://www.virginradio.fr/radio/api/get_current_event/?id_radio=#{id}"
-      |> SongProvider.get()
-      |> Map.get(:body)
-      |> Jason.decode!()
-      |> Map.get("root_tab", %{})
-      |> Map.get("event", [])
-      |> Enum.find(nil, fn e ->
-        now_unix >= e["date_created"] and now_unix <= e["date_end"]
-      end)
+      data =
+        "https://direct-radio.rfm.fr/playout?radio=#{id}&limit=1"
+        |> SongProvider.get()
+        |> Map.get(:body)
+        |> Jason.decode!()
+        |> Map.get("nowplaying", [])
+        |> List.first()
+
+      time_start_naive =
+        data
+        |> Map.get("time")
+        |> NaiveDateTime.from_iso8601!()
+
+      [hours, minutes, seconds] =
+        data
+        |> Map.get("duration")
+        |> String.split(":")
+
+      time_end_unix =
+        time_start_naive
+        |> NaiveDateTime.add(String.to_integer(hours) * 3600, :second)
+        |> NaiveDateTime.add(String.to_integer(minutes) * 60, :second)
+        |> NaiveDateTime.add(String.to_integer(seconds), :second)
+        # give it some room
+        |> NaiveDateTime.add(60, :second)
+        |> DateTime.from_naive!("UTC")
+        |> DateTime.to_unix()
+
+      time_start_unix =
+        time_start_naive
+        |> DateTime.from_naive!("UTC")
+        |> DateTime.to_unix()
+
+      if time_start_unix < now_unix and time_end_unix > now_unix do
+        data
+      else
+        nil
+      end
     rescue
       _ -> nil
     end
