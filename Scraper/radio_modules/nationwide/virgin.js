@@ -1,6 +1,7 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const utils = require('../../lib/utils');
 
 let scrapedData = [];
 let referenceIndex = 0;
@@ -11,70 +12,52 @@ const format = dateObj => {
   const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
 
     // Time
-    let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\sà\s([0-9]{1,2})[h|H]([0-9]{2})/);
-    let match = curr.datetime_raw.match(regexp);
+    regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})\s[à|–]\s([0-9]{1,2})[h|H]([0-9]{0,2})/);
+    let match_time = curr.datetime_raw.match(regexp);
 
     // no time, exit
-    if (match === null) {
+    if (match_time === null) {
+      return prev;
+    }
+
+    // Should not have next day end by let's ignore if any
+    if (match_time[1] > match_time[3]) {
       return prev;
     }
 
     const startDateTime = moment(curr.dateObj);
     const endDateTime = moment(curr.dateObj);
 
-    startDateTime.hour(match[1]);
-    startDateTime.minute(match[2]);
+    startDateTime.hour(match_time[1]);
+    if (match_time[2] !== '') {
+      startDateTime.minute(match_time[2]);
+    } else {
+      startDateTime.minute(0);
+    }
+
+    endDateTime.hour(match_time[3]);
+    if (match_time[4] !== '') {
+      endDateTime.minute(match_time[4]);
+    } else {
+      endDateTime.minute(0);
+    }
+
     startDateTime.second(0);
-    endDateTime.hour(match[3]);
-    endDateTime.minute(match[4]);
     endDateTime.second(0);
-
-    let prevMatch = null;
-    // keep only relevant time from previous day page
-    if (startDateTime.isBefore(dateObj, 'day')) {
-      if (index === 0) {
-        return prev;
-      }
-
-      prevMatch = array[0].datetime_raw.match(regexp);
-      array[0].dateObj.hour(prevMatch[1]);
-
-      if (array[0].dateObj.isBefore(startDateTime)) {
-        return prev;
-      }
-
-      // update day
-      startDateTime.add(1, 'days');
-      endDateTime.add(1, 'days');
-    }
-    // remove next day schedule from day page
-    else {
-      if (curr.dateObj !== array[index - 1].dateObj) {
-        referenceIndex = index;
-      } else {
-        prevMatch = array[referenceIndex].datetime_raw.match(regexp);
-        let prevDate = moment(array[referenceIndex].dateObj);
-        prevDate.hour(prevMatch[1]);
-
-        if (prevDate.isAfter(startDateTime)) {
-          return prev;
-        }
-      }
-
-      if (startDateTime.hour() > endDateTime.hour()) {
-        endDateTime.add(1, 'days');
-      }
-    }
 
     newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'host': curr.host.join(", "),
+      'img': curr.img,
       'title': curr.title
     };
 
-    if (typeof curr.img !== 'undefined') {
-      newEntry.img = 'https:' + curr.img;
+    if (curr.host.length > 11) {
+      newEntry.host = curr.host.substr(11)
+        .replace(/ , /g, ', ')
+        .replace(' sur Virgin Radio', '')
+        .replace(' - Virgin Tonic', '')
+        .trim();
     }
 
     prev.push(newEntry);
@@ -85,47 +68,36 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-  const day = dateObj.day();
-  let dayUrl = 'semaine';
+    dateObj.locale('fr');
+    const day = utils.upperCaseWords(dateObj.format('dddd'));
 
-  if (day === 0) {
-    dayUrl = 'dimanche';
-  } else if (day === 6) {
-    dayUrl = 'samedi';
-  }
+    let url = 'https://www.virginradio.fr/programmes';
 
-  let url = `https://www.virginradio.fr/programmes-${dayUrl}/`;
+    logger.log('info', `fetching ${url} (${day})`);
 
-  logger.log('info', `fetching ${url}`);
-
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .find('.programme_container')
-      .set({
-        'datetime_raw': '.diffused_at',
-        'img': '.avatar > div.presentator span.img > img@src',
-        'title': '.h2',
-        'host': ['span.presentator'],
-      })
-      .data(function (listing) {
-        listing.dateObj = dateObj;
-        scrapedData.push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
-  });
+    return new Promise(function (resolve, reject) {
+      return osmosis
+        .get(url)
+        .find(`#${day}`)
+        .select('.row.podcasts-single')
+        .set({
+          'datetime_raw': '.podcasts-single-term-date',
+          'img': 'img.podcasts-single-term-infos-thumb@src',
+          'title': '.podcasts-single-term-title > a',
+          'host': '.podcasts-single-term-infos-content > p'
+        })
+        .data(function (listing) {
+          listing.dateObj = dateObj;
+          scrapedData.push(listing);
+        })
+        .done(function () {
+          resolve(true);
+        })
+    });
 };
 
 const fetchAll = dateObj => {
-  const previousDay = moment(dateObj);
-  previousDay.subtract(1, 'days');
-
-  return fetch(previousDay)
-    .then(() => {
-      return fetch(dateObj);
-    });
+  return fetch(dateObj);
 };
 
 const getScrap = dateObj => {
