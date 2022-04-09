@@ -17,7 +17,7 @@
     "libxmljs-dom": "https://github.com/jfsimon/libxmljs-dom",
     "lodash.orderby": "^4.6.0",
     "lodash.uniqby": "^4.7.0",
-    "moment": "^2.18.1",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.13",
     "music-metadata": "^7.5.3",
     "needle": "2.9.0",
