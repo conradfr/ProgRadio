@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.13.2-erlang-24.2.1-ubuntu-bionic-20210930
+FROM hexpm/elixir:1.13.4-erlang-24.3.2-ubuntu-bionic-20210930
 
 EXPOSE 80
 
