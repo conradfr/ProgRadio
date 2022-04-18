@@ -12,7 +12,8 @@
   }
 }
 
-.toast-cookie-container {
+.toast-cookie-container, .toast-cookie-container-app {
+  z-index: 1300 !important;
   .toast-cookie {
     width: 450px !important;
   }

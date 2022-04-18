@@ -332,7 +332,8 @@ const storeMutations = {
     }, 300);
   },
   setFavoritesCollection(state, radios) {
-    if (state.collections[config.COLLECTION_FAVORITES] === undefined) {
+    if (state.collections === undefined
+      || state.collections[config.COLLECTION_FAVORITES] === undefined) {
       return;
     }
 

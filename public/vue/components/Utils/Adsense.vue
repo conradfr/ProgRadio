@@ -9,12 +9,12 @@
             <small> {{ $t('message.consent.disclaimer') }}</small>
           </p>
           <div>
+            <button type="button" class="btn btn-sm btn-outline-success"
+                    v-on:click="clickYes">
+              {{ $t('message.consent.accept') }}</button>
             <button type="button" class="btn btn-sm btn-outline-warning mr-3"
               v-on:click="clickNo">
               {{ $t('message.consent.deny') }}</button>
-            <button type="button" class="btn btn-sm btn-outline-success"
-              v-on:click="clickYes">
-              {{ $t('message.consent.accept') }}</button>
           </div>
         </div>
       </div>
@@ -58,6 +58,7 @@ export default {
     return {
       adsense_key,
       adsense_tag_key,
+      adsense_tag_horiz_fix_key,
       toast: null,
       showToast: cookies.get(COOKIE_CONSENT, null) === null,
       consent: cookies.get(COOKIE_CONSENT, '0') === '1'
@@ -94,10 +95,12 @@ export default {
 
     /* eslint-disable no-undef */
     if (this.showToast === true /* && typeof boostrap !== 'undefined' */) {
-      const toastCookieElem = document.getElementsByClassName('toast-cookie-app')[0];
-      /* eslint-disable no-undef */
-      this.toast = new bootstrap.Toast(toastCookieElem);
-      this.toast.show();
+      setTimeout(() => {
+        const toastCookieElem = document.getElementsByClassName('toast-cookie-app')[0];
+        /* eslint-disable no-undef */
+        this.toast = new bootstrap.Toast(toastCookieElem);
+        this.toast.show();
+      }, 250);
     }
   },
   methods: {
