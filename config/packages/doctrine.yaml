@@ -18,7 +18,6 @@ doctrine:
         mappings:
             App:
                 is_bundle: false
-                type: annotation
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
@@ -54,3 +53,27 @@ doctrine:
                 cast:           Oro\ORM\Query\AST\Functions\Cast
                 replace:        Oro\ORM\Query\AST\Functions\String\Replace
                 ilike:          App\Doctrine\Functions\ILike
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system

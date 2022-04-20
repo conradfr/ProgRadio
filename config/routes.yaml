@@ -5,6 +5,14 @@
 # HERE WE INTERCEPT URLS THAT WILL BE HANDLED BY THE SPA ROUTER
 # The spa intercept the urls client side, here it's for external/direct access
 
+controllers:
+    resource: ../src/Controller/
+    type: annotation
+
+kernel:
+    resource: ../src/Kernel.php
+    type: annotation
+
 params_spa:
     path: /{_locale}/params
     controller: App\Controller\DefaultController::index
@@ -20,3 +28,4 @@ streaming_spa:
 radio_spa:
     path: /{_locale}/radio/{collection?}
     controller: App\Controller\DefaultController::index
+
