@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c2fa218db37c7b54b9bd63e42376412a",
+    "content-hash": "7b7485d6f02c7a009548a6717801c587",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -114,110 +114,6 @@
                 }
             ],
             "time": "2021-08-15T20:50:18+00:00"
-        },
-        {
-            "name": "captcha-com/captcha",
-            "version": "4.2.5",
-            "source": {
-                "type": "git",
-                "url": "https://git.captcha.com/botdetect-php-captcha-library.git",
-                "reference": "4b8b642509bfc63d2f295dccf1c1b4d0e2266a15"
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "suggest": {
-                "captcha-com/cakephp-captcha": "CakePHP Captcha Plugin -- BotDetect PHP CAPTCHA generator integration for the CakePHP framework.",
-                "captcha-com/laravel-captcha": "Laravel Captcha Package -- BotDetect PHP CAPTCHA generator integration for the Laravel framework.",
-                "captcha-com/symfony-captcha-bundle": "Symfony Captcha Bundle -- BotDetect PHP CAPTCHA generator integration for the Symfony framework."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Captcha Support",
-                    "email": "botdetect.support@captcha.com",
-                    "homepage": "https://captcha.com/php-captcha.html"
-                }
-            ],
-            "description": "Captcha Generator -- BotDetect PHP CAPTCHA Free composer package.",
-            "homepage": "https://captcha.com/php-captcha.html",
-            "keywords": [
-                "captcha",
-                "captcha generator",
-                "captcha library",
-                "php captcha"
-            ],
-            "support": {
-                "email": "botdetect.support@captcha.com",
-                "forum": "https://captcha.com/support",
-                "issues": "https://captcha.com/support",
-                "source": "https://captcha.com/php-captcha.html"
-            },
-            "time": "2019-07-22T16:36:53+00:00"
-        },
-        {
-            "name": "carlos-mg89/symfony-captcha-bundle",
-            "version": "4.2.21",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/carlos-mg89/symfony-captcha-bundle.git",
-                "reference": "dbe25f48a3bcc9b7d5f0a75a0988ac4696c46f90"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/carlos-mg89/symfony-captcha-bundle/zipball/dbe25f48a3bcc9b7d5f0a75a0988ac4696c46f90",
-                "reference": "dbe25f48a3bcc9b7d5f0a75a0988ac4696c46f90",
-                "shasum": ""
-            },
-            "require": {
-                "captcha-com/captcha": "4.*",
-                "php": ">=5.3.9"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Captcha\\Bundle\\CaptchaBundle\\": "/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Symfony Captcha Bundle Support",
-                    "email": "botdetect.support@captcha.com",
-                    "homepage": "https://captcha.com/doc/php/symfony-captcha-bundle-quickstart.html"
-                }
-            ],
-            "description": "Symfony Captcha Bundle -- BotDetect PHP CAPTCHA generator integration for the Symfony framework.",
-            "homepage": "https://captcha.com/doc/php/symfony-captcha-bundle-quickstart.html",
-            "keywords": [
-                "botdetect",
-                "captcha",
-                "captcha bundle",
-                "captcha generator",
-                "symfony captcha",
-                "symfony captcha bundle"
-            ],
-            "support": {
-                "email": "carlosmartinezgadea@gmail.com",
-                "forum": "https://captcha.com/support",
-                "issues": "https://captcha.com/support",
-                "source": "https://captcha.com/doc/php/symfony-captcha-bundle-quickstart.html"
-            },
-            "time": "2020-12-09T16:08:18+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -1472,16 +1368,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "2.11.2",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "9c351e044478135aec1755e2c0c0493a4b6309db"
+                "reference": "d5503644314ed825fe4b276a588458a033fa3e7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/9c351e044478135aec1755e2c0c0493a4b6309db",
-                "reference": "9c351e044478135aec1755e2c0c0493a4b6309db",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/d5503644314ed825fe4b276a588458a033fa3e7c",
+                "reference": "d5503644314ed825fe4b276a588458a033fa3e7c",
                 "shasum": ""
             },
             "require": {
@@ -1494,14 +1390,14 @@
                 "doctrine/event-manager": "^1.1",
                 "doctrine/inflector": "^1.4 || ^2.0",
                 "doctrine/instantiator": "^1.3",
-                "doctrine/lexer": "^1.0",
-                "doctrine/persistence": "^2.2",
+                "doctrine/lexer": "^1.2.3",
+                "doctrine/persistence": "^2.4 || ^3",
                 "ext-ctype": "*",
                 "php": "^7.1 || ^8.0",
                 "psr/cache": "^1 || ^2 || ^3",
                 "symfony/console": "^3.0 || ^4.0 || ^5.0 || ^6.0",
                 "symfony/polyfill-php72": "^1.23",
-                "symfony/polyfill-php80": "^1.15"
+                "symfony/polyfill-php80": "^1.16"
             },
             "conflict": {
                 "doctrine/annotations": "<1.13 || >= 2.0"
@@ -1510,8 +1406,9 @@
                 "doctrine/annotations": "^1.13",
                 "doctrine/coding-standard": "^9.0",
                 "phpbench/phpbench": "^0.16.10 || ^1.0",
-                "phpstan/phpstan": "1.4.6",
+                "phpstan/phpstan": "~1.4.10 || 1.5.0",
                 "phpunit/phpunit": "^7.5 || ^8.5 || ^9.4",
+                "psr/log": "^1 || ^2 || ^3",
                 "squizlabs/php_codesniffer": "3.6.2",
                 "symfony/cache": "^4.4 || ^5.4 || ^6.0",
                 "symfony/yaml": "^3.4 || ^4.0 || ^5.0 || ^6.0",
@@ -1564,9 +1461,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/2.11.2"
+                "source": "https://github.com/doctrine/orm/tree/2.12.0"
             },
-            "time": "2022-03-09T15:23:58+00:00"
+            "time": "2022-04-19T18:34:28+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -1967,6 +1864,58 @@
             "time": "2022-03-19T10:22:38+00:00"
         },
         {
+            "name": "google/recaptcha",
+            "version": "1.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google/recaptcha.git",
+                "reference": "614f25a9038be4f3f2da7cbfd778dc5b357d2419"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google/recaptcha/zipball/614f25a9038be4f3f2da7cbfd778dc5b357d2419",
+                "reference": "614f25a9038be4f3f2da7cbfd778dc5b357d2419",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.2.20|^2.15",
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^4.8.36|^5.7.27|^6.59|^7.5.11"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ReCaptcha\\": "src/ReCaptcha"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Client library for reCAPTCHA, a free service that protects websites from spam and abuse.",
+            "homepage": "https://www.google.com/recaptcha/",
+            "keywords": [
+                "Abuse",
+                "captcha",
+                "recaptcha",
+                "spam"
+            ],
+            "support": {
+                "forum": "https://groups.google.com/forum/#!forum/recaptcha",
+                "issues": "https://github.com/google/recaptcha/issues",
+                "source": "https://github.com/google/recaptcha"
+            },
+            "time": "2020-03-31T17:50:54+00:00"
+        },
+        {
             "name": "imagine/imagine",
             "version": "1.3.2",
             "source": {
@@ -2027,6 +1976,87 @@
                 "source": "https://github.com/php-imagine/Imagine/tree/1.3.2"
             },
             "time": "2022-04-01T11:58:30+00:00"
+        },
+        {
+            "name": "karser/karser-recaptcha3-bundle",
+            "version": "v0.1.22",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/karser/KarserRecaptcha3Bundle.git",
+                "reference": "5139502293d0d19e73f82bd82df2273fe8c5f9b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/karser/KarserRecaptcha3Bundle/zipball/5139502293d0d19e73f82bd82df2273fe8c5f9b5",
+                "reference": "5139502293d0d19e73f82bd82df2273fe8c5f9b5",
+                "shasum": ""
+            },
+            "require": {
+                "google/recaptcha": "^1.2",
+                "php": ">=7.1",
+                "symfony/expression-language": "^3.4|^4.0|^5.0|^6.0",
+                "symfony/form": "^3.4|^4.0|^5.0|^6.0",
+                "symfony/framework-bundle": "^3.4.26|^4.2.7|^5.0|^6.0",
+                "symfony/twig-bundle": "^3.4|^4.0|^5.0|^6.0",
+                "symfony/validator": "^3.4|^4.0|^5.0|^6.0",
+                "symfony/yaml": "^3.4|^4.0|^5.0|^6.0",
+                "twig/twig": "^2.9|^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7|^8|^9"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Karser\\Recaptcha3Bundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitrii Poddubnyi",
+                    "homepage": "https://github.com/karser"
+                }
+            ],
+            "description": "Google ReCAPTCHA v3 for Symfony",
+            "homepage": "http://github.com/karser/KarserRecaptcha3Bundle",
+            "keywords": [
+                "Forms",
+                "Google ReCaptcha",
+                "GoogleReCaptcha",
+                "Symfony Google ReCaptcha",
+                "anti-bot",
+                "anti-bots",
+                "anti-spam",
+                "captcha",
+                "contact",
+                "google",
+                "google recaptcha v3",
+                "no-captcha",
+                "recaptcha",
+                "recaptcha v3",
+                "recaptcha v3 symfony",
+                "security",
+                "spam",
+                "symfony",
+                "symfony google recaptcha v3",
+                "symfony recaptcha",
+                "symfony recaptcha v3",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/karser/KarserRecaptcha3Bundle/issues",
+                "source": "https://github.com/karser/KarserRecaptcha3Bundle/tree/v0.1.22"
+            },
+            "time": "2022-01-10T16:03:31+00:00"
         },
         {
             "name": "laminas/laminas-code",
@@ -3202,16 +3232,16 @@
         },
         {
             "name": "snc/redis-bundle",
-            "version": "4.0",
+            "version": "4.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/snc/SncRedisBundle.git",
-                "reference": "94fe6fb18a72f9572793cbfd08dd1f703e783a6d"
+                "reference": "34d6e3b8c676bf13d71675726179bca0d5de1069"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/snc/SncRedisBundle/zipball/94fe6fb18a72f9572793cbfd08dd1f703e783a6d",
-                "reference": "94fe6fb18a72f9572793cbfd08dd1f703e783a6d",
+                "url": "https://api.github.com/repos/snc/SncRedisBundle/zipball/34d6e3b8c676bf13d71675726179bca0d5de1069",
+                "reference": "34d6e3b8c676bf13d71675726179bca0d5de1069",
                 "shasum": ""
             },
             "require": {
@@ -3229,7 +3259,7 @@
                 "doctrine/coding-standard": "^9.0",
                 "ext-pdo_sqlite": "*",
                 "ext-redis": "*",
-                "friendsofphp/proxy-manager-lts": "^1.0",
+                "friendsofphp/proxy-manager-lts": "^1.0.6",
                 "monolog/monolog": "*",
                 "phpunit/phpunit": "^8.5 || ^9.5",
                 "predis/predis": "^1.1",
@@ -3285,9 +3315,9 @@
             ],
             "support": {
                 "issues": "https://github.com/snc/SncRedisBundle/issues",
-                "source": "https://github.com/snc/SncRedisBundle/tree/4.0"
+                "source": "https://github.com/snc/SncRedisBundle/tree/4.1.6"
             },
-            "time": "2021-12-05T08:58:50+00:00"
+            "time": "2022-03-05T09:40:24+00:00"
         },
         {
             "name": "symfony/asset",

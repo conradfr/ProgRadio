@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\User;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -13,8 +15,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
-use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationFormType extends AbstractType
@@ -48,15 +48,13 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('captchaCode', CaptchaType::class, [
-                'captchaConfig' => 'ExampleCaptcha',
-                'label' => $this->translator->trans('registrationForm.captcha'),
-                'mapped' => false,
-                'constraints' => [
-                    new ValidCaptcha([
-                        'message' => $this->translator->trans('registrationForm.error.captcha'),
-                    ]),
-                ]
+            ->add('captcha', Recaptcha3Type::class, [
+                'constraints' => new Recaptcha3([
+                    'message' => 'karser_recaptcha3.message',
+                    'messageMissingValue' => 'karser_recaptcha3.message_missing_value'
+                ]),
+                'action_name' => 'contact',
+                //'script_nonce_csp' => $nonceCSP,
             ])
         ;
     }

@@ -68,7 +68,3 @@ services:
 
                 # you can also restrict listeners to a specific Doctrine connection
                 connection: 'default'
-
-    Captcha\Bundle\CaptchaBundle\Controller\:
-        resource: '../vendor/carlos-mg89/symfony-captcha-bundle/Controller'
-        autowire: true

@@ -5,12 +5,6 @@
     "brick/math": {
         "version": "0.9.3"
     },
-    "captcha-com/captcha": {
-        "version": "4.2.5"
-    },
-    "carlos-mg89/symfony-captcha-bundle": {
-        "version": "4.2.21"
-    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
@@ -106,8 +100,29 @@
     "gedmo/doctrine-extensions": {
         "version": "v3.4.0"
     },
+    "google/recaptcha": {
+        "version": "1.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.1",
+            "ref": "e5a4aa21f2e98d7440ae9aab6b56e307f99dd084"
+        }
+    },
     "imagine/imagine": {
         "version": "1.2.4"
+    },
+    "karser/karser-recaptcha3-bundle": {
+        "version": "0.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "0.1",
+            "ref": "c51ce07c10331d506762efe25b6f5843c1a5ea17"
+        },
+        "files": [
+            "config/packages/karser_recaptcha3.yaml"
+        ]
     },
     "laminas/laminas-code": {
         "version": "4.5.0"
