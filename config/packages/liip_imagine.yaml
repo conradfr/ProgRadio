@@ -16,19 +16,19 @@ liip_imagine:
                 relative_resize:
                     heighten: 58
             post_processors:
-                jpegoptim: { strip_all: true, max: 85, progressive: true }
+                jpegoptim: { strip_all: true, quality: 85, progressive: true }
                 # optipng: { strip_all: true, level: 6 }
         page_thumb:
             filters:
                 relative_resize:
                     widen: 64
             post_processors:
-                jpegoptim: { strip_all: true, max: 95, progressive: true }
+                jpegoptim: { strip_all: true, quality: 95, progressive: true }
                 # optipng: { strip_all: true, level: 5 }
         notification_thumb:
             filters:
                 downscale:
                     max: [1024, 512]
             post_processors:
-                jpegoptim: { strip_all: true, max: 95, progressive: false }
+                jpegoptim: { strip_all: true, quality : 95, progressive: false }
                 # optipng: { strip_all: true, level: 5 }

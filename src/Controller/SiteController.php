@@ -75,10 +75,8 @@ class SiteController extends AbstractController
      *      "changefreq": "yearly"
      *      }
      * )
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function contact(MailerInterface $mailer, TranslatorInterface $translator, Request $request)
+    public function contact(MailerInterface $mailer, TranslatorInterface $translator, Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);

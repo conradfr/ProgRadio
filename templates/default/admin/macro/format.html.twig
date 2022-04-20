@@ -3,7 +3,7 @@
 
   {# set hours minus minutes/seconds #}
   {% set hours = (seconds / 3600)|round(0, 'floor') %}
-  {% set seconds_remaining = seconds - (hours * 3600) %}
+  {% set seconds_remaining = (seconds - (hours * 3600))|round(0, 'floor') %}
 
   {% if hours  < 1 %}
       {# set hours to nothing #}
@@ -19,7 +19,7 @@
   {% endif %}
 
   {# set minutes remain but no seconds #}
-  {% set minutes_remaining = seconds_remaining / 60 % 60 %}
+  {% set minutes_remaining = ((seconds_remaining / 60)|round(0, 'floor') % 60)|round(0, 'floor') %}
   {% set minutes = '' %}
   {% if minutes_remaining < 10 %}
       {# add a leading zero if minutes are less than 10 #}
@@ -29,7 +29,7 @@
   {% set minutes = minutes ~ minutes_remaining ~ 'm' %}
 
   {# set seconds but no minutes or hours #}
-  {% set seconds = seconds_remaining % 60 %}
+  {% set seconds = (seconds_remaining % 60)|round(0, 'floor') %}
   {% if seconds < 10 %}
       {# add a leading zero if seconds are less than 10 #}
       {% set seconds = '0' ~ seconds %}

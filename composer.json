@@ -51,6 +51,7 @@
         "symfony/asset": "6.0.*",
         "symfony/console": "6.0.*",
         "symfony/dotenv": "6.0.*",
+        "symfony/error-handler": "6.0.*",
         "symfony/expression-language": "6.0.*",
         "symfony/flex": "^1.3.1",
         "symfony/form": "6.0.*",
@@ -70,7 +71,7 @@
         "symfony/serializer": "6.0.*",
         "symfony/string": "6.0.*",
         "symfony/translation": "6.0.*",
-        "symfony/twig-bundle": "^5.4",
+        "symfony/twig-bundle": "^6.0",
         "symfony/validator": "6.0.*",
         "symfony/web-link": "6.0.*",
         "symfony/yaml": "6.0.*",
@@ -120,5 +121,8 @@
             "allow-contrib": false,
             "require": "6.0.*"
         }
-    }
+    },
+    "classmap": [
+        "bin/.phpunit/phpunit/src"
+    ]
 }

@@ -2,7 +2,7 @@
   <div class="container now-page">
     <div class="row">
       <div class="col-12 col-sm-6">
-        <h4 class="mb-3">{{ $t('message.params_page.title') }}</h4>
+        <h4 class="mt-2 mb-3">{{ $t('message.params_page.title') }}</h4>
 
         <h5>{{ $t('message.params_page.sub_title') }}</h5>
 
@@ -22,7 +22,7 @@
           </label>
           <div class="form-text">{{ $t('message.params_page.automatic_help') }}</div>
           <div v-if="!flux.supported" class="mt-1 alert alert-warning">
-            {{ $t('message.params_page.no_suuport') }}</div>
+            {{ $t('message.params_page.no_support') }}</div>
         </div>
         <div class="form-check">
           <input class="form-check-input" type="radio" id="stream-two"

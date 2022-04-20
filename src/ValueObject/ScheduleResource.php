@@ -44,10 +44,7 @@ class ScheduleResource
         return $this->type;
     }
 
-    /**
-     * @return array|string|null
-     */
-    public function getValue()
+    public function getValue(): array|string|null
     {
         return $this->value;
     }

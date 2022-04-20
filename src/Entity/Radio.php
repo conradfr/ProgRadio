@@ -154,17 +154,11 @@ class Radio
         $this->collection = $collection;
     }
 
-    /**
-     * @return double
-     */
     public function getShare(): float
     {
         return $this->share;
     }
 
-    /**
-     * @param double $share
-     */
     public function setShare(float $share): void
     {
         $this->share = $share;
