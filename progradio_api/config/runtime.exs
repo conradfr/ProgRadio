@@ -25,7 +25,8 @@ if config_env() == :prod do
   config :progradio_api, ProgRadioApiWeb.Endpoint,
     server: true,
     http: [
-      port: String.to_integer(System.get_env("PORT") || "4000")
+      port: String.to_integer(System.get_env("PORT") || "4000"),
+      compress: true
       #    transport_options: [socket_opts: [:inet6]]
     ],
     check_origin: [System.get_env("ORIGIN"), System.get_env("ORIGIN2")],
