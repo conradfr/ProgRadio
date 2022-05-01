@@ -24,26 +24,31 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
+import { mapState } from 'pinia';
 import { DateTime, Interval } from 'luxon';
 
-import { TIMEZONE, THUMBNAIL_PAGE_PROGRAM_PATH } from '../../config/config';
+import type { Program } from '@/types/program';
+import { TIMEZONE, THUMBNAIL_PAGE_PROGRAM_PATH } from '@/config/config';
+import { useScheduleStore } from '@/stores/scheduleStore';
+
 import RadioShowSection from './RadioShowSection.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
+export default defineComponent({
+  props: {
+    show: {
+      type: Object as PropType<Program>,
+      required: true
+    }
   },
-  props: ['show'],
   components: {
     RadioShowSection
   },
   computed: {
-    ...mapState({
-      cursorTime: state => state.schedule.cursorTime,
-    }),
-    scheduleDisplay() {
+    ...mapState(useScheduleStore, ['cursorTime']),
+    scheduleDisplay(): string {
       const start = DateTime.fromISO(this.show.start_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
       const end = DateTime.fromISO(this.show.end_at)
@@ -51,13 +56,13 @@ export default {
 
       return `${start}-${end}`;
     },
-    isCurrent() {
+    isCurrent(): boolean {
       return Interval.fromDateTimes(DateTime.fromISO(this.show.start_at).setZone(TIMEZONE),
         DateTime.fromISO(this.show.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
     },
-    picture() {
+    picture(): string {
       return `${THUMBNAIL_PAGE_PROGRAM_PATH}${this.show.picture_url}`;
     }
   }
-};
+});
 </script>

@@ -5,11 +5,13 @@ FROM node:14.17.6 as buildjs
 WORKDIR /tmp
 RUN mkdir /tmp/public/
 COPY ./package.json /tmp
-COPY ./yarn.lock /tmp
+COPY ./package-lock.json /tmp
+COPY ./tsconfig.json /tmp
+COPY ./env.d.ts /tmp
 COPY ./public /tmp/public
 COPY ./buildjs /tmp/buildjs
 
-RUN yarn install
+RUN npm install
 RUN npm run build
 
 RUN ls /tmp
@@ -101,7 +103,7 @@ ARG ADSENSE_KEY=${ADSENSE_KEY}
 ARG ADSENSE_TAG_RADIO_HORIZ_KEY=${ADSENSE_TAG_RADIO_HORIZ_KEY}
 ARG ADSENSE_TAG_RADIO_VERT_KEY=${ADSENSE_TAG_RADIO_VERT_KEY}
 ARG ADSENSE_TAG_RADIO_HORIZ_FIX_KEY=${ADSENSE_TAG_RADIO_HORIZ_FIX_KEY}
-ARG GEOLOC=${GEOLOC}
+ARG GEOCODE=${GEOCODE}
 ARG RECAPTCHA3_KEY=${RECAPTCHA3_KEY}
 ARG RECAPTCHA3_SECRET=${RECAPTCHA3_SECRET}
 
@@ -116,7 +118,7 @@ ENV APP_ENV=${APP_ENV} \
   ADSENSE_TAG_RADIO_HORIZ_KEY=${ADSENSE_TAG_RADIO_HORIZ_KEY} \
   ADSENSE_TAG_RADIO_VERT_KEY=${ADSENSE_TAG_RADIO_VERT_KEY} \
   ADSENSE_TAG_RADIO_HORIZ_FIX_KEY=${ADSENSE_TAG_RADIO_HORIZ_FIX_KEY} \
-  GEOLOC=${GEOLOC} \
+  GEOCODE=${GEOCODE} \
   RECAPTCHA3_KEY=${RECAPTCHA3_KEY} \
   RECAPTCHA3_SECRET=${RECAPTCHA3_SECRET}
 
@@ -143,6 +145,7 @@ RUN mkdir -p /var/www/var/logs/
 RUN mkdir -p /var/www/var/log/
 
 RUN rm -rf /var/www/public/media
+RUN rm -rf /var/www/public/vue
 RUN ln -s /var/shared/media /var/www/public/
 
 #RUN chown -R www-data:www-data /var/shared/media

@@ -54,7 +54,7 @@ config :phoenix, :json_library, Jason
 
 #  System.get_env("CORS", ".*")
 {:ok, origin} =
-  System.get_env("CORS", "https?.*(programmes-radio|radioo-addict)\.(com|fr)")
+  System.get_env("CORS", "https?.*(programmes-radio|radio-addict)\.(com|fr)")
   |> Regex.compile()
 
 config :cors_plug,

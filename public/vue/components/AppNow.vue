@@ -43,15 +43,16 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
+
+import { useScheduleStore } from '@/stores/scheduleStore';
+import { useUserStore } from '@/stores/userStore';
 
 import NowRadio from './Now/NowRadio.vue';
 import Adsense from './Utils/Adsense.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     NowRadio,
     Adsense
@@ -59,30 +60,34 @@ export default {
   /* eslint-disable no-undef */
   data() {
     return {
+      // @ts-ignore
       locale: this.$i18n.locale
     };
   },
   created() {
-    this.$store.dispatch('getRadiosData');
-    this.$store.dispatch('getSchedule',
+    this.getRadiosData();
+
+    this.getSchedule(
       {
         collection: this.$route.params.collection
-          ? this.$route.params.collection : this.$store.state.schedule.currentCollection
-      });
+          ? this.$route.params.collection : this.currentCollection
+      }
+    );
     if (this.$route.params.collection) {
-      this.$store.dispatch('switchCollection', this.$route.params.collection);
+      this.switchCollection(this.$route.params.collection);
     }
 
     setTimeout(
       () => {
-        this.$store.dispatch('getSchedule');
+        this.getSchedule();
       },
       3500
     );
   },
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      vm.$store.dispatch('calendarToday');
+    next(() => {
+      const schedule = useScheduleStore();
+      schedule.setCalendarToday();
     });
   },
   // TODO fix this hack
@@ -103,20 +108,23 @@ export default {
     app.classList.remove('no-background');
   },
   computed: {
-    ...mapState({
-      radios: state => state.schedule.radios,
-      currentCollection: state => state.schedule.currentCollection,
-      userLogged: state => state.user.logged
+    ...mapState(useScheduleStore,
+      [
+        'radios',
+        'currentCollection',
+        'rankedCollections',
+        'rankedRadios'
+      ]
+    ),
+    ...mapState(useUserStore, {
+      userLogged: 'logged'
     }),
-    ...mapGetters([
-      'rankedCollections',
-      'rankedRadios'
-    ]),
   },
   methods: {
+    ...mapActions(useScheduleStore, ['getSchedule', 'switchCollection', 'getRadiosData']),
     setActiveCollection(collectionCodeName) {
-      this.$store.dispatch('switchCollection', collectionCodeName);
+      this.switchCollection(collectionCodeName);
     },
   }
-};
+});
 </script>

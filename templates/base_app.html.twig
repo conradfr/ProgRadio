@@ -23,7 +23,7 @@ const adsense_tag_horiz_fix_key = '{{ adsense_tag_radio_horiz_fix_key }}';
 const scrollToCursor = function() {
   const homePaths = ['/fr/', '/en/'];
   if (window.location.href.includes('schedule') || (homePaths.indexOf(window.location.pathname) !== -1)) {
-    document.getElementById('app').__vue_app__.config.globalProperties.$store.dispatch('scrollToCursor');
+    document.getElementById('app').__vue_app__.config.globalProperties.$pinia._s.get('schedule').scrollToCursor();
   }
   return false;
 };
@@ -49,7 +49,7 @@ const scrollToCursor = function() {
     {{ parent() }}
 {#    <script src="{{ asset('build/js/app.js') }}?v={{ releaseVersion() }}"></script>#}
     <!-- for IE, old not updated script, may work for some time ... -->
-    <script src="{{ asset('build/js/app.bundle.js') }}?v={{ releaseVersion() }}"></script>
+    <script src="{{ asset('build/js/app.js') }}?v={{ releaseVersion() }}"></script>
 {#    <script async src="//cdn.jsdelivr.net/npm/hls.js@latest"></script>#}
 {#    <script async src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>#}
 {#    <script async src="{{ asset('js/hls.js') }}?v={{ releaseVersion() }}"></script>#}

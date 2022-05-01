@@ -3,10 +3,10 @@
     <div v-if="radio" class="row">
       <div class="col-sm-2 col-12">
         <div class="radio-page-side">
-            <div class="text-center mb-4">
-              <img :alt="radio.name" class="radio-page-logo"
-                   :src="picture" v-once>
-            </div>
+          <div class="text-center mb-4">
+            <img :alt="radio.name" class="radio-page-logo"
+                 :src="picture" v-once>
+          </div>
           <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <div class="row">
           <div class="col-md-12 mb-2 mt-2 mt-sm-0 text-center text-sm-start">
             <router-link v-if="collection"
-              :to="'/' + locale + '/schedule/' + collection.code_name">
+                         :to="'/' + locale + '/schedule/' + collection.code_name">
               {{ $t('message.radio_page.back') }}
             </router-link>
           </div>
@@ -31,8 +31,8 @@
         </div>
         <div class="radio-page-shows">
           <radio-show
-            v-for="entry in schedule" :key="entry.hash"
-            :show="entry">
+              v-for="entry in schedule" :key="entry.hash"
+              :show="entry">
           </radio-show>
           <div v-if="schedule.length === 0" class="alert alert-warning" role="alert">
             {{ $t('message.radio_page.no_schedule') }}
@@ -40,44 +40,49 @@
         </div>
       </div>
       <div class="col-sm-3 col-12 text-center" v-if="!userLogged">
-        <adsense></adsense>
+                <adsense></adsense>
       </div>
-<!--      <div class="col-md-2 col-12 text-center" v-html="affiliateLink"
-        v-if="affiliateLink != null && affiliateLink !== '' && userLogged !== true"></div>-->
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapStores } from 'pinia';
+// import { useI18n } from 'vue-i18n';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
-import { mapGetters, mapState } from 'vuex';
 import { DateTime } from 'luxon';
+
+/* eslint-disable import/no-cycle */
+import { useGlobalStore } from '@/stores/globalStore';
+import { useScheduleStore } from '@/stores/scheduleStore';
+import { useUserStore } from '@/stores/userStore';
 
 import {
   TIMEZONE,
   THUMBNAIL_PAGE_PATH
-} from '../config/config';
+} from '@/config/config';
 
-import ScheduleApi from '../api/ScheduleApi';
+import type { Radio } from '@/types/radio';
+import type { Schedule } from '@/types/schedule';
+import type { Collection } from '@/types/collection';
+
 import RadioShow from './Radio/RadioShow.vue';
 import RadioStreams from './Radio/RadioStreams.vue';
 import Adsense from './Utils/Adsense.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     RadioShow,
     RadioStreams,
     Adsense
   },
-  /* eslint-disable no-undef */
   data() {
+    /* eslint-disable no-undef */
     return {
       locale: this.$i18n.locale,
-      affiliateLink: null,
+      // @ts-expect-error locale is defined on global scope
       date: DateTime.local().setZone(TIMEZONE).setLocale(locale)
         .toLocaleString(
           {
@@ -87,51 +92,60 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch('getRadiosData');
-    this.$store.dispatch('getSchedule', { radio: this.$route.params.radio });
-    this.getAffiliateLink();
+    this.scheduleStore.getRadiosData();
+    this.scheduleStore.getSchedule({ radio: this.$route.params.radio });
   },
   // TODO fix this hack
   mounted() {
-    const body = document.querySelector('body');
-    body.classList.remove('body-app');
+    const body = document?.querySelector('body');
+    body?.classList.remove('body-app');
 
     const app = document.getElementById('app');
-    app.classList.add('no-background');
+    app?.classList.add('no-background');
 
-    document.title = this.$i18n.t('message.radio_page.title', { radio: this.radio.name });
+    if (this.radio !== null) {
+      document.title = (this.$i18n as any).t(
+        'message.radio_page.title',
+        { radio: this.radio.name }
+      );
+    }
   },
   beforeUnmount() {
-    const body = document.querySelector('body');
+    const body = document.querySelector('body')!;
     body.classList.add('body-app');
 
-    const app = document.getElementById('app');
+    const app = document.getElementById('app')!;
     app.classList.remove('no-background');
   },
   computed: {
-    ...mapState({
-      radios: state => state.schedule.radios,
-      collections: state => state.schedule.collections,
-      currentCollection: state => state.schedule.currentCollection,
-      userLogged: state => state.user.logged
-    }),
-    ...mapGetters([
-      'hasSchedule'
-    ]),
-    radio() {
+    ...mapStores(useGlobalStore, useScheduleStore),
+    ...mapState(useGlobalStore, ['isLoading']),
+    ...mapState(useUserStore, { userLogged: 'logged' }),
+    ...mapState(useScheduleStore, { storeSchedule: 'schedule' }),
+    ...mapState(
+      useScheduleStore,
+      ['radios', 'collections', 'currentCollection', 'hasSchedule']
+    ),
+    radio(): Radio|null {
+      if (this.$route.params.radio === undefined || this.$route.params.radio === null) {
+        return null;
+      }
+
+      // @ts-ignore
       return this.radios[this.$route.params.radio] === undefined ? null
+        // @ts-ignore
         : this.radios[this.$route.params.radio];
     },
-    schedule() {
+    schedule(): Schedule|[] {
       if (this.hasSchedule === true) {
-        return orderBy(this.$store.state.schedule.schedule[this.$route.params.radio],
-          ['start_at'], ['asc']);
+        // @ts-ignore
+        return orderBy(this.storeSchedule[this.$route.params.radio], ['start_at'], ['asc']);
       }
 
       return [];
     },
-    collection() {
-      if (this.radio === null) {
+    collection(): Collection|null {
+      if (this.radio === null || this.currentCollection === null) {
         return null;
       }
 
@@ -141,15 +155,21 @@ export default {
       }
 
       // find first collection to have this radio
-      const collection = find(this.collections,
-        c => c.radios.indexOf(this.radio.code_name) !== -1);
+      const collection = find(
+        this.collections,
+        (c: Collection) => c.radios.indexOf(this.radio!.code_name) !== -1
+      );
 
       return collection === undefined ? null : collection;
     },
-    picture() {
+    picture(): string {
+      if (this.radio === null) {
+        return '';
+      }
+
       return `${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
     },
-    capitalizedDate() {
+    capitalizedDate(): string {
       if (!this.date) return '';
       const valueString = this.date.toString();
 
@@ -157,12 +177,9 @@ export default {
     }
   },
   methods: {
-    getAffiliateLink() {
-      return ScheduleApi.getAffiliate(this.$i18n.locale)
-        .then((response) => {
-          this.affiliateLink = response;
-        });
+    click() {
+      this.globalStore.setLoading(true);
     }
   }
-};
+});
 </script>

@@ -5,17 +5,24 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
 
-import { COLLECTION_FAVORITES } from '../../config/config';
+/* eslint-disable import/no-cycle */
+import { useScheduleStore } from '@/stores/scheduleStore';
 
-export default {
-  compatConfig: {
-    MODE: 3
+import { COLLECTION_FAVORITES } from '@/config/config';
+
+export default defineComponent({
+  props: {
+    collection: {
+      type: String,
+      required: true
+    },
   },
-  props: ['collection'],
   computed: {
+    ...mapState(useScheduleStore, ['scrollIndex']),
     textKey() {
       if (this.collection === COLLECTION_FAVORITES) {
         return 'message.schedule.no_radio_favorites';
@@ -23,14 +30,12 @@ export default {
 
       return 'message.schedule.no_radio';
     },
-    ...mapState({
-      noRadioStyleObject(state) {
-        const newLeft = state.schedule.scrollIndex + (window.innerWidth / 2) - 200;
-        return {
-          left: `${newLeft}px`,
-        };
-      },
-    })
+    noRadioStyleObject() {
+      const newLeft = this.scrollIndex + (window.innerWidth / 2) - 200;
+      return {
+        left: `${newLeft}px`,
+      };
+    }
   },
-};
+});
 </script>

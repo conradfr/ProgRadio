@@ -12,20 +12,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { DateTime } from 'luxon';
-import { TIMEZONE } from '../../config/config';
+import { TIMEZONE } from '@/config/config';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   props: ['section'],
   computed: {
-    timeStart() {
+    timeStart(): string {
       return DateTime.fromISO(this.section.start_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
     }
   }
-};
+});
 </script>

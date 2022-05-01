@@ -53,9 +53,6 @@ const gestures = {
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
 export default {
-  compatConfig: {
-    MODE: 3
-  },
   props: {
     enabled: Object,
     // can't make it to work dynamically with toRef, so we declare it instead

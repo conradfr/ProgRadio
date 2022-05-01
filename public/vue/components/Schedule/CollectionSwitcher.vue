@@ -15,24 +15,24 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapActions, mapState } from 'pinia';
 import find from 'lodash/find';
-
-import ScheduleUtils from '../../utils/ScheduleUtils';
-import tooltip from '../../utils/tooltip';
 
 import {
   COOKIE_TOOLTIP_COLLECTION,
   GTAG_CATEGORY_SCHEDULE,
   GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION,
   GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
-} from '../../config/config';
+} from '@/config/config';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+import { useScheduleStore } from '@/stores/scheduleStore';
+
+import ScheduleUtils from '../../utils/ScheduleUtils';
+import tooltip from '../../utils/tooltip';
+
+export default defineComponent({
   data() {
     return {
       nextCollection: ''
@@ -43,36 +43,37 @@ export default {
     tooltip.set('collection-forward', COOKIE_TOOLTIP_COLLECTION);
   },
   computed: {
-    ...mapState({
-      radios: state => state.schedule.radios,
-      collections: state => state.schedule.collections,
-      currentCollection: state => state.schedule.currentCollection,
-    })
+    ...mapState(useScheduleStore, ['radios', 'collections', 'currentCollection']),
   },
   methods: {
+    ...mapActions(useScheduleStore, ['collectionBackward', 'collectionForward']),
     clickCollectionBackward() {
-      this.$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
+      (this as any).$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         value: GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
       });
 
-      this.$store.dispatch('collectionBackward');
+      this.collectionBackward();
     },
     clickCollectionForward() {
-      this.$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
+      (this as any).$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         value: GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
       });
 
-      this.$store.dispatch('collectionForward');
+      this.collectionForward();
     },
-    hover(way) {
-      const nextCollectionCodeName = ScheduleUtils.getNextCollection(this.currentCollection,
-        this.collections, this.radios, way);
+    hover(way: 'backward'|'forward') {
+      const nextCollectionCodeName = ScheduleUtils.getNextCollection(
+        this.currentCollection,
+        this.collections,
+        this.radios,
+        way
+      );
 
       const collection = find(this.collections, c => c.code_name === nextCollectionCodeName);
-      this.nextCollection = collection.short_name;
+      this.nextCollection = collection!.short_name;
     }
   }
-};
+});
 </script>

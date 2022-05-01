@@ -38,61 +38,65 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapActions, mapState } from 'pinia';
 import { DateTime } from 'luxon';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+import { useScheduleStore } from '@/stores/scheduleStore';
+
+export default defineComponent({
   data() {
     return {
       debounce: false
     };
   },
   computed: {
-    ...mapState({
-      filterEnabled: state => state.schedule.categoriesExcluded.length > 0,
-      cursorTime: state => state.schedule.cursorTime,
-    }),
-    ...mapGetters({
+    ...mapState(useScheduleStore, ['cursorTime', 'isToday', 'isTomorrow']),
+    ...mapState(useScheduleStore, {
+      filterEnabled: store => store.categoriesExcluded.length > 0,
       styleObject: 'gridIndexLeft',
       displayFilter: 'displayCategoryFilter',
-      isToday: 'isToday',
-      isTomorrow: 'isTomorrow'
     }),
-    scheduleDate() {
-      if (this.isToday === true) { return this.$i18n.tc('message.schedule.today'); }
-      if (this.isTomorrow === true) { return this.$i18n.tc('message.schedule.tomorrow'); }
+    scheduleDate(): string {
+      if (this.isToday === true) { return (this.$i18n as any).tc('message.schedule.today'); }
+      if (this.isTomorrow === true) { return (this.$i18n as any).tc('message.schedule.tomorrow'); }
       return this.cursorTime.toLocaleString(DateTime.DATE_SHORT);
     }
   },
   methods: {
-    toTime(value) {
+    ...mapActions(useScheduleStore, [
+      'scrollBackward',
+      'scrollForward',
+      'setCalendarBackward',
+      'setCalendarForward',
+      'setCalendarToday',
+      'setCategoryFilterFocus'
+    ]),
+    toTime(value: number): string {
       // add leading 0 if < 10
       const strTime = `0${value - 1}`;
       return `${`${strTime.slice(-2)}`}h00`;
     },
     clickBackward() {
-      this.$store.dispatch('scrollBackward');
+      this.scrollBackward();
     },
     clickForward() {
-      this.$store.dispatch('scrollForward');
+      this.scrollForward();
     },
     clickCalendarToday() {
-      this.$store.dispatch('calendarToday');
+      this.setCalendarToday();
     },
     clickCalendarBackward() {
-      this.$store.dispatch('calendarBackward');
+      this.setCalendarBackward();
     },
     clickCalendarForward() {
       if (!this.isTomorrow) {
-        this.$store.dispatch('calendarForward');
+        this.setCalendarForward();
       }
     },
-    filterFocus(status) {
-      if (status === true) {
+    filterFocus(status: boolean) {
+      if (status) {
         this.debounce = true;
         setTimeout(
           () => {
@@ -105,17 +109,16 @@ export default {
       // timer helps to avoid the submenu being closed before mouse can come over it
       setTimeout(
         () => {
-          this.$store.dispatch('categoryFilterFocus', { element: 'icon', status });
+          this.setCategoryFilterFocus('icon', status);
         },
         100
       );
     },
     filterClick() {
-      if (this.debounce === false) {
-        this.$store.dispatch('categoryFilterFocus',
-          { element: 'icon', status: !this.displayFilter });
+      if (!this.debounce) {
+        this.setCategoryFilterFocus('icon', !this.displayFilter);
       }
     }
   }
-};
+});
 </script>

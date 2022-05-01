@@ -33,25 +33,23 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 
-import { STREAMS_DEFAULT_PER_PAGE, STREAMS_MAX_PAGES_DISPLAY } from '../../config/config';
+/* eslint-disable import/no-cycle */
+import { useStreamsStore } from '@/stores/streamsStore';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+import { STREAMS_DEFAULT_PER_PAGE, STREAMS_MAX_PAGES_DISPLAY } from '@/config/config';
+
+export default defineComponent({
   computed: {
-    ...mapState({
-      total: state => state.streams.total,
-      page: state => state.streams.page
-    }),
-    pages() {
+    ...mapState(useStreamsStore, ['total', 'page']),
+    pages(): number {
       return Math.ceil(this.total / STREAMS_DEFAULT_PER_PAGE);
     },
-    pagesList() {
-      if (this.pages <= STREAMS_MAX_PAGES_DISPLAY) { return this.pages; }
+    pagesList(): number[] {
+      if (this.pages <= STREAMS_MAX_PAGES_DISPLAY) { return [this.pages]; }
       const pagesList = [1];
 
       if (this.page > 2) {
@@ -68,13 +66,14 @@ export default {
     },
   },
   methods: {
-    gotoPage(page) {
+    ...mapActions(useStreamsStore, ['pageSelection']),
+    gotoPage(page: number) {
       if (page < 1 || page > this.pages) {
         return;
       }
 
-      this.$store.dispatch('pageSelection', page);
+      this.pageSelection(page);
     },
   }
-};
+});
 </script>

@@ -11,20 +11,17 @@
 
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
+
+/* eslint-disable import/no-cycle */
+import { useScheduleStore } from '@/stores/scheduleStore';
 
 import ScheduleRadioListOne from './ScheduleRadioListOne.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: { ScheduleRadioListOne },
-  computed: {
-    ...mapGetters({
-      radios: 'rankedRadios',
-    })
-  }
-};
+  computed: mapState(useScheduleStore, { radios: 'rankedRadios' }),
+});
 </script>

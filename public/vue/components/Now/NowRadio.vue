@@ -17,25 +17,33 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
+import { mapState } from 'pinia';
 import { DateTime, Interval } from 'luxon';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
-import { mapState } from 'vuex';
 
 import {
   TIMEZONE,
   THUMBNAIL_PAGE_PATH
-} from '../../config/config';
+} from '@/config/config';
+
+import type { Radio } from '@/types/radio';
+
+import { useScheduleStore } from '@/stores/scheduleStore';
 
 import RadioShow from '../Radio/RadioShow.vue';
 import RadioStream from '../Radio/RadioStream.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
+export default defineComponent({
+  props: {
+    radio: {
+      type: Object as PropType<Radio>,
+      required: true
+    }
   },
-  props: ['radio'],
   /* eslint-disable no-undef */
   data() {
     return {
@@ -47,9 +55,7 @@ export default {
     RadioStream,
   },
   computed: {
-    ...mapState({
-      cursorTime: state => state.schedule.cursorTime
-    }),
+    ...mapState(useScheduleStore, ['cursorTime', 'schedule']),
     primaryStream() {
       return filter(this.radio.streams, r => r.main === true)[0];
     },
@@ -57,7 +63,7 @@ export default {
       return `${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
     },
     currentShow() {
-      const schedule = this.$store.state.schedule.schedule[this.radio.code_name];
+      const schedule = this.schedule[this.radio.code_name];
 
       if (schedule === undefined || schedule === null) {
         return null;
@@ -70,5 +76,5 @@ export default {
       });
     },
   },
-};
+});
 </script>

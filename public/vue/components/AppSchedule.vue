@@ -3,18 +3,25 @@
     <collection-switcher></collection-switcher>
     <timeline></timeline>
     <timeline-cursor-head v-if="rankedRadios.length > 0"></timeline-cursor-head>
-    <schedule-container ref="container"></schedule-container>
+    <schedule-container :ref="setContainerRef"></schedule-container>
     <category-filter v-if="displayCategoryFilter"/>
     <adsense v-if="!userLogged" mode="horizontal_fix"></adsense>
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 
-import { COLLECTION_FAVORITES, PLAYER_TYPE_RADIO } from '../config/config';
+/* eslint-disable import/no-cycle */
+import { useScheduleStore } from '@/stores/scheduleStore';
+import { usePlayerStore } from '@/stores/playerStore';
+import { useUserStore } from '@/stores/userStore';
 
-// import ScheduleStore from '../store/ScheduleStore';
+import { COLLECTION_FAVORITES } from '@/config/config';
+
+import typeUtils from '../utils/typeUtils';
+
 import CollectionSwitcher from './Schedule/CollectionSwitcher.vue';
 import Timeline from './Schedule/Timeline.vue';
 import TimelineCursorHead from './Schedule/TimelineCursorHead.vue';
@@ -22,10 +29,7 @@ import ScheduleContainer from './Schedule/ScheduleContainer.vue';
 import CategoryFilter from './Schedule/CategoryFilter.vue';
 import Adsense from './Utils/Adsense.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     CollectionSwitcher,
     Timeline,
@@ -34,36 +38,43 @@ export default {
     CategoryFilter,
     Adsense
   },
+  /* eslint-disable indent */
+  data(): {
+    containerRef: HTMLElement|null
+  } {
+    return {
+      containerRef: null
+    };
+  },
   /* created() {
     this.$store.registerModule('schedule', ScheduleStore);
   }, */
   mounted() {
     // set focus on the schedule container to allow key nav.
-    this.$refs.container.$el.focus();
+    if (this.containerRef !== null) {
+      (this.containerRef as any).$el.focus();
+    }
 
-    const body = document.querySelector('body');
+    const body = document.querySelector('body')!;
     body.classList.add('body-app');
     body.classList.add('body-app-schedule');
 
-    document.title = this.$i18n.tc('message.schedule.title');
+    document.title = (this.$i18n as any).tc('message.schedule.title');
   },
   beforeUnmount() {
-    const body = document.querySelector('body');
+    const body = document.querySelector('body')!;
     body.classList.remove('body-app');
     body.classList.remove('body-app-schedule');
   },
   computed: {
-    ...mapGetters([
-      'displayCategoryFilter',
-      'currentSong',
-      'rankedRadios'
-    ]),
-    ...mapState({
-      playingRadio: state => state.player.radio,
-      playingShow: state => state.player.show,
-      playing: state => state.player.playing,
-      userLogged: state => state.user.logged
-    })
+    ...mapState(useUserStore, { userLogged: 'logged' }),
+    ...mapState(useScheduleStore, ['displayCategoryFilter', 'rankedRadios']),
+    ...mapState(usePlayerStore, {
+      playingRadio: 'radio',
+      playingShow: 'show',
+      playing: 'playing',
+      currentSong: 'currentSong'
+    }),
   },
   /* eslint-disable func-names */
   watch: {
@@ -78,18 +89,24 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useScheduleStore, ['scrollBackward', 'scrollForward', 'switchCollection']),
+    setContainerRef(el: HTMLElement) {
+      if (el) {
+        this.containerRef = el;
+      }
+    },
     keyLeft() {
-      this.$store.dispatch('scrollBackward');
+      this.scrollBackward();
     },
     keyRight() {
-      this.$store.dispatch('scrollForward');
+      this.scrollForward();
     },
     keyupFav() {
-      this.$store.dispatch('switchCollection', COLLECTION_FAVORITES);
+      this.switchCollection(COLLECTION_FAVORITES);
     },
     updateTitle() {
       if (this.playing === true && this.playingRadio
-          && this.playingRadio.type === PLAYER_TYPE_RADIO) {
+          && typeUtils.isRadio(this.playingRadio)) {
         let preTitle = '♫ ';
         if (this.currentSong) {
           preTitle += `${this.currentSong} - `;
@@ -101,11 +118,11 @@ export default {
 
         preTitle += `${this.playingRadio.name} - `;
 
-        document.title = `${preTitle}${this.$i18n.tc('message.schedule.title')}`;
+        document.title = `${preTitle}${(this.$i18n as any).tc('message.schedule.title')}`;
       } else {
-        document.title = this.$i18n.tc('message.schedule.title');
+        document.title = (this.$i18n as any).tc('message.schedule.title');
       }
     }
   }
-};
+});
 </script>

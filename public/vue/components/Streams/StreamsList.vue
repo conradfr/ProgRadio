@@ -17,27 +17,27 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
+
+/* eslint-disable import/no-cycle */
+import { useGlobalStore } from '@/stores/globalStore';
+import { useStreamsStore } from '@/stores/streamsStore';
 
 import StreamsListPagination from './StreamsListPagination.vue';
 import StreamsListOne from './StreamsListOne.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     StreamsListPagination,
     StreamsListOne
   },
   computed: {
-    ...mapState({
-      radios: state => state.streams.streamRadios,
-    }),
-    ...mapGetters({
-      isLoading: 'isLoading'
+    ...mapState(useGlobalStore, ['isLoading']),
+    ...mapState(useStreamsStore, {
+      radios: 'streamRadios'
     })
   },
-};
+});
 </script>

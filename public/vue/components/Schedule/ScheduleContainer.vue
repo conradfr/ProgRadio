@@ -6,17 +6,21 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapActions, mapState } from 'pinia';
+
+/* eslint-disable import/no-cycle */
+import { useScheduleStore } from '@/stores/scheduleStore';
+import { usePlayerStore } from '@/stores/playerStore';
+
+import { DEFAULT_COLLECTION } from '@/config/config';
+
 import ScheduleRadioList from './ScheduleRadioList.vue';
 import ScheduleRadioGrid from './ScheduleRadioGrid.vue';
 import Loading from '../Utils/Loading.vue';
 
-import { DEFAULT_COLLECTION } from '../../config/config';
-
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     ScheduleRadioList,
     ScheduleRadioGrid,
@@ -25,16 +29,16 @@ export default {
   created() {
     setTimeout(
       () => {
-        this.$store.dispatch('getRadiosData');
-        this.$store.dispatch('getSchedule', {
+        this.getRadiosData();
+        this.getSchedule({
           collection: this.$route.params.collection
-            ? this.$route.params.collection : this.$store.state.schedule.currentCollection
+            ? this.$route.params.collection : this.currentCollection
         });
 
         if (this.$route.params.collection) {
-          this.$store.dispatch('switchCollection', this.$route.params.collection);
+          this.switchCollection((this.$route.params.collection as string));
         } else {
-          this.$store.dispatch('joinChannel', `collection:${this.$store.state.schedule.currentCollection}`);
+          this.joinChannel(`collection:${this.currentCollection}`);
         }
       },
       25
@@ -48,16 +52,27 @@ export default {
     ); */
   },
   beforeUnmount() {
-    this.$store.dispatch('leaveChannel', `collection:${this.$store.state.schedule.currentCollection}`);
+    this.leaveChannel(`collection:${this.currentCollection}`);
   },
   watch: {
     $route(to, from) {
       if (to.params.collection !== undefined && to.params.collection !== from.params.collection) {
-        const toCollection = to.params.collection === '' ? DEFAULT_COLLECTION : to.params.collection;
-        this.$store.dispatch('getSchedule', { collection: toCollection });
-        this.$store.dispatch('switchCollection', toCollection);
+        const toCollection = to.params.collection === ''
+          ? DEFAULT_COLLECTION : to.params.collection;
+        this.getSchedule({ collection: toCollection });
+        this.switchCollection(toCollection);
       }
     }
+  },
+  computed: mapState(useScheduleStore, ['currentCollection']),
+  methods: {
+    ...mapActions(usePlayerStore, ['joinChannel', 'leaveChannel']),
+    ...mapActions(useScheduleStore, [
+      'getSchedule',
+      'switchCollection',
+      'getRadiosData',
+      'getSchedule'
+    ])
   }
-};
+});
 </script>

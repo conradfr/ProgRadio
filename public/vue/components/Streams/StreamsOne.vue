@@ -54,9 +54,9 @@
               </div>
 
               <div class="mt-4"
-                 v-if="liveSong">
+                 v-if="liveSongTitle">
                 <strong>{{ $t('message.streaming.playing') }}:</strong>&nbsp;
-                ♫ {{ liveSong }}
+                ♫ {{ liveSongTitle }}
               </div>
             </div>
 
@@ -94,90 +94,103 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
-import { nextTick } from 'vue';
+<script lang="ts">
+import { defineComponent, nextTick } from 'vue';
+import { mapState, mapActions } from 'pinia';
+
+/* eslint-disable import/no-cycle */
+import { useStreamsStore } from '@/stores/streamsStore';
+import { usePlayerStore } from '@/stores/playerStore';
+import { useUserStore } from '@/stores/userStore';
 
 import * as config from '../../config/config';
 import StreamsUtils from '../../utils/StreamsUtils';
 import Adsense from '../Utils/Adsense.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     Adsense
   },
-  props: ['codeName'],
+  props: {
+    codeName: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       locale: this.$i18n.locale
     };
   },
   computed: {
-    ...mapState({
-      playing: state => state.player.playing,
-      selectedCountry: state => state.streams.selectedCountry,
-      userLogged: state => state.user.logged
-    }),
-    ...mapGetters([
-      'radioPlayingCodeName'
-    ]),
+    ...mapState(useUserStore, { userLogged: 'logged' }),
+    ...mapState(usePlayerStore, ['playing', 'radioPlayingCodeName', 'liveSong', 'externalPlayer']),
+    ...mapState(useStreamsStore, ['selectedCountry', 'getOneStream', 'getCountryName']),
     stream() {
-      return this.$store.getters.getOneStream(this.codeName);
+      return this.getOneStream(this.codeName);
     },
     img() {
-      return StreamsUtils.getPictureUrl(this.stream);
+      return StreamsUtils.getPictureUrl(this.stream!);
     },
     country() {
-      return this.$store.getters.getCountryName(this.stream.country_code);
+      return this.getCountryName(this.stream!.country_code);
     },
-    liveSong() {
-      return this.$store.getters.liveSong(this.stream, this.stream.radio_stream_code_name);
+    liveSongTitle() {
+      return this.liveSong(this.stream!, this.stream!.radio_stream_code_name);
     },
   },
   methods: {
+    ...mapActions(usePlayerStore, ['playStream', 'stop']),
+    ...mapActions(useStreamsStore, [
+      'setSearchText',
+      'setSearchActive',
+      'getStreamRadios',
+      'setSoloExtended'
+    ]),
     playStop() {
+      if (this.stream === null) {
+        return;
+      }
+
       // stop if playing
       if (this.playing === true && this.radioPlayingCodeName === this.stream.code_name) {
         if (this.externalPlayer === false) {
-          this.$gtag.event(config.GTAG_ACTION_STOP, {
+          (this as any).$gtag.event(config.GTAG_ACTION_STOP, {
             event_category: config.GTAG_CATEGORY_STREAMING,
             event_label: this.stream.code_name,
             value: config.GTAG_ACTION_STOP_VALUE
           });
         }
 
-        this.$store.dispatch('stop');
+        this.stop();
         return;
       }
 
       if (this.externalPlayer === false) {
-        this.$gtag.event(config.GTAG_ACTION_PLAY, {
+        (this as any).$gtag.event(config.GTAG_ACTION_PLAY, {
           event_category: config.GTAG_CATEGORY_STREAMING,
           event_label: this.stream.code_name,
           value: config.GTAG_ACTION_PLAY_VALUE
         });
       }
 
-      this.$store.dispatch('playStream', this.stream);
+      this.playStream(this.stream);
     },
-    tagClick(tag) {
-      this.$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
+    tagClick(tag: string) {
+      (this as any).$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
         event_category: config.GTAG_CATEGORY_STREAMING,
         event_label: tag.toLowerCase(),
         value: config.GTAG_STREAMING_FILTER_VALUE
       });
 
-      this.$store.dispatch('setSearchText', tag);
-      this.$store.dispatch('setSearchActive', true)
-        .then(() => {
-          nextTick(() => {
-            this.$store.dispatch('setSoloExtended', null);
-            this.$store.dispatch('getStreamRadios');
-          });
-        });
+      this.setSearchText(tag);
+      this.setSearchActive(true);
+      // .then(() => {
+      nextTick(() => {
+        this.setSoloExtended(null);
+        this.getStreamRadios();
+      });
+      // });
     },
     quit() {
       this.$router.push({
@@ -186,5 +199,5 @@ export default {
       });
     }
   }
-};
+});
 </script>

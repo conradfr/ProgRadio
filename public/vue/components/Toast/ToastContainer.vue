@@ -8,20 +8,17 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
 
+import { useGlobalStore } from '@/stores/globalStore';
 import Toast from './Toast.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     Toast
   },
-  computed: mapState({
-    toasts: state => state.toasts,
-  })
-};
+  computed: mapState(useGlobalStore, ['toasts'])
+});
 </script>

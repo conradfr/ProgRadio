@@ -34,7 +34,7 @@
         v-if="(selectedCountry === code_all
           || selectedCountry === code_favorites || selectedCountry === code_last)
             && radio.country_code !== null">
-      <gb-flag
+      <vue-flag
           :code="radio.country_code"
           size="micro"
           v-once
@@ -43,20 +43,39 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
-import { nextTick, toRaw } from 'vue';
+<script lang="ts">
+import { defineComponent, nextTick, toRaw } from 'vue';
+import { mapState, mapActions } from 'pinia';
+import type { PropType } from 'vue';
+
+/* eslint-disable import/no-cycle */
+import { useStreamsStore } from '@/stores/streamsStore';
+import { usePlayerStore } from '@/stores/playerStore';
+import { useUserStore } from '@/stores/userStore';
+
+import type { Stream } from '@/types/stream';
 
 import * as config from '../../config/config';
 import StreamsUtils from '../../utils/StreamsUtils';
 import PlayerUtils from '../../utils/PlayerUtils';
 
-export default {
-  compatConfig: {
-    MODE: 3
+export default defineComponent({
+  props: {
+    radio: {
+      type: Object as PropType<Stream>,
+      required: true
+    }
   },
-  props: ['radio'],
-  data() {
+  /* eslint-disable indent */
+  data(): {
+    channelName: string,
+    currentSong: string|null,
+    hover: boolean,
+    code_all: string,
+    code_last: string,
+    code_favorites: string,
+    styleObject: any
+  } {
     const img = StreamsUtils.getPictureUrl(this.radio);
 
     return {
@@ -72,22 +91,19 @@ export default {
     };
   },
   beforeMount() {
-    this.$store.dispatch('joinChannel', this.channelName);
+    this.joinChannel(this.channelName);
   },
   beforeUnmount() {
-    this.$store.dispatch('leaveChannel', this.channelName);
+    this.leaveChannel(this.channelName);
   },
   computed: {
-    ...mapState({
-      playing: state => state.player.playing,
-      externalPlayer: state => state.player.externalPlayer,
-      selectedCountry: state => state.streams.selectedCountry,
-      favorites: state => state.streams.favorites,
-      song: state => state.player.song,
-    }),
-    ...mapGetters([
+    ...mapState(usePlayerStore, [
+      'playing',
+      'externalPlayer',
+      'song',
       'radioPlayingCodeName'
     ]),
+    ...mapState(useStreamsStore, ['selectedCountry', 'favorites']),
     liveSong() {
       if (!Object.prototype.hasOwnProperty.call(this.song, this.channelName)) {
         return null;
@@ -111,73 +127,79 @@ export default {
     },
   },
   methods: {
+    ...mapActions(usePlayerStore, ['joinChannel', 'leaveChannel', 'stop', 'playStream']),
+    ...mapActions(useUserStore, ['toggleStreamFavorite']),
+    ...mapActions(useStreamsStore, [
+      'countrySelection',
+      'setSearchText',
+      'setSearchActive',
+      'getStreamRadios'
+    ]),
     isFavorite() {
-      return this.favorites.indexOf(this.radio.code_name) !== -1;
+      return this.favorites.indexOf(this.radio.code_name!) !== -1;
     },
     playStop() {
       // stop if playing
       if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name) {
         if (this.externalPlayer === false) {
-          this.$gtag.event(config.GTAG_ACTION_STOP, {
+          (this as any).$gtag.event(config.GTAG_ACTION_STOP, {
             event_category: config.GTAG_CATEGORY_STREAMING,
             event_label: this.radio.code_name,
             value: config.GTAG_ACTION_STOP_VALUE
           });
         }
 
-        this.$store.dispatch('stop');
+        this.stop();
         return;
       }
 
       if (this.externalPlayer === false) {
-        this.$gtag.event(config.GTAG_ACTION_PLAY, {
+        (this as any).$gtag.event(config.GTAG_ACTION_PLAY, {
           event_category: config.GTAG_CATEGORY_STREAMING,
           event_label: this.radio.code_name,
           value: config.GTAG_ACTION_PLAY_VALUE
         });
       }
 
-      this.$store.dispatch('playStream', this.radio);
+      this.playStream(this.radio);
     },
     flagClick() {
-      this.$gtag.event(config.GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
+      (this as any).$gtag.event(config.GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
         event_category: config.GTAG_CATEGORY_STREAMING,
         event_label: this.radio.country_code.toLowerCase(),
         value: config.GTAG_STREAMING_FILTER_VALUE
       });
 
-      this.$store.dispatch('countrySelection', this.radio.country_code);
+      this.countrySelection(this.radio.country_code);
     },
-    tagClick(tag) {
-      this.$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
+    tagClick(tag: string) {
+      (this as any).$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
         event_category: config.GTAG_CATEGORY_STREAMING,
         event_label: tag.toLowerCase(),
         value: config.GTAG_STREAMING_FILTER_VALUE
       });
 
-      this.$store.dispatch('setSearchText', tag);
-      this.$store.dispatch('setSearchActive', true)
-        .then(() => {
-          nextTick(() => {
-            // this.$refs.searchText.focus();
-            this.$store.dispatch('getStreamRadios');
-          });
-        });
+      this.setSearchText(tag);
+      this.setSearchActive(true);
+      nextTick(() => {
+        // this.$refs.searchText.focus();
+        this.getStreamRadios();
+      });
     },
-    nameClick(id) {
+    nameClick(id: string) {
       this.$router.push({
         name: 'streaming',
         params: { countryOrCategoryOrUuid: id }
       });
     },
     toggleFavorite() {
-      this.$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
+      (this as any).$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
         event_category: config.GTAG_CATEGORY_SCHEDULE,
         event_label: this.radio.code_name,
         value: config.GTAG_ACTION_FAVORITE_TOGGLE_VALUE
       });
 
-      this.$store.dispatch('toggleFavorite', this.radio);
+      this.toggleStreamFavorite(this.radio);
     },
     tags() {
       if (this.radio.tags === undefined || this.radio.tags === null) {
@@ -187,5 +209,5 @@ export default {
       return [...new Set(this.radio.tags.split(','))];
     }
   }
-};
+});
 </script>

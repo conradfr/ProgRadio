@@ -4,25 +4,31 @@
        :style="styleObject"></div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-import { TICK_INTERVAL } from '../../config/config';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
-  data() {
+/* eslint-disable import/no-cycle */
+import { useScheduleStore } from '@/stores/scheduleStore';
+
+import { TICK_INTERVAL } from '@/config/config';
+
+export default defineComponent({
+  /* eslint-disable indent */
+  data(): {
+    tickInterval: number|null
+  } {
     return {
       tickInterval: null
     };
   },
+  mounted() {
+    this.setTick();
+  },
   computed: {
-    ...mapGetters([
-      'isToday'
-    ]),
-    styleObject() {
-      return { left: this.$store.getters.cursorIndex };
+    ...mapState(useScheduleStore, ['isToday', 'cursorIndex']),
+    styleObject(): object {
+      return { left: this.cursorIndex };
     }
   },
   watch: {
@@ -30,21 +36,20 @@ export default {
     isToday(newValue) {
       if (newValue === true) {
         this.setTick();
-      } else {
+        return;
+      }
+
+      if (this.tickInterval !== null) {
         clearInterval(this.tickInterval);
       }
     }
   },
   methods: {
-    tick() {
-      this.$store.dispatch('tick');
-    },
+    ...mapActions(useScheduleStore, ['tick']),
     setTick() {
-      this.tickInterval = setInterval(this.tick, TICK_INTERVAL);
+      // @ts-ignore
+      this.tickInterval = setInterval(this.tick(), TICK_INTERVAL);
     }
-  },
-  mounted() {
-    this.setTick();
   }
-};
+});
 </script>

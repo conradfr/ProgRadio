@@ -20,18 +20,37 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapGetters } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
+import { mapState } from 'pinia';
+
+import type { Radio } from '@/types/radio';
+import type { ScheduleOfRadio } from '@/types/schedule';
+
+/* eslint-disable import/no-cycle */
+import { useGlobalStore } from '@/stores/globalStore';
+import { useScheduleStore } from '@/stores/scheduleStore';
+import { usePlayerStore } from '@/stores/playerStore';
 
 import ScheduleRadioProgram from './ScheduleRadioProgram.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: { ScheduleRadioProgram },
-  props: ['radio', 'displayNoSchedule', 'schedule', 'hasSchedule'],
-  data() {
+  props: {
+    radio: {
+      type: Object as PropType<Radio>,
+      required: true
+    },
+    schedule: Object as PropType<ScheduleOfRadio>,
+    displayNoSchedule: Boolean,
+    hasSchedule: Boolean
+  },
+  /* eslint-disable indent */
+  data(): {
+    intersected: string[],
+    intersectionObserver: IntersectionObserver|null
+  } {
     return {
       intersected: [],
       intersectionObserver: null,
@@ -41,19 +60,20 @@ export default {
     this.intersectionObserver = new IntersectionObserver(this.handleIntersection);
   },
   computed: {
-    ...mapState({
-      playing: state => state.player.playing,
-      playingStreamCodeName: state => state.player.radioStreamCodeName,
-      noProgramStyleObject(state) {
-        return { left: `${state.schedule.scrollIndex}px` };
-      },
+    ...mapState(useGlobalStore, ['isLoading']),
+    ...mapState(useScheduleStore, ['scrollIndex']),
+    ...mapState(usePlayerStore, {
+      playing: 'playing',
+      playingStreamCodeName: 'radioStreamCodeName'
     }),
-    ...mapGetters([
-      'isLoading'
-    ]),
+    noProgramStyleObject() {
+      return {
+        left: `${this.scrollIndex}px`,
+      };
+    }
   },
   methods: {
-    handleIntersection(entries) {
+    handleIntersection(entries: any[]) {
       entries.forEach((entry) => {
         const indexOfEntry = this.intersected.indexOf(entry.target.dataset.hash);
         if (entry.isIntersecting === true && indexOfEntry === -1) {
@@ -61,16 +81,8 @@ export default {
         } else if (indexOfEntry !== -1) {
           this.intersected.splice(indexOfEntry, 1);
         }
-
-        // this.isIntersecting = entry.isIntersecting;
-        // const className = 'visually-hidden';
-        // if (entry.isIntersecting && entry.target.classList.contains(className)) {
-        //   entry.target.classList.remove(className);
-        // } else if (!entry.isIntersecting && !entry.target.classList.contains(className)) {
-        //   entry.target.classList.add(className);
-        // }
       });
     },
   }
-};
+});
 </script>
