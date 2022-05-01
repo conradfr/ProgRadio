@@ -43,7 +43,7 @@ class RadioBrowser
 
     protected function getServers(): array
     {
-        $serversFromDns = dns_get_record(self::SERVERS_DNS, DNS_ANY);
+        $serversFromDns = dns_get_record(self::SERVERS_DNS, DNS_A);
 
         if ($serversFromDns === false) {
             return [];
