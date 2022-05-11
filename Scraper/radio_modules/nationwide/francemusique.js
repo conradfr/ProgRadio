@@ -6,7 +6,7 @@ const node_fetch = require('node-fetch');
 let scrapedData = [];
 
 const fetchSections = async (id) => {
-  const response = await node_fetch(`https://www.radiofrance.fr/api/v1.6/stations/francemusique/programs/${id}/chronicles`);
+  const response = await node_fetch(`https://www.radiofrance.fr/api/v1.7/stations/francemusique/programs/${id}/chronicles`);
   return await response.json();
 };
 
@@ -48,7 +48,7 @@ const format = dateObj => {
         title: entry.concept !== null && entry.concept.title !== undefined ? entry.concept.title : null,
         description: entry.expression !== null && entry.expression.title !== undefined ? entry.expression.title : null,
         presenter: entry.concept !== null && entry.concept.producers !== undefined ? entry.concept.producers : null,
-        img: entry.concept !== null && entry.concept.visual !== undefined ? entry.concept.visual.src : null
+        img: entry.concept !== null && entry.concept.visual != null && entry.concept.visual.src !== undefined ? entry.concept.visual.src : null
       };
 
       newEntry.sections.push(secEntry);
@@ -63,7 +63,7 @@ const format = dateObj => {
 };
 
 const fetch = dateStr => {
-  let url = `https://www.radiofrance.fr/api/v1.6/stations/francemusique/programs?date=${dateStr}`;
+  let url = `https://www.radiofrance.fr/api/v1.7/stations/francemusique/programs?date=${dateStr}`;
 
   logger.log('info', `fetching ${url}`);
 

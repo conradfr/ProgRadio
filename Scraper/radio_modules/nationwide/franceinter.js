@@ -1,247 +1,88 @@
-const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const axios = require('axios');
+const node_fetch = require('node-fetch');
 
 let scrapedData = [];
 
-const format = dateObj => {
-  const mains = [];
-  const sections = [];
-  let referenceIndex = 0;
-  let referenceIndexPrev = 0;
-
-  scrapedData.reduce(function (prev, curr, index, array) {
-    let startDateTime = moment(curr.dateObj);
-
-    regexp = new RegExp(/([0-9]{1,2})h([0-9]{2})/);
-    match_time = curr.time.match(regexp);
-
-    if (match_time !== null) {
-      startDateTime.hour(match_time[1]);
-      startDateTime.minute(match_time[2]);
-      startDateTime.second(0);
-    } else {
-      return prev;
-    }
-
-    let prevMatch = null;
-    // keep only relevant time from previous day page
-    if (startDateTime.isBefore(dateObj, 'day')) {
-      if (referenceIndexPrev === 0 && (curr.description == null || curr.description.indexOf('rediffusion') === -1)) {
-        referenceIndexPrev = index;
-        return prev;
-      }
-
-      prevMatch = array[referenceIndexPrev].time.match(regexp);
-      array[referenceIndexPrev].dateObj.hour(prevMatch[1]);
-
-      if (array[referenceIndexPrev].dateObj.isBefore(startDateTime)) {
-        return prev;
-      }
-
-      // update day
-      startDateTime.add(1, 'days');
-      // endDateTime.add(1, 'days');
-    }
-    // remove next day schedule from day page
-    else {
-      if (curr.main === true && curr.dateObj !== array[index - 1].dateObj && (curr.description == null || curr.description.indexOf('rediffusion') === -1)) {
-        referenceIndex = index;
-      } else {
-        prevMatch = array[referenceIndex].time.match(regexp);
-        let prevDate = moment(array[referenceIndex].dateObj);
-        prevDate.hour(prevMatch[1]);
-
-        if (prevDate.isAfter(startDateTime)) {
-          return prev;
-        }
-      }
-
-      // if (startDateTime.hour() > endDateTime.hour()) {
-      //   endDateTime.add(1, 'days');
-      // }
-    }
-
-    // It seems some rerun are given their original airtime (??) so we can't use them
-    if (curr.description !== undefined && curr.description.indexOf('rediffusion') !== -1 && match_time[1] > 4) {
-      return prev;
-    }
-
-    newEntry = {
-      'date_time_start': startDateTime.toISOString(),
-      'img': curr.img,
-      'title': curr.title,
-      'description': curr.description !== undefined ? curr.description : null,
-    };
-
-    if (curr.main === true) {
-      if (curr.host !== undefined && curr.host !== null && curr.host.length > 0){
-        newEntry.host = curr.host;
-      }
-
-      newEntry.sections = [];
-      mains.push(newEntry);
-    } else {
-      if (curr.host !== undefined && curr.host !== null && curr.host.length > 0){
-        newEntry.presenter = curr.host.map(host => host.replace(', ', ''));
-      }
-      sections.push(newEntry);
-    }
-
-    return prev;
-  });
-
-  if (sections.length > 0) {
-    // sort mains
-    function compare(a, b) {
-      momentA = moment(a.date_time_start);
-      momentB = moment(b.date_time_start);
-
-      if (momentA.isBefore(momentB))
-        return -1;
-      if (momentA.isAfter(momentB))
-        return 1;
-      return 0;
-    }
-
-    mains.sort(compare);
-
-    sections.forEach(function (entry) {
-      for (i = 0; i < mains.length; i++) {
-        entryMoment = moment(entry.date_time_start);
-        mainMoment = moment(mains[i].date_time_start);
-
-        let toAdd = false;
-        if (i === (mains.length - 1)) {
-          if (entryMoment.isAfter(mainMoment)) {
-            toAdd = true;
-          }
-        } else if (entryMoment.isBetween(mainMoment, moment(mains[i + 1].date_time_start))) {
-          toAdd = true;
-        }
-
-        if (toAdd === true) {
-          mains[i].sections.push(entry);
-          break;
-        }
-      }
-    });
-  }
-
-  // fuuu
-  const mainsCleaned = mains.map(entry => {
-    if (entry.host === undefined) {
-      entry.sections = entry.sections.map(section => {
-        if (section.presenter !== undefined && section.presenter !== null) {
-          hostsSections = hostsSections.concat(section.presenter);
-          section.presenter = section.presenter.join(', ');
-        }
-        return section;
-      });
-
-      return entry;
-    }
-
-    // couldn't find a way to not get all sections hosts in main so dedup here
-
-    let hosts = [];
-
-    if (entry.host !== undefined && entry.host !== null) {
-      hosts = entry.host.map(host => host.replace(',', ''));
-    }
-
-    let hostsSections = [];
-
-    let sectionsCleaned = entry.sections.map(section => {
-      if (section.presenter !== undefined && section.presenter !== null) {
-        hostsSections = hostsSections.concat(section.presenter);
-        section.presenter = section.presenter.join(', ');
-      }
-
-      return section;
-    });
-
-    let index;
-    for (let i=0; i<hostsSections.length; i++) {
-      index = hosts.indexOf(hostsSections[i]);
-      if (index > -1) {
-        hosts.splice(index, 1);
-      }
-    }
-
-    if (hosts.length > 0) {
-      entry.host = [...new Set(hosts)].join(', ');
-    } else {
-      entry.host = null;
-    }
-
-    entry.sections = sectionsCleaned;
-    return entry;
-  });
-
-  // console.log(mainsCleaned);
-
-  return Promise.resolve(mainsCleaned);
+const fetchSections = async (id) => {
+  const response = await node_fetch(`https://www.radiofrance.fr/api/v1.7/stations/franceinter/programs/${id}/chronicles`);
+  return await response.json();
 };
 
-const fetch = (dayFormat, sections, dateObj) => {
-  let url = `https://www.franceinter.fr/programmes${dayFormat}`;
+const format = async dateObj => {
+  const dayStr = dateObj.format('DD');
+  const datetimeStored = [];
+
+  // we use reduce instead of map to act as a map+filter in one pass
+  const cleanedData = scrapedData.reduce(async function (prevP, curr, index, array) {
+    const prev = await prevP;
+    const date = moment.unix(curr.startTime);
+
+    // as we have to analyze two pages and can get results from previous and next days ...
+    // 1. filter other days
+    if (date.tz('Europe/Paris').format('DD') !== dayStr) {
+      return prev;
+    }
+    // 2. filter duplicated shows
+    if (datetimeStored.indexOf(curr['datetime_raw']) > -1) {
+      return prev;
+    }
+
+    const newEntry = {
+      'date_time_start': date.toISOString(),
+      'date_time_end': moment.unix(curr.endTime).toISOString(),
+      'title': curr.concept.title,
+      'description': curr.expression.title !== undefined ? curr.expression.title : null,
+      'host': curr.concept.producers !== undefined ? curr.concept.producers : null,
+      'img': curr.concept.visual.src !== undefined ? curr.concept.visual.src : null,
+      'sections': []
+    };
+
+    datetimeStored.push(moment.unix(curr.startTime));
+
+    const sections = await fetchSections(curr.id);
+
+    sections.steps.forEach(function (entry) {
+      const secEntry = {
+        date_time_start: moment.unix(entry.startTime).toISOString(),
+        title: entry.concept !== null && entry.concept.title !== undefined ? entry.concept.title : null,
+        description: entry.expression !== null && entry.expression.title !== undefined ? entry.expression.title : null,
+        presenter: entry.concept !== null && entry.concept.producers !== undefined ? entry.concept.producers : null,
+        img: entry.concept !== null && entry.concept.visual != null && entry.concept.visual.src !== undefined ? entry.concept.visual.src : null
+      };
+
+      newEntry.sections.push(secEntry);
+    });
+
+    prev.push(newEntry);
+    return prev;
+  }, []);
+
+  return await Promise.resolve(cleanedData);
+};
+
+const fetch = dateStr => {
+  let url = `https://www.radiofrance.fr/api/v1.7/stations/franceinter/programs?date=${dateStr}`;
 
   logger.log('info', `fetching ${url}`);
 
-  let findClass = ' > .card-elements > li.tile';
-
-  if (sections === true) {
-    findClass = '.card-elements-sub' + findClass;
-  } else {
-    findClass = '.card-elements-wrapper' + findClass;
-  }
-
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .find(findClass)
-      .set({
-        'time': '.card-schedule',
-        'img': '.dejavu@data-dejavu-src',
-        'title': 'a.card-text-title',
-        'description': 'a.card-text-sub',
-        'host': ['.card-text-grey > a.card-text-grey']
-      })
-      .data(function (listing) {
-        listing.main = sections !== true;
-        listing.dateObj = dateObj;
-        scrapedData.push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
-  });
+  return axios.get(url)
+    .then(function (response) {
+      // console.log(response.data.steps);
+      scrapedData = scrapedData.concat(response.data.steps);
+      // return resolve(true);
+      // }).catch(() => resolve(true));
+    });
 };
 
 const fetchAll = dateObj => {
-  /* radio schedule page has the format 3am -> 3am,
-      so we get the previous day as well to get the full day and the filter the list later  */
-
-/*  const now = new moment();
-  now.tz('Europe/Paris');
-
-  if (now.hour() < 5) {
-    return fetch('');
-  }*/
-
   const previousDay = moment(dateObj);
   previousDay.subtract(1, 'days');
 
-  return fetch('/' + previousDay.format('YYYY-MM-DD'), false, previousDay)
+  return fetch(previousDay.format('DD-MM-YYYY'))
     .then(() => {
-      // return fetch('/' + previousDay.format('YYYY-MM-DD'), true, previousDay)
-      //   .then(() => {
-          return fetch('/' + dateObj.format('YYYY-MM-DD'), false, dateObj)
-            .then(() => {
-              return fetch('/' + dateObj.format('YYYY-MM-DD'), true, dateObj)
-            })
-        // })
+      return fetch(dateObj.format('DD-MM-YYYY'));
     });
 };
 
@@ -251,6 +92,7 @@ const getScrap = dateObj => {
       return format(dateObj);
     });
 };
+
 
 const scrapModule = {
   getName: 'franceinter',

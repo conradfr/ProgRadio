@@ -1,106 +1,103 @@
-const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const axios = require('axios');
+const node_fetch = require('node-fetch');
 
 let scrapedData = [];
 
-const format = dateObj => {
-  dateObj.tz('UTC');
+const fetchSections = async (id) => {
+  const response = await node_fetch(`https://www.radiofrance.fr/api/v1.7/stations/mouv/programs/${id}/chronicles`);
+  return await response.json();
+};
+
+const format = async dateObj => {
+  const dayStr = dateObj.format('DD');
+  const datetimeStored = [];
 
   // we use reduce instead of map to act as a map+filter in one pass
-  const cleanedData = scrapedData.reduce(function(prev, curr) {
-    if (typeof curr.json === 'undefined') {
+  const cleanedData = scrapedData.reduce(async function (prevP, curr, index, array) {
+    const prev = await prevP;
+    const date = moment.unix(curr.startTime);
+
+    // as we have to analyze two pages and can get results from previous and next days ...
+    // 1. filter other days
+    if (date.tz('Europe/Paris').format('DD') !== dayStr) {
+      return prev;
+    }
+    // 2. filter duplicated shows
+    if (datetimeStored.indexOf(curr['datetime_raw']) > -1) {
       return prev;
     }
 
-    const content = JSON.parse(curr.json.substr(21));
-
-    if (content === "") {
-      return prev;
-    }
-
-    let newEntry = {
-      'title': curr.title,
-      'description': curr.description,
-      // 'img': curr.img
+    const newEntry = {
+      'date_time_start': date.toISOString(),
+      'date_time_end': moment.unix(curr.endTime).toISOString(),
+      'title': curr.concept.title,
+      'description': curr.expression.title !== undefined ? curr.expression.title : null,
+      'host': curr.concept.producers !== undefined ? curr.concept.producers : null,
+      'img': curr.concept.visual.src !== undefined ? curr.concept.visual.src : null,
+      'sections': []
     };
 
-    // temp has there is a ssl error on the server on img import
-    if (content.contentReducer.visual !== undefined && content.contentReducer.visual.url !== undefined) {
-      // newEntry.img = 'http' + content.contentReducer.visual.url.substr(5);
-      newEntry.img = content.contentReducer.visual.url;
-    }
+    datetimeStored.push(moment.unix(curr.startTime));
 
-    let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-    let match = curr.datetime_raw.match(regexp);
+    const sections = await fetchSections(curr.id);
 
-    // no time, exit
-    if (match === null) {
-      return prev;
-    }
+    sections.steps.forEach(function (entry) {
+      const secEntry = {
+        date_time_start: moment.unix(entry.startTime).toISOString(),
+        title: entry.concept !== null && entry.concept.title !== undefined ? entry.concept.title : null,
+        description: entry.expression !== null && entry.expression.title !== undefined ? entry.expression.title : null,
+        presenter: entry.concept !== null && entry.concept.producers !== undefined ? entry.concept.producers : null,
+        img: entry.concept !== null && entry.concept.visual != null && entry.concept.visual.src !== undefined ? entry.concept.visual.src : null
+      };
 
-    const startDateTime = moment(dateObj);
-    startDateTime.hour(match[1]);
-    startDateTime.minute(match[2]);
-    startDateTime.second(0);
-
-    newEntry.date_time_start = startDateTime.toISOString();
+      newEntry.sections.push(secEntry);
+    });
 
     prev.push(newEntry);
     return prev;
-  },[]);
+  }, []);
 
-  return Promise.resolve(cleanedData);
+  return await Promise.resolve(cleanedData);
 };
 
-const fetch = dateObj => {
-  dateObj.locale('fr');
-  let dayFormat = dateObj.format('YYYY-MM-DD');
-  let url = `http://www.mouv.fr/programmes/${dayFormat}`;
+const fetch = dateStr => {
+  let url = `https://www.radiofrance.fr/api/v1.7/stations/mouv/programs?date=${dateStr}`;
 
   logger.log('info', `fetching ${url}`);
 
-    return new Promise(function(resolve, reject) {
-        return osmosis
-          .get(url)
-          .select('.program-grid-step')
-            .set({
-              'datetime_raw': '.program-grid-step-timeline .time-plate',
-              'title': '.program-grid-step-infos-upper-title',
-              'img': '.color-spreaded-image img@src'
-            })
-          .do(
-            osmosis.follow('.program-grid-step-infos-visual a@href')
-              .find('body')
-              .set({
-                'description': '.content p',
-                'json': 'script[1]',
-              })
-            )
-            .data(function (listing) {
-                scrapedData.push(listing);
-            })
-            .done(function () {
-                resolve(true);
-            })
+  return axios.get(url)
+    .then(function (response) {
+      // console.log(response.data.steps);
+      scrapedData = scrapedData.concat(response.data.steps);
+      // return resolve(true);
+      // }).catch(() => resolve(true));
     });
 };
 
-const fetchAll = dateObj =>  {
-    return fetch(dateObj);
+const fetchAll = dateObj => {
+  const previousDay = moment(dateObj);
+  previousDay.subtract(1, 'days');
+
+  return fetch(previousDay.format('DD-MM-YYYY'))
+    .then(() => {
+      return fetch(dateObj.format('DD-MM-YYYY'));
+    });
 };
 
 const getScrap = dateObj => {
-    return fetchAll(dateObj)
-        .then(() => {
-            return format(dateObj);
-        });
+  return fetchAll(dateObj)
+    .then(() => {
+      return format(dateObj);
+    });
 };
 
+
 const scrapModule = {
-    getName: 'mouv',
-    supportTomorrow: false,
-    getScrap
+  getName: 'mouv',
+  supportTomorrow: true,
+  getScrap
 };
 
 module.exports = scrapModule;
