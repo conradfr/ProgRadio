@@ -30,9 +30,9 @@
             </div>
           </div>
         </div>
-<!--        <schedule-radio-section v-for="entry in program.sections" :key="entry.hash"
+        <schedule-radio-section v-for="entry in program.sections" :key="entry.hash"
           :program_start="program.start_at" :section="entry" v-once>
-        </schedule-radio-section>-->
+        </schedule-radio-section>
       </div>
     </div>
   </div>
@@ -53,10 +53,10 @@ import { usePlayerStore } from '@/stores/playerStore';
 import type { Radio } from '@/types/radio';
 import type { Program } from '@/types/program';
 
-// import ScheduleRadioSection from './ScheduleRadioSection.vue';
+import ScheduleRadioSection from './ScheduleRadioSection.vue';
 
 export default defineComponent({
-  // components: { ScheduleRadioSection },
+  components: { ScheduleRadioSection },
   props: {
     radio: {
       type: Object as PropType<Radio>,
