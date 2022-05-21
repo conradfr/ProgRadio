@@ -1,9 +1,11 @@
 {
   "presets": [
+    "@babel/preset-typescript",
+    "babel-preset-typescript-vue3",
     [
       "@babel/preset-env",
       {
-        "targets": ">= 1%, not dead, not IE 11, Firefox >= 60, Opera >= 60, Edge >= 16, safari >= 11, Chrome >= 85",
+        "targets": ">= 1%, not dead, not IE 11, Firefox >= 80, Opera >= 80, Edge >= 98, safari >= 12, Chrome >= 85",
         "corejs": { version: 3.7, proposals: true },
         "useBuiltIns": "entry",
         "modules": false

@@ -5,7 +5,7 @@
 //    "node_modules"
 //  ],
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es6",
     "allowJs": true,
     "sourceMap": true,
 //    "module": "esnext",

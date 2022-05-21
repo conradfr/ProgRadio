@@ -71,9 +71,19 @@ module.exports = {
       },
       {
         test: /\.ts$/,
-        loader: 'ts-loader',
+        loader: 'babel-loader',
         options: {
-          appendTsSuffixTo: [/\.vue$/]
+          // appendTsSuffixTo: [/\.vue$/],
+          presets: [
+            '@babel/preset-env',
+            "babel-preset-typescript-vue3",
+            [
+              '@babel/preset-typescript',
+              {
+                // Allextensions: true, // supports all file extensions
+              },
+            ]
+          ]
         },
         exclude: /node_modules/,
       },
