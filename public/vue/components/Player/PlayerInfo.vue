@@ -8,27 +8,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
+
 import { DateTime } from 'luxon';
 
-import { mapState, mapGetters } from 'vuex';
+import { TIMEZONE } from '@/config/config';
 
-import { TIMEZONE } from '../../config/config';
+/* eslint-disable import/no-cycle */
+import { usePlayerStore } from '@/stores/playerStore';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+import typeUtils from '../../utils/typeUtils';
+
+export default defineComponent({
   computed: {
-    ...mapState({
-      radio: state => state.player.radio,
-      radioStreamCodeName: state => state.player.radioStreamCodeName,
-      show: state => state.player.show
-    }),
-    ...mapGetters([
-      'currentSong'
-    ]),
-    infosUlStyle() {
+    ...mapState(usePlayerStore, ['radio', 'radioStreamCodeName', 'show', 'currentSong']),
+    infosUlStyle(): object {
       let animationCount = 1;
 
       if (this.show) {
@@ -45,15 +41,18 @@ export default {
         animationName: `roll-up-${animationCount}`
       };
     },
-    radioName() {
-      if (Object.prototype.hasOwnProperty.call(this.radio, 'streams')
-          && this.radioStreamCodeName !== null) {
-        return this.radio.streams[this.radioStreamCodeName].name;
+    radioName(): string {
+      if (this.radio === null) {
+        return '';
+      }
+
+      if (typeUtils.isRadio(this.radio) && this.radioStreamCodeName !== null) {
+        return this.radio.streams[this.radioStreamCodeName!].name;
       }
 
       return this.radio.name;
     },
-    showTitle() {
+    showTitle(): string {
       if (this.show === null) {
         return '';
       }
@@ -66,5 +65,5 @@ export default {
       return `${this.show.title} - ${start}-${end}`;
     },
   }
-};
+});
 </script>

@@ -1,5 +1,3 @@
-<!-- Inspired from http://seiyria.com/bootstrap-slider/ -->
-
 <template>
   <div id="volume-fader" v-on:mouseover="volumeFocus(true)" v-on:mouseleave="volumeFocus(false)">
     <div class="fader">
@@ -14,22 +12,24 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
+
+/* eslint-disable import/no-cycle */
+import { usePlayerStore } from '@/stores/playerStore';
 
 import Vue3Hammer from '../Utils/Vue3Hammer.vue';
 
-let initVolume = null;
+let initVolume: number|null = null;
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     Vue3Hammer
   },
   computed: {
-    styleObject() {
+    ...mapState(usePlayerStore, ['volume']),
+    styleObject(): object {
       // values are reversed as 0% = a volume of 10
       const top = ((10 - this.volume) * 10);
 
@@ -37,18 +37,19 @@ export default {
         top: `${top}%`
       };
     },
-    ...mapState({
-      volume: state => state.player.volume
-    })
   },
   methods: {
+    ...mapActions(usePlayerStore, {
+      setVolume: 'setVolume',
+      volumeFocusDispatch: 'volumeFocus'
+    }),
     onPanStart() {
       initVolume = this.volume;
     },
-    onPan(event) {
-      const deltaY = Math.round(event.deltaY / 10);
+    onPan(event: Event) {
+      const deltaY = Math.round((event as any).deltaY / 10);
 
-      let newVolume = +initVolume + (deltaY * -1);
+      let newVolume = +initVolume! + (deltaY * -1);
 
       if (newVolume === this.volume) {
         return;
@@ -68,15 +69,15 @@ export default {
         }
       }
 
-      this.$store.dispatch('setVolume', newVolume.toString());
+      this.setVolume(newVolume);
     },
-    volumeFocus(status) {
-      this.$store.dispatch('volumeFocus',
+    volumeFocus(status: boolean) {
+      this.volumeFocusDispatch(
         {
           element: 'fader',
           status
         });
     },
   }
-};
+});
 </script>

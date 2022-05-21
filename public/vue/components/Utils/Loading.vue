@@ -11,17 +11,14 @@
   </transition>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
-  computed: {
-    ...mapGetters([
-      'isLoading'
-    ]),
-  },
-};
+/* eslint-disable import/no-cycle */
+import { useGlobalStore } from '@/stores/globalStore';
+
+export default defineComponent({
+  computed: mapState(useGlobalStore, ['isLoading']),
+});
 </script>

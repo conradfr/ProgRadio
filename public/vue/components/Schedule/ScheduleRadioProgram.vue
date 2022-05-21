@@ -1,7 +1,7 @@
 <template>
   <div class="program-container" :data-hash="program.hash"
      :class="{ 'prevday': startsPrevDay, 'nextday': endsNextDay }"
-     :style="containerStyle" ref="root">
+     :style="containerStyle" :ref="setRootRef">
     <div class="program" @mouseover.once="hover = !hover"
          v-if="isIntersecting === true"
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
@@ -11,16 +11,16 @@
         </div>
         <div class="program-infos" :style="infosStyle">
           <div class="program-title" v-once>
-            <span class="schedule-display" >{{ scheduleDisplay }}</span>{{ program.title }}
+            <span class="schedule-display" >{{ timeDisplay }}</span>{{ program.title }}
           </div>
           <div class="program-host" v-if="program.host" v-once>{{ program.host }}</div>
           <div class="program-description-short"
                v-bind:class="{ 'program-description-nohost': !program.host }">
             <div class="program-description-short-inner">
               <span class="program-description-short-inner-song"
-                  v-if="radio.streaming_enabled === true && isCurrent && liveSong">
+                  v-if="radio.streaming_enabled === true && isCurrent && liveSongText">
                 <i class="bi bi-music-note-beamed"></i>
-                {{ liveSong }}
+                {{ liveSongText }}
               </span>
               <span class="program-description-short-inner-text"
                     v-bind:class="{ 'program-description-short-inner-text-current': isCurrent }"
@@ -30,66 +30,96 @@
             </div>
           </div>
         </div>
-        <schedule-radio-section v-for="entry in program.sections" :key="entry.hash"
+<!--        <schedule-radio-section v-for="entry in program.sections" :key="entry.hash"
           :program_start="program.start_at" :section="entry" v-once>
-        </schedule-radio-section>
+        </schedule-radio-section>-->
       </div>
     </div>
   </div>
 </template>
-<script>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
+import { mapState } from 'pinia';
 
 import { DateTime, Interval } from 'luxon';
-import { mapState, mapGetters } from 'vuex';
-import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '../../config/config';
+import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '@/config/config';
 
-import ScheduleRadioSection from './ScheduleRadioSection.vue';
+/* eslint-disable import/no-cycle */
+import { useScheduleStore } from '@/stores/scheduleStore';
+import { usePlayerStore } from '@/stores/playerStore';
 
-export default {
-  compatConfig: {
-    MODE: 3
+import type { Radio } from '@/types/radio';
+import type { Program } from '@/types/program';
+
+// import ScheduleRadioSection from './ScheduleRadioSection.vue';
+
+export default defineComponent({
+  // components: { ScheduleRadioSection },
+  props: {
+    radio: {
+      type: Object as PropType<Radio>,
+      required: true
+    },
+    program: {
+      type: Object as PropType<Program>,
+      required: true
+    },
+    radioPlaying: Boolean,
+    intersectionObserver: {
+      type: Object as PropType<IntersectionObserver>,
+      required: true
+    },
+    isIntersecting: Boolean
   },
-  components: { ScheduleRadioSection },
-  props: ['radio', 'program', 'radioPlaying', 'intersectionObserver', 'isIntersecting'],
-  data() {
+  /* eslint-disable indent */
+  data(): {
+    hover: boolean,
+    rootRef: HTMLElement|null
+  } {
     return {
-      hover: false
+      hover: false,
+      rootRef: null
     };
   },
   mounted() {
-    this.intersectionObserver.observe(this.$refs.root);
+    if (this.rootRef !== null) {
+      this.intersectionObserver.observe(this.rootRef);
+    }
   },
   beforeUnmount() {
-    this.intersectionObserver.unobserve(this.$refs.root);
+    if (this.rootRef !== null) {
+      this.intersectionObserver.unobserve(this.rootRef);
+    }
   },
   computed: {
-    ...mapState({
-      cursorTime: state => state.schedule.cursorTime,
-      containerStyle(state) {
-        const data = state.schedule.scheduleDisplay[this.program.hash].container;
-        const width = `${data.width}px`;
-
-        return {
-          left: `${data.left}px`,
-          width,
-          minWidth: width,
-          maxWidth: width
-        };
-      },
-      infosStyle(state) {
-        const left = state.schedule.scheduleDisplay[this.program.hash].textLeft;
-
-        return {
-          // position: 'relative',
-          // transform: `translateX(${left}px)`
-          marginLeft: `${left}px`
-        };
-      }
-    }),
-    ...mapGetters([
-      'currentSong'
+    ...mapState(usePlayerStore, ['currentSong', 'liveSong']),
+    ...mapState(useScheduleStore, [
+      'cursorTime',
+      'scheduleDisplay'
     ]),
-    title() {
+    containerStyle() {
+      const data = this.scheduleDisplay[this.program.hash].container;
+      const width = `${data.width}px`;
+
+      return {
+        left: `${data.left}px`,
+        width,
+        minWidth: width,
+        maxWidth: width
+      };
+    },
+    infosStyle(): object {
+      const left = this.scheduleDisplay[this.program.hash].textLeft;
+
+      return {
+        // position: 'relative',
+        // transform: `translateX(${left}px)`
+        marginLeft: `${left}px`
+      };
+    },
+    title(): string {
       let { title } = this.program;
 
       if (this.program.host) {
@@ -100,11 +130,11 @@ export default {
         title += ` - ${this.program.description}`;
       }
 
-      title += ` (${this.scheduleDisplay})`;
+      title += ` (${this.timeDisplay})`;
 
       return title;
     },
-    scheduleDisplay() {
+    timeDisplay(): string {
       const start = DateTime.fromISO(this.program.start_at)
         .setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
       const end = DateTime.fromISO(this.program.end_at)
@@ -112,8 +142,8 @@ export default {
 
       return `${start}-${end}`;
     },
-    liveSong() {
-      if (this.radio.streaming_enabled === false) {
+    liveSongText(): string|null {
+      if (!this.radio.streaming_enabled) {
         return null;
       }
 
@@ -123,30 +153,35 @@ export default {
       }
 
       // else check if live song of this radio main steam
-      return this.$store.getters.liveSong(this.radio, `${this.radio.code_name}_main`);
+      return this.liveSong(this.radio, `${this.radio.code_name}_main`);
     },
-    isCurrent() {
+    isCurrent(): boolean {
       return Interval.fromDateTimes(DateTime.fromISO(this.program.start_at).setZone(TIMEZONE),
         DateTime.fromISO(this.program.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
     },
-    isLongEnough() {
+    isLongEnough(): boolean {
       return this.program.duration >= PROGRAM_LONG_ENOUGH;
     },
     /* eslint-disable max-len */
-    startsPrevDay() {
-      return this.program.start_overflow;
+    startsPrevDay(): boolean {
+      return this.program.start_overflow > 0;
       // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.prevDayOverflow;
     },
-    endsNextDay() {
-      return this.program.end_overflow;
+    endsNextDay(): boolean {
+      return this.program.end_overflow > 0;
       // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.nextDayOverflow;
     },
-    picturePath() {
+    picturePath(): string {
       return `${THUMBNAIL_PROGRAM_PATH}${this.program.picture_url}`;
     }
   },
   methods: {
-    shorten(value, duration) {
+    setRootRef(el: HTMLElement) {
+      if (el) {
+        this.rootRef = el;
+      }
+    },
+    shorten(value :string|null, duration: number) {
       if (value === null) {
         return '';
       }
@@ -157,5 +192,5 @@ export default {
       return value.split('\n')[0];
     },
   }
-};
+});
 </script>

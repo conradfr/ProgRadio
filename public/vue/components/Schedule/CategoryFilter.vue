@@ -13,52 +13,53 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
+
+import { useScheduleStore } from '@/stores/scheduleStore';
 
 import {
   GTAG_CATEGORY_SCHEDULE,
   GTAG_SCHEDULE_ACTION_FILTER,
   GTAG_SCHEDULE_FILTER_VALUE
-} from '../../config/config';
+} from '@/config/config';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   data() {
     return {
       locale: this.$i18n.locale
     };
   },
   computed: {
-    ...mapState({
-      categories: state => state.schedule.categories,
-      categoriesExcluded: state => state.schedule.categoriesExcluded
-    })
+    ...mapState(useScheduleStore, ['categories', 'categoriesExcluded']),
   },
   methods: {
-    filterFocus(status) {
+    ...mapActions(useScheduleStore, [
+      'toggleExcludeCategory',
+      'setCategoryFilterFocus'
+    ]),
+    filterFocus(status: boolean) {
       // timer helps avoid the filter icon flickering
       setTimeout(
         () => {
-          this.$store.dispatch('categoryFilterFocus', { element: 'list', status });
+          this.setCategoryFilterFocus('list', status);
         },
         100
       );
     },
-    isCategoryExcluded(category) {
+    isCategoryExcluded(category: string) {
       return this.categoriesExcluded.indexOf(category) !== -1;
     },
-    toggleExclude(category) {
-      this.$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
+    toggleExclude(category: string) {
+      (this as any).$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         event_label: category,
         value: GTAG_SCHEDULE_FILTER_VALUE
       });
 
-      this.$store.dispatch('toggleExcludeCategory', category);
+      this.toggleExcludeCategory(category);
     }
   }
-};
+});
 </script>

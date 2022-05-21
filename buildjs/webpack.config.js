@@ -27,7 +27,7 @@ module.exports = {
   target: 'web',
   entry: {
     app: [
-      path.resolve(__dirname, '../public/vue/app.js'),
+      './public/vue/app.ts'
     ],
     light: path.resolve(__dirname, '../public/sass/main_light.scss'),
     dark: path.resolve(__dirname, '../public/sass/main_dark.scss'),
@@ -35,34 +35,48 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../public/build/js'),
-    filename: '[name].bundle.js',
+    filename: '[name].js',
   },
+  resolve: {
+    extensions: [ '.ts', '.js' ],
+    alias: {
+      '@': path.resolve(__dirname, '../public/vue'),
+    },
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '../css/[name].css'
+    }),
+    new VueLoaderPlugin(),
+    new webpack.DefinePlugin({
+      __VUE_PROD_DEVTOOLS__: false,
+      __VUE_OPTIONS_API__: true,
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    }),
+  ],
   module: {
     rules: [
       {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          compilerOptions: {
-            compatConfig: {
-              MODE: 3
-            }
-          },
           preserveWhitespace: false,
           transformToRequire: {
             source: 'src'
-          }
+          },
+          exclude: /node_modules/,
         }
       },
       {
-        test: /\.js$/,
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/]
+        },
         exclude: /node_modules/,
-        use: ['babel-loader'],
       },
-/*      {
-        test: /\.(ttf|otf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?|(jpg|gif)$/,
-        use: ['file-loader']
-      },*/
       {
         test: /\.s[ac]ss$/i,
         use: [
@@ -88,25 +102,6 @@ module.exports = {
         ],
       }
     ],
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '../css/[name].css'
-    }),
-    new VueLoaderPlugin(),
-    new webpack.DefinePlugin({
-      __VUE_PROD_DEVTOOLS__: false,
-      __VUE_OPTIONS_API__: true,
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-  ],
-  resolve: {
-    alias: {
-      // 'vue$': 'vue/dist/vue.esm.js'
-      vue: '@vue/compat'
-    }
   },
   optimization: {
     splitChunks: {

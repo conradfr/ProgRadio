@@ -11,24 +11,26 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
 import filter from 'lodash/filter';
+
+import type { Radio } from '@/types/radio';
 
 import RadioStream from './RadioStream.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
+export default defineComponent({
+  props: {
+    radio: {
+      type: Object as PropType<Radio>,
+      required: true
+    }
   },
-  props: ['radio'],
   components: {
     RadioStream
   },
   computed: {
-    ...mapState({
-
-    }),
     primaryStream() {
       return filter(this.radio.streams, r => r.main === true)[0];
     },
@@ -36,5 +38,5 @@ export default {
       return filter(this.radio.streams, r => r.main === false);
     },
   }
-};
+});
 </script>

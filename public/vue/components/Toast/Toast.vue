@@ -19,30 +19,34 @@
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import type { PropType } from 'vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+import type { Toast } from '@/types/toast';
+import { useGlobalStore } from '@/stores/globalStore';
+
+export default defineComponent({
   props: {
-    toast: Object
+    toast: {
+      type: Object as PropType<Toast>,
+      required: true
+    }
   },
   setup(props) {
-    const store = useStore();
+    const globalStore = useGlobalStore();
     const root = ref(null);
 
     onMounted(() => {
       /* eslint-disable no-undef */
+      // @ts-expect-error boostrap is defined on the global scope
       const toastBs = new bootstrap.Toast(root.value, { delay: props.toast.duration });
-      toastBs.show();
+      toastBs!.show();
 
       setTimeout(
         () => {
           toastBs.hide();
-          store.dispatch('toastConsumed', props.toast.id);
+          globalStore.toastConsumed(props.toast.id);
         },
         props.toast.duration + 500
       );
@@ -52,5 +56,5 @@ export default {
       root
     };
   }
-};
+});
 </script>

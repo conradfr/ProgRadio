@@ -1,10 +1,8 @@
-const path = require('path')
+const path = require('path');
 var webpack = require('webpack');
-// const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function recursiveIssuer(m, c) {
   const issuer = c.moduleGraph.getIssuer(m);
@@ -28,41 +26,63 @@ module.exports = {
   devtool: 'eval-cheap-module-source-map',
   entry: {
     app: [
-      path.resolve(__dirname, '../public/vue/app.js'),
+      './public/vue/app.ts'
     ],
     light: path.resolve(__dirname, '../public/sass/main_light.scss'),
-    dark: path.resolve(__dirname, '../public/sass/main_dark.scss')
+    dark: path.resolve(__dirname, '../public/sass/main_dark.scss'),
+    global: path.resolve(__dirname, '../public/sass/main_global.scss')
   },
   output: {
     path: path.resolve(__dirname, '../public/build/js'),
-    filename: '[name].bundle.js',
+    filename: '[name].js',
   },
+  resolve: {
+    extensions: [ '.ts', '.js' ],
+    alias: {
+      '@': path.resolve(__dirname, '../public/vue'),
+    },
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '../css/[name].css'
+    }),
+    new VueLoaderPlugin(),
+    new ESLintPlugin({
+      cache: true,
+      extensions: ['js', 'vue', 'ts'],
+      context: 'public/vue',
+      files: '/'
+    }),
+    new webpack.DefinePlugin({
+      __VUE_PROD_DEVTOOLS__: true,
+      __VUE_OPTIONS_API__: true,
+      'process.env': {
+        NODE_ENV: '"development"'
+      }
+    }),
+  ],
   module: {
     rules: [
       {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          compilerOptions: {
-            compatConfig: {
-              MODE: 3
-            }
-          },
           preserveWhitespace: false,
           transformToRequire: {
             source: 'src'
-          }
+          },
+          exclude: /node_modules/,
         }
       },
       {
-        test: /\.js$/,
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/]
+        },
         exclude: /node_modules/,
-        use: ['babel-loader'],
       },
-/*      {
-        test: /\.(ttf|otf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?|(jpg|gif)$/,
-        use: ['file-loader']
-      },*/
+      { test: /\.js$/, loader: "source-map-loader" },
       {
         test: /\.s[ac]ss$/i,
         use: [
@@ -89,38 +109,14 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '../css/[name].css'
-    }),
-    new VueLoaderPlugin(),
-    new ESLintPlugin({
-      cache: true,
-      extensions: ['js', 'vue',],
-      context: 'public/vue',
-      files: '/'
-    }),
-    new webpack.DefinePlugin({
-      __VUE_PROD_DEVTOOLS__: true,
-      __VUE_OPTIONS_API__: true,
-      'process.env': {
-        NODE_ENV: '"development"'
-      }
-    }),
-    // new BundleAnalyzerPlugin()
-  ],
-  resolve: {
-    alias: {
-      // 'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
-      // 'vue$': 'vue/dist/vue.esm-bundler.js',
-      vue: '@vue/compat'
-      // vue: 'vue/dist/vue.esm-bundler.js'
-    }
-  },
   optimization: {
     minimize: false,
-    removeAvailableModules: false,
-    removeEmptyChunks: false,
+    nodeEnv: 'development',
+    flagIncludedChunks: true,
+    sideEffects: true,
+    usedExports: true,
+    concatenateModules: true,
+    checkWasmTypes: false,
     splitChunks: {
       // chunks: 'all',
       cacheGroups: {
@@ -142,5 +138,5 @@ module.exports = {
         },
       },
     },
-  },
+  }
 }

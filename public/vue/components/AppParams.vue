@@ -60,53 +60,65 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 
-import cookies from '../utils/cookies';
+import { useGlobalStore } from '@/stores/globalStore';
+import { usePlayerStore } from '@/stores/playerStore';
+
 import {
   COOKIE_PLAYER_FLUX,
   COOKIE_PLAYER_FLUX_DURATION,
   PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS,
   PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS
-} from '../config/config';
+} from '@/config/config';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+import cookies from '../utils/cookies';
+
+export default defineComponent({
   /* eslint-disable no-undef */
-  data() {
+  /* eslint-disable indent */
+  data(): {
+    locale: string,
+    streamFlux: string|null,
+    streamFluxDuration: number|null,
+    PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS: number,
+    PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS: number
+  } {
     return {
-      locale: this.$i18n.locale,
-      streamFlux: this.$store.state.player.flux.selected,
-      streamFluxDuration: this.$store.state.player.flux.delayBeforeStop,
+      locale: (this as any).$i18n.locale,
+      streamFlux: null,
+      streamFluxDuration: null,
       PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS,
       PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS
     };
   },
   mounted() {
-    document.title = this.$i18n.t('message.params_page.title');
+    document.title = (this.$i18n as any).t('message.params_page.title');
+
+    this.streamFlux = this.flux.selected;
+    this.streamFluxDuration = this.flux.delayBeforeStop;
   },
   computed: {
-    ...mapState({
-      flux: state => state.player.flux
-    })
+    ...mapState(usePlayerStore, ['flux'])
   },
   methods: {
+    ...mapActions(useGlobalStore, ['displayToast']),
+    ...mapActions(usePlayerStore, ['updateFlux']),
     save() {
       cookies.set(COOKIE_PLAYER_FLUX, this.streamFlux);
       if (this.streamFlux === 'enabled') {
-        cookies.set(COOKIE_PLAYER_FLUX_DURATION, parseInt(this.streamFluxDuration, 10));
+        cookies.set(COOKIE_PLAYER_FLUX_DURATION, this.streamFluxDuration!.toString());
       }
 
-      this.$store.dispatch('updateFlux');
-      this.$store.dispatch('toast',
+      this.updateFlux();
+      this.displayToast(
         {
           type: 'success',
-          message: this.$i18n.tc('message.params_page.updated')
+          message: (this.$i18n as any).tc('message.params_page.updated')
         });
     }
   }
-};
+});
 </script>

@@ -1,0 +1,24 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["env.d.ts", "public/vue/**/*", "public/vue/**/*.vue"],
+//  "exclude": [
+//    "node_modules"
+//  ],
+  "compilerOptions": {
+    "target": "es2017",
+    "allowJs": true,
+    "sourceMap": true,
+//    "module": "esnext",
+    "strict": true,
+//    "importHelpers": true,
+    "moduleResolution": "node",
+//    "esModuleInterop": true,
+//    "allowSyntheticDefaultImports": true,
+//    "noImplicitThis": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["public/vue/*"]
+    },
+    "lib": ["es2017", "es2018.promise", "dom", "dom.iterable"]
+  },
+}

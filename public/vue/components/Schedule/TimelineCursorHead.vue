@@ -4,31 +4,30 @@
        :style="styleObject"></div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-import { GRID_VIEW_EXTRA_LEFT } from '../../config/config';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
+import { GRID_VIEW_EXTRA_LEFT } from '@/config/config';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+/* eslint-disable import/no-cycle */
+import { useScheduleStore } from '@/stores/scheduleStore';
+
+export default defineComponent({
   computed: {
-    ...mapGetters([
-      'isToday'
-    ]),
+    ...mapState(useScheduleStore, ['isToday', 'cursorIndex', 'gridIndexLeft', 'scrollClick']),
     styleObject() {
-      const style = {
-        left: `calc(${this.$store.getters.cursorIndex}
-                    + ${this.$store.getters.gridIndexLeft.left}
+      const style: any = {
+        left: `calc(${this.cursorIndex}
+                    + ${this.gridIndexLeft.left}
                     + ${GRID_VIEW_EXTRA_LEFT}px)`
       };
 
-      if (this.$store.state.schedule.scrollClick === true) {
+      if (this.scrollClick) {
         style.transition = 'none';
       }
 
       return style;
     }
   }
-};
+});
 </script>

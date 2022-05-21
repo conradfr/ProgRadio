@@ -4,7 +4,7 @@
        v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
     <div class="radio-list-one-one-flag"
         v-if="displayFlag">
-      <gb-flag
+      <vue-flag
           :code="radio.country_code"
           size="nano"
           v-once
@@ -62,9 +62,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
+import { mapState, mapActions } from 'pinia';
 import filter from 'lodash/filter';
-import { mapGetters, mapState } from 'vuex';
+
+import type { Radio } from '@/types/radio';
+
+/* eslint-disable import/no-cycle */
+import { useScheduleStore } from '@/stores/scheduleStore';
+import { usePlayerStore } from '@/stores/playerStore';
+import { useUserStore } from '@/stores/userStore';
 
 import {
   RADIO_MENU_WIDTH,
@@ -76,14 +85,22 @@ import {
   GTAG_ACTION_PLAY_VALUE,
   GTAG_ACTION_STOP,
   GTAG_ACTION_STOP_VALUE
-} from '../../config/config';
+} from '@/config/config';
 
-export default {
-  compatConfig: {
-    MODE: 3
+export default defineComponent({
+  props: {
+    radio: {
+      type: Object as PropType<Radio>,
+      required: true
+    },
   },
-  props: ['radio'],
-  data() {
+  /* eslint-disable indent */
+  data(): {
+    hover: boolean,
+    hoverTimer: number|null,
+    locale: string,
+    styleObject: object
+  } {
     return {
       hover: false,
       hoverTimer: null,
@@ -94,14 +111,9 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      playing: state => state.player.playing,
-      externalPlayer: state => state.player.externalPlayer,
-      playingStreamCodeName: state => state.player.radioStreamCodeName
-    }),
-    ...mapGetters([
-      'radioPlayingCodeName',
-    ]),
+    ...mapState(usePlayerStore, ['playing', 'externalPlayer', 'radioPlayingCodeName']),
+    ...mapState(usePlayerStore, { playingStreamCodeName: 'radioStreamCodeName' }),
+    ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite' }),
     subMenuStyleObject() {
       return {
         width: `${RADIO_MENU_WIDTH * 2}px`,
@@ -122,7 +134,7 @@ export default {
       return filter(this.radio.streams, r => r.main === false);
     },
     isFavorite() {
-      return this.$store.getters.isFavorite(this.radio.code_name);
+      return this.isRadioFavorite(this.radio.code_name);
     },
     displayFlag() {
       return this.radio.country_code !== null
@@ -130,47 +142,51 @@ export default {
     }
   },
   methods: {
-    playStop(streamCodeName, isSubStream) {
+    ...mapActions(usePlayerStore, ['playRadio', 'stop']),
+    ...mapActions(useUserStore, ['toggleRadioFavorite']),
+    playStop(streamCodeName: string, isSubStream: boolean) {
       // stop if playing
       if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name
-        && ((isSubStream === true && this.playingStreamCodeName === streamCodeName)
-          || isSubStream === false)) {
+        && ((isSubStream && this.playingStreamCodeName === streamCodeName)
+          || !isSubStream)) {
         if (this.externalPlayer === false) {
-          this.$gtag.event(GTAG_ACTION_STOP, {
+          (this as any).$gtag.event(GTAG_ACTION_STOP, {
             event_category: GTAG_CATEGORY_SCHEDULE,
             event_label: this.radio.code_name,
             value: GTAG_ACTION_STOP_VALUE
           });
         }
 
-        this.$store.dispatch('stop');
+        this.stop();
         return;
       }
 
-      if (this.radio.streaming_enabled === true) {
+      if (this.radio.streaming_enabled) {
         if (this.externalPlayer === false) {
-          this.$gtag.event(GTAG_ACTION_PLAY, {
+          (this as any).$gtag.event(GTAG_ACTION_PLAY, {
             event_category: GTAG_CATEGORY_SCHEDULE,
             event_label: this.radio.code_name,
             value: GTAG_ACTION_PLAY_VALUE
           });
         }
 
-        this.$store.dispatch('playRadio', { radioCodeName: this.radio.code_name, streamCodeName });
+        this.playRadio({ radioCodeName: this.radio.code_name, streamCodeName });
       }
     },
     toggleFavorite() {
-      this.$gtag.event(GTAG_ACTION_FAVORITE_TOGGLE, {
+      (this as any).$gtag.event(GTAG_ACTION_FAVORITE_TOGGLE, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         value: GTAG_ACTION_FAVORITE_TOGGLE_VALUE
       });
 
-      this.$store.dispatch('toggleFavorite', this.radio);
+      this.toggleRadioFavorite(this.radio);
     },
     hoverOn() {
       this.hover = true;
 
-      clearTimeout(this.hoverTimer);
+      if (this.hoverTimer !== null) {
+        clearTimeout(this.hoverTimer);
+      }
 
       this.hoverTimer = setTimeout(
         () => {
@@ -180,9 +196,12 @@ export default {
       );
     },
     hoverOff() {
-      clearTimeout(this.hoverTimer);
+      if (this.hoverTimer !== null) {
+        clearTimeout(this.hoverTimer);
+      }
+
       this.hover = false;
     }
   }
-};
+});
 </script>

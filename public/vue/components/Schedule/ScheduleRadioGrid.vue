@@ -25,94 +25,103 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 
-import { NAV_MOVE_BY } from '../../config/config';
+import { NAV_MOVE_BY } from '@/config/config';
+
+/* eslint-disable import/no-cycle */
+import { useGlobalStore } from '@/stores/globalStore';
+import { useScheduleStore } from '@/stores/scheduleStore';
+
+import type { ScheduleOfRadio } from '@/types/schedule';
 
 import Vue3Hammer from '../Utils/Vue3Hammer.vue';
 import TimelineCursor from './TimelineCursor.vue';
 import ScheduleRadioGridRow from './ScheduleRadioGridRow.vue';
 import ScheduleRadioGridNoRadio from './ScheduleRadioGridNoRadio.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     Vue3Hammer,
     TimelineCursor,
     ScheduleRadioGridRow,
     ScheduleRadioGridNoRadio
   },
-  data() {
+  /* eslint-disable indent */
+  data(): {
+    clickX: number|null,
+    swipeActive: boolean
+  } {
     return {
       clickX: null,
       swipeActive: false
     };
   },
   computed: {
+    ...mapState(useGlobalStore, ['isLoading']),
+    ...mapState(useScheduleStore, { radios: 'rankedRadios', displayNoSchedule: 'hasSchedule' }),
+    ...mapState(useScheduleStore, [
+      'schedule',
+      'gridIndexTransform',
+      'scrollClick',
+      'currentCollection'
+    ]),
     styleObject() {
-      const styleObject = {
+      const styleObject: any = {
         // left: this.$store.getters.gridIndexLeft.left
-        transform: this.$store.getters.gridIndexTransform.transform
+        transform: this.gridIndexTransform.transform
       };
 
       // disable grid transition while manually scrolling, avoid lag effect
-      if (this.$store.state.schedule.scrollClick) {
+      if (this.scrollClick) {
         styleObject.transition = 'none';
       }
 
       return styleObject;
     },
-    ...mapState({
-      currentCollection: state => state.schedule.currentCollection
-    }),
-    ...mapGetters({
-      radios: 'rankedRadios',
-      displayNoSchedule: 'hasSchedule',
-      isLoading: 'isLoading'
-    })
   },
   /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
   methods: {
-    getSchedule(radio) {
-      return this.$store.state.schedule.schedule[radio];
+    ...mapActions(useScheduleStore, ['scroll', 'setScrollClick']),
+    getSchedule(radio: string): ScheduleOfRadio {
+      return this.schedule[radio];
     },
-    hasSchedule(radio) {
-      return (this.$store.state.schedule.schedule[radio]
-          && Object.keys(this.$store.state.schedule.schedule[radio]).length > 0) || false;
+    hasSchedule(radio: string): boolean {
+      return (this.schedule[radio]
+          && Object.keys(this.schedule[radio]).length > 0) || false;
     },
-    onSwipe(event) {
+    onSwipe(event: Event) {
       this.swipeActive = true;
       setTimeout(this.swipeEnd, 1000);
 
       // avoid ghost click
       //  if (this.clickX !== null /* || ([2,4].indexOf(event.direction) === -1)*/) { return; }
 
-      const amount = (NAV_MOVE_BY / 2.2) * event.velocityX * -1;
-      this.$store.dispatch('scroll', amount);
+      const amount = (NAV_MOVE_BY / 2.2) * (event as any).velocityX * -1;
+      this.scroll(amount);
     },
     swipeEnd() {
       this.swipeActive = false;
     },
     onPanStart() {
-      if (this.swipeActive === true) {
+      if (this.swipeActive) {
         return;
       }
 
-      this.$store.dispatch('scrollClick', true);
+      this.setScrollClick(true);
       this.clickX = 0;
     },
     onPanEnd() {
-      if (this.swipeActive === true) {
+      if (this.swipeActive) {
         return;
       }
 
-      this.$store.dispatch('scrollClick', false);
+      this.setScrollClick(false);
     },
-    onPan(event) {
-      if (this.swipeActive === true) {
+    onPan(event: any) {
+      if (this.swipeActive) {
         return;
       }
 
@@ -123,9 +132,9 @@ export default {
       }
 
       const scroll = -1 * (event.deltaX - (this.clickX + event.overallVelocityX));
-      this.$store.dispatch('scroll', scroll);
+      this.scroll(scroll);
       this.clickX = event.deltaX;
     }
   }
-};
+});
 </script>

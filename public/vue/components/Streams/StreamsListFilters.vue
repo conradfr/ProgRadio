@@ -10,7 +10,7 @@
             style="min-width: 275px"
             :placeholder="$t('message.streaming.search_placeholder')"
             name="searchText"
-            ref="searchText"
+            :ref="addSearchTextRef"
             aria-describedby="search-addon1"
             :value="searchText"
             v-on:input="searchTextChange"
@@ -25,7 +25,7 @@
           <i class="bi bi-search"></i>
         </button>
         <button v-if="!searchActive" class="btn btn-primary btn-sm" type="submit"
-          v-on:click="playRandom">
+          v-on:click="playOneRandom">
           <i class="bi bi-play-circle"></i>
           {{ $t('message.streaming.random') }}
         </button>
@@ -41,7 +41,7 @@
         <div class="pe-3 mb-3 me-1 multiselect-div" style="min-width: 300px;">
           <Multiselect
               @change="countryChange"
-              :model-value="selectedCountry"
+              :model-value="selectedCountryInput"
               :options="countriesOptions"
               :canClear="false"
               :valueProp="'code'"
@@ -49,7 +49,6 @@
               :searchable="true"
               :strict="false"
               :noResultsText="$tc('message.streaming.country_search_no_result')"
-              ref="multicountry"
               id="multicountry"
           >
             <template v-slot:singlelabel="{ value }">
@@ -62,7 +61,7 @@
                      class="gb-flag gb-flag--mini"
                      style="max-height: 20px; max-width: 24px;"
                      :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
-                <gb-flag
+                <vue-flag
                     v-else
                     :code="value.code"
                     size="mini"
@@ -79,7 +78,7 @@
                    class="gb-flag gb-flag--mini"
                    style="max-height: 20px; max-width: 24px;"
                    :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
-              <gb-flag
+              <vue-flag
                   v-else
                   :code="option.code"
                   size="mini"
@@ -90,11 +89,10 @@
         <div class="pe-3 mb-3 multiselect-div" style="min-width: 250px">
           <Multiselect
               @change="sortByChange"
-              :model-value="selectedSortBy"
+              :model-value="selectedSortByInput"
               :options="sortByOptions"
               :canClear="false"
-              :disabled="selectedCountry === code_last"
-              ref="multisort"
+              :disabled="selectedCountryInput === code_last"
               id="multisort"
           />
         </div>
@@ -102,11 +100,13 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
-import { nextTick } from 'vue';
+<script lang="ts">
+import { defineComponent, nextTick } from 'vue';
+import { mapState, mapActions } from 'pinia';
 import Multiselect from '@vueform/multiselect';
-import StreamsApi from '../../api/StreamsApi';
+
+/* eslint-disable import/no-cycle */
+import { useStreamsStore } from '@/stores/streamsStore';
 
 import {
   STREAMING_CATEGORY_FAVORITES,
@@ -120,105 +120,116 @@ import {
   GTAG_STREAMING_FILTER_VALUE,
   GTAG_ACTION_PLAY_VALUE,
   GTAG_ACTION_SEARCH_BUTTON
-} from '../../config/config';
+} from '@/config/config';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+import StreamsApi from '../../api/StreamsApi';
+
+export default defineComponent({
   components: {
     Multiselect,
   },
-  mounted() {
-    if (this.$route.query.s !== undefined) {
-      this.searchActivate();
-      this.searchTextChange({ target: { value: this.$route.query.s } });
-    }
-  },
   data() {
     return {
+      refs: {},
       code_all: STREAMING_CATEGORY_ALL,
       code_last: STREAMING_CATEGORY_LAST,
       code_favorites: STREAMING_CATEGORY_FAVORITES,
       sortByOptions: [
         {
           value: 'name',
-          label: this.$i18n.t('message.streaming.sort.name')
+          label: (this.$i18n as any).t('message.streaming.sort.name')
         },
         {
           value: 'popularity',
-          label: this.$i18n.t('message.streaming.sort.popularity')
+          label: (this.$i18n as any).t('message.streaming.sort.popularity')
         },
         {
           value: 'last',
-          label: this.$i18n.t('message.streaming.sort.last')
+          label: (this.$i18n as any).t('message.streaming.sort.last')
         },
         {
           value: 'random',
-          label: this.$i18n.t('message.streaming.sort.random')
+          label: (this.$i18n as any).t('message.streaming.sort.random')
         }
       ]
     };
   },
-  computed: {
-    ...mapGetters([
-      'countriesOptions'
-    ]),
-    ...mapState({
-      favorites: state => state.streams.favorites,
-      searchText: state => state.streams.searchText,
-      searchActive: state => state.streams.searchActive
-    }),
-    selectedCountry: {
-      get() {
-        return this.$store.state.streams.selectedCountry;
-      }
-    },
-    selectedSortBy: {
-      get() {
-        if (this.selectedCountry === STREAMING_CATEGORY_LAST) {
-          return null;
-        }
-
-        return this.$store.state.streams.selectedSortBy;
-      }
+  mounted() {
+    if (this.$route.query.s !== undefined && typeof this.$route.query.s === 'string') {
+      this.searchActivate();
+      this.searchTextChange(this.$route.query.s);
     }
   },
-  methods: {
-    searchActivate() {
-      this.$store.dispatch('setSearchActive', true)
-        .then(() => {
-          nextTick(() => {
-            this.$refs.searchText.focus();
-          });
-        });
+  computed: {
+    ...mapState(useStreamsStore, [
+      'favorites',
+      'countriesOptions',
+      'searchText',
+      'searchActive',
+      'selectedCountry',
+      'selectedSortBy'
+    ]),
+    selectedCountryInput(): string {
+      return this.selectedCountry;
+    },
+    selectedSortByInput(): string|null {
+      if (this.selectedCountryInput === STREAMING_CATEGORY_LAST) {
+        return null;
+      }
 
-      this.$gtag.event(GTAG_ACTION_SEARCH_BUTTON, {
+      return this.selectedSortBy;
+    },
+  },
+  methods: {
+    ...mapActions(useStreamsStore, [
+      'setSearchActive',
+      'setSearchText',
+      'getStreamRadios',
+      'sortBySelection',
+      'playRandom'
+    ]),
+    addSearchTextRef(el: HTMLElement) {
+      // @ts-ignore
+      this.refs.searchText = el;
+    },
+    searchActivate() {
+      this.setSearchActive(true);
+      nextTick(() => {
+        // @ts-ignore
+        if (this.refs.searchText !== undefined) {
+          // @ts-ignore
+          this.refs.searchText.focus();
+        }
+      });
+
+      (this as any).$gtag.event(GTAG_ACTION_SEARCH_BUTTON, {
         event_category: GTAG_CATEGORY_STREAMING,
         value: GTAG_STREAMING_FILTER_VALUE
       });
     },
-    searchDeactivate(force) {
+    searchDeactivate(force: boolean) {
       if (force === true || this.searchText === null || this.searchText.trim() === '') {
-        this.$store.dispatch('setSearchActive', false);
+        this.setSearchActive(false);
       }
     },
-    searchTextChange(event) {
-      this.$store.dispatch('setSearchText', event.target.value)
-        .then(() => {
-          nextTick(() => {
-            this.$store.dispatch('getStreamRadios');
-          });
-        });
+    searchTextChange(event: Event|string) {
+      const value = typeof event === 'string'
+        ? event : (event.target as HTMLTextAreaElement).value;
+      this.setSearchText(value);
+      // .then(() => {
+      nextTick(() => {
+        this.getStreamRadios();
+      });
+      // });
     },
-    countryChange(country) {
+    countryChange(country: string): void {
       if (country === undefined || country === null) {
         return;
       }
 
       // otherwise it's just the setup
-      if (country !== this.selectedCountry) {
-        this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
+      if (country !== this.selectedCountryInput) {
+        (this as any).$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
           event_category: GTAG_CATEGORY_STREAMING,
           event_label: country.toLowerCase(),
           value: GTAG_STREAMING_FILTER_VALUE
@@ -230,33 +241,33 @@ export default {
         });
       }
     },
-    sortByChange(sortBy) {
+    sortByChange(sortBy: string): void {
       if (sortBy === undefined || sortBy === null) {
         return;
       }
 
       // otherwise it's just the setup
-      if (sortBy !== this.selectedSortBy) {
-        this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {
+      if (sortBy !== this.selectedSortByInput) {
+        (this as any).$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {
           event_category: GTAG_CATEGORY_STREAMING,
-          event_label: sortBy.code,
+          event_label: sortBy,
           value: GTAG_STREAMING_FILTER_VALUE
         });
 
-        this.$store.dispatch('sortBySelection', sortBy);
+        this.sortBySelection(sortBy);
       }
     },
-    playRandom() {
-      this.$gtag.event(GTAG_ACTION_PLAY_RANDOM, {
+    playOneRandom() {
+      (this as any).$gtag.event(GTAG_ACTION_PLAY_RANDOM, {
         event_category: GTAG_CATEGORY_STREAMING,
         event_label: 'random',
         value: GTAG_ACTION_PLAY_VALUE
       });
 
-      this.$store.dispatch('playRandom');
+      this.playRandom();
     },
     geoloc() {
-      this.$gtag.event(GTAG_STREAMING_ACTION_GEOLOC, {
+      (this as any).$gtag.event(GTAG_STREAMING_ACTION_GEOLOC, {
         event_category: GTAG_CATEGORY_STREAMING,
         event_label: null,
         value: GTAG_STREAMING_FILTER_VALUE
@@ -268,7 +279,8 @@ export default {
             position.coords.latitude,
             position.coords.longitude
           ).then((geoData) => {
-            if (geoData.countryCode !== undefined && geoData.countryCode !== null) {
+            if (geoData !== null && geoData.countryCode !== undefined
+              && geoData.countryCode !== null) {
               this.$router.push({
                 name: 'streaming',
                 params: { countryOrCategoryOrUuid: geoData.countryCode.toLowerCase() }
@@ -279,5 +291,5 @@ export default {
       }
     }
   }
-};
+});
 </script>

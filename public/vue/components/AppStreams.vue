@@ -14,10 +14,17 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapGetters } from 'vuex';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 
-import { PLAYER_TYPE_STREAM } from '../config/config';
+/* eslint-disable import/no-cycle */
+import { useGlobalStore } from '@/stores/globalStore';
+import { useStreamsStore } from '@/stores/streamsStore';
+import { usePlayerStore } from '@/stores/playerStore';
+import { useUserStore } from '@/stores/userStore';
+
+import { PLAYER_TYPE_STREAM } from '@/config/config';
 
 import StreamsListFilters from './Streams/StreamsListFilters.vue';
 import StreamsList from './Streams/StreamsList.vue';
@@ -25,10 +32,7 @@ import StreamsOne from './Streams/StreamsOne.vue';
 import Adsense from './Utils/Adsense.vue';
 import Loading from './Utils/Loading.vue';
 
-export default {
-  compatConfig: {
-    MODE: 3
-  },
+export default defineComponent({
   components: {
     StreamsListFilters,
     StreamsList,
@@ -37,65 +41,71 @@ export default {
     Adsense
   },
   created() {
-    // this.$store.registerModule('streams', StreamsStore);
-    this.$store.dispatch('getConfig');
-    this.$store.dispatch('getCountries');
+    this.getConfig();
+    this.getCountries();
   },
   mounted() {
     const body = document.querySelector('body');
-    body.classList.add('body-app');
-    document.title = this.$i18n.tc('message.streaming.title');
+    body?.classList.add('body-app');
+    document.title = (this.$i18n as any).tc('message.streaming.title');
   },
   beforeUnmount() {
     const body = document.querySelector('body');
-    body.classList.remove('body-app');
+    body?.classList.remove('body-app');
   },
   computed: {
-    ...mapState({
-      favorites: state => state.streams.favorites,
-      playingRadio: state => state.player.radio,
-      playing: state => state.player.playing,
-      radios: state => state.streams.streamRadios,
-      solo: state => state.streams.soloExtended,
-      userLogged: state => state.user.logged
+    ...mapState(useGlobalStore, ['isLoading']),
+    ...mapState(useStreamsStore, {
+      radios: 'streamRadios',
+      favorites: 'favorites',
+      solo: 'soloExtended'
     }),
-    ...mapGetters([
-      'currentSong',
-      'isLoading'
-    ])
+    ...mapState(usePlayerStore, {
+      playing: 'playing',
+      playingRadio: 'radio',
+      currentSong: 'currentSong'
+    }),
+    ...mapState(useUserStore, {
+      userLogged: 'logged'
+    })
   },
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
+    next(() => {
+      const streamsStore = useStreamsStore();
+
       if (to.params.countryOrCategoryOrUuid) {
         // this is a radio (uuid)
         if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
-          vm.$store.dispatch('setSoloExtended', to.params.countryOrCategoryOrUuid);
+          streamsStore.setSoloExtended((to.params.countryOrCategoryOrUuid as string));
         } else {
           if (to.params.page) {
-            vm.$store.dispatch('pageSet', to.params.page);
+            streamsStore.pageSet(parseInt((to.params.page as string), 10));
           }
-          vm.$store.dispatch('countrySelection', to.params.countryOrCategoryOrUuid);
-          vm.$store.dispatch('setSoloExtended', null);
+
+          streamsStore.countrySelection((to.params.countryOrCategoryOrUuid as string));
+          streamsStore.setSoloExtended(null);
         }
       } else {
         if (to.params.page) {
-          vm.$store.dispatch('pageSet', to.params.page);
+          streamsStore.pageSet(parseInt((to.params.page as string), 10));
         }
-        vm.$store.dispatch('getStreamRadios');
+        streamsStore.getStreamRadios();
       }
     });
   },
   beforeRouteUpdate(to, from, next) {
+    const streamsStore = useStreamsStore();
+
     if (to.params.countryOrCategoryOrUuid) {
       // this is a radio (uuid)
       if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
-        this.$store.dispatch('setSoloExtended', to.params.countryOrCategoryOrUuid);
+        streamsStore.setSoloExtended((to.params.countryOrCategoryOrUuid as string));
       } else {
         if (to.params.page) {
-          this.$store.dispatch('pageSet', to.params.page);
+          streamsStore.pageSet(parseInt((to.params.page as string), 10));
         }
-        this.$store.dispatch('countrySelection', to.params.countryOrCategoryOrUuid);
-        this.$store.dispatch('setSoloExtended', null);
+        streamsStore.countrySelection((to.params.countryOrCategoryOrUuid as string));
+        streamsStore.setSoloExtended(null);
       }
     }
     next();
@@ -113,6 +123,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(useStreamsStore, ['getConfig', 'getCountries']),
     updateTitle() {
       if (this.playing === true && this.playingRadio
           && this.playingRadio.type === PLAYER_TYPE_STREAM) {
@@ -124,11 +135,11 @@ export default {
 
         preTitle += `${this.playingRadio.name} - `;
 
-        document.title = `${preTitle}${this.$i18n.tc('message.streaming.title')}`;
+        document.title = `${preTitle}${(this.$i18n as any).tc('message.streaming.title')}`;
       } else {
-        document.title = this.$i18n.tc('message.streaming.title');
+        document.title = (this.$i18n as any).tc('message.streaming.title');
       }
     }
   }
-};
+});
 </script>
