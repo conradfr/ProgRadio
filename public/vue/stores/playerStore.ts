@@ -108,7 +108,7 @@ export const usePlayerStore = defineStore('player', {
       return state.radio.streams[state.radioStreamCodeName].url;
     },
     liveSong: state => (radio: Radio|Stream, radioStreamCodeName: string|null): string|null => {
-      if (typeUtils.isStream(state.radio) || !(radio as Radio).streaming_enabled) {
+      if (typeUtils.isRadio(state.radio) && !(radio as Radio).streaming_enabled) {
         return null;
       }
 
