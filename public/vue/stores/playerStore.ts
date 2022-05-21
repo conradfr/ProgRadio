@@ -24,7 +24,7 @@ import ScheduleUtils from '../utils/ScheduleUtils';
 import StreamsApi from '../api/StreamsApi';
 import AndroidApi from '../api/AndroidApi';
 
-import { Socket } from '../../js/phoenix';
+import { Socket } from '../../js/phoenix/index';
 
 interface Focus {
   icon: boolean,
