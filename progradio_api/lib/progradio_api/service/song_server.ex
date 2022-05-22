@@ -127,8 +127,9 @@ defmodule ProgRadioApi.SongServer do
     broadcast_song(name, song, state.collection_topic)
 
     next_refresh =
-      apply(module, :get_refresh, [name, data, @refresh_song_interval]) || @refresh_song_interval
-      |> Kernel.+(Enum.random(-5..5))
+      apply(module, :get_refresh, [name, data, @refresh_song_interval]) ||
+        @refresh_song_interval
+        |> Kernel.+(Enum.random(-5..5))
 
     Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 

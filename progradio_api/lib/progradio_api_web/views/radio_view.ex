@@ -5,6 +5,10 @@ defmodule ProgRadioApiWeb.RadioView do
     %{radios: radios, collections: collections, categories: categories}
   end
 
+  def render("list.json", %{radios: radios}) do
+    %{radios: radios}
+  end
+
   #  def render("show.json", %{radio: radio}) do
   #    %{data: render_one(radio, RadioView, "radio.json")}
   #  end

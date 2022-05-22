@@ -8,7 +8,7 @@ defmodule ProgRadioApi.Radios do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, RadioStream, Category, Collection}
+  alias ProgRadioApi.{Radio, RadioStream, Category, Collection, ApiKey, ApiKeyRadio}
 
   # stream retries before considering it disabled
   @retries_max 12
@@ -140,5 +140,27 @@ defmodule ProgRadioApi.Radios do
 
     query
     |> Repo.all()
+  end
+
+  def list_radios_per_api_key(api_key) do
+    query =
+      from r in Radio,
+        join: c in Collection,
+        on: r.collection_id == c.id,
+        join: akr in ApiKeyRadio,
+        on: r.id == akr.radio_id,
+        join: ak in ApiKey,
+        on: ak.id == akr.api_key_id,
+        select: %{
+          collection: c.code_name,
+          radios: fragment("array_agg(?)", r.code_name)
+        },
+        where: ak.id == ^api_key and r.active == true,
+        group_by: [c.code_name, c.priority],
+        order_by: [asc: c.priority]
+
+    query
+    |> Repo.all()
+    |> Enum.into(%{}, fn v -> {v.collection, v.radios} end)
   end
 end

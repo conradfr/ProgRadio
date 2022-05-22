@@ -5,8 +5,9 @@ const yaml = require('js-yaml');
 const fs = require('fs');
 const axios = require('axios');
 
-const radiosModule = require('./config/radios.js');
+const radiosModule = require('./lib/radios.js');
 
+(async () => {
 try {
 
 process.on('uncaughtException', function (err) {
@@ -58,7 +59,7 @@ const getResults = async (radios) => {
             'items': data
           };
 
-          await axios.post(process.env.API_URL || config.api_url, dataExport, {
+          await axios.post(process.env.API_SCHEDULE_URL || config.api_schedule_url, dataExport, {
             headers: {
               'X-Api-Key': process.env.API_KEY || config.api_key
             }
@@ -84,19 +85,27 @@ const getResults = async (radios) => {
 
 let funList = null;
 
+const radiosList = await radiosModule.radiosList(config, logger);
+
+if (radiosList === null || radiosList.length === 0) {
+  logger.log('warn', `Listing radios: no radios returned`);
+}
+
 if (options['radios']) {
   funList = [
     async function () {
-      const radios = options['radios'].map(radio => radiosModule.getRadioPath(radio));
+      const radios = radiosModule.getRadiosPathFromCollection(options['radios'], radiosList);
       return await getResults(radios);
     }
   ];
 } else {
-  const collections = options['collection'] ? options['collection'] : radiosModule.getCollections();
+  const collections = options['collection'] ? options['collection'] : Object.keys(radiosList);
+
+  console.log(collections);
 
   funList = collections.map(function (collection) {
     return async function () {
-      return await getResults(radiosModule.getRadiosWithPath(collection));
+      return await getResults(radiosModule.getRadiosPathOfCollection(collection, radiosList));
     }
   });
 }
@@ -114,3 +123,4 @@ async.series(
 catch(err) {
   console.log(err);
 }
+})();
