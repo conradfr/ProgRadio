@@ -1,4 +1,5 @@
 defmodule ProgRadioApi.SongProvider do
+
   @doc """
     Get next song refresh in seconds
   """
@@ -61,6 +62,6 @@ defmodule ProgRadioApi.SongProvider do
   @spec recase(String.t() | nil) :: String.t() | nil
   def recase(data)
 
-  def recase(nil), do: nil
-  def recase(data), do: Recase.to_title(data)
+  def recase(data) when is_binary(data), do: Recase.to_title(data)
+  def recase(_data), do: nil
 end

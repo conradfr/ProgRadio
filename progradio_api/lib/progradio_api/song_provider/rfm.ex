@@ -44,7 +44,7 @@ defmodule ProgRadioApi.SongProvider.Rfm do
         %{}
 
       _ ->
-        %{artist: SongProvider.recase(data["artist"]), title: SongProvider.recase(data["title"])}
+        %{artist: SongProvider.recase(Map.get(data, "artist")), title: SongProvider.recase(Map.get(data, "title"))}
     end
   end
 end
