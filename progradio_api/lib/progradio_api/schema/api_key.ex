@@ -38,7 +38,8 @@ defimpl Canada.Can, for: ProgRadioApi.ApiKey do
 
   # Check if key is allowed to write schedules
   defp check_right(api_key, type, action) do
-    Repo.preload(api_key, :api_key_right)
+    api_key
+    |> Repo.preload(:api_key_right)
     |> Map.get(:api_key_right)
     |> Enum.any?(fn e ->
       e.type == type and e.action == action
