@@ -1,2 +1,3 @@
 /public/js/*.js
 /public/js/phoenix/*.js
+/public/vue/utils/petite-vue.es.js
