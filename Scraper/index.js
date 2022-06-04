@@ -101,8 +101,6 @@ if (options['radios']) {
 } else {
   const collections = options['collection'] ? options['collection'] : Object.keys(radiosList);
 
-  console.log(collections);
-
   funList = collections.map(function (collection) {
     return async function () {
       return await getResults(radiosModule.getRadiosPathOfCollection(collection, radiosList));
