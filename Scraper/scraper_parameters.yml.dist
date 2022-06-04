@@ -1,5 +1,6 @@
-api_url: 'http://localhost:4000/schedule/'
-api_key:
+api_schedule_url: 'http://localhost:4000/schedule/'
+api_radios_url: 'http://localhost:4000/radios/list'
+api_key: ''
 
 logmail:
     enable: false
