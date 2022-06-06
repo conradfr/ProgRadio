@@ -1,6 +1,5 @@
 const commandLineArgs = require('command-line-args');
 const moment = require('moment-timezone');
-const async = require('async');
 const yaml = require('js-yaml');
 const fs = require('fs');
 const axios = require('axios');
@@ -8,7 +7,7 @@ const axios = require('axios');
 const radiosModule = require('./lib/radios.js');
 
 (async () => {
-try {
+  try {
 
 process.on('uncaughtException', function (err) {
   console.log('Caught exception: ', err);
@@ -65,8 +64,8 @@ const getResults = async (radios) => {
             }
           })
             .then(function (response) {
-              logger.log('debug', `${radio_module.getName} - api request done.`)
-              return true;
+              logger.log('info', `${radio_module.getName} - api request done.`)
+              // return true;
             }).catch((error) => {
               logger.log('warn', `${radio_module.getName} - api request failed.`)
             });
@@ -83,8 +82,6 @@ const getResults = async (radios) => {
   return Promise.all(all);
 };
 
-let funList = null;
-
 const radiosList = await radiosModule.radiosList(config, logger);
 
 if (radiosList === null || radiosList.length === 0) {
@@ -92,32 +89,27 @@ if (radiosList === null || radiosList.length === 0) {
 }
 
 if (options['radios']) {
-  funList = [
-    async function () {
-      const radios = radiosModule.getRadiosPathFromCollection(options['radios'], radiosList);
-      return await getResults(radios);
+  const radios = radiosModule.getRadiosPathFromCollection(options['radios'], radiosList);
+  try {
+    await getResults(radios);
+  }
+  catch(error) {
+    logger.log('error', error);
     }
-  ];
 } else {
   const collections = options['collection'] ? options['collection'] : Object.keys(radiosList);
-
-  funList = collections.map(function (collection) {
-    return async function () {
+  collections.map(async (collection) => {
+    logger.log('info', `Scraping collection: ${collection}`);
+    try {
       return await getResults(radiosModule.getRadiosPathOfCollection(collection, radiosList));
+    }
+    catch(error) {
+      logger.log('error', error);
     }
   });
 }
 
-async.series(
-  funList,
-  function (err, results) {
-    // console.log(err);
-    logger.log('info', 'All done, exiting ...');
-    process.exit(1);
-  }
-);
-
-}
+} // try
 catch(err) {
   console.log(err);
 }

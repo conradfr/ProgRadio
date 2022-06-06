@@ -14,9 +14,17 @@ const checkNested = (obj, level,  ...rest) => {
     return checkNested(obj[level], ...rest)
 }
 
+// @url https://www.delftstack.com/fr/howto/node.js/nodejs-sleep/
+const sleep = (ms) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
 const utils= {
     upperCaseWords,
-    checkNested
+    checkNested,
+    sleep
 };
 
 module.exports = utils;

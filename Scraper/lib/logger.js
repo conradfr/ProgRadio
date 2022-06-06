@@ -10,12 +10,10 @@ const logger = winston.createLogger({
   ]
 });
 
-//if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    level: 'info',
-    format: winston.format.simple()
-  }));
-//}
+logger.add(new winston.transports.Console({
+  level: process.env.NODE_ENV === 'prod' ? 'info' : 'debug',
+  format: winston.format.simple()
+}));
 
 const init = (mailConfig) => {
   if (mailConfig.enable === true) {
