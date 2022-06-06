@@ -175,7 +175,7 @@ export const useStreamsStore = defineStore('streams', {
 
       const offset = (this.page - 1) * config.STREAMS_DEFAULT_PER_PAGE;
 
-      if (this.searchActive && this.searchText !== null) {
+      if (this.searchActive && this.searchText !== null && this.searchText !== '') {
         nextTick(async () => {
           const data = await StreamsApi.searchStreams(
             this.searchText,
@@ -298,12 +298,27 @@ export const useStreamsStore = defineStore('streams', {
         }
       }
     },
-    setSearchText(text: string|null) {
+    setSearchText(text: string|null): boolean {
+      if (this.searchText === text) {
+        return false;
+      }
+
       if (text !== null && text.trim() !== '') {
         this.soloExtended = null;
       }
 
       this.searchText = text;
+
+      /* eslint-disable no-underscore-dangle */
+      if ((this as any).$router.currentRoute._rawValue.params.page !== ''
+        && (this as any).$router.currentRoute._rawValue.params.page !== '1') {
+        const params = { ...(this as any).$router.currentRoute._rawValue.params, page: '1' };
+        (this as any).$router.push({ name: 'streaming', params, replace: true });
+        return false;
+      }
+
+      this.pageSet(1);
+      return true;
     }
   }
 });

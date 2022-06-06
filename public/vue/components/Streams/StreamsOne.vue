@@ -125,7 +125,7 @@ export default defineComponent({
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged' }),
     ...mapState(usePlayerStore, ['playing', 'radioPlayingCodeName', 'liveSong', 'externalPlayer']),
-    ...mapState(useStreamsStore, ['selectedCountry', 'getOneStream', 'getCountryName']),
+    ...mapState(useStreamsStore, ['selectedCountry', 'getOneStream', 'getCountryName', 'page']),
     stream() {
       return this.getOneStream(this.codeName);
     },
@@ -195,7 +195,7 @@ export default defineComponent({
     quit() {
       this.$router.push({
         name: 'streaming',
-        params: { countryOrCategoryOrUuid: this.selectedCountry.toLowerCase() }
+        params: { countryOrCategoryOrUuid: this.selectedCountry.toLowerCase(), page: this.page }
       });
     }
   }

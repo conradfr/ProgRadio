@@ -179,17 +179,19 @@ export default defineComponent({
         value: config.GTAG_STREAMING_FILTER_VALUE
       });
 
-      this.setSearchText(tag);
+      if (this.setSearchText(tag)) {
+        nextTick(() => {
+          // this.$refs.searchText.focus();
+          this.getStreamRadios();
+        });
+      }
+
       this.setSearchActive(true);
-      nextTick(() => {
-        // this.$refs.searchText.focus();
-        this.getStreamRadios();
-      });
     },
     nameClick(id: string) {
       this.$router.push({
         name: 'streaming',
-        params: { countryOrCategoryOrUuid: id }
+        params: { countryOrCategoryOrUuid: id, page: null }
       });
     },
     toggleFavorite() {

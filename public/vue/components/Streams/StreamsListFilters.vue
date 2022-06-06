@@ -215,12 +215,12 @@ export default defineComponent({
     searchTextChange(event: Event|string) {
       const value = typeof event === 'string'
         ? event : (event.target as HTMLTextAreaElement).value;
-      this.setSearchText(value);
-      // .then(() => {
-      nextTick(() => {
-        this.getStreamRadios();
-      });
-      // });
+
+      if (this.setSearchText(value)) {
+        nextTick(() => {
+          this.getStreamRadios();
+        });
+      }
     },
     countryChange(country: string): void {
       if (country === undefined || country === null) {
@@ -237,7 +237,7 @@ export default defineComponent({
 
         this.$router.push({
           name: 'streaming',
-          params: { countryOrCategoryOrUuid: country.toLowerCase() }
+          params: { countryOrCategoryOrUuid: country.toLowerCase(), page: '1' }
         });
       }
     },
@@ -283,7 +283,7 @@ export default defineComponent({
               && geoData.countryCode !== null) {
               this.$router.push({
                 name: 'streaming',
-                params: { countryOrCategoryOrUuid: geoData.countryCode.toLowerCase() }
+                params: { countryOrCategoryOrUuid: geoData.countryCode.toLowerCase(), page: '1' }
               });
             }
           });

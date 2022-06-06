@@ -68,6 +68,7 @@
     text-align: center;
     cursor: pointer;
     opacity: 0.8;
+    color: $streams-filter-search-close;
 
     &:hover {
       opacity: 1;
@@ -205,6 +206,7 @@
           display: inline;
           margin: 0 1px;
           cursor: pointer;
+          background-image: none;
 
           &.badge-inverse {
             color: $stream-badge-color;

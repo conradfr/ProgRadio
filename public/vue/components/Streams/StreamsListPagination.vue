@@ -35,12 +35,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState, mapActions } from 'pinia';
+import { mapState } from 'pinia';
 
 /* eslint-disable import/no-cycle */
 import { useStreamsStore } from '@/stores/streamsStore';
 
-import { STREAMS_DEFAULT_PER_PAGE, STREAMS_MAX_PAGES_DISPLAY } from '@/config/config';
+import { STREAMS_DEFAULT_PER_PAGE } from '@/config/config';
 
 export default defineComponent({
   computed: {
@@ -49,7 +49,8 @@ export default defineComponent({
       return Math.ceil(this.total / STREAMS_DEFAULT_PER_PAGE);
     },
     pagesList(): number[] {
-      if (this.pages <= STREAMS_MAX_PAGES_DISPLAY) { return [this.pages]; }
+      // not sure what this does anymore
+      // if (this.pages <= STREAMS_MAX_PAGES_DISPLAY) { return [this.pages]; }
       const pagesList = [1];
 
       if (this.page > 2) {
@@ -58,7 +59,7 @@ export default defineComponent({
 
       pagesList.push(this.page);
 
-      if (this.page < this.pages - 1) {
+      if (this.page < this.pages - 1 || (this.page === 1 && this.pages > 1)) {
         pagesList.push(this.page + 1, this.pages);
       }
 
@@ -66,13 +67,17 @@ export default defineComponent({
     },
   },
   methods: {
-    ...mapActions(useStreamsStore, ['pageSelection']),
     gotoPage(page: number) {
       if (page < 1 || page > this.pages) {
         return;
       }
 
-      this.pageSelection(page);
+      const params = { ...this.$route.params, page: page.toString() };
+
+      this.$router.push({
+        name: 'streaming',
+        params
+      });
     },
   }
 });

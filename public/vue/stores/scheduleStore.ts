@@ -169,8 +169,7 @@ export const useScheduleStore = defineStore('schedule', {
         'backward'
       );
 
-      // @ts-ignore
-      this.$router.push({ name: 'schedule', params: { collection: nextCollection } });
+      (this as any).$router.push({ name: 'schedule', params: { collection: nextCollection } });
     },
     collectionForward() {
       const nextCollection = ScheduleUtils.getNextCollection(
@@ -180,8 +179,7 @@ export const useScheduleStore = defineStore('schedule', {
         'forward'
       );
 
-      // @ts-ignore
-      this.$router.push({ name: 'schedule', params: { collection: nextCollection } });
+      (this as any).$router.push({ name: 'schedule', params: { collection: nextCollection } });
     },
     switchCollection(collection: string) {
       const player = usePlayerStore();
