@@ -148,7 +148,7 @@ defmodule ProgRadioApi.Streams do
 
       "last" ->
         query
-        |> join(:inner, [ls], s in assoc(ls, :listening_session))
+        |> join(:left, [ls], s in assoc(ls, :listening_session))
         |> order_by([s, rs, r, ss, ls], desc: max(ls.date_time_start))
         |> group_by([s, rs, r, ss, ls], [
           s.id,
