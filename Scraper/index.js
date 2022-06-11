@@ -98,15 +98,15 @@ if (options['radios']) {
     }
 } else {
   const collections = options['collection'] ? options['collection'] : Object.keys(radiosList);
-  collections.map(async (collection) => {
-    logger.log('info', `Scraping collection: ${collection}`);
+  for (let i=0;i<collections.length;i++) {
+    logger.log('info', `Scraping collection: ${collections[i]}`);
     try {
-      return await getResults(radiosModule.getRadiosPathOfCollection(collection, radiosList));
+      await getResults(radiosModule.getRadiosPathOfCollection(collections[i], radiosList));
     }
     catch(error) {
       logger.log('error', error);
     }
-  });
+  }
 }
 
 } // try
