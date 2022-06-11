@@ -104,7 +104,12 @@ const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string) => {
   return radio.streams![radioStreamCodeName].url;
 };
 
-const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string) => {
+// @todo find bug from app with radioStreamCodeName as null
+const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string|null) => {
+  if (radioStreamCodeName === null) {
+    return null;
+  }
+
   if ((typeUtils.isRadio(radio) && radio.streams![radioStreamCodeName].current_song)
     || (typeUtils.isStream(radio) && radio.current_song)) {
     const channelNameEnd = typeUtils.isRadio(radio)

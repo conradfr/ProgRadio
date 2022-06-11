@@ -113,6 +113,10 @@ export const usePlayerStore = defineStore('player', {
       }
 
       const channelName = PlayerUtils.getChannelName(toRaw(radio), radioStreamCodeName!);
+      // @todo find bug from app
+      if (channelName === null) {
+        return null;
+      }
 
       if (state.song === null || state.song === undefined
         || !Object.prototype.hasOwnProperty.call(state.song, channelName)) {
@@ -552,8 +556,8 @@ export const usePlayerStore = defineStore('player', {
       this.flux = PlayerUtils.calculatedFlux();
     },
     /* From Android */
-    updateTimerEnding(minutes: number) {
-      this.setTimerCommit(minutes);
+    updateTimerEnding(minutes: any) {
+      this.setTimerCommit(typeof minutes === 'string' ? parseInt(minutes, 10) : minutes);
     },
     /* From Android */
     /* eslint-disable no-param-reassign */
