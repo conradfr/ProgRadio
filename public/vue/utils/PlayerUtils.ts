@@ -96,7 +96,7 @@ const getNextStream = (currentStream: Stream, streams: Stream[], way: 'backward'
   return streams[newIndex];
 };
 
-const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string) => {
+const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string|null) => {
   if (typeUtils.isStream(radio) || radioStreamCodeName === null) {
     return radio.stream_url;
   }
@@ -104,12 +104,13 @@ const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string) => {
   return radio.streams![radioStreamCodeName].url;
 };
 
-const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string): string => {
+const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string|null): string => {
   // @todo find bug from app with radioStreamCodeName as null
   if (typeUtils.isRadio(radio) && radioStreamCodeName === null) {
     return '';
   }
 
+  // @ts-ignore
   if ((typeUtils.isRadio(radio) && radio.streams![radioStreamCodeName].current_song)
     || (typeUtils.isStream(radio) && radio.current_song)) {
     const channelNameEnd = typeUtils.isRadio(radio)

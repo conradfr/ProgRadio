@@ -87,6 +87,8 @@ import {
   GTAG_ACTION_STOP_VALUE
 } from '@/config/config';
 
+import PlayerUtils from '../../utils/PlayerUtils';
+
 export default defineComponent({
   props: {
     radio: {
@@ -96,12 +98,15 @@ export default defineComponent({
   },
   /* eslint-disable indent */
   data(): {
+    channelName: string,
     hover: boolean,
     hoverTimer: number|null,
     locale: string,
-    styleObject: object
+    styleObject: object,
   } {
     return {
+      // @dodo fix null mobile app
+      channelName: PlayerUtils.getChannelName(this.radio, `${this.radio.code_name}_main`) || '',
       hover: false,
       hoverTimer: null,
       locale: this.$i18n.locale,
@@ -110,8 +115,20 @@ export default defineComponent({
       }
     };
   },
+  created() {
+    setTimeout(() => {
+      this.joinChannel(this.channelName);
+    }, 1000);
+  },
+  beforeUnmount() {
+    this.leaveChannel(this.channelName);
+  },
   computed: {
-    ...mapState(usePlayerStore, ['playing', 'externalPlayer', 'radioPlayingCodeName']),
+    ...mapState(usePlayerStore, [
+      'playing',
+      'externalPlayer',
+      'radioPlayingCodeName',
+    ]),
     ...mapState(usePlayerStore, { playingStreamCodeName: 'radioStreamCodeName' }),
     ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite' }),
     subMenuStyleObject() {
@@ -142,7 +159,7 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions(usePlayerStore, ['playRadio', 'stop']),
+    ...mapActions(usePlayerStore, ['playRadio', 'stop', 'joinChannel', 'leaveChannel']),
     ...mapActions(useUserStore, ['toggleRadioFavorite']),
     playStop(streamCodeName: string, isSubStream: boolean) {
       // stop if playing
