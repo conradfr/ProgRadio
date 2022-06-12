@@ -67,3 +67,7 @@ services:
 
                 # you can also restrict listeners to a specific Doctrine connection
                 connection: 'default'
+
+    cache.adapter.null:
+        class: Symfony\Component\Cache\Adapter\NullAdapter
+        arguments: [~] # small trick to avoid arguments errors on compile-time.
