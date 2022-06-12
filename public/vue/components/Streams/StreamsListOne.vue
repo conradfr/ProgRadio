@@ -79,7 +79,8 @@ export default defineComponent({
     const img = StreamsUtils.getPictureUrl(this.radio);
 
     return {
-      channelName: PlayerUtils.getChannelName(this.radio, this.radio.radio_stream_code_name),
+      // @dodo fix null mobile app
+      channelName: PlayerUtils.getChannelName(this.radio, this.radio.radio_stream_code_name) || '',
       currentSong: null,
       hover: false,
       code_all: config.STREAMING_CATEGORY_ALL,

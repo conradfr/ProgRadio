@@ -32,6 +32,7 @@ import StreamsOne from './Streams/StreamsOne.vue';
 import Adsense from './Utils/Adsense.vue';
 import Loading from './Utils/Loading.vue';
 
+/* eslint-disable no-prototype-builtins */
 export default defineComponent({
   components: {
     StreamsListFilters,
@@ -73,12 +74,12 @@ export default defineComponent({
     next(() => {
       const streamsStore = useStreamsStore();
 
-      if (to.params.countryOrCategoryOrUuid) {
+      if (to.params.hasOwnProperty('countryOrCategoryOrUuid')) {
         // this is a radio (uuid)
         if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
           streamsStore.setSoloExtended((to.params.countryOrCategoryOrUuid as string));
         } else {
-          if (to.params.page) {
+          if (to.params.hasOwnProperty('page')) {
             streamsStore.pageSet(parseInt((to.params.page as string), 10));
           }
 
@@ -86,7 +87,7 @@ export default defineComponent({
           streamsStore.setSoloExtended(null);
         }
       } else {
-        if (to.params.page) {
+        if (to.params.hasOwnProperty('page')) {
           streamsStore.pageSet(parseInt((to.params.page as string), 10));
         }
         streamsStore.getStreamRadios();
@@ -96,12 +97,12 @@ export default defineComponent({
   beforeRouteUpdate(to, from, next) {
     const streamsStore = useStreamsStore();
 
-    if (to.params.countryOrCategoryOrUuid) {
+    if (to.params.hasOwnProperty('countryOrCategoryOrUuid')) {
       // this is a radio (uuid)
       if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
         streamsStore.setSoloExtended((to.params.countryOrCategoryOrUuid as string));
       } else {
-        if (to.params.page) {
+        if (to.params.hasOwnProperty('page')) {
           streamsStore.pageSet(parseInt((to.params.page as string), 10));
         }
         streamsStore.countrySelection((to.params.countryOrCategoryOrUuid as string));

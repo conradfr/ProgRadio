@@ -44,7 +44,7 @@ import { STREAMS_DEFAULT_PER_PAGE } from '@/config/config';
 
 export default defineComponent({
   computed: {
-    ...mapState(useStreamsStore, ['total', 'page']),
+    ...mapState(useStreamsStore, ['total', 'page', 'selectedCountry']),
     pages(): number {
       return Math.ceil(this.total / STREAMS_DEFAULT_PER_PAGE);
     },
@@ -72,7 +72,11 @@ export default defineComponent({
         return;
       }
 
-      const params = { ...this.$route.params, page: page.toString() };
+      const params = {
+        ...this.$route.params,
+        countryOrCategoryOrUuid: this.selectedCountry,
+        page: page.toString()
+      };
 
       this.$router.push({
         name: 'streaming',
