@@ -112,7 +112,7 @@ const fetchShows = () => {
           .follow('a:first@href')
           .find('.emissions_content')
           .set({
-            'title': '.emissions_title',
+            'title': '.emissions_title, .aside_emissions_title',
             'datetime_raw': 'time',
             'host': '.emissions_presenter span',
             'description': ".emissions_description_text"
