@@ -47,6 +47,12 @@ class StreamOverloading
      */
     private $countryCode;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $website;
 
 
     public function getId(): string
@@ -98,5 +104,17 @@ class StreamOverloading
     {
         $this->countryCode = $countryCode;
     }
+
+    public function getWebsite(): string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(string $website): void
+    {
+        $this->website = $website;
+    }
+
+
 
 }

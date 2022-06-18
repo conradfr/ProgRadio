@@ -9,6 +9,7 @@ defmodule ProgRadioApi.StreamOverloading do
     field(:img, :string)
     field(:stream_url, :string)
     field(:country_code, :string)
+    field(:website, :string)
     field(:enabled, :boolean)
   end
 
@@ -19,7 +20,8 @@ defmodule ProgRadioApi.StreamOverloading do
       :name,
       :img,
       :stream_url,
-      :country_code
+      :country_code,
+      :website,
     ])
     |> validate_required([:id])
   end

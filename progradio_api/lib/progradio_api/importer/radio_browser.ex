@@ -79,6 +79,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
       img_url = Map.get(stream, "favicon")
       country_code = Map.get(stream, "countrycode")
+      website = Map.get(stream, "homepage")
 
       %{
         id: id,
@@ -86,7 +87,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         name: Map.get(overloading, :name) || name,
         img_url: Map.get(overloading, :img) || img_url,
         img: nil,
-        website: Map.get(stream, "homepage"),
+        website: Map.get(overloading, :website) || website,
         stream_url: Map.get(overloading, :stream_url) || stream_url,
         tags: Map.get(stream, "tags"),
         country_code: Map.get(overloading, :country_code) || country_code,
