@@ -48,7 +48,7 @@ export default defineComponent({
     ...mapActions(useScheduleStore, ['tick']),
     setTick() {
       // @ts-ignore
-      this.tickInterval = setInterval(this.tick(), TICK_INTERVAL);
+      this.tickInterval = setInterval(this.tick, TICK_INTERVAL);
     }
   }
 });
