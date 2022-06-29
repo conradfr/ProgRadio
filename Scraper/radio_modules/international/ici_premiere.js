@@ -67,8 +67,8 @@ const fetch = dateObj => {
   return axios.get(url)
     .then(function (response) {
       scrapedData = [...scrapedData, ...response.data.broadcasts];
-      return resolve(true);
-    }).catch(() => resolve(true));
+      // return resolve(true);
+    })/*.catch((error) => logger.ilog('warn', error))*/;
 };
 
 const fetchAll = dateObj => {
