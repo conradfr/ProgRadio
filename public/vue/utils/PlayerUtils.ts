@@ -97,6 +97,10 @@ const getNextStream = (currentStream: Stream, streams: Stream[], way: 'backward'
 };
 
 const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string|null) => {
+  if (typeUtils.isRadio(radio) && !radio.streaming_enabled) {
+    return null;
+  }
+
   if (typeUtils.isStream(radio) || radioStreamCodeName === null) {
     return radio.stream_url;
   }
@@ -105,13 +109,13 @@ const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string|null) => 
 };
 
 const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string|null): string => {
-  // @todo find bug from app with radioStreamCodeName as null
-  if (typeUtils.isRadio(radio) && radioStreamCodeName === null) {
+  if (typeUtils.isRadio(radio) && (radioStreamCodeName === null || !radio.streaming_enabled)) {
     return '';
   }
 
   // @ts-ignore
-  if ((typeUtils.isRadio(radio) && radio.streams![radioStreamCodeName].current_song)
+  if ((radioStreamCodeName !== null && typeUtils.isRadio(radio)
+      && Object.keys(radio.streams).length > 0 && radio.streams![radioStreamCodeName].current_song)
     || (typeUtils.isStream(radio) && radio.current_song)) {
     const channelNameEnd = typeUtils.isRadio(radio)
       ? radioStreamCodeName : radio.radio_stream_code_name;
