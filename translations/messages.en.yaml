@@ -8,10 +8,11 @@ menu:
         dashboard: Dashboard
         listening: Listening
         shares: Shares
+    all: All radios
     app: Android App
     contact: Contact
     faq: Faq
-    favorites: My favorites
+    favorites: My Favorites
     favorites_menu:
         all: Worldwide
         be: Belgium

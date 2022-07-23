@@ -3,14 +3,17 @@
         <a class="nav-link dropdown-toggle pe-0" href="#" id="navbarCollectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarCollectionsDropdown">
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}schedule/all">
+                    {{ 'menu.all'|trans }}
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
             {% for collection in collections %}
                 {% if collection.code_name == 'favorites' %}
                     <li><hr class="dropdown-divider"></li>
                 {% endif %}
                 <li>
-                    {#                <a href="{{ path('app', {'c': collection.code_name}) }}" onclick="switchCollection(event, '{{ collection.code_name }}')">#}
-                    {#                    {{ collection.name_FR }}#}
-                    {#                </a>#}
                     <a class="dropdown-item spa-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">
                         {{ collection["name_" ~ app.request.locale|upper] }}
                     </a>
@@ -21,12 +24,21 @@
 {% endmacro %}
 
 {% macro collections_mobile(collections) %}
-    {% for collection in collections %}
     <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="nav-item">
-        <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">
-            &rarr; {{ collection.name_FR }}
+        <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}schedule/all">
+            &rarr; {{ 'menu.all'|trans }}
         </a>
     </li>
+    <li><hr class="dropdown-divider"></li>
+    {% for collection in collections %}
+        {% if collection.code_name == 'favorites' %}
+            <li><hr class="dropdown-divider"></li>
+        {% endif %}
+        <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="nav-item">
+            <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">
+                &rarr; {{ collection.name_FR }}
+            </a>
+        </li>
     {% endfor %}
 {% endmacro %}
 
@@ -70,6 +82,7 @@
             &rarr; {{ 'menu.favorites_menu.all'|trans }}
         </a>
     </li>
+    <li><hr class="dropdown-divider"></li>
     <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
         <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}streaming/favorites">
             &rarr; {{ 'menu.favorites'|trans }}

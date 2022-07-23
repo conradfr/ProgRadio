@@ -1,5 +1,6 @@
 import sortBy from 'lodash/sortBy';
 import findIndex from 'lodash/findIndex';
+import find from 'lodash/find';
 
 import compose from 'lodash/fp/compose';
 import filter from 'lodash/fp/filter';
@@ -135,10 +136,27 @@ const getScheduleDisplay = (schedule: Schedule, currentTime: DateTime, initialSc
 /* ---------- COLLECTIONS ---------- */
 
 // sort by share/name/etc, desc
-const rankCollection = (collection: Collection, radios: Record<string, Radio>, categoriesExcluded: string[]): Radio[] => {
+const rankCollection = (collectionCodeName : string, collections: Record<string, Collection>, radios: Record<string, Radio>, categoriesExcluded: string[]): Radio[] => {
   if (Object.keys(radios).length === 0) {
     return [];
   }
+
+  // special case, we loop each collection to get all radios
+  if (collectionCodeName === config.COLLECTION_ALL) {
+    const collectionIsNotFavorites = (entry: Collection) => entry.code_name !== config.COLLECTION_FAVORITES;
+    const collectionsOrdered = compose(
+      filter(collectionIsNotFavorites),
+      orderBy(['priority'], ['asc'])
+    )(collections);
+
+    return collectionsOrdered.reduce((acc: Radio[], entry: Collection) => {
+      const radiosOfCollection = rankCollection(entry.code_name, collections, radios, categoriesExcluded);
+      return [...acc, ...radiosOfCollection];
+    }, []);
+  }
+
+  const collection = <Collection>find(collections,
+    { code_name: collectionCodeName });
 
   const { sort_field: sortField, sort_order: sortOrder } = collection;
 
@@ -163,11 +181,11 @@ const getNextCollection = (currentCodeName: string, collections: Record<string, 
 
   let newIndex = 0;
   if (way === 'backward') {
-    newIndex = indexOfCurrentCollection === 0 ? collectionsOrdered.length - 1
-      : indexOfCurrentCollection - 1;
+    newIndex = indexOfCurrentCollection === 0 || currentCodeName === config.COLLECTION_ALL
+      ? collectionsOrdered.length - 1 : indexOfCurrentCollection - 1;
   } else if (way === 'forward') {
-    newIndex = collectionsOrdered.length === (indexOfCurrentCollection + 1) ? 0
-      : indexOfCurrentCollection + 1;
+    newIndex = collectionsOrdered.length === (indexOfCurrentCollection + 1) || currentCodeName === config.COLLECTION_ALL
+      ? 0 : indexOfCurrentCollection + 1;
   }
 
   // has the collection any radios? If no, skip it.

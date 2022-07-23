@@ -6,7 +6,6 @@ import find from 'lodash/find';
 import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 import type { Program } from '@/types/program';
-import type { Collection } from '@/types/collection';
 import type { Songs } from '@/types/song';
 import type { ListeningSession } from '@/types/listening_session';
 
@@ -294,11 +293,9 @@ export const usePlayerStore = defineStore('player', {
           return;
         }
 
-        const collectionToIterateOn = <Collection>find(scheduleStore.collections,
-          { code_name: scheduleStore.currentCollection });
-
         const radios = ScheduleUtils.rankCollection(
-          collectionToIterateOn,
+          scheduleStore.currentCollection,
+          scheduleStore.collections,
           scheduleStore.radios,
           scheduleStore.categoriesExcluded
         );

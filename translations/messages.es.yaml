@@ -8,11 +8,12 @@ menu:
         dashboard: Tableau de bord
         listening: Écoutes
         shares: Parts de marché
+    all: Todas las radios
     app: App Android
     contact: Contactar
     faq: Pmf
 
-    favorites: Mis preferidos
+    favorites: Mis Preferidos
     favorites_menu:
         all: Mundo entero
         be: Bélgica

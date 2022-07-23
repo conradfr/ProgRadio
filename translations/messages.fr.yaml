@@ -8,11 +8,12 @@ menu:
         dashboard: Tableau de bord
         listening: Écoutes
         shares: Parts de marché
+    all: Toutes les radios
     app: App Android
     contact: Contact
     faq: Faq
 
-    favorites: Mes favoris
+    favorites: Mes Favoris
     favorites_menu:
         all: Monde entier
         be: Belgique

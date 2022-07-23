@@ -92,12 +92,14 @@ export const useScheduleStore = defineStore('schedule', {
     rankedRadios: (state) => {
       if (state.collections === undefined || state.collections === null
         || Object.keys(state.collections).length === 0
-        || state.collections[state.currentCollection] === undefined) {
+        || (state.currentCollection !== config.COLLECTION_ALL
+          && state.collections[state.currentCollection] === undefined)) {
         return [];
       }
 
       return ScheduleUtils.rankCollection(
-        state.collections[state.currentCollection],
+        state.currentCollection,
+        state.collections,
         state.radios,
         state.categoriesExcluded
       );
@@ -184,10 +186,15 @@ export const useScheduleStore = defineStore('schedule', {
     switchCollection(collection: string) {
       const player = usePlayerStore();
 
-      if (this.currentCollection !== null && this.currentCollection !== undefined) {
+      if (this.currentCollection !== null && this.currentCollection !== undefined
+        && this.currentCollection !== config.STREAMING_CATEGORY_ALL) {
         player.leaveChannel(`collection:${this.currentCollection}`);
       }
-      player.joinChannel(`collection:${collection}`);
+
+      if (collection !== config.STREAMING_CATEGORY_ALL) {
+        player.joinChannel(`collection:${collection}`);
+      }
+
       this.currentCollection = collection;
 
       setTimeout(() => {
@@ -208,10 +215,9 @@ export const useScheduleStore = defineStore('schedule', {
         return;
       }
 
-      const collectionToIterateOn = <Collection>find(this.collections,
-        { code_name: this.currentCollection });
       const radios = ScheduleUtils.rankCollection(
-        collectionToIterateOn,
+        this.currentCollection,
+        this.collections,
         this.radios,
         this.categoriesExcluded);
 
@@ -342,9 +348,12 @@ export const useScheduleStore = defineStore('schedule', {
       if (params !== undefined && params !== null && params !== '') {
         // api don't have user favorites access
         /* eslint-disable no-param-reassign */
-        if (params.collection !== undefined && params.collection === config.COLLECTION_FAVORITES) {
-          if (this.collections[config.COLLECTION_FAVORITES] !== undefined) {
-            params.radios = this.collections[config.COLLECTION_FAVORITES].radios;
+        if (params.collection !== undefined
+          && (params.collection === config.COLLECTION_FAVORITES || (params.collection === config.COLLECTION_ALL))) {
+          if (params.collection === config.COLLECTION_FAVORITES) {
+            if (this.collections[config.COLLECTION_FAVORITES] !== undefined) {
+              params.radios = this.collections[config.COLLECTION_FAVORITES].radios;
+            }
           }
           delete params.collection;
         }
