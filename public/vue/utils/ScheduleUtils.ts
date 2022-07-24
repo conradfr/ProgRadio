@@ -136,7 +136,13 @@ const getScheduleDisplay = (schedule: Schedule, currentTime: DateTime, initialSc
 /* ---------- COLLECTIONS ---------- */
 
 // sort by share/name/etc, desc
-const rankCollection = (collectionCodeName : string, collections: Record<string, Collection>, radios: Record<string, Radio>, categoriesExcluded: string[]): Radio[] => {
+const rankCollection = (
+  collectionCodeName : string,
+  collections: Record<string, Collection>,
+  radios: Record<string, Radio>,
+  categoriesExcluded: string[],
+  preRollExcluded: boolean
+): Radio[] => {
   if (Object.keys(radios).length === 0) {
     return [];
   }
@@ -150,7 +156,7 @@ const rankCollection = (collectionCodeName : string, collections: Record<string,
     )(collections);
 
     return collectionsOrdered.reduce((acc: Radio[], entry: Collection) => {
-      const radiosOfCollection = rankCollection(entry.code_name, collections, radios, categoriesExcluded);
+      const radiosOfCollection = rankCollection(entry.code_name, collections, radios, categoriesExcluded, preRollExcluded);
       return [...acc, ...radiosOfCollection];
     }, []);
   }
@@ -162,10 +168,12 @@ const rankCollection = (collectionCodeName : string, collections: Record<string,
 
   const collectionHasRadio = (entry: Radio) => collection.radios.indexOf(entry.code_name) !== -1;
   const isCategoryExcluded = (entry: Radio) => categoriesExcluded.indexOf(entry.category) === -1;
+  const isPreRollExcluded = (entry: Radio) => !(preRollExcluded && entry.has_preroll);
 
   return compose(
     filter(collectionHasRadio),
     filter(isCategoryExcluded),
+    filter(isPreRollExcluded),
     orderBy([sortField], [sortOrder])
   )(radios);
 };

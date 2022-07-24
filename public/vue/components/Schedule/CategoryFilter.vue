@@ -1,6 +1,15 @@
 <template>
   <div id="category-filter" v-on:mouseover="filterFocus(true)" v-on:mouseleave="filterFocus(false)">
     <div class="category-one"
+         :class="{ 'category-one-excluded': preRollExcluded }"
+         v-on:click="togglePreRoll()"
+    >
+      <span class="bi"
+            :class="{ 'bi-check-lg': !preRollExcluded,
+                  'bi-dash-lg': preRollExcluded }">
+      </span>{{ $t('message.schedule.preroll_filter') }}
+    </div>
+    <div class="category-one"
       :class="{ 'category-one-excluded': isCategoryExcluded(entry.code_name) }"
       v-for="entry in categories" :key="entry.code_name"
       v-on:click="toggleExclude(entry.code_name)"
@@ -32,12 +41,13 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapState(useScheduleStore, ['categories', 'categoriesExcluded']),
+    ...mapState(useScheduleStore, ['categories', 'categoriesExcluded', 'preRollExcluded']),
   },
   methods: {
     ...mapActions(useScheduleStore, [
       'toggleExcludeCategory',
-      'setCategoryFilterFocus'
+      'setCategoryFilterFocus',
+      'preRollExcludedToggle'
     ]),
     filterFocus(status: boolean) {
       // timer helps avoid the filter icon flickering
@@ -59,6 +69,15 @@ export default defineComponent({
       });
 
       this.toggleExcludeCategory(category);
+    },
+    togglePreRoll() {
+      (this as any).$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
+        event_category: GTAG_CATEGORY_SCHEDULE,
+        event_label: 'preroll',
+        value: GTAG_SCHEDULE_FILTER_VALUE
+      });
+
+      this.preRollExcludedToggle();
     }
   }
 });

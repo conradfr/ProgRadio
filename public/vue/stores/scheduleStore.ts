@@ -41,6 +41,7 @@ interface State {
   scrollIndex: number
   scrollClick: boolean
   currentCollection: any
+  preRollExcluded: boolean,
   categoriesExcluded: string[]
   categoryFilterFocus: CategoryFilterFocus
 }
@@ -61,6 +62,7 @@ export const useScheduleStore = defineStore('schedule', {
     scrollIndex: initialScrollIndex,
     scrollClick: false,
     currentCollection: cookies.get(config.COOKIE_COLLECTION, config.DEFAULT_COLLECTION),
+    preRollExcluded: cookies.get(config.COOKIE_PREROLL, false),
     categoriesExcluded: cookies.has(config.COOKIE_EXCLUDE)
       ? cookies.get(config.COOKIE_EXCLUDE).split('|') : [],
     categoryFilterFocus: {
@@ -101,7 +103,8 @@ export const useScheduleStore = defineStore('schedule', {
         state.currentCollection,
         state.collections,
         state.radios,
-        state.categoriesExcluded
+        state.categoriesExcluded,
+        state.preRollExcluded
       );
     },
     /* eslint-disable max-len */
@@ -219,7 +222,8 @@ export const useScheduleStore = defineStore('schedule', {
         this.currentCollection,
         this.collections,
         this.radios,
-        this.categoriesExcluded);
+        this.categoriesExcluded,
+        this.preRollExcluded);
 
       AndroidApi.list(radios);
     },
@@ -239,6 +243,10 @@ export const useScheduleStore = defineStore('schedule', {
       setTimeout(() => {
         cookies.set(config.COOKIE_EXCLUDE, this.categoriesExcluded.join('|'));
       }, 500);
+    },
+    preRollExcludedToggle() {
+      cookies.set(config.COOKIE_PREROLL, !this.preRollExcluded);
+      this.preRollExcluded = !this.preRollExcluded;
     },
 
     // ---------- CALENDAR ----------

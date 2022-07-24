@@ -297,7 +297,8 @@ export const usePlayerStore = defineStore('player', {
           scheduleStore.currentCollection,
           scheduleStore.collections,
           scheduleStore.radios,
-          scheduleStore.categoriesExcluded
+          scheduleStore.categoriesExcluded,
+          scheduleStore.preRollExcluded
         );
 
         const nextRadio = PlayerUtils.getNextRadio(this.radio, radios, way || 'forward');

@@ -341,6 +341,8 @@ export default defineComponent({
 
       if (startPlayPromise !== undefined) {
         startPlayPromise.then(() => {
+          // this.currentPlayer.element.currentTime += 1;
+          // console.log('skiip yoyoo');
           // check if stream playing
           this.currentPlayer.element.addEventListener('timeupdate', () => {
             this.lastUpdated = new Date();

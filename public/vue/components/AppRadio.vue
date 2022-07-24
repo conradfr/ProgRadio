@@ -61,6 +61,7 @@ import { useUserStore } from '@/stores/userStore';
 
 import {
   TIMEZONE,
+  COLLECTION_ALL,
   THUMBNAIL_PAGE_PATH
 } from '@/config/config';
 
@@ -145,7 +146,8 @@ export default defineComponent({
       return [];
     },
     collection(): Collection|null {
-      if (this.radio === null || this.currentCollection === null) {
+      if (this.radio === null || this.currentCollection === null
+        || this.currentCollection === COLLECTION_ALL) {
         return null;
       }
 

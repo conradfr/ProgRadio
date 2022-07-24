@@ -11,5 +11,6 @@ export interface Radio {
   streams: Record<string, RadioStream>
   type: 'radio'
   img: string
-  stream_url: string
+  stream_url: string,
+  has_preroll: boolean
 }

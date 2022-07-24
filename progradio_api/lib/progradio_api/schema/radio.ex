@@ -11,6 +11,7 @@ defmodule ProgRadioApi.Radio do
     field(:active, :boolean)
     field(:share, :decimal)
     field(:country_code, :string)
+    field(:has_preroll, :boolean)
     has_many(:schedule_entry, ScheduleEntry)
     has_many(:radio_stream, RadioStream)
     belongs_to(:category, Category)
