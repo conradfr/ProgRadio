@@ -3,6 +3,9 @@
     <loading></loading>
     <schedule-radio-list></schedule-radio-list>
     <schedule-radio-grid></schedule-radio-grid>
+    <schedule-radio-program-modal
+        v-if="displayProgramModal">
+    </schedule-radio-program-modal>
   </div>
 </template>
 
@@ -18,12 +21,14 @@ import { DEFAULT_COLLECTION } from '@/config/config';
 
 import ScheduleRadioList from './ScheduleRadioList.vue';
 import ScheduleRadioGrid from './ScheduleRadioGrid.vue';
+import ScheduleRadioProgramModal from './ScheduleRadioProgramModal.vue';
 import Loading from '../Utils/Loading.vue';
 
 export default defineComponent({
   components: {
     ScheduleRadioList,
     ScheduleRadioGrid,
+    ScheduleRadioProgramModal,
     Loading
   },
   created() {
@@ -64,7 +69,7 @@ export default defineComponent({
       }
     }
   },
-  computed: mapState(useScheduleStore, ['currentCollection']),
+  computed: mapState(useScheduleStore, ['currentCollection', 'displayProgramModal']),
   methods: {
     ...mapActions(usePlayerStore, ['joinChannel', 'leaveChannel']),
     ...mapActions(useScheduleStore, [

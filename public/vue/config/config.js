@@ -140,6 +140,9 @@ export const GTAG_ACTION_TOGGLE_PREVIOUS_VALUE = 1;
 export const GTAG_ACTION_FAVORITE_TOGGLE = 'favorite_toggle';
 export const GTAG_ACTION_FAVORITE_TOGGLE_VALUE = 2;
 
+export const GTAG_ACTION_PROGRAM_DETAIL = 'program_detail';
+export const GTAG_ACTION_PROGRAM_DETAIL_VALUE = 1;
+
 // categories
 
 export const GTAG_CATEGORY_SCHEDULE = 'schedule';

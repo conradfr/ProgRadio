@@ -9,9 +9,9 @@
          :src="picture" v-once>
     </div>
     <div class="flex-fill ps-3 mb-3">
-      <h6 class="fw-bold mb-0">
+      <h5 class="fw-bold mb-0">
         {{ scheduleDisplay }} - {{ show.title }}
-      </h6>
+      </h5>
       <div v-if="show.host" v-once>{{ show.host }}</div>
       <p class="fw-light mt-2" v-if="show.description" v-once>{{ show.description }}</p>
       <div v-if="show.sections && show.sections.length > 0" class="mt-1">

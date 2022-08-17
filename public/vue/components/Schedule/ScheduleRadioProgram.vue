@@ -1,7 +1,9 @@
 <template>
   <div class="program-container" :data-hash="program.hash"
      :class="{ 'prevday': startsPrevDay, 'nextday': endsNextDay }"
-     :style="containerStyle" :ref="setRootRef">
+     :style="containerStyle" :ref="setRootRef"
+       v-on:click.stop="detailClick"
+  >
     <div class="program" @mouseover.once="hover = !hover"
          v-if="isIntersecting === true"
          v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
@@ -41,10 +43,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 
 import { DateTime, Interval } from 'luxon';
-import { TIMEZONE, THUMBNAIL_PROGRAM_PATH, PROGRAM_LONG_ENOUGH } from '@/config/config';
+import {
+  TIMEZONE,
+  THUMBNAIL_PROGRAM_PATH,
+  PROGRAM_LONG_ENOUGH,
+  GTAG_ACTION_PROGRAM_DETAIL,
+  GTAG_ACTION_PROGRAM_DETAIL_VALUE,
+  GTAG_CATEGORY_SCHEDULE
+} from '@/config/config';
 
 /* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
@@ -76,11 +85,15 @@ export default defineComponent({
   /* eslint-disable indent */
   data(): {
     hover: boolean,
-    rootRef: HTMLElement|null
+    rootRef: HTMLElement|null,
+    displayModal: boolean,
+    modal: any|null
   } {
     return {
       hover: false,
-      rootRef: null
+      rootRef: null,
+      displayModal: false,
+      modal: null
     };
   },
   mounted() {
@@ -176,6 +189,9 @@ export default defineComponent({
     }
   },
   methods: {
+    ...mapActions(useScheduleStore, [
+      'activateProgramModal'
+    ]),
     setRootRef(el: HTMLElement) {
       if (el) {
         this.rootRef = el;
@@ -191,6 +207,15 @@ export default defineComponent({
 
       return value.split('\n')[0];
     },
+    detailClick() {
+      (this as any).$gtag.event(GTAG_ACTION_PROGRAM_DETAIL, {
+        event_category: GTAG_CATEGORY_SCHEDULE,
+        event_label: this.program.title,
+        value: GTAG_ACTION_PROGRAM_DETAIL_VALUE
+      });
+
+      this.activateProgramModal(this.program);
+    }
   }
 });
 </script>

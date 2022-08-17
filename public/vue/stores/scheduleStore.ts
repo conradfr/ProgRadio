@@ -10,6 +10,7 @@ import type { Collection } from '@/types/collection';
 import type { Radio } from '@/types/radio';
 import type { Schedule } from '@/types/schedule';
 import type { ScheduleDisplay } from '@/types/schedule_display';
+import type { Program } from '@/types/program';
 
 /* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
@@ -43,7 +44,10 @@ interface State {
   currentCollection: any
   preRollExcluded: boolean,
   categoriesExcluded: string[]
-  categoryFilterFocus: CategoryFilterFocus
+  categoryFilterFocus: CategoryFilterFocus,
+  displayProgramModal: boolean,
+  programModal: any|null,
+  programForModal: Program|null
 }
 
 const cursorTime: DateTime = DateTime.local().setZone(config.TIMEZONE);
@@ -68,7 +72,10 @@ export const useScheduleStore = defineStore('schedule', {
     categoryFilterFocus: {
       icon: false,
       list: false
-    }
+    },
+    displayProgramModal: false,
+    programModal: null,
+    programForModal: null
   }),
   getters: {
     hasSchedule: state => Object.keys(state.schedule).length > 0,
@@ -401,7 +408,6 @@ export const useScheduleStore = defineStore('schedule', {
         updatedSchedule, this.cursorTime, initialScrollIndex
       );
 
-      // Object.freeze(updatedSchedule);
       this.schedule = markRaw(updatedSchedule);
       this.scheduleDisplay = scheduleDisplay;
     },
@@ -418,6 +424,26 @@ export const useScheduleStore = defineStore('schedule', {
       }
 
       this.collections = collections;
+    },
+    // done globally here as Bootstrap modal is better at the html root due to fixed positioning
+    activateProgramModal(program: Program) {
+      this.displayProgramModal = true;
+      this.programForModal = program;
+
+      nextTick(() => {
+        const modalElem = document.getElementById('scheduleRadioProgramModal');
+
+        modalElem?.addEventListener('hidden.bs.modal', () => {
+          this.displayProgramModal = false;
+          this.programModal = null;
+          this.programForModal = null;
+        });
+
+        /* eslint-disable no-undef */
+        // @ts-expect-error bootstrap is defined on global scope
+        this.programModal = new bootstrap.Modal(modalElem);
+        this.programModal?.show();
+      });
     }
   }
 });
