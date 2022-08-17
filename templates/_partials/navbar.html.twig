@@ -13,10 +13,21 @@
                 <a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
             </div>
         {% endif %}
+
+        {# Favorites #}
+        <div id="mobile-schedule-favorites-shortcut" class="d-block d-sm-none d-none">
+            <a title="{{ 'menu.favorites'|trans }}" class="nav-top-icon spa-link" href="{{ path('app') }}schedule/favorites"><i class="bi bi-star-fill"></i></a>
+        </div>
+        <div id="mobile-streaming-favorites-shortcut" class="d-block d-sm-none d-none">
+            <a title="{{ 'menu.favorites'|trans }}" class="nav-top-icon spa-link" href="{{ path('app') }}streaming/favorites"><i class="bi bi-star-fill"></i></a>
+        </div>
+
+        {# Dark mode #}
         <div class="d-block d-sm-none">
             <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeTime() == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
             <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeTime() %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
         </div>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
             <span class="navbar-toggler-icon"></span>
         </button>

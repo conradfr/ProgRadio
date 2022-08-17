@@ -49,10 +49,18 @@ export default defineComponent({
     const body = document.querySelector('body');
     body?.classList.add('body-app');
     document.title = (this.$i18n as any).tc('message.streaming.title');
+
+    // favorites shortcut
+    const mobileFavoritesShortcut = document.getElementById('mobile-streaming-favorites-shortcut');
+    mobileFavoritesShortcut?.classList.remove('d-none');
   },
   beforeUnmount() {
     const body = document.querySelector('body');
     body?.classList.remove('body-app');
+
+    // favorites shortcut
+    const mobileFavoritesShortcut = document.getElementById('mobile-streaming-favorites-shortcut');
+    mobileFavoritesShortcut?.classList.add('d-none');
   },
   computed: {
     ...mapState(useGlobalStore, ['isLoading']),

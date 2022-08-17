@@ -46,6 +46,7 @@ export default defineComponent({
     // links from the navbar that we want to redirect to spa router
     /* eslint-disable no-undef */
     const navLinks = document.getElementsByClassName('spa-link')!;
+
     Array.prototype.forEach.call(navLinks, (element) => {
       element.addEventListener('click', (e: any) => {
         e.preventDefault();

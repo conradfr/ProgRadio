@@ -59,12 +59,20 @@ export default defineComponent({
     body.classList.add('body-app');
     body.classList.add('body-app-schedule');
 
+    // favorites shortcut
+    const mobileFavoritesShortcut = document.getElementById('mobile-schedule-favorites-shortcut');
+    mobileFavoritesShortcut?.classList.remove('d-none');
+
     document.title = (this.$i18n as any).tc('message.schedule.title');
   },
   beforeUnmount() {
     const body = document.querySelector('body')!;
     body.classList.remove('body-app');
     body.classList.remove('body-app-schedule');
+
+    // favorites shortcut
+    const mobileFavoritesShortcut = document.getElementById('mobile-schedule-favorites-shortcut');
+    mobileFavoritesShortcut?.classList.add('d-none');
   },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged' }),
