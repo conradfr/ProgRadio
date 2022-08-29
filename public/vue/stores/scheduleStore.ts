@@ -66,7 +66,7 @@ export const useScheduleStore = defineStore('schedule', {
     scrollIndex: initialScrollIndex,
     scrollClick: false,
     currentCollection: cookies.get(config.COOKIE_COLLECTION, config.DEFAULT_COLLECTION),
-    preRollExcluded: cookies.get(config.COOKIE_PREROLL, false),
+    preRollExcluded: cookies.get(config.COOKIE_PREROLL_EXCLUDED, 'false') === 'true',
     categoriesExcluded: cookies.has(config.COOKIE_EXCLUDE)
       ? cookies.get(config.COOKIE_EXCLUDE).split('|') : [],
     categoryFilterFocus: {
@@ -252,7 +252,7 @@ export const useScheduleStore = defineStore('schedule', {
       }, 500);
     },
     preRollExcludedToggle() {
-      cookies.set(config.COOKIE_PREROLL, !this.preRollExcluded);
+      cookies.set(config.COOKIE_PREROLL_EXCLUDED, !this.preRollExcluded);
       this.preRollExcluded = !this.preRollExcluded;
     },
 

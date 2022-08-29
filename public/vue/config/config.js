@@ -47,7 +47,7 @@ export const COOKIE_PARAMS = {
 };
 
 export const COOKIE_EXCLUDE = `${COOKIE_PREFIX}-exclude`;
-export const COOKIE_PREROLL = `${COOKIE_PREFIX}-preroll`;
+export const COOKIE_PREROLL_EXCLUDED = `${COOKIE_PREFIX}-preroll_excluded`;
 export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
