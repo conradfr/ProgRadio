@@ -17,7 +17,7 @@
     "lodash.orderby": "^4.6.0",
     "lodash.uniqby": "^4.7.0",
     "moment": "^2.18.1",
-    "moment-timezone": "^0.5.13",
+    "moment-timezone": "^0.5.35",
     "music-metadata": "^7.5.3",
     "needle": "2.9.0",
     "node-fetch": "^2.6.1",
