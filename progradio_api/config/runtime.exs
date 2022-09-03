@@ -41,4 +41,7 @@ if config_env() == :prod do
 
   config :progradio_api,
     image_path: System.get_env("MEDIA_PATH")
+
+  config :request_cache_plug,
+    enabled?: true
 end

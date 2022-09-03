@@ -13,7 +13,10 @@ defmodule ProgRadioApiWeb.ScheduleController do
   def index(%{params: conn_params} = conn, %{"day" => day} = _params)
       when :erlang.is_map_key("c", conn_params) do
     schedule = Schedule.list_schedule_collection(day, conn_params["c"])
-    render(conn, "index.json", schedule: schedule)
+
+    conn
+    |> RequestCache.store()
+    |> render("index.json", schedule: schedule)
   end
 
   def index(%{params: conn_params} = conn, %{"day" => day} = _params)
@@ -23,12 +26,18 @@ defmodule ProgRadioApiWeb.ScheduleController do
       |> String.split(",")
 
     schedule = Schedule.list_schedule_radios(day, radios)
-    render(conn, "index.json", schedule: schedule)
+
+    conn
+    |> RequestCache.store()
+    |> render("index.json", schedule: schedule)
   end
 
   def index(conn, %{"day" => day} = _params) do
     schedule = Schedule.list_schedule(day)
-    render(conn, "index.json", schedule: schedule)
+
+    conn
+    |> RequestCache.store()
+    |> render("index.json", schedule: schedule)
   end
 
   # ---------- POST ----------

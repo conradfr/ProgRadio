@@ -10,7 +10,10 @@ defmodule ProgRadioApiWeb.RadioController do
     radios = Radios.list_active_radios()
     collections = Radios.list_collections()
     categories = Radios.list_categories()
-    render(conn, "index.json", radios: radios, collections: collections, categories: categories)
+
+    conn
+    |> RequestCache.store()
+    |>render("index.json", radios: radios, collections: collections, categories: categories)
   end
 
   def list(conn, _params) do

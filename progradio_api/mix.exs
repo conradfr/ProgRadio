@@ -54,7 +54,7 @@ defmodule ProgRadioApi.MixProject do
       {:cors_plug, "~> 2.0"},
       {:remote_ip, "~> 1.0.0"},
       {:dns, "~> 2.2.0"},
-      {:quantum, "~> 3.4.0"},
+      {:quantum, "~> 3.5.0"},
       {:redix, "~> 1.1.5"},
       {:mogrify, "~> 0.8.0"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
@@ -71,7 +71,9 @@ defmodule ProgRadioApi.MixProject do
       {:canada, "~> 2.0"},
       {:nebulex, "~> 2.3"},
       {:decorator, "~> 1.3"},
-      {:observer_cli, "~> 1.7"}
+      {:observer_cli, "~> 1.7"},
+      {:request_cache_plug,
+        git: "https://github.com/conradfr/request_cache_plug", branch: "main"}
     ]
   end
 
