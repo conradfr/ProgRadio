@@ -18,7 +18,9 @@ defmodule ProgRadioApiWeb.Router do
     resources "/radios", RadioController, only: [:index]
     resources "/listening_session", ListeningSessionController, only: [:create, :update]
 
+    get "/config", ConfigController, :index
     get "/radios/list", RadioController, :list
+    get "/countries", CountryController, :list
   end
 
   # Enables LiveDashboard only for development

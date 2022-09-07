@@ -5,6 +5,7 @@ defmodule ProgRadioApi.Streams do
 
   import Ecto.Query
   use Nebulex.Caching
+
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
@@ -16,9 +17,12 @@ defmodule ProgRadioApi.Streams do
   @cache_ttl_stream 21_600_000
   # 30s
   @cache_ttl_stream_last 30_000
+  # 1d
+  @cache_ttl_countries 86_400_000
 
   @cache_prefix_stream "stream_"
   @cache_prefix_stream_count "stream_count_"
+  @cache_prefix_countries "countries_"
 
   @decorate cacheable(
               cache: Cache,
@@ -58,6 +62,52 @@ defmodule ProgRadioApi.Streams do
     |> add_country(params)
     |> add_text(params)
     |> Repo.one()
+  end
+
+  @decorate cacheable(
+              cache: Cache,
+              key: "#{@cache_prefix_countries}#{locale}",
+              opts: [ttl: @cache_ttl_countries]
+            )
+  def get_countries(locale) when is_binary(locale) do
+    query =
+      from s in Stream,
+        distinct: s.country_code,
+        select: fragment("upper(?)", s.country_code),
+        where: not is_nil(s.country_code),
+        where: s.country_code != "",
+        order_by: [asc: s.country_code]
+
+    result =
+      query
+      |> Repo.all()
+
+    # Process:
+    # 1. a map of country_name => country_code
+    # 2. sort a country_name list by the country name based on locale rules
+    # 3. reconstruct a sorted map country_code => country_name
+
+    result_with_names =
+      result
+      |> Enum.reduce(%{}, fn country_code, acc ->
+        case ProgRadioApi.Cldr.Territory.from_territory_code(country_code, locale: locale) do
+          {:ok, country_name} ->
+            Map.put(acc, country_name, country_code)
+
+          _ ->
+            acc
+        end
+      end)
+
+    result_with_names
+    |> Map.keys()
+    |> Cldr.Collation.sort(casing: :insensitive)
+    |> Enum.reverse()
+    |> Enum.reduce([], fn country_name, acc ->
+      country_code = Map.get(result_with_names, country_name)
+      [{country_code, country_name} | acc]
+    end)
+    |> Enum.map(&Tuple.to_list/1)
   end
 
   defp build_query(params) do

@@ -234,7 +234,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # API
 
-  defp get_one_random_server() do
+  def get_one_random_server() do
     get_servers()
     |> Enum.random()
     |> Map.get(:data)

@@ -21,7 +21,7 @@ defmodule ProgRadioApi.StreamOverloading do
       :img,
       :stream_url,
       :country_code,
-      :website,
+      :website
     ])
     |> validate_required([:id])
   end

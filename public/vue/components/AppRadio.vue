@@ -40,7 +40,7 @@
         </div>
       </div>
       <div class="col-sm-3 col-12 text-center" v-if="!userLogged">
-                <adsense></adsense>
+        <adsense></adsense>
       </div>
     </div>
   </div>

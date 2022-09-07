@@ -73,7 +73,10 @@ defmodule ProgRadioApi.MixProject do
       {:decorator, "~> 1.3"},
       {:observer_cli, "~> 1.7"},
       {:request_cache_plug,
-        git: "https://github.com/conradfr/request_cache_plug", branch: "main"}
+       git: "https://github.com/conradfr/request_cache_plug", branch: "main"},
+      {:ex_cldr, "~> 2.33"},
+      {:ex_cldr_territories, "~> 2.0"},
+      {:ex_cldr_collation, "~> 0.7.0"}
     ]
   end
 

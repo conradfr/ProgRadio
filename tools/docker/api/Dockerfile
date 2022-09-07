@@ -35,6 +35,7 @@ ENV DATABASE_URL=${DATABASE_URL} \
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
     imagemagick \
+    libicu-dev \
     jpegoptim optipng pngquant gifsicle
 
 # For temp forked dep

@@ -126,14 +126,15 @@ const getBestFromRadio = async (radioCodeName: string): Promise<Stream|null> => 
 };
 
 const getConfig = async (): Promise<GetConfigResponse> => {
-  const { data } = await axios.get<GetConfigResponse>('/streams/config');
+  // @ts-expect-error apiUrl is defined on the global scope
+  const { data } = await axios.get<GetConfigResponse>(`https://${apiUrl}/config`);
   return data;
 };
 
 const getCountries = async (): Promise<Countries|null> => {
   try {
     // @ts-expect-error locale is defined on the global scope
-    const { data } = await axios.get<GetCountriesResponse>(`/streams/countries?locale=${locale}`);
+    const { data } = await axios.get<GetCountriesResponse>(`https://${apiUrl}/countries?locale=${locale}`);
     return data.countries;
   } catch (error) {
     return null;

@@ -106,6 +106,8 @@ class StreamsController  extends AbstractBaseController
     }
 
     /**
+     * LEGACY
+     *
      * @Route(
      *     "/config",
      *     name="streams_config",
@@ -146,6 +148,8 @@ class StreamsController  extends AbstractBaseController
     }
 
     /**
+     * LEGACY
+     *
      * @Route(
      *     "/countries",
      *     name="streams_countries",

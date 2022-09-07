@@ -13,7 +13,7 @@ defmodule ProgRadioApiWeb.RadioController do
 
     conn
     |> RequestCache.store()
-    |>render("index.json", radios: radios, collections: collections, categories: categories)
+    |> render("index.json", radios: radios, collections: collections, categories: categories)
   end
 
   def list(conn, _params) do
