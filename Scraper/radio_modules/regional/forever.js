@@ -1,10 +1,10 @@
 const scrapAbstract = require('./_abstract_lesindes2.js');
 
-const name = 'goldfm';
+const name = 'forever';
 
 const getScrap = dateObj => {
-  const url = 'https://www.goldfm.fr/emissions';
-  const description_prefix = 'https://www.goldfm.fr';
+  const url = 'https://www.foreverlaradio.fr/emissions';
+  const description_prefix = 'https://www.foreverlaradio.fr';
   return scrapAbstract.getScrap(dateObj, url, name, description_prefix);
 };
 
