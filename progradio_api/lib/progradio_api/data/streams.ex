@@ -85,7 +85,7 @@ defmodule ProgRadioApi.Streams do
     # Process:
     # 1. a map of country_name => country_code
     # 2. sort a country_name list by the country name based on locale rules
-    # 3. reconstruct a sorted map country_code => country_name
+    # 3. reconstruct a list of (sorted) tuple {map country_code, country_name}
 
     result_with_names =
       result
@@ -107,7 +107,6 @@ defmodule ProgRadioApi.Streams do
       country_code = Map.get(result_with_names, country_name)
       [{country_code, country_name} | acc]
     end)
-    |> Enum.map(&Tuple.to_list/1)
   end
 
   defp build_query(params) do
