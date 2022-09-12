@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Routing\Route as RouteObject;
 use App\Form\ContactType;
@@ -151,7 +152,7 @@ class SiteController extends AbstractController
      *     stateless=true
      * )
      */
-    public function sitemap(Host $host, Request $request, EntityManagerInterface $em): Response
+    public function sitemap(Host $host, RouterInterface $router, Request $request, EntityManagerInterface $em): Response
     {
         // @todo move to service
 
@@ -159,7 +160,7 @@ class SiteController extends AbstractController
         $routesToExport = ['app', 'now', 'faq', 'contact'];
         $routes = [];
         foreach ($routesToExport as $entry) {
-            $routes[$entry] = $this->get('router')->getRouteCollection()->get($entry);
+            $routes[$entry] = $router->getRouteCollection()->get($entry);
         }
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL
@@ -175,13 +176,13 @@ class SiteController extends AbstractController
             if ($host->isProgRadio($request) === true) {
                 $radios = $em->getRepository(Radio::class)->getAllCodename();
 
-                $savedRouteAppDefault = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->getDefaults();
+                $savedRouteAppDefault = $router->getRouteCollection()->get('radio.'.$locale)->getDefaults();
                 foreach ($radios as $radio) {
-                    $xml .= $this->getEntryXml($host, $request,'radio', $this->get('router')->getRouteCollection()->get('radio.'.$locale), $locale,  ['codename' => $radio]);
+                    $xml .= $this->getEntryXml($host, $request,'radio', $router->getRouteCollection()->get('radio.'.$locale), $locale,  ['codename' => $radio]);
                     // spa radio page
-                    $routeApp = $this->get('router')->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
+                    $routeApp = $router->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
                     $xml .= $this->getEntryXml($host, $request,'app', $routeApp, $locale);
-                    $this->get('router')->getRouteCollection()->get('radio.'.$locale)->setDefaults($savedRouteAppDefault);
+                    $router->getRouteCollection()->get('radio.'.$locale)->setDefaults($savedRouteAppDefault);
                 }
             }
 
