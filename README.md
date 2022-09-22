@@ -2,14 +2,15 @@ ProgRadio
 =========
 
 https://www.programmes-radio.com
+https://www.radio-addict.com
 
 Dependencies
 --------------
-- PHP 8.0.x / Symfony 5.3
-- VueJs 3.1+
+- PHP 8.1.x / Symfony 6.1
+- TypeScript 4.8 / VueJs 3.1+
 - NodeJS v14.x
-- Elixir 1.12.x (Api / Importer)
-- PostgreSQL 13 & Redis
+- Elixir 1.13.x (Api / Importer)
+- PostgreSQL 14 & Redis
 - Nginx or Apache
 - ImageMagick
 - CapRover & Docker (deployment)
