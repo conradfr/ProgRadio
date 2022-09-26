@@ -70,7 +70,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-  const url = 'http://www.bergerac95.fr/emissions';
+  const url = 'https://www.bergerac95.fr/emissions';
 
   logger.log('info', `fetching ${url}`);
 
