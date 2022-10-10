@@ -15,7 +15,8 @@ defmodule ProgRadioApi.SongProvider.Fip do
     "fip_electro" => 74,
     "fip_monde" => 69,
     "fip_reggae" => 71,
-    "fip_nouveautes" => 70
+    "fip_nouveautes" => 70,
+    "fip_metal" => 77
   }
 
   @impl true
