@@ -10,7 +10,7 @@ const upperCaseWords = (str) => {
 // @url https://stackoverflow.com/questions/2631001/test-for-existence-of-nested-javascript-object-key
 const checkNested = (obj, level,  ...rest) => {
     if (obj === undefined || obj === null) return false
-    if (rest.length == 0 && obj.hasOwnProperty(level)) return true
+    if (rest.length === 0 && obj.hasOwnProperty(level)) return true
     return checkNested(obj[level], ...rest)
 }
 

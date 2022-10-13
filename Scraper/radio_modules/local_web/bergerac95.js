@@ -3,18 +3,9 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const utils = require('../../lib/utils');
 
 let scrapedData = [];
-
-const dayFr = {
-  'Lundi': 1,
-  'Mardi': 2,
-  'Mercredi': 3,
-  'Jeudi': 4,
-  'Vendredi': 5,
-  'Samedi': 6,
-  'Dimanche': 7
-};
 
 const format = dateObj => {
   dateObj.tz("Europe/Paris");
@@ -22,11 +13,11 @@ const format = dateObj => {
 
   const cleanedData = scrapedData.reduce(function (prev, entry) {
     // this show is more a section that is not correctly listed, remove it for now
-    if (entry.title === 'Votre journal' || entry.title === 'Agenda sportif') {
+    if (entry.title === 'Votre journal' || entry.title === 'Agenda sportif' || entry.title === 'Les infos locales avec Emilie') {
       return prev;
     }
 
-    let regexp = new RegExp(/^De\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)\sà\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+    let regexp = new RegExp(/([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
     let match = entry.datetime_raw.match(regexp);
 
     if (match === null) {
@@ -34,19 +25,18 @@ const format = dateObj => {
     }
 
     // not in day interval
-    const dayNum = dateObj.isoWeekday();
-    if (dayNum < dayFr[match[1]] || dayNum > dayFr[match[2]]) {
+    if (entry.datetime_raw.includes(utils.upperCaseWords(dateObj.format('dddd'))) === false) {
       return prev;
     }
 
     let startDateTime = moment(dateObj);
-    startDateTime.hour(match[3]);
-    startDateTime.minute(match[4]);
+    startDateTime.hour(match[1]);
+    startDateTime.minute(match[2]);
     startDateTime.second(0);
 
     endDateTime = moment(dateObj);
-    endDateTime.hour(match[5]);
-    endDateTime.minute(match[6]);
+    endDateTime.hour(match[3]);
+    endDateTime.minute(match[4]);
     endDateTime.second(0);
 
     const newEntry = {
@@ -62,10 +52,10 @@ const format = dateObj => {
       delete newEntry.host;
     }
 
-    prev.push(newEntry);
     return prev;
   }, []);
 
+  console.log(cleanedData);
   return Promise.resolve(cleanedData);
 };
 
