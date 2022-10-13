@@ -110,7 +110,8 @@ export default defineComponent({
     ...mapState(usePlayerStore, ['currentSong', 'liveSong']),
     ...mapState(useScheduleStore, [
       'cursorTime',
-      'scheduleDisplay'
+      'scheduleDisplay',
+      'swipeClick'
     ]),
     containerStyle() {
       const data = this.scheduleDisplay[this.program.hash].container;
@@ -208,6 +209,10 @@ export default defineComponent({
       return value.split('\n')[0];
     },
     detailClick() {
+      if (this.swipeClick === true) {
+        return;
+      }
+
       (this as any).$gtag.event(GTAG_ACTION_PROGRAM_DETAIL, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         event_label: this.program.title,

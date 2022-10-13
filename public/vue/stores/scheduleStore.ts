@@ -41,6 +41,7 @@ interface State {
   cursorTime: DateTime
   scrollIndex: number
   scrollClick: boolean
+  swipeClick: boolean
   currentCollection: any
   preRollExcluded: boolean,
   categoriesExcluded: string[]
@@ -65,6 +66,7 @@ export const useScheduleStore = defineStore('schedule', {
     cursorTime,
     scrollIndex: initialScrollIndex,
     scrollClick: false,
+    swipeClick: false,
     currentCollection: cookies.get(config.COOKIE_COLLECTION, config.DEFAULT_COLLECTION),
     preRollExcluded: cookies.get(config.COOKIE_PREROLL_EXCLUDED, 'false') === 'true',
     categoriesExcluded: cookies.has(config.COOKIE_EXCLUDE)
@@ -152,6 +154,9 @@ export const useScheduleStore = defineStore('schedule', {
     setScrollClick(value: boolean) {
       this.scrollClick = value;
       this.updateDisplayData();
+    },
+    setSwipeClick(value: boolean) {
+      this.swipeClick = value;
     },
     scrollTo(x: number) {
       this.scrollIndex = ScheduleUtils.enforceScrollIndex(this.scrollIndex + x);

@@ -51,12 +51,10 @@ export default defineComponent({
   },
   /* eslint-disable indent */
   data(): {
-    clickX: number|null,
-    swipeActive: boolean
+    clickX: number|null
   } {
     return {
-      clickX: null,
-      swipeActive: false
+      clickX: null
     };
   },
   computed: {
@@ -66,6 +64,7 @@ export default defineComponent({
       'schedule',
       'gridIndexTransform',
       'scrollClick',
+      'swipeClick',
       'currentCollection'
     ]),
     styleObject() {
@@ -84,7 +83,7 @@ export default defineComponent({
   },
   /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
   methods: {
-    ...mapActions(useScheduleStore, ['scroll', 'setScrollClick']),
+    ...mapActions(useScheduleStore, ['scroll', 'setScrollClick', 'setSwipeClick']),
     getSchedule(radio: string): ScheduleOfRadio {
       return this.schedule[radio];
     },
@@ -93,7 +92,7 @@ export default defineComponent({
           && Object.keys(this.schedule[radio]).length > 0) || false;
     },
     onSwipe(event: Event) {
-      this.swipeActive = true;
+      this.setSwipeClick(true);
       setTimeout(this.swipeEnd, 1000);
 
       // avoid ghost click
@@ -103,10 +102,10 @@ export default defineComponent({
       this.scroll(amount);
     },
     swipeEnd() {
-      this.swipeActive = false;
+      this.setSwipeClick(false);
     },
     onPanStart() {
-      if (this.swipeActive) {
+      if (this.swipeClick) {
         return;
       }
 
@@ -114,14 +113,14 @@ export default defineComponent({
       this.clickX = 0;
     },
     onPanEnd() {
-      if (this.swipeActive) {
+      if (this.swipeClick) {
         return;
       }
 
       this.setScrollClick(false);
     },
     onPan(event: any) {
-      if (this.swipeActive) {
+      if (this.swipeClick) {
         return;
       }
 
