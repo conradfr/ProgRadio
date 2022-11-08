@@ -25,6 +25,14 @@
         }
       }
     }
+
+    @include media-breakpoint-down(sm) {
+      font-size: 1.615rem;
+
+      // compensate smaller font-size to keep same height as desktop
+      padding-top: $navbar-brand-padding-y + 0.250rem;
+      padding-bottom: $navbar-brand-padding-y + 0.250rem;
+    }
   }
 
   .navbar-brand > img {

@@ -41,7 +41,7 @@ const getStreams = async (
     queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);
   }
 
-  if (offset !== undefined && offset !== null) {
+  if (offset !== undefined && offset !== null && !Number.isNaN(offset)) {
     queryParamsList.push(`offset=${offset}`);
   }
 

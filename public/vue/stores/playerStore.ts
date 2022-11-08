@@ -88,9 +88,7 @@ export const usePlayerStore = defineStore('player', {
     radioPlayingCodeName: state => (state.radio !== null ? state.radio.code_name : null),
     displayVolume: state => state.focus.icon || state.focus.fader || false,
     timerIsActive: state => state.timer !== undefined && state.timer !== null && state.timer !== 0,
-    timerDisplay: (state) => {
-      return state.playing || (state.timer !== null && state.timer > 0);
-    },
+    timerDisplay: state => state.playing || (state.timer !== null && state.timer > 0),
     streamUrl: (state) => {
       if (state.radio === null) { return null; }
 

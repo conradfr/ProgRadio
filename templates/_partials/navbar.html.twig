@@ -8,9 +8,9 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app') }}{% if isProgRadio(app.request) == true %}schedule{% else %}streaming{% endif %}" onclick="return scrollToCursor();">
             <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="{{ getDomainName(app.request) }}" class="d-inline-block align-text-top">{{ getDomainName(app.request) }}</a>
-        {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') and isProgRadio(app.request) == true %}
+        {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
             <div>
-                <a href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
+                <a href="{{ getField('play_store', app.request) }}"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
             </div>
         {% endif %}
 
@@ -83,10 +83,8 @@
                         <li><a class="dropdown-item" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
                         <li><hr class="dropdown-divider"></li>
 
-                        {% if isProgRadio(app.request) == true %}
-                            <li><a class="dropdown-item" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                        {% endif %}
+                        <li><a class="dropdown-item" href="{{ getField('play_store', app.request) }}"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
+                        <li><hr class="dropdown-divider"></li>
 
                         {% for locale in locales %}
                             {% if app.request.locale != locale %}

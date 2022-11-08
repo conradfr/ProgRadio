@@ -91,13 +91,14 @@ export default defineComponent({
             streamsStore.pageSet(parseInt((to.params.page as string), 10));
           }
 
-          streamsStore.countrySelection((to.params.countryOrCategoryOrUuid as string));
+          streamsStore.countrySelection(to.params.countryOrCategoryOrUuid as string);
           streamsStore.setSoloExtended(null);
         }
       } else {
         if (to.params.hasOwnProperty('page')) {
           streamsStore.pageSet(parseInt((to.params.page as string), 10));
         }
+
         streamsStore.getStreamRadios();
       }
     });

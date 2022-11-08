@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 class Host
 {
     protected const DEFAULT_DOMAIN = 'progradio';
-    
+
     public const DATA = [
         'progradio' => [
             'domain' =>  ['programmes-radio.com', 'programmes-radio.fr'],
@@ -20,7 +20,8 @@ class Host
             'default_country' => 'FR',
             'bangs' => [
                 'app' => ['schedule','streaming']
-            ]
+            ],
+            'play_store' => 'https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio'
         ],
         'radioaddict' => [
             'domain' =>  ['radio-addict.com'],
@@ -31,7 +32,8 @@ class Host
             'locale' => 'en',
             'bangs' => [
                 'app' => ['streaming']
-            ]
+            ],
+            'play_store' => 'https://play.google.com/store/apps/details?id=io.programmes_radio.www.radioaddict'
         ]
     ];
 
