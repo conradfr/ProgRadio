@@ -4,8 +4,7 @@ import forEach from 'lodash/forEach';
 
 import {
   THUMBNAIL_NOTIFICATION_PROGRAM_PATH,
-  THUMBNAIL_STREAM_PATH,
-  ANDROID_TIMER_MIN_VERSION
+  THUMBNAIL_STREAM_PATH
 } from '@/config/config';
 
 import type { Radio } from '@/types/radio';
@@ -107,7 +106,6 @@ export default {
     Android.getstate();
   },
   timer(minutes: number|null) {
-    if (!hasAndroid || this.getVersion() < ANDROID_TIMER_MIN_VERSION) { return; }
     // @ts-expect-error Android is defined by the device
     Android.timer(minutes);
   }

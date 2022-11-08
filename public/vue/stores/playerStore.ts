@@ -89,12 +89,6 @@ export const usePlayerStore = defineStore('player', {
     displayVolume: state => state.focus.icon || state.focus.fader || false,
     timerIsActive: state => state.timer !== undefined && state.timer !== null && state.timer !== 0,
     timerDisplay: (state) => {
-      if (state.externalPlayer === true
-        && (state.externalPlayerVersion == null
-        || state.externalPlayerVersion < config.ANDROID_TIMER_MIN_VERSION)) {
-        return false;
-      }
-
       return state.playing || (state.timer !== null && state.timer > 0);
     },
     streamUrl: (state) => {

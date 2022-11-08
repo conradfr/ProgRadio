@@ -179,7 +179,3 @@ export const GTAG_ACTION_TIMER_CANCEL = 'timer_cancel';
 export const GTAG_ACTION_HOME_SET = 'timer_set';
 export const GTAG_ACTION_HOME_REMOVE = 'timer_quick_set';
 export const GTAG_ACTION_HOME_VALUE = 1;
-
-// Android
-
-export const ANDROID_TIMER_MIN_VERSION = 16;
