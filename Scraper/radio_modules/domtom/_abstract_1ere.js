@@ -47,60 +47,57 @@ const format = (dateObj, dayWanted, name) => {
 
   // we use reduce instead of map to act as a map+filter in one pass
   cleanedData[name] = scrapedData[name].reduce(function (prev, curr) {
-
     let matchedDay = false;
     let match = null;
-    for (let entry of curr.datetime_host) {
-      if (matchedDay === false) {
-        let regexp = new RegExp(/(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\sau\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
-        match = entry.toLowerCase().match(regexp);
+    const dayNum = dateObj.isoWeekday();
 
-        if (match !== null) {
-          // not in day interval
-          const dayNum = dateObj.isoWeekday();
+    // day range
+    let regexp = new RegExp(/(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\sau\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
+    match = curr.datetime_host.toLowerCase().match(regexp);
 
-          if (dayNum < dayFr[match[1]] || dayNum > dayFr[match[2]]) {
-            return prev;
-          } else {
-            matchedDay = true;
-            break;
-          }
-        }
+    if (match !== null) {
+      // not in day interval
+      if (dayNum < dayFr[match[1]] || dayNum > dayFr[match[2]]) {
+        return prev;
+      } else {
+        matchedDay = true;
+      }
+    }
 
-        regexp = new RegExp(/(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\set\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
-        match = entry.toLowerCase().match(regexp);
+    // two days
+    if (matchedDay === false) {
+      regexp = new RegExp(/(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\set\s(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
+      match = curr.datetime_host.toLowerCase().match(regexp);
 
-        if (match !== null) {
-          // not one of days
-          const dayNum = dateObj.isoWeekday();
-
-          if (dayNum !== dayFr[match[1]] && dayNum !== dayFr[match[2]]) {
-            return prev;
-          } else {
-            matchedDay = true;
-            break;
-          }
-        }
-
-        regexp = new RegExp(/(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
-        match = entry.toLowerCase().match(regexp);
-
-        if (match !== null) {
-          // not day
-          const dayNum = dateObj.isoWeekday();
-
-          if (dayNum !== dayFr[match[1]]) {
-            return prev;
-          } else {
-            matchedDay = true;
-            break;
-          }
-        }
-
-        if (entry.includes('ous les jours') === true) {
+      if (match !== null) {
+        // not one of days
+        if (dayNum !== dayFr[match[1]] && dayNum !== dayFr[match[2]]) {
+          return prev;
+        } else {
           matchedDay = true;
-          break;
         }
+      }
+    }
+
+    // one day
+    if (matchedDay === false) {
+      regexp = new RegExp(/(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)/);
+      match = curr.datetime_host.toLowerCase().match(regexp);
+
+      if (match !== null) {
+        // not day
+        if (dayNum !== dayFr[match[1]]) {
+          return prev;
+        } else {
+          matchedDay = true;
+        }
+      }
+    }
+
+    // everyday
+    if (matchedDay === false) {
+      if (curr.datetime_host.includes('ous les jours') === true) {
+        matchedDay = true;
       }
     }
 
@@ -108,130 +105,55 @@ const format = (dateObj, dayWanted, name) => {
       return prev;
     }
 
-    let timeMatched = false;
     let isSection = false;
     let matchTime = null;
-    let isMultiple = false;
-    for (let entry2 of curr.datetime_host) {
 
-      // 14h à 16h00.
-      regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})\sà\s/);
-      matchTime = entry2.match(regexp);
+    // 14h à 16h00, getting the start
+    regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})\sà\s/);
+    matchTime = curr.datetime_host.match(regexp);
 
-      if (matchTime !== null) {
-        if (matchTime.length === 2) {
-          matchTime[2] = 0;
-        }
-
-        regexp = new RegExp(/\sà\s([0-9]{1,2})[h|H]([0-9]{0,2})/);
-        const matchTimeSupp = entry2.match(regexp);
-
-        // should not be null
-        if (matchTimeSupp !== null) {
-          matchTime[3] = matchTimeSupp[1];
-
-          if (matchTimeSupp.length === 2) {
-            matchTime[4] = 0;
-          } else {
-            matchTime[4] = matchTimeSupp[2];
-          }
-        }
-
-        timeMatched = true;
-
-        regexp = new RegExp(/\spuis\s([0-9]{1,2})[h|H]([0-9]{0,2})\sà(.*)/);
-        matchTimeMultiple = entry2.match(regexp);
-        if (matchTimeMultiple !== null) {
-          isMultiple = true;
-          matchTime[5] = matchTimeMultiple[1];
-          if (matchTimeMultiple.length === 3) {
-            matchTime[6] = 0;
-          } else {
-            matchTime[6] = matchTimeMultiple[2];
-          }
-
-          const restOfText = matchTimeMultiple.length === 3 ? matchTimeMultiple[2] : matchTimeMultiple[3];
-          regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})/);
-          matchTimeMultiple = restOfText.match(regexp);
-
-          // should not be null
-          if (matchTimeMultiple !== null) {
-            matchTime[7] = matchTimeMultiple[1];
-
-            if (matchTimeSupp.length === 2) {
-              matchTime[8] = 0;
-            } else {
-              matchTime[8] = matchTimeMultiple[2];
-            }
-          }
-        }
-
-        break;
+    if (matchTime !== null) {
+      if (matchTime.length === 2) {
+        matchTime[2] = 0;
       }
 
-      // 8h-11h
+      // getting the end
+      regexp = new RegExp(/\sà\s([0-9]{1,2})[h|H]([0-9]{0,2})/);
+      const matchTimeSupp = curr.datetime_host.match(regexp);
 
-      regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})-/);
-      matchTime = entry2.match(regexp);
+      // should not be null
+      if (matchTimeSupp !== null) {
+        matchTime[3] = matchTimeSupp[1];
 
-      if (matchTime !== null) {
-        if (matchTime.length === 2) {
-          matchTime[2] = 0;
+        if (matchTimeSupp.length === 2) {
+          matchTime[4] = 0;
+        } else {
+          matchTime[4] = matchTimeSupp[2];
         }
-
-        regexp = new RegExp(/-([0-9]{1,2})[h|H]([0-9]{0,2})/);
-        const matchTimeSupp = entry2.match(regexp);
-
-        // should not be null
-        if (matchTimeSupp !== null) {
-          matchTime[3] = matchTimeSupp[1];
-
-          if (matchTimeSupp.length === 2) {
-            matchTime[4] = 0;
-          } else {
-            matchTime[4] = matchTimeSupp[2];
-          }
-        }
-
-        timeMatched = true;
-        break;
-      }
-
-      regexp = new RegExp(/à\s([0-9]{1,2})[h|H]([0-9]{0,2})/);
-      matchTime = entry2.match(regexp);
-
-      if (matchTime !== null) {
-        if (matchTime.length === 2) {
-          matchTime[2] = 0;
-        }
-
-        regexp = new RegExp(/\set\s([0-9]{1,2})[h|H]([0-9]{0,2})/);
-        matchTimeMultiple = entry2.match(regexp);
-
-        if (matchTimeMultiple !== null) {
-          isMultiple = true;
-          matchTime[3] = matchTimeMultiple[1];
-          if (matchTimeMultiple.length === 2) {
-            matchTime[4] = 0;
-          } else {
-            matchTime[4] = matchTimeMultiple[2];
-          }
-        }
-
-        timeMatched = true;
-        isSection = true;
-        break;
       }
     }
 
-    if (timeMatched === false) {
+    // section ?
+    if (matchTime === null) {
+      regexp = new RegExp(/à\s([0-9]{1,2})[h|H]([0-9]{0,2})/);
+      matchTime = curr.datetime_host.match(regexp);
+
+      if (matchTime !== null) {
+        isSection = true;
+        if (matchTime.length === 2) {
+          matchTime[2] = 0;
+        }
+      }
+    }
+
+    if (matchTime === null) {
       return prev;
     }
 
     const newEntry = {
       img: curr.img,
       title: curr.title,
-      description: curr.description.join(' ').trim(),
+      description: curr.description !== undefined ? curr.description.trim() : null,
       sections: []
     };
 
@@ -250,13 +172,24 @@ const format = (dateObj, dayWanted, name) => {
       endDateTime.hour(matchTime[3]);
       endDateTime.minute(matchTime[4]);
       endDateTime.second(0);
-      
+
       newEntry.date_time_end = endDateTime.toISOString();
     }
 
-    for (let entry3 of curr.datetime_host) {
-      regexp = new RegExp(/Présenté par (.*)/);
-      const matchHost = entry3.match(regexp);
+    // host
+
+    regexp = new RegExp(/Présenté par ([A-Za-z]*\s[A-Za-z]*\set\s[A-Za-z]*\s[A-Za-z]*)/);
+    let matchHost = curr.datetime_host.match(regexp);
+
+    if (matchHost !== null) {
+      if (isSection === false) {
+        newEntry.host = matchHost[1];
+      } else {
+        newEntry.presenter = matchHost[1];
+      }
+    } else {
+      regexp = new RegExp(/Présenté par ([A-Za-z]*\s[A-Za-z]*)/);
+      matchHost = curr.datetime_host.match(regexp);
 
       if (matchHost !== null) {
         if (isSection === false) {
@@ -264,48 +197,14 @@ const format = (dateObj, dayWanted, name) => {
         } else {
           newEntry.presenter = matchHost[1];
         }
-
-        break;
       }
     }
 
     if (isSection === true) {
-      if (curr.podcast !== undefined) {
-        newEntry.podcast = curr.podcast;
-      }
-
+      delete newEntry.sections;
       prev['sections'].push(newEntry);
-
-      if (isMultiple === true) {
-        const newEntryCopy = Object.assign({}, newEntry);
-        const startDateTime2 = moment(curr.dateObj);
-        startDateTime2.tz(dateObj.tz());
-        startDateTime2.hour(matchTime[3]);
-        startDateTime2.minute(matchTime[4]);
-        startDateTime2.second(0);
-        newEntryCopy.date_time_start = startDateTime2.toISOString();
-        prev['sections'].push(newEntryCopy);
-      }
     } else {
       prev['shows'].push(newEntry);
-
-      if (isMultiple === true) {
-        const newEntryCopy = Object.assign({}, newEntry);
-        const startDateTime2 = moment(curr.dateObj);
-        startDateTime2.tz(dateObj.tz());
-        startDateTime2.hour(matchTime[5]);
-        startDateTime2.minute(matchTime[6]);
-        startDateTime2.second(0);
-        newEntryCopy.date_time_start = startDateTime2.toISOString();
-
-        const endDateTime2 = moment(curr.dateObj);
-        endDateTime2.tz(dateObj.tz());
-        endDateTime2.hour(matchTime[7]);
-        endDateTime2.minute(matchTime[8]);
-        endDateTime2.second(0);
-        newEntryCopy.date_time_end = endDateTime2.toISOString();
-        prev['shows'].push(newEntryCopy);
-      }
     }
 
     return prev;
@@ -350,53 +249,7 @@ const format = (dateObj, dayWanted, name) => {
     }
   }
 
-  // try to get last unused section podcast length and convert it to a show.
-  const promises = [];
-
-  for (let unassignedSection of unassignedSections) {
-    if (unassignedSection.podcast !== undefined) {
-      promises.push(
-        new Promise((resolve, reject) => {
-          return getDuration(unassignedSection.podcast).then( duration => {
-            if (duration !== false) {
-              const minutes = Math.floor(duration / 60);
-
-              if (minutes < DURATION_MIN) {
-                reject();
-              } else {
-                const endObj = moment(unassignedSection.date_time_start);
-                endObj.add(minutes, 'minutes');
-                unassignedSection.date_time_end = endObj.toISOString();
-
-
-                if (unassignedSection.presenter !== undefined) {
-                  unassignedSection.host = unassignedSection.presenter;
-                  delete(unassignedSection.presenter);
-                }
-
-                // finalShows.push(unassignedSection);
-                resolve(unassignedSection)
-              }
-            } else {
-              reject();
-            }
-          });
-        })
-      );
-    }
-  }
-
-  if (promises.length > 0) {
-    return Promise.all(promises).then((values) => {
-      return [...finalShows, ...values];
-    })
-    .catch(error => {
-      // logger.log('error', error);
-      return finalShows;
-    });
-  } else {
-    return Promise.resolve(finalShows);
-  }
+  return Promise.resolve(finalShows);
 };
 
 const fetch = (dateObj, name, url) => {
@@ -405,17 +258,18 @@ const fetch = (dateObj, name, url) => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .select('.emissions-thematique-content .block-fr3-content .content')
+      .select('.m-card')
       .set({
-        'img': '.image .asset-image img@src',
-        'datetime_host': ['p'],
-        'title': 'h3 a'
+        // 'img': 'img.a-image@src',
+        'datetime_host': '.m-card__description',
+        'title': '.m-card__title',
       })
       .do(
-        osmosis.follow('.image a@href')
+        osmosis.follow('a.m-card__link@href')
           .set({
-            'description': ['.emission-description--header p'],
-            'podcast': '.player-standard audio@src'
+            'img': 'img.a-image@src',
+            'description': '.description',
+            // 'podcast': '.player-standard audio@src'
           })
       )
       .data(function (listing) {
@@ -432,8 +286,8 @@ const fetchAll = (dateObj, dateWantedObj, name, url) => {
   const diff = dateWantedObj.utcOffset() - dateObj.utcOffset();
   const otherDayObj = moment(dateObj) ;
 
-  // positive = after France so we need previous day + day
-  // negative = before France so we need day + next day
+  // positive = after France metro so we need previous day + day
+  // negative = before France metro so we need day + next day
   if (diff > 0) {
     otherDayObj.subtract(1, 'days');
   } else {
