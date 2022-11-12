@@ -8,8 +8,36 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   @stream_folder "stream"
   @temp_folder "temp"
 
-  @spec import(String.t(), struct) :: tuple
-  def import(url, radio) do
+  @spec import(String.t(), map, struct) :: tuple
+  def import(filename_or_base64, show, radio)
+
+  # when base64
+  def import("data:" <> _base64 = base64_raw, show, radio) do
+    with %{} = base64_data <-
+           Regex.named_captures(~r/data:(?<type>[a-zA-Z\/]*);base64,(?<data>[^\"]*)/, base64_raw),
+         extension <- base64_data["type"] |> MIME.extensions() |> List.first(),
+         filename <- "#{get_name(show["title"], radio)}.#{extension}",
+         full_path =
+           "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{filename}" do
+      unless ImageCache.is_cached(full_path) do
+        Logger.debug("Importing base64: #{filename} to #{full_path}")
+
+        case File.write!(full_path, Base.decode64!(base64_data["data"]), [:binary]) do
+          :ok -> {:ok, filename}
+          _ -> {:error, nil}
+        end
+      else
+        Logger.debug("Program image #{filename} was cached")
+        {:ok, filename}
+      end
+    else
+      _ ->
+        Logger.debug("Error importing base64")
+        {:error, nil}
+    end
+  end
+
+  def import("http" <> _rest_of_url = url, _show, radio) do
     filename = get_name(url, radio)
     full_path = "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{filename}"
 
@@ -26,6 +54,8 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       {:ok, filename}
     end
   end
+
+  def import(_url, _show, _radio), do: {:error, nil}
 
   @spec import_stream(String.t(), struct) :: tuple
   def import_stream(url, radio) do

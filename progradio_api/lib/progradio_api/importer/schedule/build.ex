@@ -1,5 +1,6 @@
 defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
   use Timex
+  require Logger
   alias ProgRadioApi.Importer.ImageImporter
 
   # Build
@@ -138,7 +139,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
       case head["img"] do
         url when is_binary(url) and url !== "" ->
           try do
-            with {:ok, imported} <- ImageImporter.import(url, radio) do
+            with {:ok, imported} <- ImageImporter.import(url, head, radio) do
               imported
               |> (&Map.put(head, "picture_url", &1)).()
               |> Map.delete("img")
@@ -146,9 +147,13 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
               _ -> head
             end
           rescue
-            _ -> head
+            e ->
+              Logger.debug("Error importing picture: #{e.message}")
+              head
           catch
-            _ -> head
+            _ ->
+              Logger.debug("Error importing picture")
+              head
             :exit, _ -> head
           end
 
