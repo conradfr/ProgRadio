@@ -38,15 +38,17 @@ const format = async dateObj => {
         'img': curr.picture.url.replace('{0}', '180').replace('{1}', '1x1')
       };
 
-      await osmosis
+      // seems to have moved to a json based variable in a script, let's ignore for now
+/*      await osmosis
         .get(`https://ici.radio-canada.ca/ohdio${curr.url}`)
-        .find('.section-main-about .about-content')
+        .find('.section-main .about-content')
         .set({
-          'description':  ['article.article > p'],
+          'description':  ['p'],
         })
         .data(function(listing) {
+          console.log(listing);
           newEntry.description = listing.description.join(' ');
-        });
+        });*/
 
       await items.push(newEntry);
       return items;

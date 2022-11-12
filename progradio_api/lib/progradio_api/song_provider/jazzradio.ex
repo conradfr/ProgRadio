@@ -24,7 +24,7 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
     "jazzradio_jazzcinema" => 26
   }
 
-  @max_duration_minutes 7
+  @max_duration_minutes 10
 
   @impl true
   def has_custom_refresh(), do: false
@@ -58,6 +58,7 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
           |> Map.get("date_prog")
           |> NaiveDateTime.from_iso8601!()
           |> DateTime.from_naive!("Europe/Paris")
+          |> IO.inspect()
           |> DateTime.to_unix()
 
         # we don't know the duration ...
