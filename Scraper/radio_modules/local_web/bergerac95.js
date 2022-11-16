@@ -52,6 +52,7 @@ const format = dateObj => {
       delete newEntry.host;
     }
 
+    prev.push(newEntry);
     return prev;
   }, []);
 
@@ -74,7 +75,7 @@ const fetch = dateObj => {
       .set({
         'img': 'img.list-img-thumb@src',
         'title': 'h4',
-        'datetime_raw': 'a.title-link + div'
+        'datetime_raw': '.program-date'
       })
       .do(
         osmosis.follow('a.title-link@href')
