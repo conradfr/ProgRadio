@@ -196,7 +196,8 @@ export default defineComponent({
 
       return this.audio[`player${this.audio.current}`];
     },
-    isFavorite(store): boolean {
+    isFavorite(store: any): boolean {
+      // (I don't remember where that store argument comes from and why it works)
       if (this.radio === null) {
         return false;
       }
