@@ -3,6 +3,7 @@
 import forEach from 'lodash/forEach';
 
 import {
+  ANDROID_SONG_MIN_VERSION,
   THUMBNAIL_NOTIFICATION_PROGRAM_PATH,
   THUMBNAIL_STREAM_PATH
 } from '@/config/config';
@@ -13,6 +14,7 @@ import type { RadioStream } from '@/types/radio_stream';
 import type { Program } from '@/types/program';
 
 import typeUtils from '../utils/typeUtils';
+import PlayerUtils from '../utils/PlayerUtils';
 import ScheduleUtils from '../utils/ScheduleUtils';
 
 // @ts-expect-error Android is defined by the device
@@ -87,8 +89,26 @@ export default {
       return;
     }
 
-    // @ts-expect-error Android is defined by the device
-    Android.play(radioCodeName, radioName, streamUrl, showTitle, getPictureUrl(radio, currentShow));
+    if (this.getVersion() < ANDROID_SONG_MIN_VERSION) {
+      // @ts-expect-error Android is defined by the device
+      Android.play(
+        radioCodeName,
+        radioName,
+        streamUrl,
+        showTitle,
+        getPictureUrl(radio, currentShow)
+      );
+    } else {
+      // @ts-expect-error Android is defined by the device
+      Android.play(
+        radioCodeName,
+        radioName,
+        streamUrl,
+        showTitle,
+        getPictureUrl(radio, currentShow),
+        PlayerUtils.getChannelName(radio, radioCodeName)
+      );
+    }
   },
   pause() {
     if (!hasAndroid) { return; }
