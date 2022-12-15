@@ -9,7 +9,7 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
     "funkyradio_disco" => "https://discofunk.streamingmedia.it/play"
   }
 
-  @url "https://funky.radio/wp-content/plugins/wp-lunaradio/js/stream-icy-meta.php"
+  @url "https://funky.radio/wp-content/plugins/lu-radioplayer/js/stream-icy-meta.php"
 
   @impl true
   def has_custom_refresh(), do: false

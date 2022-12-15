@@ -59,7 +59,7 @@ defmodule ProgRadioApi.SongProvider.Radionova do
     |> SongProvider.get()
     |> Map.get(:body)
     |> Jason.decode!()
-    |> Map.get("currentTrack", %{})
+    |> Map.get("currentTrack", nil)
   end
 
   @impl true

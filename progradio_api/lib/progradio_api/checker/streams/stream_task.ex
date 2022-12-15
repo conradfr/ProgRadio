@@ -6,10 +6,6 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
   @success_status [200, 302]
 
   def start_link(radio_stream) do
-    # Note: this function must return the format of `{:ok, pid}` and like
-    # all children started by a Supervisor, the process must be linked
-    # back to the supervisor (if you use `Task.start_link/1` then both
-    # these requirements are met automatically)
     Task.start_link(fn ->
       Logger.info("Checking: #{radio_stream.code_name} (#{radio_stream.url})")
 
@@ -87,7 +83,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
 
             :hackney_pool.stop_pool(:checker)
 
-          reason when is_tuple(reason) ->
+          reason when is_tuple(reason) and tuple_size(reason) == 2 ->
             {_error, {_error2, error_message}} = reason
             Logger.warn("Error (#{radio_stream.code_name}): #{to_string(error_message)}")
 
