@@ -394,10 +394,10 @@ export const usePlayerStore = defineStore('player', {
         this.socket = new Socket(`wss://${apiUrl}/socket`);
         this.socket.connect();
         this.socket.onError(() => {
-          this.socket.disconnect();
+          // this.socket.disconnect();
           this.channels = {};
           this.song = {};
-          this.socket = null;
+          // this.socket = null;
         });
       }
 
