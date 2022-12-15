@@ -7,6 +7,10 @@ defmodule ProgRadioApi.SongServer do
 
   @refresh_song_interval 15000
   @refresh_song_interval_long 30000
+  @refresh_song_retries_increment 10000
+  @refresh_song_retries_max 10
+  @refresh_song_retries_max_reset_at 100
+  @refresh_song_retries_max_interval 120_000
   @refresh_presence_interval 60000
 
   # ----- Client Interface -----
@@ -21,6 +25,7 @@ defmodule ProgRadioApi.SongServer do
         name: song_topic,
         song: nil,
         last_data: nil,
+        retries: 0,
         collection_topic: nil,
         db_data: nil
       },
@@ -50,6 +55,7 @@ defmodule ProgRadioApi.SongServer do
         name: song_topic,
         song: nil,
         last_data: nil,
+        retries: 0,
         collection_topic: collection_topic,
         db_data: db_data
       },
@@ -81,9 +87,10 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def handle_info(
         {:refresh, :auto},
-        %{module: module, name: name, last_data: last_data, db_data: db_data} = state
+        %{module: module, name: name, last_data: last_data, retries: retries, db_data: db_data} =
+          state
       ) do
-    with {data, song} <- get_data_song(module, name, last_data),
+    with {data, song, updated_retries} <- get_data_song(module, name, last_data, retries),
          false <- data == :error do
       spawn(fn -> update_status(song, db_data) end)
 
@@ -92,21 +99,26 @@ defmodule ProgRadioApi.SongServer do
       broadcast_song(name, song, state.collection_topic)
 
       refresh_rate =
-        if apply(state.module, :has_custom_refresh, []) == true do
-          apply(module, :get_auto_refresh, [name, data, @refresh_song_interval_long]) ||
+        cond do
+          Kernel.function_exported?(state.module, :get_auto_refresh, 0) == true ->
+            apply(state.module, :get_auto_refresh, [])
+
+          apply(state.module, :has_custom_refresh, []) == true ->
             @refresh_song_interval_long
-        else
-          apply(module, :get_auto_refresh, [name, data, @refresh_song_interval]) ||
+
+          true ->
             @refresh_song_interval
         end
+        |> Kernel.+(Enum.random(-5..5))
+        |> increment_interval(updated_retries)
 
       Process.send_after(self(), {:refresh, :auto}, refresh_rate)
 
       Logger.debug(
-        "Data provider - #{name}: song updated (timer) - #{how_many_connected} clients connected"
+        "Data provider - #{name}: song updated (timer, next: #{trunc(refresh_rate / 1000)}s, retries: #{updated_retries}) - #{how_many_connected} clients connected"
       )
 
-      {:noreply, %{state | song: song, last_data: data}, :hibernate}
+      {:noreply, %{state | song: song, last_data: data, retries: updated_retries}, :hibernate}
     else
       _ ->
         broadcast_song(name, nil, nil)
@@ -119,9 +131,10 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def handle_info(
         {:refresh, _},
-        %{module: module, name: name, last_data: last_data, db_data: db_data} = state
+        %{module: module, name: name, last_data: last_data, retries: retries, db_data: db_data} =
+          state
       ) do
-    {data, song} = get_data_song(module, name, last_data)
+    {data, song, _retries} = get_data_song(module, name, last_data, retries)
     spawn(fn -> update_status(song, db_data) end)
 
     broadcast_song(name, song, state.collection_topic)
@@ -185,12 +198,27 @@ defmodule ProgRadioApi.SongServer do
     #    )
   end
 
-  @spec get_data_song(atom(), String.t(), map() | nil) :: tuple()
-  defp get_data_song(module, name, last_data) do
+  @spec get_data_song(atom(), String.t(), map() | nil, integer) :: tuple()
+  defp get_data_song(module, name, last_data, retries) do
     data = apply(module, :get_data, [name, last_data])
     song = apply(module, :get_song, [name, data]) || %{}
 
-    {data, song}
+    updated_retries =
+      case song do
+        %{} = map when map_size(map) == 0 -> retries + 1
+        nil -> retries + 1
+        _ -> 0
+      end
+      |> case do
+        value when value == @refresh_song_retries_max_reset_at ->
+          Logger.debug("Data provider - #{name}: retries reset")
+          1
+
+        value ->
+          value
+      end
+
+    {data, song, updated_retries}
   end
 
   @spec update_status(map(), map() | nil) :: any()
@@ -236,4 +264,10 @@ defmodule ProgRadioApi.SongServer do
     Presence.list(collection_topic)
     |> Kernel.map_size()
   end
+
+  defp increment_interval(_base_refresh, retries) when retries >= @refresh_song_retries_max,
+    do: @refresh_song_retries_max_interval
+
+  defp increment_interval(base_refresh, retries),
+    do: base_refresh + @refresh_song_retries_increment * retries
 end

@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_auto_refresh(_name, _data, _default_refresh), do: @refresh_auto_interval
+  def get_auto_refresh(), do: @refresh_auto_interval
 
   @impl true
   def get_data(name, _last_data) do

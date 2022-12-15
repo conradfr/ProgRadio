@@ -5,11 +5,6 @@ defmodule ProgRadioApi.SongProvider do
   @callback get_refresh(String.t(), map() | nil, integer()) :: integer() | nil
 
   @doc """
-    Get auto refresh
-  """
-  @callback get_auto_refresh(String.t(), map() | nil, integer()) :: integer() | nil
-
-  @doc """
     Get source data as map
   """
   @callback get_data(String.t(), map() | nil) :: map() | nil
@@ -23,6 +18,13 @@ defmodule ProgRadioApi.SongProvider do
     Indicates if it can refreshes based on metadata or not
   """
   @callback has_custom_refresh() :: boolean()
+
+  @doc """
+    Overrides the default auto refresh rate
+  """
+  @callback get_auto_refresh() :: integer()
+
+  @optional_callbacks get_auto_refresh: 0
 
   # ----- Utils -----
 

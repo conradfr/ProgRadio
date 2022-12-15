@@ -154,7 +154,9 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
             _ ->
               Logger.debug("Error importing picture")
               head
-            :exit, _ -> head
+
+            :exit, _ ->
+              head
           end
 
         _ ->

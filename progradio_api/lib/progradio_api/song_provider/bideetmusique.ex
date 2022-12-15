@@ -13,9 +13,6 @@ defmodule ProgRadioApi.SongProvider.Bideetmusique do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_auto_refresh(_name, _data, default_refresh), do: default_refresh
-
-  @impl true
   def get_data(_name, _last_data) do
     try do
       @url

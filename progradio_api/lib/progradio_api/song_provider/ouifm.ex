@@ -22,9 +22,6 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
   defdelegate get_refresh(name, data, default_refresh), to: GenericLesIndes2
 
   @impl true
-  defdelegate get_auto_refresh(name, data, default_refresh), to: GenericLesIndes2
-
-  @impl true
   def get_data(name, _last_data) do
     radio_id =
       SongProvider.get_stream_code_name_from_channel(name)

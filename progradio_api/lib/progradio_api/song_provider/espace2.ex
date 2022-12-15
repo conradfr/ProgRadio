@@ -10,9 +10,6 @@ defmodule ProgRadioApi.SongProvider.Espace2 do
   def has_custom_refresh(), do: false
 
   @impl true
-  def get_auto_refresh(_name, _data, default_refresh), do: default_refresh
-
-  @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true

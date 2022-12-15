@@ -23,9 +23,6 @@ defmodule ProgRadioApi.SongProvider.Fip do
   def has_custom_refresh(), do: true
 
   @impl true
-  def get_auto_refresh(_name, _data, default_refresh), do: default_refresh
-
-  @impl true
   def get_refresh(_name, nil, default_refresh), do: default_refresh
 
   @impl true

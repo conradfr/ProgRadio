@@ -18,9 +18,6 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_auto_refresh(_name, _data, default_refresh), do: default_refresh
-
-  @impl true
   def get_data(name, _last_data) do
     try do
       channel = SongProvider.get_stream_code_name_from_channel(name)

@@ -33,9 +33,6 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_auto_refresh(_name, _data, default_refresh), do: default_refresh
-
-  @impl true
   def get_data(name, _last_data) do
     now_unix = SongProvider.now_unix()
 
@@ -58,7 +55,6 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
           |> Map.get("date_prog")
           |> NaiveDateTime.from_iso8601!()
           |> DateTime.from_naive!("Europe/Paris")
-          |> IO.inspect()
           |> DateTime.to_unix()
 
         # we don't know the duration ...
