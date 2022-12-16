@@ -183,3 +183,4 @@ export const GTAG_ACTION_HOME_VALUE = 1;
 // Android
 
 export const ANDROID_SONG_MIN_VERSION = 26;
+export const ANDROID_CHANNEL_IN_LIST_MIN_VERSION = 27;

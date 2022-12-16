@@ -4,6 +4,7 @@ import forEach from 'lodash/forEach';
 
 import {
   ANDROID_SONG_MIN_VERSION,
+  ANDROID_CHANNEL_IN_LIST_MIN_VERSION,
   THUMBNAIL_NOTIFICATION_PROGRAM_PATH,
   THUMBNAIL_STREAM_PATH
 } from '@/config/config';
@@ -20,6 +21,12 @@ import ScheduleUtils from '../utils/ScheduleUtils';
 // @ts-expect-error Android is defined by the device
 const hasAndroid = typeof Android !== 'undefined';
 // const hasAndroid = false;
+
+const getVersion = () => {
+  if (!hasAndroid) { return 0; }
+  // @ts-expect-error Android is defined by the device
+  return Android.getVersion !== undefined ? Android.getVersion() : 15; // temp
+};
 
 const getPictureUrl = (radio: Radio|Stream, show: Program|null = null): string|null => {
   if (show !== null && show.picture_url !== null) {
@@ -39,6 +46,7 @@ const getPictureUrl = (radio: Radio|Stream, show: Program|null = null): string|n
 
 const formatRadios = (radios: Record<string, Radio>): Array<object> => {
   const radiosExport: Array<object> = [];
+
   forEach(radios, (radio) => {
     if (typeUtils.isStream(radio) || radio.streaming_enabled) {
       let codeName = radio.code_name;
@@ -56,14 +64,18 @@ const formatRadios = (radios: Record<string, Radio>): Array<object> => {
       }
 
       if (streamUrl !== undefined && streamUrl !== null) {
-        radiosExport.push(
-          {
-            codeName,
-            name: radio.name,
-            streamUrl,
-            pictureUrl: getPictureUrl(radio)
-          }
-        );
+        const radioToExport: Record<string, any> = {
+          codeName,
+          name: radio.name,
+          streamUrl,
+          pictureUrl: getPictureUrl(radio)
+        };
+
+        if (getVersion() >= ANDROID_CHANNEL_IN_LIST_MIN_VERSION) {
+          radioToExport.channelName = PlayerUtils.getChannelName(radio, codeName);
+        }
+
+        radiosExport.push(radioToExport);
       }
     }
   });
@@ -73,11 +85,7 @@ const formatRadios = (radios: Record<string, Radio>): Array<object> => {
 
 export default {
   hasAndroid,
-  getVersion() {
-    if (!hasAndroid) { return 0; }
-    // @ts-expect-error Android is defined by the device
-    return Android.getVersion !== undefined ? Android.getVersion() : 15; // temp
-  },
+  getVersion,
   play(radio: Radio|Stream, stream: RadioStream|null = null, currentShow: Program|null = null) {
     if (!hasAndroid) { return; }
     const showTitle = currentShow === null ? null : currentShow.title;
