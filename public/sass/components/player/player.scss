@@ -14,7 +14,7 @@ $icon-play-size-hover: 1.846rem;
   transform: translateX(-50%);
 
   height: 41px;
-  width: 305px;
+  //width: 505px;
 
   margin-top: 5px;
   background-color: $player-background;
@@ -38,6 +38,18 @@ $icon-play-size-hover: 1.846rem;
     bottom: 10px;
     width: 242px;
     //left: ~"calc(50% - @{radio-list-width})";
+  }
+
+  @include media-breakpoint-up(sm) {
+    width: 305px;
+  }
+
+  @include media-breakpoint-up(xxl) {
+    width: 405px;
+  }
+
+  @media (min-width: 1920px) {
+    width: 505px;
   }
 
   .player-wrap {
