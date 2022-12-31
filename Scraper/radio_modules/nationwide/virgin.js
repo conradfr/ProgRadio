@@ -4,7 +4,9 @@ const logger = require('../../lib/logger.js');
 const utils = require('../../lib/utils');
 
 let scrapedData = [];
-let referenceIndex = 0;
+
+// Radio was renamed Europe2 on 01/01/2023
+// Keeping old code_name for now
 
 const format = dateObj => {
 
@@ -71,7 +73,7 @@ const fetch = dateObj => {
     dateObj.locale('fr');
     const day = utils.upperCaseWords(dateObj.format('dddd'));
 
-    let url = 'https://www.virginradio.fr/programmes';
+    let url = 'https://www.europe2.fr/programmes';
 
     logger.log('info', `fetching ${url} (${day})`);
 

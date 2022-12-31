@@ -2,6 +2,9 @@ defmodule ProgRadioApi.SongProvider.Virgin do
   require Logger
   alias ProgRadioApi.SongProvider
 
+  #  Radio was renamed Europe2 on 01/01/2023
+  #  Keeping old code_name for now
+
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
