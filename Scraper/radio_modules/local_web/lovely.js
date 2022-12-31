@@ -14,9 +14,9 @@ const format = dateObj => {
     endDateTime.add(1, 'days');
 
     const newEntry = {
-      'title': 'En direct sur FIP',
-      'description': "Bienvenue sur Fip, la radio musicale la plus éclectique au monde ! Fip, c'est aussi l'actualité musicale : nouveautés, sorties d'albums, interviews, sessions live exclusives. Toute la musique est sur Fip !",
-      'img': 'https://www.radiofrance.fr/sites/default/files/styles/format_32_9/public/2019-07/home%20fip.png.jpeg',
+      'title': 'Hits & Golds',
+      'description': "Points info trafic détaillés (toutes les ½ heures le matin et le soir), de l'information locale, des bons plans sorties, des jeux de proximité, de la musique Hit and Gold.",
+      'img': 'https://images.lesindesradios.fr/fit-in/300x2000/filters:quality(100)/radios/lovely/images/logo.png',
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString()
       // 'sections': subs
@@ -31,7 +31,7 @@ function sleep(ms) {
 }
 
 const fetch = dateObj => {
-  logger.log('info', `fetching static fip`);
+  logger.log('info', `fetching static lovely`);
 
   // For some reason we need to have a sleep otherwise save in redis fails
   return new Promise((resolve, reject) => {
@@ -53,7 +53,7 @@ const getScrap = dateObj => {
 };
 
 const scrapModule = {
-  getName: 'fip',
+  getName: 'lovely',
   supportTomorrow: true,
   getScrap
 };
