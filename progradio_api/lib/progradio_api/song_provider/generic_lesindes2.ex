@@ -9,7 +9,15 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes2 do
 
   def get_refresh(_name, _data, _default_refresh), do: nil
 
-  def get_data(url, _name, radio_id) do
+  def get_data(url, name, %{} = radio_id) do
+    radio_id =
+      SongProvider.get_stream_code_name_from_channel(name)
+      |> (&Map.get(radio_id, &1)).()
+
+    get_data(url, name, radio_id)
+  end
+
+  def get_data(url, _name, radio_id) when is_binary(radio_id) do
     now_unix = SongProvider.now_unix()
     now_iso = SongProvider.now_iso()
 
