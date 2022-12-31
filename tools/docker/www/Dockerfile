@@ -3,15 +3,16 @@
 FROM node:14.17.6 as buildjs
 
 WORKDIR /tmp
-RUN mkdir /tmp/public/
 COPY ./package.json /tmp
 COPY ./package-lock.json /tmp
 COPY ./tsconfig.json /tmp
 COPY ./env.d.ts /tmp
+RUN npm install
+
+RUN mkdir /tmp/public/
 COPY ./public /tmp/public
 COPY ./buildjs /tmp/buildjs
 
-RUN npm install
 RUN npm run build
 
 RUN ls /tmp
