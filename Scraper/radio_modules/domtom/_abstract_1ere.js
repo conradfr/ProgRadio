@@ -47,6 +47,10 @@ const format = (dateObj, dayWanted, name) => {
 
   // we use reduce instead of map to act as a map+filter in one pass
   cleanedData[name] = scrapedData[name].reduce(function (prev, curr) {
+    if (curr.datetime_host === undefined) {
+      return prev;
+    }
+
     let matchedDay = false;
     let match = null;
     const dayNum = dateObj.isoWeekday();
