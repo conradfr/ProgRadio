@@ -2,9 +2,12 @@ defmodule ProgRadioApi.SongProvider.Contactfm do
   require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes2
 
+  #  Radio was renamed Radio µontact on 11/2022
+  #  Keeping old code_name for now
+
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://api.mycontact.fr/graphql"
+  @url "https://api.radiocontact.fr/graphql"
   @radio_id "2174546520932614237"
 
   @impl true
