@@ -1,5 +1,5 @@
 const osmosis = require('osmosis');
-const fixUtf8 = require('fix-utf8')
+const fixUtf8 = require('fix-utf8');
 let moment = require('moment-timezone');
 let util = require('util');
 const logger = require('../../lib/logger.js');

@@ -1,6 +1,5 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
-const utils = require('../../lib/utils');
 const logger = require('../../lib/logger.js');
 
 const dayFr = {
