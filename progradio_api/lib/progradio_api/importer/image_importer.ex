@@ -2,11 +2,14 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   import Mogrify
   require Application
   require Logger
+  alias ProgRadioApi.Cache
   alias ProgRadioApi.ImageCache
 
   @image_folder "program"
   @stream_folder "stream"
   @temp_folder "temp"
+
+  @ls_cache_key "streams_ls"
 
   @spec import(String.t(), map, struct) :: tuple
   def import(filename_or_base64, show, radio)
@@ -83,6 +86,47 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       Logger.debug("Stream image #{filename} was cached")
       {:ok, filename}
     end
+  end
+
+  def find_image_for_stream(stream_id) do
+    filename =
+      "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/"
+      |> list_stream_files()
+      |> Enum.filter(fn f -> String.starts_with?(f, stream_id) == true end)
+      |> pick_more_recent_image()
+
+    case filename do
+      nil -> nil
+      _ -> {stream_id, filename}
+    end
+  end
+
+  defp list_stream_files(path) do
+    case Cache.has_key?(@ls_cache_key) do
+      true ->
+        Cache.get(@ls_cache_key)
+
+      false ->
+        files = File.ls!(path)
+        Cache.put(@ls_cache_key, files)
+        files
+    end
+  end
+
+  defp pick_more_recent_image(filenames) when length(filenames) == 0, do: nil
+  defp pick_more_recent_image(filenames) when length(filenames) == 1, do: hd(filenames)
+
+  defp pick_more_recent_image(filenames) do
+    filenames
+    |> Enum.sort_by(
+      fn f ->
+        "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{f}"
+        |> File.lstat!([{:time, :posix}])
+        |> Map.get(:mtime)
+      end,
+      :desc
+    )
+    |> List.first()
   end
 
   defp process(image_path, dest_path) do

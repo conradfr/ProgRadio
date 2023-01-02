@@ -2,10 +2,11 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   import Ecto.Query, only: [from: 2]
   alias Ecto.Multi
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.Stream
-  alias ProgRadioApi.StreamOverloading
+  alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Importer.StreamsImporter.StreamMatcher
+
+  # TODO unbundle if we diversify streams sources
 
   @image_folder "stream"
 
@@ -23,6 +24,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> delete_images_from_removed_stations()
     |> store()
 
+    reattach_image_of_stream_with_no_image()
     StreamMatcher.match()
   end
 
@@ -247,5 +249,32 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   defp get_servers() do
     DNS.query(@servers_dns)
     |> Map.get(:anlist)
+  end
+
+  # Images
+
+  # If a stream has no image (usually from a dead link) we reuse the former one if any,
+  # (as we don't delete previous images)
+  def reattach_image_of_stream_with_no_image() do
+    get_streams_with_no_image()
+    |> Enum.map(fn s -> ImageImporter.find_image_for_stream(s) end)
+    |> Enum.filter(&(&1 != nil))
+    |> Enum.each(&update_stream_with_image/1)
+  end
+
+  defp get_streams_with_no_image() do
+    from(s in Stream,
+      where: is_nil(s.img),
+      select: s.id
+    )
+    |> Repo.all()
+  end
+
+  defp update_stream_with_image({stream_id, filename}) do
+    query =
+      from s in Stream,
+        where: s.id == ^stream_id
+
+    Repo.update_all(query, set: [img: filename])
   end
 end
