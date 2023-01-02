@@ -1,4 +1,8 @@
-FROM hexpm/elixir:1.13.4-erlang-25.1.2-ubuntu-bionic-20210930
+FROM hexpm/elixir:1.14.2-erlang-25.2-ubuntu-bionic-20210930
+
+# There is a bug / dependecy problem when using Unbutu 20.04 (focal)
+# Failure to build & load nif for :ex_cldr_collation
+# Staying on bionic for now
 
 EXPOSE 80
 

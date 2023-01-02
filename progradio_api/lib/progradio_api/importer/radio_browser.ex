@@ -255,7 +255,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # If a stream has no image (usually from a dead link) we reuse the former one if any,
   # (as we don't delete previous images)
-  def reattach_image_of_stream_with_no_image() do
+  defp reattach_image_of_stream_with_no_image() do
     get_streams_with_no_image()
     |> Enum.map(fn s -> ImageImporter.find_image_for_stream(s) end)
     |> Enum.filter(&(&1 != nil))
