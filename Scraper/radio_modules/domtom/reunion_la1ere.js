@@ -8,7 +8,7 @@ const getScrap = dateObj => {
 
   dateObj.tz('Indian/Reunion');
 
-  const url = 'https://la1ere.francetvinfo.fr/reunion/radio';
+  const url = 'https://la1ere.francetvinfo.fr/reunion/programme-audio/';
   return scrapAbstract.getScrap(dateObj, dateWantedObj, name, url)
 };
 

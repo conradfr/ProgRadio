@@ -8,7 +8,7 @@ const getScrap = dateObj => {
 
   dateObj.tz('America/Guadeloupe');
 
-  const url = 'https://la1ere.francetvinfo.fr/guadeloupe/radio';
+  const url = 'https://la1ere.francetvinfo.fr/guadeloupe/programme-audio/';
   return scrapAbstract.getScrap(dateObj, dateWantedObj, name, url)
 };
 

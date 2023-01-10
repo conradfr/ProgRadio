@@ -8,7 +8,7 @@ const getScrap = dateObj => {
 
   dateObj.tz('America/Martinique');
 
-  const url = 'https://la1ere.francetvinfo.fr/martinique/radio';
+  const url = 'https://la1ere.francetvinfo.fr/martinique/programme-audio/';
   return scrapAbstract.getScrap(dateObj, dateWantedObj, name, url)
 };
 
