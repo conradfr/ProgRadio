@@ -35,7 +35,7 @@ import { NAV_MOVE_BY } from '@/config/config';
 import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 
-import type { ScheduleOfRadio } from '@/types/schedule';
+import type { ScheduleOfSubRadio } from '@/types/schedule';
 
 import Vue3Hammer from '../Utils/Vue3Hammer.vue';
 import TimelineCursor from './TimelineCursor.vue';
@@ -84,12 +84,14 @@ export default defineComponent({
   /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
   methods: {
     ...mapActions(useScheduleStore, ['scroll', 'setScrollClick', 'setSwipeClick']),
-    getSchedule(radio: string): ScheduleOfRadio {
-      return this.schedule[radio];
+    getSchedule(radioCodeName: string): ScheduleOfSubRadio {
+      return (this.schedule[radioCodeName]
+        && this.schedule[radioCodeName][radioCodeName])
+          ? this.schedule[radioCodeName][radioCodeName] : {};
     },
-    hasSchedule(radio: string): boolean {
-      return (this.schedule[radio]
-          && Object.keys(this.schedule[radio]).length > 0) || false;
+    hasSchedule(radioCodeName: string): boolean {
+      return (this.schedule[radioCodeName] && this.schedule[radioCodeName][radioCodeName]
+        && Object.keys(this.schedule[radioCodeName][radioCodeName]).length > 0) || false;
     },
     onSwipe(event: Event) {
       this.setSwipeClick(true);

@@ -148,7 +148,7 @@ export default defineComponent({
       };
     },
     secondaryStreams() {
-      return filter(this.radio.streams, r => r.main === false);
+      return filter(this.radio.streams, r => r.main === false && r.sub_radio === false);
     },
     isFavorite() {
       return this.isRadioFavorite(this.radio.code_name);

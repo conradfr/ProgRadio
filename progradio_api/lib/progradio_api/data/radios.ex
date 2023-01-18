@@ -8,7 +8,7 @@ defmodule ProgRadioApi.Radios do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, RadioStream, Category, Collection, ApiKey, ApiKeyRadio}
+  alias ProgRadioApi.{Radio, SubRadio, RadioStream, Category, Collection, ApiKey, ApiKeyRadio}
 
   # stream retries before considering it disabled
   @retries_max 12
@@ -27,6 +27,8 @@ defmodule ProgRadioApi.Radios do
         on: r.category_id == c.id,
         left_join: rs in RadioStream,
         on: rs.radio_id == r.id and rs.enabled == true,
+        left_join: sr in SubRadio,
+        on: sr.id == rs.sub_radio_id and sr.enabled == true,
         where: r.active == true,
         select: %{
           id: r.id,
@@ -44,7 +46,14 @@ defmodule ProgRadioApi.Radios do
           stream_main: rs.main,
           stream_current_song: rs.current_song,
           stream_status: rs.status,
-          stream_retries: rs.retries
+          stream_retries: rs.retries,
+          stream_sub_radio_id: rs.sub_radio_id
+        },
+        select_merge: %{
+          sub_radio_code_name: rs.code_name,
+          sub_radio_name: rs.name,
+          sub_radio_main: rs.main,
+          sub_radio_enabled: rs.enabled
         }
 
     query
@@ -66,7 +75,8 @@ defmodule ProgRadioApi.Radios do
               type: "radio",
               country_code: r.country_code,
               has_preroll: r.has_preroll,
-              streams: %{}
+              streams: %{},
+              sub_radios: %{}
             }
         end
 
@@ -84,10 +94,27 @@ defmodule ProgRadioApi.Radios do
               name: e.stream_name,
               url: e.stream_url,
               main: e.stream_main,
+              sub_radio: e.stream_sub_radio_id !== nil,
               current_song: e.stream_current_song
             }
 
             put_in(radio, [:streams, stream.code_name], stream)
+        end
+
+      radio =
+        case r do
+          e when is_nil(e.sub_radio_code_name) ->
+            radio
+
+          e ->
+            sub_radio = %{
+              code_name: e.sub_radio_code_name,
+              name: e.sub_radio_name,
+              main: e.sub_radio_main,
+              enabled: e.sub_radio_enabled
+            }
+
+            put_in(radio, [:sub_radios, sub_radio.code_name], sub_radio)
         end
 
       Map.put(acc, radio.code_name, radio)

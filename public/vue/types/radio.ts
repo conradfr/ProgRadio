@@ -1,3 +1,4 @@
+import type { SubRadio } from './sub_radio';
 import type { RadioStream } from './radio_stream';
 
 export interface Radio {
@@ -9,6 +10,7 @@ export interface Radio {
   share: number
   streaming_enabled: boolean
   streams: Record<string, RadioStream>
+  sub_radios: Record<string, SubRadio>
   type: 'radio'
   img: string
   stream_url: string,

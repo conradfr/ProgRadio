@@ -8,7 +8,7 @@ defmodule ProgRadioApi.Schedule do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, Collection, ScheduleEntry, SectionEntry}
+  alias ProgRadioApi.{Radio, SubRadio, Collection, ScheduleEntry, SectionEntry}
 
   @timezone "Europe/Paris"
 
@@ -104,6 +104,8 @@ defmodule ProgRadioApi.Schedule do
       on: se.radio_id == r.id,
       left_join: sc in SectionEntry,
       on: sc.schedule_entry_id == se.id,
+      inner_join: sr in SubRadio,
+      on: sr.id == se.sub_radio_id,
       where: r.active == true,
       where:
         fragment(
@@ -120,6 +122,7 @@ defmodule ProgRadioApi.Schedule do
       order_by: [asc: se.date_time_start, asc: sc.date_time_start],
       select: %{
         code_name: r.code_name,
+        sub_radio_code_name: sr.code_name,
         title: se.title,
         host: se.host,
         description: se.description,
@@ -163,15 +166,24 @@ defmodule ProgRadioApi.Schedule do
   defp format(data) do
     radio_schedule =
       data
-      |> Enum.map(fn e -> {e.code_name, %{}} end)
+      |> Enum.map(fn e -> {e.code_name, e.sub_radio_code_name} end)
       |> Enum.uniq()
-      |> Enum.into(%{})
+      |> Enum.reduce(%{}, fn
+        {radio_code_name, sub_radio_code_name}, acc when is_map_key(acc, radio_code_name) ->
+          case Map.get(acc[radio_code_name], sub_radio_code_name) do
+            nil -> put_in(acc, [radio_code_name, sub_radio_code_name], %{})
+            _ -> acc
+          end
+
+        {radio_code_name, sub_radio_code_name}, acc ->
+          Map.put(acc, radio_code_name, %{sub_radio_code_name => %{}})
+      end)
 
     radio_schedule_with_shows =
       data
       |> Enum.reduce(radio_schedule, fn e, acc ->
         # add in schedule_entry not already there
-        case Map.has_key?(acc[e.code_name], e.hash) do
+        case Map.has_key?(acc[e.code_name][e.sub_radio_code_name], e.hash) do
           false ->
             schedule_entry = %{
               hash: e.hash,
@@ -187,7 +199,7 @@ defmodule ProgRadioApi.Schedule do
               sections: []
             }
 
-            put_in(acc, [e.code_name, e.hash], schedule_entry)
+            put_in(acc, [e.code_name, e.sub_radio_code_name, e.hash], schedule_entry)
 
           true ->
             acc
@@ -206,8 +218,8 @@ defmodule ProgRadioApi.Schedule do
         start_at: e.section_start_at
       }
 
-      (acc[e.code_name][e.hash].sections ++ [section_entry])
-      |> (&put_in(acc, [e.code_name, e.hash, :sections], &1)).()
+      (acc[e.code_name][e.sub_radio_code_name][e.hash].sections ++ [section_entry])
+      |> (&put_in(acc, [e.code_name, e.sub_radio_code_name, e.hash, :sections], &1)).()
     end)
   end
 

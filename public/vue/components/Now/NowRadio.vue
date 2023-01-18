@@ -63,7 +63,7 @@ export default defineComponent({
       return `${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
     },
     currentShow() {
-      const schedule = this.schedule[this.radio.code_name];
+      const schedule = this.schedule[this.radio.code_name][this.radio.code_name];
 
       if (schedule === undefined || schedule === null) {
         return null;

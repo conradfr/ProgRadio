@@ -12,7 +12,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
     []
   end
 
-  def build(items, radio) do
+  def build(items, radio, _sub_radio) do
     items
     |> cast_schedule()
     |> sort()

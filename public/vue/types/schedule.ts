@@ -1,9 +1,13 @@
 import type { Program } from './program';
 
-export interface ScheduleOfRadio {
+export interface ScheduleOfSubRadio {
   [key: string]: Program
 }
 
+export interface ScheduleOfSubRadios {
+  [key: string]: ScheduleOfSubRadio
+}
+
 export interface Schedule {
-  [key: string]: ScheduleOfRadio
+  [key: string]: ScheduleOfSubRadios
 }

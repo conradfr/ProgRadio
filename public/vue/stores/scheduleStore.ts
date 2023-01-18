@@ -124,7 +124,7 @@ export const useScheduleStore = defineStore('schedule', {
       || state.categoryFilterFocus.list || false,
     /* eslint-disable arrow-parens */
     currentShowOnRadio: (state) => (radioCodename: string) => {
-      const currentShow = find(state.schedule[radioCodename], (show) => Interval
+      const currentShow = find(state.schedule[radioCodename][radioCodename], (show) => Interval
         .fromDateTimes(DateTime.fromISO(show.start_at).setZone(config.TIMEZONE),
           DateTime.fromISO(show.end_at).setZone(config.TIMEZONE)).contains(state.cursorTime));
 
@@ -355,7 +355,6 @@ export const useScheduleStore = defineStore('schedule', {
     },
     getSchedule(params?: any) {
       const globalStore = useGlobalStore();
-
       const dateStr: string = this.cursorTime.toISODate();
 
       // if we have cache we display it immediately and then fetch an update silently

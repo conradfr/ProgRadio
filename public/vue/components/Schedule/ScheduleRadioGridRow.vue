@@ -26,7 +26,7 @@ import type { PropType } from 'vue';
 import { mapState } from 'pinia';
 
 import type { Radio } from '@/types/radio';
-import type { ScheduleOfRadio } from '@/types/schedule';
+import type { ScheduleOfSubRadio } from '@/types/schedule';
 
 /* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
@@ -42,7 +42,7 @@ export default defineComponent({
       type: Object as PropType<Radio>,
       required: true
     },
-    schedule: Object as PropType<ScheduleOfRadio>,
+    schedule: Object as PropType<ScheduleOfSubRadio>,
     displayNoSchedule: Boolean,
     hasSchedule: Boolean
   },

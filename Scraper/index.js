@@ -54,6 +54,7 @@ const getResults = async (radios) => {
         if (data.length > 0) {
           const dataExport = {
             'radio': radio_module.getName,
+            'sub_radio': radio_module.getName,
             'date': dateObj.format(dateFormat),
             'items': data
           };

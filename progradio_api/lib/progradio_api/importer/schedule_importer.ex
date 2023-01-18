@@ -34,12 +34,12 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
 
   @impl true
   def handle_message(_, message, _) do
-    {:ok, date, radio_name} =
+    {:ok, date, radio_name, sub_radio_code_name} =
       ProgRadioApi.Importer.ScheduleImporter.Processor.process(message.data)
 
     message
     |> Broadway.Message.update_data(fn m ->
-      %{key: m, date: date, radio_name: radio_name}
+      %{key: m, date: date, radio_name: radio_name, sub_radio_code_name: sub_radio_code_name}
     end)
   end
 
