@@ -5,6 +5,7 @@ const fs = require('fs');
 const axios = require('axios');
 
 const radiosModule = require('./lib/radios.js');
+const logger = require("./lib/logger");
 
 (async () => {
   try {
@@ -34,9 +35,9 @@ const options = commandLineArgs(optionDefinitions);
 
 logger.log('info', 'Starting ...');
 
-const getResults = async (radios) => {
+const getResults = async (radios, radiosList) => {
   const all = await radios.map(async function (radio) {
-    const radio_module = require(`./radio_modules/${radio}.js`);
+    const radio_module = require(`./radio_modules/${radio.path}.js`);
     const dateObj = moment();
     if (options['tomorrow'] === true) {
       if (radio_module.supportTomorrow !== true) {
@@ -46,38 +47,40 @@ const getResults = async (radios) => {
     }
     dateObj.tz('Europe/Paris');
 
-    return await radio_module.getScrap(dateObj)
-      .then(async function (data) {
-        const dateFormat = 'DD-MM-YYYY';
-        logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
+    return radio.sub_radios.map(async function (sub_radio) {
+      return await radio_module.getScrap(dateObj, sub_radio)
+        .then(async function (data) {
+          const dateFormat = 'DD-MM-YYYY';
+          logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
 
-        if (data.length > 0) {
-          const dataExport = {
-            'radio': radio_module.getName,
-            'sub_radio': radio_module.getName,
-            'date': dateObj.format(dateFormat),
-            'items': data
-          };
+          if (data.length > 0) {
+            const dataExport = {
+              'radio': radio_module.getName,
+              'sub_radio': sub_radio,
+              'date': dateObj.format(dateFormat),
+              'items': data
+            };
 
-          await axios.post(process.env.API_SCHEDULE_URL || config.api_schedule_url, dataExport, {
-            headers: {
-              'X-Api-Key': process.env.API_KEY || config.api_key
-            }
-          })
-            .then(function (response) {
-              logger.log('info', `${radio_module.getName} - api request done.`)
-              // return true;
-            }).catch((error) => {
-              logger.log('warn', `${radio_module.getName} - api request failed.`)
-            });
-        } else {
-          // Log specifically when no data is found, in case of website change etc
-          logger.log('warn', `${radio_module.getName} - NO DATA`);
-        }
-      })
-      .catch(error => {
-        logger.log('error', error);
-      });
+            await axios.post(process.env.API_SCHEDULE_URL || config.api_schedule_url, dataExport, {
+              headers: {
+                'X-Api-Key': process.env.API_KEY || config.api_key
+              }
+            })
+              .then(function (response) {
+                logger.log('info', `${radio_module.getName} - api request done.`)
+                // return true;
+              }).catch((error) => {
+                logger.log('warn', `${radio_module.getName} - api request failed.`)
+              });
+          } else {
+            // Log specifically when no data is found, in case of website change etc
+            logger.log('warn', `${radio_module.getName} - NO DATA`);
+          }
+        })
+        .catch(error => {
+          logger.log('error', error);
+        });
+    });
   });
 
   return Promise.all(all);

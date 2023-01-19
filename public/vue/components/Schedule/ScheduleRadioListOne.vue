@@ -139,8 +139,12 @@ export default defineComponent({
       };
     },
     subMenuStyleObjectStreams() {
-      const howMany = Object.keys(this.radio.streams).length > 0
-        ? Object.keys(this.radio.streams).length - 1 : 0;
+      let howManyStreams: any = filter(this.radio.streams,
+        s => s.main === true || !s.sub_radio);
+      howManyStreams = Object.keys(howManyStreams).length;
+
+      const howMany = howManyStreams > 0
+        ? howManyStreams - 1 : 0;
       return {
         width: `${RADIO_MENU_WIDTH * howMany}px`,
         left: this.hover ? `${3 * RADIO_MENU_WIDTH}px`
@@ -148,7 +152,7 @@ export default defineComponent({
       };
     },
     secondaryStreams() {
-      return filter(this.radio.streams, r => r.main === false && r.sub_radio === false);
+      return filter(this.radio.streams, s => s.main === false && !s.sub_radio);
     },
     isFavorite() {
       return this.isRadioFavorite(this.radio.code_name);

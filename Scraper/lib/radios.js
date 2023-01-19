@@ -33,8 +33,10 @@ const radiosList = async (config, logger) => {
 
 const getRadiosPathFromCollection = (radios, radiosCollection) => {
   return Object.keys(radiosCollection).reduce((acc, curr) => {
-    const intersection = radiosCollection[curr].filter(x => radios.includes(x));
-    const mapped = intersection.map(r =>`${curr}/${r}`);
+    const intersection = Object.keys(radiosCollection[curr]).filter(x => radios.includes(x));
+    const mapped = intersection.map(r => {
+      return {path: `${curr}/${r}`, sub_radios: radiosCollection[curr][r]};
+    });
     return [...acc, ...mapped];
   }, []);
 }
@@ -44,8 +46,8 @@ const getRadiosPathOfCollection = (collection, radiosCollection) => {
     return [];
   }
 
-  return radiosCollection[collection].reduce((acc, curr) => {
-    const mapped = `${collection}/${curr}`;
+  return Object.keys(radiosCollection[collection]).reduce((acc, curr) => {
+    const mapped = {path:`${collection}/${curr}`, sub_radios: radiosCollection[collection][curr]};
     acc.push(mapped);
     return acc;
   }, []);

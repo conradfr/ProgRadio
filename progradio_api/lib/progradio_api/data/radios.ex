@@ -174,6 +174,8 @@ defmodule ProgRadioApi.Radios do
   def list_radios_per_api_key(api_key) do
     query =
       from r in Radio,
+        join: sr in SubRadio,
+        on: sr.radio_id == r.id,
         join: c in Collection,
         on: r.collection_id == c.id,
         join: akr in ApiKeyRadio,
@@ -182,14 +184,22 @@ defmodule ProgRadioApi.Radios do
         on: ak.id == akr.api_key_id,
         select: %{
           collection: c.code_name,
-          radios: fragment("array_agg(?)", r.code_name)
+          radios: fragment("array_agg(?)", r.code_name),
+          sub_radios: fragment("array_agg(?)", sr.code_name)
         },
-        where: ak.id == ^api_key and r.active == true,
-        group_by: [c.code_name, c.priority],
+        where: ak.id == ^api_key and r.active == true and sr.enabled == true,
+        group_by: [c.code_name, r.code_name, c.priority],
         order_by: [asc: c.priority]
 
     query
     |> Repo.all()
-    |> Enum.into(%{}, fn v -> {v.collection, v.radios} end)
+    |> Enum.group_by(& &1.collection, & {&1.radios, &1.sub_radios})
+    |> Enum.into(%{}, fn {k, v} ->
+      radios = Enum.into(v, %{}, fn {radios, sub_radios} ->
+        {hd(radios), sub_radios}
+      end)
+
+      {k, radios}
+    end)
   end
 end
