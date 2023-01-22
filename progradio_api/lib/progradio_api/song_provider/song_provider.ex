@@ -31,7 +31,8 @@ defmodule ProgRadioApi.SongProvider do
   def get(url) do
     HTTPoison.get!(
       url,
-      [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}]
+      [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
+      hackney: [:insecure]
     )
   end
 

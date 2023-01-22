@@ -60,7 +60,11 @@ final class Version20230117153636 extends AbstractMigration implements Container
         );
 
         $connection->exec(
-            "UPDATE schedule_entry SET sub_radio_id = radio_id;"
+            'UPDATE radio_stream SET sub_radio_id = radio_id WHERE main = true;'
+        );
+
+        $connection->exec(
+            'UPDATE schedule_entry SET sub_radio_id = radio_id;'
         );
     }
 
