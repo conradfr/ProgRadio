@@ -148,7 +148,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
             end
           rescue
             e ->
-              Logger.debug("Error importing picture: #{e.message}")
+              Logger.debug("Error importing picture: #{Map.get(e, :message, url)}")
               head
           catch
             _ ->

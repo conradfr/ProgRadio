@@ -10,6 +10,13 @@
           v-once
       />
     </div>
+    <div class="radio-subradio"
+        v-if="hasSubRadios"
+        v-on:click="regionClick"
+         v-on:mouseover.stop=""
+        :title="$i18n.t('message.schedule.radio_list.pick_region_title')">
+      <i class="bi bi-geo-alt"></i>
+    </div>
     <div class="radio-submenu"
          :style="subMenuStyleObject"
          :class="{ 'radio-submenu': hover }">
@@ -43,10 +50,11 @@
         <p>{{ entry.name }}</p>
       </div>
     </div>
-    <a v-on:click="playStop(`${radio.code_name}_main`, false)" :title="radio.name">
+    <a v-on:click="playStop(radio.code_name, false)" :title="radio.name">
       <div class="radio-logo"
            :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}"
-           :title="radio.name" :style="styleObject">
+           :title="getSubRadio(radio.code_name).name"
+           :style="styleObject">
         <div class="radio-logo-play"
            :class="{
           'radio-logo-play-active': radio.code_name === radioPlayingCodeName,
@@ -54,7 +62,7 @@
           'radio-logo-play-hide': radio.streaming_enabled === false,
           'radio-logo-play-secondary':
             (radio.code_name === radioPlayingCodeName
-              && playingStreamCodeName !== `${radio.code_name}_main`)
+              && isWebRadio(radio.code_name, playingStreamCodeName))
           }">
         </div>
       </div>
@@ -84,7 +92,9 @@ import {
   GTAG_ACTION_FAVORITE_TOGGLE_VALUE,
   GTAG_ACTION_PLAY_VALUE,
   GTAG_ACTION_STOP,
-  GTAG_ACTION_STOP_VALUE
+  GTAG_ACTION_STOP_VALUE,
+  GTAG_ACTION_REGION_CLICK,
+  GTAG_ACTION_REGION_VALUE,
 } from '@/config/config';
 
 import PlayerUtils from '../../utils/PlayerUtils';
@@ -130,6 +140,7 @@ export default defineComponent({
       'radioPlayingCodeName',
     ]),
     ...mapState(usePlayerStore, { playingStreamCodeName: 'radioStreamCodeName' }),
+    ...mapState(useScheduleStore, ['getSubRadio', 'isWebRadio']),
     ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite' }),
     subMenuStyleObject() {
       return {
@@ -157,6 +168,9 @@ export default defineComponent({
     isFavorite() {
       return this.isRadioFavorite(this.radio.code_name);
     },
+    hasSubRadios() {
+      return Object.keys(this.radio.sub_radios).length > 1;
+    },
     displayFlag() {
       return this.radio.country_code !== null
         && this.radio.country_code !== RADIO_LIST_IGNORE_COUNTRY;
@@ -165,7 +179,10 @@ export default defineComponent({
   methods: {
     ...mapActions(usePlayerStore, ['playRadio', 'stop', 'joinChannel', 'leaveChannel']),
     ...mapActions(useUserStore, ['toggleRadioFavorite']),
-    playStop(streamCodeName: string, isSubStream: boolean) {
+    ...mapActions(useScheduleStore, ['activateRegionModal']),
+    playStop(radioCodeName: string, isSubStream: boolean) {
+      const streamCodeName = this.getSubRadio(radioCodeName).radio_stream;
+
       // stop if playing
       if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name
         && ((isSubStream && this.playingStreamCodeName === streamCodeName)
@@ -222,6 +239,15 @@ export default defineComponent({
       }
 
       this.hover = false;
+    },
+    regionClick() {
+      (this as any).$gtag.event(GTAG_ACTION_REGION_CLICK, {
+        event_category: GTAG_CATEGORY_SCHEDULE,
+        event_label: this.radio.code_name,
+        value: GTAG_ACTION_REGION_VALUE
+      });
+
+      this.activateRegionModal(this.radio);
     }
   }
 });

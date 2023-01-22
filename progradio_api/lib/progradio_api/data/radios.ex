@@ -50,10 +50,11 @@ defmodule ProgRadioApi.Radios do
           stream_sub_radio_id: rs.sub_radio_id
         },
         select_merge: %{
-          sub_radio_code_name: rs.code_name,
-          sub_radio_name: rs.name,
-          sub_radio_main: rs.main,
-          sub_radio_enabled: rs.enabled
+          sub_radio_code_name: sr.code_name,
+          sub_radio_name: sr.name,
+          sub_radio_main: sr.main,
+          sub_radio_enabled: sr.enabled,
+          sub_radio_radio_stream: rs.code_name
         }
 
     query
@@ -111,7 +112,8 @@ defmodule ProgRadioApi.Radios do
               code_name: e.sub_radio_code_name,
               name: e.sub_radio_name,
               main: e.sub_radio_main,
-              enabled: e.sub_radio_enabled
+              enabled: e.sub_radio_enabled,
+              radio_stream: e.sub_radio_radio_stream
             }
 
             put_in(radio, [:sub_radios, sub_radio.code_name], sub_radio)
@@ -175,7 +177,7 @@ defmodule ProgRadioApi.Radios do
     query =
       from r in Radio,
         join: sr in SubRadio,
-        on: sr.radio_id == r.id,
+        on: sr.radio_id == r.id and sr.enabled == true,
         join: c in Collection,
         on: r.collection_id == c.id,
         join: akr in ApiKeyRadio,
@@ -187,17 +189,18 @@ defmodule ProgRadioApi.Radios do
           radios: fragment("array_agg(?)", r.code_name),
           sub_radios: fragment("array_agg(?)", sr.code_name)
         },
-        where: ak.id == ^api_key and r.active == true and sr.enabled == true,
+        where: ak.id == ^api_key and r.active == true,
         group_by: [c.code_name, r.code_name, c.priority],
         order_by: [asc: c.priority]
 
     query
     |> Repo.all()
-    |> Enum.group_by(& &1.collection, & {&1.radios, &1.sub_radios})
+    |> Enum.group_by(& &1.collection, &{&1.radios, &1.sub_radios})
     |> Enum.into(%{}, fn {k, v} ->
-      radios = Enum.into(v, %{}, fn {radios, sub_radios} ->
-        {hd(radios), sub_radios}
-      end)
+      radios =
+        Enum.into(v, %{}, fn {radios, sub_radios} ->
+          {hd(radios), sub_radios}
+        end)
 
       {k, radios}
     end)

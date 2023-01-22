@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 
 import {
+  COOKIE_SUBRADIOS,
   COOKIE_RADIO_FAVORITES,
   COOKIE_STREAM_FAVORITES,
   CACHE_KEY_RADIO_FAVORITES,
@@ -24,6 +25,7 @@ import StreamsApi from '../api/StreamsApi';
 
 interface State {
   logged: boolean
+  subRadios: Record<string, string>
   favoritesRadio: Array<string>
   favoritesStream: Array<string>
 }
@@ -33,14 +35,16 @@ export const useUserStore = defineStore('user', {
   state: (): State => (
     {
       logged: false,
+      subRadios: cookies.getJson(COOKIE_SUBRADIOS, {}),
       favoritesRadio: cache.hasCache(CACHE_KEY_RADIO_FAVORITES)
         ? cache.getCache(CACHE_KEY_RADIO_FAVORITES) : [],
       favoritesStream: cache.hasCache(CACHE_KEY_STREAM_FAVORITES)
         ? cache.getCache(CACHE_KEY_STREAM_FAVORITES) : [],
     }
   ),
+  /* eslint-disable max-len */
   getters: {
-
+    getSubRadioCodeName: state => (radioCodeName: string): string | null => state.subRadios[radioCodeName] || null,
   },
   actions: {
     getUserData() {
@@ -168,6 +172,10 @@ export const useUserStore = defineStore('user', {
 
       streamsStore.setStreamFavorites(this.favoritesStream);
       cache.setCache(CACHE_KEY_STREAM_FAVORITES, this.favoritesStream);
-    }
+    },
+    setSubRadio(radioCodeName: string, subRadioCodeName: string) {
+      this.subRadios[radioCodeName] = subRadioCodeName;
+      cookies.set(COOKIE_SUBRADIOS, this.subRadios);
+    },
   }
 });

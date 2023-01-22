@@ -11,6 +11,7 @@ import { DateTime } from 'luxon';
 import type { Schedule } from '@/types/schedule';
 import type { Collection } from '@/types/collection';
 import type { Radio } from '@/types/radio';
+import type { SubRadio } from '@/types/sub_radio';
 import type { Stream } from '@/types/stream';
 import type { ScheduleDisplay } from '@/types/schedule_display';
 import type { Program } from '@/types/program';
@@ -225,6 +226,14 @@ const getStreamFromCodeName = (streamCodeName: string|null, radio: Radio|Stream)
   return null;
 };
 
+/* eslint-disable arrow-body-style */
+const getMainSubRadio = (radioCodeName: string, radios: Record<string, Radio>): SubRadio => {
+  // @ts-ignore
+  return find(radios[radioCodeName].sub_radios, (v, _k) => {
+    return v.main === true;
+  });
+};
+
 export default {
   enforceScrollIndex,
   initialScrollIndexFunction,
@@ -233,5 +242,6 @@ export default {
   rankCollection,
   getCollectionIndex,
   getNextCollection,
-  getStreamFromCodeName
+  getStreamFromCodeName,
+  getMainSubRadio
 };

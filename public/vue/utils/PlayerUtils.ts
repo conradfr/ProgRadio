@@ -153,6 +153,13 @@ const formatSong = (songData: Song): string|null => {
   return song === '' ? null : song;
 };
 
+// Help pass the cookie size limit of 4ko
+const reduceRadioSize = (radio: Radio): Radio => {
+  const radioCopy = { ...radio };
+  radioCopy.sub_radios = {};
+  return radioCopy;
+};
+
 /* ---------- NOTIFICATION ---------- */
 
 const buildNotificationData = (
@@ -357,6 +364,7 @@ export default {
   getNextStream,
   getChannelName,
   formatSong,
+  reduceRadioSize,
   showNotification,
   sendListeningSession,
   calculatedFlux

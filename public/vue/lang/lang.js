@@ -88,7 +88,13 @@ export const messages = {
         tomorrow: 'Demain',
         tooltip: 'Plus de radios ici',
         radio_list: {
-          page: 'Page des programmes'
+          page: 'Page des programmes',
+          pick_region_title: 'Choisir une région',
+          region: {
+            modal: {
+              close: 'Fermer',
+            }
+          }
         }
       },
       streaming: {
@@ -200,7 +206,13 @@ export const messages = {
         tomorrow: 'Tomorrow',
         tooltip: 'More radios here',
         radio_list: {
-          page: 'Schedule page'
+          page: 'Schedule page',
+          pick_region_title: 'Select an area',
+          region: {
+            modal: {
+              close: 'Close',
+            }
+          }
         }
       },
       streaming: {
@@ -312,7 +324,13 @@ export const messages = {
         tomorrow: 'Mañana',
         tooltip: 'Más radios aquí',
         radio_list: {
-          page: 'Página de programas'
+          page: 'Página de programas',
+          pick_region_title: 'Elija una región',
+          region: {
+            modal: {
+              close: 'Cerrar',
+            }
+          }
         }
       },
       streaming: {

@@ -8,6 +8,7 @@ import without from 'lodash/without';
 import type { Category } from '@/types/category';
 import type { Collection } from '@/types/collection';
 import type { Radio } from '@/types/radio';
+import type { SubRadio } from '@/types/sub_radio';
 import type { Schedule } from '@/types/schedule';
 import type { ScheduleDisplay } from '@/types/schedule_display';
 import type { Program } from '@/types/program';
@@ -49,6 +50,9 @@ interface State {
   displayProgramModal: boolean,
   programModal: any|null,
   programForModal: Program|null
+  displayRegionModal: boolean,
+  regionModal: any|null,
+  radioForRegionModal: Radio|null
 }
 
 const cursorTime: DateTime = DateTime.local().setZone(config.TIMEZONE);
@@ -77,7 +81,10 @@ export const useScheduleStore = defineStore('schedule', {
     },
     displayProgramModal: false,
     programModal: null,
-    programForModal: null
+    programForModal: null,
+    displayRegionModal: false,
+    regionModal: null,
+    radioForRegionModal: null
   }),
   getters: {
     hasSchedule: state => Object.keys(state.schedule).length > 0,
@@ -123,12 +130,33 @@ export const useScheduleStore = defineStore('schedule', {
     displayCategoryFilter: state => state.categoryFilterFocus.icon
       || state.categoryFilterFocus.list || false,
     /* eslint-disable arrow-parens */
-    currentShowOnRadio: (state) => (radioCodename: string) => {
-      const currentShow = find(state.schedule[radioCodename][radioCodename], (show) => Interval
-        .fromDateTimes(DateTime.fromISO(show.start_at).setZone(config.TIMEZONE),
-          DateTime.fromISO(show.end_at).setZone(config.TIMEZONE)).contains(state.cursorTime));
+    currentShowOnRadio(state: any) {
+      return (radioCodeName: string) => {
+        const subRadio = this.getSubRadio(radioCodeName);
+        let currentShow = null;
 
-      return typeof currentShow === 'undefined' ? null : currentShow;
+        if (state.schedule[radioCodeName] && state.schedule[radioCodeName][subRadio.code_name]) {
+          currentShow = find(state.schedule[radioCodeName][subRadio.code_name], (show) => Interval
+            .fromDateTimes(DateTime.fromISO(show.start_at).setZone(config.TIMEZONE),
+              DateTime.fromISO(show.end_at).setZone(config.TIMEZONE)).contains(state.cursorTime));
+        }
+
+        return typeof currentShow === 'undefined' || currentShow === null ? null : currentShow;
+      };
+    },
+    /* eslint-disable arrow-body-style */
+    isWebRadio: state => (radioCodeName: string, radioStreamCodeName: string): boolean => {
+      return !state.radios[radioCodeName].streams[radioStreamCodeName].sub_radio;
+    },
+    getSubRadio: state => (radioCodeName: string) : SubRadio => {
+      const userStore = useUserStore();
+      const userSubRadioCodeName = userStore.getSubRadioCodeName(radioCodeName);
+
+      if (userSubRadioCodeName !== null) {
+        return state.radios[radioCodeName].sub_radios[userSubRadioCodeName];
+      }
+
+      return ScheduleUtils.getMainSubRadio(radioCodeName, state.radios);
     }
   },
   actions: {
@@ -447,6 +475,25 @@ export const useScheduleStore = defineStore('schedule', {
         // @ts-expect-error bootstrap is defined on global scope
         this.programModal = new bootstrap.Modal(modalElem);
         this.programModal?.show();
+      });
+    },
+    activateRegionModal(radio: Radio) {
+      this.displayRegionModal = true;
+      this.radioForRegionModal = radio;
+
+      nextTick(() => {
+        const modalElem = document.getElementById('scheduleRadioRegionModal');
+
+        modalElem?.addEventListener('hidden.bs.modal', () => {
+          this.displayRegionModal = false;
+          this.regionModal = null;
+          this.radioForRegionModal = null;
+        });
+
+        /* eslint-disable no-undef */
+        // @ts-expect-error bootstrap is defined on global scope
+        this.regionModal = new bootstrap.Modal(modalElem);
+        this.regionModal?.show();
       });
     }
   }

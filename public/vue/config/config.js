@@ -58,6 +58,7 @@ export const COOKIE_LAST_RADIO_STREAM_PLAYED = `${COOKIE_PREFIX}-stream-lastplay
 export const COOKIE_PREV_RADIO_PLAYED = `${COOKIE_PREFIX}-prevplayed`;
 export const COOKIE_PREV_RADIO_STREAM_PLAYED = `${COOKIE_PREFIX}-stream-prevplayed`;
 export const COOKIE_RADIO_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
+export const COOKIE_SUBRADIOS = `${COOKIE_PREFIX}-subradios`;
 export const COOKIE_STREAM_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}_streams`;
 export const COOKIE_STREAM_COUNTRY = `${COOKIE_PREFIX}-stream-country-3`;
 export const COOKIE_STREAM_SORT = `${COOKIE_PREFIX}-stream-sort-3`;
@@ -143,6 +144,8 @@ export const GTAG_ACTION_FAVORITE_TOGGLE_VALUE = 2;
 export const GTAG_ACTION_PROGRAM_DETAIL = 'program_detail';
 export const GTAG_ACTION_PROGRAM_DETAIL_VALUE = 1;
 
+export const GTAG_ACTION_REGION_VALUE = 1;
+
 // categories
 
 export const GTAG_CATEGORY_SCHEDULE = 'schedule';
@@ -173,6 +176,11 @@ export const GTAG_ACTION_TIMER_SET = 'timer_set';
 export const GTAG_ACTION_TIMER_QUICK_SET = 'timer_quick_set';
 export const GTAG_ACTION_TIMER_ADD = 'timer_add';
 export const GTAG_ACTION_TIMER_CANCEL = 'timer_cancel';
+
+// region
+
+export const GTAG_ACTION_REGION_CLICK = 'region_click';
+export const GTAG_ACTION_REGION_SELECT = 'region_select';
 
 // set home
 

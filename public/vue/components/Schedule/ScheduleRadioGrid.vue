@@ -33,6 +33,7 @@ import { NAV_MOVE_BY } from '@/config/config';
 
 /* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
+import { useUserStore } from '@/stores/userStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 
 import type { ScheduleOfSubRadio } from '@/types/schedule';
@@ -59,13 +60,19 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useGlobalStore, ['isLoading']),
-    ...mapState(useScheduleStore, { radios: 'rankedRadios', displayNoSchedule: 'hasSchedule' }),
+    ...mapState(useUserStore, { userSubRadios: 'subRadios' }),
+    ...mapState(useScheduleStore, {
+      allRadios: 'radios',
+      radios: 'rankedRadios',
+      displayNoSchedule: 'hasSchedule'
+    }),
     ...mapState(useScheduleStore, [
       'schedule',
       'gridIndexTransform',
       'scrollClick',
       'swipeClick',
-      'currentCollection'
+      'currentCollection',
+      'getSubRadio'
     ]),
     styleObject() {
       const styleObject: any = {
@@ -84,14 +91,16 @@ export default defineComponent({
   /* @note scroll inspired by https://codepen.io/pouretrebelle/pen/cxLDh */
   methods: {
     ...mapActions(useScheduleStore, ['scroll', 'setScrollClick', 'setSwipeClick']),
-    getSchedule(radioCodeName: string): ScheduleOfSubRadio {
-      return (this.schedule[radioCodeName]
-        && this.schedule[radioCodeName][radioCodeName])
-          ? this.schedule[radioCodeName][radioCodeName] : {};
+    getSchedule(radioCodeName: string): ScheduleOfSubRadio | Record<string, never> {
+      if (!this.schedule[radioCodeName]) {
+        return {};
+      }
+
+      const subRadioCodeName = this.getSubRadio(radioCodeName).code_name;
+      return this.schedule[radioCodeName][subRadioCodeName];
     },
     hasSchedule(radioCodeName: string): boolean {
-      return (this.schedule[radioCodeName] && this.schedule[radioCodeName][radioCodeName]
-        && Object.keys(this.schedule[radioCodeName][radioCodeName]).length > 0) || false;
+      return Object.keys(this.getSchedule(radioCodeName)).length > 0;
     },
     onSwipe(event: Event) {
       this.setSwipeClick(true);

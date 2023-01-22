@@ -143,7 +143,7 @@ export const usePlayerStore = defineStore('player', {
       const stream = ScheduleUtils.getStreamFromCodeName(streamCodeName, radio);
 
       if (stream !== null) {
-        cookies.set(config.COOKIE_LAST_RADIO_PLAYED, radio);
+        cookies.set(config.COOKIE_LAST_RADIO_PLAYED, PlayerUtils.reduceRadioSize(radio));
         cookies.set(config.COOKIE_LAST_RADIO_STREAM_PLAYED, stream.code_name);
 
         this.setPrevious({ radio, streamCodeName: stream.code_name });

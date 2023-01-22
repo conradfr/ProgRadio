@@ -42,6 +42,7 @@ defmodule ProgRadioApi.SongProvider.RadioScoop do
         |> DateTime.from_iso8601()
 
       duration_raw = Map.get(data, "time")
+
       {duration_seconds, _} =
         Regex.named_captures(~r/T(?<duration>.*)\+/, duration_raw)
         |> Map.get("duration")

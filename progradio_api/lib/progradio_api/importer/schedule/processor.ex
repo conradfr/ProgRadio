@@ -28,6 +28,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Processor do
          date when not is_nil(date) <-
            Timex.parse!(payload["date"], @date_format) |> Timex.to_date() do
       shows = Builder.build(payload["items"], radio, sub_radio)
+
       Store.persist(shows, radio, sub_radio, date)
 
       {:ok, date, radio.code_name, sub_radio.code_name}

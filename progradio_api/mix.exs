@@ -55,7 +55,7 @@ defmodule ProgRadioApi.MixProject do
       {:remote_ip, "~> 1.0.0"},
       {:dns, "~> 2.2.0"},
       {:quantum, "~> 3.5.0"},
-      {:redix, ">= 0.0.0 and < 1.2.0"},
+      {:redix, ">= 0.0.0"},
       {:mogrify, "~> 0.8.0"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:broadway, "~> 1.0.0"},

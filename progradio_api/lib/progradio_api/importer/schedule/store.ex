@@ -53,6 +53,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Store do
         case ScheduleEntry
              |> Repo.get_by(%{
                radio_id: radio.id,
+               sub_radio_id: sub_radio.id,
                date_time_start: head["date_time_start"],
                date_time_end: head["date_time_end"]
              }) do

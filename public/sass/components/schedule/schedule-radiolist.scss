@@ -125,6 +125,37 @@
     }
   }
 
+  .radio-subradio {
+    //z-index: 4;
+    position: absolute;
+    top: 5px;
+    left: 64px;
+
+    height: 1.231rem;
+    width: 1.154rem;
+    line-height: 0.692rem;
+    font-size: 0.692rem;
+
+    padding: 4px 1px 0 4px;
+    background-color: $radio-list-background;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+
+    opacity: 0.95;
+
+    transition: left 75ms ease-in-out 50ms, opacity 75ms;
+
+    i {
+      color: $white;
+      font-size: 0.692rem;
+    }
+
+    &:hover {
+      left: 68px;
+      opacity: 1;
+    }
+  }
+
   .radio-list-one-wrapper-hover {
     .radio-submenu {
       //display: block;
@@ -276,3 +307,8 @@
     }
   }
 }
+
+.pick-sub-radio-one {
+  border: 1px solid $program-border-color;
+}
+

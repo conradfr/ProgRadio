@@ -3,4 +3,5 @@ export interface SubRadio {
   name: string
   main: boolean
   enabled: boolean
+  radio_stream: string
 }
