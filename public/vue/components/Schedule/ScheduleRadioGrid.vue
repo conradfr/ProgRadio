@@ -97,6 +97,11 @@ export default defineComponent({
       }
 
       const subRadioCodeName = this.getSubRadio(radioCodeName).code_name;
+
+      if (!this.schedule[radioCodeName][subRadioCodeName]) {
+        return {};
+      }
+
       return this.schedule[radioCodeName][subRadioCodeName];
     },
     hasSchedule(radioCodeName: string): boolean {

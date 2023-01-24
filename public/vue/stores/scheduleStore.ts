@@ -87,7 +87,7 @@ export const useScheduleStore = defineStore('schedule', {
     radioForRegionModal: null
   }),
   getters: {
-    hasSchedule: state => Object.keys(state.schedule).length > 0,
+    hasSchedule: state => state.schedule !== undefined && Object.keys(state.schedule).length > 0,
     cursorIndex: (state): string => {
       const startDay = state.cursorTime.startOf('day');
       const newIndex = state.cursorTime.diff(startDay).as('minutes') * config.MINUTE_PIXEL + 1;
