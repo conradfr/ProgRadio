@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
-// import { createApp } from 'https://unpkg.com/petite-vue@0.4.0/dist/petite-vue.es.js';
+// import { createApp } from 'https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.es.js';
 import { createApp } from '../../public/vue/utils/petite-vue.es';
 import { Socket } from '../js/phoenix';
 
@@ -38,6 +38,7 @@ const loadHls = () => {
 };
 
 const updateListeningSession = (radioId, dateTimeStart, sessionId) => {
+
   if (dateTimeStart === undefined || dateTimeStart === null) {
     return;
   }
@@ -105,7 +106,6 @@ createApp({
     this.radioId = codeName;
     this.sessionId = null;
     this.playerStart = new Date();
-    let startPlayPromise;
 
     if (streamingUrl.indexOf('.m3u8') !== -1) {
       loadHls().then(() => {
@@ -117,7 +117,9 @@ createApp({
           this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
             this.hls.loadSource(streamingUrl);
             this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              startPlayPromise = window.audio.play();
+              window.audio.play().then(() => {
+                this.playingStarted();
+              });
             });
           });
         }
@@ -127,32 +129,9 @@ createApp({
         ? `${streamsProxy}?stream=${streamingUrl}` : streamingUrl;
 
       window.audio = new Audio(`${streamUrl}`);
-      startPlayPromise = window.audio.play();
-    }
-
-    if (startPlayPromise !== undefined) {
-      startPlayPromise.then(() => {
-        window.audio.addEventListener('timeupdate', () => {
-          this.lastUpdated = new Date();
-        });
-
-        this.lastUpdated = new Date();
-        this.playingStart = new Date();
-
-        if (topic !== undefined && topic !== null && topic !== '') {
-          this.connectSocket();
-          this.joinChannel(topic);
-        }
-
-        this.listeningInterval = setInterval(() => {
-          updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((data) => {
-            if (data.id !== null) {
-              this.sessionId = data.id;
-              this.playingStart = new Date(data.date_time_start);
-            }
-          });
-        }, LISTENING_INTERVAL);
-      }).catch(() => this.stop());
+      window.audio.play().then(() => {
+        this.playingStarted();
+      });
     }
   },
   stop() {
@@ -186,6 +165,29 @@ createApp({
     this.sessionId = null;
     this.playingStart = null;
   },
+  playingStarted() {
+    this.lastUpdated = new Date();
+    this.playingStart = new Date();
+
+    // For some reason the interval was not set when the code was at the end of this function
+    this.listeningInterval = setInterval(() => {
+      updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((data) => {
+        if (data.id !== null) {
+          this.sessionId = data.id;
+          this.playingStart = new Date(data.date_time_start);
+        }
+      });
+    }, LISTENING_INTERVAL);
+
+    window.audio.addEventListener('timeupdate', () => {
+      this.lastUpdated = new Date();
+    });
+
+    if (topic !== undefined && topic !== null && topic !== '') {
+      this.connectSocket();
+      this.joinChannel(topic);
+    }
+  },
   connectSocket() {
     if (this.socket !== null) {
       return;
@@ -202,7 +204,7 @@ createApp({
     this.channel = this.socket.channel(topic, {});
 
     this.channel.join()
-      .receive("error", resp => {
+      .receive('error', resp => {
         this.song = null;
         this.channel = null;
       })
