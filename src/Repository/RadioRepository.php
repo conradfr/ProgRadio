@@ -83,21 +83,23 @@ class RadioRepository extends EntityRepository
     }
 
     public function getAllCodename($filterbyActive = true): array {
-        $queryString = 'SELECT r.codeName' . PHP_EOL
-                        . 'FROM App:Radio r' . PHP_EOL;
+        $qb = $this->createQueryBuilder('r');
+
+        $qb->select('r.codeName, GROUP_CONCAT(sr.codeName) as sub_radios')
+            ->innerJoin('r.subRadios', 'sr')
+            ->groupBy('r.codeName');
 
         if ($filterbyActive) {
-            $queryString .= ' WHERE r.active = TRUE'.PHP_EOL;
+            $qb->where('r.active = true')
+               ->andWhere('sr.enabled = true');
         }
 
-        $query = $this->getEntityManager()->createQuery(
-            $queryString
-        );
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_RADIO_TTL);
 
-        $query->setResultCacheLifetime(self::CACHE_RADIO_TTL);
         $result = $query->getResult();
 
-       return array_column($result, 'codeName');
+        return array_column($result, 'sub_radios', 'codeName');
     }
 
     public function getNameAndShares(): array

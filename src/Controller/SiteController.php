@@ -62,7 +62,7 @@ class SiteController extends AbstractController
         return $this->render('default/faq.html.twig',
             [
                 'radios' => $radios,
-                'collections' => $collections
+                'collections' => $collections,
             ]
         );
     }
@@ -95,7 +95,7 @@ class SiteController extends AbstractController
                 ->context([
                     'name' => $contact->getName(),
                     'contact_email' => $contact->getEmail(),
-                    'message' => $contact->getMessage()
+                    'message' => $contact->getMessage(),
                 ]);
 
             $mailer->send($email);
@@ -188,8 +188,17 @@ class SiteController extends AbstractController
                 $radios = $em->getRepository(Radio::class)->getAllCodename();
 
                 $savedRouteAppDefault = $router->getRouteCollection()->get('radio.'.$locale)->getDefaults();
-                foreach ($radios as $radio) {
+                /** @var Radio $radio */
+                foreach ($radios as $radio => $subRadiosString) {
+                    $subRadios = explode(',', $subRadiosString);
                     $xml .= $this->getEntryXml($host, $request,'radio', $router->getRouteCollection()->get('radio.'.$locale), $locale,  ['codeName' => $radio]);
+
+                    if (count($subRadios) > 1) {
+                        foreach ($subRadios as $subRadio) {
+                            $xml .= $this->getEntryXml($host, $request,'radio_subradio', $router->getRouteCollection()->get('radio.'.$locale), $locale,  ['codeName' => $radio, 'subRadioCodeName' => $subRadio]);
+                        }
+                    }
+
                     // spa radio page
                     $routeApp = $router->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
                     $xml .= $this->getEntryXml($host, $request,'app', $routeApp, $locale);
