@@ -11,7 +11,7 @@ defmodule ProgRadioApi.Radios do
   alias ProgRadioApi.{Radio, SubRadio, RadioStream, Category, Collection, ApiKey, ApiKeyRadio}
 
   # stream retries before considering it disabled
-  @retries_max 12
+  @retries_max 56
 
   # one week
   @cache_ttl_default 604_800_000
@@ -86,8 +86,9 @@ defmodule ProgRadioApi.Radios do
           e when is_nil(e.stream_code_name) ->
             radio
 
-          e when e.stream_status == false and e.stream_retries > @retries_max ->
-            radio
+            # disabled temporarily while investigating how that affects subradios
+#          e when e.stream_status == false and e.stream_retries > @retries_max ->
+#            radio
 
           e ->
             stream = %{

@@ -16,6 +16,7 @@
             <h4>{{ capitalizedDate }}</h4>
           </div>
         </div>
+
         <div class="row">
           <div class="col-md-12 mb-2 mt-2 mt-sm-0 text-center text-sm-start">
             <router-link v-if="collection"
@@ -24,6 +25,22 @@
             </router-link>
           </div>
         </div>
+
+        <div v-if="hasSubRadios" class="row">
+          <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
+            <ul class="nav nav-tabs">
+              <li v-for="sub_radio in radio.sub_radios" :key="sub_radio.code_name"
+                class="nav-item" >
+                <a class="nav-link" href="#"
+                  :class="{ 'active': currentSubRadioCodeName === sub_radio.code_name}"
+                  :ariaSelected="currentSubRadioCodeName === sub_radio.code_name ? 'true' : 'false'"
+                   v-on:click="regionClick(sub_radio.code_name)"
+                >{{ sub_radio.name }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
             <a href="#media-current">{{ $t('message.radio_page.current') }}</a>
@@ -48,7 +65,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState, mapStores } from 'pinia';
+import { mapActions, mapState, mapStores } from 'pinia';
 // import { useI18n } from 'vue-i18n';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
@@ -62,7 +79,10 @@ import { useUserStore } from '@/stores/userStore';
 import {
   TIMEZONE,
   COLLECTION_ALL,
-  THUMBNAIL_PAGE_PATH
+  THUMBNAIL_PAGE_PATH,
+  GTAG_ACTION_REGION_SELECT,
+  GTAG_ACTION_REGION_VALUE,
+  GTAG_CATEGORY_SCHEDULE
 } from '@/config/config';
 
 import type { Radio } from '@/types/radio';
@@ -125,8 +145,22 @@ export default defineComponent({
     ...mapState(useScheduleStore, { storeSchedule: 'schedule' }),
     ...mapState(
       useScheduleStore,
-      ['radios', 'collections', 'currentCollection', 'hasSchedule']
+      ['radios', 'collections', 'currentCollection', 'hasSchedule', 'getSubRadio']
     ),
+    hasSubRadios() {
+      if (this.radio === null) {
+        return false;
+      }
+
+      return Object.keys(this.radio.sub_radios).length > 1;
+    },
+    currentSubRadioCodeName() {
+      if (this.radio === null) {
+        return null;
+      }
+
+      return this.getSubRadio(this.radio.code_name).code_name;
+    },
     radio(): Radio|null {
       if (this.$route.params.radio === undefined || this.$route.params.radio === null) {
         return null;
@@ -138,9 +172,16 @@ export default defineComponent({
         : this.radios[this.$route.params.radio];
     },
     schedule(): Schedule|[] {
-      if (this.hasSchedule === true) {
+      if (this.hasSchedule === true
+          && this.$route.params.radio
+          && this.currentSubRadioCodeName
+          && this.storeSchedule[this.$route.params.radio as string]
+          && this.storeSchedule[this.$route.params.radio as string][this.currentSubRadioCodeName]) {
         // @ts-ignore
-        return orderBy(this.storeSchedule[this.$route.params.radio], ['start_at'], ['asc']);
+        return orderBy(this.storeSchedule[this.$route.params.radio][this.currentSubRadioCodeName],
+          ['start_at'],
+          ['asc']
+        );
       }
 
       return [];
@@ -179,8 +220,22 @@ export default defineComponent({
     }
   },
   methods: {
+    ...mapActions(useUserStore, ['setSubRadio']),
     click() {
       this.globalStore.setLoading(true);
+    },
+    regionClick(subRadioCodeName: string) {
+      if (this.radio === null) {
+        return;
+      }
+
+      (this as any).$gtag.event(GTAG_ACTION_REGION_SELECT, {
+        event_category: GTAG_CATEGORY_SCHEDULE,
+        event_label: this.radio?.code_name,
+        value: GTAG_ACTION_REGION_VALUE
+      });
+
+      this.setSubRadio(this.radio.code_name, subRadioCodeName);
     }
   }
 });

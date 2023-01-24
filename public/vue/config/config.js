@@ -29,7 +29,7 @@ export const RADIO_LIST_IGNORE_COUNTRY = 'FR';
 
 export const LIVE_SONG_ALL_CHANNEL = 'songs';
 
-export const CACHE_KEY_RADIOS = 'radios';
+export const CACHE_KEY_RADIOS = 'radios_v2';
 export const CACHE_KEY_COLLECTIONS = 'collections';
 export const CACHE_KEY_CATEGORIES = 'categories';
 export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites';
