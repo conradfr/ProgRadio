@@ -109,6 +109,14 @@ class RadioStream
      */
     private $streams;
 
+    /**
+     * @var SubRadio
+     *
+     * @ORM\OneToOne(targetEntity=SubRadio::class)
+     * @ORM\JoinColumn(name="sub_radio_id", referencedColumnName="id")
+     */
+    private $subRadio;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
         $this->streams = new ArrayCollection();
@@ -147,6 +155,16 @@ class RadioStream
     public function setRadio(Radio $radio): void
     {
         $this->radio = $radio;
+    }
+
+    public function getSubRadio(): SubRadio
+    {
+        return $this->subRadio;
+    }
+
+    public function setSubRadio(SubRadio $subRadio): void
+    {
+        $this->subRadio = $subRadio;
     }
 
     public function getUrl(): string
@@ -244,4 +262,5 @@ class RadioStream
     {
         $this->currentSongRetries = $currentSongRetries;
     }
+
 }

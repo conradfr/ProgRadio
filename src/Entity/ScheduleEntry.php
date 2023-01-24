@@ -88,6 +88,14 @@ class ScheduleEntry
      */
     private $pictureUrl;
 
+    /**
+     * @var SubRadio
+     *
+     * @ORM\ManyToOne(targetEntity=SubRadio::class)
+     * @ORM\JoinColumn(name="sub_radio_id", referencedColumnName="id")
+     */
+    private $subRadio;
+
     public function __construct() {
         $this->sectionEntries = new ArrayCollection();
     }
@@ -210,5 +218,15 @@ class ScheduleEntry
         $this->sectionEntries = $sectionEntries;
 
         return $this;
+    }
+
+    public function getSubRadio(): SubRadio
+    {
+        return $this->subRadio;
+    }
+
+    public function setSubRadio(SubRadio $subRadio): void
+    {
+        $this->subRadio = $subRadio;
     }
 }

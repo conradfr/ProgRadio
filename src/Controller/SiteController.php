@@ -189,7 +189,7 @@ class SiteController extends AbstractController
 
                 $savedRouteAppDefault = $router->getRouteCollection()->get('radio.'.$locale)->getDefaults();
                 foreach ($radios as $radio) {
-                    $xml .= $this->getEntryXml($host, $request,'radio', $router->getRouteCollection()->get('radio.'.$locale), $locale,  ['codename' => $radio]);
+                    $xml .= $this->getEntryXml($host, $request,'radio', $router->getRouteCollection()->get('radio.'.$locale), $locale,  ['codeName' => $radio]);
                     // spa radio page
                     $routeApp = $router->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
                     $xml .= $this->getEntryXml($host, $request,'app', $routeApp, $locale);

@@ -24,7 +24,7 @@ class ScheduleEntryRepository extends EntityRepository
             $codeName = $row['codeName'];
             unset($row['codeName']);
 
-            // if schedule does not exists add it
+            // if schedule does not exist add it
             if (!isset($export[$codeName][$row['hash']])) {
                 $export[$codeName][$row['hash']] = $row;
             }
@@ -62,7 +62,7 @@ class ScheduleEntryRepository extends EntityRepository
             if (!isset($export[$collectionCodeName][$codeName])) {
                 $radioData = [
                     'codeName' => $codeName,
-                    'name' => $row['radio_name'],
+                    'name' => $row['radio_stream_name'],
                     'share' => $row['radio_share'],
                     'streamingUrl' => $row['streaming_url']
                 ];
@@ -88,6 +88,8 @@ class ScheduleEntryRepository extends EntityRepository
      * Get stats for each day of the last 7 days with total shows per radio
      * and the difference with the same day the week before
      *
+     * @todo update to support subradios
+     *
      * @throws \Exception
      */
     public function getStatsByDayAndRadio(): array
@@ -108,10 +110,12 @@ class ScheduleEntryRepository extends EntityRepository
         
             from schedule_entry se
                 inner join radio r on r.id = se.radio_id
+                inner join sub_radio sr on se.sub_radio_id = sr.id
                 left join section_entry e on se.id = e.schedule_entry_id
                 
             where se.date_time_start <= :todayTime AT TIME ZONE 'UTC'
                 and se.date_time_start >= :twoWeeksTime AT TIME ZONE 'UTC'
+                and sr.main = true
         
             GROUP BY r.id, 3
         )
@@ -211,6 +215,7 @@ EOT;
            ->from('App:ScheduleEntry', 'se')
            ->innerJoin('se.radio', 'r')
            ->leftJoin('se.sectionEntries', 'sc')
+           ->leftJoin('se.subRadio', 'sr')
            ->where(
                '(TIMEZONE(\'UTC\', se.dateTimeStart) >= :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeStart) < :datetime_end)'
                     . 'OR (TIMEZONE(\'UTC\', se.dateTimeEnd) > :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeEnd) <= :datetime_end)')
@@ -227,13 +232,22 @@ EOT;
 
         if ($scheduleResource->getType() === ScheduleResource::TYPE_RADIO) {
             $qb->andWhere('r.codeName = :radio')
-                ->setParameter('radio', $scheduleResource->getValue());
+               ->setParameter('radio', $scheduleResource->getValue());
+
+            if ($scheduleResource->getSubValue() !== null) {
+                $qb->andWhere('sr.id = :subRadioId')
+                   ->setParameter('subRadioId', $scheduleResource->getSubValue()->getId());
+            } else {
+                $qb->andWhere('sr.main = true');
+            }
         } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_RADIOS) {
             $qb->andWhere('r.codeName IN (:radios)')
-                ->setParameter('radios', $scheduleResource->getValue());
+               ->andWhere('sr.main = true')
+               ->setParameter('radios', $scheduleResource->getValue());
         } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_COLLECTION) {
             $qb->innerJoin('r.collection', 'c')
                ->andWhere('c.codeName = :collection')
+               ->andWhere('sr.main = true')
                ->setParameter('collection', $scheduleResource->getValue());
         }
 
@@ -250,7 +264,7 @@ EOT;
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
-            ->addSelect('r.name as radio_name, r.share as radio_share, rs.url as streaming_url, c.codeName as collectionCodeName')
+            ->addSelect('r.name as radio_name, r.share as radio_share, rs.name as radio_stream_name, rs.url as streaming_url, c.codeName as collectionCodeName')
            ->from('App:ScheduleEntry', 'se')
            ->innerJoin('se.radio', 'r')
             ->leftJoin('r.streams', 'rs')

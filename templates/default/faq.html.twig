@@ -15,7 +15,7 @@
 
                 {% for radioCodeName in collection.radios %}
                     {% if radios[radioCodeName] is defined  %}
-                        <a href="{{ path('radio', {'codename': radios[radioCodeName].code_name}) }}">{{ radios[radioCodeName].name }}</a>{% if not loop.last %}, {% else %}.{% endif %}
+                        <a href="{{ path('radio', {'codeName': radios[radioCodeName].code_name}) }}">{{ radios[radioCodeName].name }}</a>{% if not loop.last %}, {% else %}.{% endif %}
                     {% endif %}
                 {% endfor %}
             </p>

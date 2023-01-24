@@ -37,7 +37,7 @@
                     {% for entry in schedule[entry_collection.code_name] %}
                         <div class="row mb-4 pb-2 border-bottom">
                             <div class="col-2 col-md-1">
-                                <a class="spa-link" href="{{ path('radio', {'codename': entry.radio.codeName}) }}">
+                                <a class="spa-link" href="{{ path('radio', {'codeName': entry.radio.codeName}) }}">
                                     <img class="img-fluid" title="{{ entry.radio.name }}" alt="{{ entry.radio.name }}" src="{{ asset('img/radio/page/' ~ entry.radio.codeName ~ '.png') }}">
                                 </a>
                                 {% if entry.radio.streamingUrl is not null %}
@@ -77,7 +77,7 @@
                                     <div>
                                         <h6 class="fw-bold">{{ entry.show.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }}-{{ entry.show.end_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ entry.show.title }}</h6>
                                         {% if entry.show.host %}
-                                            <div> {{ entry.show.host }}</div>
+                                            <div class="mb-1"> {{ entry.show.host }}</div>
                                         {% endif %}
                                         {% if entry.show.description %}
                                             <p class="fw-light">{{ entry.show.description | nl2br  }}</p>

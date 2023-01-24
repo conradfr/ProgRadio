@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as Doctrinecollection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RadioRepository;
 
@@ -110,8 +111,17 @@ class Radio
      */
     private $streams;
 
+
+    /**
+     * @var SubRadio[]
+     *
+     * @ORM\OneToMany(targetEntity=SubRadio::class, mappedBy="radio")
+     */
+    private $subRadios;
+
     public function __construct() {
         $this->streams = new ArrayCollection();
+        $this->subRadios = new ArrayCollection();
     }
 
     public function getId(): int
@@ -194,12 +204,12 @@ class Radio
         $this->active = $active;
     }
 
-    public function getStreams(): ArrayCollection
+    public function getStreams(): Doctrinecollection
     {
         return $this->streams;
     }
 
-    public function setStreams(ArrayCollection $streams): void
+    public function setStreams(Doctrinecollection $streams): void
     {
         $this->streams = $streams;
     }
@@ -213,6 +223,16 @@ class Radio
         }
 
         return null;
+    }
+
+    public function getSubRadios(): Doctrinecollection
+    {
+        return $this->subRadios;
+    }
+
+    public function setSubRadios(Doctrinecollection $subRadios): void
+    {
+        $this->subRadios = $subRadios;
     }
 
     public function getDescriptionFr(): ?string

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
+use App\Entity\SubRadio;
+
 class ScheduleResource
 {
     public const TYPE_RADIO = 'radio';
@@ -19,7 +21,8 @@ class ScheduleResource
     public function __construct(
         protected \DateTime $dateTime,
         protected ?string $type=null,
-        protected string|array|null $value=null
+        protected string|array|null $value=null,
+        protected SubRadio|null $subValue=null
     ) {
         if ($type !== null && !in_array($type, self::TYPES)) {
             throw new \BadMethodCallException('Not allowed type');
@@ -30,6 +33,10 @@ class ScheduleResource
         }
 
         if ($type !== null && $type !== self::TYPE_RADIOS && !is_string($value)) {
+            throw new \BadMethodCallException('Wrong value type');
+        }
+
+        if ($type !== null && $type !== self::TYPE_RADIO && $subValue !== null) {
             throw new \BadMethodCallException('Wrong value type');
         }
     }
@@ -48,4 +55,9 @@ class ScheduleResource
     {
         return $this->value;
     }
+    public function getSubValue(): SubRadio|null
+    {
+        return $this->subValue;
+    }
+
 }

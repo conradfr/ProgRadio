@@ -46,7 +46,7 @@ class RadioRepository extends EntityRepository
             unset($radio['id']);
             return $radio;
         } , $resultRadios);
-        
+
         foreach ($radioStreamsResult as $radioStream) {
             $resultRadios[$radioStream['radio_code_name']]['streams'][$radioStream['code_name']] = [
                 'code_name' => $radioStream['code_name'],
@@ -56,7 +56,7 @@ class RadioRepository extends EntityRepository
                 'current_song' => $radioStream['current_song']
             ];
         }
-        
+
         return $resultRadios;
     }
 
@@ -98,27 +98,6 @@ class RadioRepository extends EntityRepository
         $result = $query->getResult();
 
        return array_column($result, 'codeName');
-    }
-
-    public function getAllActiveRadioCodenameOfCollection(string $collection): array {
-        $query = $this->getEntityManager()->createQuery(
-            "SELECT r.codeName
-                FROM App:Radio r
-                  INNER JOIN r.collection cl
-                WHERE r.active = :active
-                  AND cl.codeName = :collection 
-            "
-        );
-
-        $query->setParameters([
-            'active' => true,
-            'collection' => $collection
-        ]);
-
-        $query->enableResultCache(self::CACHE_RADIO_TTL, self::CACHE_RADIO_ACTIVE_ID . '_' . $collection);
-        $result = $query->getResult();
-
-        return array_column($result, 'codeName');
     }
 
     public function getNameAndShares(): array

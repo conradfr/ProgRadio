@@ -5,28 +5,24 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Affiliate;
-use App\Entity\RadioStream;
 use App\Entity\Stream;
 use App\Service\Host;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
+use App\Entity\SubRadio;
 use App\Entity\Category;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
-use Darsyn\IP\Version\Multi;
 use Doctrine\ORM\EntityManagerInterface;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Intl\Countries;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use App\Entity\ListeningSession;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -85,11 +81,11 @@ class DefaultController extends AbstractBaseController
 
     /**
      * @Route({
-     *     "en": "/{_locale}/schedule-streaming-{codename}/{date?}",
-     *     "fr": "/{_locale}/grille-ecouter-{codename}/{date?}",
-     *     "es": "/{_locale}/escuchar-{codename}/{date?}",
+     *     "en": "/{_locale}/schedule-streaming-{codeName}-{subRadioCodeName}/{date?}",
+     *     "fr": "/{_locale}/grille-ecouter-{codeName}-{subRadioCodeName}/{date?}",
+     *     "es": "/{_locale}/escuchar-{codeName}-{subRadioCodeName}/{date?}",
      * },
-     *     name="radio",
+     *     name="radio_subradio",
      *     defaults={
      *      "priority": "0.8",
      *      "changefreq": "daily"
@@ -99,27 +95,32 @@ class DefaultController extends AbstractBaseController
      * @ParamConverter("date", options={"format": "Y-m-d"})
      * @throws \Exception
      */
-    public function radio(string $codename, \DateTime $date=null, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
+    public function radioSubRadio(string $codeName, string $subRadioCodeName, \DateTime $date=null, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
     {
         if ($date === null) {
             $date = new \DateTime();
         }
 
         /** @var Radio $radio */
-        $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codename, 'active' => true]);
+        $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName, 'active' => true]);
         if (!$radio) {
             throw new NotFoundHttpException('Radio not found');
         }
 
-        $stream = $em->getRepository(RadioStream::class)->getMainStreamOfRadio($radio->getId());
+        /** @var SubRadio $subRadio */
+        $subRadio = $em->getRepository(SubRadio::class)->findOneBy(['codeName' => $subRadioCodeName, 'enabled' => true]);
+        if (!$subRadio) {
+            throw new NotFoundHttpException('Radio not found');
+        }
+
         $moreRadios = $em->getRepository(Radio::class)->getMoreRadiosFrom($radio);
         $moreRadios2 = $em->getRepository(Radio::class)->getMoreRadiosFrom($radio, true);
 
-        $schedule = $scheduleManager->getDayScheduleOfRadio($date, $codename);
+        $schedule = $scheduleManager->getDayScheduleOfRadio($date, $codeName, $subRadio);
         $scheduleRadio = [];
 
-        if (isset($schedule[$codename])) {
-            $scheduleRadio = $schedule[$codename];
+        if (isset($schedule[$codeName])) {
+            $scheduleRadio = $schedule[$codeName];
         }
 
         // not ideal as we do the full sql queries, but at least it will put it in cache,
@@ -134,7 +135,7 @@ class DefaultController extends AbstractBaseController
         if ($date->format('Y-m-d') === self::MIN_DATE) {
             $prevSchedule = null;
         } else {
-            $prevSchedule = $scheduleManager->getDayScheduleOfRadio($prevDate, $codename);
+            $prevSchedule = $scheduleManager->getDayScheduleOfRadio($prevDate, $codeName);
         }
 
         // don't go after tomorrow, we don't have the data
@@ -142,13 +143,13 @@ class DefaultController extends AbstractBaseController
         if ($date->format('Y-m-d') === $tomorrow->format('Y-m-d')) {
             $nextSchedule = null;
         } else {
-            $nextSchedule = $scheduleManager->getDayScheduleOfRadio($nextDate, $codename);
+            $nextSchedule = $scheduleManager->getDayScheduleOfRadio($nextDate, $codeName);
         }
 
         return $this->render('default/radio.html.twig', [
             'schedule' => $scheduleRadio,
             'radio' => $radio,
-            'stream_url' => $stream !== null ? $stream['url'] : null,
+            'sub_radio' => $subRadio,
             'date' => $date,
             'prev_date' => $prevDate,
             'next_date' => $nextDate,
@@ -157,6 +158,40 @@ class DefaultController extends AbstractBaseController
             'more_radios' => $moreRadios,
             'more_radios2' => $moreRadios2
         ]);
+    }
+
+    /**
+     * @Route({
+     *     "en": "/{_locale}/schedule-streaming-{codeName}/{date?}",
+     *     "fr": "/{_locale}/grille-ecouter-{codeName}/{date?}",
+     *     "es": "/{_locale}/escuchar-{codeName}/{date?}",
+     * },
+     *     name="radio",
+     *     defaults={
+     *      "priority": "0.8",
+     *      "changefreq": "daily"
+     *      }
+     * )
+     *
+     * @ParamConverter("date", options={"format": "Y-m-d"})
+     * @throws \Exception
+     */
+    public function radio(string $codeName, \DateTime $date=null, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
+    {
+        /** @var Radio $radio */
+        $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName, 'active' => true]);
+        if (!$radio) {
+            throw new NotFoundHttpException('Radio not found');
+        }
+
+        /** @var SubRadio $subRadio */
+        $subRadio = $em->getRepository(SubRadio::class)->findOneBy(['radio' => $radio, 'main' => true, 'enabled' => true]);
+        if (!$subRadio) {
+            throw new NotFoundHttpException('Radio not found');
+        }
+
+        // We don't do a redirect to keep the url clean without the default subradio.
+        return $this->radioSubRadio($codeName, $subRadio->getCodeName(), $date, $em, $scheduleManager);
     }
 
     /**
