@@ -20,39 +20,29 @@ class StreamOverloading
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=500, nullable=true))
      */
-    private $name;
+    private ?string $name;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=500, nullable=true)
      */
-    private $img;
+    private ?string $img;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=500, nullable=true))
      */
-    private $streamUrl;
+    private ?string $streamUrl;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=2, nullable=true))
      */
-    private $countryCode;
+    private ?string $countryCode;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $website;
+    private ?string  $website;
 
 
     public function getId(): string
@@ -65,12 +55,12 @@ class StreamOverloading
         $this->id = $id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
@@ -80,37 +70,37 @@ class StreamOverloading
         return $this->img;
     }
 
-    public function setImg(string $img): void
+    public function setImg(?string $img): void
     {
         $this->img = $img;
     }
 
-    public function getStreamUrl(): string
+    public function getStreamUrl(): ?string
     {
         return $this->streamUrl;
     }
 
-    public function setStreamUrl(string $streamUrl): void
+    public function setStreamUrl(?string $streamUrl): void
     {
         $this->streamUrl = $streamUrl;
     }
 
-    public function getCountryCode(): string
+    public function getCountryCode(): ?string
     {
         return $this->countryCode;
     }
 
-    public function setCountryCode(string $countryCode): void
+    public function setCountryCode(?string $countryCode): void
     {
         $this->countryCode = $countryCode;
     }
 
-    public function getWebsite(): string
+    public function getWebsite(): ?string
     {
         return $this->website;
     }
 
-    public function setWebsite(string $website): void
+    public function setWebsite(?string $website): void
     {
         $this->website = $website;
     }

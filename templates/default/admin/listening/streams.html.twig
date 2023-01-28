@@ -25,9 +25,9 @@
                     </span>
                     <div class="row align-items-center">
                         <div class="col-md-3">
-                            <a target="_blank" href="{{ path('app') }}streaming/{{ one.id }}">
+                            <a target="_blank" href="{{ path('admin_overloading', {streamId: one.id}) }}">
                                 <img title="{{ one.name }}" alt="{{ one.name }}"
-                                        {% if one.img is null and one.radio_code_name is null %}
+                                {% if one.img is null and one.radio_code_name is null %}
                                     src="{{ asset('/img/stream-placeholder.png') }}"
                                 {% elseif one.radio_code_name is not null %}
                                     src="{{ asset('img/radio/schedule/' ~ one.radio_code_name ~ '.png') }}"
@@ -44,7 +44,9 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3">{{ one.total_sessions }}</div>
-                        <div class="col-md-5">{{ format.secondsToMinutes(one.total_seconds) }}</div>
+                        <div class="col-md-5">
+                            <a target="_blank" style="color: #666; text-decoration: none" href="{{ path('app') }}streaming/{{ one.id }}">{{ format.secondsToMinutes(one.total_seconds) }}</a>
+                        </div>
                     </div>
                     {% endif %}
                 </td>

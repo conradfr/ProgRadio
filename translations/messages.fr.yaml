@@ -7,6 +7,7 @@ menu:
     admin:
         dashboard: Tableau de bord
         listening: Écoutes
+        overloading: Stream Overloading
         shares: Parts de marché
     all: Toutes les radios
     app: App Android

@@ -8,10 +8,12 @@ use App\Entity\Collection;
 use App\Entity\ListeningSession;
 use App\Entity\Radio;
 use App\Entity\RadioStream;
+use App\Entity\StreamOverloading;
 use App\Entity\StreamSong;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
 use App\Form\SharesType;
+use App\Form\StreamOverloadingType;
 use App\Service\DateUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -157,6 +159,32 @@ class AdminController extends AbstractBaseController
             'dateRange' => $dateRange,
             'old_view' => $request->query->get('old', null) !== null
         ]);
+    }
+
+    #[Route('/admin/overloading/{streamId}', name: 'admin_overloading')]
+    public function streamOverloading(string $streamId, EntityManagerInterface $em, Request $request): Response
+    {
+        $streamOverloading = $em->getRepository(StreamOverloading::class)->find($streamId);
+
+        if (!$streamOverloading) {
+            $streamOverloading = new StreamOverloading();
+            $streamOverloading->setId($streamId);
+        }
+
+        $form = $this->createForm(StreamOverloadingType::class, $streamOverloading);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($form->getData());
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                "Stream overload has been updated."
+            );
+        }
+
+        return $this->render('default/admin/stream_overloading.html.twig',['form' => $form->createView()]);
     }
 
     /**
