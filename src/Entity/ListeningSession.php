@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ListeningSessionRepository;
+use App\Entity\RadioStream;
+use App\Entity\Stream;
 use Darsyn\IP\Version\Multi as IP;
 
 /**
@@ -28,13 +30,12 @@ class ListeningSession
     ];
 
     /**
-     * @var string
      *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $id;
+    private ?string $id = null;
 
     private ?string $type = null;
 
@@ -42,34 +43,28 @@ class ListeningSession
      * @ORM\ManyToOne(targetEntity=RadioStream::class, inversedBy="listeningSessions")
      * @ORM\JoinColumn(name="radio_stream_id", referencedColumnName="id")
      */
-    private $radioStream;
+    private ?RadioStream $radioStream = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Stream::class, inversedBy="listeningSessions")
      * @ORM\JoinColumn(name="stream_id", referencedColumnName="id")
      */
-    private $stream;
+    private ?Stream $stream = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime")
      */
-    private $dateTimeStart = null;
+    private ?\DateTime $dateTimeStart = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $dateTimeEnd;
+    private ?\DateTime $dateTimeEnd = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=30, nullable=true)
      */
-    private $source;
+    private ?string $source = null;
 
     /**
      * @ORM\Column(type="ip", nullable=true)

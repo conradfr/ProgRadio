@@ -84,7 +84,7 @@ class DefaultController extends AbstractBaseController
         )
     ]
     #[ParamConverter('date', options: ['format' => 'Y-m-d'])]
-    public function radioSubRadio(string $codeName, string $subRadioCodeName, \DateTime $date=null, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
+    public function radioSubRadio(string $codeName, string $subRadioCodeName, EntityManagerInterface $em, ScheduleManager $scheduleManager, \DateTime $date=null): Response
     {
         if ($date === null) {
             $date = new \DateTime();
@@ -167,7 +167,7 @@ class DefaultController extends AbstractBaseController
         )
     ]
     #[ParamConverter('date', options: ['format' => 'Y-m-d'])]
-    public function radio(string $codeName, \DateTime $date=null, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
+    public function radio(string $codeName, EntityManagerInterface $em, ScheduleManager $scheduleManager, \DateTime $date=null): Response
     {
         /** @var Radio $radio */
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName, 'active' => true]);
@@ -182,7 +182,7 @@ class DefaultController extends AbstractBaseController
         }
 
         // We don't do a redirect to keep the url clean without the default subradio.
-        return $this->radioSubRadio($codeName, $subRadio->getCodeName(), $date, $em, $scheduleManager);
+        return $this->radioSubRadio($codeName, $subRadio->getCodeName(), $em, $scheduleManager, $date);
     }
 
     #[
@@ -264,15 +264,11 @@ class DefaultController extends AbstractBaseController
 
         if ($user !== null) {
             $favorites = $user->getFavoriteRadios()->map(
-                function ($radio) {
-                    return $radio->getCodeName();
-                }
+                fn($radio) => $radio->getCodeName()
             )->toArray();
 
             $favoritesStream = $user->getFavoriteStreams()->map(
-                function ($stream) {
-                    return $stream->getId();
-                }
+                fn($stream) => $stream->getId()
             )->toArray();
 
         } else {
@@ -344,9 +340,7 @@ class DefaultController extends AbstractBaseController
 
         $schedule = $em->getRepository(ScheduleEntry::class)->getTimeSpecificSchedule($dateTime);
         $collections = $em->getRepository(Collection::class)->getCollections();
-        $collections = array_filter($collections, function($collection) {
-            return $collection['code_name'] !== Radio::FAVORITES;
-        });
+        $collections = array_filter($collections, fn($collection) => $collection['code_name'] !== Radio::FAVORITES);
 
         return $this->render('default/now.html.twig', [
             'schedule' => $schedule,
@@ -415,7 +409,7 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    public function index(string $collection=null, Request $request): Response
+    public function index(Request $request, string $collection=null): Response
     {
         return $this->render('default/index.html.twig', []);
     }

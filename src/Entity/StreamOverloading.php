@@ -11,38 +11,37 @@ use Doctrine\ORM\Mapping as ORM;
 class StreamOverloading
 {
     /**
-     * @var string
      *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $id;
+    private ?string $id = null;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=true))
      */
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=true)
      */
-    private ?string $img;
+    private ?string $img = null;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=true))
      */
-    private ?string $streamUrl;
+    private ?string $streamUrl = null;
 
     /**
      * @ORM\Column(type="string", length=2, nullable=true))
      */
-    private ?string $countryCode;
+    private ?string $countryCode = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private ?string  $website;
+    private ?string  $website = null;
 
 
     public function getId(): string

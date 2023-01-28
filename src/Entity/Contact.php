@@ -6,26 +6,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Contact
 {
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
-    private $name;
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\Email()
-     */
-    private $email;
+    #[Assert\Email]
+    private ?string $email = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
-    private $message;
+    #[Assert\NotBlank]
+    private ?string $message = null;
 
     public function setName(string $name): Contact
     {

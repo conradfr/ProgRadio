@@ -17,15 +17,9 @@ use Doctrine\ORM\Query\ResultSetMapping;
 
 class ListeningSessionRepository extends ServiceEntityRepository
 {
-    private $security;
-
-    public function __construct(Security $security, ManagerRegistry $registry)
+    public function __construct(private readonly Security $security, ManagerRegistry $registry)
     {
         parent::__construct($registry, Radio::class);
-
-        // Avoid calling getUser() in the constructor: auth may not
-        // be complete yet. Instead, store the entire Security object.
-        $this->security = $security;
     }
 
     public function getRadiosData($startDate, $endDate=null): array
@@ -162,8 +156,8 @@ class ListeningSessionRepository extends ServiceEntityRepository
         $resultIndexed = array_merge($baseResults, array_column($result, null, 'source'));
 
         foreach ($resultIndexed as &$row) {
-            $jsonRadios = is_array($row['list_radios']) ? $row['list_radios'] : json_decode($row['list_radios']);
-            $jsonStreams = is_array($row['list_streams']) ? $row['list_streams'] : json_decode($row['list_streams']);
+            $jsonRadios = is_array($row['list_radios']) ? $row['list_radios'] : json_decode((string) $row['list_radios'], null, 512, JSON_THROW_ON_ERROR);
+            $jsonStreams = is_array($row['list_streams']) ? $row['list_streams'] : json_decode((string) $row['list_streams'], null, 512, JSON_THROW_ON_ERROR);
             $row['list_radios'] =  array_column($jsonRadios, 'total', 'radio');
             $row['list_streams'] = array_column($jsonStreams, 'total', 'stream');
         }

@@ -11,29 +11,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Category
 {
     /**
-     * @var integer
      *
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100)
-     * @Groups({"export"})
      */
-    private $codeName;
+    #[Groups(['export'])]
+    private ?string $codeName = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100)
-     * @Groups({"export"})
      */
-    private $name;
+    #[Groups(['export'])]
+    private ?string $name = null;
 
     public function getId(): int
     {

@@ -50,7 +50,7 @@ class RadioBrowser
         }
 
         $serversAll = array_reduce($serversFromDns, function ($result, $record) {
-            $ip = isset($record['ip']) ? $record['ip'] : $record['ipv6'];
+            $ip = $record['ip'] ?? $record['ipv6'];
             $host = gethostbyaddr($ip);
 
             if ($host !== false) {

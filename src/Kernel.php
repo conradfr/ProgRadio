@@ -11,7 +11,7 @@ class Kernel extends BaseKernel
 
     public function getCacheDir(): string
     {
-        if (in_array($this->environment, array('dev', 'test'))) {
+        if (in_array($this->environment, ['dev', 'test'])) {
             return '/dev/shm/progradio/cache/' .  $this->environment;
         }
 
@@ -20,7 +20,7 @@ class Kernel extends BaseKernel
 
     public function getLogDir(): string
     {
-        if (in_array($this->environment, array('dev', 'test'))) {
+        if (in_array($this->environment, ['dev', 'test'])) {
             return '/dev/shm/progradio/logs';
         }
 

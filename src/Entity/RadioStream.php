@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\RadioStreamRepository;
+use App\Entity\Radio;
+use App\Entity\SubRadio;
 
 /**
  * @ORM\Entity(repositoryClass=RadioStreamRepository::class)
@@ -24,98 +26,78 @@ class RadioStream
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100)
      */
-    private $codeName;
+    private ?string $codeName = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100, nullable=false)
      */
-    private $name;
+    private ?string $name = null;
 
     /**
-     * @var Radio
      *
      * @ORM\ManyToOne(targetEntity=Radio::class, inversedBy="streams")
      * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
      */
-    private $radio;
+    private ?Radio $radio = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=255, nullable=false)
-     * @Groups({"export"})
      */
-    private $url;
+    #[Groups(['export'])]
+    private ?string $url = null;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(type="boolean", options={"default"=false})
      */
-    private $main = false;
+    private bool $main = false;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(type="boolean", options={"default"=true})
      */
-    private $enabled = true;
+    private bool $enabled = true;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(type="boolean", options={"default"=false})
      */
-    private $currentSong = true;
+    private bool $currentSong = true;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(type="boolean", options={"default"=true})
      */
-    private $status = true;
+    private bool $status = true;
 
     /**
-     * @var int
-     *
      * @ORM\Column(type="integer", options={"default"=0})
      */
-    private $retries = 0;
+    private int $retries = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(type="integer", options={"default"=0})
      */
-    private $currentSongRetries = 0;
+    private int $currentSongRetries = 0;
 
     /**
      * @var ListeningSession[]
      *
      * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
      */
-    private $listeningSessions;
+    private Collection $listeningSessions;
 
     /**
      * @var RadioStream[]
      *
      * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
      */
-    private $streams;
+    private Collection $streams;
 
     /**
-     * @var SubRadio
      *
      * @ORM\OneToOne(targetEntity=SubRadio::class)
      * @ORM\JoinColumn(name="sub_radio_id", referencedColumnName="id")
      */
-    private $subRadio;
+    private ?SubRadio $subRadio = null;
 
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
@@ -197,17 +179,11 @@ class RadioStream
         $this->enabled = $enabled;
     }
 
-    /**
-     * @return bool
-     */
     public function isCurrentSong(): bool
     {
         return $this->currentSong;
     }
 
-    /**
-     * @param bool $currentSong
-     */
     public function setCurrentSong(bool $currentSong): void
     {
         $this->currentSong = $currentSong;

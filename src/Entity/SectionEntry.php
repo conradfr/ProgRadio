@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\ScheduleEntry;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ScheduleEntryRepository")
@@ -11,61 +12,49 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class SectionEntry
 {
     /**
-     * @var integer
      *
      * @ORM\Column(type="bigint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
-     * @var ScheduleEntry
      *
      * @ORM\ManyToOne(targetEntity="ScheduleEntry", inversedBy="sectionEntries")
      * @ORM\JoinColumn(name="schedule_entry_id", referencedColumnName="id")
      */
-    private $scheduleEntry;
+    private ?ScheduleEntry $scheduleEntry = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime")
-     * @Groups({"export"})
      */
-    private $dateTimeStart;
+    #[Groups(['export'])]
+    private ?\DateTime $dateTimeStart = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="text")
-     * @Groups({"export"})
      */
-    private $title;
+    #[Groups(['export'])]
+    private ?string $title = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100, nullable=true)
-     * @Groups({"export"})
      */
-    private $presenter;
+    #[Groups(['export'])]
+    private ?string $presenter = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"export"})
      */
-    private $description;
+    #[Groups(['export'])]
+    private ?string $description = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"export"})
      */
-    private $pictureUrl;
+    #[Groups(['export'])]
+    private ?string $pictureUrl = null;
 
     public function getId(): int
     {

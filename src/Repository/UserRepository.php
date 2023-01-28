@@ -14,13 +14,9 @@ use Symfony\Component\Security\Core\Security;
 
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
-    private $security;
-
-    public function __construct(ManagerRegistry $registry, Security $security)
+    public function __construct(ManagerRegistry $registry, private readonly Security $security)
     {
         parent::__construct($registry, User::class);
-
-        $this->security = $security;
     }
 
     public function loadUserByIdentifier($email): ?UserInterface
@@ -86,7 +82,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $result = $qb->getQuery()->getResult();
 
-        if ($result === null || count($result) === 0) {
+        if ($result === null || (is_countable($result) ? count($result) : 0) === 0) {
             return true;
         }
 
@@ -99,7 +95,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         $user->setPassword($newHashedPassword);

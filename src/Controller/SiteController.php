@@ -23,7 +23,7 @@ use App\Form\ContactType;
 
 class SiteController extends AbstractController
 {
-   public const LANG = ['fr', 'en', 'es'];
+   final public const LANG = ['fr', 'en', 'es'];
 
     #[
         Route('/{_locale}/faq',
@@ -180,7 +180,7 @@ class SiteController extends AbstractController
                 $savedRouteAppDefault = $router->getRouteCollection()->get('radio.'.$locale)->getDefaults();
                 /** @var Radio $radio */
                 foreach ($radios as $radio => $subRadiosString) {
-                    $subRadios = explode(',', $subRadiosString);
+                    $subRadios = explode(',', (string) $subRadiosString);
                     $xml .= $this->getEntryXml($host, $request,'radio', $router->getRouteCollection()->get('radio.'.$locale), $locale,  ['codeName' => $radio]);
 
                     if (count($subRadios) > 1) {
@@ -218,7 +218,7 @@ class SiteController extends AbstractController
         $parameters['_locale'] = $locale;
 
         $bangsAll = $host->getField('bangs', $request);
-        $bangs = isset($bangsAll[$name]) ? $bangsAll[$name] : [''] ;
+        $bangs = $bangsAll[$name] ?? [''] ;
 
         $entries = '';
         foreach ($bangs as $bang) {

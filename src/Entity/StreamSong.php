@@ -14,34 +14,26 @@ use App\Repository\StreamSongRepository;
 class StreamSong
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $id;
+    private ?int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100)
      */
-    private $codeName;
+    private ?string $codeName = null;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(type="boolean", options={"default"=true})
      */
-    private $enabled = true;
+    private bool $enabled = true;
 
     /**
-     * @var int
-     *
      * @ORM\Column(type="integer", options={"default"=0})
      */
-    private $retries = 0;
+    private int $retries = 0;
 
 
     /**
@@ -49,7 +41,7 @@ class StreamSong
      *
      * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="streamSong", fetch="EXTRA_LAZY")
      */
-    private $streams;
+    private ArrayCollection $streams;
 
     public function __construct() {
         $this->streams = new ArrayCollection();

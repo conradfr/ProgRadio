@@ -21,52 +21,44 @@ class UserEmailChange
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=180)
      */
-    private $email;
+    private ?string $email = null;
 
     /**
      * @var User
-     * 
+     *
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="emailChanges")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
      /**
-     * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created_at", type="datetime")
      */
-    private $createdAt;
+    private ?\DateTime $createdAt = null;
 
     /**
-     * @var \DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
-    private $updatedAt;
+    private ?\DateTime $updatedAt = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100)
      */
-    private $token;
+    private ?string $token = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime")
      */
-    private $tokenExpiration;
+    private ?\DateTime $tokenExpiration = null;
 
     public function getId()
     {

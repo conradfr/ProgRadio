@@ -12,27 +12,21 @@ use App\Repository\AffiliateRepository;
 class Affiliate
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue()
      */
-    private $id;
+    private ?int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string")
      */
-    private $locale;
+    private ?string $locale = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string")
      */
-    private $htmlLink;
+    private ?string $htmlLink = null;
 
     public function getId(): int
     {

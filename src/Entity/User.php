@@ -29,30 +29,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
-     * @Assert\NotBlank
      * @AppAssert\EmailAvailable(groups={"registration"})
-     *
      * @ORM\Column(type="string", length=180)
      */
-    private $email;
+    #[Assert\NotBlank]
+    private ?string $email = null;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
-     * @var string The hashed password
-     *
      * @ORM\Column(type="string")
      */
-    private $password;
+    private ?string $password = null;
 
     /**
-     * @var Collection
      *
      * @ORM\Cache(usage="READ_ONLY")
      * @ORM\ManyToMany(targetEntity=Radio::class)
@@ -61,10 +57,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      inverseJoinColumns={@ORM\JoinColumn(name="radio_id", referencedColumnName="id")}
      *      )
      */
-    private $favoriteRadios;
+    private Collection $favoriteRadios;
 
     /**
-     * @var Collection
      *
      * @ORM\Cache(usage="READ_ONLY")
      * @ORM\ManyToMany(targetEntity=Stream::class)
@@ -73,14 +68,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      inverseJoinColumns={@ORM\JoinColumn(name="stream_id", referencedColumnName="id")}
      *      )
      */
-    private $favoriteStreams;
+    private Collection $favoriteStreams;
 
     /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity=UserEmailChange::class, mappedBy="user")
      */
-    private $emailChanges;
+    private Collection $emailChanges;
 
     /**
      * @var \DateTime
@@ -99,18 +94,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $updatedAt;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100)
      */
-    private $passwordResetToken;
+    private ?string $passwordResetToken = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime")
      */
-    private $passwordResetExpiration;
+    private ?\DateTime $passwordResetExpiration = null;
 
     public function __construct() {
         $this->favoriteRadios = new ArrayCollection();

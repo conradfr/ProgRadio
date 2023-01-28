@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Intl\Countries;
+use App\Entity\StreamOverloading;
+use App\Entity\RadioStream;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StreamRepository")
@@ -13,94 +15,73 @@ use Symfony\Component\Intl\Countries;
  */
 class Stream
 {
-    public const FAVORITES = 'FAVORITES';
+    final public const FAVORITES = 'FAVORITES';
 
     /**
-     * @var string
      *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $id;
+    private ?string $id = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=500)
      */
-    private $name;
+    private ?string $name = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=500, nullable=true)
      */
-    private $img;
+    private ?string $img = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=500)
      */
-    private $streamUrl;
+    private ?string $streamUrl = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=500, nullable=true)
      */
-    private $tags;
+    private ?string $tags = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=2)
      */
-    private $countryCode;
+    private ?string $countryCode = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=255)
      */
-    private $language;
+    private ?string $language = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $website = null;
+    private ?string $website = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(type="integer", options={"default"=0})
      */
-    private $votes;
+    private ?int $votes = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(type="integer", name="clicks_last_24h", options={"default"=0})
      */
-    private $clicksLast24h;
+    private ?int $clicksLast24h = null;
 
     /**
      * @var ListeningSession[]
      *
      * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="stream", fetch="EXTRA_LAZY")
      */
-    private $listeningSessions;
+    private ArrayCollection $listeningSessions;
 
     /**
-     * @var RadioStream
-     *
      * @ORM\ManyToOne(targetEntity=RadioStream::class, inversedBy="streams")
      * @ORM\JoinColumn(name="radio_stream_id", referencedColumnName="id")
      */
-    private $radioStream;
+    private RadioStream $radioStream;
 
     /**
      * @var StreamSong
@@ -111,26 +92,21 @@ class Stream
     private $streamSong;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=30)
      */
-    private $streamSongCodeName;
+    private ?string $streamSongCodeName = null;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(type="boolean", options={"default"=true})
      */
-    private $enabled = true;
+    private bool $enabled = true;
 
     /**
-     * @var StreamOverloading
      *
      * @ORM\OneToOne(targetEntity=StreamOverloading::class)
      * @ORM\JoinColumn(name="id", referencedColumnName="id")
      */
-    private $streamOverloading;
+    private ?StreamOverloading $streamOverloading = null;
 
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
@@ -283,7 +259,7 @@ class Stream
             }
 
             return Countries::getName($this->getCountryCode(), $locale);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return '';
         }
     }

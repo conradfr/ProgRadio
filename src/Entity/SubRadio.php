@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\SubRadioRepository;
+use App\Entity\Radio;
+use App\Entity\RadioStream;
 
 /**
  * @ORM\Entity(repositoryClass=SubRadioRepository::class)
@@ -14,60 +16,47 @@ use App\Repository\SubRadioRepository;
 class SubRadio
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(type="bigint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private ?int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100)
      */
-    private $codeName;
+    private ?string $codeName = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100, nullable=false)
      */
-    private $name;
+    private ?string $name = null;
 
     /**
-     * @var Radio
      *
      * @ORM\ManyToOne(targetEntity=Radio::class, inversedBy="subRadios")
      * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
      */
-    private $radio;
+    private ?Radio $radio = null;
 
     /**
-     * @var RadioStream
-     *
      * @ORM\OneToOne(targetEntity=RadioStream::class, mappedBy="subRadio", fetch="EXTRA_LAZY")
      */
-    private $radioStream;
+    private ?RadioStream $radioStream = null;
 
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
     }
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(type="boolean", options={"default"=false})
      */
-    private $main = false;
+    private bool $main = false;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(type="boolean", options={"default"=true})
      */
-    private $enabled = true;
+    private bool $enabled = true;
 
     public function getId(): int
     {

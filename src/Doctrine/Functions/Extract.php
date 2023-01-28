@@ -17,8 +17,6 @@ class Extract extends FunctionNode
     }
 
     /**
-     * @param Parser $parser
-     *
      * @throws \Doctrine\ORM\Query\QueryException
      */
     public function parse(Parser $parser): void
@@ -35,11 +33,6 @@ class Extract extends FunctionNode
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
-    /**
-     * @param \Doctrine\ORM\Query\SqlWalker $sqlWalker
-     *
-     * @return string
-     */
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker): string
     {
         return "EXTRACT('epoch' FROM "

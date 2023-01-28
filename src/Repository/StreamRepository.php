@@ -20,15 +20,9 @@ class StreamRepository extends ServiceEntityRepository
 
     protected const DEFAULT_MORE_LIMIT = 6;
 
-    private $security;
-
-    public function __construct(Security $security, ManagerRegistry $registry)
+    public function __construct(private readonly Security $security, ManagerRegistry $registry)
     {
         parent::__construct($registry, Stream::class);
-
-        // Avoid calling getUser() in the constructor: auth may not
-        // be complete yet. Instead, store the entire Security object.
-        $this->security = $security;
     }
 
     public function getMoreStreams(Stream $stream, int $limit=self::DEFAULT_MORE_LIMIT)
@@ -102,9 +96,7 @@ class StreamRepository extends ServiceEntityRepository
             if ($countryOrCategory === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
-                        function ($stream) {
-                            return $stream->getId();
-                        }
+                        fn($stream) => $stream->getId()
                     )->toArray();
                 } else {
                     $favorites = $favoritesFromCookies;
@@ -182,9 +174,7 @@ class StreamRepository extends ServiceEntityRepository
             if ($countryOrCategory === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
-                        function ($stream) {
-                            return $stream->getId();
-                        }
+                        fn($stream) => $stream->getId()
                     )->toArray();
                 } else {
                     $favorites = $favoritesFromCookies;
@@ -241,7 +231,7 @@ class StreamRepository extends ServiceEntityRepository
             return $this->getOneRandomStream();
         }
 
-        $offset = mt_rand(0, $total - 1);
+        $offset = random_int(0, $total - 1);
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -262,9 +252,7 @@ class StreamRepository extends ServiceEntityRepository
             if ($countryOrCategory === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
-                        function ($stream) {
-                            return $stream->getId();
-                        }
+                        fn($stream) => $stream->getId()
                     )->toArray();
                 } else {
                     $favorites = $favoritesFromCookies;
@@ -330,9 +318,7 @@ class StreamRepository extends ServiceEntityRepository
             if ($countryOrCategory === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
-                        function ($stream) {
-                            return $stream->getId();
-                        }
+                        fn($stream) => $stream->getId()
                     )->toArray();
                 } else {
                     $favorites = $favoritesFromCookies;
@@ -377,9 +363,7 @@ class StreamRepository extends ServiceEntityRepository
             if ($countryOrCategory === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
-                        function ($stream) {
-                            return $stream->getId();
-                        }
+                        fn($stream) => $stream->getId()
                     )->toArray();
                 } else {
                     $favorites = $favoritesFromCookies;

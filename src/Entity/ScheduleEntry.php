@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Radio;
+use App\Entity\SubRadio;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ScheduleEntryRepository")
@@ -14,87 +16,69 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class ScheduleEntry
 {
     /**
-     * @var integer
      *
      * @ORM\Column(type="bigint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Radio")
      * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
      */
-    private $radio;
+    private ?Radio $radio = null;
 
     /**
      * @ORM\OneToMany(targetEntity="SectionEntry", mappedBy="scheduleEntry")
      */
-    private $sectionEntries;
+    private ArrayCollection $sectionEntries;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime")
-     * @Groups({"export"})
      */
-    private $dateTimeStart;
+    #[Groups(['export'])]
+    private ?\DateTime $dateTimeStart = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime")
-     * @Groups({"export"})
      */
-    private $dateTimeEnd;
+    #[Groups(['export'])]
+    private ?\DateTime $dateTimeEnd = null;
+
+    #[Groups(['export'])]
+    private ?int $duration = null;
 
     /**
-     * @var integer
-     *
-     * @Groups({"export"})
-     */
-    private $duration;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(type="text")
-     * @Groups({"export"})
      */
-    private $title;
+    #[Groups(['export'])]
+    private ?string $title = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"export"})
      */
-    private $host;
+    #[Groups(['export'])]
+    private ?string $host = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"export"})
      */
-    private $description;
+    #[Groups(['export'])]
+    private ?string $description = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"export"})
      */
-    private $pictureUrl;
+    #[Groups(['export'])]
+    private ?string $pictureUrl = null;
 
     /**
-     * @var SubRadio
      *
      * @ORM\ManyToOne(targetEntity=SubRadio::class)
      * @ORM\JoinColumn(name="sub_radio_id", referencedColumnName="id")
      */
-    private $subRadio;
+    private ?SubRadio $subRadio = null;
 
     public function __construct() {
         $this->sectionEntries = new ArrayCollection();

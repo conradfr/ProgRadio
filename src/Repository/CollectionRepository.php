@@ -15,17 +15,12 @@ class CollectionRepository extends ServiceEntityRepository
     protected const CACHE_COLLECTION_TTL = 604800; // week
     protected const CACHE_COLLECTION_ID = 'collections';
 
-    protected const CACHE_FAVORITES_TTL = 3600; // one hour
+    protected const CACHE_FAVORITES_TTL = 3600;
 
-    private $security;
-
-    public function __construct(Security $security, ManagerRegistry $registry)
+    public function __construct(// one hour
+    private readonly Security $security, ManagerRegistry $registry)
     {
         parent::__construct($registry, Collection::class);
-
-        // Avoid calling getUser() in the constructor: auth may not
-        // be complete yet. Instead, store the entire Security object.
-        $this->security = $security;
     }
 
     public function getCollections(array $favoritesFromCookies = []): array {
@@ -49,9 +44,7 @@ class CollectionRepository extends ServiceEntityRepository
         $favorites = null;
         if($user !== null) {
             $favorites = $user->getFavoriteRadios()->map(
-                function ($radio) {
-                    return $radio->getCodeName();
-                }
+                fn($radio) => $radio->getCodeName()
             )->toArray();
         } else {
             $favorites = $favoritesFromCookies;
@@ -62,7 +55,7 @@ class CollectionRepository extends ServiceEntityRepository
             if ($collection['code_name'] === Radio::FAVORITES) {
                 $collection['radios'] = $favorites;
             } else {
-                $collection['radios'] = explode(',', $collection['radios']);
+                $collection['radios'] = explode(',', (string) $collection['radios']);
             }
 
             //$data[$collection['code_name']] = $collection;
@@ -86,9 +79,7 @@ class CollectionRepository extends ServiceEntityRepository
 
         if ($user !== null) {
             $favorites = $user->getFavoriteRadios()->map(
-                function ($radio) {
-                    return $radio->getCodeName();
-                }
+                fn($radio) => $radio->getCodeName()
             )->toArray();
         } else {
             $favorites = $favoritesFromCookies;
