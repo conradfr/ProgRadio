@@ -9,75 +9,53 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Radio;
 use App\Entity\SubRadio;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ScheduleEntryRepository")
- * @ORM\Table(indexes={@ORM\Index(name="starttime_idx", columns={"date_time_start"}), @ORM\Index(name="endtime_idx", columns={"date_time_end"})})
- */
+#[ORM\Table]
+#[ORM\Index(name: 'starttime_idx', columns: ['date_time_start'])]
+#[ORM\Index(name: 'endtime_idx', columns: ['date_time_end'])]
+#[ORM\Entity(repositoryClass: 'App\Repository\ScheduleEntryRepository')]
 class ScheduleEntry
 {
-    /**
-     *
-     * @ORM\Column(type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Column(type: 'bigint')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Radio")
-     * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Radio')]
+    #[ORM\JoinColumn(name: 'radio_id', referencedColumnName: 'id')]
     private ?Radio $radio = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="SectionEntry", mappedBy="scheduleEntry")
-     */
+    #[ORM\OneToMany(targetEntity: 'SectionEntry', mappedBy: 'scheduleEntry')]
     private ArrayCollection $sectionEntries;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTime $dateTimeStart = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTime $dateTimeEnd = null;
 
     #[Groups(['export'])]
     private ?int $duration = null;
 
-    /**
-     * @ORM\Column(type="text")
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'text')]
     private ?string $title = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $host = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $pictureUrl = null;
 
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity=SubRadio::class)
-     * @ORM\JoinColumn(name="sub_radio_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: SubRadio::class)]
+    #[ORM\JoinColumn(name: 'sub_radio_id', referencedColumnName: 'id')]
     private ?SubRadio $subRadio = null;
 
     public function __construct() {

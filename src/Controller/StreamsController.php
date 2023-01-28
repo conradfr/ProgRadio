@@ -138,7 +138,6 @@ class StreamsController  extends AbstractBaseController
         /** @var User $user */
         $user = $this->getUser();
 
-        $favorites = null;
         if ($user === null) {
             $favorites = $request->attributes->get('favoritesStream', []);
         }

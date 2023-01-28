@@ -4,43 +4,28 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\StreamOverloadingRepository")
- * @ORM\Table(name="`stream_overloading`")
- */
+#[ORM\Table(name: '`stream_overloading`')]
+#[ORM\Entity(repositoryClass: 'App\Repository\StreamOverloadingRepository')]
 class StreamOverloading
 {
-    /**
-     *
-     * @ORM\Column(type="uuid", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?string $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=500, nullable=true))
-     */
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $name = null;
 
-    /**
-     * @ORM\Column(type="string", length=500, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $img = null;
 
-    /**
-     * @ORM\Column(type="string", length=500, nullable=true))
-     */
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $streamUrl = null;
 
-    /**
-     * @ORM\Column(type="string", length=2, nullable=true))
-     */
+    #[ORM\Column(type: 'string', length: 2, nullable: true)]
     private ?string $countryCode = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string  $website = null;
 
 

@@ -9,103 +9,73 @@ use Symfony\Component\Intl\Countries;
 use App\Entity\StreamOverloading;
 use App\Entity\RadioStream;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\StreamRepository")
- * @ORM\Table(name="`stream`", indexes={@ORM\Index(name="name_idx", columns={"name"}), @ORM\Index(name="click24_idx", columns={"clicks_last_24h"}), @ORM\Index(name="countrycode_idx", columns={"country_code"}), @ORM\Index(name="stream_tags_idx", columns={"tags"})})
- */
+#[ORM\Table(name: '`stream`')]
+#[ORM\Index(name: 'name_idx', columns: ['name'])]
+#[ORM\Index(name: 'click24_idx', columns: ['clicks_last_24h'])]
+#[ORM\Index(name: 'countrycode_idx', columns: ['country_code'])]
+#[ORM\Index(name: 'stream_tags_idx', columns: ['tags'])]
+#[ORM\Entity(repositoryClass: 'App\Repository\StreamRepository')]
 class Stream
 {
     final public const FAVORITES = 'FAVORITES';
 
-    /**
-     *
-     * @ORM\Column(type="uuid", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?string $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=500)
-     */
+    #[ORM\Column(type: 'string', length: 500)]
     private ?string $name = null;
 
-    /**
-     * @ORM\Column(type="string", length=500, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $img = null;
 
-    /**
-     * @ORM\Column(type="string", length=500)
-     */
+    #[ORM\Column(type: 'string', length: 500)]
     private ?string $streamUrl = null;
 
-    /**
-     * @ORM\Column(type="string", length=500, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $tags = null;
 
-    /**
-     * @ORM\Column(type="string", length=2)
-     */
+    #[ORM\Column(type: 'string', length: 2)]
     private ?string $countryCode = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $language = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $website = null;
 
-    /**
-     * @ORM\Column(type="integer", options={"default"=0})
-     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private ?int $votes = null;
 
-    /**
-     * @ORM\Column(type="integer", name="clicks_last_24h", options={"default"=0})
-     */
+    #[ORM\Column(type: 'integer', name: 'clicks_last_24h', options: ['default' => 0])]
     private ?int $clicksLast24h = null;
 
     /**
      * @var ListeningSession[]
-     *
-     * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="stream", fetch="EXTRA_LAZY")
      */
-    private ArrayCollection $listeningSessions;
+    #[ORM\OneToMany(targetEntity: ListeningSession::class, mappedBy: 'stream', fetch: 'EXTRA_LAZY')]
+    private Collection $listeningSessions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=RadioStream::class, inversedBy="streams")
-     * @ORM\JoinColumn(name="radio_stream_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: RadioStream::class, inversedBy: 'streams')]
+    #[ORM\JoinColumn(name: 'radio_stream_id', referencedColumnName: 'id')]
     private RadioStream $radioStream;
 
     /**
      * @var StreamSong
-     *
-     * @ORM\ManyToOne(targetEntity=StreamSong::class, inversedBy="streams")
-     * @ORM\JoinColumn(name="stream_song_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: StreamSong::class, inversedBy: 'streams')]
+    #[ORM\JoinColumn(name: 'stream_song_id', referencedColumnName: 'id')]
     private $streamSong;
 
-    /**
-     * @ORM\Column(type="string", length=30)
-     */
+    #[ORM\Column(type: 'string', length: 30)]
     private ?string $streamSongCodeName = null;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $enabled = true;
 
-    /**
-     *
-     * @ORM\OneToOne(targetEntity=StreamOverloading::class)
-     * @ORM\JoinColumn(name="id", referencedColumnName="id")
-     */
+    #[ORM\OneToOne(targetEntity: StreamOverloading::class)]
+    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
     private ?StreamOverloading $streamOverloading = null;
 
     public function __construct() {

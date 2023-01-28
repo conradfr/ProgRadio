@@ -15,92 +15,72 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\Table(name="`user`", indexes={@ORM\Index(name="user_token_idx", columns={"password_reset_token"}), @ORM\Index(name="user_email_idx", columns={"email"})})
- */
+#[ORM\Table(name: '`user`')]
+#[ORM\Index(name: 'user_token_idx', columns: ['password_reset_token'])]
+#[ORM\Index(name: 'user_email_idx', columns: ['email'])]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     protected const TOKEN_LENGTH = 25;
     protected const TOKEN_EXPIRATION = 24; // hours
-
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id;
 
     /**
      * @AppAssert\EmailAvailable(groups={"registration"})
-     * @ORM\Column(type="string", length=180)
      */
     #[Assert\NotBlank]
+    #[ORM\Column(type: 'string', length: 180)]
     private ?string $email = null;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private ?string $password = null;
 
-    /**
-     *
-     * @ORM\Cache(usage="READ_ONLY")
-     * @ORM\ManyToMany(targetEntity=Radio::class)
-     * @ORM\JoinTable(name="users_radios",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="radio_id", referencedColumnName="id")}
-     *      )
-     */
+    #[ORM\JoinTable(name: 'users_radios')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'radio_id', referencedColumnName: 'id')]
+    #[ORM\Cache(usage: 'READ_ONLY')]
+    #[ORM\ManyToMany(targetEntity: Radio::class)]
     private Collection $favoriteRadios;
 
-    /**
-     *
-     * @ORM\Cache(usage="READ_ONLY")
-     * @ORM\ManyToMany(targetEntity=Stream::class)
-     * @ORM\JoinTable(name="users_streams",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="stream_id", referencedColumnName="id")}
-     *      )
-     */
+    #[ORM\JoinTable(name: 'users_streams')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'stream_id', referencedColumnName: 'id')]
+    #[ORM\Cache(usage: 'READ_ONLY')]
+    #[ORM\ManyToMany(targetEntity: Stream::class)]
     private Collection $favoriteStreams;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity=UserEmailChange::class, mappedBy="user")
      */
+    #[ORM\OneToMany(targetEntity: UserEmailChange::class, mappedBy: 'user')]
     private Collection $emailChanges;
 
     /**
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="created_at", type="datetime")
      */
+    #[ORM\Column(name: 'created_at', type: 'datetime')]
     private $createdAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
+    #[ORM\Column(name: 'updated_at', type: 'datetime')]
     private $updatedAt;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $passwordResetToken = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTime $passwordResetExpiration = null;
 
     public function __construct() {

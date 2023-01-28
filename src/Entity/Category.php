@@ -5,29 +5,20 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
- */
+#[ORM\Entity(repositoryClass: 'App\Repository\CategoryRepository')]
 class Category
 {
-    /**
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $codeName = null;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $name = null;
 
     public function getId(): int

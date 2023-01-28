@@ -12,12 +12,11 @@ use App\Service\DateUtils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 class ListeningSessionRepository extends ServiceEntityRepository
 {
-    public function __construct(private readonly Security $security, ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Radio::class);
     }

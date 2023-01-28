@@ -7,40 +7,29 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\StreamSongRepository;
 
-/**
- * @ORM\Entity(repositoryClass=StreamSongRepository::class)
- * @ORM\Table()
- */
+#[ORM\Table]
+#[ORM\Entity(repositoryClass: StreamSongRepository::class)]
 class StreamSong
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?int $id;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $codeName = null;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $enabled = true;
 
-    /**
-     * @ORM\Column(type="integer", options={"default"=0})
-     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $retries = 0;
 
 
     /**
      * @var Stream[]
-     *
-     * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="streamSong", fetch="EXTRA_LAZY")
      */
+    #[ORM\OneToMany(targetEntity: Stream::class, mappedBy: 'streamSong', fetch: 'EXTRA_LAZY')]
     private ArrayCollection $streams;
 
     public function __construct() {

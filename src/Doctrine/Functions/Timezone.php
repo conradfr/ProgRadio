@@ -18,8 +18,6 @@ class Timezone extends FunctionNode
     }
 
     /**
-     * @param Parser $parser
-     *
      * @throws \Doctrine\ORM\Query\QueryException
      */
     public function parse(Parser $parser): void
@@ -32,11 +30,6 @@ class Timezone extends FunctionNode
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
-    /**
-     * @param SqlWalker $sqlWalker
-     *
-     * @return string
-     */
     public function getSql(SqlWalker $sqlWalker): string
     {
         return 'TIMEZONE(' . $this->dateExpression->dispatch($sqlWalker) . ', '

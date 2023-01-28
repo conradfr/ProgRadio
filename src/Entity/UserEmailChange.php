@@ -7,57 +7,45 @@ use App\Repository\UserEmailChangeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass=UserEmailChangeRepository::class)
- * @ORM\Table(name="user_email_change")
- */
+#[ORM\Table(name: 'user_email_change')]
+#[ORM\Entity(repositoryClass: UserEmailChangeRepository::class)]
 class UserEmailChange
 {
     protected const TOKEN_LENGTH = 25;
     protected const TOKEN_EXPIRATION = 24; // hours
-
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id;
 
-    /**
-     * @ORM\Column(type="string", length=180)
-     */
+    #[ORM\Column(type: 'string', length: 180)]
     private ?string $email = null;
 
     /**
      * @var User
-     *
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="emailChanges")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'emailChanges')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private $user;
 
      /**
      *
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="created_at", type="datetime")
      */
+    #[ORM\Column(name: 'created_at', type: 'datetime')]
     private ?\DateTime $createdAt = null;
 
     /**
      *
-     * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
+    #[ORM\Column(name: 'updated_at', type: 'datetime')]
     private ?\DateTime $updatedAt = null;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $token = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTime $tokenExpiration = null;
 
     public function getId()

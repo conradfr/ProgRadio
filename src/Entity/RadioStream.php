@@ -10,93 +10,62 @@ use App\Repository\RadioStreamRepository;
 use App\Entity\Radio;
 use App\Entity\SubRadio;
 
-/**
- * @ORM\Entity(repositoryClass=RadioStreamRepository::class)
- * @ORM\Table(indexes={@ORM\Index(name="radio_stream_code_name_idx", columns={"code_name"})})
- */
+#[ORM\Table]
+#[ORM\Index(name: 'radio_stream_code_name_idx', columns: ['code_name'])]
+#[ORM\Entity(repositoryClass: RadioStreamRepository::class)]
 class RadioStream
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Column(type: 'bigint')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private ?int $id;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $codeName = null;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=false)
-     */
+    #[ORM\Column(type: 'string', length: 100, nullable: false)]
     private ?string $name = null;
 
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity=Radio::class, inversedBy="streams")
-     * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Radio::class, inversedBy: 'streams')]
+    #[ORM\JoinColumn(name: 'radio_id', referencedColumnName: 'id')]
     private ?Radio $radio = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private ?string $url = null;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=false})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $main = false;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $enabled = true;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=false})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $currentSong = true;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $status = true;
 
-    /**
-     * @ORM\Column(type="integer", options={"default"=0})
-     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $retries = 0;
 
-    /**
-     * @ORM\Column(type="integer", options={"default"=0})
-     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $currentSongRetries = 0;
 
     /**
      * @var ListeningSession[]
-     *
-     * @ORM\OneToMany(targetEntity=ListeningSession::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
      */
+    #[ORM\OneToMany(targetEntity: ListeningSession::class, mappedBy: 'radioStream', fetch: 'EXTRA_LAZY')]
     private Collection $listeningSessions;
 
     /**
      * @var RadioStream[]
-     *
-     * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="radioStream", fetch="EXTRA_LAZY")
      */
+    #[ORM\OneToMany(targetEntity: Stream::class, mappedBy: 'radioStream', fetch: 'EXTRA_LAZY')]
     private Collection $streams;
 
-    /**
-     *
-     * @ORM\OneToOne(targetEntity=SubRadio::class)
-     * @ORM\JoinColumn(name="sub_radio_id", referencedColumnName="id")
-     */
+    #[ORM\OneToOne(targetEntity: SubRadio::class, inversedBy: 'radioStream')]
+    #[ORM\JoinColumn(name: 'sub_radio_id', referencedColumnName: 'id')]
     private ?SubRadio $subRadio = null;
 
     public function __construct() {

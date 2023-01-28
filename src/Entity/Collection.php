@@ -8,82 +8,61 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Radio;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CollectionRepository")
- * @ORM\Table(indexes={@ORM\Index(name="collection_code_name_idx", columns={"code_name"})})
- */
+#[ORM\Table]
+#[ORM\Index(name: 'collection_code_name_idx', columns: ['code_name'])]
+#[ORM\Entity(repositoryClass: 'App\Repository\CollectionRepository')]
 class Collection
 {
-    /**
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $codeName = null;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $name = null;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=100)
      */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private $name_fr;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=100)
      */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private $name_en;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=100)
      */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private $name_es;
 
-    /**
-     * @ORM\Column(type="string", length=25)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 25)]
     private ?string $shortName = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private ?int $priority = null;
 
-    /**
-     * @ORM\Column(type="string", length=25)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 25)]
     private ?string $sortField = null;
 
-    /**
-     * @ORM\Column(type="string", length=5)
-     */
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 5)]
     private ?string $sortOrder = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Radio", mappedBy="collection")
-     */
+    #[ORM\OneToMany(targetEntity: 'Radio', mappedBy: 'collection')]
     private DoctrineCollection $radios;
 
     public function __construct() {

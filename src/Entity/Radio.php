@@ -9,95 +9,65 @@ use App\Repository\RadioRepository;
 use App\Entity\Collection;
 use App\Entity\Category;
 
-/**
- * @ORM\Entity(repositoryClass=RadioRepository::class)
- * @ORM\Table(indexes={@ORM\Index(name="radio_code_name_idx", columns={"code_name"})})
- */
+#[ORM\Table]
+#[ORM\Index(name: 'radio_code_name_idx', columns: ['code_name'])]
+#[ORM\Entity(repositoryClass: RadioRepository::class)]
 class Radio
 {
     public const FAVORITES = 'favorites';
 
-    /**
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $codeName = null;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $name = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $description_fr = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $description_en = null;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $website = null;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $wikipedia_fr = null;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $wikipedia_en = null;
 
-    /**
-     * @ORM\Column(type="string", length=50, options={"default"="Europe/Paris"})
-     */
+    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'Europe/Paris'])]
     private string $timezone = 'Europe/Paris';
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Category")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Category')]
     private ?Category $category = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Collection", inversedBy="radios", fetch="EAGER")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Collection', inversedBy: 'radios', fetch: 'EAGER')]
     private ?Collection $collection = null;
 
-    /**
-     * @ORM\Column(type="decimal", scale=2, options={"default"=0})
-     */
+    #[ORM\Column(type: 'decimal', scale: 2, options: ['default' => 0])]
     private ?float $share = null;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $active = true;
 
     /**
      * @var RadioStream[]
-     *
-     * @ORM\OneToMany(targetEntity=RadioStream::class, mappedBy="radio", fetch="EXTRA_LAZY")
      */
+    #[ORM\OneToMany(targetEntity: RadioStream::class, mappedBy: 'radio', fetch: 'EXTRA_LAZY')]
     private DoctrineCollection $streams;
 
 
     /**
      * @var SubRadio[]
-     *
-     * @ORM\OneToMany(targetEntity=SubRadio::class, mappedBy="radio")
      */
+    #[ORM\OneToMany(targetEntity: SubRadio::class, mappedBy: 'radio')]
     private DoctrineCollection $subRadios;
 
     public function __construct() {

@@ -5,27 +5,20 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AffiliateRepository;
 
-/**
- * @ORM\Entity(repositoryClass=AffiliateRepository::class)
- * @ORM\Table(indexes={@ORM\Index(name="affiliate_id_seq", columns={"locale"})})
- */
+#[ORM\Table]
+#[ORM\Index(name: 'affiliate_id_seq', columns: ['locale'])]
+#[ORM\Entity(repositoryClass: AffiliateRepository::class)]
 class Affiliate
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue()
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     private ?int $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private ?string $locale = null;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private ?string $htmlLink = null;
 
     public function getId(): int

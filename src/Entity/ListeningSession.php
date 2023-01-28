@@ -8,10 +8,11 @@ use App\Entity\RadioStream;
 use App\Entity\Stream;
 use Darsyn\IP\Version\Multi as IP;
 
-/**
- * @ORM\Entity(repositoryClass=ListeningSessionRepository::class)
- * @ORM\Table(indexes={@ORM\Index(name="ls_radio_stream_idx", columns={"radio_stream_id"}), @ORM\Index(name="stream_idx", columns={"stream_id"}), @ORM\Index(name="date_time_start_idx", columns={"date_time_start"})})
- */
+#[ORM\Table]
+#[ORM\Index(name: 'ls_radio_stream_idx', columns: ['radio_stream_id'])]
+#[ORM\Index(name: 'stream_idx', columns: ['stream_id'])]
+#[ORM\Index(name: 'date_time_start_idx', columns: ['date_time_start'])]
+#[ORM\Entity(repositoryClass: ListeningSessionRepository::class)]
 class ListeningSession
 {
     public const TYPE_RADIO = 'radio';
@@ -29,46 +30,31 @@ class ListeningSession
         self::SOURCE_ANDROID
     ];
 
-    /**
-     *
-     * @ORM\Column(type="uuid", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?string $id = null;
 
     private ?string $type = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=RadioStream::class, inversedBy="listeningSessions")
-     * @ORM\JoinColumn(name="radio_stream_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: RadioStream::class, inversedBy: 'listeningSessions')]
+    #[ORM\JoinColumn(name: 'radio_stream_id', referencedColumnName: 'id')]
     private ?RadioStream $radioStream = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Stream::class, inversedBy="listeningSessions")
-     * @ORM\JoinColumn(name="stream_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Stream::class, inversedBy: 'listeningSessions')]
+    #[ORM\JoinColumn(name: 'stream_id', referencedColumnName: 'id')]
     private ?Stream $stream = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTime $dateTimeStart = null;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTime $dateTimeEnd = null;
 
-    /**
-     * @ORM\Column(type="string", length=30, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 30, nullable: true)]
     private ?string $source = null;
 
-    /**
-     * @ORM\Column(type="ip", nullable=true)
-     */
+    #[ORM\Column(type: 'ip', nullable: true)]
     protected $ipAddress;
 
     public function setId(string $id): void

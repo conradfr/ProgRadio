@@ -10,52 +10,35 @@ use App\Repository\SubRadioRepository;
 use App\Entity\Radio;
 use App\Entity\RadioStream;
 
-/**
- * @ORM\Entity(repositoryClass=SubRadioRepository::class)
- */
+#[ORM\Entity(repositoryClass: SubRadioRepository::class)]
 class SubRadio
 {
-    /**
-     * @ORM\Column(type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Column(type: 'bigint')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $codeName = null;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=false)
-     */
+    #[ORM\Column(type: 'string', length: 100, nullable: false)]
     private ?string $name = null;
 
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity=Radio::class, inversedBy="subRadios")
-     * @ORM\JoinColumn(name="radio_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Radio::class, inversedBy: 'subRadios')]
+    #[ORM\JoinColumn(name: 'radio_id', referencedColumnName: 'id')]
     private ?Radio $radio = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity=RadioStream::class, mappedBy="subRadio", fetch="EXTRA_LAZY")
-     */
+    #[ORM\OneToOne(targetEntity: RadioStream::class, mappedBy: 'subRadio', fetch: 'EXTRA_LAZY')]
     private ?RadioStream $radioStream = null;
 
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
     }
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=false})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $main = false;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $enabled = true;
 
     public function getId(): int
