@@ -30,16 +30,9 @@ class DefaultController extends AbstractBaseController
 {
     protected const MIN_DATE = '2017-08-19';
 
-    /**
-     * LEGACY
-     *
-     * @Route(
-     *     "/schedule/{date}",
-     *     name="schedule"
-     * )
-     *
-     * @ParamConverter("date", options={"format": "Y-m-d"})
-     */
+    // LEGACY
+    #[Route('/schedule/{date}', name: 'schedule')]
+    #[ParamConverter('date', options: ['format' => 'Y-m-d'])]
     public function schedule(\DateTime $date, ScheduleManager $scheduleManager, Request $request): Response
     {
         $collection = $request->query->get('collection');
@@ -57,14 +50,8 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * LEGACY
-     *
-     * @Route(
-     *     "/radios",
-     *     name="api_radios"
-     * )
-     */
+    // LEGACY
+    #[Route('/radios', name: 'api_radios')]
     public function radios(EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favorites', []);
@@ -80,21 +67,23 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
-     * @Route({
-     *     "en": "/{_locale}/schedule-streaming-{codeName}-{subRadioCodeName}/{date?}",
-     *     "fr": "/{_locale}/grille-ecouter-{codeName}-{subRadioCodeName}/{date?}",
-     *     "es": "/{_locale}/escuchar-{codeName}-{subRadioCodeName}/{date?}",
-     * },
-     *     name="radio_subradio",
-     *     defaults={
-     *      "priority": "0.8",
-     *      "changefreq": "daily"
-     *      }
-     * )
-     *
-     * @ParamConverter("date", options={"format": "Y-m-d"})
      * @throws \Exception
      */
+    #[
+        Route(
+            path: [
+                'en' => '/{_locale}/schedule-streaming-{codeName}-{subRadioCodeName}/{date?}',
+                'fr' => '/{_locale}/grille-ecouter-{codeName}-{subRadioCodeName}/{date?}',
+                'es' => '/{_locale}/escuchar-{codeName}-{subRadioCodeName}/{date?}'
+            ],
+            name: 'radio_subradio',
+            defaults: [
+                'priority' => '0.8',
+                'changefreq' => 'daily'
+            ]
+        )
+    ]
+    #[ParamConverter('date', options: ['format' => 'Y-m-d'])]
     public function radioSubRadio(string $codeName, string $subRadioCodeName, \DateTime $date=null, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
     {
         if ($date === null) {
@@ -161,21 +150,23 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
-     * @Route({
-     *     "en": "/{_locale}/schedule-streaming-{codeName}/{date?}",
-     *     "fr": "/{_locale}/grille-ecouter-{codeName}/{date?}",
-     *     "es": "/{_locale}/escuchar-{codeName}/{date?}",
-     * },
-     *     name="radio",
-     *     defaults={
-     *      "priority": "0.8",
-     *      "changefreq": "daily"
-     *      }
-     * )
-     *
-     * @ParamConverter("date", options={"format": "Y-m-d"})
      * @throws \Exception
      */
+    #[
+        Route(
+            path: [
+                'en' => '/{_locale}/schedule-streaming-{codeName}/{date?}',
+                'fr' => '/{_locale}/grille-ecouter-{codeName}/{date?}',
+                'es' => '/{_locale}/escuchar-{codeName}/{date?}'
+            ],
+            name: 'radio',
+            defaults: [
+                'priority' => '0.8',
+                'changefreq' => 'daily'
+            ]
+        )
+    ]
+    #[ParamConverter('date', options: ['format' => 'Y-m-d'])]
     public function radio(string $codeName, \DateTime $date=null, EntityManagerInterface $em, ScheduleManager $scheduleManager): Response
     {
         /** @var Radio $radio */
@@ -194,19 +185,20 @@ class DefaultController extends AbstractBaseController
         return $this->radioSubRadio($codeName, $subRadio->getCodeName(), $date, $em, $scheduleManager);
     }
 
-    /**
-     * @Route({
-     *     "en": "/{_locale}/stream/{id}/listen-{codename}",
-     *     "fr": "/{_locale}/stream/{id}/ecouter-{codename}",
-     *     "es": "/{_locale}/stream/{id}/escuchar-{codename}",
-     * },
-     *     name="streams_one",
-     *     defaults={
-     *      "priority": "0.7",
-     *      "changefreq": "monthly"
-     *      }
-     * )
-     */
+    #[
+        Route(
+            path: [
+                'en' => '/{_locale}/stream/{id}/listen-{codename}',
+                'fr' => '/{_locale}/stream/{id}/ecouter-{codename}',
+                'es' => '/{_locale}/stream/{id}/escuchar-{codename}'
+            ],
+            name: 'streams_one',
+            defaults: [
+                'priority' => '0.7',
+                'changefreq' => 'monthly'
+            ]
+        )
+    ]
     public function one(Stream $stream, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
     {
         // redirect non-fr stream seo pages to new host
@@ -229,19 +221,15 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/top/{countryCode}",
-     *     name="streams_top",
-     *     defaults={
-     *       "priority": "0.5",
-     *       "changefreq": "weekly"
-     *     },
-     *     requirements={
-     *      "_locale": "en|fr|es",
-     *     }
-     * )
-     */
+    #[Route('/{_locale}/top/{countryCode}',
+            name: 'streams_top',
+            defaults: [
+                'priority' => '0.5',
+                'changefreq' => 'weekly'
+            ],
+            requirements: ['_locale' => 'en|fr|es']
+        )
+    ]
     public function top(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
     {
         // redirect non-fr stream seo pages to new host
@@ -269,12 +257,7 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/user",
-     *     name="user_config",
-     * )
-     */
+    #[Route('/user', name: 'user_config')]
     public function user(Request $request): Response
     {
         $user = $this->getUser();
@@ -306,14 +289,8 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/radios/favorite/{codeName}",
-     *     name="favorite_toggle"
-     * )
-     *
-     * @IsGranted("ROLE_USER")
-     */
+    #[Route('/radios/favorite/{codeName}', name: 'favorite_toggle')]
+    #[IsGranted('ROLE_USER')]
     public function toggleFavorite(Radio $radio, EntityManagerInterface $em): Response
     {
         /** @var User $user */
@@ -350,17 +327,17 @@ class DefaultController extends AbstractBaseController
     }
 
     /**
-     * @Route(
-     *     "/{_locale}/now",
-     *     name="now",
-     *     defaults={
-     *      "priority": "0.9",
-     *      "changefreq": "hourly"
-     *      }
-     * )
-     *
      * @throws \Exception
      */
+    #[
+        Route('/{_locale}/now',
+            name: 'now',
+            defaults: [
+                'priority' => '0.9',
+                'changefreq' => 'hourly'
+            ]
+        )
+    ]
     public function now(EntityManagerInterface $em, Request $request): Response
     {
         $dateTime = new \DateTime();
@@ -378,11 +355,7 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/affiliate",
-     *     name="affiliate",
-     * )
-     */
+    #[Route('/{_locale}/affiliate', name: 'affiliate')]
     public function affiliate(EntityManagerInterface $em, Request $request): Response
     {
         $result = $em->getRepository(Affiliate::class)->getOneAffiliate($request->getLocale());
@@ -397,31 +370,30 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route("/",
-     *     name="index_radio_addict",
-     *     host="{subdomain}.radio-addict.com",
-     *     defaults={"subdomain"="www"},
-     *     requirements={"subdomain"="www|local"}
-     * )
-     */
+    #[
+        Route('/',
+            name: 'index_radio_addict',
+            host: '{subdomain}.radio-addict.com',
+            defaults: [ 'subdomain' => 'www'],
+            requirements: ['subdomain' => 'wwww|local']
+        )
+    ]
     public function indexRadioAddict(): Response
     {
         return $this->redirectToRoute('streaming_spa');
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/",
-     *     name="index_radio_addict_locale",
-     *     host="{subdomain}.radio-addict.com",
-     *     defaults={"subdomain"="www"},
-     *     requirements={
-     *       "subdomain"="www|local",
-     *       "_locale": "en|fr|es"
-     *     }
-     * )
-     */
+    #[
+        Route('/{_locale}/',
+            name: 'index_radio_addict_locale',
+            host: '{subdomain}.radio-addict.com',
+            defaults: [ 'subdomain' => 'www'],
+            requirements: [
+                'subdomain' => 'wwww|local',
+                '_locale' => 'en|fr|es'
+            ]
+        )
+    ]
     public function indexRadioAddictLocale(): Response
     {
         return $this->redirectToRoute('streaming_spa');
@@ -430,30 +402,25 @@ class DefaultController extends AbstractBaseController
     /**
      * This is the spa entry point,
      *   matching multiple urls that are then handled by the spa router
-     *
-     * @Route(
-     *     "/{_locale}/",
-     *     name="app",
-     *     defaults={
-     *      "priority": "1.0",
-     *      "changefreq": "daily"
-     *     },
-     *     requirements={
-     *      "_locale": "en|fr|es",
-     *     }
-     * )
      */
+    #[
+        Route('/{_locale}/',
+            name: 'app',
+            defaults: [
+                'priority' => '1.0',
+                'changefreq' => 'daily'
+            ],
+            requirements: [
+                '_locale' => 'en|fr|es'
+            ]
+        )
+    ]
     public function index(string $collection=null, Request $request): Response
     {
         return $this->render('default/index.html.twig', []);
     }
 
-    /**
-     * @Route(
-     *     "/",
-     *     name="app_legacy"
-     * )
-     */
+    #[Route('/', name: 'app_legacy')]
     public function indexLegacy(Host $host, Request $request): RedirectResponse
     {
         $locale = $host->getDefaultLocale($request);

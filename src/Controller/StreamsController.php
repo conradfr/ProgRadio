@@ -16,19 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @Route("/streams")
- */
+#[Route('/streams')]
 class StreamsController  extends AbstractBaseController
 {
     public const DEFAULT_RESULTS = 40;
 
-    /**
-     * @Route(
-     *     "/list",
-     *     name="streams_radios",
-     * )
-     */
+    #[Route('/list', name: 'streams_radios')]
     public function list(EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favoritesStream', []);
@@ -53,12 +46,7 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
-    /**
-     * @Route(
-     *     "/search",
-     *     name="streams_radios_search",
-     * )
-     */
+    #[Route('/search', name: 'streams_radios_search')]
     public function search(EntityManagerInterface $em, Request $request): Response
     {
         $text = (string) $request->query->get('text');
@@ -84,12 +72,7 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
-    /**
-     * @Route(
-     *     "/bestradio/{codeName}",
-     *     name="streams_best_radio",
-     * )
-     */
+    #[Route('/bestradio/{codeName}', name: 'streams_best_radio')]
     public function bestRadio(Radio $radio, EntityManagerInterface $em): Response
     {
         $stream =  $em->getRepository(Stream::class)->getBestStreamForRadio($radio);
@@ -105,14 +88,8 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
-    /**
-     * LEGACY
-     *
-     * @Route(
-     *     "/config",
-     *     name="streams_config",
-     * )
-     */
+    // LEGACY
+    #[Route('/config', name: 'streams_config')]
     public function config(RadioBrowser $radioBrowser): Response
     {
         $radioBrowserUrl = 'https://' . $radioBrowser->getOneRandomServer();
@@ -123,12 +100,7 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
-    /**
-     * @Route(
-     *     "/random",
-     *     name="streams_random",
-     * )
-     */
+    #[Route('/random', name: 'streams_random')]
     public function random(EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favoritesStream', []);
@@ -147,14 +119,8 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
-    /**
-     * LEGACY
-     *
-     * @Route(
-     *     "/countries",
-     *     name="streams_countries",
-     * )
-     */
+    // LEGACY
+    #[Route('/countries', name: 'streams_countries')]
     public function countries(RadioBrowser $radioBrowser, Request $request): Response
     {
         $locale = $request->query->get('locale', $this->getParameter('kernel.default_locale'));
@@ -166,12 +132,7 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
-    /**
-     * @Route(
-     *     "/favorites",
-     *     name="streams_favorites",
-     * )
-     */
+    #[Route('/favorites', name: 'streams_favorites')]
     public function favorites(Request $request): Response
     {
         /** @var User $user */
@@ -195,14 +156,8 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
-    /**
-     * @Route(
-     *     "/favorite/{id}",
-     *     name="streams_favorite_toggle"
-     * )
-     *
-     * @IsGranted("ROLE_USER")
-     */
+    #[Route('/favorite/{id}', name: 'streams_favorite_toggle')]
+    #[IsGranted('ROLE_USER')]
     public function toggleFavorite(Stream $stream, EntityManagerInterface $em): Response
     {
         /** @var User $user */

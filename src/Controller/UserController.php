@@ -19,34 +19,21 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/my-account")
- *
- * @IsGranted("ROLE_USER")
- */
+#[Route('/my-account')]
+#[IsGranted('ROLE_USER')]
 class UserController extends AbstractBaseController
 {
     protected const SESSION_DELETE_ATTR = 'delete-id';
 
     public function __construct(private RequestStack $requestStack) { }
 
-    /**
-     * @Route(
-     *     "/{_locale}/",
-     *     name="user_page",
-     * )
-     */
+    #[Route('/{_locale}/', name: 'user_page')]
     public function index(Request $request): Response
     {
         return $this->redirectToRoute('user_page_email');
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/email",
-     *     name="user_page_email",
-     * )
-     */
+    #[Route('/{_locale}/email', name: 'user_page_email')]
     public function emailChange(Host $host, Request $request, EntityManagerInterface $em, MailerInterface $mailer,         TranslatorInterface $translator): Response
     {
         /** @var \App\Entity\User $user */
@@ -119,12 +106,7 @@ class UserController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/password",
-     *     name="user_page_password",
-     * )
-     */
+    #[Route('/{_locale}/password', name: 'user_page_password')]
     public function passwordUpdate(
         Host $host,
         Request $request,
@@ -182,12 +164,7 @@ class UserController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/delete",
-     *     name="user_page_delete",
-     * )
-     */
+    #[Route('/{_locale}/delete', name: 'user_page_delete')]
     public function delete(): Response
     {
         $token = uniqid();
@@ -199,12 +176,7 @@ class UserController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/delete/confirm/{token}",
-     *     name="user_page_delete_confirm",
-     * )
-     */
+    #[Route('/{_locale}/delete/confirm/{token}', name: 'user_page_delete_confirm')]
     public function deleteConfirm(string $token, Request $request, EntityManagerInterface $em): Response
     {
         $session = $this->requestStack->getSession();

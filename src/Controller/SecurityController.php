@@ -26,12 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityController extends AbstractController
 {
-    /**
-     * @Route(
-     *     "/{_locale}/login",
-     *     name="app_login"
-     * )
-     */
+    #[Route('/{_locale}/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
@@ -46,23 +41,13 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/logout",
-     *     name="app_logout"
-     * )
-     */
+    #[Route('/{_locale}/logout', name: 'app_logout')]
     public function logout()
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/signup",
-     *     name="app_register"
-     * )
-     */
+    #[Route('/{_locale}/signup', name: 'app_register')]
     public function register(Host $host, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer, TranslatorInterface $translator): Response
     {
         $user = new User();
@@ -118,12 +103,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/forgotten-password",
-     *     name="forgotten_password"
-     * )
-     */
+    #[Route('/{_locale}/forgotten-password', name: 'forgotten_password')]
     public function forgottenPassword(Host $host, Request $request, EntityManagerInterface $em, MailerInterface $mailer, TranslatorInterface $translator): Response
     {
         $userEmail = null;
@@ -164,12 +144,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/reset-password/{token}",
-     *     name="reset_password"
-     * )
-     */
+    #[Route('/{_locale}/reset-password/{token}', name: 'reset_password')]
     public function resetPassword(string $token, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
     {
         /** @var \App\Entity\User $user */
@@ -208,12 +183,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/revert-email/{token}",
-     *     name="revert_email"
-     * )
-     */
+    #[Route('/{_locale}/revert-email/{token}', name: 'revert_email')]
     public function revertEmailChange(string $token, Request $request, EntityManagerInterface $em): Response
     {
         $userEmailChange = $em->getRepository(UserEmailChange::class)->findFromToken($token);
@@ -237,23 +207,13 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/signup-success",
-     *     name="signup_success"
-     * )
-     */
+    #[Route('/{_locale}/signup-success', name: 'signup_success')]
     public function registerConfirmation(): Response
     {
         return $this->render('security/confirmation.html.twig', []);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/deleted",
-     *     name="user_deleted"
-     * )
-     */
+    #[Route('/{_locale}/deleted', name: 'user_deleted')]
     public function delete(): Response
     {
         return $this->render('default/user/delete_confirm.html.twig', []);

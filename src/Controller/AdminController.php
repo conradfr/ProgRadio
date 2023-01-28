@@ -27,12 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class AdminController extends AbstractBaseController
 {
-    /**
-     * @Route(
-     *     "/admin",
-     *     name="admin"
-     * )
-     */
+    #[Route('/admin', name: 'admin')]
     public function indexAction(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository(Radio::class)->getActiveRadiosFull();
@@ -54,12 +49,7 @@ class AdminController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/admin/listening/webcount",
-     *     name="admin_listening_webcount"
-     * )
-     */
+    #[Route('/admin/listening/webcount', name: 'admin_listening_webcount')]
     public function listeningWebCount(EntityManagerInterface $em): Response
     {
         $count = $em->getRepository(ListeningSession::class)->getCurrentWeb();
@@ -69,13 +59,7 @@ class AdminController extends AbstractBaseController
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/admin/listening/{dateRange}",
-     *     requirements={"dateRange"="\w+"},
-     *     name="admin_listening"
-     * )
-     */
+    #[Route('/admin/listening/{dateRange}', name: 'admin_listening', requirements: ['dateRange' => '\w+'])]
     public function listeningAction(DateUtils $dateUtils, EntityManagerInterface $em, Request $request, string $dateRange='today'): Response
     {
         $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
@@ -187,12 +171,7 @@ class AdminController extends AbstractBaseController
         return $this->render('default/admin/stream_overloading.html.twig',['form' => $form->createView()]);
     }
 
-    /**
-     * @Route(
-     *     "/admin/shares",
-     *     name="admin_shares"
-     * )
-     */
+    #[Route('/admin/shares', name: 'admin_shares')]
     public function shares(EntityManagerInterface $em, Request $request): Response
     {
         $dbData = $em->getRepository(Radio::class)->getNameAndShares();
@@ -231,23 +210,13 @@ class AdminController extends AbstractBaseController
         return $this->render('default/admin/shares.html.twig', ['form' => $form->createView()]);
     }
 
-    /**
-     * @Route(
-     *     "/admin/goaccess",
-     *     name="admin_goaccess"
-     * )
-     */
+    #[Route('/admin/goaccess', name: 'admin_goaccess')]
     public function goaccess(): Response
     {
         return $this->render('default/admin/goaccess.html.twig');
     }
 
-    /**
-     * @Route(
-     *     "/admin/goaccessiframe",
-     *     name="admin_goaccess_iframe"
-     * )
-     */
+    #[Route('/admin/goaccessiframe', name: 'admin_goaccess_iframe')]
     public function goaccessiframe(): Response
     {
         return $this->render('default/admin/goaccessiframe.html.twig');

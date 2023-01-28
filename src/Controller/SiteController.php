@@ -25,34 +25,32 @@ class SiteController extends AbstractController
 {
    public const LANG = ['fr', 'en', 'es'];
 
-    /**
-     * @Route(
-     *     "/{_locale}/faq",
-     *     name="faq_radio_addict",
-     *     host="{subdomain}.radio-addict.com",
-     *     defaults={"subdomain"="www"},
-     *     requirements={"subdomain"="www|local"},
-     *     defaults={
-     *      "priority": "0.2",
-     *      "changefreq": "monthly"
-     *      }
-     * )
-     */
+    #[
+        Route('/{_locale}/faq',
+            name: 'faq_radio_addict',
+            host: '{subdomain}.radio-addict.com',
+            requirements: ['subdmain' => 'www|local'],
+            defaults: [
+                'subdomain' => ['subdomain' => 'www'],
+                'priority' => '0.2',
+                'changefreq' => 'monthly'
+            ]
+        )
+    ]
     public function faqRadioAddict(): Response
     {
         return $this->render('default/faq_radio_addict.html.twig', []);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/faq",
-     *     name="faq",
-     *     defaults={
-     *      "priority": "0.2",
-     *      "changefreq": "monthly"
-     *      }
-     * )
-     */
+    #[
+        Route('/{_locale}/faq',
+            name: 'faq',
+            defaults: [
+                'priority' => '0.2',
+                'changefreq' => 'monthly'
+            ]
+        )
+    ]
     public function faq(EntityManagerInterface $em, Request $request): Response
     {
         $favorites = $request->attributes->get('favorites', []);
@@ -67,16 +65,15 @@ class SiteController extends AbstractController
         );
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/contact",
-     *     name="contact",
-     *     defaults={
-     *      "priority": "0.1",
-     *      "changefreq": "yearly"
-     *      }
-     * )
-     */
+    #[
+        Route('/{_locale}/contact',
+            name: 'contact',
+            defaults: [
+                'priority' => '0.1',
+                'changefreq' => 'yearly'
+            ]
+        )
+    ]
     public function contact(MailerInterface $mailer, TranslatorInterface $translator, Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|Response
     {
         $contact = new Contact();
@@ -111,24 +108,21 @@ class SiteController extends AbstractController
         return $this->render('default/contact.html.twig', ['form' => $form->createView()]);
     }
 
-    /**
-     * @Route(
-     *     "/{_locale}/legal",
-     *     name="legal",
-     *     defaults={
-     *      "priority": "0.1",
-     *      "changefreq": "yearly"
-     *      }
-     * )
-     */
+    #[
+        Route('/{_locale}/legal',
+            name: 'legal',
+            defaults: [
+                'priority' => '0.1',
+                'changefreq' => 'yearly'
+            ]
+        )
+    ]
     public function legal(): Response
     {
         return $this->render('default/legal.html.twig', []);
     }
 
-    /**
-     * @Route("/ads.txt", stateless=true)
-     */
+    #[Route('/ads.txt', stateless: true)]
     public function adsTxt(EntityManagerInterface $em): Response
     {
         $txt = 'google.com, ' .  getenv('ADSENSE_KEY') .', DIRECT, f08c47fec0942fa0';
@@ -137,9 +131,7 @@ class SiteController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/app-ads.txt", stateless=true)
-     */
+    #[Route('/app-ads.txt', stateless: true)]
     public function appAdsTxt(EntityManagerInterface $em): Response
     {
         $txt = 'google.com, ' .  getenv('ADMOB_KEY') .', DIRECT, f08c47fec0942fa0';
@@ -154,15 +146,13 @@ class SiteController extends AbstractController
      * Doesn't use the serializer.
      * While it would have looked cleaner it seems too much work to override full xml output.
      *
-     * @Route(
-     *     "/sitemap.{_format}",
-     *     defaults={"_format": "xml"},
-     *     requirements={
-     *         "_format": "xml"
-     *     },
-     *     stateless=true
-     * )
      */
+    #[
+        Route('/sitemap.{_format}',
+            stateless: true,
+            requirements: ['_format' => "xml"]
+        )
+    ]
     public function sitemap(Host $host, RouterInterface $router, Request $request, EntityManagerInterface $em): Response
     {
         // @todo move to service
