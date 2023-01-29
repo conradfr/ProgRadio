@@ -26,26 +26,17 @@ class Collection
     #[ORM\Column(type: 'string', length: 100)]
     private ?string $name = null;
 
-    /**
-     * @var string
-     */
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 100)]
-    private $name_fr;
+    private string $name_fr;
 
-    /**
-     * @var string
-     */
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 100)]
-    private $name_en;
+    private string $name_en;
 
-    /**
-     * @var string
-     */
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 100)]
-    private $name_es;
+    private string $name_es;
 
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 25)]

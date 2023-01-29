@@ -21,22 +21,17 @@ class UserEmailChange
     #[ORM\Column(type: 'string', length: 180)]
     private ?string $email = null;
 
-    /**
-     * @var User
-     */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'emailChanges')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    private $user;
+    private User $user;
 
      /**
-     *
      * @Gedmo\Timestampable(on="create")
      */
     #[ORM\Column(name: 'created_at', type: 'datetime')]
     private ?\DateTime $createdAt = null;
 
     /**
-     *
      * @Gedmo\Timestampable(on="update")
      */
     #[ORM\Column(name: 'updated_at', type: 'datetime')]

@@ -55,27 +55,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Stream::class)]
     private Collection $favoriteStreams;
 
-    /**
-     * @var Collection
-     */
     #[ORM\OneToMany(targetEntity: UserEmailChange::class, mappedBy: 'user')]
     private Collection $emailChanges;
 
     /**
-     * @var \DateTime
-     *
      * @Gedmo\Timestampable(on="create")
      */
     #[ORM\Column(name: 'created_at', type: 'datetime')]
-    private $createdAt;
+    private \DateTime $createdAt;
 
     /**
-     * @var \DateTime
-     *
      * @Gedmo\Timestampable(on="update")
      */
     #[ORM\Column(name: 'updated_at', type: 'datetime')]
-    private $updatedAt;
+    private \DateTime $updatedAt;
 
     #[ORM\Column(type: 'string', length: 100)]
     private ?string $passwordResetToken = null;

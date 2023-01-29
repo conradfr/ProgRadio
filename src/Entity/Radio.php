@@ -58,11 +58,10 @@ class Radio
     private bool $active = true;
 
     /**
-     * @var RadioStream[]
+     * @var RadioStream[]|null
      */
     #[ORM\OneToMany(targetEntity: RadioStream::class, mappedBy: 'radio', fetch: 'EXTRA_LAZY')]
-    private DoctrineCollection $streams;
-
+    private ?DoctrineCollection $streams;
 
     /**
      * @var SubRadio[]

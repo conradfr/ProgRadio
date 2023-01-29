@@ -61,12 +61,9 @@ class Stream
     #[ORM\JoinColumn(name: 'radio_stream_id', referencedColumnName: 'id')]
     private ?RadioStream $radioStream;
 
-    /**
-     * @var StreamSong
-     */
     #[ORM\ManyToOne(targetEntity: StreamSong::class, inversedBy: 'streams')]
     #[ORM\JoinColumn(name: 'stream_song_id', referencedColumnName: 'id')]
-    private $streamSong;
+    private ?StreamSong $streamSong;
 
     #[ORM\Column(type: 'string', length: 30)]
     private ?string $streamSongCodeName = null;
