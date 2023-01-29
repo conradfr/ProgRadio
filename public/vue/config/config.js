@@ -23,6 +23,7 @@ export const MOBILE_MENU_TIMER_CLASSNAME = 'nav-link-timer';
 
 export const DEFAULT_COLLECTION = 'nationwide';
 export const COLLECTION_FAVORITES = 'favorites';
+export const COLLECTION_EXCLUDED_FROM_ALL = ['favorites', 'francebleu'];
 export const COLLECTION_ALL = 'all';
 
 export const RADIO_LIST_IGNORE_COUNTRY = 'FR';

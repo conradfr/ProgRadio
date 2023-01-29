@@ -154,9 +154,9 @@ const rankCollection = (
 
   // special case, we loop each collection to get all radios
   if (collectionCodeName === config.COLLECTION_ALL) {
-    const collectionIsNotFavorites = (entry: Collection) => entry.code_name !== config.COLLECTION_FAVORITES;
+    const collectionNotExcluded = (entry: Collection) => config.COLLECTION_EXCLUDED_FROM_ALL.indexOf(entry.code_name) === -1;
     const collectionsOrdered = compose(
-      filter(collectionIsNotFavorites),
+      filter(collectionNotExcluded),
       orderBy(['priority'], ['asc'])
     )(collections);
 
