@@ -63,7 +63,6 @@ export const useUserStore = defineStore('user', {
           this.favoritesStream = user?.favoritesStream || [];
 
           scheduleStore.setFavoritesCollection(this.favoritesRadio);
-          scheduleStore.setFavoritesCollection(user?.favoritesRadio);
           streamsStore.setStreamFavorites(this.favoritesStream);
 
           cache.setCache(CACHE_KEY_RADIO_FAVORITES, user?.favoritesRadio);
@@ -102,7 +101,7 @@ export const useUserStore = defineStore('user', {
       setTimeout(
         async () => {
           if (this.logged === true) {
-            ScheduleApi.toggleFavoriteRadio(radioCodeName);
+            await ScheduleApi.toggleFavoriteRadio(radioCodeName);
             this.getUserData();
             return;
           }
@@ -144,10 +143,8 @@ export const useUserStore = defineStore('user', {
       setTimeout(
         async () => {
           if (this.logged === true) {
-            StreamsApi.toggleFavoriteStream(streamId)
-              .then(() => {
-                this.getUserData();
-              });
+            await StreamsApi.toggleFavoriteStream(streamId);
+            this.getUserData();
             return;
           }
 

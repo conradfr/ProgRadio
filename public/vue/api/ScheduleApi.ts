@@ -77,14 +77,15 @@ const getRadiosData = async (): Promise<GetRadiosDataResponse|null> => {
   }
 };
 
-const toggleFavoriteRadio = (radioCodeName: string): void => {
+const toggleFavoriteRadio = (radioCodeName: string): Promise<any>|null => {
   try {
-    axios.get(`/radios/favorite/${radioCodeName}`);
+    return axios.get(`/radios/favorite/${radioCodeName}`);
   } catch (error: any) {
     if (axios.isAxiosError(error) && error.response!.status === 403) {
       /* eslint-disable no-undef */
       window.location.href = '/fr/login';
     }
+    return null;
   }
 };
 

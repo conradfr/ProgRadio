@@ -148,12 +148,13 @@ const incrementPlayCount = (stationUuid: string, radioBrowserUrl: string|null): 
   }
 };
 
-const toggleFavoriteStream = (streamCodeName: string) => {
+const toggleFavoriteStream = (streamCodeName: string): Promise<any>|null => {
   return axios.get(`/streams/favorite/${streamCodeName}`)
     .catch((error) => {
       if (error.response.status === 403) {
         window.location.href = '/fr/login';
       }
+      return null;
     });
 };
 
