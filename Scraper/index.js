@@ -51,7 +51,7 @@ const getResults = async (radios, radiosList) => {
       return await radio_module.getScrap(dateObj, sub_radio)
         .then(async function (data) {
           const dateFormat = 'DD-MM-YYYY';
-          logger.log('info', `${radio_module.getName} - items found: ${data.length}`);
+          logger.log('info', `${radio_module.getName} (${sub_radio}) - items found: ${data.length}`);
 
           if (data.length > 0) {
             const dataExport = {
@@ -67,14 +67,14 @@ const getResults = async (radios, radiosList) => {
               }
             })
               .then(function (response) {
-                logger.log('info', `${radio_module.getName} - api request done.`)
+                logger.log('info', `${radio_module.getName} (${sub_radio}) - api request done.`)
                 // return true;
               }).catch((error) => {
-                logger.log('warn', `${radio_module.getName} - api request failed.`)
+                logger.log('warn', `${radio_module.getName} (${sub_radio}) - api request failed (${error}).`)
               });
           } else {
             // Log specifically when no data is found, in case of website change etc
-            logger.log('warn', `${radio_module.getName} - NO DATA`);
+            logger.log('warn', `${radio_module.getName} (${sub_radio}) - NO DATA`);
           }
         })
         .catch(error => {
