@@ -12,9 +12,13 @@
         </div>
         <div class="modal-body pb-0">
           <div class="d-flex flex-row flex-wrap justify-content-evenly">
-            <button v-for="sub_radio in radio.sub_radios" :key="sub_radio.code_name"
+            <button v-for="sub_radio in subRadiosSorted" :key="sub_radio.code_name"
+              v-once
               v-on:click="regionClick(sub_radio.code_name)"
-              type="button" class="btn btn-secondary m-2">{{ sub_radio.name }}</button>
+              type="button" class="btn m-2"
+              :class="{ 'btn-primary': currentSubRadioCodeName === sub_radio.code_name,
+                'btn-seconday': currentSubRadioCodeName === sub_radio.code_name }"
+            >{{ sub_radio.name }}</button>
           </div>
         </div>
         <div class="modal-footer">
@@ -42,7 +46,32 @@ import { useScheduleStore } from '@/stores/scheduleStore';
 import { useUserStore } from '@/stores/userStore';
 
 export default defineComponent({
-  computed: mapState(useScheduleStore, { radio: 'radioForRegionModal' }),
+  computed: {
+    ...mapState(useScheduleStore, ['radios', 'getSubRadio']),
+    ...mapState(useScheduleStore, { radio: 'radioForRegionModal' }),
+    subRadiosSorted() {
+      if (this.radio === null || this.radio.sub_radios === null) {
+        return [];
+      }
+
+      /* eslint-disable no-param-reassign */
+      return Object.keys(this.radio.sub_radios).sort().reduce(
+        (obj, key) => {
+          /* eslint-disable no-param-reassign */
+          // @ts-ignore
+          obj[key] = this.radio.sub_radios[key];
+          return obj;
+        }, {}
+      );
+    },
+    currentSubRadioCodeName() {
+      if (this.radio === null) {
+        return null;
+      }
+
+      return this.getSubRadio(this.radio.code_name).code_name;
+    },
+  },
   // computed: mapState(usePlayerStore, ['timer']),
   methods: {
     ...mapActions(useUserStore, ['setSubRadio']),
