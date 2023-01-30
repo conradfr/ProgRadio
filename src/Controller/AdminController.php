@@ -8,6 +8,7 @@ use App\Entity\Collection;
 use App\Entity\ListeningSession;
 use App\Entity\Radio;
 use App\Entity\RadioStream;
+use App\Entity\Stream;
 use App\Entity\StreamOverloading;
 use App\Entity\StreamSong;
 use App\Entity\ScheduleEntry;
@@ -147,6 +148,7 @@ class AdminController extends AbstractBaseController
     public function streamOverloading(string $streamId, EntityManagerInterface $em, Request $request): Response
     {
         $streamOverloading = $em->getRepository(StreamOverloading::class)->find($streamId);
+        $stream = $em->getRepository(Stream::class)->find($streamId);
 
         if (!$streamOverloading) {
             $streamOverloading = new StreamOverloading();
@@ -166,7 +168,12 @@ class AdminController extends AbstractBaseController
             );
         }
 
-        return $this->render('default/admin/stream_overloading.html.twig',['form' => $form->createView()]);
+        return $this->render('default/admin/stream_overloading.html.twig',
+            [
+                'stream' => $stream,
+                'form' => $form->createView()
+            ]
+        );
     }
 
     #[Route('/admin/shares', name: 'admin_shares')]
