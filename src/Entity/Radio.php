@@ -27,6 +27,9 @@ class Radio
     #[ORM\Column(type: 'string', length: 100)]
     private ?string $name = null;
 
+    #[ORM\Column(type: 'string', length: 2)]
+    private string $countryCode;
+
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $description_fr = null;
 
@@ -92,6 +95,16 @@ class Radio
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getCountryCode(): string
+    {
+        return $this->countryCode;
+    }
+
+    public function setCountryCode(string $countryCode): void
+    {
+        $this->countryCode = $countryCode;
     }
 
     public function getCategory(): Category

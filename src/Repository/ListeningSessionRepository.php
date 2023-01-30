@@ -21,7 +21,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
         parent::__construct($registry, Radio::class);
     }
 
-    public function getRadiosData($startDate, $endDate=null): array
+    public function getRadiosData($startDate, $endDate=null, ?string $countryCode=null): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -35,6 +35,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
             ->addOrderBy('total_seconds', 'DESC');
 
         $this->addDates($qb, $startDate, $endDate);
+        $this->addCountryCode($qb, 'r', $countryCode);
 
         $query = $qb->getQuery();
         $query->disableResultCache();
@@ -70,7 +71,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
         return array_column($result, null, 'source');
     }
 
-    public function getStreamsData($startDate, $endDate=null): array
+    public function getStreamsData($startDate, $endDate=null, ?string $countryCode=null): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -84,6 +85,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
             ->addOrderBy('total_seconds', 'DESC');
 
         $this->addDates($qb, $startDate, $endDate);
+        $this->addCountryCode($qb, 's', $countryCode);
 
         $query = $qb->getQuery();
         $query->disableResultCache();
@@ -105,6 +107,16 @@ class ListeningSessionRepository extends ServiceEntityRepository
                 'endDate'=> $endDate
             ]);
         }
+    }
+
+    protected function addCountryCode(QueryBuilder $qb, string $entityShorts, ?string $countyCode=null): void
+    {
+        if ($countyCode === null) {
+            return;
+        }
+
+        $qb->andWhere($entityShorts . '.countryCode = :countryCode')
+           ->setParameter('countryCode', strtoupper($countyCode));
     }
 
     public function getCurrentWeb()

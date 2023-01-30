@@ -58,8 +58,8 @@ class AdminController extends AbstractBaseController
         ]);
     }
 
-    #[Route('/admin/listening/{dateRange}', name: 'admin_listening', requirements: ['dateRange' => '\w+'])]
-    public function listeningAction(DateUtils $dateUtils, EntityManagerInterface $em, Request $request, string $dateRange='today'): Response
+    #[Route('/admin/listening/{dateRange}/{countryCode}', name: 'admin_listening', requirements: ['dateRange' => '\w+'])]
+    public function listeningAction(DateUtils $dateUtils, EntityManagerInterface $em, Request $request, string $dateRange='today', ?string $countryCode=null): Response
     {
         $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
 
@@ -69,7 +69,7 @@ class AdminController extends AbstractBaseController
 
         // RADIOS
 
-        $radioListening = $em->getRepository(ListeningSession::class)->getRadiosData($dates[0], $dates[1]);
+        $radioListening = $em->getRepository(ListeningSession::class)->getRadiosData($dates[0], $dates[1], $countryCode);
         $radioListeningDevices = $em->getRepository(ListeningSession::class)->getPerDeviceData($dates[0], $dates[1]);
         $collections = $em->getRepository(Collection::class)->getCollections();
         $collections = array_filter($collections, function($collection) {
@@ -116,7 +116,7 @@ class AdminController extends AbstractBaseController
 
         // STREAMS
 
-        $streamListening = $em->getRepository(ListeningSession::class)->getStreamsData($dates[0], $dates[1]);
+        $streamListening = $em->getRepository(ListeningSession::class)->getStreamsData($dates[0], $dates[1], $countryCode);
         $streamListeningDevices = $em->getRepository(ListeningSession::class)->getPerDeviceData($dates[0], $dates[1], 'stream');
 
         $sessionsStreamsTotal =  array_reduce($streamListening, function($acc, $ls) {
