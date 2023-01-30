@@ -36,7 +36,10 @@ class ListeningSessionRepository extends ServiceEntityRepository
 
         $this->addDates($qb, $startDate, $endDate);
 
-        return $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+        $query->disableResultCache();
+
+        return $query->getResult();
     }
 
     public function getPerDeviceData($startDate, $endDate=null, $type='radio'): array
@@ -59,7 +62,10 @@ class ListeningSessionRepository extends ServiceEntityRepository
             $qb->andWhere('ls.radioStream IS NULL');
         }
 
-        $result = $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+        $query->disableResultCache();
+
+        $result = $query->getResult();
 
         return array_column($result, null, 'source');
     }
@@ -79,7 +85,10 @@ class ListeningSessionRepository extends ServiceEntityRepository
 
         $this->addDates($qb, $startDate, $endDate);
 
-        return $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+        $query->disableResultCache();
+
+        return $query->getResult();
     }
 
     protected function addDates(QueryBuilder $qb, \DateTime $startDate, \DateTime $endDate=null): void
