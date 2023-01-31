@@ -367,9 +367,10 @@ class DefaultController extends AbstractBaseController
     #[
         Route('/',
             name: 'index_radio_addict',
+            priority: 2,
             host: '{subdomain}.radio-addict.com',
             defaults: [ 'subdomain' => 'www'],
-            requirements: ['subdomain' => 'wwww|local']
+            requirements: ['subdomain' => 'www|local']
         )
     ]
     public function indexRadioAddict(): Response
@@ -380,10 +381,11 @@ class DefaultController extends AbstractBaseController
     #[
         Route('/{_locale}/',
             name: 'index_radio_addict_locale',
+            priority: 1,
             host: '{subdomain}.radio-addict.com',
             defaults: [ 'subdomain' => 'www'],
             requirements: [
-                'subdomain' => 'wwww|local',
+                'subdomain' => 'www|local',
                 '_locale' => 'en|fr|es'
             ]
         )
