@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -343,7 +343,7 @@ class DefaultController extends AbstractBaseController
 
         return $this->jsonResponse([
             'status' => 'OK',
-            'id' => $userSong->getId()
+            'id' => 's' . $userSong->getId()
         ]);
     }
 

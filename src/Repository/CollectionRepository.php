@@ -8,7 +8,7 @@ use App\Entity\Collection;
 use App\Entity\Radio;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class CollectionRepository extends ServiceEntityRepository
 {

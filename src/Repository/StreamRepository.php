@@ -9,7 +9,7 @@ use App\Entity\Stream;
 use App\Entity\RadioStream;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /*
  @TODO reduce code duplication for queries
