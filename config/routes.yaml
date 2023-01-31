@@ -6,8 +6,10 @@
 # The spa intercept the urls client side, here it's for external/direct access
 
 controllers:
-    resource: ../src/Controller/
-    type: annotation
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
 
 kernel:
     resource: ../src/Kernel.php
@@ -32,4 +34,3 @@ streaming_spa:
 radio_spa:
     path: /{_locale}/radio/{collection?}
     controller: App\Controller\DefaultController::index
-
