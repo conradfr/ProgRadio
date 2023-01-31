@@ -118,7 +118,7 @@ createApp({
             this.hls.loadSource(streamingUrl);
             this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
               window.audio.play().then(() => {
-                this.playingStarted();
+                this.playingStarted(topic);
               });
             });
           });
@@ -130,7 +130,7 @@ createApp({
 
       window.audio = new Audio(`${streamUrl}`);
       window.audio.play().then(() => {
-        this.playingStarted();
+        this.playingStarted(topic);
       });
     }
   },
@@ -165,7 +165,7 @@ createApp({
     this.sessionId = null;
     this.playingStart = null;
   },
-  playingStarted() {
+  playingStarted(topic) {
     this.lastUpdated = new Date();
     this.playingStart = new Date();
 

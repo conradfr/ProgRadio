@@ -30,7 +30,7 @@
     <div class="row">
         <div class="col-sm-2 col-12">
             <div class="radio-page-side sticky">
-                <div class="text-center mb-4">
+                <div class="text-center mb-2">
                     <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ self.picture(stream) }}">
                 </div>
             </div>
@@ -38,16 +38,16 @@
         <div class="col-sm-10 col-10 offset-1 offset-sm-0 pb-3">
             <div class="row">
                 <div class="col-sm-9 col-12 order-2 order-sm-1">
-                    <h4 class="mb-4">{{ stream.name | capitalize }}</h4>
+                    <h4 class="mb-4 mb-sm-5">{{ stream.name | capitalize }}</h4>
 
-                    <div class="stream-page-stream mt-3 mb-4" v-scope>
+                    <div class="stream-page-stream mt-5 mt-sm-3 mb-5" v-scope>
                         <div class="radio-page-streams-one d-none d-flex align-items-center justify-content-center justify-content-sm-start"
                              @vue:mounted="$el.classList.remove('d-none')">
                             <div>
                                 <div
-                                        v-if="playing === false"
-                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}')"
-                                        class="radio-page-play">
+                                    v-if="playing === false"
+                                    @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}')"
+                                    class="radio-page-play">
                                     <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
                                          src="/img/play-button-inside-a-circle.svg">
                                 </div>
@@ -76,11 +76,17 @@
                             </div>
                         </div>
 
-                        <div class="mt-4" v-if="song !== null">
-                            <strong>{{ 'page.stream.playing'|trans }}:</strong>
-                            {% verbatim %}
-                                ♫ {{ song }}
-                            {% endverbatim %}
+                        <div class="mt-4 mb-1" v-if="song !== null">
+                            <div>
+                                <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
+                                {% verbatim %}♫ {{ song }}{% endverbatim %}
+                            </div>
+                            <div class="mt-2" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                                <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
+                                   :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                                    <i class="bi bi-youtube"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -92,7 +98,7 @@
                     {% endif %}
 
                     {% if stream.website is defined and stream.website is not null %}
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a>
                         </div>
                     {% endif %}

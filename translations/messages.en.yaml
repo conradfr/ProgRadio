@@ -99,6 +99,7 @@ page:
         country: Country
         description: 'Listen to radios from all over the world'
         discover: Discover more radios, search by country and style ...
+        find_youtube: Find on Youtube
         playing: Playing
         suggested: Suggested radios
         tags: Tags

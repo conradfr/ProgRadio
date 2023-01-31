@@ -1,22 +1,6 @@
 const path = require('path')
 var webpack = require('webpack');
-const ESLintPlugin = require('eslint-webpack-plugin');
-
-function recursiveIssuer(m, c) {
-  const issuer = c.moduleGraph.getIssuer(m);
-
-  if (issuer) {
-    return recursiveIssuer(issuer, c);
-  }
-
-  const chunks = c.chunkGraph.getModuleChunks(m);
-
-  for (const chunk of chunks) {
-    return chunk.name;
-  }
-
-  return false;
-}
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -35,12 +19,6 @@ module.exports = {
 
   },
   plugins: [
-    new ESLintPlugin({
-      cache: true,
-      extensions: ['js', 'vue',],
-      context: 'public/vue',
-      files: '/'
-    }),
     new webpack.DefinePlugin({
       __VUE_PROD_DEVTOOLS__: true,
       __VUE_OPTIONS_API__: true,
@@ -50,16 +28,28 @@ module.exports = {
     }),
   ],
   resolve: {
-    alias: {
 
-    }
   },
   optimization: {
-    minimize: false,
-    removeAvailableModules: false,
-    removeEmptyChunks: false,
     splitChunks: {
-      chunks: 'all'
+      chunks: 'all',
     },
-  },
+    minimize: false,
+    nodeEnv: 'development',
+    flagIncludedChunks: true,
+    sideEffects: true,
+    usedExports: true,
+    concatenateModules: true,
+    checkWasmTypes: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          format: {
+            comments: false,
+          },
+        },
+        extractComments: false,
+      }),
+    ],
+  }
 }

@@ -23,3 +23,12 @@
 .toast-cookie-app {
   width: 450px;
 }
+
+.link-no-to-bold {
+  color: $body-color;
+  text-decoration: none;
+
+  &:hover {
+    font-weight: bold;
+  }
+}
