@@ -1,0 +1,76 @@
+<template>
+  <div class="container now-page">
+    <div class="row">
+      <div class="col-12 col-sm-9">
+        <h4 class="mt-2 mb-4">{{ $t('message.songs_page.title') }}</h4>
+
+        <table v-if="Object.keys(songs).length > 0" class="table table-striped table-songs">
+          <tbody>
+            <tr v-for="(song, index) in songs" :key="index">
+              <td  class="ps-3" style="width: 60%;">{{ song }}</td>
+              <td class="text-center" style="width: 25%;">
+                <a class="link-no-to-bold" target="_blank"
+                   :title="$t( 'message.songs_page.find_youtube')"
+                   :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                  <i class="bi bi-youtube"></i>&nbsp;&nbsp;
+                  <span class="d-none d-sm-inline">
+                    {{ $t('message.songs_page.find_youtube') }}
+                  </span>
+                </a>
+              </td>
+              <td class="text-end pe-3" style="width: 15%;">
+                <a class="link-no-to-bold" v-on:click="removeSong(index)">
+                  <i class="bi bi-trash3-fill"></i>&nbsp;&nbsp;
+                  <span class="d-none d-sm-inline">
+                    {{ $t('message.generic.delete') }}
+                  </span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div v-if="Object.keys(songs).length === 0" class="mt-5">
+          <p class="text-center mb-5">{{ $t('message.songs_page.no_songs') }}</p>
+          <div class="text-center"><img class="img-fluid" src="/img/songsave.png" alt=""></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
+
+/* eslint-disable import/no-cycle */
+import { useUserStore } from '@/stores/userStore';
+
+import {
+  GTAG_ACTION_REMOVE_SONG,
+  GTAG_ACTION_REMOVE_SONG_VALUE,
+  GTAG_CATEGORY_SONGS
+} from '@/config/config';
+
+export default defineComponent({
+  mounted() {
+    document.title = (this.$i18n as any).t('message.songs_page.title');
+  },
+  computed: {
+    ...mapState(useUserStore, ['songs']),
+  },
+  methods: {
+    ...mapActions(useUserStore, ['deleteSong']),
+    removeSong(songId: number) {
+      this.deleteSong(songId);
+
+      (this as any).$gtag.event(GTAG_ACTION_REMOVE_SONG, {
+        event_category: GTAG_CATEGORY_SONGS,
+        event_label: null,
+        value: GTAG_ACTION_REMOVE_SONG_VALUE
+      });
+    }
+  }
+});
+</script>

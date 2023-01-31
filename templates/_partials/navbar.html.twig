@@ -56,6 +56,12 @@
                     {{ menu.streaming_menu() }}
                 </li>
 
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <li class="nav-item pe-2 d-none d-sm-block">
+                        <a title="{{ 'menu.songs'|trans }}" class="nav-link pr-0 spa-link" href="{{ path('app') }}songs"><i class="bi bi-music-note-list"></i></a>
+                    </li>
+                {% endif %}
+
                 {# Plus #}
                 <li class="nav-item dropdown pe-0">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

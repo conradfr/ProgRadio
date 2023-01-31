@@ -17,6 +17,10 @@ params_spa:
     path: /{_locale}/params
     controller: App\Controller\DefaultController::index
 
+songs_spa:
+    path: /{_locale}/songs
+    controller: App\Controller\DefaultController::index
+
 schedule_spa:
     path: /{_locale}/schedule/{collection?}
     controller: App\Controller\DefaultController::index

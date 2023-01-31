@@ -9,6 +9,7 @@ import {
 } from '@/config/config';
 
 /* eslint-disable import/no-cycle */
+import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 
@@ -18,6 +19,7 @@ import type { Stream } from '@/types/stream';
 import typeUtils from '@/utils/typeUtils';
 import cache from '../utils/cache';
 import cookies from '../utils/cookies';
+import i18n from '../lang/i18n';
 
 import UserApi from '../api/UserApi';
 import ScheduleApi from '../api/ScheduleApi';
@@ -26,6 +28,7 @@ import StreamsApi from '../api/StreamsApi';
 interface State {
   logged: boolean
   subRadios: Record<string, string>
+  songs: Record<string, string>
   favoritesRadio: Array<string>
   favoritesStream: Array<string>
 }
@@ -36,6 +39,7 @@ export const useUserStore = defineStore('user', {
     {
       logged: false,
       subRadios: cookies.getJson(COOKIE_SUBRADIOS, {}),
+      songs: {},
       favoritesRadio: cache.hasCache(CACHE_KEY_RADIO_FAVORITES)
         ? cache.getCache(CACHE_KEY_RADIO_FAVORITES) : [],
       favoritesStream: cache.hasCache(CACHE_KEY_STREAM_FAVORITES)
@@ -59,6 +63,7 @@ export const useUserStore = defineStore('user', {
           }
 
           this.logged = user?.logged || false;
+          this.songs = user?.songs || {};
           this.favoritesRadio = user?.favoritesRadio || [];
           this.favoritesStream = user?.favoritesStream || [];
 
@@ -174,5 +179,31 @@ export const useUserStore = defineStore('user', {
       this.subRadios[radioCodeName] = subRadioCodeName;
       cookies.set(COOKIE_SUBRADIOS, this.subRadios);
     },
+    async addSong(song: string) {
+      const globalStore = useGlobalStore();
+
+      const savedSong = await UserApi.saveSong(song);
+
+      if (savedSong !== null && savedSong.data.status === 'OK') {
+        globalStore.displayToast({
+          message: i18n.global.tc('message.player.song_saved'),
+          type: 'success'
+        });
+
+        this.songs[savedSong.data.id] = song;
+      } else {
+        globalStore.displayToast({
+          message: i18n.global.tc('message.generic.error'),
+          type: 'error'
+        });
+      }
+    },
+    async deleteSong(songId: number) {
+      const deletedSong = await UserApi.removeSong(songId);
+
+      if (deletedSong !== null && deletedSong.data.status === 'OK') {
+        delete this.songs[songId];
+      }
+    }
   }
 });

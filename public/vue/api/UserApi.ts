@@ -11,7 +11,31 @@ const getUserData = async () => {
   }
 };
 
+/* eslint-disable arrow-body-style */
+const saveSong = (song: string): Promise<any>|null => {
+  return axios.get(`/user/song/add/${song}`)
+    .catch((error) => {
+      if (error.response.status === 403) {
+        window.location.href = '/fr/login';
+      }
+      return null;
+    });
+};
+
+/* eslint-disable arrow-body-style */
+const removeSong = (id: number): Promise<any>|null => {
+  return axios.get(`/user/song/remove/${id}`)
+    .catch((error) => {
+      if (error.response.status === 403) {
+        window.location.href = '/fr/login';
+      }
+      return null;
+    });
+};
+
 /* eslint-disable no-undef */
 export default {
-  getUserData
+  getUserData,
+  saveSong,
+  removeSong
 };

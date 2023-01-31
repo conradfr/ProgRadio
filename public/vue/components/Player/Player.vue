@@ -36,6 +36,9 @@
         }"></i>
       </div>
       <player-info v-if="radio"></player-info>
+      <transition name="timer-fade" mode="out-in">
+        <player-save-song v-if="currentSong"></player-save-song>
+      </transition>
       <div v-if="!radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}
       </div>
@@ -68,6 +71,7 @@ import { useStreamsStore } from '@/stores/streamsStore';
 import { useUserStore } from '@/stores/userStore';
 
 import PlayerInfo from './PlayerInfo.vue';
+import PlayerSaveSong from './PlayerSaveSong.vue';
 import Timer from '../Timer/Timer.vue';
 import VolumeFader from './VolumeFader.vue';
 
@@ -116,6 +120,7 @@ interface PlayerAudio {
 export default defineComponent({
   components: {
     PlayerInfo,
+    PlayerSaveSong,
     Timer,
     VolumeFader
   },
@@ -187,7 +192,8 @@ export default defineComponent({
       'radioStreamCodeName',
       'playing',
       'muted',
-      'volume'
+      'volume',
+      'currentSong'
     ]),
     currentPlayer(): any|null {
       if (this.audio.current === null) {
@@ -266,7 +272,7 @@ export default defineComponent({
       if (this.externalPlayer === false) {
         (this as any).$gtag.event(config.GTAG_ACTION_TOGGLE_PLAY, {
           event_category: config.GTAG_CATEGORY_PLAYER,
-          event_label: this.radio!.code_name,
+          event_label: this.radio !== null ? this.radio!.code_name : null,
           value: config.GTAG_ACTION_TOGGLE_PLAY_VALUE
         });
       }
@@ -443,6 +449,7 @@ export default defineComponent({
       player.url = null;
       player.startedAt = null;
       // delete window.audio;
+      // delete window.audio;
     },
     favoriteToggle() {
       if (this.radio !== null) {
@@ -539,7 +546,7 @@ export default defineComponent({
         window.audio.muted = val;
       } */
 
-      if (this.currentPlayer !== null) {
+      if (this.currentPlayer !== null && this.currentPlayer.element !== null) {
         this.currentPlayer.element.muted = val;
       }
     },

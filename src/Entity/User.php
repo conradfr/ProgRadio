@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Radio;
 use App\Entity\Stream;
+use App\Entity\UserSong;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -58,6 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserEmailChange::class, mappedBy: 'user')]
     private Collection $emailChanges;
 
+    #[ORM\OneToMany(targetEntity: UserSong::class, mappedBy: 'user')]
+    private Collection $userSongs;
+
     /**
      * @Gedmo\Timestampable(on="create")
      */
@@ -80,6 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->favoriteRadios = new ArrayCollection();
         $this->favoriteStreams = new ArrayCollection();
         $this->emailChanges = new ArrayCollection();
+        $this->userSongs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -212,6 +217,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->favoriteStreams->contains($favoriteStream) === true) {
             $this->favoriteStreams->removeElement($favoriteStream);
         }
+    }
+
+    public function getUserSongs(): Collection
+    {
+        return $this->userSongs;
+    }
+
+    public function getUserSongsAsArray(): array
+    {
+        $songs = [];
+        /** @var UserSong $usersong */
+        foreach ($this->userSongs->toArray() as $usersong) {
+            // index as strings to allow the data to be object once in the JS side
+            $songs[(string) $usersong->getId()] = $usersong->getSong();
+        }
+
+        return $songs;
+    }
+
+    public function setUserSongs(Collection $userSongs): void
+    {
+        $this->userSongs = $userSongs;
+    }
+
+    public function addUserSong(UserSong $userSong): void
+    {
+        $this->userSongs->add($userSong);
     }
 
     public function getCreatedAt(): ?\Datetime

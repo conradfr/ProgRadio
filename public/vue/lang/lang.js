@@ -21,6 +21,10 @@ export const messages = {
         disclaimer: '(Nous ne vendons pas les données de nos utilisateurs)'
       },
       loading: 'Chargement ...',
+      generic: {
+        delete: 'Supprimer',
+        error: "Une erreur s'est produite."
+      },
       now_page: {
         back: '← Retourner à la grille complète des programmes',
         title: 'En ce moment à la radio'
@@ -44,6 +48,8 @@ export const messages = {
         play_error: 'Erreur de lecture',
         placeholder: 'Cliquer sur un logo pour lancer la lecture',
         previous: 'Ecouter {radio} de nouveau',
+        save_song: 'Sauvegarder ce titre ({song})',
+        song_saved: 'Le titre a été sauvegardé',
         favorites: {
           add: 'Ajouter aux favoris',
           remove: 'Retirer des favoris'
@@ -97,6 +103,11 @@ export const messages = {
           }
         }
       },
+      songs_page: {
+        find_youtube: 'Chercher sur Youtube',
+        no_songs: "Vous n'avez pas de titres sauvegardés.",
+        title: 'Titres sauvegardés',
+      },
       streaming: {
         categories: {
           all_countries: 'Tous les pays',
@@ -139,6 +150,10 @@ export const messages = {
         disclaimer: '(This website does not track its visitors or sell data)'
       },
       loading: 'Loading ...',
+      generic: {
+        delete: 'Delete',
+        error: 'An error occurred.'
+      },
       now_page: {
         back: '← Back to radio guide',
         title: 'Currently on the radio'
@@ -162,6 +177,8 @@ export const messages = {
         play_error: 'Media error',
         placeholder: 'Click on a radio logo to start streaming',
         previous: 'Play {radio} again',
+        save_song: 'Save this song ({song})',
+        song_saved: 'The song has been saved',
         favorites: {
           add: 'Add to favorites',
           remove: 'Remove from favorites'
@@ -215,6 +232,11 @@ export const messages = {
           }
         }
       },
+      songs_page: {
+        find_youtube: 'Find on Youtube',
+        no_songs: 'You have no songs saved yet.',
+        title: 'Saved songs',
+      },
       streaming: {
         categories: {
           all_countries: 'All countries',
@@ -257,6 +279,10 @@ export const messages = {
         disclaimer: '(Este sitio web no rastrea a sus visitantes ni vende datos)'
       },
       loading: 'Cargando ...',
+      generic: {
+        delete: 'Suprimir',
+        error: 'Se ha producido un error'
+      },
       now_page: {
         back: '← Ir al programa Grid de todas las radios.',
         title: 'En este momento en la radio'
@@ -280,6 +306,8 @@ export const messages = {
         play_error: 'error de reproducción',
         placeholder: 'Haga clic en un logotipo para reproducir',
         previous: 'Escucha {radio} de nuevo',
+        save_song: 'La canción fue salvada ({song})',
+        song_saved: 'Le titre a été sauvegardé',
         favorites: {
           add: 'Agregar a los favoritos',
           remove: 'eliminar de los favoritos'
@@ -332,6 +360,11 @@ export const messages = {
             }
           }
         }
+      },
+      songs_page: {
+        find_youtube: 'Busque en YouTube',
+        no_songs: 'Todavía no tienes canciones guardadas.',
+        title: 'Canciones guardadas',
       },
       streaming: {
         categories: {

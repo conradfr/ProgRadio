@@ -23,6 +23,8 @@ menu:
         usa: Estados Unidos
         mx: México
 
+    songs: Canciones Guardadas
+
     home:
         enable: Seleccione esta página como página de inicio del sitio
         disable: Eliminar la página de inicio personalizada
@@ -155,8 +157,9 @@ boxes:
 
     why_account:
         title: ¿Por qué registrarse?
-        content: "- Una cuenta le permite acceder a sus favoritos radios y streamings desde cualquier navegador y de la aplicación"
-        content2: "- Sin publicidad"
+        content: "- Una cuenta le permite acceder a sus favoritos radios y streamings desde cualquier navegador y de la aplicación."
+        content2: "- Guardar el título de canciones en el curso de la escucha."
+        content3: "- Sin publicidad."
 
 registrationForm:
     email: 'Correo electrónico '

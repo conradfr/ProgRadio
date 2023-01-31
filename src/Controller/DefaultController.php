@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Affiliate;
 use App\Entity\Stream;
+use App\Entity\UserSong;
 use App\Service\Host;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
@@ -258,8 +259,9 @@ class DefaultController extends AbstractBaseController
     }
 
     #[Route('/user', name: 'user_config')]
-    public function user(Request $request): Response
+    public function user(Request $request, EntityManagerInterface $em): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         if ($user !== null) {
@@ -271,7 +273,9 @@ class DefaultController extends AbstractBaseController
                 fn($stream) => $stream->getId()
             )->toArray();
 
+            $songs = $user->getUserSongsAsArray();
         } else {
+            $songs = [];
             $favorites = $request->attributes->get('favorites', []);
             $favoritesStream = $request->attributes->get('favoritesStream', []);
         }
@@ -280,6 +284,7 @@ class DefaultController extends AbstractBaseController
             'user' => [
                 'favoritesRadio' => $favorites,
                 'favoritesStream' => $favoritesStream,
+                'songs' => $songs,
                 'logged' => $user !== null
             ]
         ]);
@@ -319,6 +324,49 @@ class DefaultController extends AbstractBaseController
 
         return $this->jsonResponse([
             'count' => $user->getFavoriteRadios()->count()
+        ]);
+    }
+
+    #[Route('/user/song/add/{song}', name: 'user_add_song')]
+    #[IsGranted('ROLE_USER')]
+    public function addSong(string $song, EntityManagerInterface $em): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $userSong = new UserSong();
+        $userSong->setUser($user);
+        $userSong->setSong($song);
+
+        $em->persist($userSong);
+        $em->flush();
+
+        return $this->jsonResponse([
+            'status' => 'OK',
+            'id' => $userSong->getId()
+        ]);
+    }
+
+    #[Route('/user/song/remove/{songId}', name: 'user_remove_song')]
+    #[IsGranted('ROLE_USER')]
+    public function removeSong(int $songId, EntityManagerInterface $em): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $userSong = $em->getRepository(UserSong::class)->findOneBy(['id' => $songId, 'user' => $user]);
+
+        if (!$userSong) {
+            return $this->jsonResponse([
+                'status' => 'KO'
+            ]);
+        }
+
+        $em->remove($userSong);
+        $em->flush();
+
+        return $this->jsonResponse([
+            'status' => 'OK'
         ]);
     }
 

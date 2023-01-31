@@ -169,6 +169,7 @@ export const GTAG_CATEGORY_TIMER = 'timer';
 
 export const GTAG_CATEGORY_RADIOPAGE = 'radio_page';
 export const GTAG_CATEGORY_NOWPAGE = 'now_page';
+export const GTAG_CATEGORY_SONGS = 'songs_page';
 export const GTAG_CATEGORY_MENU = 'menu';
 
 // timer
@@ -177,6 +178,13 @@ export const GTAG_ACTION_TIMER_SET = 'timer_set';
 export const GTAG_ACTION_TIMER_QUICK_SET = 'timer_quick_set';
 export const GTAG_ACTION_TIMER_ADD = 'timer_add';
 export const GTAG_ACTION_TIMER_CANCEL = 'timer_cancel';
+
+// song
+
+export const GTAG_ACTION_SAVE_SONG = 'save_song';
+export const GTAG_ACTION_SAVE_SONG_VALUE = 2;
+export const GTAG_ACTION_REMOVE_SONG = 'remove_song';
+export const GTAG_ACTION_REMOVE_SONG_VALUE = 1;
 
 // region
 

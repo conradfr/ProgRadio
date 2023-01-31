@@ -1,5 +1,5 @@
 <template>
-  <div class="toast-container position-absolute end-0 p-3">
+  <div class="toast-container position-fixed end-0 p-3">
     <toast
       v-for="toast in toasts"
       :key="toast.id"

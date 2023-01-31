@@ -13,6 +13,7 @@ menu:
     app: Android App
     contact: Contact
     faq: Faq
+
     favorites: My Favorites
     favorites_menu:
         all: Worldwide
@@ -21,6 +22,8 @@ menu:
         fr: France
         usa: United States
         mx: Mexico
+
+    songs: Songs Saved
 
     home:
         enable: Set this page as homescreen
@@ -153,7 +156,8 @@ boxes:
     why_account:
         title: Why sign-up?
         content: "- You can synchronize your favorites between your devices."
-        content2: "- No ads"
+        content2: "- Save broadcasted songs."
+        content3: "- No ads."
 
 registrationForm:
     email: 'Email'

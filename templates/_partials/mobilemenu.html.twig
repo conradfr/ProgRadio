@@ -95,6 +95,21 @@
                 </div>
             </li>
 
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <li class="nav-item mt-0" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
+                <div class="d-flex flex-row align-items-center mb-1 disabled">
+                    <div class="align-self-center pe-3 offmenu-item-icon">
+                        <a class="nav-link">
+                            <i class="bi bi-music-note-list"></i>
+                        </a>
+                    </div>
+                    <div class="align-self-center flex-fill">
+                        <a class="nav-link spa-link" href="{{ path('app') }}songs">{{ 'menu.songs'|trans }}</a>
+                    </div>
+                </div>
+            </li>
+            {% endif %}
+
             <li class="nav-item offcanvas-divider mb-1"></li>
 
             <!-- schedule -->
