@@ -347,7 +347,7 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    #[Route('/user/song/remove/{songId}', name: 'user_remove_song')]
+    #[Route('/user/song/remove/s{songId}', name: 'user_remove_song')]
     #[IsGranted('ROLE_USER')]
     public function removeSong(int $songId, EntityManagerInterface $em): Response
     {

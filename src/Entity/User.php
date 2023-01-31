@@ -229,8 +229,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $songs = [];
         /** @var UserSong $usersong */
         foreach ($this->userSongs->toArray() as $usersong) {
-            // index as strings to allow the data to be object once in the JS side
-            $songs[(string) $usersong->getId()] = $usersong->getSong();
+            $songs['s' . ((string) $usersong->getId())] = $usersong->getSong();
         }
 
         return $songs;
