@@ -550,6 +550,10 @@ export const usePlayerStore = defineStore('player', {
       this.setTimerCommit(typeof minutes === 'string' ? parseInt(minutes, 10) : minutes);
     },
     /* From Android */
+    updateSong(songData: any|null) {
+      this.setSong(songData);
+    },
+    /* From Android */
     /* eslint-disable no-param-reassign */
     updateStatusFromExternalPlayer(params: any) {
       const scheduleStore = useScheduleStore();

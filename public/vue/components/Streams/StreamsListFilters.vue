@@ -213,7 +213,7 @@ export default defineComponent({
       }
     },
     searchTextChange(event: Event|string) {
-      const value = typeof event === 'string'
+      const value: string|null = typeof event === 'string'
         ? event : (event.target as HTMLTextAreaElement).value;
 
       if (this.setSearchText(value)) {
