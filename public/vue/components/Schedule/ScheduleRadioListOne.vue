@@ -181,7 +181,8 @@ export default defineComponent({
     ...mapActions(useUserStore, ['toggleRadioFavorite']),
     ...mapActions(useScheduleStore, ['activateRegionModal']),
     playStop(radioCodeName: string, isSubStream: boolean) {
-      const streamCodeName = this.getSubRadio(radioCodeName).radio_stream;
+      const streamCodeName = isSubStream ? radioCodeName
+        : this.getSubRadio(radioCodeName).radio_stream;
 
       // stop if playing
       if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name
