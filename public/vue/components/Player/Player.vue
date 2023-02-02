@@ -37,7 +37,7 @@
       </div>
       <player-info v-if="radio"></player-info>
       <transition name="timer-fade" mode="out-in">
-        <player-save-song v-if="currentSong"></player-save-song>
+        <player-save-song v-if="userLogged && currentSong"></player-save-song>
       </transition>
       <div v-if="!radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}
@@ -177,6 +177,9 @@ export default defineComponent({
   computed: {
     ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite', collection: 'collections' }),
     ...mapState(useStreamsStore, { streamFavorites: 'favorites' }),
+    ...mapState(useUserStore, {
+      userLogged: 'logged'
+    }),
     ...mapState(usePlayerStore, [
       'flux',
       'focus',
