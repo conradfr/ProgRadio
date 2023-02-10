@@ -28,6 +28,8 @@ class StreamOverloading
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string  $website = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $enabled = null;
 
     public function getId(): string
     {
@@ -89,6 +91,13 @@ class StreamOverloading
         $this->website = $website;
     }
 
+    public function getEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
 
-
+    public function setEnabled(?bool $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
 }

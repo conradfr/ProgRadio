@@ -75,6 +75,10 @@ class Stream
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
     private ?StreamOverloading $streamOverloading = null;
 
+    #[ORM\OneToOne(targetEntity: Stream::class)]
+    #[ORM\JoinColumn(name: 'redirect_to', referencedColumnName: 'id')]
+    private ?Stream $redirectToStream = null;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
     }
@@ -259,5 +263,15 @@ class Stream
     public function setStreamOverloading(StreamOverloading $streamOverloading): void
     {
         $this->streamOverloading = $streamOverloading;
+    }
+
+    public function getRedirectToStream(): ?Stream
+    {
+        return $this->redirectToStream;
+    }
+
+    public function setRedirectToStream(?Stream $redirectToStream): void
+    {
+        $this->redirectToStream = $redirectToStream;
     }
 }

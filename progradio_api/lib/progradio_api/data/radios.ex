@@ -86,9 +86,9 @@ defmodule ProgRadioApi.Radios do
           e when is_nil(e.stream_code_name) ->
             radio
 
-            # disabled temporarily while investigating how that affects subradios
-#          e when e.stream_status == false and e.stream_retries > @retries_max ->
-#            radio
+          # disabled temporarily while investigating how that affects subradios
+          # e when e.stream_status == false and e.stream_retries > @retries_max ->
+          # radio
 
           e ->
             stream = %{

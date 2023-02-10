@@ -25,6 +25,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> store()
 
     reattach_image_of_stream_with_no_image()
+    find_redirect_for_disabled_streams()
     StreamMatcher.match()
     :ok
   end
@@ -250,6 +251,49 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   defp get_servers() do
     DNS.query(@servers_dns)
     |> Map.get(:anlist)
+  end
+
+  # Disabled
+
+  def find_redirect_for_disabled_streams() do
+    get_disabled_with_no_redirect()
+    |> Enum.map(fn s -> find_redirect_stream(s) end)
+    |> Enum.filter(&(&1 != nil))
+    |> Enum.each(&update_stream_with_redirect/1)
+  end
+
+  defp get_disabled_with_no_redirect() do
+    from(s in Stream,
+      where: is_nil(s.redirect_to) and not is_nil(s.country_code) and s.enabled == false,
+      select: %{id: s.id, name: s.name, country_code: s.country_code}
+    )
+    |> Repo.all()
+  end
+
+  defp find_redirect_stream(stream_data) do
+    redirect_stream_id =
+      from(s in Stream,
+        where:
+          fragment("LOWER(?) = ?", s.name, ^String.downcase(stream_data.name)) and
+            s.country_code == ^stream_data.country_code and s.enabled == true,
+        order_by: [desc: s.clicks_last_24h, desc: s.votes],
+        limit: 1,
+        select: s.id
+      )
+      |> Repo.one()
+
+    case redirect_stream_id do
+      nil -> nil
+      _ -> {stream_data.id, redirect_stream_id}
+    end
+  end
+
+  defp update_stream_with_redirect({stream_id, redirect_stream_id}) do
+    query =
+      from s in Stream,
+        where: s.id == ^stream_id
+
+    Repo.update_all(query, set: [redirect_to: redirect_stream_id])
   end
 
   # Images

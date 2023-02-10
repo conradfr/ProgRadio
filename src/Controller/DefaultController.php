@@ -26,6 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class DefaultController extends AbstractBaseController
 {
@@ -209,6 +210,18 @@ class DefaultController extends AbstractBaseController
                 '_locale' => $request->getLocale(),
                 'id' => $stream->getId(),
                 'codename' => $codename
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
+        if ($stream->isEnabled() === false && $stream->getRedirectToStream() !== null) {
+            $slugger = new AsciiSlugger();
+
+            $redirectUrl = $router->generate('streams_one', [
+                '_locale' => $request->getLocale(),
+                'id' => $stream->getRedirectToStream()->getId(),
+                'codename' => $slugger->slug($stream->getRedirectToStream()->getName())
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
             return $this->redirect($redirectUrl, 301);
