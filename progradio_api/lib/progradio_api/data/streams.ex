@@ -13,8 +13,8 @@ defmodule ProgRadioApi.Streams do
 
   @default_limit 40
 
-  # 6h
-  @cache_ttl_stream 21_600_000
+  # 1h
+  @cache_ttl_stream 3600_000
   # 30s
   @cache_ttl_stream_last 30_000
   # 1d

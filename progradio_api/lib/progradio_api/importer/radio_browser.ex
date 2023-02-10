@@ -26,6 +26,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
     reattach_image_of_stream_with_no_image()
     StreamMatcher.match()
+    :ok
   end
 
   # Data
@@ -253,12 +254,32 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # Images
 
+  # For some reason (current or previous bug?) some streams have a 404 image
+  # Trying to clean up and reuse former one
+  def reattach_image_of_stream_with_404_image() do
+    get_streams_with_404_image()
+    |> Enum.map(fn %{id: id, img: _img} -> ImageImporter.find_image_for_stream(id) end)
+    |> Enum.each(&update_stream_with_image/1)
+  end
+
+  defp get_streams_with_404_image() do
+    from(s in Stream,
+      where: not is_nil(s.img) and s.enabled == true,
+      select: %{id: s.id, img: s.img}
+    )
+    |> Repo.all()
+    |> Enum.filter(fn s ->
+      "#{Application.get_env(:progradio_api, :image_path)}stream/#{s.img}"
+      |> File.exists?() == false
+    end)
+  end
+
   # If a stream has no image (usually from a dead link) we reuse the former one if any,
   # (as we don't delete previous images)
-  defp reattach_image_of_stream_with_no_image() do
+  def reattach_image_of_stream_with_no_image() do
     get_streams_with_no_image()
     |> Enum.map(fn s -> ImageImporter.find_image_for_stream(s) end)
-    |> Enum.filter(&(&1 != nil))
+    |> Enum.filter(fn {_stream_id, filename} -> filename != nil end)
     |> Enum.each(&update_stream_with_image/1)
   end
 

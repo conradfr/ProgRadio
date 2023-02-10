@@ -10,6 +10,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   @temp_folder "temp"
 
   @ls_cache_key "streams_ls"
+  @ls_cache_ttl 21_600_000
 
   @spec import(String.t(), map, struct) :: tuple
   def import(filename_or_base64, show, radio)
@@ -96,7 +97,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       |> pick_more_recent_image()
 
     case filename do
-      nil -> nil
+      nil -> {stream_id, nil}
       _ -> {stream_id, filename}
     end
   end
@@ -108,7 +109,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
 
       false ->
         files = File.ls!(path)
-        Cache.put(@ls_cache_key, files)
+        Cache.put(@ls_cache_key, files, ttl: @ls_cache_ttl)
         files
     end
   end
