@@ -2,11 +2,18 @@ const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 
-let scrapedData = [];
+const urls = {
+  'radionova': 'https://www.nova.fr/la-grille-nova/la-grille/',
+  'radionova_bordeaux': 'https://www.nova.fr/la-grille-nova/la-grille-de-radio-nova-bordeaux/',
+  'radionova_lyon': 'https://www.nova.fr/la-grille-nova/la-grille-2/'
+};
 
-const format = dateObj => {
+let scrapedData = {};
+let cleanedData = {};
+
+const format = (dateObj, subRadio) => {
   // we use reduce instead of map to act as a map+filter in one pass
-  const cleanedData = scrapedData.reduce(function (prev, curr) {
+  cleanedData[subRadio] = scrapedData[subRadio].reduce(function (prev, curr) {
     if (typeof curr.days === 'undefined') {
       return prev;
     }
@@ -69,12 +76,13 @@ const format = dateObj => {
     return prev;
   }, []);
 
-  return Promise.resolve(cleanedData);
+  return Promise.resolve(cleanedData[subRadio]);
 };
 
-const fetch = dateObj => {
+const fetch = (dateObj, subRadio) => {
+  scrapedData[subRadio] = [];
   dateObj.locale('fr');
-  const url = 'https://www.nova.fr/la-grille-nova/la-grille/';
+  const url = urls[subRadio];
 
   logger.log('info', `fetching ${url}`);
 
@@ -92,7 +100,7 @@ const fetch = dateObj => {
         'description_alt': '.content'
       })
       .data(function (listing) {
-        scrapedData.push(listing);
+        scrapedData[subRadio].push(listing);
       })
       .done(function () {
         resolve(true);
@@ -100,14 +108,14 @@ const fetch = dateObj => {
   });
 };
 
-const fetchAll = dateObj => {
-  return fetch(dateObj);
+const fetchAll = (dateObj, subRadio) => {
+  return fetch(dateObj, subRadio);
 };
 
-const getScrap = dateObj => {
-  return fetchAll(dateObj)
+const getScrap = (dateObj, subRadio) => {
+  return fetchAll(dateObj, subRadio)
     .then(() => {
-      return format(dateObj);
+      return format(dateObj, subRadio);
     });
 };
 

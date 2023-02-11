@@ -9,7 +9,9 @@ defmodule ProgRadioApi.SongProvider.Radionova do
     "radionova_nouvo" => "nouvo-nova",
     "radionova_danse" => "nova-danse",
     "radionova_lanuit" => "nova-la-nuit",
-    "radionova_classics" => "nova-classics"
+    "radionova_classics" => "nova-classics",
+    "radionova_bordeaux" => "nova-bordeaux",
+    "radionova_lyon" => "nova-lyon"
   }
 
   @impl true
