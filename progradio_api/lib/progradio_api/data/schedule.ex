@@ -127,7 +127,7 @@ defmodule ProgRadioApi.Schedule do
         host: se.host,
         description: se.description,
         picture_url: se.picture_url,
-        hash: fragment("MD5(CONCAT(?,?,?))", r.code_name, se.title, se.date_time_start),
+        hash: fragment("MD5(CONCAT(?,?,?,?))", r.code_name, se.title, se.date_time_start, se.sub_radio_id),
         start_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_start),
         end_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_end),
         duration:
@@ -153,8 +153,9 @@ defmodule ProgRadioApi.Schedule do
         section_start_at: fragment("? AT TIME ZONE 'UTC'", sc.date_time_start),
         section_hash:
           fragment(
-            "MD5(CONCAT(CONCAT(?,?,?),?,?))",
+            "MD5(CONCAT(CONCAT(?,?,?,?),?,?))",
             r.code_name,
+            se.id,
             se.title,
             se.date_time_start,
             sc.title,

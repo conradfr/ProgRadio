@@ -196,12 +196,12 @@ EOT;
         return 'r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
                 . 'AT_TIME_ZONE(se.dateTimeStart,\'UTC\') as start_at,'
                 . 'AT_TIME_ZONE(se.dateTimeEnd,\'UTC\') as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'
-                . 'MD5(CONCAT(r.codeName, se.title, se.dateTimeStart)) as hash,'
+                . 'MD5(CONCAT(r.codeName, se.title, se.dateTimeStart, sr.id)) as hash,'
                 . 'CASE WHEN(AT_TIME_ZONE(se.dateTimeStart, \'UTC\') < :datetime_start) THEN 1 ELSE 0 END as start_overflow,'
                 . 'CASE WHEN(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') > :datetime_end AND (HOUR(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\')) <> 23 OR MINUTE(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\')) <> 0)) THEN 1 ELSE 0 END as end_overflow,'
                 . 'sc.title as section_title, sc.pictureUrl as section_picture_url, sc.presenter as section_presenter, sc.description as section_description,'
                 . 'AT_TIME_ZONE(sc.dateTimeStart,\'UTC\') as section_start_at,'
-                . 'MD5(CONCAT(CONCAT(r.codeName, se.title, se.dateTimeStart), sc.title, sc.dateTimeStart)) as section_hash';
+                . 'MD5(CONCAT(CONCAT(r.codeName, se.id, se.title, se.dateTimeStart), sc.title, sc.dateTimeStart)) as section_hash';
     }
 
     protected function getSchedulesAndSections(ScheduleResource $scheduleResource): array {
@@ -267,7 +267,8 @@ EOT;
             ->addSelect('r.name as radio_name, r.share as radio_share, rs.name as radio_stream_name, rs.url as streaming_url, c.codeName as collectionCodeName')
            ->from('App:ScheduleEntry', 'se')
            ->innerJoin('se.radio', 'r')
-            ->leftJoin('r.streams', 'rs')
+           ->leftJoin('se.subRadio', 'sr')
+           ->leftJoin('r.streams', 'rs')
            ->innerJoin('r.collection', 'c')
            ->leftJoin('se.sectionEntries', 'sc')
            ->where('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') <= :datetime')
