@@ -24,6 +24,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> delete_images_from_removed_stations()
     |> store()
 
+    enable_overloaded()
     reattach_image_of_stream_with_no_image()
     find_redirect_for_disabled_streams()
     StreamMatcher.match()
@@ -62,7 +63,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
       overloading =
         case Enum.find(stream_overloading, fn s -> s.id == id end) do
-          nil -> %StreamOverloading{}
+          nil -> %{}
           data -> data
         end
 
@@ -98,8 +99,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         language: Map.get(stream, "language"),
         votes: Map.get(stream, "votes"),
         clicks_last_24h: Map.get(stream, "clickcount"),
-        enabled: true,
-        has_overloading: overloading !== nil
+        enabled: true
       }
     end)
   end
@@ -151,22 +151,22 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         {:ok, uuid} = Ecto.UUID.dump(s.id)
         uuid
       end)
-
-    query =
-      from(
-        s in "stream",
-        left_join: so in StreamOverloading,
-        on: so.id == s.id,
-        where: s.id not in ^ids_to_keep and so.enabled != true,
-        select: s.img
-      )
-
-    img_to_del = Repo.all(query)
-
-    Enum.each(img_to_del, fn img ->
-      "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{img}"
-      |> File.rm()
-    end)
+#
+#    query =
+#      from(
+#        s in "stream",
+#        left_join: so in StreamOverloading,
+#        on: so.id == s.id,
+#        where: s.id not in ^ids_to_keep and so.enabled != true,
+#        select: s.img
+#      )
+#
+#    img_to_del = Repo.all(query)
+#
+#    Enum.each(img_to_del, fn img ->
+#      "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{img}"
+#      |> File.rm()
+#    end)
 
     {ids_to_keep, streams}
   end
@@ -234,6 +234,27 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       )
 
     Multi.update_all(multi, :update_enabled, q, [])
+  end
+
+  # re-enable when enabled overloaded
+  defp enable_overloaded() do
+    ids_to_keep =
+      from(so in StreamOverloading,
+        where: so.enabled == true,
+        select: so.id
+      )
+      |> Repo.all()
+      |> Enum.map(fn stream_id ->
+        Ecto.UUID.dump!(stream_id)
+      end)
+
+    q =
+      from(
+        s in "stream",
+        where: s.id in ^ids_to_keep
+      )
+
+    Repo.update_all(q, set: [enabled: true])
   end
 
   # API
