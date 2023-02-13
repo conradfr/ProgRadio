@@ -99,6 +99,12 @@ createApp({
       this.stop();
     }
 
+    // to be sure
+    if (this.listeningInterval !== null) {
+      clearInterval(this.listeningInterval);
+      this.listeningInterval = null;
+    }
+
     /* eslint-disable no-undef */
     sendGaEvent('play', 'SSR', codeName, 3);
 
@@ -141,6 +147,11 @@ createApp({
       window.audio.pause();
     }
 
+    if (this.listeningInterval !== null) {
+      clearInterval(this.listeningInterval);
+      this.listeningInterval = null;
+    }
+
     if (this.hls !== null) {
       this.hls.destroy();
       this.hls = null;
@@ -153,10 +164,6 @@ createApp({
       updateListeningSession(this.radioId, this.playingStart, this.sessionId);
       /* eslint-disable no-undef */
       sendGaEvent('stop', 'SSR', this.radioId, 1);
-    }
-
-    if (this.listeningInterval !== null) {
-      clearInterval(this.listeningInterval);
     }
 
     this.playing = false;
