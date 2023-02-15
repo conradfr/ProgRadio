@@ -5,6 +5,16 @@ let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 const utils = require('../../lib/utils');
 
+const dayFr = {
+  'lundi': 1,
+  'mardi': 2,
+  'mercredi': 3,
+  'jeudi': 4,
+  'vendredi': 5,
+  'samedi': 6,
+  'dimanche': 7
+};
+
 let scrapedData = [];
 
 const format = dateObj => {
@@ -17,35 +27,37 @@ const format = dateObj => {
       return prev;
     }
 
-    let regexp = new RegExp(/([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
-    let match = entry.datetime_raw.match(regexp);
+    let regexp = new RegExp(/([0-9]{1,2})h – ([0-9]{1,2})h/);
+    let match = entry.title.match(regexp);
 
     if (match === null) {
       return prev;
     }
 
-    // not in day interval
-    if (entry.datetime_raw.includes(utils.upperCaseWords(dateObj.format('dddd'))) === false) {
+    if (entry.days.indexOf(utils.upperCaseWords(dateObj.format('dddd'))) === -1) {
       return prev;
     }
 
+    const charLimit = entry.title.indexOf(':');
+    const title = entry.title.substr(0, charLimit - 1);
+
+
     let startDateTime = moment(dateObj);
     startDateTime.hour(match[1]);
-    startDateTime.minute(match[2]);
+    startDateTime.minute(0);
     startDateTime.second(0);
 
     endDateTime = moment(dateObj);
-    endDateTime.hour(match[3]);
-    endDateTime.minute(match[4]);
+    endDateTime.hour(match[2]);
+    endDateTime.minute(0);
     endDateTime.second(0);
 
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'img': `http://www.bergerac95.fr${entry.img}`,
-      'title': entry.title,
-      'host': entry.host.join(', '),
-      'description': entry.description.join(' '),
+      'img': entry.img,
+      'title': title,
+      'description': entry.description,
     };
 
     if (newEntry.host === '') {
@@ -60,7 +72,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-  const url = 'https://www.bergerac95.fr/emissions';
+  const url = 'https://bergerac95.fr/emissions';
 
   logger.log('info', `fetching ${url}`);
 
@@ -71,21 +83,20 @@ const fetch = dateObj => {
       .config({
         ignore_http_errors: true
       })
-      .select('.list_element')
+      .find('.elementor-portfolio-item')
+      // .select('.item')
       .set({
-        'img': 'img.list-img-thumb@src',
-        'title': 'h4',
-        'datetime_raw': '.program-date'
+        'days': '@data-filter',
+        'datetime_raw': '.programme-thumbnail .programme-time-slots',
+        'img': '.elementor-portfolio-item__img img@data-src',
       })
       .do(
-        osmosis.follow('a.title-link@href')
-          .config({
-            ignore_http_errors: true
-          })
-          .select('.article')
+        osmosis.follow('a.elementor-post__thumbnail__link@href')
+          .find('#content article')
           .set({
-            'description': ['p'],
-            'host': ['h4']
+            'days': ['li.meta-cat a'],
+            'title': '.single-post-title.entry-title',
+            'description': '.entry-content.clr > p'
           })
       )
       .data(function (listing) {
