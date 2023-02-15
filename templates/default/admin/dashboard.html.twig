@@ -123,6 +123,7 @@
                                             <td class="radio-header"><img title="{{ radioStream.name }}" alt="{{ radioStream.name }}" src="{{ asset('img/radio/schedule/' ~ radioStream.radio_code_name ~ '.png') }}"></td>
                                             <td class="td-auto">Erreurs pour <strong>{{ radioStream.retries }}</strong> checks.</td>
                                             <td><a target="_blank" href="{{ radioStream.url }}">lien</a></td>
+                                            <td><a href="{{ path('admin_reset_stream_retries', {'id': radioStream.id}) }}"><i class="bi bi-trash"></i></a></td>
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
@@ -140,6 +141,7 @@
                                         <td class="radio-header"><img title="{{ radioStream.name }}" alt="{{ radioStream.name }}" src="{{ asset('img/radio/schedule/' ~ radioStream.radio_code_name ~ '.png') }}"></td>
                                         <td class="td-auto">Erreurs pour <strong>{{ radioStream.currentSongRetries }}</strong> checks.</td>
                                         <td><a target="_blank" href="{{ radioStream.url }}">lien</a></td>
+                                        <td><a href="{{ path('admin_reset_current_song_retries', {'id': radioStream.id}) }}"><i class="bi bi-trash"></i></a></td>
                                     </tr>
                                 {% endfor %}
                                 {% for stream in stream_song_status %}

@@ -125,12 +125,6 @@ final class Version20230129110946 extends AbstractMigration implements Container
                 'radio_id'   => 124
             ],
             [
-                'codename'   => 'france_bleu_breizhizel',
-                'name'       => 'France Bleu Breizh Izel',
-                'main'       => 'false',
-                'radio_id'   => 124
-            ],
-            [
                 'codename'   => 'france_bleu_cotentin',
                 'name'       => 'France Bleu Cotentin',
                 'main'       => 'false',

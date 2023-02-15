@@ -226,4 +226,30 @@ class AdminController extends AbstractBaseController
     {
         return $this->render('default/admin/goaccessiframe.html.twig');
     }
+
+    #[Route('/reset_stream/{id}', name: 'admin_reset_stream_retries')]
+    #[IsGranted('ROLE_USER')]
+    public function resetStreamRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
+    {
+        $radioStream->setRetries(0);
+        $radioStream->setStatus(true);
+
+        $em->persist($radioStream);
+        $em->flush();
+
+        return $this->redirectToRoute('admin', [], 301);
+    }
+
+    #[Route('/reset_current_song/{id}', name: 'admin_reset_current_song_retries')]
+    #[IsGranted('ROLE_USER')]
+    public function resetCurrentSongRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
+    {
+        $radioStream->setCurrentSongRetries(0);
+        $radioStream->setCurrentSong(true);
+
+        $em->persist($radioStream);
+        $em->flush();
+
+        return $this->redirectToRoute('admin', [], 301);
+    }
 }
