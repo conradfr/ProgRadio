@@ -310,7 +310,9 @@ export const useStreamsStore = defineStore('streams', {
       this.searchText = text;
 
       /* eslint-disable no-underscore-dangle */
-      if ((this as any).$router.currentRoute._rawValue.params.page !== ''
+      if ((this as any).$router.currentRoute._rawValue.params.page !== undefined
+        && (this as any).$router.currentRoute._rawValue.params.page !== null
+        && (this as any).$router.currentRoute._rawValue.params.page !== ''
         && (this as any).$router.currentRoute._rawValue.params.page !== '1') {
         const params = { ...(this as any).$router.currentRoute._rawValue.params, page: '1' };
         (this as any).$router.push({ name: 'streaming', params, replace: true });
