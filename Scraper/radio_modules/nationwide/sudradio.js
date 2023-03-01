@@ -125,7 +125,7 @@ const fetch = (dateObj, url) => {
       .find(`#nav-${dayFormat}`)
       .select('ol.list-unstyled li.sud-schedule__show')
       .set({
-        'img': 'img.sud-show__thumbnail-image@src',
+        'img': 'img.sud-show__thumbnail-image@data-src',
         'datetime_raw_start': 'time.sud-show__meta-date-start',
         'datetime_raw_end': 'time.sud-show__meta-date-end',
         'title': 'h3 > a',
