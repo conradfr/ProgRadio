@@ -1,10 +1,12 @@
-FROM hexpm/elixir:1.14.2-erlang-25.2-ubuntu-bionic-20210930
+FROM hexpm/elixir:1.14.3-erlang-25.2.3-ubuntu-focal-20221130
 
 # There is a bug / dependecy problem when using Unbutu 20.04 (focal)
 # Failure to build & load nif for :ex_cldr_collation
 # Staying on bionic for now
 
 EXPOSE 80
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 ARG DATABASE_URL=${DATABASE_URL}
 ARG PORT=${PORT}
@@ -38,12 +40,17 @@ ENV DATABASE_URL=${DATABASE_URL} \
 #USER www-data
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
+    tzdata \
+    build-essential make \
     imagemagick \
+    pkgconf \
     libicu-dev \
     jpegoptim optipng pngquant gifsicle
 
 # For temp forked dep
 RUN apt-get install --no-install-recommends --no-install-suggests -y git ca-certificates
+
+RUN pkg-config --libs icu-uc icu-io
 
 RUN mkdir -p /var/progradio_api
 RUN mkdir -p /var/www

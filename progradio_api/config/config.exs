@@ -70,6 +70,14 @@ config :progradio_api,
 
 config :hackney, use_default_pool: false
 
+config :progradio_api, ProgRadioApiWeb.Gettext,
+  default_locale: "fr",
+  locales: ~w(fr en es)
+
+config :ex_cldr,
+  default_locale: "fr",
+  default_backend: ProgRadioApi.Cldr
+
 config :progradio_api, ProgRadioApi.Cache,
   # When using :shards as backend
   # backend: :shards,
