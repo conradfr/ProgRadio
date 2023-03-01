@@ -8,8 +8,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # TODO unbundle if we diversify streams sources
 
-  @image_folder "stream"
-
   @servers_dns "all.api.radio-browser.info"
   @api_all_radios "/stations"
 

@@ -21,8 +21,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
            Regex.named_captures(~r/data:(?<type>[a-zA-Z\/]*);base64,(?<data>[^\"]*)/, base64_raw),
          extension <- base64_data["type"] |> MIME.extensions() |> List.first(),
          filename <- "#{get_name(show["title"], radio)}.#{extension}",
-         full_path =
-           "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{filename}" do
+         full_path <- "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{filename}" do
       unless ImageCache.is_cached(full_path) do
         Logger.debug("Importing base64: #{filename} to #{full_path}")
 
@@ -62,6 +61,33 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   def import(_url, _show, _radio), do: {:error, nil}
 
   @spec import_stream(String.t(), struct) :: tuple
+  def import_stream(url, radio)
+
+  # when base64
+  def import_stream("data:" <> _base64 = base64_raw, radio) do
+    with %{} = base64_data <-
+           Regex.named_captures(~r/data:(?<type>[a-zA-Z\/]*);base64,(?<data>[^\"]*)/, base64_raw),
+         extension <- base64_data["type"] |> MIME.extensions() |> List.first(),
+         filename <- "#{radio.id}.#{extension}",
+         full_path <- "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{filename}" do
+      unless ImageCache.is_cached(full_path) do
+        Logger.debug("Importing base64: #{filename} to #{full_path}")
+
+        case File.write!(full_path, Base.decode64!(base64_data["data"]), [:binary]) do
+          :ok -> {:ok, filename}
+          _ -> {:error, nil}
+        end
+      else
+        Logger.debug("Stream image #{filename} was cached")
+        {:ok, filename}
+      end
+    else
+      _ ->
+        Logger.debug("Error importing base64")
+        {:error, nil}
+    end
+  end
+
   def import_stream(url, radio) do
     filename = get_name(url, radio)
     full_path = "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{filename}"
