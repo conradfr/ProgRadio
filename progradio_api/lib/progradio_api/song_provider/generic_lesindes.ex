@@ -18,6 +18,7 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
         |> SongProvider.get()
         |> Map.get(:body)
         |> Jason.decode!()
+        |> convert_time_key()
 
       last_time =
         unless last_data == nil do
@@ -53,4 +54,10 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
         %{artist: SongProvider.recase(data["artist"]), title: SongProvider.recase(data["title"])}
     end
   end
+
+  defp convert_time_key(%{"mtime" => mtime} = data) do
+    Map.put(data, "time", mtime)
+  end
+
+  defp convert_time_key(data), do: data
 end

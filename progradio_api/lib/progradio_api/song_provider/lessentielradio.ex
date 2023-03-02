@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Lessentielradio do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "http://lessentielradio.lu/cache/titreplayer1"
+  @url "https://lessentielradio.lu/cache/titreplayer1"
 
   @impl true
   defdelegate has_custom_refresh(), to: GenericLesIndes
