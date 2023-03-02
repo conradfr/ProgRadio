@@ -18,7 +18,7 @@ defmodule ProgRadioApi.Checker.Streams do
       from(rs in RadioStream,
         join: r in Radio,
         on: r.id == rs.radio_id,
-        where: r.active == true,
+        where: r.active == true and rs.enabled == true,
         order_by: [desc: rs.id]
       )
 
