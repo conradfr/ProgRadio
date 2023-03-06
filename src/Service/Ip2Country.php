@@ -11,7 +11,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 class Ip2Country
 {
     protected const CACHE_IP_PREFIX = 'cache_ip_data_';
-    protected const CACHE_IP_TTL = 86400; // seconds
+    protected const CACHE_IP_TTL = 604800; // one week in seconds
 
     protected const API_URL = 'http://www.geoplugin.net/json.gp?ip=%s';
 
@@ -44,9 +44,18 @@ class Ip2Country
     protected function getData($ip): array
     {
         $url = sprintf(self::API_URL, $ip);
+        $result = null;
+        $defaultResult = [
+            'country_code' => null,
+            'region_code' => null
+        ];
 
         try {
             $fp = fopen($url, 'r');
+
+            if ($fp === false) {
+                return $defaultResult;
+            }
 
             $content = '';
             while(!feof($fp)){
@@ -58,7 +67,7 @@ class Ip2Country
             $result = json_decode($content, true);
         }
         catch (\Exception $e) {
-            $result = null;
+            return $defaultResult;
         }
 
         return [
