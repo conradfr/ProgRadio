@@ -14,6 +14,7 @@ class AdProtectedRuntime implements RuntimeExtensionInterface
 
     public function isAdProtected(Request $request): bool
     {
-        return $this->ip2Country->isProtected($request);
+        return true;
+        //return $this->ip2Country->isProtected($request);
     }
 }
