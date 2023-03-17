@@ -1,6 +1,7 @@
 general:
     main_description: Écoute en ligne et les programmes radio en France.
-    main_title: Toutes les grilles radio, tous les programmes et écoute en ligne
+    main_title_progradio: Toutes les grilles radio, tous les programmes et écoute en ligne
+    main_title_radioaddict: Streaming de toutes les radios en France et dans le monde !
 
 menu:
     account: Mon compte

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}{{ 'general.main_title'|trans }}{% endblock %} - {{ getDomainName(app.request) }}</title>
+    <title>{% block title %}{{ getField('title_key', app.request)|trans }}{% endblock %} - {{ getDomainName(app.request) }}</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
