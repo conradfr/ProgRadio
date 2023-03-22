@@ -3,7 +3,7 @@ const scrapAbstract = require('./_abstract.js');
 const name = 'francebleu_champagneardenne';
 
 const getScrap = dateObj => {
-  const url = 'https://www.francebleu.fr/emissions/grille-programmes/champagne-ardenne';
+  const url = 'champagne-ardenne';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

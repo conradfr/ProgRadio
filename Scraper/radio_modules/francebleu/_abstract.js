@@ -1,166 +1,178 @@
-const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
-let scrapedData = {};
+const axios = require("axios");
 
-const format = (dateObj, name) => {
+let scrapedData = {
+  prev: {},
+  curr: {}
+};
+const schedule = [];
+
+const when = ['morning', 'midday', 'afternoon', 'evening'];
+
+const format = async (dateObj, name) => {
   dateObj.tz('Europe/Paris');
-  const mains = [];
-  scrapedData[name].forEach(function (curr) {
-    let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s{1,30}-\s([0-9]{1,2})[h|H]([0-9]{2})/);
-    let match = curr.datetime_raw.match(regexp);
 
-    if (match === null) {
-      return;
-    }
+  // not using forEach as it does not work with await
+  for (const key of Object.keys(scrapedData)) {
+    for (const dayWhen of when) {
+      if (!scrapedData[key][dayWhen]) {
+        continue;
+      }
 
-    const startDateTime = moment(dateObj);
-    const endDateTime = moment(dateObj);
+      if (key === 'prev' && dayWhen !== 'evening') {
+        continue;
+      }
 
-    startDateTime.hour(match[1]);
-    startDateTime.minute(match[2]);
-    startDateTime.second(0);
-    endDateTime.hour(match[3]);
-    endDateTime.minute(match[4]);
-    endDateTime.second(0);
-
-    // midnight etc
-    if (startDateTime.hour() > endDateTime.hour() || (endDateTime.hour() === 0 && endDateTime.minute() === 0)) {
-      endDateTime.add(1, 'days');
-    }
-
-    let host = null;
-    if (curr.host.length > 0) {
-      host = curr.host.join(", ");
-    } /*else {
-            regexp = /-\s([A-Za-zÀ-ÿ-9]{4,40}\s[A-Za-zÀ-ÿ0-9]{4,40})/gu;
-            const match = curr.title.match(regexp);
-            if (match !== null) {
-                host = match.join(", ").replace(/- /g, '');
-            }
-        }*/
-
-    const regex = /{%(.+?)%}/;
-    const description = curr.description ? curr.description.replace(regex, '').split('\r\n').join(' ') : null;
-
-    // filtering weird base64 for now
-    let img = null;
-
-    if (typeof curr.img_alt !== 'undefined') {
-      img = curr.img_alt;
-    } else if (typeof curr.img !== 'undefined' && curr.img.substring(0, 4) !== 'data') {
-      img = curr.img;
-    }
-
-    const subs = [];
-    curr.sub.forEach(function (sub) {
-      if (typeof sub.datetime_raw !== 'undefined') {
+      for (const data of scrapedData[key][dayWhen]) {
         let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
-        match = sub.datetime_raw.match(regexp);
+        let match = data.start.match(regexp);
 
         if (match === null) {
-          return;
+          continue;
         }
 
-        const sub_startDateTime = moment(startDateTime);
-        sub_startDateTime.hour(match[1]);
-        sub_startDateTime.minute(match[2]);
-        sub_startDateTime.second(0);
-
-        let sub_presenter = null;
-        if (sub.presenter.length > 0) {
-          sub_presenter = sub.presenter.join(", ");
+        if (key === 'prev' && match[1] > 3) {
+          continue;
         }
 
-        const newSub = {
-          date_time_start: sub_startDateTime.toISOString(),
-          title: sub.title,
-          presenter: sub_presenter
-        };
+        if (key === 'curr' && match[1] < 3) {
+          continue;
+        }
 
-        subs.push(newSub);
+        let match2 = data.end.match(regexp);
+
+        if (match2 === null) {
+          continue;
+        }
+
+        const startDateTime = moment(dateObj);
+        const endDateTime = moment(dateObj);
+
+        startDateTime.hour(match[1]);
+        startDateTime.minute(match[2]);
+        startDateTime.second(0);
+        endDateTime.hour(match2[1]);
+        endDateTime.minute(match2[2]);
+        endDateTime.second(0);
+
+        const newEntry = {
+          'date_time_start': startDateTime.toISOString(),
+          'date_time_end': endDateTime.toISOString(),
+          'title': data.title,
+          'img': 'https://www.francebleu.fr/images/emission-fallback.png',
+          'sections': []
+        }
+
+        if (data.authors) {
+          const host = data.authors.reduce(function (acc, curr) {
+            acc.push(curr.title);
+            return acc;
+          }, []);
+
+          if (host.length > 0) {
+            newEntry.host = host.join(', ');
+          }
+        }
+
+        if (data.visual && data.visual.mobile && data.visual.mobile.url) {
+          newEntry.img = data.visual.mobile.url;
+        }
+
+        if (data.path) {
+          try {
+            const res = await axios.get(`https://www.francebleu.fr/api/path?value=${data.path}`);
+
+            if (res.data.context.Concept.body[0].children[0].value) {
+              newEntry.description = res.data.context.Concept.body[0].children[0].value;
+            }
+
+          } catch (error) {
+            // Handle errors
+          }
+        }
+
+        // sections
+        if (data.columns && data.columns.length > 0) {
+          data.columns.forEach(subData => {
+            let match3 = subData.start.match(regexp);
+            if (match3 === null) {
+              return;
+            }
+
+            const subStartDateTime = moment(dateObj);
+            subStartDateTime.hour(match3[1]);
+            subStartDateTime.minute(match3[2]);
+            subStartDateTime.second(0);
+
+            const subEntry = {
+              'date_time_start': subStartDateTime.toISOString(),
+              'title': subData.title
+            };
+
+            if (subData.authors) {
+              const host = subData.authors.reduce(function (acc, curr) {
+                acc.push(curr.title);
+                return acc;
+              }, []);
+
+              if (host.length > 0) {
+                subEntry.host = host.join(', ');
+              }
+
+              if (subData.visual && subData.visual.mobile && subData.visual.mobile.url) {
+                subEntry.img = subData.visual.mobile.url;
+              }
+            }
+
+            newEntry.sections.push(subEntry);
+          });
+        }
+
+        schedule.push(newEntry);
       }
-    });
-
-    const newEntry = {
-      'date_time_start': startDateTime.toISOString(),
-      'date_time_end': endDateTime.toISOString(),
-      'img': img.substr(0, 4) !== 'http' ? `https://www.francebleu.fr${img}` : img,
-      'title': curr.title,
-      'host': host,
-      'description': description,
-      'sections': subs
-    };
-
-    mains.push(newEntry);
-  });
-
-  // sometimes the show is duplicated, we pick the one with the most sections
-  const mainsFiltered = mains.reduce(function (prev, curr, index, array) {
-    if (index === (array.length - 1)) {
-      prev.push(curr);
-      return prev;
     }
+  }
 
-    const next = array[index + 1];
-    if (curr.date_time_start === next.date_time_start && curr.date_time_end === next.date_time_end
-      && curr.sections.length < next.sections.length) {
-      return prev;
-    } else {
-
-    }
-
-    prev.push(curr);
-    return prev;
-  }, []);
-
-  return Promise.resolve(mainsFiltered);
+  return Promise.resolve(schedule)
 };
 
-const fetch = (url, name) => {
+const fetch = async (urlName, name, dateObj, prev) => {
+  dateObj.locale('fr');
+  const format = 'YYYY-MM-DD';
+
+  const url = `https://www.francebleu.fr/api/path?date=${dateObj.format(format)}&value=emissions%2Fgrille-programmes%2F${urlName}`;
+
   logger.log('info', `fetching ${url}`);
 
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .find('.emission')
-      .set({
-          'img': '.entete img@src',
-          'img_alt': '.entete img@data-dejavu-src',
-          'datetime_raw': '.entete .texte > .quand',
-          'title': '.entete .texte > h3',
-          'host': ['.entete .texte > .chroniqueur > a'],
-          'description': '.entete .texte > p.hat',
-          'sub': [
-            osmosis.find('.liste_chroniques li')
-              .set({
-                'datetime_raw': '.horaire',
-                'title': '.titre',
-                'presenter': ['.chroniqueur > a'],
-                'description': '.titre-emission'
-              })
-          ]
-        }
-      )
-      .data(function (listing) {
-        scrapedData[name].push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
-  });
+  try {
+    const response = await axios.get(url);
+
+    if (prev === true) {
+      scrapedData.prev = response.data.context.ProgramGridLocale;
+    } else {
+      scrapedData.curr = response.data.context.ProgramGridLocale;
+    }
+  } catch(error) {
+
+  }
+
+  return true;
 };
 
-const fetchAll = (url, name) => {
-  return fetch(url, name);
+const fetchAll = async (urlName, name, dateObj) => {
+  const previousDay = moment(dateObj);
+  previousDay.locale('fr');
+  previousDay.subtract(1, 'days');
+
+  await await fetch(urlName, name, previousDay, true);
+  return await fetch(urlName, name, dateObj, false);
 };
 
-const getScrap = (dateObj, url, name) => {
+const getScrap = async (dateObj, urlName, name) => {
   scrapedData[name] = [];
-  return fetchAll(url, name)
-    .then(() => {
-      return format(dateObj, name);
-    });
+  await fetchAll(urlName, name, dateObj);
+  return await format(dateObj, name)
 };
 
 const scrapModuleAbstract = {

@@ -3,7 +3,7 @@ const scrapAbstract = require('./_abstract.js');
 const name = 'francebleu_roussillon';
 
 const getScrap = dateObj => {
-  const url = 'https://www.francebleu.fr/emissions/grille-programmes/roussillon';
+  const url = 'roussillon';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

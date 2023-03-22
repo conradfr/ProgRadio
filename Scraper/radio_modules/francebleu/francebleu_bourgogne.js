@@ -3,7 +3,7 @@ const scrapAbstract = require('./_abstract.js');
 const name = 'francebleu_bourgogne';
 
 const getScrap = dateObj => {
-  const url = 'https://www.francebleu.fr/emissions/grille-programmes/bourgogne';
+  const url = 'bourgogne';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

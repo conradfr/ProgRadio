@@ -3,7 +3,7 @@ const scrapAbstract = require('./_abstract.js');
 const name = 'francebleu_bassenormandie';
 
 const getScrap = dateObj => {
-  const url = 'https://www.francebleu.fr/emissions/grille-programmes/normandie-caen';
+  const url = 'normandie-caen';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

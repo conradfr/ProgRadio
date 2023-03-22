@@ -3,7 +3,7 @@ const scrapAbstract = require('./_abstract.js');
 const name = 'francebleu_elsass';
 
 const getScrap = dateObj => {
-  const url = 'https://www.francebleu.fr/emissions/grille-programmes/elsass';
+  const url = 'elsass';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

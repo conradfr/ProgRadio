@@ -3,7 +3,7 @@ const scrapAbstract = require('./_abstract.js');
 const name = 'francebleu_occitanie';
 
 const getScrap = dateObj => {
-  const url = 'https://www.francebleu.fr/emissions/grille-programmes/toulouse';
+  const url = 'toulouse';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

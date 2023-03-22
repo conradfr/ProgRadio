@@ -3,7 +3,7 @@ const scrapAbstract = require('./_abstract.js');
 const name = 'francebleu_armorique';
 
 const getScrap = dateObj => {
-  const url = 'https://www.francebleu.fr/emissions/grille-programmes/armorique';
+  const url = 'armorique';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 

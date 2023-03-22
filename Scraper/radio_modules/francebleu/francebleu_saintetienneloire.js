@@ -3,7 +3,7 @@ const scrapAbstract = require('./_abstract.js');
 const name = 'francebleu_saintetienneloire';
 
 const getScrap = dateObj => {
-  const url = 'https://www.francebleu.fr/emissions/grille-programmes/saint-etienne-loire';
+  const url = 'saint-etienne-loire';
   return scrapAbstract.getScrap(dateObj, url, name)
 };
 
