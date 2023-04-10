@@ -14,9 +14,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   @max_concurrency 4
   @task_timeout 1_000_000
 
-  def import() do
+  def import(stream_id \\ nil) do
     get_one_random_server()
-    |> get_radios()
+    |> get_radios(stream_id)
     |> format()
     |> import_images()
     |> delete_images_from_removed_stations()
@@ -31,10 +31,17 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # Data
 
-  defp get_radios(host) do
+  defp get_radios(host, stream_id) do
     # ?limit=20&offset=7500
+    url =
+      if stream_id != nil and is_binary(stream_id) do
+        "https://#{host}/json/#{@api_all_radios}/byuuid/#{stream_id}"
+      else
+        "https://#{host}/json/#{@api_all_radios}"
+      end
+
     HTTPoison.get!(
-      "https://#{host}/json/#{@api_all_radios}",
+      url,
       [{"User-Agent", "programmes-radio.com"}]
     )
     |> Map.get(:body)
