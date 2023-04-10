@@ -14,9 +14,21 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   @max_concurrency 4
   @task_timeout 1_000_000
 
-  def import(stream_id \\ nil) do
+  def import(stream_id \\ nil)
+
+  def import(stream_id) when is_binary(stream_id) do
     get_one_random_server()
     |> get_radios(stream_id)
+    |> format()
+    |> import_images()
+    |> store_one()
+
+    :ok
+  end
+
+  def import(_stream_id) do
+    get_one_random_server()
+    |> get_radios()
     |> format()
     |> import_images()
     |> delete_images_from_removed_stations()
@@ -31,7 +43,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # Data
 
-  defp get_radios(host, stream_id) do
+  defp get_radios(host, stream_id \\ nil) do
     # ?limit=20&offset=7500
     url =
       if stream_id != nil and is_binary(stream_id) do
@@ -177,6 +189,15 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   end
 
   # Store
+
+  # note: multi has just been copied from below function to reuse functions
+  defp store_one(streams) do
+    multi_upsert =
+      Multi.new()
+      |> upsert_streams(streams)
+
+    Repo.transaction(multi_upsert, timeout: :infinity)
+  end
 
   defp store({ids_to_keep, streams} = _args) do
     multi_delete =
