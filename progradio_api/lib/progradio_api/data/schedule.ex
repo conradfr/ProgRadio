@@ -19,36 +19,39 @@ defmodule ProgRadioApi.Schedule do
   @cache_ttl_collection 604_800_000
   @cache_prefix_collection "collection_"
 
-  def list_schedule_collection(day, collection_code_name) when is_binary(collection_code_name) do
+  def list_schedule_collection(day, collection_code_name, now \\ false)
+      when is_binary(collection_code_name) do
     radio_code_names_of_collection(collection_code_name)
-    |> schedule_of_radios_and_day(day)
+    |> schedule_of_radios_and_day(day, now)
   end
 
-  def list_schedule_radios(day, radios) when is_list(radios) and length(radios) > 0 do
-    schedule_of_radios_and_day(radios, day)
+  def list_schedule_radios(day, radios, now \\ false)
+
+  def list_schedule_radios(day, radios, now) when is_list(radios) and length(radios) > 0 do
+    schedule_of_radios_and_day(radios, day, now)
   end
 
-  def list_schedule_radios(day, _radios) do
-    list_schedule(day)
+  def list_schedule_radios(day, _radios, now) do
+    list_schedule(day, now)
   end
 
-  def list_schedule(day) do
+  def list_schedule(day, now \\ false) do
     # hopefully cached
     ProgRadioApi.Radios.list_active_radios()
     |> Map.keys()
-    |> schedule_of_radios_and_day(day)
+    |> schedule_of_radios_and_day(day, now)
   end
 
-  def list_schedule() do
-    NaiveDateTime.local_now()
-    |> DateTime.from_naive!("Europe/Paris")
-    |> DateTime.to_date()
-    |> Date.to_string()
-    |> list_schedule()
-  end
+  #  def list_schedule(now \\ false) do
+  #    NaiveDateTime.local_now()
+  #    |> DateTime.from_naive!("Europe/Paris")
+  #    |> DateTime.to_date()
+  #    |> Date.to_string()
+  #    |> list_schedule(now)
+  #  end
 
-  @spec schedule_of_radios_and_day(list(), String.t()) :: map()
-  defp schedule_of_radios_and_day(radio_code_names, day) do
+  @spec schedule_of_radios_and_day(list(), String.t(), boolean) :: map()
+  defp schedule_of_radios_and_day(radio_code_names, day, now) do
     cache_key = @cache_prefix_schedule <> day <> "_"
 
     {radio_code_names_cached, radio_code_names_not_cached} =
@@ -62,7 +65,7 @@ defmodule ProgRadioApi.Schedule do
         _ ->
           result =
             day
-            |> query()
+            |> query(now)
             |> where([se, r, sc], r.code_name in ^radio_code_names_not_cached)
             |> Repo.all()
             |> format()
@@ -87,88 +90,109 @@ defmodule ProgRadioApi.Schedule do
     Map.merge(cached, not_cached)
   end
 
-  @spec query(String.t()) :: Ecto.query()
-  defp query(day) do
-    date_time_start =
+  @spec query(String.t(), boolean) :: Ecto.query()
+  defp query(day, now) do
+    day_start =
       (day <> " 00:00:00")
       |> NaiveDateTime.from_iso8601!()
       |> DateTime.from_naive!(@timezone)
       |> DateTime.shift_zone!("UTC")
 
-    date_time_end =
-      date_time_start
+    day_end =
+      day_start
       |> DateTime.add(86400)
 
-    from se in ScheduleEntry,
-      join: r in Radio,
-      on: se.radio_id == r.id,
-      left_join: sc in SectionEntry,
-      on: sc.schedule_entry_id == se.id,
-      inner_join: sr in SubRadio,
-      on: sr.id == se.sub_radio_id,
-      where: r.active == true,
-      where:
-        fragment(
-          "(TIMEZONE('UTC', ?) >= ? AND TIMEZONE('UTC', ?) < ?) OR (TIMEZONE('UTC', ?) > ? AND TIMEZONE('UTC', ?) <= ?)",
-          se.date_time_start,
-          ^date_time_start,
-          se.date_time_start,
-          ^date_time_end,
-          se.date_time_end,
-          ^date_time_start,
-          se.date_time_end,
-          ^date_time_end
-        ),
-      order_by: [asc: se.date_time_start, asc: sc.date_time_start],
-      select: %{
-        code_name: r.code_name,
-        sub_radio_code_name: sr.code_name,
-        title: se.title,
-        host: se.host,
-        description: se.description,
-        picture_url: se.picture_url,
-        hash:
-          fragment(
-            "MD5(CONCAT(?,?,?,?))",
-            r.code_name,
-            se.title,
-            se.date_time_start,
-            se.sub_radio_id
-          ),
-        start_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_start),
-        end_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_end),
-        duration:
-          fragment("EXTRACT('epoch' FROM ? - ?) / 60", se.date_time_end, se.date_time_start),
-        start_overflow:
-          fragment(
-            "CASE WHEN(? AT TIME ZONE 'UTC' < ?) THEN 1 ELSE 0 END",
-            se.date_time_start,
-            ^date_time_start
-          ),
-        end_overflow:
-          fragment(
-            "CASE WHEN(? AT TIME ZONE 'UTC' > ? AND (EXTRACT(HOUR FROM ? AT TIME ZONE 'UTC') <> 23 OR EXTRACT(MINUTE FROM ? AT TIME ZONE 'UTC') <> 0)) THEN 1 ELSE 0 END",
-            se.date_time_end,
-            ^date_time_end,
-            se.date_time_end,
-            se.date_time_end
-          ),
-        section_title: sc.title,
-        section_picture_url: sc.picture_url,
-        section_presenter: sc.presenter,
-        section_description: sc.description,
-        section_start_at: fragment("? AT TIME ZONE 'UTC'", sc.date_time_start),
-        section_hash:
-          fragment(
-            "MD5(CONCAT(CONCAT(?,?,?,?),?,?))",
-            r.code_name,
-            se.id,
-            se.title,
-            se.date_time_start,
-            sc.title,
-            sc.date_time_start
-          )
-      }
+    query =
+      from se in ScheduleEntry,
+        join: r in Radio,
+        on: se.radio_id == r.id,
+        left_join: sc in SectionEntry,
+        on: sc.schedule_entry_id == se.id,
+        inner_join: sr in SubRadio,
+        on: sr.id == se.sub_radio_id,
+        where: r.active == true,
+        order_by: [asc: se.date_time_start, asc: sc.date_time_start],
+        select: %{
+          code_name: r.code_name,
+          sub_radio_code_name: sr.code_name,
+          title: se.title,
+          host: se.host,
+          description: se.description,
+          picture_url: se.picture_url,
+          hash:
+            fragment(
+              "MD5(CONCAT(?,?,?,?))",
+              r.code_name,
+              se.title,
+              se.date_time_start,
+              se.sub_radio_id
+            ),
+          start_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_start),
+          end_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_end),
+          duration:
+            fragment("EXTRACT('epoch' FROM ? - ?) / 60", se.date_time_end, se.date_time_start),
+          start_overflow:
+            fragment(
+              "CASE WHEN(? AT TIME ZONE 'UTC' < ?) THEN 1 ELSE 0 END",
+              se.date_time_start,
+              ^day_start
+            ),
+          end_overflow:
+            fragment(
+              "CASE WHEN(? AT TIME ZONE 'UTC' > ? AND (EXTRACT(HOUR FROM ? AT TIME ZONE 'UTC') <> 23 OR EXTRACT(MINUTE FROM ? AT TIME ZONE 'UTC') <> 0)) THEN 1 ELSE 0 END",
+              se.date_time_end,
+              ^day_end,
+              se.date_time_end,
+              se.date_time_end
+            ),
+          section_title: sc.title,
+          section_picture_url: sc.picture_url,
+          section_presenter: sc.presenter,
+          section_description: sc.description,
+          section_start_at: fragment("? AT TIME ZONE 'UTC'", sc.date_time_start),
+          section_hash:
+            fragment(
+              "MD5(CONCAT(CONCAT(?,?,?,?),?,?))",
+              r.code_name,
+              se.id,
+              se.title,
+              se.date_time_start,
+              sc.title,
+              sc.date_time_start
+            )
+        }
+
+    case now do
+      true ->
+        {:ok, date_time, _} =
+          (day <> " " <> (Time.utc_now() |> Time.truncate(:second) |> Time.to_string()) <> "Z")
+          |> DateTime.from_iso8601()
+
+        from se in query,
+          where:
+            fragment(
+              "TIMEZONE('UTC', ?) <= ? AND TIMEZONE('UTC', ?) >= ?",
+              se.date_time_start,
+              ^date_time,
+              se.date_time_end,
+              ^date_time
+            )
+
+      _ ->
+        from se in query,
+          where:
+            fragment(
+              "(TIMEZONE('UTC', ?) >= ? AND TIMEZONE('UTC', ?) < ?) OR (TIMEZONE('UTC', ?) > ? AND TIMEZONE('UTC', ?) <= ?)",
+              se.date_time_start,
+              ^day_start,
+              se.date_time_start,
+              ^day_end,
+              se.date_time_end,
+              ^day_start,
+              se.date_time_end,
+              ^day_end
+            )
+    end
   end
 
   defp format(data) do

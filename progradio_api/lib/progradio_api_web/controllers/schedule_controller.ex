@@ -8,33 +8,31 @@ defmodule ProgRadioApiWeb.ScheduleController do
 
   # ---------- GET ----------
 
-  def index(%{params: conn_params} = conn, %{"day" => day} = _params)
-      when is_map_key(conn_params, "c") do
-    schedule = Schedule.list_schedule_collection(day, conn_params["c"])
+  def index(conn, %{"day" => day, "c" => collection} = params) do
+    now = Map.get(params, "now", false) == "1"
+    schedule = Schedule.list_schedule_collection(day, collection, now)
 
     conn
-#    |> RequestCache.store()
+    #    |> RequestCache.store()
     |> render("index.json", schedule: schedule)
   end
 
-  def index(%{params: conn_params} = conn, %{"day" => day} = _params)
-      when is_map_key(conn_params, "r") do
-    radios =
-      conn_params["r"]
-      |> String.split(",")
-
-    schedule = Schedule.list_schedule_radios(day, radios)
+  def index(conn, %{"day" => day, "r" => radio_list} = params) do
+    now = Map.get(params, "now", false) == "1"
+    radios = String.split(radio_list, ",")
+    schedule = Schedule.list_schedule_radios(day, radios, now)
 
     conn
-    |> RequestCache.store()
+    #    |> RequestCache.store()
     |> render("index.json", schedule: schedule)
   end
 
-  def index(conn, %{"day" => day} = _params) do
-    schedule = Schedule.list_schedule(day)
+  def index(conn, %{"day" => day} = params) do
+    now = Map.get(params, "now", false) == "1"
+    schedule = Schedule.list_schedule(day, now)
 
     conn
-#    |> RequestCache.store()
+    #    |> RequestCache.store()
     |> render("index.json", schedule: schedule)
   end
 
