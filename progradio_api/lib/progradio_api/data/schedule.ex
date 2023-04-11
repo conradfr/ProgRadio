@@ -14,6 +14,7 @@ defmodule ProgRadioApi.Schedule do
 
   # two days
   @cache_ttl_schedule 172_800_000
+  @cache_ttl_schedule_now 300_000
   @cache_prefix_schedule "schedule_"
 
   @cache_ttl_collection 604_800_000
@@ -52,10 +53,8 @@ defmodule ProgRadioApi.Schedule do
 
   @spec schedule_of_radios_and_day(list(), String.t(), boolean) :: map()
   defp schedule_of_radios_and_day(radio_code_names, day, now) do
-    cache_key = @cache_prefix_schedule <> day <> "_"
-
     {radio_code_names_cached, radio_code_names_not_cached} =
-      radio_code_names_cached_or_not_for_day(radio_code_names, day)
+      radio_code_names_cached_or_not_for_day(radio_code_names, day, now)
 
     not_cached =
       case Kernel.length(radio_code_names_not_cached) do
@@ -71,9 +70,11 @@ defmodule ProgRadioApi.Schedule do
             |> format()
 
           # put in cache
-          result
-          |> Enum.each(fn {k, e} ->
-            Cache.put(cache_key <> k, e, ttl: @cache_ttl_schedule)
+          spawn(fn ->
+            result
+            |> Enum.each(fn {k, e} ->
+              Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
+            end)
           end)
 
           result
@@ -82,7 +83,7 @@ defmodule ProgRadioApi.Schedule do
     cached =
       radio_code_names_cached
       |> Enum.map(fn e ->
-        data = Cache.get(cache_key <> e)
+        data = Cache.get(get_cache_key(e, day, now))
         {e, data}
       end)
       |> Enum.into(%{})
@@ -164,9 +165,7 @@ defmodule ProgRadioApi.Schedule do
 
     case now do
       true ->
-        {:ok, date_time, _} =
-          (day <> " " <> (Time.utc_now() |> Time.truncate(:second) |> Time.to_string()) <> "Z")
-          |> DateTime.from_iso8601()
+        date_time = DateTime.utc_now()
 
         from se in query,
           where:
@@ -255,14 +254,14 @@ defmodule ProgRadioApi.Schedule do
     end)
   end
 
-  @spec radio_code_names_cached_or_not_for_day(list(), String.t()) :: tuple()
-  defp radio_code_names_cached_or_not_for_day(radio_code_names, day) do
+  @spec radio_code_names_cached_or_not_for_day(list(), String.t(), boolean) :: tuple()
+  defp radio_code_names_cached_or_not_for_day(radio_code_names, day, now) do
     cache_keys = Cache.all(nil, return: :key)
 
     code_names_cached =
       radio_code_names
       |> Enum.filter(fn e ->
-        Enum.member?(cache_keys, "#{@cache_prefix_schedule}#{day}_#{e}")
+        Enum.member?(cache_keys, get_cache_key(e, day, now))
       end)
 
     {code_names_cached, radio_code_names -- code_names_cached}
@@ -285,4 +284,11 @@ defmodule ProgRadioApi.Schedule do
 
     Repo.all(query)
   end
+
+  defp get_cache_key(code_name, day, now) do
+    @cache_prefix_schedule <> day <> "_" <> to_string(now) <> "_" <> code_name
+  end
+
+  defp get_cache_ttl(now) when now == true, do: @cache_ttl_schedule_now
+  defp get_cache_ttl(_now), do: @cache_ttl_schedule
 end

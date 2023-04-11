@@ -26,12 +26,20 @@ const getSchedule = async (dateStr: string, params?: any): Promise<Schedule|null
   let url = `https://${apiUrl}/schedule/${dateStr}`;
 
   if (params !== undefined && params !== null) {
+    url += '?';
+  }
+
+  if (params !== undefined && params !== null && params.now === true) {
+    url += 'now=1&';
+  }
+
+  if (params !== undefined && params !== null) {
     if (params.collection !== undefined && params.collection !== null && params.collection !== '') {
-      url += `?c=${params.collection}`;
+      url += `c=${params.collection}`;
     } else if (params.radio !== undefined && params.radio !== null && params.radio !== '') {
-      url += `?r=${params.radio}`;
+      url += `r=${params.radio}`;
     } else if (params.radios !== undefined && params.radios !== null && params.radios.length > 0) {
-      url += `?r=${params.radios.join(',')}`;
+      url += `r=${params.radios.join(',')}`;
     }
   }
 

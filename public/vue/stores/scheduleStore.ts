@@ -407,12 +407,19 @@ export const useScheduleStore = defineStore('schedule', {
 
         setTimeout(
           async () => {
-            const scheduleData = await ScheduleApi.getSchedule(dateStr, params);
+            params.now = true;
+            let scheduleData = await ScheduleApi.getSchedule(dateStr, params);
             if (scheduleData !== null) {
               this.updateSchedule(scheduleData);
             }
 
             globalStore.setLoading(false);
+
+            params.now = false;
+            scheduleData = await ScheduleApi.getSchedule(dateStr, params);
+            if (scheduleData !== null) {
+              this.updateSchedule(scheduleData);
+            }
           },
           75
         );
@@ -423,18 +430,23 @@ export const useScheduleStore = defineStore('schedule', {
 
         setTimeout(
           async () => {
-            const scheduleData = await ScheduleApi.getSchedule(dateStr);
+            let scheduleData = await ScheduleApi.getSchedule(dateStr, { now: true });
             if (scheduleData !== null) {
               this.updateSchedule(scheduleData);
             }
             globalStore.setLoading(false);
+
+            scheduleData = await ScheduleApi.getSchedule(dateStr);
+            if (scheduleData !== null) {
+              this.updateSchedule(scheduleData);
+            }
           },
           75
         );
       }
     },
     updateSchedule(schedule: Schedule) {
-      const updatedSchedule: any = { ...{ ...this.schedule }, ...schedule };
+      const updatedSchedule: any = { ...this.schedule, ...schedule };
       /* eslint-disable function-paren-newline */
       const scheduleDisplay = ScheduleUtils.getScheduleDisplay(
         updatedSchedule, this.cursorTime, initialScrollIndex
