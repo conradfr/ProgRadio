@@ -1,25 +1,24 @@
 defmodule ProgRadioApiWeb.ScheduleController do
+  import ProgRadioApiWeb.Utils.Controller, only: [send_error: 1]
   import Canada, only: [can?: 2]
   use ProgRadioApiWeb, :controller
 
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Radio, SubRadio, Schedule}
 
-  action_fallback ProgRadioApiWeb.FallbackController
-
   # ---------- GET ----------
 
   def index(%{params: conn_params} = conn, %{"day" => day} = _params)
-      when :erlang.is_map_key("c", conn_params) do
+      when is_map_key(conn_params, "c") do
     schedule = Schedule.list_schedule_collection(day, conn_params["c"])
 
     conn
-    |> RequestCache.store()
+#    |> RequestCache.store()
     |> render("index.json", schedule: schedule)
   end
 
   def index(%{params: conn_params} = conn, %{"day" => day} = _params)
-      when :erlang.is_map_key("r", conn_params) do
+      when is_map_key(conn_params, "r") do
     radios =
       conn_params["r"]
       |> String.split(",")
@@ -35,7 +34,7 @@ defmodule ProgRadioApiWeb.ScheduleController do
     schedule = Schedule.list_schedule(day)
 
     conn
-    |> RequestCache.store()
+#    |> RequestCache.store()
     |> render("index.json", schedule: schedule)
   end
 
@@ -53,12 +52,9 @@ defmodule ProgRadioApiWeb.ScheduleController do
 
       conn
       |> put_status(:created)
-      |> json(%{"status" => "OK"})
+      |> render("create.json", status: "OK")
     else
-      _ ->
-        conn
-        |> put_status(:bad_request)
-        |> json(%{"status" => "Error"})
+      _ -> send_error(conn)
     end
   end
 end

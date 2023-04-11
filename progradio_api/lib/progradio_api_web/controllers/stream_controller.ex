@@ -1,15 +1,14 @@
 defmodule ProgRadioApiWeb.StreamController do
+  import ProgRadioApiWeb.Utils.Controller, only: [send_error: 1]
   use ProgRadioApiWeb, :controller
 
   alias ProgRadioApi.Streams
   alias ProgRadioApiWeb.ApiParams.Streams, as: StreamsApiParams
 
-  action_fallback ProgRadioApiWeb.FallbackController
-
   # ---------- GET ----------
 
   def index(%{params: conn_params} = conn, _params)
-      when :erlang.is_map_key("radio", conn_params) do
+      when is_map_key(conn_params, "radio") do
     with changeset <- StreamsApiParams.changeset(%StreamsApiParams{}, conn_params),
          {:ok, api_params} <- Ecto.Changeset.apply_action(changeset, :insert) do
       streams =
@@ -19,10 +18,7 @@ defmodule ProgRadioApiWeb.StreamController do
 
       render(conn, "index.json", streams: [streams])
     else
-      _ ->
-        conn
-        |> put_status(:bad_request)
-        |> json(%{"status" => "Error"})
+      _ -> send_error(conn)
     end
   end
 
@@ -44,10 +40,7 @@ defmodule ProgRadioApiWeb.StreamController do
         timestamp: System.os_time(:microsecond)
       )
     else
-      _ ->
-        conn
-        |> put_status(:bad_request)
-        |> json(%{"status" => "Error"})
+      _ -> send_error(conn)
     end
   end
 end

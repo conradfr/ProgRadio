@@ -127,7 +127,14 @@ defmodule ProgRadioApi.Schedule do
         host: se.host,
         description: se.description,
         picture_url: se.picture_url,
-        hash: fragment("MD5(CONCAT(?,?,?,?))", r.code_name, se.title, se.date_time_start, se.sub_radio_id),
+        hash:
+          fragment(
+            "MD5(CONCAT(?,?,?,?))",
+            r.code_name,
+            se.title,
+            se.date_time_start,
+            se.sub_radio_id
+          ),
         start_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_start),
         end_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_end),
         duration:
@@ -167,8 +174,8 @@ defmodule ProgRadioApi.Schedule do
   defp format(data) do
     radio_schedule =
       data
-      |> Enum.map(fn e -> {e.code_name, e.sub_radio_code_name} end)
-      |> Enum.uniq()
+      |> Stream.map(fn e -> {e.code_name, e.sub_radio_code_name} end)
+      |> Stream.uniq()
       |> Enum.reduce(%{}, fn
         {radio_code_name, sub_radio_code_name}, acc when is_map_key(acc, radio_code_name) ->
           case Map.get(acc[radio_code_name], sub_radio_code_name) do
@@ -208,7 +215,7 @@ defmodule ProgRadioApi.Schedule do
       end)
 
     data
-    |> Enum.filter(fn e -> e.section_title != nil end)
+    |> Stream.filter(fn e -> e.section_title != nil end)
     |> Enum.reduce(radio_schedule_with_shows, fn e, acc ->
       section_entry = %{
         hash: e.section_hash,

@@ -1,5 +1,5 @@
 # This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
+# and its dependencies with the aid of the Config module.
 #
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
@@ -16,9 +16,12 @@ config :progradio_api,
 # Configures the endpoint
 config :progradio_api, ProgRadioApiWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: ProgRadioApiWeb.ErrorView, accepts: ~w(json), layout: false],
+  render_errors: [
+    formats: [json: ProgRadioApiWeb.ErrorJSON],
+    layout: false
+  ],
   pubsub_server: ProgRadioApi.PubSub,
-  live_view: [signing_salt: "LI4gelTF"]
+  live_view: [signing_salt: "blb3VG44"]
 
 config :progradio_api, ProgRadioApi.Scheduler,
   timezone: "Europe/Paris",
@@ -40,6 +43,15 @@ config :progradio_api, ProgRadioApi.Scheduler,
       task: {ProgRadioApi.Schedule, :list_schedule, []}
     ]
   ]
+
+# Configures the mailer
+#
+# By default it uses the "Local" adapter which stores the emails
+# locally. You can see the emails in your browser, at "/dev/mailbox".
+#
+# For production it's recommended to configure a different adapter
+# at the `config/runtime.exs`.
+config :progradio_api, ProgRadioApi.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -94,6 +106,7 @@ config :progradio_api, ProgRadioApi.Cache,
 
 config :request_cache_plug,
   enabled?: false,
+  verbose?: false,
   request_cache_module: ProgRadioApi.NebulexCacheStore,
   default_ttl: :timer.minutes(5)
 

@@ -1,8 +1,6 @@
 defmodule ProgRadioApiWeb.ConfigController do
   use ProgRadioApiWeb, :controller
 
-  action_fallback ProgRadioApiWeb.FallbackController
-
   def index(conn, _params) do
     server =
       ProgRadioApi.Importer.StreamsImporter.RadioBrowser.get_one_random_server()

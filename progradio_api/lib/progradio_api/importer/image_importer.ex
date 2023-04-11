@@ -21,7 +21,8 @@ defmodule ProgRadioApi.Importer.ImageImporter do
            Regex.named_captures(~r/data:(?<type>[a-zA-Z\/]*);base64,(?<data>[^\"]*)/, base64_raw),
          extension <- base64_data["type"] |> MIME.extensions() |> List.first(),
          filename <- "#{get_name(show["title"], radio)}.#{extension}",
-         full_path <- "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{filename}" do
+         full_path <-
+           "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{filename}" do
       unless ImageCache.is_cached(full_path) do
         Logger.debug("Importing base64: #{filename} to #{full_path}")
 
@@ -69,7 +70,8 @@ defmodule ProgRadioApi.Importer.ImageImporter do
            Regex.named_captures(~r/data:(?<type>[a-zA-Z\/]*);base64,(?<data>[^\"]*)/, base64_raw),
          extension <- base64_data["type"] |> MIME.extensions() |> List.first(),
          filename <- "#{radio.id}.#{extension}",
-         full_path <- "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{filename}" do
+         full_path <-
+           "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{filename}" do
       unless ImageCache.is_cached(full_path) do
         Logger.debug("Importing base64: #{filename} to #{full_path}")
 

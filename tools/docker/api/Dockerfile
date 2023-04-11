@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.14.3-erlang-25.2.3-ubuntu-focal-20221130
+FROM hexpm/elixir:1.14.4-erlang-25.3-ubuntu-focal-20230126
 
 # There is a bug / dependecy problem when using Unbutu 20.04 (focal)
 # Failure to build & load nif for :ex_cldr_collation

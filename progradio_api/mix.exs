@@ -4,10 +4,9 @@ defmodule ProgRadioApi.MixProject do
   def project do
     [
       app: :progradio_api,
-      version: "0.2.1",
-      elixir: "~> 1.12",
+      version: "0.3.0",
+      elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
@@ -39,15 +38,17 @@ defmodule ProgRadioApi.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.6.0"},
+      {:phoenix, "~> 1.7.2"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_live_dashboard, "~> 0.5"},
+      {:phoenix_live_dashboard, "~> 0.7.2"},
+      {:swoosh, "~> 1.3"},
+      {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.18"},
-      {:jason, "~> 1.0"},
+      {:gettext, "~> 0.20"},
+      {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:httpoison, "~> 1.8"},
       {:tzdata, "~> 1.1.1"},
@@ -60,7 +61,7 @@ defmodule ProgRadioApi.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:broadway, "~> 1.0.0"},
       # {:off_broadway_redis, "~> 0.4.3"},
-      # Until off_broadway_redis 1.0.0 is fixed and tagged
+      #      # Until off_broadway_redis 1.0.0 is fixed and tagged
       {:off_broadway_redis,
        git: "https://github.com/conradfr/off_broadway_redis.git", branch: "1.0.0"},
       {:timex, "~> 3.7"},
@@ -72,8 +73,9 @@ defmodule ProgRadioApi.MixProject do
       {:nebulex, "~> 2.3"},
       {:decorator, "~> 1.3"},
       {:observer_cli, "~> 1.7"},
-      {:request_cache_plug,
-       git: "https://github.com/conradfr/request_cache_plug", branch: "main"},
+      {:request_cache_plug, "~> 0.2"},
+#      {:request_cache_plug,
+#       git: "https://github.com/conradfr/request_cache_plug", branch: "main"},
       {:ex_cldr, "~> 2.33"},
       {:ex_cldr_territories, "~> 2.0"},
       {:ex_cldr_collation, "~> 0.7.0"}

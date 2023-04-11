@@ -4,8 +4,6 @@ defmodule ProgRadioApiWeb.CountryController do
   alias ProgRadioApi.Cldr
   alias ProgRadioApi.Streams
 
-  action_fallback ProgRadioApiWeb.FallbackController
-
   # one day
   @cache_ttl :timer.seconds(86400)
 

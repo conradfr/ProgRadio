@@ -7,7 +7,8 @@ defmodule ProgRadioApiWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_progradio_api_key",
-    signing_salt: "/u1sfuFC"
+    signing_salt: "23+DNb6e",
+    same_site: "Lax"
   ]
 
   socket "/socket", ProgRadioApiWeb.UserSocket,
@@ -24,7 +25,7 @@ defmodule ProgRadioApiWeb.Endpoint do
     at: "/",
     from: :progradio_api,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ProgRadioApiWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

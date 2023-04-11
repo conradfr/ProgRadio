@@ -19,25 +19,20 @@ defmodule ProgRadioApiWeb.ConnCase do
 
   using do
     quote do
+      # The default endpoint for testing
+      @endpoint ProgRadioApiWeb.Endpoint
+
+      use ProgRadioApiWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import ProgRadioApiWeb.ConnCase
-
-      alias ProgRadioApiWeb.Router.Helpers, as: Routes
-
-      # The default endpoint for testing
-      @endpoint ProgRadioApiWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ProgRadioApi.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(ProgRadioApi.Repo, {:shared, self()})
-    end
-
+    ProgRadioApi.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

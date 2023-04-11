@@ -1,10 +1,9 @@
 defmodule ProgRadioApiWeb.RadioController do
+  import ProgRadioApiWeb.Utils.Controller, only: [send_error: 1]
   use ProgRadioApiWeb, :controller
   import Canada, only: [can?: 2]
 
   alias ProgRadioApi.Radios
-
-  action_fallback ProgRadioApiWeb.FallbackController
 
   def index(conn, _params) do
     radios = Radios.list_active_radios()
@@ -22,10 +21,7 @@ defmodule ProgRadioApiWeb.RadioController do
       radios = Radios.list_radios_per_api_key(api_key.id)
       render(conn, "list.json", radios: radios)
     else
-      _ ->
-        conn
-        |> put_status(:bad_request)
-        |> json(%{"status" => "Error"})
+      _ -> send_error(conn)
     end
   end
 end

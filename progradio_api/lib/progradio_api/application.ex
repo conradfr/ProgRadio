@@ -5,13 +5,14 @@ defmodule ProgRadioApi.Application do
 
   use Application
 
+  @impl true
   def start(_type, _args) do
     children = [
       ProgRadioApi.Cache,
-      # Start the Ecto repository
-      ProgRadioApi.Repo,
       # Start the Telemetry supervisor
       ProgRadioApiWeb.Telemetry,
+      # Start the Ecto repository
+      ProgRadioApi.Repo,
       {Redix,
        host: Application.get_env(:progradio_api, :redis_host),
        database: Application.get_env(:progradio_api, :redis_db),
@@ -24,6 +25,8 @@ defmodule ProgRadioApi.Application do
       ProgRadioApiWeb.Presence,
       {Registry, [keys: :unique, name: SongSongProviderRegistry]},
       {DynamicSupervisor, strategy: :one_for_one, name: ProgRadioApi.SongDynamicSupervisor},
+      # Start Finch
+      {Finch, name: ProgRadioApi.Finch},
       # Start the Endpoint (http/https)
       ProgRadioApiWeb.Endpoint,
       ProgRadioApi.Scheduler,
@@ -40,6 +43,7 @@ defmodule ProgRadioApi.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
+  @impl true
   def config_change(changed, _new, removed) do
     ProgRadioApiWeb.Endpoint.config_change(changed, removed)
     :ok
