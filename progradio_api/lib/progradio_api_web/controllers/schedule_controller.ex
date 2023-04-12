@@ -13,7 +13,7 @@ defmodule ProgRadioApiWeb.ScheduleController do
     schedule = Schedule.list_schedule_collection(day, collection, now)
 
     conn
-    #    |> RequestCache.store()
+    |> RequestCache.store()
     |> render("index.json", schedule: schedule)
   end
 
@@ -23,7 +23,7 @@ defmodule ProgRadioApiWeb.ScheduleController do
     schedule = Schedule.list_schedule_radios(day, radios, now)
 
     conn
-    #    |> RequestCache.store()
+    |> RequestCache.store()
     |> render("index.json", schedule: schedule)
   end
 
@@ -32,7 +32,7 @@ defmodule ProgRadioApiWeb.ScheduleController do
     schedule = Schedule.list_schedule(day, now)
 
     conn
-    #    |> RequestCache.store()
+    |> RequestCache.store()
     |> render("index.json", schedule: schedule)
   end
 

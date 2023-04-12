@@ -11,7 +11,7 @@ const getScrap = async (dateObj, subRadio) => {
 
 const scrapModule = {
   getName: 'france_bleu',
-  supportTomorrow: true,
+  supportTomorrow: false,
   getScrap
 };
 

@@ -36,20 +36,22 @@ defmodule ProgRadioApi.Schedule do
     list_schedule(day, now)
   end
 
-  def list_schedule(day, now \\ false) do
+  def list_schedule(day \\ nil, now \\ false)
+
+  def list_schedule(nil, now) do
+    NaiveDateTime.local_now()
+    |> DateTime.from_naive!("Europe/Paris")
+    |> DateTime.to_date()
+    |> Date.to_string()
+    |> list_schedule(now)
+  end
+
+  def list_schedule(day, now) do
     # hopefully cached
     ProgRadioApi.Radios.list_active_radios()
     |> Map.keys()
     |> schedule_of_radios_and_day(day, now)
   end
-
-  #  def list_schedule(now \\ false) do
-  #    NaiveDateTime.local_now()
-  #    |> DateTime.from_naive!("Europe/Paris")
-  #    |> DateTime.to_date()
-  #    |> Date.to_string()
-  #    |> list_schedule(now)
-  #  end
 
   @spec schedule_of_radios_and_day(list(), String.t(), boolean) :: map()
   defp schedule_of_radios_and_day(radio_code_names, day, now) do
@@ -70,12 +72,12 @@ defmodule ProgRadioApi.Schedule do
             |> format()
 
           # put in cache
-          spawn(fn ->
+#          spawn(fn ->
             result
             |> Enum.each(fn {k, e} ->
               Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
             end)
-          end)
+#          end)
 
           result
       end
@@ -112,7 +114,7 @@ defmodule ProgRadioApi.Schedule do
         inner_join: sr in SubRadio,
         on: sr.id == se.sub_radio_id,
         where: r.active == true,
-        order_by: [asc: se.date_time_start, asc: sc.date_time_start],
+#        order_by: [asc: se.date_time_start, asc: sc.date_time_start],
         select: %{
           code_name: r.code_name,
           sub_radio_code_name: sr.code_name,
