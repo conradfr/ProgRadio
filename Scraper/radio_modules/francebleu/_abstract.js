@@ -2,11 +2,8 @@ let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 const axios = require("axios");
 
-let scrapedData = {
-  prev: {},
-  curr: {}
-};
-const schedule = [];
+let scrapedData = {};
+const schedule = {};
 
 const when = ['morning', 'midday', 'afternoon', 'evening'];
 
@@ -14,9 +11,9 @@ const format = async (dateObj, name) => {
   dateObj.tz('Europe/Paris');
 
   // not using forEach as it does not work with await
-  for (const key of Object.keys(scrapedData)) {
+  for (const key of Object.keys(scrapedData[name])) {
     for (const dayWhen of when) {
-      if (!scrapedData[key][dayWhen]) {
+      if (!scrapedData[name][key][dayWhen]) {
         continue;
       }
 
@@ -24,7 +21,7 @@ const format = async (dateObj, name) => {
         continue;
       }
 
-      for (const data of scrapedData[key][dayWhen]) {
+      for (const data of scrapedData[name][key][dayWhen]) {
         let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
         let match = data.start.match(regexp);
 
@@ -129,12 +126,14 @@ const format = async (dateObj, name) => {
           });
         }
 
-        schedule.push(newEntry);
+        schedule[name].push(newEntry);
       }
     }
   }
 
-  return Promise.resolve(schedule)
+  // console.log(schedule[name]);
+
+  return Promise.resolve(schedule[name])
 };
 
 const fetch = async (urlName, name, dateObj, prev) => {
@@ -149,9 +148,9 @@ const fetch = async (urlName, name, dateObj, prev) => {
     const response = await axios.get(url);
 
     if (prev === true) {
-      scrapedData.prev = response.data.context.ProgramGridLocale;
+      scrapedData[name].prev = response.data.context.ProgramGridLocale;
     } else {
-      scrapedData.curr = response.data.context.ProgramGridLocale;
+      scrapedData[name].curr = response.data.context.ProgramGridLocale;
     }
   } catch(error) {
 
@@ -170,7 +169,12 @@ const fetchAll = async (urlName, name, dateObj) => {
 };
 
 const getScrap = async (dateObj, urlName, name) => {
-  scrapedData[name] = [];
+  schedule[name] = [];
+  scrapedData[name] = {
+    prev: {},
+    curr: {}
+  };
+
   await fetchAll(urlName, name, dateObj);
   return await format(dateObj, name)
 };
