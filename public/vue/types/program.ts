@@ -8,7 +8,7 @@ export interface Program {
   hash: string
   host?: string|null
   picture_url?: string|null
-  section?: Section[]|null
+  sections?: Section[]|null
   start_at: string
   start_overflow: 0|1
   title: string

@@ -415,11 +415,11 @@ export const useScheduleStore = defineStore('schedule', {
 
             globalStore.setLoading(false);
 
-/*            params.now = false;
+            /* params.now = false;
             scheduleData = await ScheduleApi.getSchedule(dateStr, params);
             if (scheduleData !== null) {
               this.updateSchedule(scheduleData);
-            }*/
+            } */
           },
           75
         );
@@ -437,10 +437,10 @@ export const useScheduleStore = defineStore('schedule', {
             }
             globalStore.setLoading(false);
 
-/*            scheduleData = await ScheduleApi.getSchedule(dateStr);
+            /* scheduleData = await ScheduleApi.getSchedule(dateStr);
             if (scheduleData !== null) {
               this.updateSchedule(scheduleData);
-            }*/
+            } */
           },
           75
         );
