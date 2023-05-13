@@ -28,7 +28,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
 
     try do
       data =
-        "https://np.maradio.be/qp/v3/events?rpId=#{id}&nameSize=100000&serviceNameSize=100000&artistNameSize=100000&descriptionSize=100000&_=#{now_unix}"
+        "https://core-search.radioplayer.cloud/056/qp/v4/events/?rpId=#{id}"
         |> SongProvider.get()
         |> Map.get(:body)
         |> Jason.decode!()
