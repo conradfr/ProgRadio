@@ -11,7 +11,7 @@ defmodule ProgRadioApi.Radios do
   alias ProgRadioApi.{Radio, SubRadio, RadioStream, Category, Collection, ApiKey, ApiKeyRadio}
 
   # stream retries before considering it disabled
-  @retries_max 56
+#  @retries_max 56
 
   # one week
   @cache_ttl_default 604_800_000
