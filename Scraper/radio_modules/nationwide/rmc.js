@@ -110,12 +110,12 @@ const fetchShows = () => {
       .do(
         osmosis
           .follow('a:first@href')
-          .find('.emissions_content')
+          .find('.emission_container')
           .set({
-            'title': '.emissions_title, .aside_emissions_title',
-            'datetime_raw': 'time',
-            'host': '.emissions_presenter span',
-            'description': ".emissions_description_text"
+            'title': '.podcast_caption > h1',
+            'datetime_raw': '.podcast_caption .podcast_time_l',
+            'host': '.podcast_caption > span',
+            'description': ".podcast_description .podcast_bandeau_desc span:not(.podcast_time_s)"
           })
       )
       .data(function (listing) {
