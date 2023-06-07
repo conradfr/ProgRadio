@@ -6,7 +6,8 @@ import {
   ANDROID_SONG_MIN_VERSION,
   ANDROID_CHANNEL_IN_LIST_MIN_VERSION,
   THUMBNAIL_NOTIFICATION_PROGRAM_PATH,
-  THUMBNAIL_STREAM_PATH
+  THUMBNAIL_STREAM_PATH,
+  THUMBNAIL_PAGE_PATH
 } from '@/config/config';
 
 import type { Radio } from '@/types/radio';
@@ -35,6 +36,10 @@ const getPictureUrl = (radio: Radio|Stream, show: Program|null = null): string|n
 
   if (typeUtils.isRadio(radio)) {
     return `/img/radio/page/${radio.code_name}.png`;
+  }
+
+  if (radio.img_alt !== null && radio.img_alt !== '') {
+    return `${THUMBNAIL_PAGE_PATH}${radio.img_alt}.png`;
   }
 
   if (radio.img !== null && radio.img !== '') {
