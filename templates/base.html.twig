@@ -1,7 +1,7 @@
 {% set locales = ['fr', 'en', 'es'] %}
 {% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es'} %}
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}" class="h-100{% block htmlsupp %}{% endblock %}{% if isDarkModeTime() %} progradio-dark{% endif %}">
+<html lang="{{ app.request.locale }}" class="h-100{% block htmlsupp %}{% endblock %}" {% if isDarkModeTime(app.request) %}data-bs-theme="dark"{% endif %}>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,18 +11,20 @@
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Lobster&text=AdictRadoProgmes&display=swap" as="font" crossorigin>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     {% block head_supp %}
     {% endblock %}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" id="favicon" type="image/png" href="{{ asset('favicon.png') }}" />
+
+    <link rel="preload" href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" as="style">
 
     <link href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
     <link href="{{ asset('build/css/main_dark.css') }}?v={{ releaseVersion() }}" rel="stylesheet">

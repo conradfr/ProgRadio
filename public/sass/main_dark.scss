@@ -1,4 +1,4 @@
-.progradio-dark:not(.progradio-nodark) {
+[data-bs-theme="dark"]:not(.progradio-nodark) {
   @import "colors_dark";
   @import "variables";
 
@@ -7,6 +7,13 @@
   @import "bootswatch_darkly/_variables";
   @import "../../node_modules/bootstrap/scss/bootstrap";
   @import "bootswatch_darkly/_bootswatch";
+
+  // weirdly not generated from theme
+  // maybe a bug as -rgb is new to 5.3
+  --bs-primary-rgb: rgb(55, 90, 127);
+  .navbar.bg-primary {
+    background-color: #375A7FFF !important;
+  }
 
   @import "main";
 

@@ -1,5 +1,7 @@
 <script type="text/javascript">
-  const darkModeClassName = 'progradio-dark';
+  const themeDataName = 'bsTheme';
+  const darkThemeName = 'dark';
+
   const navLightClassName = 'nav-link-lightmode';
   const navDarkClassName = 'nav-link-darkmode';
   const hiddenClassName = 'd-none';
@@ -32,38 +34,41 @@
   };
 
   const toggleColorSchemeMode = () => {
-    document.getElementsByTagName('html')[0].classList.toggle(darkModeClassName);
+      // it was dark
+      if (themeDataName in document.getElementsByTagName('html')[0].dataset
+        && document.getElementsByTagName('html')[0].dataset[themeDataName] === darkThemeName) {
+        // remove attribute
+        delete document.getElementsByTagName('html')[0].dataset[themeDataName];
+
+        // if not dark time we store the always dark mode choice, else set it to auto
+        if (isCurrentlyDarkTime()) {
+            setDarkModeCookie(false);
+            sendDarkModeGaEvent('light', false);
+        } else {
+            setDarkModeCookie();
+            sendDarkModeGaEvent('light', true);
+        }
+      } else {
+        document.getElementsByTagName('html')[0].dataset[themeDataName] = darkThemeName;
+
+        if (isCurrentlyDarkTime() === false) {
+          setDarkModeCookie(true);
+          sendDarkModeGaEvent('dark', false);
+        } else {
+          setDarkModeCookie();
+          sendDarkModeGaEvent('dark', true);
+        }
+      }
 
     // ui toggle icon
     updateColorSchemeUI();
-
-    // it's now dark mode
-    // if not dark time we store the always dark mode choice, else set it to auto
-    if (document.getElementsByTagName('html')[0].classList.contains(darkModeClassName)) {
-      if (isCurrentlyDarkTime() === false) {
-        setDarkModeCookie(true);
-          sendDarkModeGaEvent('dark', false);
-      } else {
-        setDarkModeCookie();
-        sendDarkModeGaEvent('dark', true);
-      }
-    } else {
-      // if not dark time we store the always dark mode choice, else set it to auto
-      if (isCurrentlyDarkTime()) {
-        setDarkModeCookie(false);
-        sendDarkModeGaEvent('light', false);
-      } else {
-        setDarkModeCookie();
-        sendDarkModeGaEvent('light', true);
-      }
-    }
   };
 
   const setColorSchemeMode = (state) => {
     if (state === true) {
-      document.getElementsByTagName('html')[0].classList.add(darkModeClassName);
+      document.getElementsByTagName('html')[0].dataset[themeDataName] = darkThemeName;
     } else {
-      document.getElementsByTagName('html')[0].classList.remove(darkModeClassName);
+      delete document.getElementsByTagName('html')[0].classList.remove(themeDataName);
     }
 
     // ui toggle icon
@@ -72,7 +77,8 @@
 
   const updateColorSchemeUI = () => {
     // it's now dark mode
-    if (document.getElementsByTagName('html')[0].classList.contains(darkModeClassName)) {
+    if (themeDataName in document.getElementsByTagName('html')[0].dataset
+      && document.getElementsByTagName('html')[0].dataset[themeDataName] === darkThemeName) {
       const darkElems = document.getElementsByClassName(navDarkClassName);
       Array.prototype.forEach.call(darkElems, element => {
         element.classList.add(hiddenClassName);

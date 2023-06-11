@@ -24,8 +24,8 @@
 
         {# Dark mode #}
         <div class="d-block d-sm-none">
-            <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeTime() == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
-            <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeTime() %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
+            <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeTime(app.request) == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
+            <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeTime(app.request) %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
         </div>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
@@ -106,10 +106,10 @@
                 </li>
 
                 <li class="nav-item ps-0 pe-1">
-                    <a title="{{ 'menu.mode.light'|trans }}" class="nav-link nav-link-lightmode{% if isDarkModeTime() == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i>
+                    <a title="{{ 'menu.mode.light'|trans }}" class="nav-link nav-link-lightmode{% if isDarkModeTime(app.request) == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i>
                         <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.light'|trans }}</span>
                     </a>
-                    <a title="{{ 'menu.mode.dark'|trans }}" class="nav-link nav-link-darkmode {% if isDarkModeTime() %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i>
+                    <a title="{{ 'menu.mode.dark'|trans }}" class="nav-link nav-link-darkmode {% if isDarkModeTime(app.request) %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i>
                         <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.dark'|trans }}</span>
                     </a>
                 </li>

@@ -21,14 +21,16 @@ class Ip2Country
 
     public function __construct(protected CacheItemPoolInterface $cache) { }
 
+    public function getTimeZone(Request $request): ?string
+    {
+        $ipData = $this->getIpData($request);
+
+        return $ipData['timezone'] ?? null;
+    }
+
     public function isProtected(Request $request): bool
     {
-        $ip = $request->getClientIp();
-
-        $ipData = $this->cache->get(self::CACHE_IP_PREFIX . $ip, function (ItemInterface $item) use ($ip) {
-            $item->expiresAfter(self::CACHE_IP_TTL);
-            return $this->getData($ip);
-        });
+        $ipData = $this->getIpData($request);
 
         if (in_array($ipData['country_code'], self::GDPR_COUNTRIES)) {
             return true;
@@ -41,13 +43,24 @@ class Ip2Country
         return false;
     }
 
+    protected function getIpData(Request $request): array
+    {
+        $ip = $request->getClientIp();
+
+        return $this->cache->get(self::CACHE_IP_PREFIX . $ip, function (ItemInterface $item) use ($ip) {
+            $item->expiresAfter(self::CACHE_IP_TTL);
+            return $this->getData($ip);
+        });
+    }
+
     protected function getData($ip): array
     {
         $url = sprintf(self::API_URL, $ip);
         $result = null;
         $defaultResult = [
             'country_code' => null,
-            'region_code' => null
+            'region_code' => null,
+            'timezone' => null
         ];
 
         try {
@@ -72,7 +85,8 @@ class Ip2Country
 
         return [
             'country_code' => $result !== null && isset($result['geoplugin_countryCode']) ? $result['geoplugin_countryCode'] : null,
-            'region_code' => $result !== null && isset($result['geoplugin_regionCode']) ? $result['geoplugin_regionCode'] : null
+            'region_code' => $result !== null && isset($result['geoplugin_regionCode']) ? $result['geoplugin_regionCode'] : null,
+            'timezone' => $result !== null && isset($result['geoplugin_timezone']) ? $result['geoplugin_timezone'] : null,
         ];
     }
 

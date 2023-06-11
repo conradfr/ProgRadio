@@ -5,8 +5,7 @@
          v-on:click="togglePreRoll()"
     >
       <span class="bi"
-            :class="{ 'bi-check-lg': !preRollExcluded,
-                  'bi-dash-lg': preRollExcluded }">
+        :class="{ 'bi-check-lg': !preRollExcluded, 'bi-dash-lg': preRollExcluded }">
       </span>{{ $t('message.schedule.preroll_filter') }}
     </div>
     <div class="category-one"

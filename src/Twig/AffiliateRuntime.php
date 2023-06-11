@@ -23,7 +23,7 @@ class AffiliateRuntime implements RuntimeExtensionInterface
         $result = $this->em->getRepository(Affiliate::class)->getOneAffiliate($locale);
 
         if ($result !== null && is_array($result)) {
-            return $result['htmlLink'];
+            return $result['htmlLink'] ?? null;
         }
 
         return null;
