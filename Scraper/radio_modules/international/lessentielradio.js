@@ -26,7 +26,7 @@ const format = dateObj => {
 
     let time = [];
 
-    let regexp = new RegExp(/^De\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)\sà\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+    let regexp = new RegExp(/^Du\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)\sau\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
     let match = entry.datetime_raw.match(regexp);
 
     if (match === null) {
@@ -117,7 +117,7 @@ const fetch = dateObj => {
       .set({
         'img': 'img.list-img-thumb@src',
         'title': 'h4',
-        'datetime_raw': 'a.title-link + div'
+        'datetime_raw': '.program-date'
       })
       .do(
         osmosis.follow('a.title-link@href')
