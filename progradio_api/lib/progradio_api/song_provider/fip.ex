@@ -28,12 +28,12 @@ defmodule ProgRadioApi.SongProvider.Fip do
   @impl true
   def get_refresh(_name, data, default_refresh) do
     now_unix = SongProvider.now_unix()
-    next = Map.get(data, "next_refresh", now_unix + default_refresh / 1000) + 5 - now_unix
+    next = Map.get(data, "delayToRefresh", now_unix + default_refresh) + 5 - now_unix
 
     if next < @refresh_fallback do
       @refresh_fallback * 1000
     else
-      next * 1000
+      next
     end
   end
 
@@ -44,26 +44,38 @@ defmodule ProgRadioApi.SongProvider.Fip do
       |> (&Map.get(@stream_ids, &1)).()
 
     url =
-      "https://www.fip.fr/latest/api/graphql?operationName=NowList&variables={\"bannerPreset\":\"266x266\",\"stationIds\":[#{id}]}&extensions={\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"151ca055b816d28507dae07f9c036c02031ed54e18defc3d16feee2551e9a731\"}}"
+      "https://api.radiofrance.fr/livemeta/live/#{id}/webrf_fip_player"
 
-    url
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> Jason.decode!()
-    |> Map.get("data", %{})
-    |> Map.get("nowList", %{})
-    |> List.first()
+    try do
+      data =
+        url
+        |> SongProvider.get()
+        |> Map.get(:body)
+        |> Jason.decode!()
+
+      now_unix = SongProvider.now_unix()
+
+      if data != nil and Map.get(data, "now") != nil
+          and Map.get(data["now"], "startTime") != nil and Map.get(data["now"], "endTime") != nil
+          and now_unix >= data["now"]["startTime"] and now_unix <= data["now"]["endTime"] do
+        data
+      else
+        nil
+      end
+    rescue
+      _ -> nil
+    end
   end
 
   @impl true
   def get_song(name, data) do
-    case data do
+    case Map.get(data, "now") do
       nil ->
         Logger.info("Data provider - #{name}: error fetching song data or empty")
         %{}
 
       _ ->
-        %{artist: data["playing_item"]["title"], title: data["playing_item"]["subtitle"]}
+        %{artist: Map.get(data["now"], "secondLine"), title: Map.get(data["now"], "firstLine")}
     end
   end
 end
