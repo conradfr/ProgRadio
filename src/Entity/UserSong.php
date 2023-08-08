@@ -4,11 +4,15 @@ namespace App\Entity;
 
 use App\Entity\User;
 use App\Repository\UserSongRepository;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'user_song')]
 #[ORM\Entity(repositoryClass: UserSongRepository::class)]
+#[AsDoctrineListener(event: Events::preUpdate)]
+#[AsDoctrineListener(event: Events::prePersist)]
 class UserSong
 {
     #[ORM\Id]

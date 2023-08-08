@@ -4,11 +4,15 @@ namespace App\Entity;
 
 use App\Entity\User;
 use App\Repository\UserEmailChangeRepository;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'user_email_change')]
 #[ORM\Entity(repositoryClass: UserEmailChangeRepository::class)]
+#[AsDoctrineListener(event: Events::preUpdate)]
+#[AsDoctrineListener(event: Events::prePersist)]
 class UserEmailChange
 {
     protected const TOKEN_LENGTH = 25;

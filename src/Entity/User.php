@@ -6,8 +6,10 @@ use App\Entity\Radio;
 use App\Entity\Stream;
 use App\Entity\UserSong;
 use App\Repository\UserRepository;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,6 +21,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(name: 'user_token_idx', columns: ['password_reset_token'])]
 #[ORM\Index(name: 'user_email_idx', columns: ['email'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[AsDoctrineListener(event: Events::preUpdate)]
+#[AsDoctrineListener(event: Events::prePersist)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     protected const TOKEN_LENGTH = 25;

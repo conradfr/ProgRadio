@@ -26,16 +26,18 @@ class CollectionRepository extends ServiceEntityRepository
     public function getCollections(array $favoritesFromCookies = []): array {
         $user = $this->security->getUser();
 
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT c.codeName as code_name, c.name_fr as name_FR, c.name_en as name_EN, c.name_es as name_ES, c.shortName as short_name, 
-                c.priority, c.sortField as sort_field, c.sortOrder as sort_order,
-                GROUP_CONCAT(r.codeName) as radios
-                FROM App:Collection c
-                LEFT JOIN c.radios r
-                GROUP BY c.id, c.priority
-                ORDER BY c.priority asc, c.id asc'
-        );
+        $qb = $this->getEntityManager()->createQueryBuilder();
 
+        $qb->select('c.codeName as code_name, c.name_fr as name_FR, c.name_en as name_EN, c.name_es as name_ES, c.shortName as short_name, 
+                c.priority, c.sortField as sort_field, c.sortOrder as sort_order,
+                GROUP_CONCAT(r.codeName) as radios')
+            ->from(Collection::class, 'c')
+            ->leftJoin('c.radios', 'r')
+            ->groupBy('c.id, c.priority')
+            ->orderBy('c.priority', 'ASC')
+            ->orderBy('c.id', 'ASC');
+
+        $query = $qb->getQuery();
         $query->enableResultCache( self::CACHE_COLLECTION_TTL, self::CACHE_COLLECTION_ID);
         $results = $query->getResult();
 

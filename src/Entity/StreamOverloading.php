@@ -4,9 +4,13 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Events;
 
 #[ORM\Table(name: '`stream_overloading`')]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamOverloadingRepository')]
+#[AsDoctrineListener(event: Events::preUpdate)]
+#[AsDoctrineListener(event: Events::prePersist)]
 class StreamOverloading
 {
     #[ORM\Column(type: 'uuid', unique: true)]
