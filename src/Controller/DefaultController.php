@@ -203,16 +203,25 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    public function oneShort(string $shortId, Stream $stream, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
+    public function oneShort(string $shortId, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
     {
-        // note: shortId parameter is unused here but necessary to chain the ParamConverter from shortId to Stream
+        // !!! NOTE !!! could not find in the doc how to do a custom ParamConverter in Symfony 6.3 like with ExtraBundle before
+        // So we do it manually here, oh well...
+
+        $shortener = Shortener::make(
+            Dictionary::createUnmistakable()
+        );
+
+        $uuid = $shortener->expand($shortId);
+
+        $stream = $em->getRepository(Stream::class)->find($uuid);
+
+        if (!$stream) {
+            throw new NotFoundHttpException('Radio not found');
+        }
 
         // redirect non-fr stream seo pages to new host
         if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
-            $shortener = Shortener::make(
-                Dictionary::createUnmistakable() // or pass your own characters set
-            );
-
             $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
@@ -225,9 +234,6 @@ class DefaultController extends AbstractBaseController
 
         if ($stream->isEnabled() === false && $stream->getRedirectToStream() !== null) {
             $slugger = new AsciiSlugger();
-            $shortener = Shortener::make(
-                Dictionary::createUnmistakable() // or pass your own characters set
-            );
 
             $shortId = $shortener->reduce($stream->getRedirectToStream()->getId());
 
