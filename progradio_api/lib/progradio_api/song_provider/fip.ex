@@ -69,7 +69,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
 
   @impl true
   def get_song(name, data) do
-    case Map.get(data, "now") do
+    case Map.get(data || %{}, "now") do
       nil ->
         Logger.info("Data provider - #{name}: error fetching song data or empty")
         %{}
