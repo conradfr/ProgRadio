@@ -142,7 +142,7 @@ class SiteController extends AbstractController
         return $response;
     }
 
-    /**
+    /*
      * Simple sitemap generator
      *
      * Doesn't use the serializer.

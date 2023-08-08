@@ -34,7 +34,7 @@ class UserController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/email', name: 'user_page_email')]
-    public function emailChange(Host $host, Request $request, EntityManagerInterface $em, MailerInterface $mailer,         TranslatorInterface $translator): Response
+    public function emailChange(Host $host, Request $request, EntityManagerInterface $em, MailerInterface $mailer, TranslatorInterface $translator): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();

@@ -32,15 +32,11 @@ class StreamOverloading
     #[ORM\Column(type: 'boolean')]
     private ?bool $enabled = null;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     */
+    #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
     private \DateTime $createdAt;
 
-    /**
-     * @Gedmo\Timestampable(on="update")
-     */
+    #[Gedmo\Timestampable(on: 'update')]
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
     private \DateTime $updatedAt;
 

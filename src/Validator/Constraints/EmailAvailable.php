@@ -6,9 +6,7 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
-* @Annotation
-*/
+#[\Attribute]
 class EmailAvailable extends Constraint
 {
   public string $message = "Cet email n'est pas disponible.";

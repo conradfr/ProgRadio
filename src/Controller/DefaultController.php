@@ -515,7 +515,7 @@ class DefaultController extends AbstractBaseController
         return $this->redirectToRoute('streaming_spa');
     }
 
-    /**
+    /*
      * This is the spa entry point,
      *   matching multiple urls that are then handled by the spa router
      */

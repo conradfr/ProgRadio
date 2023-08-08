@@ -11,13 +11,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 class FavoritesRuntime implements RuntimeExtensionInterface
 {
-    /** @var EntityManagerInterface */
-    protected $em;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->em = $entityManager;
-    }
+    public function __construct(protected EntityManagerInterface $em) { }
 
     public function scheduleCollections($user, ParameterBag $requestAttributes)
     {
