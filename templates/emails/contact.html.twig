@@ -4,6 +4,9 @@
 {% if email %}
 <p><strong>Email:</strong> {{ contact_email }}</p>
 {%  endif %}
+{% if site %}
+<p><strong>Site:</strong> {{ site }}</p>
+{%  endif %}
 <p><strong>Message:</strong>
     <br>
     {{ message | nl2br }}

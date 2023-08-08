@@ -74,9 +74,10 @@ class SiteController extends AbstractController
             ]
         )
     ]
-    public function contact(MailerInterface $mailer, TranslatorInterface $translator, Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|Response
+    public function contact(MailerInterface $mailer, TranslatorInterface $translator, Host $host, Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|Response
     {
         $contact = new Contact();
+
         $form = $this->createForm(ContactType::class, $contact);
 
         $form->handleRequest($request);
@@ -92,6 +93,7 @@ class SiteController extends AbstractController
                 ->context([
                     'name' => $contact->getName(),
                     'contact_email' => $contact->getEmail(),
+                    'site' => $host->getRootDomain($request),
                     'message' => $contact->getMessage(),
                 ]);
 
