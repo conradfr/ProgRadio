@@ -109,7 +109,7 @@ page:
         playing: Título
         suggested: Radios sugeridos
         tags: Tags
-        title: 'Reproducir %radio% en vivo'
+        title: 'Escuchar %radio% en vivo'
         website: 'Sitio web'
 
     top:

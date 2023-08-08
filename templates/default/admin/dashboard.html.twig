@@ -148,7 +148,7 @@
                                     <tr>
                                         <td class="radio-header"><img title="{{ stream.name }}" alt="{{ stream.name }}" src="{{ self.streamPicture(stream) }}"></td>
                                         <td class="td-auto">Erreurs pour <strong>{{ stream.retries }}</strong> checks.</td>
-                                        <td><a target="_blank" href="{{ path('streams_one', {'id': stream.id, 'codename': stream.name|slug }) }}">lien</a></td>
+                                        <td><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">lien</a></td>
                                     </tr>
                                 {% endfor %}
                                 {% if current_song_status|length == 0 and stream_song_status|length == 0 %}

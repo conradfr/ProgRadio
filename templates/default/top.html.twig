@@ -69,7 +69,7 @@
                             </div>
 
                             <div class="streams-one-name" title="{{ stream.name }}">
-                                <a class="streams-one-name-detail" href="{{ path('streams_one', {'id': stream.code_name, 'codename': stream.name|slug}) }}">{{ stream.name }}</a>
+                                <a class="streams-one-name-detail" href="{{ path('streams_one_short', {'shortId': stream.code_name|shortid, 'codename': stream.name|slug}) }}">{{ stream.name }}</a>
                                 <div class="streams-one-song" v-if="playing === true && radioId === '{{ stream.code_name }}' && song !== null">
                                     {% verbatim %}
                                         ♫ {{ song }}

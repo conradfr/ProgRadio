@@ -27,6 +27,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Keiko\Uuid\Shortener\Dictionary;
+use Keiko\Uuid\Shortener\Shortener;
 
 class DefaultController extends AbstractBaseController
 {
@@ -190,25 +192,31 @@ class DefaultController extends AbstractBaseController
     #[
         Route(
             path: [
-                'en' => '/{_locale}/stream/{id}/listen-{codename}',
-                'fr' => '/{_locale}/stream/{id}/ecouter-{codename}',
-                'es' => '/{_locale}/stream/{id}/escuchar-{codename}'
+                'en' => '/{_locale}/stream-{shortId}/listen-{codename}',
+                'fr' => '/{_locale}/stream-{shortId}/ecouter-{codename}',
+                'es' => '/{_locale}/stream-{shortId}/escuchar-{codename}'
             ],
-            name: 'streams_one',
+            name: 'streams_one_short',
             defaults: [
                 'priority' => '0.7',
                 'changefreq' => 'monthly'
             ]
         )
     ]
-    public function one(Stream $stream, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
+    public function oneShort(string $shortId, Stream $stream, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
     {
+        // note: shortId parameter is unused here but necessary to chain the ParamConverter from shortId to Stream
+
         // redirect non-fr stream seo pages to new host
         if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
+            $shortener = Shortener::make(
+                Dictionary::createUnmistakable() // or pass your own characters set
+            );
+
             $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
-            $redirectUrl = $router->generate('streams_one', [
+            $redirectUrl = $router->generate('streams_oneshort', [
                 '_locale' => $request->getLocale(),
-                'id' => $stream->getId(),
+                'shortId' => $shortener->reduce($stream->getId()),
                 'codename' => $codename
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -217,10 +225,15 @@ class DefaultController extends AbstractBaseController
 
         if ($stream->isEnabled() === false && $stream->getRedirectToStream() !== null) {
             $slugger = new AsciiSlugger();
+            $shortener = Shortener::make(
+                Dictionary::createUnmistakable() // or pass your own characters set
+            );
 
-            $redirectUrl = $router->generate('streams_one', [
+            $shortId = $shortener->reduce($stream->getRedirectToStream()->getId());
+
+            $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
-                'id' => $stream->getRedirectToStream()->getId(),
+                'shortId' => $shortId,
                 'codename' => $slugger->slug($stream->getRedirectToStream()->getName())
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -233,6 +246,52 @@ class DefaultController extends AbstractBaseController
             'stream' => $stream,
             'more_streams' => $moreStreams
         ]);
+    }
+
+    #[
+        Route(
+            path: [
+                'en' => '/{_locale}/stream/{id}/listen-{codename}',
+                'fr' => '/{_locale}/stream/{id}/ecouter-{codename}',
+                'es' => '/{_locale}/stream/{id}/escuchar-{codename}'
+            ],
+            name: 'streams_one',
+            defaults: [
+                'priority' => '0.6',
+                'changefreq' => 'monthly'
+            ]
+        )
+    ]
+    public function one(Stream $stream, string $codename, RouterInterface $router, Host $host, Request $request): Response
+    {
+        $shortener = Shortener::make(
+            Dictionary::createUnmistakable() // or pass your own characters set
+        );
+
+        // redirect non-fr stream seo pages to new host
+        if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
+            $redirectUrl = $router->generate('streams_one_short', [
+                '_locale' => $request->getLocale(),
+                'shortId' => $shortener->reduce($stream->getId()),
+                'codename' => $codename
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
+        $slugger = new AsciiSlugger();
+
+        $name = $stream->getRedirectToStream() !== null ? $stream->getRedirectToStream()->getName() : $stream->getName();
+        $shortId = $stream->getRedirectToStream() !== null ? $stream->getRedirectToStream()->getId() : $stream->getId();
+
+        $redirectUrl = $router->generate('streams_one_short', [
+            '_locale' => $request->getLocale(),
+            'shortId' =>  $shortener->reduce($shortId),
+            'codename' => $slugger->slug($name)
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->redirect($redirectUrl, 301);
     }
 
     #[Route('/{_locale}/top/{countryCode}',

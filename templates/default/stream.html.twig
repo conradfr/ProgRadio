@@ -125,7 +125,7 @@
                         <div class="mt-5 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
                         <div class="d-flex flex-wrap clearfix">
                             {% for entry in more_streams %}
-                                <a class="more-streams-one" href="{{ path('streams_one', {'id': entry.code_name, 'codename': entry.name|slug }) }}">
+                                <a class="more-streams-one" href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug }) }}">
                                     <div class="h-100 mb-1 text-center d-flex flex-column align-items-center">
                                         <div class="mt-auto mb-auto">
                                             <img src="/media/stream/{{ entry.img }}" alt="" title="{{ entry.name }}">
