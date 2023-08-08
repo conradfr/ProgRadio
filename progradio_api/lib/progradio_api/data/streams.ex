@@ -9,7 +9,7 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamSong}
+  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamSong}
 
   @default_limit 40
 
@@ -107,6 +107,35 @@ defmodule ProgRadioApi.Streams do
       country_code = Map.get(result_with_names, country_name)
       [{country_code, country_name} | acc]
     end)
+  end
+
+  def register_streaming_error(stream_id) when is_binary(stream_id) do
+    with %Stream{} = stream <- Repo.get(Stream, stream_id) do
+      # we insert a new entry or increase the count if this combination of test + track + rank exists
+      on_conflict = [set: [playing_error: dynamic([s], fragment("? + ?", s.playing_error, 1))]]
+
+      stream
+      |> Map.put(:playing_error, 1)
+      |> Repo.insert(
+        on_conflict: on_conflict,
+        conflict_target: [:id]
+      )
+    else
+      _ -> {:ok, nil}
+    end
+  end
+
+  def get_recently_overload_updated_ids() do
+    date_time =
+      DateTime.utc_now()
+      |> DateTime.add(-86400)
+
+    query =
+      from so in StreamOverloading,
+        select: so.id,
+        where: so.updated_at > ^date_time
+
+    Repo.all(query)
   end
 
   defp build_query(params) do

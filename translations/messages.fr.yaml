@@ -9,6 +9,7 @@ menu:
         dashboard: Tableau de bord
         listening: Écoutes
         overloading: Stream Overloading
+        playing_errors: Erreurs Streams
         shares: Parts de marché
     all: Toutes les radios
     app: App Android
@@ -108,6 +109,7 @@ page:
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
         find_youtube: Chercher sur Youtube
         playing: Titre
+        playing_error: Erreur de lecture
         suggested: Radios suggérées
         tags: Tags
         title: 'Écouter %radio% en direct et gratuit'

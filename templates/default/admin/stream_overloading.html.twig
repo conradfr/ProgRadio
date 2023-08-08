@@ -13,6 +13,7 @@
             <div class="d-flex justify-content-between mb-3">
                 <div><h5>{{ stream.name }}</h5></div>
                 <div><a target="_blank" href="https://www.google.com/search?tbm=isch&q={{ stream.name }}">Search Google Images</a></div>
+                <div><a target="_blank" href="https://www.google.com/search?q={{ stream.name }}">Search Google</a></div>
             </div>
 
             {% for label, messages in app.flashes %}

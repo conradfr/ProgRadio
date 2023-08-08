@@ -25,6 +25,18 @@ class StreamRepository extends ServiceEntityRepository
         parent::__construct($registry, Stream::class);
     }
 
+    public function getStreamsWithPlayingError()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('s.id, s.name as name, s.playingError')
+            ->from(Stream::class, 's')
+            ->where('s.playingError > 0')
+            ->orderBy('s.playingError', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function getMoreStreams(Stream $stream, int $limit=self::DEFAULT_MORE_LIMIT)
     {
         $limitHalf = $limit / 2;

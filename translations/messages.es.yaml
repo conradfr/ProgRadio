@@ -8,6 +8,7 @@ menu:
         dashboard: Tableau de bord
         listening: Écoutes
         overloading: Stream Overloading
+        playing_errors: Erreurs Streams
         shares: Parts de marché
     all: Todas las radios
     app: App Android
@@ -107,6 +108,7 @@ page:
         discover: Descubra más radios, busque por país y estilos de música ...
         find_youtube: Busque en YouTube
         playing: Título
+        playing_error: Error de transmisión
         suggested: Radios sugeridos
         tags: Tags
         title: 'Escuchar %radio% en vivo'

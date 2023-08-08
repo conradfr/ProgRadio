@@ -6,10 +6,10 @@ https://www.radio-addict.com
 
 Dependencies
 --------------
-- PHP 8.1.x / Symfony 6.1
+- PHP 8.2.x / Symfony 6.2
 - TypeScript 4.8 / VueJs 3.1+
 - NodeJS v14.x
-- Elixir 1.13.x (Api / Importer)
+- Elixir 1.14.x (Api / Importer)
 - PostgreSQL 14 & Redis
 - Nginx or Apache
 - ImageMagick

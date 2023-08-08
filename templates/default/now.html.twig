@@ -28,6 +28,10 @@
 
     <div class="row">
         <div class="col-12 col-sm-9">
+            <div id="playing-alert" class="mt-2 mb-4 alert alert-danger d-none" role="alert">
+                <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+            </div>
+
             <div class="tab-content tab-now">
                 {% for entry_collection in collections %}
                 <div role="tabpanel" aria-labelledby="{{ entry_collection.code_name }}-tab" class="tab-pane {{ loop.first ? ' show active' : '' }}" id="{{ entry_collection.code_name }}">

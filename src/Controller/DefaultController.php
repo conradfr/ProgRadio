@@ -214,7 +214,7 @@ class DefaultController extends AbstractBaseController
             );
 
             $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
-            $redirectUrl = $router->generate('streams_oneshort', [
+            $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
                 'shortId' => $shortener->reduce($stream->getId()),
                 'codename' => $codename

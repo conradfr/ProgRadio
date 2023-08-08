@@ -25,6 +25,8 @@ defmodule ProgRadioApiWeb.Router do
     get "/config", ConfigController, :index
     get "/radios/list", RadioController, :list
     get "/countries", CountryController, :list
+
+    post "/stream_error/:id", StreamController, :playing_error
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

@@ -8,6 +8,7 @@ menu:
         dashboard: Dashboard
         listening: Listening
         overloading: Stream Overloading
+        playing_errors: Streams Errors
         shares: Shares
     all: All radios
     app: Android App
@@ -104,6 +105,7 @@ page:
         discover: Discover more radios, search by country and style ...
         find_youtube: Find on Youtube
         playing: Playing
+        playing_error: Playing error (radio streaming may be unavailable)
         suggested: Suggested radios
         tags: Tags
         title: 'Listen to %radio%'

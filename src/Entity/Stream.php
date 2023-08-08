@@ -36,7 +36,7 @@ class Stream
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $tags = null;
 
-    #[ORM\Column(type: 'string', length: 2)]
+    #[ORM\Column(type: 'string', length: 2, nullable: true)]
     private ?string $countryCode = null;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -78,6 +78,9 @@ class Stream
     #[ORM\OneToOne(targetEntity: Stream::class)]
     #[ORM\JoinColumn(name: 'redirect_to', referencedColumnName: 'id')]
     private ?Stream $redirectToStream = null;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private ?int $playingError = null;
 
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
@@ -133,7 +136,7 @@ class Stream
         $this->tags = $tags;
     }
 
-    public function getCountryCode(): string
+    public function getCountryCode(): ?string
     {
         return $this->countryCode;
     }
@@ -273,5 +276,15 @@ class Stream
     public function setRedirectToStream(?Stream $redirectToStream): void
     {
         $this->redirectToStream = $redirectToStream;
+    }
+
+    public function getPlayingError(): ?int
+    {
+        return $this->playingError;
+    }
+
+    public function setPlayingError(?int $playingError): void
+    {
+        $this->playingError = $playingError;
     }
 }

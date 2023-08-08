@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: '`stream_overloading`')]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamOverloadingRepository')]
@@ -30,6 +31,18 @@ class StreamOverloading
 
     #[ORM\Column(type: 'boolean')]
     private ?bool $enabled = null;
+
+    /**
+     * @Gedmo\Timestampable(on="create")
+     */
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
+    private \DateTime $createdAt;
+
+    /**
+     * @Gedmo\Timestampable(on="update")
+     */
+    #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
+    private \DateTime $updatedAt;
 
     public function getId(): string
     {
@@ -99,5 +112,15 @@ class StreamOverloading
     public function setEnabled(?bool $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    public function getCreatedAt(): ?\Datetime
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\Datetime
+    {
+        return $this->updatedAt;
     }
 }

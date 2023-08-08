@@ -1,0 +1,33 @@
+{% extends 'default/admin/admin_base.html.twig' %}
+
+{% block title %}Erreurs streams{% endblock %}
+
+{% block body %}
+<div id="admin" class="container">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <h5 class="mb-4">Erreurs Streams</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col" class="text-center">Erreurs</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                {% for stream_error in errors %}
+                    <tr>
+                        <td class="text-start">{{ stream_error.name }}</td>
+                        <td class="text-center" style="width: 250px !important">{{ stream_error.playingError }}</td>
+                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">view</a></td>
+                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">edit</a></td>
+                        <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">reset</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

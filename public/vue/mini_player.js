@@ -83,6 +83,38 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId) => {
     });
 };
 
+const sendPlayingError = (radioId) => {
+  // only streams
+  if (!radioId.includes('-')) {
+    return;
+  }
+
+  /* eslint-disable no-undef */
+  let url = `https://${apiUrl}/stream_error/${radioId}`;
+
+  /* eslint-disable consistent-return */
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({})
+  })
+  .then(response => response.json());
+}
+
+const setPlayingAlertVisible = (visible) => {
+  const elem = document.getElementById('playing-alert');
+
+  if (!elem) {
+    return;
+  }
+
+  if (visible === true) {
+    elem.classList.remove('d-none');
+  } else {
+    elem.classList.add('d-none');
+  }
+};
+
 createApp({
   hls: null,
   socket: null,
@@ -95,6 +127,8 @@ createApp({
   sessionId: null,
   listeningInterval: null,
   play(streamingUrl, codeName, topic) {
+    setPlayingAlertVisible(false);
+
     if (this.playing === true) {
       this.stop();
     }
@@ -120,6 +154,14 @@ createApp({
           this.hls = new Hls();
           // bind them together
           this.hls.attachMedia(window.audio);
+
+          this.hls.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+              setPlayingAlertVisible(true);
+              sendPlayingError(codeName);
+            }
+          });
+
           this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
             this.hls.loadSource(streamingUrl);
             this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -135,6 +177,11 @@ createApp({
         ? `${streamsProxy}?stream=${streamingUrl}` : streamingUrl;
 
       window.audio = new Audio(`${streamUrl}`);
+      window.audio.onerror = () => {
+        setPlayingAlertVisible(true);
+        sendPlayingError(codeName);
+      };
+
       window.audio.play().then(() => {
         this.playingStarted(topic);
       });

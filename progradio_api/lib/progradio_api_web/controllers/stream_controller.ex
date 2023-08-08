@@ -43,4 +43,12 @@ defmodule ProgRadioApiWeb.StreamController do
       _ -> send_error(conn)
     end
   end
+
+  # ---------- POST ----------
+
+  def playing_error(conn, %{"id" => id} = _params) when is_binary(id) do
+    Streams.register_streaming_error(id)
+
+    render(conn, "playing_error.json", %{})
+  end
 end

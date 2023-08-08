@@ -49,6 +49,10 @@
 
         <div class="row">
             <div class="col-md-12">
+                <div id="playing-alert" class="mt-4 mb-4 alert alert-danger d-none" role="alert">
+                    <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+                </div>
+
                 <div class="streams d-flex justify-content-center">
                     {% for stream in streams %}
                         <div class="streams-one"

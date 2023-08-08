@@ -25,3 +25,7 @@ export type GetGeoResponse = {
   countryCode: string
   countryName: string
 };
+
+export type GetStreamPlayingError = {
+  status: string
+};

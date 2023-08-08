@@ -3,6 +3,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias Ecto.Multi
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
+  alias ProgRadioApi.Streams
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Importer.StreamsImporter.StreamMatcher
 
@@ -39,6 +40,13 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     find_redirect_for_disabled_streams()
     StreamMatcher.match()
     :ok
+  end
+
+  def import_recently_updated() do
+    Streams.get_recently_overload_updated_ids()
+    |> Enum.each(fn stream_id when is_binary(stream_id) ->
+      __MODULE__.import(stream_id)
+    end)
   end
 
   # Data
@@ -103,20 +111,27 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       country_code = Map.get(stream, "countrycode")
       website = Map.get(stream, "homepage")
 
+      enabled =
+        case Map.get(overloading, :enabled, nil) do
+          true -> true
+          false -> false
+          nil -> true
+        end
+
       %{
         id: id,
         code_name: id,
-        name: Map.get(overloading, :name, name),
-        img_url: Map.get(overloading, :img, img_url),
+        name: Map.get(overloading, :name) || name,
+        img_url: Map.get(overloading, :img) || img_url,
         img: nil,
-        website: Map.get(overloading, :website, website),
-        stream_url: Map.get(overloading, :stream_url, stream_url),
+        website: Map.get(overloading, :website) || website,
+        stream_url: Map.get(overloading, :stream_url) || stream_url,
         tags: Map.get(stream, "tags"),
-        country_code: Map.get(overloading, :country_code, country_code),
+        country_code: Map.get(overloading, :country_code) || country_code,
         language: Map.get(stream, "language"),
         votes: Map.get(stream, "votes"),
         clicks_last_24h: Map.get(stream, "clickcount"),
-        enabled: true
+        enabled: enabled
       }
     end)
   end
@@ -235,7 +250,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             stream_url: s.stream_url,
             votes: s.votes,
             clicks_last_24h: s.clicks_last_24h,
-            enabled: true
+            enabled: s.enabled
           ]
         ],
         conflict_target: :id

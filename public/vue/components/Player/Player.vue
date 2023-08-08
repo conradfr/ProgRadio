@@ -242,7 +242,8 @@ export default defineComponent({
       stopDispatch: 'stop',
       volumeFocusDispatch: 'volumeFocus',
       joinChannel: 'joinChannel',
-      updateFlux: 'updateFlux'
+      updateFlux: 'updateFlux',
+      setStreamPlayingError: 'setStreamPlayingError'
     }),
     beforeWindowUnload() {
       if (this.externalPlayer === false && this.playing === true) {
@@ -325,6 +326,16 @@ export default defineComponent({
             this.currentPlayer.hls = new Hls();
             // bind them together
             this.currentPlayer.hls.attachMedia(this.currentPlayer.element);
+
+            // @ts-ignore
+            this.currentPlayer.hls.on(Hls.Events.ERROR, (event, data) => {
+              if (data.fatal) {
+                if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
+                  this.setStreamPlayingError(this.radio.code_name);
+                }
+              }
+            });
+
             // @ts-ignore
             this.currentPlayer.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
               this.currentPlayer.hls.loadSource(url);
@@ -372,6 +383,10 @@ export default defineComponent({
               message: (this.$i18n as any).tc('message.player.play_error'),
               type: 'error'
             });
+
+            if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
+              this.setStreamPlayingError(this.radio.code_name);
+            }
           }
         });
       }

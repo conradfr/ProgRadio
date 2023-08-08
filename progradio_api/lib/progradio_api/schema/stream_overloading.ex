@@ -11,6 +11,8 @@ defmodule ProgRadioApi.StreamOverloading do
     field(:country_code, :string)
     field(:website, :string)
     field(:enabled, :boolean)
+    field(:created_at, :utc_datetime)
+    field(:updated_at, :utc_datetime)
   end
 
   def changeset(stream, params \\ %{}) do
@@ -21,7 +23,8 @@ defmodule ProgRadioApi.StreamOverloading do
       :img,
       :stream_url,
       :country_code,
-      :website
+      :website,
+      :enabled
     ])
     |> validate_required([:id])
   end

@@ -162,6 +162,27 @@ class AdminController extends AbstractBaseController
             $em->persist($form->getData());
             $em->flush();
 
+            $streamOverloading = $em->getRepository(StreamOverloading::class)->find($streamId);
+
+            $stream->setPlayingError(0);
+
+            // push change now instead of waiting for the stream import cron
+            // omit picture as it can't be done in the Symfony app
+
+            if ($streamOverloading->getStreamUrl() !== null) {
+                $stream->setStreamUrl($streamOverloading->getStreamUrl());
+            }
+
+            if ($streamOverloading->getCountryCode() !== null) {
+                $stream->setCountryCode($streamOverloading->getCountryCode());
+            }
+
+            if ($streamOverloading->getName() !== null) {
+                $stream->setName($streamOverloading->getName());
+            }
+
+            $em->flush();
+
             $this->addFlash(
                 'success',
                 "Stream overload has been updated."
@@ -174,6 +195,16 @@ class AdminController extends AbstractBaseController
                 'form' => $form->createView()
             ]
         );
+    }
+
+    #[Route('/admin/playing_errors', name: 'admin_playing_errors')]
+    public function playingErrorsAction(EntityManagerInterface $em): Response
+    {
+        $errors = $em->getRepository(Stream::class)->getStreamsWithPlayingError();
+
+        return $this->render('default/admin/playing_error.html.twig', [
+            'errors' => $errors,
+        ]);
     }
 
     #[Route('/admin/shares', name: 'admin_shares')]
@@ -227,8 +258,18 @@ class AdminController extends AbstractBaseController
         return $this->render('default/admin/goaccessiframe.html.twig');
     }
 
+    #[Route('/reset_stream_playing_error/{id}', name: 'admin_reset_stream_paying_error')]
+    public function resetStreamPlayingErrors(Stream $stream, EntityManagerInterface $em): Response
+    {
+        $stream->setPlayingError(0);
+
+        $em->persist($stream);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_playing_errors', [], 301);
+    }
+
     #[Route('/reset_stream/{id}', name: 'admin_reset_stream_retries')]
-    #[IsGranted('ROLE_USER')]
     public function resetStreamRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
     {
         $radioStream->setRetries(0);
@@ -241,7 +282,6 @@ class AdminController extends AbstractBaseController
     }
 
     #[Route('/reset_current_song/{id}', name: 'admin_reset_current_song_retries')]
-    #[IsGranted('ROLE_USER')]
     public function resetCurrentSongRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
     {
         $radioStream->setCurrentSongRetries(0);

@@ -76,6 +76,10 @@
                             </div>
                         </div>
 
+                        <div id="playing-alert" class="mt-4 alert alert-danger d-none" role="alert">
+                            <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+                        </div>
+
                         <div class="mt-4 mb-1" v-if="song !== null">
                             <div>
                                 <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>

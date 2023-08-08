@@ -13,6 +13,7 @@ import type {
   GetStreamsResponse,
   GetOneStreamResponse,
   GetCountriesResponse,
+  GetStreamPlayingError,
   GetGeoResponse
 } from '@/types/streams_api';
 
@@ -125,6 +126,18 @@ const getBestFromRadio = async (radioCodeName: string): Promise<Stream|null> => 
   }
 };
 
+const addStreamPlayingError = async (radioCodeName: string): Promise<string|null> => {
+  try {
+    /* eslint-disable no-underscore-dangle */
+    // @ts-expect-error apiUrl is defined on the global scope
+    const { data } = await axios.post<GetStreamPlayingError>(`https://${apiUrl}/stream_error/${radioCodeName}`, {});
+
+    return data.status;
+  } catch (error) {
+    return null;
+  }
+};
+
 const getConfig = async (): Promise<GetConfigResponse> => {
   // @ts-expect-error apiUrl is defined on the global scope
   const { data } = await axios.get<GetConfigResponse>(`https://${apiUrl}/config`);
@@ -176,6 +189,7 @@ export default {
   getCountries,
   getBestFromRadio,
   searchStreams,
+  addStreamPlayingError,
   incrementPlayCount,
   toggleFavoriteStream,
   getCountryFromLatLong

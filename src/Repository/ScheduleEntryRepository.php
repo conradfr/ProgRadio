@@ -274,7 +274,7 @@ EOT;
            ->where('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') <= :datetime')
            ->andWhere('AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') >= :datetime')
            ->andWhere('r.active = :active')
-           ->andWhere('rs.main = true AND rs.enabled = TRUE')
+           ->andWhere('rs.main = TRUE AND rs.enabled = TRUE')
            ->addOrderBy('r.share', 'DESC')
            ->addOrderBy('r.codeName', 'ASC')
            ->addOrderBy('se.dateTimeStart', 'ASC')

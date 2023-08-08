@@ -151,6 +151,10 @@
                 </div>
             {% endif %}
 
+            <div id="playing-alert" class="mb-4 alert alert-danger d-none" role="alert">
+                <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+            </div>
+
             <div class="radio-page-shows">
             {% for show in schedule %}
                 {{ self.is_current_anchor(show.start_at, show.end_at) }}
