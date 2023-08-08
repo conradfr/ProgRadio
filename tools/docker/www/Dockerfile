@@ -1,6 +1,6 @@
 # --------------- NODE ---------------
 
-FROM node:14.17.6 as buildjs
+FROM node:18-alpine as buildjs
 
 WORKDIR /tmp
 COPY ./package.json /tmp
