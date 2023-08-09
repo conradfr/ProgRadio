@@ -26,9 +26,9 @@
                     <tr>
                         <td class="text-start">{{ stream_error.name }}</td>
                         <td class="text-center" style="width: 250px !important">{{ stream_error.playingError }}</td>
-                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">view</a></td>
-                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">edit</a></td>
-                        <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">reset</a></td>
+                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">View</a></td>
+                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">Edit</a></td>
+                        <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">Reset</a></td>
                     </tr>
                 {% endfor %}
             </table>

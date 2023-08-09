@@ -29,7 +29,7 @@ class Host
             'name' => 'Radio Addict',
             'name_host' => 'Radio-Addict.com',
             'url' => 'https://www.radio-addict.com',
-            'default_country' => 'LAST',
+            'default_country' => 'ALL',
             'title_key' => 'general.main_title_radioaddict',
             'locale' => 'en',
             'bangs' => [
