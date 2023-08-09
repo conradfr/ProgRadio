@@ -6,8 +6,8 @@ namespace App\Repository;
 
 use App\Entity\Radio;
 use App\Entity\Stream;
-use App\Entity\RadioStream;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -35,6 +35,14 @@ class StreamRepository extends ServiceEntityRepository
             ->orderBy('s.playingError', 'DESC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function resetAllPlayingErrors()
+    {
+        $rsm = new ResultSetMapping();
+        $query = $this->getEntityManager()->createNativeQuery('UPDATE stream SET playing_error = 0 WHERE playing_error > 0', $rsm);
+
+        $query->getResult();
     }
 
     public function getMoreStreams(Stream $stream, int $limit=self::DEFAULT_MORE_LIMIT)

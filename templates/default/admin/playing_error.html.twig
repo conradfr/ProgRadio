@@ -6,7 +6,12 @@
 <div id="admin" class="container">
     <div class="row">
         <div class="col-12 col-md-8">
-            <h5 class="mb-4">Erreurs Streams</h5>
+
+            <div class="d-flex justify-content-between mt-2 mb-4">
+                <div><h5>Erreurs Streams</h5></div>
+                <div><a href="{{ path('admin_reset_all_stream_paying_errors') }}">Reset all</a></div>
+            </div>
+
             <table class="table table-striped">
                 <thead>
                 <tr>

@@ -269,6 +269,14 @@ class AdminController extends AbstractBaseController
         return $this->redirectToRoute('admin_playing_errors', [], 301);
     }
 
+    #[Route('/reset_all_stream_playing_errors', name: 'admin_reset_all_stream_paying_errors')]
+    public function resetAllStreamPlayingErrors(EntityManagerInterface $em): Response
+    {
+        $em->getRepository(Stream::class)->resetAllPlayingErrors();
+
+        return $this->redirectToRoute('admin_playing_errors', [], 301);
+    }
+
     #[Route('/reset_stream/{id}', name: 'admin_reset_stream_retries')]
     public function resetStreamRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
     {
