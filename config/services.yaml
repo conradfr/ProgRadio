@@ -45,21 +45,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: 256 }
 
-    App\EventListener\DoctrinePostConnectListener:
+    App\Middleware\DatabaseTimezoneConnectionMiddleware:
         arguments:
             - "%timezone%"
         tags:
             -
-                name: 'doctrine.event_listener'
-                # this is the only required option for the lifecycle listener tag
-                event: 'postConnect'
-
-                # listeners can define their priority in case multiple listeners are associated
-                # to the same event (default priority = 0; higher numbers = listener is run earlier)
-                priority: 500
-
-                # you can also restrict listeners to a specific Doctrine connection
-                connection: 'default'
+                name: 'doctrine.middleware'
 
     cache.adapter.null:
         class: Symfony\Component\Cache\Adapter\NullAdapter
