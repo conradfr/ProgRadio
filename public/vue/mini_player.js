@@ -157,8 +157,13 @@ createApp({
 
           this.hls.on(Hls.Events.ERROR, (event, data) => {
             if (data.fatal) {
-              setPlayingAlertVisible(true);
-              sendPlayingError(codeName);
+              setTimeout(
+                () => {
+                  setPlayingAlertVisible(true);
+                  sendPlayingError(codeName);
+                },
+                2000
+              );
             }
           });
 
@@ -178,8 +183,14 @@ createApp({
 
       window.audio = new Audio(`${streamUrl}`);
       window.audio.onerror = () => {
-        setPlayingAlertVisible(true);
-        sendPlayingError(codeName);
+        // the delay prevents sending an error when the user just click a link and goes to another page...
+        setTimeout(
+          () => {
+            setPlayingAlertVisible(true);
+            sendPlayingError(codeName);
+          },
+          2000
+        );
       };
 
       window.audio.play().then(() => {
