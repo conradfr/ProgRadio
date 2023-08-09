@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\RadioStream;
 use Doctrine\ORM\EntityRepository;
 
 class RadioStreamRepository extends EntityRepository
@@ -15,7 +16,7 @@ class RadioStreamRepository extends EntityRepository
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT rs.id, r.codeName as radio_code_name, rs.currentSong as current_song, rs.codeName as code_name, rs.name, rs.url, rs.main
-                FROM App:RadioStream rs
+                FROM " . RadioStream::class . " rs
                   INNER JOIN rs.radio r
                 WHERE rs.enabled = :enabled
                   AND r.id IN (:radioIds)

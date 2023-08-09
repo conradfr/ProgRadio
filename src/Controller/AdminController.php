@@ -223,7 +223,7 @@ class AdminController extends AbstractBaseController
 
             $batchSize = 20;
             $i = 0;
-            $q = $em->createQuery('select r from App:Radio r');
+            $q = $em->createQuery('select r from ' . Radio::class .' r');
             $iterableResult = $q->iterate();
             foreach ($iterableResult as $row) {
                 /** @var Radio $radio */

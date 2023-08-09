@@ -22,8 +22,8 @@ class RadioRepository extends EntityRepository
                     s.url as streamingUrl, r.share, COALESCE(s.enabled, false) as streaming_enabled,
                     c.codeName as category, 'radio' as type,
                     s.url as stream_url 
-                FROM App:Radio r
-                  INNER JOIN r.category c
+                FROM " . Radio::class
+                  . " r INNER JOIN r.category c
                   LEFT JOIN r.streams s
                 WHERE r.active = :active 
                   AND s.main = TRUE
@@ -66,10 +66,10 @@ class RadioRepository extends EntityRepository
                     s.retries as streamingRetries, s.status as streamingStatus,
                     c.codeName as category, 'radio' as type,
                     s.url as streamUrl 
-                FROM App:Radio r
-                  INNER JOIN r.category c
+                FROM " . Radio::class
+                  . " r INNER JOIN r.category c
                   LEFT JOIN r.streams s
-                WHERE r.active = :active 
+                WHERE r.active = :active
                   AND s.main = TRUE
             "
         );
@@ -107,7 +107,7 @@ class RadioRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('r.id, r.codeName, r.name, r.share')
-            ->from('App:Radio', 'r')
+            ->from(Radio::class, 'r')
             ->addOrderBy('r.share', 'DESC')
             ->addOrderBy('r.codeName', 'ASC');
 
@@ -123,7 +123,7 @@ class RadioRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('r.id, r.codeName, r.name')
-            ->from('App:Radio', 'r')
+            ->from(Radio::class, 'r')
             ->innerJoin('r.streams', 'rs')
             ->where('r.collection ' . $equality . ' :collection')
             ->andWhere('r.active = TRUE')

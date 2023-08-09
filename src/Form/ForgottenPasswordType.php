@@ -19,7 +19,7 @@ class ForgottenPasswordType extends AbstractType
 {
     public function __construct(protected TranslatorInterface $translator) { }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('email', EmailType::class, [

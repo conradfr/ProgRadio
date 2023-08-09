@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use Doctrine\ORM\EntityRepository;
 
 class CategoryRepository extends EntityRepository
@@ -13,7 +14,7 @@ class CategoryRepository extends EntityRepository
     public function getCategories(): array {
         $query = $this->getEntityManager()->createQuery(
             'SELECT c.codeName as code_name, c.name as name_FR
-                FROM App:Category c
+                FROM ' . Category::class . ' c
                 ORDER BY c.id asc
             '
         );

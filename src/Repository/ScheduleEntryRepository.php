@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\ScheduleEntry;
 use App\ValueObject\ScheduleResource;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -212,7 +213,7 @@ EOT;
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString()        )
-           ->from('App:ScheduleEntry', 'se')
+           ->from(ScheduleEntry::class, 'se')
            ->innerJoin('se.radio', 'r')
            ->leftJoin('se.sectionEntries', 'sc')
            ->leftJoin('se.subRadio', 'sr')
@@ -265,7 +266,7 @@ EOT;
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
             ->addSelect('r.name as radio_name, r.share as radio_share, rs.name as radio_stream_name, rs.url as streaming_url, c.codeName as collectionCodeName')
-           ->from('App:ScheduleEntry', 'se')
+           ->from(ScheduleEntry::class, 'se')
            ->innerJoin('se.radio', 'r')
            ->leftJoin('se.subRadio', 'sr')
            ->leftJoin('r.streams', 'rs')
