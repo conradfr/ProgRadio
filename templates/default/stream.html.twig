@@ -25,7 +25,9 @@
 
 {% macro topic(stream) %}url:{{ stream.streamUrl }}{% endmacro %}
 
-{% macro stream_code_name(stream) %}{{ stream.radioStream.radio.codeName|default(stream.id) }}{% endmacro %}
+{% macro stream_code_name(stream) %}
+{% if stream.radioStream.radio.codeName is defined %}{{ stream.radioStream.radio.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
+{% endmacro %}
 
 {% block body %}
 <div class="container stream-page">

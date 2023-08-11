@@ -173,8 +173,8 @@ defmodule ProgRadioApi.ListenersCounter do
 
         channel_name =
           cond do
-#            Map.get(stream, :stream_song) != nil ->
-#              stream.stream_song_code_name
+            Map.get(stream, :stream_song) != nil ->
+              stream.stream_song_code_name
 
             Map.get(stream, :radio_stream) != nil ->
               stream.radio_stream.code_name

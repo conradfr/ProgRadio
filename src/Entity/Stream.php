@@ -215,7 +215,7 @@ class Stream
         $this->streamSong = $streamSong;
     }
 
-    public function getStreamSongCodeName(): string
+    public function getStreamSongCodeName(): ?string
     {
         return $this->streamSongCodeName;
     }

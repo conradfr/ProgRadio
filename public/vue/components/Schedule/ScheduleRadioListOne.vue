@@ -190,7 +190,7 @@ export default defineComponent({
         return null;
       }
 
-      const topicName = `${this.radio.code_name}_main`
+      const topicName = `${this.radio.code_name}_main`;
 
       if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
         return null;
