@@ -133,6 +133,24 @@
       }
     }
 
+    .streams-one-listeners {
+      position: absolute;
+      top: 127px;
+      right: 4px;
+
+      opacity: 0.85;
+      transition: opacity 150ms;
+
+      @include media-breakpoint-down(sm) {
+        top: 80px;
+        right: 3px;
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
     .streams-one-img {
       height: 150px;
       background-repeat: no-repeat;

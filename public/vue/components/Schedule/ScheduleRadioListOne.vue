@@ -2,13 +2,20 @@
   <div class="radio-list-one-wrapper"
        :class="{'radio-list-one-wrapper-hover': hover}"
        v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
-    <div class="radio-list-one-one-flag"
+    <div class="radio-list-one-flag"
         v-if="displayFlag">
       <vue-flag
           :code="radio.country_code"
           size="nano"
           v-once
       />
+    </div>
+    <div class="radio-list-one-listeners" v-if="liveListenersCount && liveListenersCount > 0"
+      :title="$t('message.streaming.listeners', { how_many: liveListenersCount})" >
+    >
+      <span class="badge rounded-pill text-bg-dark">
+        {{ liveListenersCount }}
+      </span>
     </div>
     <div class="radio-subradio"
         v-if="hasSubRadios"
@@ -128,16 +135,19 @@ export default defineComponent({
   created() {
     setTimeout(() => {
       this.joinChannel(this.channelName);
+      this.joinListenersChannel(`${this.radio.code_name}_main`);
     }, 1000);
   },
   beforeUnmount() {
     this.leaveChannel(this.channelName);
+    this.leaveListenersChannel(`${this.radio.code_name}_main`);
   },
   computed: {
     ...mapState(usePlayerStore, [
       'playing',
       'externalPlayer',
       'radioPlayingCodeName',
+      'listeners'
     ]),
     ...mapState(usePlayerStore, { playingStreamCodeName: 'radioStreamCodeName' }),
     ...mapState(useScheduleStore, ['getSubRadio', 'isWebRadio']),
@@ -174,12 +184,36 @@ export default defineComponent({
     displayFlag() {
       return this.radio.country_code !== null
         && this.radio.country_code !== RADIO_LIST_IGNORE_COUNTRY;
-    }
+    },
+    liveListenersCount() {
+      if (!this.radio) {
+        return null;
+      }
+
+      const topicName = `${this.radio.code_name}_main`
+
+      if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
+        return null;
+      }
+
+      if (!this.listeners[topicName] || this.listeners[topicName] === 0) {
+        return null;
+      }
+
+      return this.listeners[topicName];
+    },
   },
   methods: {
-    ...mapActions(usePlayerStore, ['playRadio', 'stop', 'joinChannel', 'leaveChannel']),
     ...mapActions(useUserStore, ['toggleRadioFavorite']),
     ...mapActions(useScheduleStore, ['activateRegionModal']),
+    ...mapActions(usePlayerStore, [
+      'playRadio',
+      'stop',
+      'joinChannel',
+      'leaveChannel',
+      'joinListenersChannel',
+      'leaveListenersChannel'
+    ]),
     playStop(radioCodeName: string, isSubStream: boolean) {
       const streamCodeName = isSubStream ? radioCodeName
         : this.getSubRadio(radioCodeName).radio_stream;

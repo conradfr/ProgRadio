@@ -7,6 +7,7 @@ import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 import type { Program } from '@/types/program';
 import type { Songs } from '@/types/song';
+import type { Listeners } from '@/types/listeners';
 import type { ListeningSession } from '@/types/listening_session';
 
 /* eslint-disable import/no-cycle */
@@ -33,6 +34,7 @@ interface Focus {
 interface State {
   socket: any
   channels:any
+  channelsRefCount: any,
   playing: boolean
   externalPlayer: boolean
   externalPlayerVersion: number|null
@@ -42,6 +44,7 @@ interface State {
   prevRadioStreamCodeName: string|null
   show: Program|null
   song: Songs
+  listeners: Listeners
   flux: any
   volume: number
   muted: boolean
@@ -59,6 +62,7 @@ export const usePlayerStore = defineStore('player', {
   state: (): State => ({
     socket: null,
     channels: {},
+    channelsRefCount: {},
     playing: false,
     externalPlayer: AndroidApi.hasAndroid,
     externalPlayerVersion: AndroidApi.getVersion(),
@@ -68,6 +72,7 @@ export const usePlayerStore = defineStore('player', {
     prevRadioStreamCodeName: cookies.get(config.COOKIE_PREV_RADIO_STREAM_PLAYED),
     show: null,
     song: {},
+    listeners: {},
     flux,
     volume: parseInt(cookies.get(config.COOKIE_VOLUME, config.DEFAULT_VOLUME), 10),
     muted: cookies.get(config.COOKIE_MUTED, 'false') === 'true',
@@ -99,7 +104,7 @@ export const usePlayerStore = defineStore('player', {
       return state.radio.streams[state.radioStreamCodeName].url;
     },
     liveSong: state => (radio: Radio|Stream, radioStreamCodeName: string|null): string|null => {
-      if (typeUtils.isRadio(state.radio) && !(radio as Radio).streaming_enabled) {
+      if (!radio || (typeUtils.isRadio(state.radio) && !(radio as Radio).streaming_enabled)) {
         return null;
       }
 
@@ -122,7 +127,7 @@ export const usePlayerStore = defineStore('player', {
       }
 
       return this.liveSong(state.radio, state.radioStreamCodeName);
-    }
+    },
   },
   /* eslint-disable object-curly-newline */
   /* eslint-disable no-prototype-builtins */
@@ -385,12 +390,7 @@ export const usePlayerStore = defineStore('player', {
       this.show = stream !== null && stream.main === true
         ? scheduleStore.currentShowOnRadio(this.radio.code_name) : null;
     },
-    joinChannel(topicName: string) {
-      // Channel already exists?
-      if (Object.prototype.hasOwnProperty.call(this.channels, topicName)) {
-        return false;
-      }
-
+    connectSocket() {
       if (this.socket === null) {
         /* eslint-disable no-undef */
         // @ts-expect-error apiUrl is defined on the global scope
@@ -400,9 +400,41 @@ export const usePlayerStore = defineStore('player', {
           // this.socket.disconnect();
           this.channels = {};
           this.song = {};
+          this.listeners = {};
           // this.socket = null;
+
+          // retry later
+          setTimeout(this.connectSocket, config.WEBSOCKET_RETRY);
         });
       }
+    },
+    // todo clean this dual aspect of joinChannel & leaveChannel
+    joinListenersChannel(topicName: string) {
+      this.joinChannel(`listeners:${topicName}`, topicName);
+    },
+    leaveListenersChannel(topicName: string) {
+      this.leaveChannel(`listeners:${topicName}`, topicName);
+    },
+    joinChannel(topicName: string, innerName: string|null = null) {
+      // Increment refCounter
+      // Used because multiple component may want to join and leave the same channel and one would then leave for all
+
+      let refCount = 1;
+      if (Object.prototype.hasOwnProperty.call(this.channelsRefCount, topicName)) {
+        refCount = this.channelsRefCount[topicName] + 1;
+      }
+
+      this.channelsRefCount = {
+        ...this.channelsRefCount,
+        [topicName]: refCount
+      };
+
+      // Channel already exists?
+      if (Object.prototype.hasOwnProperty.call(this.channels, topicName)) {
+        return false;
+      }
+
+      this.connectSocket();
 
       return nextTick(() => {
         setTimeout(() => {
@@ -419,41 +451,79 @@ export const usePlayerStore = defineStore('player', {
             });
 
             this.channels[topicName].on('quit', () => {
-              this.setSong({ topicName, song: null });
+              this.setSong({ name: topicName, song: null });
               this.leaveChannel(topicName);
+            });
+
+            this.channels[topicName].on('counter_update', (counterData: any) => {
+              this.setListeners(counterData);
             });
 
             this.channels[topicName].join()
               // .receive('ok', ({ messages }) => console.log('catching up', messages))
               .receive('error', () => {
-                this.setSong({ topicName, song: null });
+                if (topicName.startsWith('listeners:')) {
+                  this.setListeners({ name: innerName, listeners: 0 });
+                } else {
+                  this.setSong({ name: topicName, song: null });
+                }
+
                 this.leaveChannel(topicName);
               })
               .receive('timeout', () => {
-                this.setSong({ topicName, song: null });
-                this.leaveChannel(topicName);
+                /* if (topicName.startsWith('listeners:')) {
+                  this.setListeners({ name: innerName, listeners: 0 });
+                } else {
+                  this.setSong({ name: topicName, song: null });
+                }
+
+                this.leaveChannel(topicName); */
               });
           }
         }, 50);
       });
     },
-    leaveChannel(topicName:string) {
+    leaveChannel(topicName:string, innerName: string|null = null) {
       if (this.socket === null
         || !Object.prototype.hasOwnProperty.call(this.channels, topicName)) {
         return;
+      }
+
+      // decrement ref count
+      if (Object.prototype.hasOwnProperty.call(this.channelsRefCount, topicName)) {
+        this.channelsRefCount = {
+          ...this.channelsRefCount,
+          [topicName]: this.channelsRefCount[topicName] - 1
+        };
+
+        // don't leave if refCount not at 0
+        if (this.channelsRefCount[topicName] > 0) {
+          return;
+        }
       }
 
       this.channels[topicName].leave();
       delete this.channels[topicName];
 
       // remove songs when they came from this channel
-      Object.entries(this.song).forEach(
-        ([key, value]) => {
-          if (value.topic === topicName) {
-            delete this.song[key];
+      if (!topicName.startsWith('listeners:')) {
+        Object.entries(this.song).forEach(
+          ([key, value]) => {
+            if (value.topic === topicName) {
+              delete this.song[key];
+            }
           }
-        }
-      );
+        );
+      } else {
+        Object.entries(this.listeners).forEach(
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          ([key, _value]) => {
+            if (key === innerName) {
+              delete this.listeners[key];
+            }
+          }
+        );
+      }
     },
     setSong(songData?: any|null) {
       if (songData === null || songData === undefined) {
@@ -464,13 +534,35 @@ export const usePlayerStore = defineStore('player', {
       const { topic, name, song } = songData;
 
       if (song === null) {
-        delete this.song[name];
+        if (name) {
+          delete this.song[name];
+        }
         return;
       }
 
       this.song = {
         ...this.song,
         [name]: markRaw({ topic, song })
+      };
+    },
+    setListeners(songData: any|null) {
+      if (!songData) {
+        return;
+      }
+
+      const { name, listeners } = songData;
+
+      if (!name || !listeners || listeners === 0) {
+        if (name && listeners !== undefined) {
+          delete this.listeners[name];
+        }
+
+        return;
+      }
+
+      this.listeners = {
+        ...this.listeners,
+        [name]: listeners
       };
     },
     toggleMute() {

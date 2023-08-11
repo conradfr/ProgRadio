@@ -331,7 +331,8 @@ const sendListeningSession = (
   playing: boolean,
   radio: Radio|Stream,
   radioStreamCodeName: string|null,
-  session: ListeningSession
+  session: ListeningSession,
+  ending?: boolean
 ) => {
   if (externalPlayer) {
     return;
@@ -350,7 +351,8 @@ const sendListeningSession = (
         session.start!,
         dateTimeEnd,
         session.id!,
-        session.ctrl!
+        session.ctrl!,
+        ending
       );
     },
     1000

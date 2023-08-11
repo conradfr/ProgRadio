@@ -103,7 +103,8 @@ const sendListeningSession = async (
   dateTimeStart: DateTime,
   dateTimeEnd: DateTime,
   id: string,
-  ctrl: number
+  ctrl: number,
+  ending?: boolean
 ) => {
   const postData: listeningSessionPostData = {
     date_time_start: dateTimeStart.toISO(),
@@ -111,6 +112,10 @@ const sendListeningSession = async (
     source: LISTENING_SESSION_SOURCE,
     ctrl: Math.random()
   };
+
+  if (ending === true) {
+    postData.ending = true;
+  }
 
   // radio or stream
   if (radioStreamCodeName !== undefined && radioStreamCodeName !== null) {

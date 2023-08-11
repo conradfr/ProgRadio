@@ -43,8 +43,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
-    url =
-      "https://api.radiofrance.fr/livemeta/live/#{id}/webrf_fip_player"
+    url = "https://api.radiofrance.fr/livemeta/live/#{id}/webrf_fip_player"
 
     try do
       data =
@@ -55,9 +54,9 @@ defmodule ProgRadioApi.SongProvider.Fip do
 
       now_unix = SongProvider.now_unix()
 
-      if data != nil and Map.get(data, "now") != nil
-          and Map.get(data["now"], "startTime") != nil and Map.get(data["now"], "endTime") != nil
-          and now_unix >= data["now"]["startTime"] and now_unix <= data["now"]["endTime"] do
+      if data != nil and Map.get(data, "now") != nil and
+           Map.get(data["now"], "startTime") != nil and Map.get(data["now"], "endTime") != nil and
+           now_unix >= data["now"]["startTime"] and now_unix <= data["now"]["endTime"] do
         data
       else
         nil

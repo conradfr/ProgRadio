@@ -16,7 +16,7 @@ defmodule ProgRadioApi.Streams do
   # 1h
   @cache_ttl_stream 3600_000
   # 30s
-  @cache_ttl_stream_last 30_000
+  @cache_ttl_stream_last 15_000
   # 1d
   @cache_ttl_countries 86_400_000
 
@@ -33,6 +33,20 @@ defmodule ProgRadioApi.Streams do
     base_query()
     |> where([s], s.id == ^id)
     |> Repo.one()
+  end
+
+  @decorate cacheable(
+              cache: Cache,
+              key: "#{@cache_prefix_stream}_preload#{id}",
+              opts: [ttl: @cache_ttl_stream]
+            )
+  def get_one_preload(id) do
+    query =
+      from s in Stream,
+        where: s.id == ^id,
+        preload: [:radio_stream, :stream_song]
+
+    Repo.one(query)
   end
 
   # avoid caching random sort

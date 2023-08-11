@@ -40,6 +40,12 @@
           v-once
       />
     </div>
+    <div v-if="liveListenersCount && liveListenersCount > 0" class="streams-one-listeners"
+      :title="$t('message.streaming.listeners', { how_many: liveListenersCount})">
+      <span class="badge rounded-pill text-bg-secondary">
+        {{ liveListenersCount }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -92,16 +98,21 @@ export default defineComponent({
     };
   },
   beforeMount() {
-    this.joinChannel(this.channelName);
+    setTimeout(() => {
+      this.joinChannel(this.channelName);
+      this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+    }, 500);
   },
   beforeUnmount() {
     this.leaveChannel(this.channelName);
+    this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
   },
   computed: {
     ...mapState(usePlayerStore, [
       'playing',
       'externalPlayer',
       'song',
+      'listeners',
       'radioPlayingCodeName'
     ]),
     ...mapState(useStreamsStore, ['selectedCountry', 'favorites']),
@@ -111,7 +122,20 @@ export default defineComponent({
       }
 
       return this.song[this.channelName];
-    }
+    },
+    liveListenersCount() {
+      const topicName = this.radio.radio_stream_code_name || this.radio.code_name;
+
+      if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
+        return null;
+      }
+
+      if (!this.listeners[topicName] || this.listeners[topicName] === 0) {
+        return null;
+      }
+
+      return this.listeners[topicName];
+    },
   },
   // We do not use the getter player.liveSong due to performance as it would be called each time
   // a song update for any radio by each instances of this component
@@ -128,7 +152,14 @@ export default defineComponent({
     },
   },
   methods: {
-    ...mapActions(usePlayerStore, ['joinChannel', 'leaveChannel', 'stop', 'playStream']),
+    ...mapActions(usePlayerStore, [
+      'joinChannel',
+      'leaveChannel',
+      'joinListenersChannel',
+      'leaveListenersChannel',
+      'stop',
+      'playStream'
+    ]),
     ...mapActions(useUserStore, ['toggleStreamFavorite']),
     ...mapActions(useStreamsStore, [
       'countrySelection',

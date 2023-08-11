@@ -37,7 +37,7 @@ const loadHls = () => {
   });
 };
 
-const updateListeningSession = (radioId, dateTimeStart, sessionId) => {
+const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
 
   if (dateTimeStart === undefined || dateTimeStart === null) {
     return;
@@ -61,6 +61,10 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId) => {
     source: LISTENING_SESSION_SOURCE_SSR,
     ctrl: Math.random()
   };
+
+  if (ending === true) {
+    data.ending = true;
+  }
 
   if (radioId.includes('-')) {
     data.stream_id = radioId;
@@ -118,15 +122,16 @@ const setPlayingAlertVisible = (visible) => {
 createApp({
   hls: null,
   socket: null,
-  channel: null,
+  channels: {},
   playing: false,
   song: null,
+  listeners: null,
   lastUpdated: null,
   radioId: null,
   playingStart: null,
   sessionId: null,
   listeningInterval: null,
-  play(streamingUrl, codeName, topic) {
+  play(streamingUrl, codeName, topic, stream_code_name) {
     setPlayingAlertVisible(false);
 
     if (this.playing === true) {
@@ -171,7 +176,7 @@ createApp({
             this.hls.loadSource(streamingUrl);
             this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
               window.audio.play().then(() => {
-                this.playingStarted(topic);
+                this.playingStarted(topic, stream_code_name);
               });
             });
           });
@@ -194,7 +199,7 @@ createApp({
       };
 
       window.audio.play().then(() => {
-        this.playingStarted(topic);
+        this.playingStarted(topic, stream_code_name);
       });
     }
   },
@@ -219,7 +224,7 @@ createApp({
     delete window.audio;
 
     if (this.playing !== false) {
-      updateListeningSession(this.radioId, this.playingStart, this.sessionId);
+      updateListeningSession(this.radioId, this.playingStart, this.sessionId, true);
       /* eslint-disable no-undef */
       sendGaEvent('stop', 'SSR', this.radioId, 1);
     }
@@ -230,7 +235,7 @@ createApp({
     this.sessionId = null;
     this.playingStart = null;
   },
-  playingStarted(topic) {
+  playingStarted(topic, stream_code_name) {
     this.lastUpdated = new Date();
     this.playingStart = new Date();
 
@@ -252,6 +257,12 @@ createApp({
       this.connectSocket();
       this.joinChannel(topic);
     }
+
+    if (stream_code_name !== undefined && stream_code_name !== null && stream_code_name !== '') {
+      this.connectSocket();
+      this.joinChannel(`listeners:${stream_code_name}`);
+    }
+
   },
   connectSocket() {
     if (this.socket !== null) {
@@ -262,29 +273,45 @@ createApp({
     this.socket.connect();
     this.socket.onError(() => {
       this.song = null;
+      this.listeners = null;
       this.socket = null;
     });
   },
   joinChannel(topic) {
-    this.channel = this.socket.channel(topic, {});
+    this.channels[topic] = this.socket.channel(topic, {});
 
-    this.channel.join()
+    this.channels[topic].join()
       .receive('error', resp => {
-        this.song = null;
-        this.channel = null;
+        if (topic.startsWith('listeners:')) {
+          this.listeners = null;
+        } else {
+          this.song = null;
+        }
+
+        this.channels[topic] = null;
       })
       .receive('timeout', () => {
-        this.song = null;
-        this.channel = null;
+        if (topic.startsWith('listeners:')) {
+          this.listeners = null;
+        } else {
+          this.song = null;
+        }
+
+        this.channels[topic] = null;
       });
 
-    this.channel.on('playing', (songData) => {
+    this.channels[topic].on('playing', (songData) => {
       this.formatSong(songData);
     });
 
-    this.channel.on('quit', () => {
+    this.channels[topic].on('counter_update', (counterData) => {
+      this.formatListeners(counterData);
+    });
+
+    this.channels[topic].on('quit', () => {
       this.song = null;
-      this.channel = null;
+      this.listeners = null;
+      this.channels[topic] = null;
     });
   },
   formatSong(songData) {
@@ -311,6 +338,14 @@ createApp({
     }
 
     this.song = song === '' ? null : song;
+  },
+  formatListeners(listenersData) {
+    if (!listenersData || !listenersData.listeners || !listenersData.listeners === 0) {
+      this.listeners = null;
+      return;
+    }
+
+    this.listeners = listenersData.listeners;
   }
 }).mount();
 

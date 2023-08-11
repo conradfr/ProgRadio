@@ -72,12 +72,13 @@ defmodule ProgRadioApi.Schedule do
             |> format()
 
           # put in cache
-#          spawn(fn ->
-            result
-            |> Enum.each(fn {k, e} ->
-              Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
-            end)
-#          end)
+          #          spawn(fn ->
+          result
+          |> Enum.each(fn {k, e} ->
+            Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
+          end)
+
+          #          end)
 
           result
       end
@@ -114,7 +115,7 @@ defmodule ProgRadioApi.Schedule do
         inner_join: sr in SubRadio,
         on: sr.id == se.sub_radio_id,
         where: r.active == true,
-#        order_by: [asc: se.date_time_start, asc: sc.date_time_start],
+        #        order_by: [asc: se.date_time_start, asc: sc.date_time_start],
         select: %{
           code_name: r.code_name,
           sub_radio_code_name: sr.code_name,

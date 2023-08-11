@@ -25,6 +25,7 @@ defmodule ProgRadioApi.Application do
       ProgRadioApiWeb.Presence,
       {Registry, [keys: :unique, name: SongSongProviderRegistry]},
       {DynamicSupervisor, strategy: :one_for_one, name: ProgRadioApi.SongDynamicSupervisor},
+      ProgRadioApi.ListenersCounter,
       # Start Finch
       {Finch, name: ProgRadioApi.Finch},
       # Start the Endpoint (http/https)

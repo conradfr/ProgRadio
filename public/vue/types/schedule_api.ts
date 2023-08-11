@@ -19,7 +19,8 @@ export type listeningSessionPostData = {
   source: string
   ctrl: number
   radio_stream_code_name?: string
-  stream_id?: string
+  stream_id?: string,
+  ending?: boolean
 }
 
 export type PutListeningSessionResponse = {

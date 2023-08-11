@@ -28,8 +28,6 @@ export const COLLECTION_ALL = 'all';
 
 export const RADIO_LIST_IGNORE_COUNTRY = 'FR';
 
-export const LIVE_SONG_ALL_CHANNEL = 'songs';
-
 export const CACHE_KEY_RADIOS = 'radios_v2';
 export const CACHE_KEY_COLLECTIONS = 'collections';
 export const CACHE_KEY_CATEGORIES = 'categories';
@@ -84,8 +82,7 @@ export const PLAYER_NOTIFICATION_LENGTH = 3000; /* ms */
 export const PLAYER_TYPE_RADIO = 'radio';
 export const PLAYER_TYPE_STREAM = 'stream';
 
-export const PLAYER_TYPE_CHECK_INTERVAL = 2500; /* ms */
-export const PLAYER_TYPE_CHECK_TIMEOUT = 7000; /* ms */
+export const WEBSOCKET_RETRY = 30000; /* ms */
 
 export const LISTENING_SESSION_MIN_SECONDS = 30;
 export const LISTENING_SESSION_SOURCE = 'web';

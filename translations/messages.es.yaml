@@ -107,6 +107,7 @@ page:
         description: 'Escuchar radios de todo el mundo'
         discover: Descubra más radios, busque por país y estilos de música ...
         find_youtube: Busque en YouTube
+        listeners: Oyentes
         playing: Título
         playing_error: Error de transmisión
         suggested: Radios sugeridos

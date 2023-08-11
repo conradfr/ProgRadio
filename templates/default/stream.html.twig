@@ -25,6 +25,8 @@
 
 {% macro topic(stream) %}url:{{ stream.streamUrl }}{% endmacro %}
 
+{% macro stream_code_name(stream) %}{{ stream.radioStream.radio.codeName|default(stream.id) }}{% endmacro %}
+
 {% block body %}
 <div class="container stream-page">
     <div class="row">
@@ -40,13 +42,13 @@
                 <div class="col-sm-9 col-12 order-2 order-sm-1">
                     <h4 class="mb-4 mb-sm-5">{{ stream.name | capitalize }}</h4>
 
-                    <div class="stream-page-stream mt-5 mt-sm-3 mb-5" v-scope>
+                    <div class="stream-page-stream mt-5 mt-sm-3 mb-4" v-scope>
                         <div class="radio-page-streams-one d-none d-flex align-items-center justify-content-center justify-content-sm-start"
                              @vue:mounted="$el.classList.remove('d-none')">
                             <div>
                                 <div
                                     v-if="playing === false"
-                                    @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}')"
+                                    @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
                                     class="radio-page-play">
                                     <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
                                          src="/img/play-button-inside-a-circle.svg">
@@ -63,7 +65,7 @@
                             <div class="ps-2">
                                 <div
                                         v-if="playing === false"
-                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}')"
+                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
                                         class="radio-page-play">
                                     <div>{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
                                 </div>
@@ -88,8 +90,19 @@
                             <div class="mt-2" v-if="song !== undefined && song !== null && song.trim() !== ''">
                                 <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
                                    :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
-                                    <i class="bi bi-youtube"></i>
+                                    <i class="bi bi-youtube"></i> YouTube
                                 </a>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 mb-1" v-if="listeners !== null">
+                            <div>
+                                <strong>{{ 'page.stream.listeners'|trans }}:&nbsp;&nbsp;</strong>
+                                {% verbatim %}
+                                  <i v-if="listeners === 1" class="bi bi-person-fill"></i>
+                                  <i v-if="listeners > 1" class="bi bi-people-fill"></i>
+                                  &nbsp;{{ listeners }}
+                                {% endverbatim %}
                             </div>
                         </div>
                     </div>

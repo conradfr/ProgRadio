@@ -6,18 +6,22 @@
           <div class="text-center mb-4">
             <img class="radio-page-logo" :alt="stream.name" :src="img">
           </div>
+          <div class="text-center cursor-pointer mb-4"
+               :title="$t('message.streaming.close')"
+               v-on:click="quit"
+          ><i class="bi bi-arrow-left"></i> {{ $t('message.streaming.close') }}</div>
         </div>
       </div>
       <div class="col-sm-7 col-10 offset-1 offset-sm-0 pb-3">
         <div class="row">
           <div class="col-sm-9 col-12">
-            <div class="float-end cursor-pointer"
+            <div class="d-none d-md-block float-end cursor-pointer"
               :title="$t('message.streaming.close')"
               v-on:click="quit"
             ><i class="bi bi-x-lg"></i></div>
             <h4 class="mb-4">{{ stream.name }}</h4>
 
-            <div class="stream-page-stream mt-3 mb-4">
+            <div class="stream-page-stream mt-3 mb-5">
               <div class="radio-page-streams-one d-flex
                 align-items-center justify-content-center justify-content-sm-start">
                 <div>
@@ -53,10 +57,14 @@
                 </div>
               </div>
 
-              <div class="mt-4"
-                 v-if="liveSongTitle">
+              <div class="mt-4" v-if="liveSongTitle">
                 <strong>{{ $t('message.streaming.playing') }}:</strong>&nbsp;
                 ♫ {{ liveSongTitle }}
+              </div>
+
+              <div class="mt-4" v-if="liveListenersCount && liveListenersCount > 0">
+                <strong>{{ $t('message.streaming.listeners_title') }}:</strong>&nbsp;
+                {{ $t('message.streaming.listeners', { how_many: liveListenersCount}) }}
               </div>
             </div>
 
@@ -124,8 +132,14 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged' }),
-    ...mapState(usePlayerStore, ['playing', 'radioPlayingCodeName', 'liveSong', 'externalPlayer']),
     ...mapState(useStreamsStore, ['selectedCountry', 'getOneStream', 'getCountryName', 'page']),
+    ...mapState(usePlayerStore, [
+      'playing',
+      'radioPlayingCodeName',
+      'liveSong',
+      'listeners',
+      'externalPlayer'
+    ]),
     stream() {
       return this.getOneStream(this.codeName);
     },
@@ -137,6 +151,23 @@ export default defineComponent({
     },
     liveSongTitle() {
       return this.liveSong(this.stream!, this.stream!.radio_stream_code_name);
+    },
+    liveListenersCount() {
+      if (!this.stream) {
+        return null;
+      }
+
+      const topicName = this.stream.radio_stream_code_name || this.stream.code_name;
+
+      if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
+        return null;
+      }
+
+      if (!this.listeners[topicName] || this.listeners[topicName] === 0) {
+        return null;
+      }
+
+      return this.listeners[topicName];
     },
   },
   methods: {

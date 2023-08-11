@@ -3,6 +3,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   use ProgRadioApiWeb, :controller
 
   alias ProgRadioApi.ListeningSessions
+  alias ProgRadioApi.ListenersCounter
 
   #  def index(conn, _params) do
   #    listening_session = ListeningSessions.list_listening_session()
@@ -12,6 +13,8 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   def create(conn, listening_session_params) do
     with {:ok, listening_session} <-
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
+      ListenersCounter.register_listening_session(listening_session)
+
       conn
       |> put_status(:created)
       |> render("one.json", %{
@@ -34,6 +37,8 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
              listening_session_params,
              conn.remote_ip
            ) do
+      if Map.get(listening_session_params, "ending") != true, do: ListenersCounter.register_listening_session(updated_listening_session)
+
       conn
       |> put_status(:ok)
       |> render("one.json", %{

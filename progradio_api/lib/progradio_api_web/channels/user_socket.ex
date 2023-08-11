@@ -1,11 +1,14 @@
 defmodule ProgRadioApiWeb.UserSocket do
   use Phoenix.Socket
 
+  alias ProgRadioApiWeb.{SongChannel, ListenersChannel}
+
   ## Channels
-  channel "collection:*", ProgRadioApiWeb.SongChannel
-  channel "song:*", ProgRadioApiWeb.SongChannel
-  channel "url:*", ProgRadioApiWeb.SongChannel
-  channel "songs", ProgRadioApiWeb.SongChannel
+  channel "collection:*", SongChannel
+  channel "song:*", SongChannel
+  channel "url:*", SongChannel
+
+  channel "listeners:*", ListenersChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

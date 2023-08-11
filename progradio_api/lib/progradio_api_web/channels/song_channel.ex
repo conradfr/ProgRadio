@@ -9,10 +9,6 @@ defmodule ProgRadioApiWeb.SongChannel do
   alias ProgRadioApi.Radio
   alias ProgRadioApi.Collection
 
-  def join("songs", _params, socket) do
-    {:ok, socket}
-  end
-
   def join("song:" <> radio_stream_code_name, _params, socket) do
     # check radio first, if null, check stream
     radio_stream_data =

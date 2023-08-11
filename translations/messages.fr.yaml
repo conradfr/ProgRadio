@@ -108,6 +108,7 @@ page:
         description: 'Écoutez les radios du monde entier'
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
         find_youtube: Chercher sur Youtube
+        listeners: Auditeurs
         playing: Titre
         playing_error: Erreur de lecture
         suggested: Radios suggérées

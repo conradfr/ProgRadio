@@ -22,7 +22,7 @@ defmodule ProgRadioApi.Stream do
     field(:enabled, :boolean)
     field(:redirect_to, :binary_id)
     field(:playing_error, :integer, default: 0)
-#    field(:editing_key, :string)
+    #    field(:editing_key, :string)
     belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream_song, StreamSong)
     has_many(:listening_session, ListeningSession)
