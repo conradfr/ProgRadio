@@ -84,7 +84,7 @@ export const PLAYER_TYPE_STREAM = 'stream';
 
 export const WEBSOCKET_RETRY = 30000; /* ms */
 
-export const LISTENING_SESSION_MIN_SECONDS = 30;
+export const LISTENING_SESSION_MIN_SECONDS = 15;
 export const LISTENING_SESSION_SOURCE = 'web';
 export const LISTENING_SESSION_SOURCE_SSR = 'seo';
 

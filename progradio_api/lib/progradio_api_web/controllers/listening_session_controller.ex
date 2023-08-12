@@ -37,7 +37,11 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
              listening_session_params,
              conn.remote_ip
            ) do
-      if Map.get(listening_session_params, "ending") != true, do: ListenersCounter.register_listening_session(updated_listening_session)
+      if Map.get(listening_session_params, "ending") == true do
+        ListenersCounter.remove_listening_session(updated_listening_session)
+      else
+        ListenersCounter.register_listening_session(updated_listening_session)
+      end
 
       conn
       |> put_status(:ok)

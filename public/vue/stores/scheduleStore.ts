@@ -146,6 +146,11 @@ export const useScheduleStore = defineStore('schedule', {
     },
     /* eslint-disable arrow-body-style */
     isWebRadio: state => (radioCodeName: string, radioStreamCodeName: string): boolean => {
+      if (state.radios[radioCodeName] === undefined
+        || state.radios[radioCodeName].streams[radioStreamCodeName] === undefined) {
+        return false;
+      }
+
       return !state.radios[radioCodeName].streams[radioStreamCodeName].sub_radio;
     },
     getSubRadio: state => (radioCodeName: string) : SubRadio => {

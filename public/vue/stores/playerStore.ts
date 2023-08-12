@@ -241,17 +241,17 @@ export const usePlayerStore = defineStore('player', {
       };
     },
     stop() {
-      PlayerUtils.sendListeningSession(
-        this.externalPlayer,
-        this.playing,
-        this.radio!,
-        this.radioStreamCodeName,
-        this.session);
-
       if (this.externalPlayer === true) {
         AndroidApi.pause();
         return;
       }
+
+      PlayerUtils.sendListeningSession(
+        this.playing,
+        this.radio!,
+        this.radioStreamCodeName,
+        this.session,
+        true);
 
       // commit
       this.playing = false;
@@ -356,7 +356,7 @@ export const usePlayerStore = defineStore('player', {
     startListeningSession() {
       /* eslint-disable function-call-argument-newline */
       this.sessionInterval = setInterval(() => {
-        PlayerUtils.sendListeningSession(this.externalPlayer, this.playing,
+        PlayerUtils.sendListeningSession(this.playing,
           this.radio!, this.radioStreamCodeName, this.session);
       }, config.LISTENING_SESSION_MIN_SECONDS * 1000);
     },

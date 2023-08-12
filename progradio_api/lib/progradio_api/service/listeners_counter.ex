@@ -9,9 +9,10 @@ defmodule ProgRadioApi.ListenersCounter do
   @name :listeners_counter
 
   # 10s
-  @refresh 10000
+  @refresh_sessions 10000
+  @refresh_counter 15000
 
-  @timestamp_threshold_seconds 35
+  @timestamp_threshold_seconds 32
 
   # state:
   # %{
@@ -19,14 +20,13 @@ defmodule ProgRadioApi.ListenersCounter do
   #   sessions: %{channel_name => %{listening_session_id => timestamp}}
   # }
 
-  # We re-use the live_song nomenclature
-  # Allows to broadcast the data via the live_song channels and mutualize the data by url instead of individual streams
-
   # ----- Client Interface -----
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, %{sessions: %{}, counter: %{}}, name: @name)
   end
+
+  def register_listening_session(listening_session)
 
   def register_listening_session(%ListeningSession{} = listening_session) do
     stream_code_name = get_channel_name(listening_session)
@@ -36,17 +36,27 @@ defmodule ProgRadioApi.ListenersCounter do
 
   def register_listening_session(_listening_session), do: :ok
 
+  def remove_listening_session(listening_session)
+
+  def remove_listening_session(%ListeningSession{} = listening_session) do
+    stream_code_name = get_channel_name(listening_session)
+
+    GenServer.cast(@name, {:remove_listening_session, {stream_code_name, listening_session.id}})
+  end
+
+  def remove_listening_session(_listening_session), do: :ok
+
   def send_counter_of_stream(stream_code_name) when is_binary(stream_code_name) do
     GenServer.cast(@name, {:send_counter_of, stream_code_name})
   end
 
   def send_counter_of_stream(_stream_code_name), do: :ok
 
-#  def get_count_of_stream(stream_code_name) when is_binary(stream_code_name) do
-#    GenServer.call(@name, {:count_of, stream_code_name})
-#  end
-#
-#  def get_count_of_stream(_stream_code_name), do: 0
+  #  def get_count_of_stream(stream_code_name) when is_binary(stream_code_name) do
+  #    GenServer.call(@name, {:count_of, stream_code_name})
+  #  end
+  #
+  #  def get_count_of_stream(_stream_code_name), do: 0
 
   # ----- Server callbacks -----
 
@@ -54,8 +64,8 @@ defmodule ProgRadioApi.ListenersCounter do
   def init(state) do
     Logger.info("Listeners counter: starting ...")
 
-    Process.send_after(self(), :refresh_sessions, @refresh)
-    Process.send_after(self(), :refresh_counter, @refresh + 5000)
+    Process.send_after(self(), :refresh_sessions, @refresh_sessions)
+    Process.send_after(self(), :refresh_counter, @refresh_counter)
 
     {:ok, state}
   end
@@ -74,6 +84,25 @@ defmodule ProgRadioApi.ListenersCounter do
         ],
         unix_timestamp
       )
+
+    Process.send(self(), {:refresh_counter, stream_code_name}, [])
+
+    {:noreply, updated_state}
+  end
+
+  @impl true
+  def handle_cast({:remove_listening_session, {stream_code_name, listening_session_id}}, state) do
+    {_whatever, updated_state} =
+      pop_in(
+        state,
+        [
+          :sessions,
+          Access.key(stream_code_name, %{listening_session_id => nil}),
+          listening_session_id
+        ]
+      )
+
+    Process.send(self(), {:refresh_counter, stream_code_name}, [])
 
     {:noreply, updated_state}
   end
@@ -116,7 +145,35 @@ defmodule ProgRadioApi.ListenersCounter do
 
     updated_state = Map.put(state, :sessions, cleaned_sessions)
 
-    Process.send_after(self(), :refresh_sessions, @refresh)
+    Process.send_after(self(), :refresh_sessions, @refresh_sessions)
+
+    {:noreply, updated_state}
+  end
+
+  # todo use this function for the global :refresh_counter ?
+  @impl true
+  def handle_info({:refresh_counter, stream_code_name}, state) do
+    count =
+      state
+      |> Map.get(:sessions)
+      |> Map.get(stream_code_name, %{})
+      |> Kernel.map_size()
+
+    ProgRadioApiWeb.Endpoint.broadcast!(
+      "listeners:" <> stream_code_name,
+      "counter_update",
+      %{name: stream_code_name, listeners: count}
+    )
+
+    updated_state =
+      put_in(
+        state,
+        [
+          :counter,
+          Access.key(stream_code_name, 0)
+        ],
+        count
+      )
 
     {:noreply, updated_state}
   end
@@ -142,7 +199,7 @@ defmodule ProgRadioApi.ListenersCounter do
 
     updated_state = Map.put(state, :counter, counter)
 
-    Process.send_after(self(), :refresh_counter, @refresh)
+    Process.send_after(self(), :refresh_counter, @refresh_counter)
 
     spawn(fn ->
       counters_code_name
@@ -159,12 +216,12 @@ defmodule ProgRadioApi.ListenersCounter do
     {:noreply, updated_state}
   end
 
-#  @impl true
-#  def handle_call({:count_of, stream_code_name}, _from, %{counter: counter} = state) do
-#    count = Map.get(counter, stream_code_name, 0)
-#
-#    {:reply, count, state}
-#  end
+  #  @impl true
+  #  def handle_call({:count_of, stream_code_name}, _from, %{counter: counter} = state) do
+  #    count = Map.get(counter, stream_code_name, 0)
+  #
+  #    {:reply, count, state}
+  #  end
 
   defp get_channel_name(%ListeningSession{} = listening_session) do
     case Map.get(listening_session, :radio_stream_id) do

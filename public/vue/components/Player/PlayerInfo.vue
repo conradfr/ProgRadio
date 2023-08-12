@@ -46,7 +46,9 @@ export default defineComponent({
         return '';
       }
 
-      if (typeUtils.isRadio(this.radio) && this.radioStreamCodeName !== null) {
+      if (typeUtils.isRadio(this.radio) && this.radioStreamCodeName !== null
+        && Object.keys(this.radio.streams!).length > 0
+          && Object.prototype.hasOwnProperty.call(this.radio.streams!, this.radioStreamCodeName)) {
         return this.radio.streams[this.radioStreamCodeName!].name;
       }
 

@@ -4,7 +4,7 @@ defmodule ProgRadioApi.ListeningSession do
   alias ProgRadioApi.RadioStream
   alias ProgRadioApi.Stream
 
-  @time_length_minimum_seconds 30
+  @time_length_minimum_seconds 15
 
   @primary_key {:id, :binary_id, autogenerate: true}
 

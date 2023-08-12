@@ -105,17 +105,24 @@ const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string|null) => 
     return radio.stream_url;
   }
 
-  return radio.streams![radioStreamCodeName].url;
+  if (Object.keys(radio.streams!).length > 0
+    && Object.prototype.hasOwnProperty.call(radio.streams!, radioStreamCodeName)) {
+    return radio.streams![radioStreamCodeName].url;
+  }
+
+  return null;
 };
 
 const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string|null): string => {
-  if (typeUtils.isRadio(radio) && (radioStreamCodeName === null || !radio.streaming_enabled)) {
+  if (typeUtils.isRadio(radio) && (!radioStreamCodeName || !radio.streaming_enabled)) {
     return '';
   }
 
   // @ts-ignore
-  if ((radioStreamCodeName !== null && typeUtils.isRadio(radio)
-      && Object.keys(radio.streams).length > 0 && radio.streams![radioStreamCodeName].current_song)
+  if ((radioStreamCodeName && typeUtils.isRadio(radio)
+      && Object.keys(radio.streams).length > 0
+      && Object.prototype.hasOwnProperty.call(radio.streams!, radioStreamCodeName)
+      && radio.streams![radioStreamCodeName].current_song)
     || (typeUtils.isStream(radio) && radio.current_song)) {
     const channelNameEnd = typeUtils.isRadio(radio)
       ? radioStreamCodeName : radio.radio_stream_code_name;
@@ -327,16 +334,12 @@ const calculatedFlux = () => {
 /* ---------- API ---------- */
 
 const sendListeningSession = (
-  externalPlayer: boolean,
   playing: boolean,
   radio: Radio|Stream,
   radioStreamCodeName: string|null,
   session: ListeningSession,
   ending?: boolean
 ) => {
-  if (externalPlayer) {
-    return;
-  }
   if (playing && session.start !== null) {
     const dateTimeEnd = DateTime.local().setZone(config.TIMEZONE);
 

@@ -124,11 +124,7 @@ export default defineComponent({
       return this.song[this.channelName];
     },
     liveListenersCount() {
-      console.log(this.radio.name);
-
       const topicName = this.radio.radio_stream_code_name || this.radio.code_name;
-
-      console.log(topicName);
 
       if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
         return null;

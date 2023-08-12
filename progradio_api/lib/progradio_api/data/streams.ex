@@ -241,7 +241,10 @@ defmodule ProgRadioApi.Streams do
       "last" ->
         query
         |> join(:inner, [s, rs, r, ss], ls in ListeningSession, on: s.id == ls.stream_id)
-        |> where([s, rs, r, ss, ls], fragment("? < now() at time zone 'utc' + interval '120 second'", ls.date_time_end))
+        |> where(
+          [s, rs, r, ss, ls],
+          fragment("? < now() at time zone 'utc' + interval '120 second'", ls.date_time_end)
+        )
         |> order_by([s, rs, r, ss, ls], desc: max(ls.date_time_start))
         |> group_by([s, rs, r, ss, ls], [
           s.id,
