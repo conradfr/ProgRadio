@@ -97,7 +97,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
     full_path_temp =
       "#{Application.get_env(:progradio_api, :image_path)}#{@temp_folder}/#{filename}"
 
-    unless ImageCache.is_cached(full_path) do
+    unless ImageCache.is_cached(full_path, false) do
       full_url = full_url(url)
       Logger.debug("Importing: #{full_url}")
 

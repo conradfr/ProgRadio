@@ -2,15 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\ORM\Events;
 
 #[ORM\Table(name: '`stream_overloading`')]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamOverloadingRepository')]
-#[AsDoctrineListener(event: Events::preUpdate)]
-#[AsDoctrineListener(event: Events::prePersist)]
 class StreamOverloading
 {
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -37,11 +34,11 @@ class StreamOverloading
     private ?bool $enabled = null;
 
     #[Gedmo\Timestampable(on: 'create')]
-    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private \DateTime $createdAt;
 
     #[Gedmo\Timestampable(on: 'update')]
-    #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private \DateTime $updatedAt;
 
     public function getId(): string
@@ -114,13 +111,24 @@ class StreamOverloading
         $this->enabled = $enabled;
     }
 
-    public function getCreatedAt(): ?\Datetime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\Datetime
+    public function setCreatedAt(\DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
     }
+
+    public function setUpdatedAt(\DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
 }

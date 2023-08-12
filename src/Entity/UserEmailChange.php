@@ -3,16 +3,13 @@
 namespace App\Entity;
 
 use App\Entity\User;
+use Doctrine\DBAL\Types\Types;
 use App\Repository\UserEmailChangeRepository;
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'user_email_change')]
 #[ORM\Entity(repositoryClass: UserEmailChangeRepository::class)]
-#[AsDoctrineListener(event: Events::preUpdate)]
-#[AsDoctrineListener(event: Events::prePersist)]
 class UserEmailChange
 {
     protected const TOKEN_LENGTH = 25;
@@ -30,11 +27,11 @@ class UserEmailChange
     private User $user;
 
     #[Gedmo\Timestampable(on: 'create')]
-    #[ORM\Column(name: 'created_at', type: 'datetime')]
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $createdAt = null;
 
     #[Gedmo\Timestampable(on: 'update')]
-    #[ORM\Column(name: 'updated_at', type: 'datetime')]
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $updatedAt = null;
 
     #[ORM\Column(type: 'string', length: 100)]

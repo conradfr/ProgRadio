@@ -11,12 +11,12 @@ defmodule ProgRadioApi.ImageCache do
   ]
 
   @spec is_cached(String.t()) :: boolean
-  def is_cached(filepath) do
+  def is_cached(filepath, delete_if_ttl_over \\ true) when is_binary(filepath) do
     with file_exists when file_exists == true <- File.exists?(filepath),
          {:ok, stat} <- File.lstat(filepath, [{:time, :posix}]) do
       case is_ttl_over(stat.mtime) do
         true ->
-          delete_cached_files(filepath)
+            if delete_if_ttl_over == true, do: delete_cached_files(filepath)
           false
 
         false ->
@@ -28,12 +28,12 @@ defmodule ProgRadioApi.ImageCache do
   end
 
   @spec is_ttl_over(integer) :: boolean
-  defp is_ttl_over(datetime) do
-    DateTime.to_unix(DateTime.utc_now()) - @ttl > datetime
+  defp is_ttl_over(datetime) when is_number(datetime) do
+    System.os_time(:second) - @ttl > datetime
   end
 
   @spec delete_cached_files(String.t()) :: atom
-  defp delete_cached_files(filepath) do
+  defp delete_cached_files(filepath) when is_binary(filepath) do
     # original image
     File.rm(filepath)
 

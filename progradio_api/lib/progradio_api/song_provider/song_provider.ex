@@ -51,8 +51,7 @@ defmodule ProgRadioApi.SongProvider do
 
   @spec now_unix() :: integer()
   def now_unix() do
-    DateTime.utc_now()
-    |> DateTime.to_unix()
+    System.os_time(:second)
   end
 
   @spec now_iso() :: String.t()

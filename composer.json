@@ -48,6 +48,7 @@
         "qbbr/pgsql-doctrine-random-function": "^1.0",
         "ramsey/uuid-doctrine": "^1.6",
         "snc/redis-bundle": "^4.1",
+        "stof/doctrine-extensions-bundle": "^1.8",
         "symfony/asset": "6.3.*",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
