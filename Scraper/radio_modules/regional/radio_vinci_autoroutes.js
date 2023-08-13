@@ -1,4 +1,5 @@
 let moment = require('moment-timezone');
+const logger = require('../../lib/logger.js');
 
 const format = dateObj => {
     let startDateTime = moment(dateObj);
@@ -13,23 +14,24 @@ const format = dateObj => {
     endDateTime.add(1, 'days');
 
     const newEntry = {
-      'title': 'En direct sur FIP',
-      'description': "Bienvenue sur Fip, la radio musicale la plus éclectique au monde ! Fip, c'est aussi l'actualité musicale : nouveautés, sorties d'albums, interviews, sessions live exclusives. Toute la musique est sur Fip !",
-      'img': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/FIP_logo_2021.svg/2048px-FIP_logo_2021.svg.png',
+      'title': 'Informer, former, accompagner',
+      'description': "707.7FM - La priorité de Radio VINCI Autoroutes est de contribuer au confort et à la sécurité de ses auditeurs en les informant avec le maximum de précision et de réactivité sur leurs conditions de circulation.",
+      'img': 'https://upload.wikimedia.org/wikipedia/fr/thumb/7/7f/Logo_radio_vinci_autoroutes.svg/494px-Logo_radio_vinci_autoroutes.svg.png',
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString()
+      // 'sections': subs
     };
 
   const cleanedData = [newEntry];
   return Promise.resolve(cleanedData);
 };
 
-const getScrap = dateObj => {
+const getScrap = (dateObj) => {
   return format(dateObj);
 };
 
 const scrapModule = {
-  getName: 'fip',
+  getName: 'radio_vinci_autoroutes',
   supportTomorrow: true,
   getScrap
 };
