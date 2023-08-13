@@ -70,6 +70,7 @@ const format = dateObj => {
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,
       'img': `${process.env.PROXY_URL}nrj.jpg?key=${process.env.PROXY_KEY}&url=${img}`,
+      // 'img': img,
       'description': curr.description
     };
 
@@ -84,20 +85,21 @@ const fetch = dateObj => {
   dateObj.locale('fr');
   let day = utils.upperCaseWords(dateObj.format('dddd'));
   let url = 'https://www.nrj.fr/grille-emissions';
-  logger.log('info', `fetching ${url}`);
+  logger.log('info', `fetching ${url} (${day})`);
 
-  const proxy = process.env.PROXY_URL;
+/*  const proxy = process.env.PROXY_URL;
   const options = {
     headers: {
       'Proxy-Target-URL': url,
       'Proxy-Auth': process.env.PROXY_KEY
     }
-  };
+  };*/
 
   return new Promise(function (resolve, reject) {
     return osmosis
-      .get(proxy)
-      .config(options)
+      // .get(proxy)
+      .get(url)
+      // .config(options)
       // .get(url)
       .find(`#${day}`)
       .select('.timelineShedule')
