@@ -62,8 +62,7 @@ defmodule ProgRadioApi.SongProvider.Virgin do
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
-    {:ok, now} = DateTime.now("Europe/Paris")
-    now_unix = DateTime.to_unix(now)
+    now_unix = SongProvider.now_unix()
 
     try do
       data =

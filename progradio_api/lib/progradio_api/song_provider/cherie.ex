@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Cherie do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://www.cheriefm.fr/onair"
+  @url "https://www.cheriefm.fr/onair.json"
   @minutes_delta_max 300
   @discarded_artist "CHERIE FM"
 

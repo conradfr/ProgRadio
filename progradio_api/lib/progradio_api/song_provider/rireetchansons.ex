@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Rireetchansons do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://www.rireetchansons.fr/onair"
+  @url "https://www.rireetchansons.fr/onair.json"
   @minutes_delta_max 300
   @discarded_artist "RIRE & CHANSONS"
 
