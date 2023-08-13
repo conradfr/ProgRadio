@@ -65,7 +65,7 @@
                   <strong>{{ $t('message.songs_page.find') }}:</strong>&nbsp;&nbsp;
                   <a class="link-no-to-bold" target="_blank"
                      :title="$t( 'message.songs_page.find_youtube')"
-                     :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                     :href="encodeURI(`https://www.youtube.com/results?search_query=${liveSongTitle}`)">
                     <i class="bi bi-youtube"></i>&nbsp;&nbsp;
                     <span class="d-none d-sm-inline">
                     {{ $t('message.songs_page.find_youtube') }}
@@ -73,7 +73,7 @@
                   </a>&nbsp;&nbsp;
                   <a class="link-no-to-bold" target="_blank"
                      :title="$t( 'message.songs_page.find_spotify')"
-                     :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                     :href="encodeURI(`https://open.spotify.com/search/${liveSongTitle}`)">
                     <i class="bi bi-spotify"></i>&nbsp;&nbsp;
                     <span class="d-none d-sm-inline">
                     {{ $t('message.songs_page.find_spotify') }}
@@ -81,7 +81,7 @@
                   </a>&nbsp;&nbsp;
                   <a class="link-no-to-bold" target="_blank"
                      :title="$t( 'message.songs_page.find_deezer')"
-                     :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                     :href="encodeURI(`https://www.deezer.com/search/${liveSongTitle}`)">
                     <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
                     <span class="d-none d-sm-inline">
                     {{ $t('message.songs_page.find_deezer') }}

@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.14.4-erlang-25.3-ubuntu-focal-20230126
+FROM hexpm/elixir:1.14.5-erlang-25.3.2.5-ubuntu-focal-20230126
 
 # There is a bug / dependecy problem when using Unbutu 20.04 (focal)
 # Failure to build & load nif for :ex_cldr_collation
@@ -65,8 +65,11 @@ WORKDIR /var/progradio_api/
 RUN rm -Rf _build && \
     mix local.hex --force && \
     mix local.rebar --force && \
-    mix deps.get --only prod \
-    mix deps.compile
+    mix deps.get --only prod
+
+RUN mix deps.compile --skip-local-deps
+
+RUN mix deps.compile
 
 COPY  ./progradio_api /var/progradio_api/
 
