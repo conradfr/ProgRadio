@@ -89,15 +89,24 @@
                                 <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
                                 {% verbatim %}♫ {{ song }}{% endverbatim %}
                             </div>
-                            <div class="mt-2" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                            <div class="mt-4" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                                <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;
                                 <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
                                    :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
                                     <i class="bi bi-youtube"></i> YouTube
-                                </a>
+                                </a>&nbsp;&nbsp;
+                                <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
+                                   :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                                    <i class="bi bi-spotify"></i> Spotify
+                                </a>&nbsp;&nbsp;
+                                <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
+                                   :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                                    <img src="{{ asset('img/deezericon.png') }}" alt="{{ 'page.stream.find_deezer'|trans }}"> Deezer
+                                </a>&nbsp;&nbsp;
                             </div>
                         </div>
 
-                        <div class="mt-4 mb-1" v-if="listeners !== null">
+                        <div class="mt-4 mb-3" v-if="listeners !== null">
                             <div>
                                 <strong>{{ 'page.stream.listeners'|trans }}:&nbsp;&nbsp;</strong>
                                 {% verbatim %}

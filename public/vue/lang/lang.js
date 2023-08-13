@@ -104,7 +104,10 @@ export const messages = {
         }
       },
       songs_page: {
-        find_youtube: 'Chercher sur Youtube',
+        find: 'Rechercher',
+        find_deezer: 'Deezer',
+        find_spotify: 'Spotify',
+        find_youtube: 'Youtube',
         no_songs: "Vous n'avez pas de titres sauvegardés.",
         title: 'Titres sauvegardés',
       },
@@ -235,7 +238,10 @@ export const messages = {
         }
       },
       songs_page: {
-        find_youtube: 'Find on Youtube',
+        find: 'Search',
+        find_deezer: 'Deezer',
+        find_spotify: 'Spotify',
+        find_youtube: 'Youtube',
         no_songs: 'You have no songs saved yet.',
         title: 'Saved songs',
       },
@@ -366,7 +372,10 @@ export const messages = {
         }
       },
       songs_page: {
-        find_youtube: 'Busque en YouTube',
+        find: 'Busque',
+        find_deezer: 'Deezer',
+        find_spotify: 'Spotify',
+        find_youtube: 'YouTube',
         no_songs: 'Todavía no tienes canciones guardadas.',
         title: 'Canciones guardadas',
       },

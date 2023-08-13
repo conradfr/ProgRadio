@@ -178,6 +178,7 @@ defmodule ProgRadioApi.Streams do
         stream_url: s.stream_url,
         tags: s.tags,
         country_code: s.country_code,
+        website: s.website,
         clicks_last_24h: s.clicks_last_24h,
         type: "stream",
         radio_code_name: fragment("COALESCE(?)", r.code_name),

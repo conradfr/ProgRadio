@@ -9,13 +9,21 @@
             <tr v-for="(song, index) in songs" :key="index">
               <td  class="ps-3" style="width: 60%;">{{ song }}</td>
               <td class="text-center" style="width: 25%;">
+                {{ $t('message.songs_page.find') }}:&nbsp;&nbsp;
                 <a class="link-no-to-bold" target="_blank"
                    :title="$t( 'message.songs_page.find_youtube')"
                    :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
                   <i class="bi bi-youtube"></i>&nbsp;&nbsp;
-                  <span class="d-none d-sm-inline">
-                    {{ $t('message.songs_page.find_youtube') }}
-                  </span>
+                </a>&nbsp;&nbsp;
+                <a class="link-no-to-bold" target="_blank"
+                   :title="$t( 'message.songs_page.find_spotify')"
+                   :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                  <i class="bi bi-spotify"></i>&nbsp;&nbsp;
+                </a>&nbsp;&nbsp;
+                <a class="link-no-to-bold" target="_blank"
+                   :title="$t( 'message.songs_page.find_deezer')"
+                   :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                  <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
                 </a>
               </td>
               <td class="text-end pe-3" style="width: 15%;">

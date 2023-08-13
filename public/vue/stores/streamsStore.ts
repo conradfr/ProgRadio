@@ -122,7 +122,7 @@ export const useStreamsStore = defineStore('streams', {
     },
     /* eslint-disable max-len */
     getOneStream: state => (id: string): Stream|null => find(state.streamRadios, ['code_name', id]) || null,
-    getCountryName: state => (key: string): string => state.countries[key] || ''
+    getCountryName: state => (key: string): string|null => state.countries[key] || null
   },
   actions: {
     async getConfig() {

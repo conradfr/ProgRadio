@@ -9,6 +9,7 @@ export interface Stream {
   radio_code_name: string
   radio_stream_code_name: string
   stream_url: string
+  website: string
   tags: string
   type: 'stream'
 }

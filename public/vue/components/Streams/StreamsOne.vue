@@ -60,6 +60,34 @@
               <div class="mt-4" v-if="liveSongTitle">
                 <strong>{{ $t('message.streaming.playing') }}:</strong>&nbsp;
                 ♫ {{ liveSongTitle }}
+
+                <div class="mt-3">
+                  <strong>{{ $t('message.songs_page.find') }}:</strong>&nbsp;&nbsp;
+                  <a class="link-no-to-bold" target="_blank"
+                     :title="$t( 'message.songs_page.find_youtube')"
+                     :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                    <i class="bi bi-youtube"></i>&nbsp;&nbsp;
+                    <span class="d-none d-sm-inline">
+                    {{ $t('message.songs_page.find_youtube') }}
+                  </span>
+                  </a>&nbsp;&nbsp;
+                  <a class="link-no-to-bold" target="_blank"
+                     :title="$t( 'message.songs_page.find_spotify')"
+                     :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                    <i class="bi bi-spotify"></i>&nbsp;&nbsp;
+                    <span class="d-none d-sm-inline">
+                    {{ $t('message.songs_page.find_spotify') }}
+                  </span>
+                  </a>&nbsp;&nbsp;
+                  <a class="link-no-to-bold" target="_blank"
+                     :title="$t( 'message.songs_page.find_deezer')"
+                     :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                    <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
+                    <span class="d-none d-sm-inline">
+                    {{ $t('message.songs_page.find_deezer') }}
+                  </span>
+                  </a>
+                </div>
               </div>
 
               <div class="mt-4" v-if="liveListenersCount && liveListenersCount > 0">
@@ -68,7 +96,7 @@
               </div>
             </div>
 
-            <div class="mb-3" v-if="stream.country_code">
+            <div class="mb-3" v-if="country">
               <strong>{{ $t('message.streaming.country') }}:</strong>&nbsp;
               {{ country }}
             </div>

@@ -107,7 +107,10 @@ page:
         country: Pays
         description: 'Écoutez les radios du monde entier'
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
-        find_youtube: Chercher sur Youtube
+        find: Rechercher
+        find_deezer: Rechercher sur Deezer
+        find_spotify: Rechercher sur Spotify
+        find_youtube: Rechercher sur Youtube
         listeners: Auditeurs
         playing: Titre
         playing_error: Erreur de lecture
