@@ -44,7 +44,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   def import_recently_updated() do
     Streams.get_recently_overload_updated_ids()
-    |> IO.inspect()
     |> Enum.each(fn stream_id when is_binary(stream_id) ->
       __MODULE__.import(stream_id)
     end)
