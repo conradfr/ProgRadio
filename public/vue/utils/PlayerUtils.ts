@@ -167,6 +167,14 @@ const reduceRadioSize = (radio: Radio): Radio => {
   return radioCopy;
 };
 
+const extractTopicName = (fullTopicName: string): string|null => {
+  if (!fullTopicName.startsWith('listeners:')) {
+    return null;
+  }
+
+  return fullTopicName.substring(10);
+};
+
 /* ---------- NOTIFICATION ---------- */
 
 const buildNotificationData = (
@@ -372,5 +380,6 @@ export default {
   reduceRadioSize,
   showNotification,
   sendListeningSession,
-  calculatedFlux
+  calculatedFlux,
+  extractTopicName
 };

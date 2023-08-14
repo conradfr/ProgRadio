@@ -9,6 +9,7 @@ import type { Program } from '@/types/program';
 import type { Songs } from '@/types/song';
 import type { Listeners } from '@/types/listeners';
 import type { ListeningSession } from '@/types/listening_session';
+import type { ChannelsRefCount } from '@/types/channels_ref_count';
 
 /* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
@@ -34,7 +35,7 @@ interface Focus {
 interface State {
   socket: any
   channels:any
-  channelsRefCount: any,
+  channelsRefCount: ChannelsRefCount,
   playing: boolean
   externalPlayer: boolean
   externalPlayerVersion: number|null
@@ -396,8 +397,26 @@ export const usePlayerStore = defineStore('player', {
         // @ts-expect-error apiUrl is defined on the global scope
         this.socket = new Socket(`wss://${apiUrl}/socket`);
         this.socket.connect();
-        this.socket.onError(() => {
+
+        this.socket.onOpen(() => {
+          Object.entries(this.channelsRefCount).forEach(
+            ([key, value]) => {
+              if (value > 0) {
+                const topicName = PlayerUtils.extractTopicName(key);
+
+                if (topicName) {
+                  this.joinChannel(key, topicName);
+                } else {
+                  this.joinChannel(key);
+                }
+              }
+            }
+          );
+        });
+
+        this.socket.onClose(() => {
           // this.socket.disconnect();
+          this.socket = null;
           this.channels = {};
           this.song = {};
           this.listeners = {};
