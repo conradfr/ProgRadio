@@ -67,7 +67,7 @@ RUN rm -Rf _build && \
     mix local.rebar --force && \
     mix deps.get --only prod
 
-RUN mix deps.compile --skip-local-deps
+# RUN mix deps.compile --skip-local-deps
 
 RUN mix deps.compile
 

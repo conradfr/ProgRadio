@@ -53,15 +53,19 @@ defmodule ProgRadioApi.SongProvider.Radionova do
 
   @impl true
   def get_data(name, _last_data) do
-    name =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_name, &1)).()
+    try do
+      name =
+        SongProvider.get_stream_code_name_from_channel(name)
+        |> (&Map.get(@stream_name, &1)).()
 
-    "https://www.nova.fr/wp-json/radios/#{name}"
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> Jason.decode!()
-    |> Map.get("currentTrack", nil)
+      "https://www.nova.fr/wp-json/radios/#{name}"
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> Jason.decode!()
+      |> Map.get("currentTrack", nil)
+    rescue
+      _ -> nil
+    end
   end
 
   @impl true

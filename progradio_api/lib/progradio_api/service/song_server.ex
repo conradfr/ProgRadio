@@ -132,7 +132,7 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def handle_info(
         {:refresh, _},
-        %{module: module, name: name, last_data: last_data, retries: retries, db_data: db_data} =
+        %{module: module, name: name, last_data: last_data, db_data: db_data} =
           state
       ) do
     {data, song} = get_data_song(module, name, last_data)
