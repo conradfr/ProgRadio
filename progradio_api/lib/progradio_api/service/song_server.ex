@@ -90,13 +90,14 @@ defmodule ProgRadioApi.SongServer do
         %{module: module, name: name, last_data: last_data, retries: retries, db_data: db_data} =
           state
       ) do
-    with {data, song, updated_retries} <- get_data_song(module, name, last_data, retries),
+    with {data, song} <- get_data_song(module, name, last_data),
+         updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error do
-      spawn(fn -> update_status(song, db_data) end)
+      broadcast_song(name, song, state.collection_topic)
+
+      update_status(song, db_data)
 
       how_many_connected = how_many_connected(name, state.collection_topic)
-
-      broadcast_song(name, song, state.collection_topic)
 
       refresh_rate =
         cond do
@@ -112,11 +113,11 @@ defmodule ProgRadioApi.SongServer do
         |> Kernel.+(Enum.random(-5..5))
         |> increment_interval(updated_retries)
 
-      Process.send_after(self(), {:refresh, :auto}, refresh_rate)
-
       Logger.debug(
         "Data provider - #{name}: song updated (timer, next: #{trunc(refresh_rate / 1000)}s, retries: #{updated_retries}) - #{how_many_connected} clients connected"
       )
+
+      Process.send_after(self(), {:refresh, :auto}, refresh_rate)
 
       {:noreply, %{state | song: song, last_data: data, retries: updated_retries}, :hibernate}
     else
@@ -134,21 +135,21 @@ defmodule ProgRadioApi.SongServer do
         %{module: module, name: name, last_data: last_data, retries: retries, db_data: db_data} =
           state
       ) do
-    {data, song, _retries} = get_data_song(module, name, last_data, retries)
-    spawn(fn -> update_status(song, db_data) end)
-
+    {data, song} = get_data_song(module, name, last_data)
     broadcast_song(name, song, state.collection_topic)
+
+    update_status(song, db_data)
 
     next_refresh =
       apply(module, :get_refresh, [name, data, @refresh_song_interval]) ||
         @refresh_song_interval
         |> Kernel.+(Enum.random(-5..5))
 
-    Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
-
     Logger.debug(
       "Data provider - #{name}: song updated, next update in #{trunc(next_refresh / 1000)} seconds"
     )
+
+    Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 
     {:noreply, %{state | song: song, last_data: data}}
   end
@@ -160,12 +161,11 @@ defmodule ProgRadioApi.SongServer do
     case how_many_connected do
       0 ->
         broadcast_song(name, nil, nil)
-        Logger.info("Data provider - #{name}: no client connected, exiting")
+        Logger.debug("Data provider - #{name}: no client connected, exiting")
         {:stop, :normal, nil}
 
       _ ->
         Logger.debug("Data provider - #{name}: #{how_many_connected} clients connected")
-
         Process.send_after(self(), :presence, @refresh_presence_interval)
         {:noreply, state}
     end
@@ -190,35 +190,30 @@ defmodule ProgRadioApi.SongServer do
       "playing",
       Map.put(data, :topic, name)
     )
-
-    #    ProgRadioApiWeb.Endpoint.broadcast!(
-    #      "songs",
-    #      "playing",
-    #      Map.put(data, :topic, name)
-    #    )
   end
 
-  @spec get_data_song(atom(), String.t(), map() | nil, integer) :: tuple()
-  defp get_data_song(module, name, last_data, retries) do
+  @spec get_data_song(atom(), String.t(), map() | nil) :: tuple()
+  defp get_data_song(module, name, last_data) do
     data = apply(module, :get_data, [name, last_data])
     song = apply(module, :get_song, [name, data]) || %{}
 
-    updated_retries =
-      case song do
-        %{} = map when map_size(map) == 0 -> retries + 1
-        nil -> retries + 1
-        _ -> 0
-      end
-      |> case do
-        value when value == @refresh_song_retries_max_reset_at ->
-          Logger.debug("Data provider - #{name}: retries reset")
-          1
+    {data, song}
+  end
 
-        value ->
-          value
-      end
+  defp get_updated_retries(name, song, retries) do
+    case song do
+      %{} = map when map_size(map) == 0 -> retries + 1
+      nil -> retries + 1
+      _ -> 0
+    end
+    |> case do
+      value when value == @refresh_song_retries_max_reset_at ->
+        Logger.debug("Data provider - #{name}: retries reset")
+        1
 
-    {data, song, updated_retries}
+      value ->
+        value
+    end
   end
 
   @spec update_status(map(), map() | nil) :: any()
