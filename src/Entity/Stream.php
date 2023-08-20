@@ -14,6 +14,7 @@ use App\Entity\RadioStream;
 #[ORM\Index(name: 'click24_idx', columns: ['clicks_last_24h'])]
 #[ORM\Index(name: 'countrycode_idx', columns: ['country_code'])]
 #[ORM\Index(name: 'stream_tags_idx', columns: ['tags'])]
+#[ORM\Index(name: 'stream_playing_error_index', columns: ['playing_error'])]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamRepository')]
 class Stream
 {

@@ -25,7 +25,6 @@
             {{ form_start(form) }}
             {{ form_widget(form) }}
             {{ form_end(form) }}
-
         </div>
         <div class="col-12 col-md-5 offset-md-1">
             <h5 class="mt-2">Stream data</h5>
@@ -36,6 +35,9 @@
             <div class="mb-1"><strong>Enabled:</strong> {{ stream.enabled }}</div>
             <div class="mb-1"><strong>Picture:</strong></div>
             <div class="mb-1"><img src="{{ asset('media/stream/' ~ stream.img) }}" /></div>
+
+            <div class="mt-5 mb-1"><strong>Playing errors:</strong> {{ stream.playingError }}</div>
+            <div class="mb-1"><a href="{{ path('admin_reset_stream_paying_error', {id: stream.id}) }}">Reset</a></div>
         </div>
     </div>
 </div>
