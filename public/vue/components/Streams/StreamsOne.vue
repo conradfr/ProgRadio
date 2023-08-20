@@ -92,7 +92,7 @@
 
               <div class="mt-4" v-if="liveListenersCount && liveListenersCount > 0">
                 <strong>{{ $t('message.streaming.listeners_title') }}:</strong>&nbsp;
-                {{ $t('message.streaming.listeners', { how_many: liveListenersCount}) }}
+                {{ $tc('message.streaming.listeners', liveListenersCount, { how_many: liveListenersCount}) }}
               </div>
             </div>
 

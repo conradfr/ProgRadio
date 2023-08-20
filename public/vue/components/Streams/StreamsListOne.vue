@@ -41,7 +41,7 @@
       />
     </div>
     <div v-if="liveListenersCount && liveListenersCount > 0" class="streams-one-listeners"
-      :title="$t('message.streaming.listeners', { how_many: liveListenersCount})">
+      :title="$tc('message.streaming.listeners', liveListenersCount, { how_many: liveListenersCount})">
       <span class="badge rounded-pill text-bg-secondary">
         {{ liveListenersCount }}
       </span>

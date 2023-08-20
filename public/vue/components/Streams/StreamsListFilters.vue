@@ -48,7 +48,7 @@
               :label="'label'"
               :searchable="true"
               :strict="false"
-              :noResultsText="$tc('message.streaming.country_search_no_result')"
+              :noResultsText="$t('message.streaming.country_search_no_result')"
               id="multicountry"
           >
             <template v-slot:singlelabel="{ value }">
