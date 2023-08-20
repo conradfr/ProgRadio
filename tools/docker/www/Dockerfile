@@ -29,7 +29,7 @@ ENV TZ=Europe/Paris
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     iputils-ping \
-    netcat \
+    netcat-traditional \
     build-essential \
     libpng-dev \
     libpq-dev \

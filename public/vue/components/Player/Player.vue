@@ -1,7 +1,7 @@
 <template>
   <div class="navbar-player">
     <div v-if="radio && !prevRadio" class="player-radio-link">
-      -<a :href="radioLink()"><i class="bi bi-link-45deg"></i></a>
+      <a :href="radioLink()"><i class="bi bi-link-45deg"></i></a>
     </div>
     <transition name="play-prev-fade" mode="out-in">
       <div v-if="prevRadio" class="player-radio-previous"

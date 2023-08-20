@@ -27,8 +27,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
 
   @impl true
   def get_refresh(_name, data, default_refresh) do
-    now_unix = SongProvider.now_unix()
-    next = Map.get(data, "delayToRefresh", now_unix + default_refresh) + 5 - now_unix
+    next = Map.get(data, "delayToRefresh", default_refresh) + 5
 
     if next < @refresh_fallback do
       @refresh_fallback * 1000

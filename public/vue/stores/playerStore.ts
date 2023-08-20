@@ -396,7 +396,6 @@ export const usePlayerStore = defineStore('player', {
         /* eslint-disable no-undef */
         // @ts-expect-error apiUrl is defined on the global scope
         this.socket = new Socket(`wss://${apiUrl}/socket`);
-        this.socket.connect();
 
         this.socket.onOpen(() => {
           Object.entries(this.channelsRefCount).forEach(
@@ -415,16 +414,18 @@ export const usePlayerStore = defineStore('player', {
         });
 
         this.socket.onClose(() => {
-          // this.socket.disconnect();
-          this.socket = null;
-          this.channels = {};
+          // this.channels = {};
           this.song = {};
           this.listeners = {};
           // this.socket = null;
 
           // retry later
-          setTimeout(this.connectSocket, config.WEBSOCKET_RETRY);
+          // setTimeout(this.connectSocket, config.WEBSOCKET_RETRY);
         });
+      }
+
+      if (!this.socket.isConnected()) {
+        this.socket.connect();
       }
     },
     // todo clean this dual aspect of joinChannel & leaveChannel
@@ -487,7 +488,7 @@ export const usePlayerStore = defineStore('player', {
                   this.setSong({ name: topicName, song: null });
                 }
 
-                this.leaveChannel(topicName);
+                // this.leaveChannel(topicName);
               })
               .receive('timeout', () => {
                 /* if (topicName.startsWith('listeners:')) {

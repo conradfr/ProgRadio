@@ -47,9 +47,9 @@ export default defineComponent({
 
         if (this.$route.params.collection) {
           this.switchCollection((this.$route.params.collection as string));
-        } else {
+        } /* else {
           this.joinChannel(`collection:${this.currentCollection}`);
-        }
+        } */
       },
       25
     );
@@ -62,7 +62,7 @@ export default defineComponent({
     ); */
   },
   beforeUnmount() {
-    this.leaveChannel(`collection:${this.currentCollection}`);
+    /* this.leaveChannel(`collection:${this.currentCollection}`); */
   },
   watch: {
     $route(to, from) {

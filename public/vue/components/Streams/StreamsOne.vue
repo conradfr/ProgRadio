@@ -65,7 +65,9 @@
                   <strong>{{ $t('message.songs_page.find') }}:</strong>&nbsp;&nbsp;
                   <a class="link-no-to-bold" target="_blank"
                      :title="$t( 'message.songs_page.find_youtube')"
-                     :href="encodeURI(`https://www.youtube.com/results?search_query=${liveSongTitle}`)">
+                     :href="encodeURI(
+                      `https://www.youtube.com/results?search_query=${liveSongTitle}`)"
+                  >
                     <i class="bi bi-youtube"></i>&nbsp;&nbsp;
                     <span class="d-none d-sm-inline">
                     {{ $t('message.songs_page.find_youtube') }}
@@ -92,7 +94,7 @@
 
               <div class="mt-4" v-if="liveListenersCount && liveListenersCount > 0">
                 <strong>{{ $t('message.streaming.listeners_title') }}:</strong>&nbsp;
-                {{ $tc('message.streaming.listeners', liveListenersCount, { how_many: liveListenersCount}) }}
+      {{ $tc('message.streaming.listeners', liveListenersCount, { how_many: liveListenersCount}) }}
               </div>
             </div>
 

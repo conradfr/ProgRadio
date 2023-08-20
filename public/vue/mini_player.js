@@ -274,7 +274,7 @@ createApp({
     this.socket.onError(() => {
       this.song = null;
       this.listeners = null;
-      this.socket = null;
+      // this.socket = null;
     });
   },
   joinChannel(topic) {
@@ -288,7 +288,7 @@ createApp({
           this.song = null;
         }
 
-        this.channels[topic] = null;
+        // this.channels[topic] = null;
       })
       .receive('timeout', () => {
         if (topic.startsWith('listeners:')) {
@@ -297,7 +297,7 @@ createApp({
           this.song = null;
         }
 
-        this.channels[topic] = null;
+        // this.channels[topic] = null;
       });
 
     this.channels[topic].on('playing', (songData) => {

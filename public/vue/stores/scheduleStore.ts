@@ -232,16 +232,16 @@ export const useScheduleStore = defineStore('schedule', {
       (this as any).$router.push({ name: 'schedule', params: { collection: nextCollection } });
     },
     switchCollection(collection: string) {
-      const player = usePlayerStore();
+      // const player = usePlayerStore();
 
-      if (this.currentCollection !== null && this.currentCollection !== undefined
+      /* if (this.currentCollection !== null && this.currentCollection !== undefined
         && this.currentCollection !== config.STREAMING_CATEGORY_ALL) {
         player.leaveChannel(`collection:${this.currentCollection}`);
-      }
+      } */
 
-      if (collection !== config.STREAMING_CATEGORY_ALL) {
+      /* if (collection !== config.STREAMING_CATEGORY_ALL) {
         player.joinChannel(`collection:${collection}`);
-      }
+      } */
 
       this.currentCollection = collection;
 
