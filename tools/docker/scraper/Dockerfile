@@ -1,4 +1,4 @@
-FROM node:14.17.6
+FROM node:14-bullseye
 
 ENV TZ=Europe/Paris
 
@@ -27,6 +27,8 @@ ENV MAIL_PASSWORD=${MAIL_PASSWORD} \
     NODE_ENV=${NODE_ENV} \
     PROXY_URL=${PROXY_URL} \
     PROXY_KEY=${PROXY_KEY}
+
+# RUN echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" > /etc/apt/sources.list
 
 RUN apt-get update \
     && apt-get -y install \
