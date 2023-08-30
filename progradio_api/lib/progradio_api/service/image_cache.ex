@@ -16,7 +16,7 @@ defmodule ProgRadioApi.ImageCache do
          {:ok, stat} <- File.lstat(filepath, [{:time, :posix}]) do
       case is_ttl_over(stat.mtime) do
         true ->
-            if delete_if_ttl_over == true, do: delete_cached_files(filepath)
+          if delete_if_ttl_over == true, do: delete_cached_files(filepath)
           false
 
         false ->

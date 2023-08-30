@@ -57,6 +57,22 @@ defmodule ProgRadioApi.ListeningSessions do
     end
   end
 
+  def get_listening_session!(id, %{"code_name" => code_name} = _attrs) do
+    case Ecto.UUID.cast(code_name) do
+      # not uuid, must be a radio_stream
+      :error ->
+        radio_stream = Repo.get_by(RadioStream, code_name: code_name)
+
+        case radio_stream do
+          nil -> nil
+          _ -> Repo.get_by(ListeningSession, id: id, radio_stream_id: radio_stream.id)
+        end
+
+      _ ->
+        Repo.get_by(ListeningSession, id: id, stream_id: code_name)
+    end
+  end
+
   @doc """
   Creates a listening_session.
 
@@ -75,8 +91,7 @@ defmodule ProgRadioApi.ListeningSessions do
   def create_listening_session(
         %{"id" => id} = attrs,
         remote_ip
-      )
-      when is_map_key(attrs, "id") do
+      ) do
     case Ecto.UUID.cast(id) do
       # not uuid, must be a radio_stream
       :error ->

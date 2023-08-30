@@ -1,9 +1,5 @@
 FROM hexpm/elixir:1.15.4-erlang-26.0.2-ubuntu-focal-20230126
 
-# There is a bug / dependecy problem when using Unbutu 20.04 (focal)
-# Failure to build & load nif for :ex_cldr_collation
-# Staying on bionic for now
-
 EXPOSE 80
 
 ARG DEBIAN_FRONTEND=noninteractive

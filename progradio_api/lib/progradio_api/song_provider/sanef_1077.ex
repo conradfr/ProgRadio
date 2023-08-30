@@ -82,7 +82,7 @@ defmodule ProgRadioApi.SongProvider.Sanef1077 do
         |> DateTime.add(String.to_integer(hours) * 3600, :second)
         |> DateTime.add(String.to_integer(minutes) * 60, :second)
         |> DateTime.add(String.to_integer(seconds), :second)
-          # give it some room
+        # give it some room
         |> DateTime.add(60, :second)
         |> DateTime.to_unix()
 
