@@ -51,7 +51,7 @@ class AdminController extends AbstractBaseController
     #[Route('/admin/listening/webcount', name: 'admin_listening_webcount')]
     public function listeningWebCount(EntityManagerInterface $em): Response
     {
-        $count = $em->getRepository(ListeningSession::class)->getCurrentWeb();
+        $count = $em->getRepository(ListeningSession::class)->getCurrent();
 
         return $this->jsonResponse([
             'count' => $count

@@ -30,7 +30,9 @@
         return (checkNested(data, 'count', 'web', 'total_radios') ? data.count.web.total_radios : 0)
           + (checkNested(data, 'count', 'web', 'total_streams') ? data.count.web.total_streams : 0)
           + (checkNested(data, 'count', 'seo', 'total_radios') ? data.count.seo.total_radios : 0)
-          + (checkNested(data, 'count', 'seo', 'total_streams') ? data.count.seo.total_streams : 0);
+          + (checkNested(data, 'count', 'seo', 'total_streams') ? data.count.seo.total_streams : 0)
+          + (checkNested(data, 'count', 'android', 'total_radios') ? data.count.android.total_radios : 0)
+          + (checkNested(data, 'count', 'android', 'total_streams') ? data.count.android.total_streams : 0);
       }
 
       // @url https://medium.com/@alperen.talaslioglu/building-dynamic-favicon-with-javascript-223ad7999661
@@ -70,7 +72,7 @@
         };
       }
 
-      const sources = ['web', 'seo'];
+      const sources = ['web', 'seo', 'android'];
 
       createApp({
         data: null,
@@ -89,6 +91,12 @@
         },
         get totalSeoStreams() {
           return checkNested(this.data, 'count', 'seo', 'total_streams') ? this.data.count.seo.total_streams : '-';
+        },
+        get totalAndroidRadios() {
+          return checkNested(this.data, 'count', 'android', 'total_radios') ? this.data.count.android.total_radios : '-';
+        },
+        get totalAndroidStreams() {
+          return checkNested(this.data, 'count', 'android', 'total_streams') ? this.data.count.android.total_streams : '-';
         },
         totalOfRadio(type, radio_id) {
           let count = 0;
@@ -130,15 +138,21 @@
                   @vue:mounted="start">
                     <table style="width: 100%">
                         <tr>
-                            <td style="width:40%;"><strong>Live web app</strong></td>
+                            <td style="width:40%;"><strong>Live web</strong></td>
                             <td style="width:30%;" class="text-center">Radios:&nbsp;<span>{{ totalWebRadios }}</span></td>
                             <td class="text-center">Streams:&nbsp;<span>{{ totalWebStreams }}</span></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td style="width:40%;"><strong>Live seo pages</strong></td>
+                            <td style="width:40%;"><strong>Live seo</strong></td>
                             <td style="width:30%;" class="text-center">Radios:&nbsp;<span>{{ totalSeoRadios }}</span></td>
                             <td class="text-center">Streams:&nbsp;<span>{{  totalSeoStreams }}</span></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="width:40%;"><strong>Live apps</strong></td>
+                            <td style="width:30%;" class="text-center">Radios:&nbsp;<span>{{ totalAndroidRadios }}</span></td>
+                            <td class="text-center">Streams:&nbsp;<span>{{  totalAndroidStreams }}</span></td>
                             <td></td>
                         </tr>
                     </table>

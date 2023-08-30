@@ -119,7 +119,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
            ->setParameter('countryCode', strtoupper($countyCode));
     }
 
-    public function getCurrentWeb()
+    public function getCurrent()
     {
         $baseResults = [
             'seo' => [
@@ -129,6 +129,12 @@ class ListeningSessionRepository extends ServiceEntityRepository
                 'list_streams' => []
             ],
             'web' => [
+                'total_radios' => 0,
+                'total_streams' => 0,
+                'list_radios' => [],
+                'list_streams' => []
+            ],
+            'android' => [
                 'total_radios' => 0,
                 'total_streams' => 0,
                 'list_radios' => [],
@@ -152,7 +158,6 @@ class ListeningSessionRepository extends ServiceEntityRepository
                     left join stream s on ls.stream_id = s.id
                      WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second')
                        AND ls.date_time_end < (now() at time zone 'utc' + interval '32 second')
-                       AND ls.source IN (:source1, :source2)
                      GROUP BY ls.source, r.code_name, s.id
             ) ls
             GROUP BY ls.source
@@ -166,10 +171,6 @@ class ListeningSessionRepository extends ServiceEntityRepository
             ->addScalarResult('source', 'source', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        $query->setParameters([
-            'source1' => ListeningSession::SOURCE_WEB,
-            'source2' => ListeningSession::SOURCE_SEO
-        ]);
         $query->disableResultCache();
 
         $result = $query->getResult();
