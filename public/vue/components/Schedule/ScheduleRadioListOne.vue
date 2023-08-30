@@ -11,8 +11,7 @@
       />
     </div>
     <div class="radio-list-one-listeners" v-if="liveListenersCount && liveListenersCount > 0"
-      :title="$t('message.streaming.listeners', { how_many: liveListenersCount})" >
-    >
+      :title="$t('message.streaming.listeners', { how_many: liveListenersCount})">
       <span class="badge rounded-pill text-bg-dark">
         {{ liveListenersCount }}
       </span>
