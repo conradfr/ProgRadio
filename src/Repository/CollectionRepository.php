@@ -34,8 +34,7 @@ class CollectionRepository extends ServiceEntityRepository
             ->from(Collection::class, 'c')
             ->leftJoin('c.radios', 'r')
             ->groupBy('c.id, c.priority')
-            ->orderBy('c.priority', 'ASC')
-            ->orderBy('c.id', 'ASC');
+            ->orderBy('c.priority', 'ASC');
 
         $query = $qb->getQuery();
         $query->enableResultCache( self::CACHE_COLLECTION_TTL, self::CACHE_COLLECTION_ID);
