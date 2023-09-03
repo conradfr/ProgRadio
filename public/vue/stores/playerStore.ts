@@ -436,6 +436,11 @@ export const usePlayerStore = defineStore('player', {
       this.leaveChannel(`listeners:${topicName}`, topicName);
     },
     joinChannel(topicName: string, innerName: string|null = null) {
+      // should not happen but...
+      if (topicName === 'url:null') {
+        return false;
+      }
+
       // Increment refCounter
       // Used because multiple component may want to join and leave the same channel and one would then leave for all
 

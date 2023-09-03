@@ -120,31 +120,31 @@ final class Version20230903174159 extends AbstractMigration implements Container
 
         $stream = [
             [
-                'code_name' => 'pulsradio_hits',
+                'code_name' => 'pulsradio_hits_main',
                 'name' => 'PulsRadio Hits',
                 'main' => 'true',
                 'radio_id' => 127,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/hitpartyHD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 198
             ],
             [
-                'code_name' => 'pulsradio_dance',
+                'code_name' => 'pulsradio_dance_main',
                 'name' => 'PulsRadio Dance',
                 'main' => 'true',
                 'radio_id' => 128,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/pulsHD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 199
             ],
             [
-                'code_name' => 'pulsradio_club',
+                'code_name' => 'pulsradio_club_main',
                 'name' => 'PulsRadio Club',
                 'main' => 'true',
                 'radio_id' => 129,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/mxHD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 200
@@ -154,7 +154,7 @@ final class Version20230903174159 extends AbstractMigration implements Container
                 'name' => 'PulsRadio 80',
                 'main' => 'false',
                 'radio_id' => 127,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/magicradioHD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 'null'
@@ -164,7 +164,7 @@ final class Version20230903174159 extends AbstractMigration implements Container
                 'name' => 'PulsRadio 90',
                 'main' => 'false',
                 'radio_id' => 127,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/puls90HD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 'null'
@@ -174,17 +174,17 @@ final class Version20230903174159 extends AbstractMigration implements Container
                 'name' => 'PulsRadio 2000',
                 'main' => 'false',
                 'radio_id' => 127,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/puls00HD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 'null'
             ],
             [
-                'code_name' => 'pulsradio_trance',
+                'code_name' => 'pulsradio_trance_main',
                 'name' => 'PulsRadio Trance',
                 'main' => 'true',
                 'radio_id' => 130,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/pulstranceHD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 201
@@ -194,7 +194,7 @@ final class Version20230903174159 extends AbstractMigration implements Container
                 'name' => 'PulsRadio Lounge',
                 'main' => 'false',
                 'radio_id' => 127,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/relaxHD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 'null'
@@ -204,7 +204,7 @@ final class Version20230903174159 extends AbstractMigration implements Container
                 'name' => 'PulsRadio UK',
                 'main' => 'false',
                 'radio_id' => 127,
-                'current_song' => 'true',
+                'current_song' => 'false',
                 'url' => 'https://icecast.pulsradio.com/hitukHD.mp3',
                 'enabled' => 'true',
                 'sub_radio' => 'null'
