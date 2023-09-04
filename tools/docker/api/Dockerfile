@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.15.4-erlang-26.0.2-ubuntu-focal-20230126
+FROM hexpm/elixir:1.15.5-erlang-26.0.2-ubuntu-focal-20230126
 
 EXPOSE 80
 
@@ -63,7 +63,7 @@ RUN rm -Rf _build && \
     mix local.rebar --force && \
     mix deps.get --only prod
 
-# RUN mix deps.compile --skip-local-deps
+RUN mix deps.compile --skip-local-deps
 
 RUN mix deps.compile
 

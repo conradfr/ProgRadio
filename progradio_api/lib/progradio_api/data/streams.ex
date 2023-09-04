@@ -253,7 +253,8 @@ defmodule ProgRadioApi.Streams do
           ss.code_name,
           ss.enabled,
           rs.current_song,
-          rs.code_name
+          rs.code_name,
+          rs.url
         ])
 
       "random" ->
