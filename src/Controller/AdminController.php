@@ -293,7 +293,7 @@ class AdminController extends AbstractBaseController
     public function resetCurrentSongRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
     {
         $radioStream->setCurrentSongRetries(0);
-        $radioStream->setCurrentSong(true);
+//        $radioStream->setCurrentSong(true);
 
         $em->persist($radioStream);
         $em->flush();
