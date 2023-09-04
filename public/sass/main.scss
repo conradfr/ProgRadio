@@ -65,3 +65,9 @@ body {
 .tooltip {
   z-index: $zindex-tooltip !important;
 }
+
+/* Bootstrap overlaoding */
+
+.offcanvas, .offcanvas-lg, .offcanvas-md, .offcanvas-sm, .offcanvas-xl, .offcanvas-xxl {
+  --bs-offcanvas-width: 300px;
+}
