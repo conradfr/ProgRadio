@@ -81,11 +81,12 @@ page:
         current: '↓ Go to current show'
         description: 'Day schedule of radio %radio% !'
         goto_today: Check today's schedule
+        goto_schedule: Check radio's schedule
         more_radios: 'More radios'
         no_schedule: 'Schedule not available'
         not_today: You're browsing another's schedule
         play: 'Listen to %radio%'
-        stop: 'Stop'
+        stop: 'Stop %radio%'
         summary: 'Summary'
         title: 'Listen to %radio% live'
         website: 'Website'

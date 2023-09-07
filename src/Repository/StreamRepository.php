@@ -18,7 +18,7 @@ class StreamRepository extends ServiceEntityRepository
 {
     protected const CACHE_TTL = 21600; // six hours
 
-    protected const DEFAULT_MORE_LIMIT = 6;
+    protected const DEFAULT_MORE_LIMIT = 12;
 
     public function __construct(private readonly Security $security, ManagerRegistry $registry)
     {

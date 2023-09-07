@@ -38,13 +38,21 @@
                     <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ self.picture(stream) }}">
                 </div>
             </div>
+            {% if stream.radioStream %}
+                <div class="mt-5 text-center w-50 d-none d-sm-block" style="margin:auto">
+                    <a href="{{ path('radio_spa', {collection: stream.radioStream.radio.codeName }) }}">
+                        <small>{{ 'page.radio.goto_schedule'|trans|raw }}</small>
+                    </a>
+                </div>
+            {% endif %}
+
         </div>
         <div class="col-sm-10 col-10 offset-1 offset-sm-0 pb-3">
             <div class="row">
                 <div class="col-sm-9 col-12 order-2 order-sm-1">
-                    <h4 class="mb-4 mb-sm-5">{{ stream.name | capitalize }}</h4>
+                    <h4 class="mb-5">{{ stream.name | capitalize }}</h4>
 
-                    <div class="stream-page-stream mt-5 mt-sm-3 mb-4" v-scope>
+                    <div class="stream-page-stream mt-0 mt-sm-0 mb-5" v-scope>
                         <div class="radio-page-streams-one d-none d-flex align-items-center justify-content-center justify-content-sm-start"
                              @vue:mounted="$el.classList.remove('d-none')">
                             <div>
@@ -69,44 +77,46 @@
                                         v-if="playing === false"
                                         @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
                                         class="radio-page-play">
-                                    <div>{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
+                                    <div>&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
                                 </div>
                                 <div
                                         v-if="playing === true"
                                         @click="stop('{{ stream.id }}')"
                                         class="radio-page-play">
-                                    <div>{{ 'page.radio.stop'|trans() }}</div>
+                                    <div>&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream.name}) }}</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div id="playing-alert" class="mt-4 alert alert-danger d-none" role="alert">
+                        <div id="playing-alert" class="alert alert-danger d-none mt-5 mb-5" role="alert">
                             <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
                         </div>
 
-                        <div class="mt-4 mb-1" v-if="song !== null">
-                            <div>
-                                <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
-                                {% verbatim %}♫ {{ song }}{% endverbatim %}
-                            </div>
-                            <div class="mt-4" v-if="song !== undefined && song !== null && song.trim() !== ''">
-                                <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;
-                                <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
-                                   :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
-                                    <i class="bi bi-youtube"></i> YouTube
-                                </a>&nbsp;&nbsp;
-                                <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
-                                   :href="encodeURI(`https://open.spotify.com/search/${song}`)">
-                                    <i class="bi bi-spotify"></i> Spotify
-                                </a>&nbsp;&nbsp;
-                                <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
-                                   :href="encodeURI(`https://www.deezer.com/search/${song}`)">
-                                    <img src="{{ asset('img/deezericon.png') }}" alt="{{ 'page.stream.find_deezer'|trans }}"> Deezer
-                                </a>&nbsp;&nbsp;
+                        <div class="mt-5" v-if="song !== null || listeners !== null">
+                            <div class="mb-4" v-if="song !== null">
+                                <div>
+                                    <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
+                                    {% verbatim %}♫ {{ song }}{% endverbatim %}
+                                </div>
+                                <div class="mt-4" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                                    <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;
+                                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
+                                       :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                                        <i class="bi bi-youtube"></i> YouTube
+                                    </a>&nbsp;&nbsp;
+                                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
+                                       :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                                        <i class="bi bi-spotify"></i> Spotify
+                                    </a>&nbsp;&nbsp;
+                                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
+                                       :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                                        <img src="{{ asset('img/deezericon.png') }}" alt="{{ 'page.stream.find_deezer'|trans }}"> Deezer
+                                    </a>&nbsp;&nbsp;
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mt-4 mb-3" v-if="listeners !== null">
+                        <div class="mb-4" v-if="listeners !== null">
                             <div>
                                 <strong>{{ 'page.stream.listeners'|trans }}:&nbsp;&nbsp;</strong>
                                 {% verbatim %}
@@ -119,7 +129,7 @@
                     </div>
 
                     {% if stream.countryCode is not null and stream.countryCode != '' %}
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <strong>{{ 'page.stream.country'|trans }}:</strong>
                             {{ stream.getCountry(app.request.locale) }}
                         </div>
@@ -151,21 +161,31 @@
 
                     <div class="more-streams">
                         <div class="mt-5 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
-                        <div class="d-flex flex-wrap clearfix">
-                            {% for entry in more_streams %}
-                                <a class="more-streams-one" href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug }) }}">
-                                    <div class="h-100 mb-1 text-center d-flex flex-column align-items-center">
-                                        <div class="mt-auto mb-auto">
-                                            <img src="/media/stream/{{ entry.img }}" alt="" title="{{ entry.name }}">
+
+                        {% if stream.countryCode is not null and stream.countryCode != '' %}
+                            <div class="mt-3 mb-3">
+                                <a href="{{ path('streaming_spa') }}/{{ stream.countryCode }}">{{ 'page.top.more'|trans({'%country%': stream.getCountry(app.request.locale)}) }}</a>
+                            </div>
+                        {% endif %}
+
+                        {% for i in [0, 6] %}
+                            <div class="d-flex flex-wrap clearfix">
+                                {% for entry in more_streams|slice(i, 6) %}
+                                    <a class="more-streams-one" href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug }) }}">
+                                        <div class="h-100 mb-1 text-center d-flex flex-column align-items-center">
+                                            <div class="mt-auto mb-auto">
+                                                <img src="/media/stream/{{ entry.img }}" alt="" title="{{ entry.name }}">
+                                            </div>
+                                            <div class="pt-1">
+                                                {{ entry.name }}
+                                            </div>
                                         </div>
-                                        <div class="pt-1">
-                                            {{ entry.name }}
-                                        </div>
-                                    </div>
-                                </a>
-                            {% endfor %}
-                        </div>
-                        <div class="clearfix mt-4">
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="clearfix mt-5 mb-5">
                             <a class="more-link" href="{{ path('streaming_spa') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>

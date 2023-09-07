@@ -22,7 +22,6 @@ use Symfony\Component\Intl\Countries;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -36,7 +35,6 @@ class DefaultController extends AbstractBaseController
 
     // LEGACY
     #[Route('/schedule/{date}', name: 'schedule')]
-    #[ParamConverter('date', options: ['format' => 'Y-m-d'])]
     public function schedule(\DateTime $date, ScheduleManager $scheduleManager, Request $request): Response
     {
         $collection = $request->query->get('collection');
@@ -87,7 +85,6 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    #[ParamConverter('date', options: ['format' => 'Y-m-d'])]
     public function radioSubRadio(string $codeName, string $subRadioCodeName, EntityManagerInterface $em, ScheduleManager $scheduleManager, \DateTime $date=null): Response
     {
         if ($date === null) {
@@ -170,7 +167,6 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    #[ParamConverter('date', options: ['format' => 'Y-m-d'])]
     public function radio(string $codeName, EntityManagerInterface $em, ScheduleManager $scheduleManager, \DateTime $date=null): Response
     {
         /** @var Radio $radio */

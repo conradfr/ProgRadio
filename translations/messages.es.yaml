@@ -84,11 +84,12 @@ page:
         current: ↓ Ir al espectáculo actual
         description: 'Programas de radio %radio% y escucha en línea'
         goto_today: Ver los programas de hoy.
+        goto_schedule: Ver los programas de hoy
         more_radios: 'Más radios '
         no_schedule: 'Programas no disponibles.'
         not_today: Usted está revisando los programas en otro día que hoy
         play: 'Reproducir %radio%'
-        stop: 'Detener'
+        stop: 'Detener %radio%'
         summary: 'Descripción'
         title: 'Reproducir %radio% en vivo - streaming'
         website: 'Sitio web'
