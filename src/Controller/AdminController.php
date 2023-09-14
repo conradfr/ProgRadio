@@ -300,4 +300,52 @@ class AdminController extends AbstractBaseController
 
         return $this->redirectToRoute('admin', [], 301);
     }
+
+    #[Route('/reset_current_song_all', name: 'admin_reset_current_song_retries_all')]
+    public function resetCurrentSongRetriesAll(EntityManagerInterface $em): Response
+    {
+        $em->getRepository(RadioStream::class)->resetAllLiveSongErrors();
+
+        return $this->redirectToRoute('admin', [], 301);
+    }
+
+    #[Route('/delete_picture/{id}', name: 'admin_delete_stream_picture')]
+    public function deletePicture(Stream $stream, EntityManagerInterface $em, Request $request): Response
+    {
+        $streamOverloading = new StreamOverloading();
+        $streamOverloading->setId($stream->getId());
+
+        $form = $this->createForm(StreamOverloadingType::class, $streamOverloading);
+        $form->handleRequest($request);
+
+        if (!empty($stream->getImg())) {
+            $filename = getcwd() . '/media/stream/' . $stream->getImg();
+
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+
+            $stream->setImg(null);
+
+            $em->persist($stream);
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                'Stream picture has been deleted.'
+            );
+        } else {
+            $this->addFlash(
+                'error',
+                'No picture to delete.'
+            );
+        }
+
+        return $this->render('default/admin/stream_overloading.html.twig',
+            [
+                'stream' => $stream,
+                'form' => $form
+            ]
+        );
+    }
 }

@@ -134,7 +134,10 @@
                             </table>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <h5>Erreurs titre en cours</h5>
+                            <div>
+                                <div class="float-end"><a href="{{ path('admin_reset_current_song_retries_all') }}">reset all</a></div>
+                                <h5>Erreurs titre en cours</h5>
+                            </div>
                             <table class="table table-striped schedule-stats">
                                 {% for radioStream in current_song_status %}
                                     <tr>

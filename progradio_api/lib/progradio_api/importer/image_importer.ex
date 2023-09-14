@@ -12,6 +12,8 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   @ls_cache_key "streams_ls"
   @ls_cache_ttl 21_600_000
 
+  @stream_size 125
+
   @spec import(String.t(), map, struct) :: tuple
   def import(filename_or_base64, show, radio)
 
@@ -166,7 +168,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       |> verbose()
       |> custom("flatten")
       |> custom("strip")
-      |> resize_to_limit(125)
+      |> resize_to_limit(@stream_size)
       |> custom("density", "72")
       #      |> format("png")
       |> save(path: dest_path)

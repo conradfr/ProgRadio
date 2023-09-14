@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\RadioStream;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class RadioStreamRepository extends EntityRepository
 {
@@ -62,5 +63,13 @@ class RadioStreamRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->disableResultCache();
         return $query->getResult();
+    }
+
+    public function resetAllLiveSongErrors()
+    {
+        $rsm = new ResultSetMapping();
+        $query = $this->getEntityManager()->createNativeQuery('UPDATE radio_stream SET current_song_retries = 0 WHERE current_song_retries > 0', $rsm);
+
+        $query->getResult();
     }
 }

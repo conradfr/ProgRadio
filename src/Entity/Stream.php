@@ -112,7 +112,7 @@ class Stream
         return $this->img;
     }
 
-    public function setImg(string $img): void
+    public function setImg(?string $img): void
     {
         $this->img = $img;
     }
