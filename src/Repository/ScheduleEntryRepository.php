@@ -154,10 +154,10 @@ EOT;
 
         $query = $this->getEntityManager()->createNativeQuery($queryStr, $rsm);
         $query->setParameters([
-           ':today' => $dateTime->format(self::DAY_FORMAT),
-           ':week' => $dateTimeOneWeek->format(self::DAY_FORMAT),
-           ':todayTime' => $dateTime->format(self::DAY_FORMAT) . ' 23:29:59',
-           ':twoWeeksTime' => $dateTimeTwoWeeks->format(self::DAY_FORMAT) . ' 00:00:00'
+            ':today' => $dateTime->format(self::DAY_FORMAT),
+            ':week' => $dateTimeOneWeek->format(self::DAY_FORMAT),
+            ':todayTime' => $dateTime->format(self::DAY_FORMAT) . ' 23:29:59',
+            ':twoWeeksTime' => $dateTimeTwoWeeks->format(self::DAY_FORMAT) . ' 00:00:00'
         ]);
 
         $query->disableResultCache();
@@ -195,14 +195,14 @@ EOT;
     protected function getScheduleSelectString(): string
     {
         return 'r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
-                . 'AT_TIME_ZONE(se.dateTimeStart,\'UTC\') as start_at,'
-                . 'AT_TIME_ZONE(se.dateTimeEnd,\'UTC\') as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'
-                . 'MD5(CONCAT(r.codeName, se.title, se.dateTimeStart, sr.id)) as hash,'
-                . 'CASE WHEN(AT_TIME_ZONE(se.dateTimeStart, \'UTC\') < :datetime_start) THEN 1 ELSE 0 END as start_overflow,'
-                . 'CASE WHEN(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') > :datetime_end AND (HOUR(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\')) <> 23 OR MINUTE(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\')) <> 0)) THEN 1 ELSE 0 END as end_overflow,'
-                . 'sc.title as section_title, sc.pictureUrl as section_picture_url, sc.presenter as section_presenter, sc.description as section_description,'
-                . 'AT_TIME_ZONE(sc.dateTimeStart,\'UTC\') as section_start_at,'
-                . 'MD5(CONCAT(CONCAT(r.codeName, se.id, se.title, se.dateTimeStart), sc.title, sc.dateTimeStart)) as section_hash';
+            . 'AT_TIME_ZONE(se.dateTimeStart,\'UTC\') as start_at,'
+            . 'AT_TIME_ZONE(se.dateTimeEnd,\'UTC\') as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'
+            . 'MD5(CONCAT(r.codeName, se.title, se.dateTimeStart, sr.id)) as hash,'
+            . 'CASE WHEN(AT_TIME_ZONE(se.dateTimeStart, \'UTC\') < :datetime_start) THEN 1 ELSE 0 END as start_overflow,'
+            . 'CASE WHEN(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') > :datetime_end AND (HOUR(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\')) <> 23 OR MINUTE(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\')) <> 0)) THEN 1 ELSE 0 END as end_overflow,'
+            . 'sc.title as section_title, sc.pictureUrl as section_picture_url, sc.presenter as section_presenter, sc.description as section_description,'
+            . 'AT_TIME_ZONE(sc.dateTimeStart,\'UTC\') as section_start_at,'
+            . 'MD5(CONCAT(CONCAT(r.codeName, se.id, se.title, se.dateTimeStart), sc.title, sc.dateTimeStart)) as section_hash';
     }
 
     protected function getSchedulesAndSections(ScheduleResource $scheduleResource): array {
@@ -213,16 +213,16 @@ EOT;
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString()        )
-           ->from(ScheduleEntry::class, 'se')
-           ->innerJoin('se.radio', 'r')
-           ->leftJoin('se.sectionEntries', 'sc')
-           ->leftJoin('se.subRadio', 'sr')
-           ->where(
-               '(TIMEZONE(\'UTC\', se.dateTimeStart) >= :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeStart) < :datetime_end)'
-                    . 'OR (TIMEZONE(\'UTC\', se.dateTimeEnd) > :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeEnd) <= :datetime_end)')
-           ->andWhere('r.active = :active')
-           ->addOrderBy('se.dateTimeStart', 'ASC')
-           ->addOrderBy('sc.dateTimeStart', 'ASC')
+            ->from(ScheduleEntry::class, 'se')
+            ->innerJoin('se.radio', 'r')
+            ->leftJoin('se.sectionEntries', 'sc')
+            ->leftJoin('se.subRadio', 'sr')
+            ->where(
+                '(TIMEZONE(\'UTC\', se.dateTimeStart) >= :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeStart) < :datetime_end)'
+                . 'OR (TIMEZONE(\'UTC\', se.dateTimeEnd) > :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeEnd) <= :datetime_end)')
+            ->andWhere('r.active = :active')
+            ->addOrderBy('se.dateTimeStart', 'ASC')
+            ->addOrderBy('sc.dateTimeStart', 'ASC')
         ;
 
         $qb->setParameters([
@@ -233,23 +233,23 @@ EOT;
 
         if ($scheduleResource->getType() === ScheduleResource::TYPE_RADIO) {
             $qb->andWhere('r.codeName = :radio')
-               ->setParameter('radio', $scheduleResource->getValue());
+                ->setParameter('radio', $scheduleResource->getValue());
 
             if ($scheduleResource->getSubValue() !== null) {
                 $qb->andWhere('sr.id = :subRadioId')
-                   ->setParameter('subRadioId', $scheduleResource->getSubValue()->getId());
+                    ->setParameter('subRadioId', $scheduleResource->getSubValue()->getId());
             } else {
                 $qb->andWhere('sr.main = true');
             }
         } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_RADIOS) {
             $qb->andWhere('r.codeName IN (:radios)')
-               ->andWhere('sr.main = true')
-               ->setParameter('radios', $scheduleResource->getValue());
+                ->andWhere('sr.main = true')
+                ->setParameter('radios', $scheduleResource->getValue());
         } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_COLLECTION) {
             $qb->innerJoin('r.collection', 'c')
-               ->andWhere('c.codeName = :collection')
-               ->andWhere('sr.main = true')
-               ->setParameter('collection', $scheduleResource->getValue());
+                ->andWhere('c.codeName = :collection')
+                ->andWhere('sr.main = true')
+                ->setParameter('collection', $scheduleResource->getValue());
         }
 
         $query = $qb->getQuery();
@@ -266,20 +266,20 @@ EOT;
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
             ->addSelect('r.name as radio_name, r.share as radio_share, rs.name as radio_stream_name, rs.url as streaming_url, c.codeName as collectionCodeName')
-           ->from(ScheduleEntry::class, 'se')
-           ->innerJoin('se.radio', 'r')
-           ->leftJoin('se.subRadio', 'sr')
-           ->leftJoin('r.streams', 'rs')
-           ->innerJoin('r.collection', 'c')
-           ->leftJoin('se.sectionEntries', 'sc')
-           ->where('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') <= :datetime')
-           ->andWhere('AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') >= :datetime')
-           ->andWhere('r.active = :active')
-           ->andWhere('rs.main = TRUE AND rs.enabled = TRUE')
-           ->addOrderBy('r.share', 'DESC')
-           ->addOrderBy('r.codeName', 'ASC')
-           ->addOrderBy('se.dateTimeStart', 'ASC')
-           ->addOrderBy('sc.dateTimeStart', 'ASC')
+            ->from(ScheduleEntry::class, 'se')
+            ->innerJoin('se.radio', 'r')
+            ->leftJoin('se.subRadio', 'sr')
+            ->leftJoin('r.streams', 'rs')
+            ->innerJoin('r.collection', 'c')
+            ->leftJoin('se.sectionEntries', 'sc')
+            ->where('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') <= :datetime')
+            ->andWhere('AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') >= :datetime')
+            ->andWhere('r.active = :active')
+            ->andWhere('rs.main = TRUE AND rs.enabled = TRUE')
+            ->addOrderBy('r.share', 'DESC')
+            ->addOrderBy('r.codeName', 'ASC')
+            ->addOrderBy('se.dateTimeStart', 'ASC')
+            ->addOrderBy('sc.dateTimeStart', 'ASC')
         ;
 
         $qb->setParameters([

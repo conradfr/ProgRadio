@@ -341,11 +341,6 @@ class AdminController extends AbstractBaseController
             );
         }
 
-        return $this->render('default/admin/stream_overloading.html.twig',
-            [
-                'stream' => $stream,
-                'form' => $form
-            ]
-        );
+        return $this->redirectToRoute('admin_overloading', ['streamId' => $stream->getId()], 301);
     }
 }

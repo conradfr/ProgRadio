@@ -125,7 +125,7 @@ defmodule ProgRadioApi.Streams do
 
   def register_streaming_error(stream_id) when is_binary(stream_id) do
     with %Stream{} = stream <- Repo.get(Stream, stream_id) do
-      # we insert a new entry or increase the count if this combination of test + track + rank exists
+      # we insert a new entry or increase the count if already set for this stream
       on_conflict = [set: [playing_error: dynamic([s], fragment("? + ?", s.playing_error, 1))]]
 
       stream
