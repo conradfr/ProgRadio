@@ -31,8 +31,14 @@ class Stream
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $img = null;
 
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    private ?string $originalImg = null;
+
     #[ORM\Column(type: 'string', length: 500)]
     private ?string $streamUrl = null;
+
+    #[ORM\Column(type: 'string', length: 500)]
+    private ?string $originalStreamUrl = null;
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $tags = null;
@@ -287,5 +293,25 @@ class Stream
     public function setPlayingError(?int $playingError): void
     {
         $this->playingError = $playingError;
+    }
+
+    public function getOriginalImg(): ?string
+    {
+        return $this->originalImg;
+    }
+
+    public function setOriginalImg(?string $originalImg): void
+    {
+        $this->originalImg = $originalImg;
+    }
+
+    public function getOriginalStreamUrl(): ?string
+    {
+        return $this->originalStreamUrl;
+    }
+
+    public function setOriginalStreamUrl(?string $originalStreamUrl): void
+    {
+        $this->originalStreamUrl = $originalStreamUrl;
     }
 }

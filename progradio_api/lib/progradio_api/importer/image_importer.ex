@@ -186,7 +186,12 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   @spec download(String.t(), String.t()) :: tuple
   defp download(url, dest_path) do
     try do
-      url_encoded = URI.encode(url)
+      # only encode url if not already encoded
+      url_encoded =
+        case URI.decode(url) do
+          decoded_url when decoded_url != url -> url
+          _ -> URI.encode(url)
+        end
 
       # we put it in a task to have a timeout if we get a never-ending stream instead of an image
       http_task =
@@ -204,7 +209,11 @@ defmodule ProgRadioApi.Importer.ImageImporter do
             )
           rescue
             _ ->
-              Logger.warn("Error downloading image: #{url} to #{dest_path}")
+              Logger.warn("Error downloading image (rescue): #{url} to #{dest_path}")
+              {:error, nil}
+          catch
+            _ ->
+              Logger.warn("Error downloading image (catch): #{url} to #{dest_path}")
               {:error, nil}
           end
         end)
@@ -223,7 +232,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
             Logger.warn("Error importing image, task exited: #{url} / #{reason}")
             nil
 
-          nil ->
+          _ ->
             Logger.warn("Error importing image, task failed: #{url}")
             nil
         end

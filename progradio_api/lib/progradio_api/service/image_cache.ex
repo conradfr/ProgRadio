@@ -7,7 +7,7 @@ defmodule ProgRadioApi.ImageCache do
   @thumbnails [
     "cache/page_thumb/media/program/",
     "cache/program_thumb/media/program/"
-#    "cache/stream_thumb/media/stream/"
+    #    "cache/stream_thumb/media/stream/"
   ]
 
   @spec is_cached(String.t()) :: boolean

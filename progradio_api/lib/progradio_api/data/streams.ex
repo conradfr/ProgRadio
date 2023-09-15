@@ -169,7 +169,7 @@ defmodule ProgRadioApi.Streams do
       on: r.id == rs.radio_id,
       left_join: ss in StreamSong,
       on: ss.id == s.stream_song_id,
-      where: s.enabled == true,
+      where: s.enabled == true and is_nil(s.redirect_to),
       limit: @default_limit,
       select: %{
         code_name: s.id,

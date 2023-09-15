@@ -194,7 +194,7 @@ createApp({
             setPlayingAlertVisible(true);
             sendPlayingError(codeName);
           },
-          2000
+          2500
         );
       };
 

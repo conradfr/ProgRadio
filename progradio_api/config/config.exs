@@ -36,7 +36,7 @@ config :progradio_api, ProgRadioApi.Scheduler,
     ],
     import_overload: [
       schedule: "10 20 * * *",
-      task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import_recently_updated, []}
+      task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :overload_recently_updated, []}
     ],
     warm_radios_cache: [
       schedule: "4 0,12 * * *",

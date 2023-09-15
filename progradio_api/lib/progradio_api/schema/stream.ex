@@ -11,7 +11,9 @@ defmodule ProgRadioApi.Stream do
   schema "stream" do
     field(:name, :string)
     field(:img, :string)
+    field(:original_img, :string)
     field(:stream_url, :string)
+    field(:original_stream_url, :string)
     field(:tags, :string)
     field(:website, :string)
     field(:country_code, :string)
@@ -35,8 +37,10 @@ defmodule ProgRadioApi.Stream do
       :id,
       :name,
       :img,
+      :original_img,
       :website,
       :stream_url,
+      :original_stream_url,
       :tags,
       :country_code,
       :language,
