@@ -12,6 +12,16 @@ import {
 
 const LISTENING_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
 
+const createVideoElem = () => {
+  let videoElem = document.getElementById('videoplayer');
+  if (!videoElem) {
+    videoElem = document.createElement('audio');
+    videoElem.id = 'videoplayer';
+    videoElem.style = 'display:none';
+    document.body.appendChild(videoElem);
+  }
+}
+
 /* we load the hls script dynamically once, reducing initial app load */
 /* eslint-disable arrow-body-style */
 const loadHls = () => {
@@ -22,10 +32,7 @@ const loadHls = () => {
       return;
     }
 
-    const videoElem = document.createElement('video');
-    videoElem.id = 'videoplayer';
-    videoElem.style = 'display:none';
-    document.body.appendChild(videoElem);
+    createVideoElem();
 
     const hlsScript = document.createElement('script');
     hlsScript.type = 'text/javascript';
@@ -34,6 +41,28 @@ const loadHls = () => {
     hlsScript.onload = resolve;
     hlsScript.onerror = reject;
     document.body.appendChild(hlsScript);
+  });
+};
+
+/* we load the dash script dynamically once, reducing initial app load */
+/* eslint-disable arrow-body-style */
+const loadDash = () => {
+  return new Promise((resolve, reject) => {
+    const dashElem = document.getElementById('dash-script');
+    if (dashElem !== null) {
+      resolve(true);
+      return;
+    }
+
+    createVideoElem();
+
+    const dashScript = document.createElement('script');
+    dashScript.type = 'text/javascript';
+    dashScript.id = 'dash-script';
+    dashScript.src = '/js/dash.all.min.js';
+    dashScript.onload = resolve;
+    dashScript.onerror = reject;
+    document.body.appendChild(dashScript);
   });
 };
 
@@ -121,6 +150,7 @@ const setPlayingAlertVisible = (visible) => {
 
 createApp({
   hls: null,
+  dash: null,
   socket: null,
   channels: {},
   playing: false,
@@ -182,6 +212,29 @@ createApp({
           });
         }
       });
+    } else if (streamingUrl.indexOf('.mpd') !== -1) {
+      loadDash().then(() => {
+        window.audio = document.getElementById('videoplayer');
+
+        this.dash = dashjs.MediaPlayer().create();
+        this.dash.initialize(window.audio, streamingUrl, false);
+
+        this.dash.on('error', () => {
+          setTimeout(
+            () => {
+              setPlayingAlertVisible(true);
+              sendPlayingError(codeName);
+            },
+            2500
+          );
+        });
+
+        this.dash.on('canPlay', () => {
+          window.audio.play().then(() => {
+            this.playingStarted(topic, stream_code_name);
+          });
+        });
+      });
     } else {
       const streamUrl = (streamingUrl.substring(0, 5) !== 'https')
         ? `${streamsProxy}?stream=${streamingUrl}` : streamingUrl;
@@ -218,6 +271,11 @@ createApp({
     if (this.hls !== null) {
       this.hls.destroy();
       this.hls = null;
+    }
+
+    if (this.dash !== null) {
+      this.dash.destroy();
+      this.dash = null;
     }
 
     window.audio = null;
@@ -315,7 +373,7 @@ createApp({
     });
   },
   formatSong(songData) {
-    if (songData === null || songData.song === undefined) {
+    if (!songData === null || !songData.song) {
       this.song = null;
       return;
     }

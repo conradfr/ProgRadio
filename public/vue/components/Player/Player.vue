@@ -55,7 +55,8 @@
       </div>
     </div>
     <volume-fader v-if="displayVolume"/>
-    <video id="videoplayer" style="display:none"></video>
+    <audio id="videoplayer1" style="display:none"></audio>
+    <audio id="videoplayer2" style="display:none"></audio>
   </div>
 </template>
 
@@ -83,8 +84,8 @@ import typeUtils from '../../utils/typeUtils';
 /* eslint-disable import/extensions */
 import type Hls from '../../../js/hls.js';
 
-/* eslint-disable arrow-body-style */
 /* we load the hls script dynamically once, reducing initial app load */
+/* eslint-disable arrow-body-style */
 const loadHls = () => {
   return new Promise((resolve, reject) => {
     const hlsElem = document.getElementById('hls-script');
@@ -103,10 +104,32 @@ const loadHls = () => {
   });
 };
 
+/* we load the dash script dynamically once, reducing initial app load */
+/* eslint-disable arrow-body-style */
+const loadDash = () => {
+  return new Promise((resolve, reject) => {
+    const dashElem = document.getElementById('dash-script');
+    if (dashElem !== null) {
+      resolve(true);
+      return;
+    }
+
+    const dashScript = document.createElement('script');
+    dashScript.type = 'text/javascript';
+    dashScript.id = 'dash-script';
+    dashScript.src = '/js/dash.all.min.js';
+    dashScript.onload = resolve;
+    dashScript.onerror = reject;
+    document.body.appendChild(dashScript);
+  });
+};
+
 interface PlayerRadio {
   url: string|null
   timer: number|null
   hls: Hls|null
+  dash: any|null
+  elementId: string,
   element: HTMLElement|null
   startedAt: Date|null
 }
@@ -128,6 +151,7 @@ export default defineComponent({
   data(): {
     audio: PlayerAudio,
     hls: Hls|null,
+    // dash: Dash|null,
     debounce: boolean,
     lastUpdated: Date|null,
     locale: string
@@ -139,6 +163,8 @@ export default defineComponent({
           url: null,
           timer: null,
           hls: null,
+          dash: null,
+          elementId: 'videoplayer1',
           element: null,
           startedAt: null
         },
@@ -146,6 +172,8 @@ export default defineComponent({
           url: null,
           timer: null,
           hls: null,
+          dash: null,
+          elementId: 'videoplayer2',
           element: null,
           startedAt: null
         }
@@ -157,6 +185,7 @@ export default defineComponent({
       */
       debounce: false,
       hls: null,
+      // dash: null,
       lastUpdated: null,
       locale: this.$i18n.locale,
     };
@@ -321,7 +350,7 @@ export default defineComponent({
         loadHls().then(() => {
           // @ts-ignore
           if (Hls.isSupported()) {
-            this.currentPlayer.element = document.getElementById('videoplayer');
+            this.currentPlayer.element = document.getElementById(this.currentPlayer.elementId);
             // @ts-ignore
             this.currentPlayer.hls = new Hls();
             // bind them together
@@ -330,6 +359,11 @@ export default defineComponent({
             // @ts-ignore
             this.currentPlayer.hls.on(Hls.Events.ERROR, (event, data) => {
               if (data.fatal) {
+                this.displayToast({
+                  message: (this.$i18n as any).tc('message.player.play_error'),
+                  type: 'error'
+                });
+
                 if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
                   this.setStreamPlayingError(this.radio.code_name);
                 }
@@ -347,6 +381,30 @@ export default defineComponent({
               });
             });
           }
+        });
+      } else if (url.indexOf('.mpd') !== -1) {
+        loadDash().then(() => {
+          this.currentPlayer.element = document.getElementById(this.currentPlayer.elementId);
+          // @ts-ignore
+          this.currentPlayer.dash = dashjs.MediaPlayer().create();
+          this.currentPlayer.dash.initialize(this.currentPlayer.element, url, false);
+
+          this.currentPlayer.dash.on('error', () => {
+            this.displayToast({
+              message: (this.$i18n as any).tc('message.player.play_error'),
+              type: 'error'
+            });
+
+            if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
+              this.setStreamPlayingError(this.radio.code_name);
+            }
+          });
+
+          this.currentPlayer.dash.on('canPlay', () => {
+            this.currentPlayer.element.muted = this.muted;
+            this.currentPlayer.element.volume = (this.volume * 0.1);
+            startPlayPromise = this.currentPlayer.element.play();
+          });
         });
       } else {
         const streamUrl = (url.substring(0, 5) !== 'https')
@@ -461,6 +519,11 @@ export default defineComponent({
       if (player.hls !== null) {
         player.hls.destroy();
         player.hls = null;
+      }
+
+      if (player.dash !== null) {
+        player.dash.destroy();
+        player.dash = null;
       }
 
       player.element = null;

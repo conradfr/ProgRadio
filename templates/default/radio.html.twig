@@ -57,10 +57,10 @@
                             v-if="playing === true"
                             @click="stop('{{ radio.codename }}')"
                             class="radio-page-play">
-                            <img alt="{{ 'page.radio.stop'|trans() }}"
+                            <img alt="{{ 'page.radio.stop'|trans({'%radio%': radio.name}) }}"
                                  src="/img/rounded-pause-button.svg">
                             <div>
-                                {{ 'page.radio.stop'|trans() }}
+                                {{ 'page.radio.stop'|trans({'%radio%': radio.name}) }}
                             </div>
                         </div>
                     </div>
