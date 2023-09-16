@@ -337,7 +337,7 @@ export default defineComponent({
         this.currentPlayer.timer = null;
       }
 
-      // previous stream is the same a this one
+      // previous stream is the same as this one
       if (this.currentPlayer.url === url) {
         this.currentPlayer.element.volume = (this.volume * 0.1);
         return;
@@ -567,7 +567,9 @@ export default defineComponent({
       this.togglePreviousDispatch();
     },
     setNextPlayer() {
-      this.audio.current = this.audio.current === 1 ? 2 : 1;
+      const nextPlayer = this.audio.current === 1 ? 2 : 1;
+      this.resetPlayer(nextPlayer);
+      this.audio.current = nextPlayer;
     }
   },
   /* eslint-disable operator-linebreak */
