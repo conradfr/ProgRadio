@@ -40,7 +40,7 @@
             </div>
             {% if stream.radioStream %}
                 <div class="mt-5 text-center w-50 d-none d-sm-block" style="margin:auto">
-                    <a href="{{ path('radio_spa', {collection: stream.radioStream.radio.codeName }) }}">
+                    <a href="{{ constant('App\\Service\\Host::DATA')['progradio']['url'] }}{{ path('radio_spa', {collection: stream.radioStream.radio.codeName }) }}">
                         <small>{{ 'page.radio.goto_schedule'|trans|raw }}</small>
                     </a>
                 </div>
