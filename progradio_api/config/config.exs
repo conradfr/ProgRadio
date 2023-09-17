@@ -31,7 +31,7 @@ config :progradio_api, ProgRadioApi.Scheduler,
       task: {ProgRadioApi.Checker.Streams, :check, []}
     ],
     import: [
-      schedule: "10 02 */3 * *",
+      schedule: "10 02 */2 * *",
       task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import, []}
     ],
     import_overload: [

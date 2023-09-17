@@ -181,6 +181,12 @@ class AdminController extends AbstractBaseController
                 $stream->setName($streamOverloading->getName());
             }
 
+            if ($streamOverloading->getWebsite() !== null) {
+                $stream->setWebsite($streamOverloading->getWebsite());
+            }
+
+            $stream->setEnabled($streamOverloading->getEnabled());
+
             $em->flush();
 
             $this->addFlash(
