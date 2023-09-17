@@ -1,5 +1,5 @@
 <template>
-  <div class="player-infos" :title="showTitle">
+  <div class="player-infos" :title="showTitle" v-on:click="gotoRadio">
     <ul :style="infosUlStyle">
       <li>{{ radioName }}</li>
       <li v-if="show">{{ show.title }}</li>
@@ -42,7 +42,7 @@ export default defineComponent({
       };
     },
     radioName(): string {
-      if (this.radio === null) {
+      if (!this.radio) {
         return '';
       }
 
@@ -55,7 +55,7 @@ export default defineComponent({
       return this.radio.name;
     },
     showTitle(): string {
-      if (this.show === null) {
+      if (!this.show) {
         return '';
       }
 
@@ -66,6 +66,25 @@ export default defineComponent({
 
       return `${this.show.title} - ${start}-${end}`;
     },
+  },
+  methods: {
+    gotoRadio() {
+      if (!this.radio) {
+        return;
+      }
+
+      if (typeUtils.isRadio(this.radio)) {
+        this.$router.push({
+          name: 'radio',
+          params: { radio: this.radio.code_name }
+        });
+      } else {
+        this.$router.push({
+          name: 'streaming',
+          params: { countryOrCategoryOrUuid: this.radio.code_name, page: null }
+        });
+      }
+    }
   }
 });
 </script>
