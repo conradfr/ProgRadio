@@ -147,7 +147,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
                        //->distinct()
                        ->leftJoin('s.listeningSessions', 'ls')
-                       ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName')
+                       ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName, rs.url')
                        ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
                     break;
             }
