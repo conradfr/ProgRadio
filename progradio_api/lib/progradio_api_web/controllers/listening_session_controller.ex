@@ -13,7 +13,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   def create(conn, listening_session_params) do
     with {:ok, listening_session} <-
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
-      ListenersCounter.register_listening_session(listening_session)
+      ListenersCounter.register_listening_session(listening_session, false)
 
       conn
       |> put_status(:created)
@@ -40,7 +40,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
       if Map.get(listening_session_params, "ending") == true do
         ListenersCounter.remove_listening_session(updated_listening_session)
       else
-        ListenersCounter.register_listening_session(updated_listening_session)
+        ListenersCounter.register_listening_session(updated_listening_session, true)
       end
 
       conn

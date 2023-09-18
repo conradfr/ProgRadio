@@ -110,7 +110,7 @@ defmodule ProgRadioApi.SongServer do
           true ->
             @refresh_song_interval
         end
-        |> Kernel.+(Enum.random(-5..5))
+        |> Kernel.+(Enum.random(-5000..5000))
         |> increment_interval(updated_retries)
 
       Logger.debug(
@@ -165,7 +165,7 @@ defmodule ProgRadioApi.SongServer do
 
       _ ->
         Logger.debug("Data provider - #{name}: #{how_many_connected} clients connected")
-        Process.send_after(self(), :presence, @refresh_presence_interval)
+        Process.send_after(self(), :presence, @refresh_presence_interval + Enum.random(-3000..3000))
         {:noreply, state}
     end
   end

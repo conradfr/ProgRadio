@@ -26,15 +26,15 @@ defmodule ProgRadioApi.ListenersCounter do
     GenServer.start_link(__MODULE__, %{sessions: %{}, counter: %{}}, name: @name)
   end
 
-  def register_listening_session(listening_session)
+  def register_listening_session(listening_session, is_update)
 
-  def register_listening_session(%ListeningSession{} = listening_session) do
+  def register_listening_session(%ListeningSession{} = listening_session, is_update) do
     stream_code_name = get_channel_name(listening_session)
 
-    GenServer.cast(@name, {:register_listening_session, {stream_code_name, listening_session.id}})
+    GenServer.cast(@name, {:register_listening_session, {stream_code_name, listening_session.id}, is_update})
   end
 
-  def register_listening_session(_listening_session), do: :ok
+  def register_listening_session(_listening_session, _is_update), do: :ok
 
   def remove_listening_session(listening_session)
 
@@ -71,7 +71,7 @@ defmodule ProgRadioApi.ListenersCounter do
   end
 
   @impl true
-  def handle_cast({:register_listening_session, {stream_code_name, listening_session_id}}, state) do
+  def handle_cast({:register_listening_session, {stream_code_name, listening_session_id}, is_update}, state) do
     unix_timestamp = System.os_time(:second)
 
     updated_state =
@@ -85,7 +85,7 @@ defmodule ProgRadioApi.ListenersCounter do
         unix_timestamp
       )
 
-    Process.send(self(), {:refresh_counter, stream_code_name}, [])
+    unless is_update == true, do: Process.send(self(), {:refresh_counter, stream_code_name}, [])
 
     {:noreply, updated_state}
   end
@@ -102,7 +102,7 @@ defmodule ProgRadioApi.ListenersCounter do
         ]
       )
 
-    Process.send(self(), {:refresh_counter, stream_code_name}, [])
+     Process.send(self(), {:refresh_counter, stream_code_name}, [])
 
     {:noreply, updated_state}
   end
