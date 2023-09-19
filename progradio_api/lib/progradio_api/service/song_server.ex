@@ -8,7 +8,8 @@ defmodule ProgRadioApi.SongServer do
   @refresh_song_interval 15000
   @refresh_song_interval_long 30000
   @refresh_song_retries_increment 10000
-  @refresh_song_retries_max 100
+
+  @refresh_song_retries_max 10
   @refresh_song_retries_max_reset_at 100
   @refresh_song_retries_max_interval 120_000
   @refresh_presence_interval 60000
@@ -123,9 +124,13 @@ defmodule ProgRadioApi.SongServer do
     else
       _ ->
         broadcast_song(name, nil, nil)
-        ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
-        Logger.error("Data provider - #{state.name}: fetching error, exiting")
-        {:stop, :normal, nil}
+
+        Process.send_after(self(), {:refresh, :auto}, @refresh_song_retries_max_interval)
+        {:noreply, %{state | song: nil, last_data: nil}, :hibernate}
+
+#        ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
+#        Logger.error("Data provider - #{state.name}: fetching error, exiting")
+#        {:stop, :normal, nil}
     end
   end
 
