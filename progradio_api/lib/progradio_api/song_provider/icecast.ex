@@ -71,7 +71,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
         Logger.debug("Data provider - #{name}: data - #{song}")
 
         # we discard empty or suspicious/incomplete entries
-        unless song === "" or String.contains?(song, " - ") === false do
+        unless song === "" or String.trim(song) === "-" or String.contains?(song, " - ") === false do
           %{
             artist: song,
             title: nil

@@ -34,12 +34,12 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
                 update_status(radio_stream, true)
 
               _ ->
-                Logger.warn("Error status (#{radio_stream.code_name}): #{status_code}")
+                Logger.warning("Error status (#{radio_stream.code_name}): #{status_code}")
                 update_status(radio_stream, false)
             end
 
           message ->
-            Logger.warn("Non-status received (#{radio_stream.code_name}): #{inspect(message)}")
+            Logger.warning("Non-status received (#{radio_stream.code_name}): #{inspect(message)}")
             update_status(radio_stream, false)
         end
       end
@@ -74,10 +74,10 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
       e in HTTPoison.Error ->
         case e.reason do
           reason when is_binary(reason) ->
-            Logger.warn("Error (#{radio_stream.code_name}): #{e.reason}")
+            Logger.warning("Error (#{radio_stream.code_name}): #{e.reason}")
 
           reason when reason == :checkout_timeout ->
-            Logger.warn(
+            Logger.warning(
               "Error (#{radio_stream.code_name}): checkout_timeout - restarting pool ..."
             )
 
@@ -85,10 +85,10 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
 
           reason when is_tuple(reason) and tuple_size(reason) == 2 ->
             {_error, {_error2, error_message}} = reason
-            Logger.warn("Error (#{radio_stream.code_name}): #{to_string(error_message)}")
+            Logger.warning("Error (#{radio_stream.code_name}): #{to_string(error_message)}")
 
           unknown ->
-            Logger.warn("Error (#{radio_stream.code_name}): #{to_string(unknown)}")
+            Logger.warning("Error (#{radio_stream.code_name}): #{to_string(unknown)}")
         end
 
         update_status(radio_stream, false)

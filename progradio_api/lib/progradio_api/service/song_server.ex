@@ -8,7 +8,7 @@ defmodule ProgRadioApi.SongServer do
   @refresh_song_interval 15000
   @refresh_song_interval_long 30000
   @refresh_song_retries_increment 10000
-  @refresh_song_retries_max 10
+  @refresh_song_retries_max 100
   @refresh_song_retries_max_reset_at 100
   @refresh_song_retries_max_interval 120_000
   @refresh_presence_interval 60000

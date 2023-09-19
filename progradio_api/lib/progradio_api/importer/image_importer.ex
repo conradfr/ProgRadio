@@ -174,7 +174,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       |> save(path: dest_path)
     rescue
       _ ->
-        Logger.warn("Error processing stream image: #{image_path}")
+        Logger.warning("Error processing stream image: #{image_path}")
         {:error, nil}
     after
       File.rm(image_path)
@@ -209,11 +209,11 @@ defmodule ProgRadioApi.Importer.ImageImporter do
             )
           rescue
             _ ->
-              Logger.warn("Error downloading image (rescue): #{url} to #{dest_path}")
+              Logger.warning("Error downloading image (rescue): #{url} to #{dest_path}")
               {:error, nil}
           catch
             _ ->
-              Logger.warn("Error downloading image (catch): #{url} to #{dest_path}")
+              Logger.warning("Error downloading image (catch): #{url} to #{dest_path}")
               {:error, nil}
           end
         end)
@@ -224,16 +224,16 @@ defmodule ProgRadioApi.Importer.ImageImporter do
             result
 
           {:error, %HTTPoison.Error{reason: :checkout_timeout}} ->
-            Logger.warn("Error importing image, checkout_timeout: #{url} - restarting pool ...")
+            Logger.warning("Error importing image, checkout_timeout: #{url} - restarting pool ...")
             :hackney_pool.stop_pool(:image_pool)
             nil
 
           {:exit, reason} ->
-            Logger.warn("Error importing image, task exited: #{url} / #{reason}")
+            Logger.warning("Error importing image, task exited: #{url} / #{reason}")
             nil
 
           _ ->
-            Logger.warn("Error importing image, task failed: #{url}")
+            Logger.warning("Error importing image, task failed: #{url}")
             nil
         end
 
@@ -244,31 +244,31 @@ defmodule ProgRadioApi.Importer.ImageImporter do
               {:ok, url}
 
             _ ->
-              Logger.warn("Error importing image, writing failed #{url} / #{dest_path}")
+              Logger.warning("Error importing image, writing failed #{url} / #{dest_path}")
               {:error, nil}
           end
 
         {:ok, %HTTPoison.Response{status_code: status_code}} ->
-          Logger.warn(
+          Logger.warning(
             "Error importing image, wrong response: #{status_code} / #{url} / #{dest_path}"
           )
 
           {:error, nil}
 
         {:error, %HTTPoison.Error{reason: reason}} when is_atom(reason) ->
-          Logger.warn(
+          Logger.warning(
             "Error importing image, wrong response: #{Atom.to_string(reason)} #{url} / #{dest_path}"
           )
 
           {:error, nil}
 
         _ ->
-          Logger.warn("Error importing image, wrong response: #{url} / #{dest_path}")
+          Logger.warning("Error importing image, wrong response: #{url} / #{dest_path}")
           {:error, nil}
       end
     rescue
       _ ->
-        Logger.warn("Error importing image #{url}")
+        Logger.warning("Error importing image #{url}")
         {:error, nil}
     end
   end

@@ -67,7 +67,7 @@ defmodule ProgRadioApi.MixProject do
        git: "https://github.com/conradfr/off_broadway_redis.git", branch: "1.0.0"},
       {:timex, "~> 3.7"},
       {:elixir_xml_to_map, "~> 2.0"},
-      {:recase, "~> 0.5"},
+      {:recase, "~> 0.7"},
 #      {:shoutcast, "~> 0.1.0"},
       {:shoutcast,
         git: "https://github.com/conradfr/shoutcast_ex.git", branch: "master"},
