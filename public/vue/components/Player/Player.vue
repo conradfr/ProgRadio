@@ -330,7 +330,7 @@ export default defineComponent({
       // }
 
       let startPlayPromise;
-      this.setNextPlayer();
+      this.setNextPlayer(url);
 
       if (this.currentPlayer.timer !== null) {
         clearTimeout(this.currentPlayer.timer);
@@ -454,10 +454,10 @@ export default defineComponent({
         return;
       }
 
-      if (this.flux.allowTwoFeeds === false) {
+     if (this.flux.allowTwoFeeds === false) {
         this.stop();
         return;
-      }
+     }
 
       // allow quick real stop at stream' start
       if ((Date.now() - this.currentPlayer.startedAt) / 1000 <= config.PLAYER_MAX_SECONDS_TO_STOP) {
@@ -481,6 +481,7 @@ export default defineComponent({
 
       if (this.currentPlayer.element !== undefined && this.currentPlayer.element !== null) {
         this.currentPlayer.element.pause();
+        this.currentPlayer.element.src = '';
       }
 
       if (this.currentPlayer.timer !== null) {
@@ -490,6 +491,11 @@ export default defineComponent({
       if (this.currentPlayer.hls !== null) {
         this.currentPlayer.hls.destroy();
         this.currentPlayer.hls = null;
+      }
+
+      if (this.currentPlayer.dash !== null) {
+        this.currentPlayer.dash.destroy();
+        this.currentPlayer.dash = null;
       }
 
       this.currentPlayer.element = null;
@@ -509,6 +515,7 @@ export default defineComponent({
 
       if (player.element !== undefined && player.element !== null) {
         player.element.pause();
+        player.element.src = '';
       }
 
       if (player.timer !== null) {
@@ -566,9 +573,16 @@ export default defineComponent({
 
       this.togglePreviousDispatch();
     },
-    setNextPlayer() {
+    setNextPlayer(nextUrl: string) {
       const nextPlayer = this.audio.current === 1 ? 2 : 1;
-      this.resetPlayer(nextPlayer);
+
+      if (this.audio[`player${nextPlayer}`] !== null
+          && this.audio[`player${nextPlayer}`].element !== null
+          && this.audio[`player${nextPlayer}`].url !== null
+          && this.audio[`player${nextPlayer}`].url !== nextUrl) {
+        this.resetPlayer(nextPlayer);
+      }
+
       this.audio.current = nextPlayer;
     }
   },
