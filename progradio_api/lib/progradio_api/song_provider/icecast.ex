@@ -24,9 +24,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
       task =
         Task.async(fn ->
           try do
-            {:ok, %Shoutcast.Meta{data: data}} = Shoutcast.read_meta(url)
-            #      {:ok, %Shoutcast.Meta{data: data}} = ProgRadioApi.Icecast.read_meta(url)
-
+            {:ok, %Shoutcast.Meta{data: data}} = Shoutcast.read_meta(url, [follow_redirect: true])
             data
           rescue
             _ ->
