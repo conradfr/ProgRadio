@@ -34,6 +34,7 @@ interface Focus {
 
 interface State {
   socket: any
+  socketTimer: number|null,
   channels:any
   channelsRefCount: ChannelsRefCount,
   playing: boolean
@@ -62,6 +63,7 @@ const flux = PlayerUtils.calculatedFlux();
 export const usePlayerStore = defineStore('player', {
   state: (): State => ({
     socket: null,
+    socketTimer: null,
     channels: {},
     channelsRefCount: {},
     playing: false,
@@ -392,12 +394,24 @@ export const usePlayerStore = defineStore('player', {
         ? scheduleStore.currentShowOnRadio(this.radio.code_name) : null;
     },
     connectSocket() {
-      if (this.socket === null) {
+      if (!this.socket) {
+        const opts = {
+          reconnectAfterMs: (tries: number) => {
+            if (tries >= config.WEBSOCKET_MAX_RETRIES) {
+              return null;
+            }
+
+            return [10, 50, 100, 150, 200, 250, 500, 1000, 2000, 5000, 10000, 20000][tries - 1] || 30000;
+          }
+        };
+
         /* eslint-disable no-undef */
         // @ts-expect-error apiUrl is defined on the global scope
-        this.socket = new Socket(`wss://${apiUrl}/socket`);
+        this.socket = new Socket(`wss://${apiUrl}/socket`, opts);
 
         this.socket.onOpen(() => {
+          this.setSocketTimer();
+
           Object.entries(this.channelsRefCount).forEach(
             ([key, value]) => {
               if (value > 0) {
@@ -418,14 +432,33 @@ export const usePlayerStore = defineStore('player', {
           this.song = {};
           this.listeners = {};
           // this.socket = null;
-
-          // retry later
-          // setTimeout(this.connectSocket, config.WEBSOCKET_RETRY);
+          this.clearSocketTimer();
         });
+
+        /* this.socket.onError((error: any) => {
+          console.log(error);
+        }); */
       }
 
-      if (!this.socket.isConnected()) {
+      if (this.socket && !this.socket.isConnected()) {
         this.socket.connect();
+      }
+    },
+    setSocketTimer() {
+      // reset if currently one
+      this.clearSocketTimer();
+
+      this.socketTimer = setTimeout(() => {
+        if (this.socket) {
+          this.socket.disconnect();
+          this.socketTimer = null;
+        }
+      }, config.WEBSOCKET_DISCONNECT_AFTER);
+    },
+    clearSocketTimer() {
+      if (this.socketTimer) {
+        clearTimeout(this.socketTimer);
+        this.socketTimer = null;
       }
     },
     // todo clean this dual aspect of joinChannel & leaveChannel
