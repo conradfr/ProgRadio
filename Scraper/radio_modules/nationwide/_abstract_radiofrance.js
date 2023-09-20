@@ -1,53 +1,96 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const node_fetch = require('node-fetch');
 
 const scrapedData = {};
 const cleanedData = {};
 
+const fetchSections = async (id) => {
+  const response = await node_fetch(`https://www.radiofrance.fr/franceinter/api/grid/${id}`);
+  return await response.json();
+};
+
 const format = async (dateObj, name) => {
-  const dayStart = moment(dateObj);
-  dayStart.hour(0);
-  dayStart.minute(0);
-  dayStart.second(0);
+  if (cleanedData[name] === undefined) {
+    cleanedData[name] = [];
+  }
 
-  const dayEnd = moment(dateObj);
-  dayEnd.hour(23);
-  dayEnd.minute(59);
-  dayEnd.second(59);
+  const startDay = moment(dateObj).startOf('day');
+  const endDay = moment(dateObj).endOf('day');
 
-  // we use reduce instead of map to act as a map+filter in one pass
-  cleanedData[name] = scrapedData[name].reduce(async function (prevP, curr, index, array) {
-    const prev = await prevP;
-    const currDateTime = moment(curr.datetime_raw);
+  await scrapedData[name].forEach(async curr => {
+    const textStart = curr.json_raw.indexOf('const data = [');
+    const textEnd = curr.json_raw.indexOf('Promise.all([');
 
-    if (currDateTime.isBefore(dayStart) || currDateTime.isAfter(dayEnd)) {
-      return prev;
-    }
+    const jsonExtracted = curr.json_raw.substring(textStart + 13, + textEnd).trim();
+    const dataRaw = eval(jsonExtracted.substring(0, jsonExtracted.length - 1));
 
-    const newEntry = {
-      'date_time_start': currDateTime.toISOString(),
-      'title': curr.title,
-      'description': curr.description ? curr.description : null,
-      'img': curr.img ? curr.img : null,
-      'sections': []
-    };
+    let data = [];
 
-    if (curr.host) {
-      // host is string as "par <host>"
-      const regexp = new RegExp(/Par(\n){0,1} (?<host>[\'\w\s\A-zÀ-ÿ\|]+)/);
-      const match = curr.host.match(regexp);
-
-      if (match !== null && match.groups.host !== undefined) {
-        newEntry.host = match.groups.host.trim();
+    dataRaw.forEach(entry => {
+      if (entry.data
+        && entry.data.grid && entry.data.grid['steps'] !== undefined) {
+        data = entry.data.grid['steps'];
       }
+    });
+
+    if (!data || data.length === 0) {
+      return;
     }
 
-    prev.push(newEntry);
-    return prev;
-  }, []);
+    data.reduce(async (prev, entry) => {
+      const dateTimeStart = moment.unix(entry.startTime);
+      const dateTimeEnd = moment.unix(entry.endTime);
 
-  return await Promise.resolve(cleanedData[name]);
+      if (dateTimeStart.isBefore(startDay)) {
+        return;
+      }
+
+      if (dateTimeStart.isAfter(endDay)) {
+        return;
+      }
+
+      const newEntry = {
+        'id': entry.id,
+        'date_time_start': dateTimeStart.toISOString(),
+        'date_time_end': dateTimeEnd.toISOString(),
+        'title': entry.concept.title,
+        'description': entry.expression && entry.expression.title ? entry.expression.title : null,
+        'host': entry.concept.producers ? entry.concept.producers : null,
+        'img': entry.expression && entry.expression.visual && entry.expression.visual.src ? entry.expression.visual.src : null,
+        'sections': []
+      };
+
+      cleanedData[name].push(newEntry);
+      return prev;
+    });
+  });
+
+  // sections
+  results = await Promise.all(cleanedData[name].map(async entry => {
+    const sections = await fetchSections(entry.id);
+
+    if (sections && sections.length > 0) {
+      sections.forEach(sectionEntry => {
+        const sectionDateStart = moment.unix(sectionEntry.startTime);
+        const section = {
+          'date_time_start': sectionDateStart.toISOString(),
+          'title': sectionEntry.concept.title,
+          'presenter': sectionEntry.concept.producers ? sectionEntry.concept.producers : null,
+          'img': sectionEntry.expression && sectionEntry.expression.visual && sectionEntry.expression.visual.src ? sectionEntry.expression.visual.src : null,
+        };
+
+        entry.sections.push(section);
+      });
+    }
+
+    delete entry.id;
+    return entry;
+  }));
+
+  return Promise.resolve(results);
+  // return await Promise.resolve(cleanedData[name]);
 };
 
 const fetch = (name, dateObj) => {
@@ -59,13 +102,9 @@ const fetch = (name, dateObj) => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find('.g-container.Programs .Programs-grid .TimeSlotContainer')
+      .find('body')
       .set({
-        'datetime_raw': 'time@datetime', // utc
-        'img': 'picture source[data-testid="image-src"]@srcset',
-        'title': '.TimeSlotContent-title',
-        'description': '.TimeSlotContent-subtitle',
-        'host': '.TimeSlotContent-producers'
+        'json_raw': 'script'
       })
       .data(function (listing) {
         // listing.main = sections !== true;
@@ -92,8 +131,8 @@ const fetchAll = (name, dateObj) => {
 
 const getScrap = (name, dateObj) => {
   return fetchAll(name, dateObj)
-    .then(() => {
-      return format(dateObj, name);
+    .then(async () => {
+      return await format(dateObj, name);
     });
 };
 
