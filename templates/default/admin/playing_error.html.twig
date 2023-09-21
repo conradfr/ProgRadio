@@ -1,6 +1,6 @@
 {% extends 'default/admin/admin_base.html.twig' %}
 
-{% block title %}Streams errors{% endblock %}
+{% block title %}{{ 'admin.stream_errors.title'|trans }}{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -17,11 +17,11 @@
 {% block body %}
 <div id="admin" class="container">
     <div class="row">
-        <div class="col-12 col-md-10">
+        <div class="col-12">
 
             <div class="d-flex justify-content-between mt-2 mb-4">
-                <div><h5>Stream errors</h5></div>
-                <div><a href="{{ path('admin_reset_all_stream_paying_errors') }}">Reset all</a></div>
+                <div><h5>{{ 'admin.stream_errors.title'|trans }}</h5></div>
+                <div><a href="{{ path('admin_reset_all_stream_paying_errors') }}">{{ 'admin.stream_errors.reset_all'|trans }}</a></div>
             </div>
 
             <div id="playing-alert" class="alert alert-danger d-none mt-2 mb-3" role="alert">
@@ -31,8 +31,8 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col" class="text-center">Errors</th>
+                    <th scope="col">{{ 'admin.stream_errors.name'|trans }}</th>
+                    <th scope="col" class="text-center">{{ 'admin.stream_errors.errors'|trans }}</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -43,9 +43,9 @@
                     <tr>
                         <td class="text-start">{{ stream_error.name }}</td>
                         <td class="text-center" style="width: 250px !important">{{ stream_error.playingError }}</td>
-                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">View</a></td>
-                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">Edit</a></td>
-                        <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">Reset</a></td>
+                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a></td>
+                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></td>
+                        <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">{{ 'admin.stream_errors.reset'|trans }}</a></td>
                         <td class="text-start" v-scope>
                             <div
                                 v-if="playing === false || radioId !== '{{ stream_error.id }}'"

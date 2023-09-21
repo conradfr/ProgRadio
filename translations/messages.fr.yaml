@@ -210,3 +210,52 @@ cookie:
     deny: Non
     disclaimer: (%name% ne vend pas les données de ses visiteurs)
 
+admin:
+    dashboard:
+        title: Tableau de bord
+        menu:
+            brief: Résumé
+            table: Tableau
+        table:
+            shows: Programmes
+            sections: Chroniques
+            stream_abbr: St.
+        accounts:
+            title: Comptes
+            active: '%number% comptes actifs'
+            email: email
+            created_at: Création
+            last: (%number% derniers)
+        no_schedule:
+            title: Radios sans programmes aujourd'hui
+            shows: Programmes
+            sections: Chroniques
+            all_ok: Toutes les radios ont des programmes affichés.
+        stream_errors:
+            title: Erreurs streams
+            error: Erreurs pour <strong>%number%</strong> check
+            link: lien
+            no_errors: Tous les streams fonctionnent
+        live_song_errors:
+            title: Erreurs titre en cours
+            error: Erreurs pour <strong>%number%</strong> check
+            reset_all: reset all
+            link: lien
+            no_errors: Pas d'erreur enregistrées
+
+    listening:
+        title: Ecoutes
+        today: Aujourd'hui
+        yesterday: Hier
+        this_month: Ce mois-ci
+        last_month: Mois dernier
+        ratings: Sondages
+
+    stream_errors:
+        title: Erreur streams
+        name: Nom
+        errors: Erreurs
+        view: Voir
+        edit: Edit
+        reset: Reset
+        reset_all: Tout reset

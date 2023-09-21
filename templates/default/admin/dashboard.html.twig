@@ -1,6 +1,6 @@
 {% extends 'default/admin/admin_base.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
+{% block title %}{{ 'admin.dashboard.accounts.title'|trans }}{% endblock %}
 
 {% import _self as self %}
 
@@ -42,10 +42,10 @@
         <div class="col-md-1">
             <ul class="nav nav-pills flex-column" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active w-100 text-left" id="brief-tab" data-bs-toggle="tab" data-bs-target="#brief" type="button" role="tab" aria-controls="brief" aria-selected="true">Résumé</button>
+                    <button class="nav-link active w-100 text-left" id="brief-tab" data-bs-toggle="tab" data-bs-target="#brief" type="button" role="tab" aria-controls="brief" aria-selected="true">{{ 'admin.dashboard.menu.brief'|trans }}</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link w-100 text-left" id="table-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="table" aria-selected="false">Tableau</button>
+                    <button class="nav-link w-100 text-left" id="table-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="table" aria-selected="false">{{ 'admin.dashboard.menu.table'|trans }}</button>
                 </li>
             </ul>
         </div>
@@ -55,11 +55,11 @@
                 <div role="tabpanel" class="tab-pane active" id="brief" aria-labelledby="brief-tab">
                     <div class="row">
                         <div class="col-md-3 col-sm-12">
-                            <h5>Comptes</h5>
-                            <p><strong>{{ userCount }} comptes</strong> actifs.</p>
+                            <h5>{{ 'admin.dashboard.accounts.title'|trans }}</h5>
+                            <p>{{ 'admin.dashboard.accounts.active'|trans({'%number%': userCount}) }}</p>
                             <table class="table table-striped">
                                 <thead>
-                                    <tr><th>Email</th><th>Création</th></tr>
+                                    <tr><th>{{ 'admin.dashboard.accounts.email'|trans }}</th><th>{{ 'admin.dashboard.accounts.created_at'|trans }}</th></tr>
                                 </thead>
                                 {% for user in users %}
                                     <tr>
@@ -69,13 +69,13 @@
                                 {% endfor %}
                                 <tfoot>
                                 <tr>
-                                    <th colspan="2">(10 derniers)</th>
+                                    <th colspan="2">{{ 'admin.dashboard.accounts.last'|trans({'%number%': 10}) }}</th>
                                 </tr>
                                 </tfoot>
                             </table>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <h5>Radios sans programmes aujourd'hui</h5>
+                            <h5>{{ 'admin.dashboard.no_schedule.title'|trans }}</h5>
                             <table class="table table-striped schedule-stats">
                                 {% set schedule_errors = 0 %}
                                 {% for radio in radios %}
@@ -96,15 +96,15 @@
                                 {% endfor %}
 
                                 {% if schedule_errors == 0 %}
-                                    <tr><td class="radio-streaming-brief"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;Toutes les radios ont des programmes affichés.</td></tr>
+                                    <tr><td class="radio-streaming-brief"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;{{ 'admin.dashboard.no_schedule.all_ok'|trans }}</td></tr>
                                 {% else %}
                                     <thead>
                                     <tr>
                                         <th></th>
                                         <th>
                                             <div class="row">
-                                                <div class="col-md-6">Programmes</div>
-                                                <div class="col-md-6">Chroniques</div>
+                                                <div class="col-md-6">{{ 'admin.dashboard.no_schedule.shows'|trans }}</div>
+                                                <div class="col-md-6">{{ 'admin.dashboard.no_schedule.sections'|trans }}</div>
                                             </div>
                                         </th>
                                     </tr>
@@ -113,7 +113,7 @@
                             </table>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <h5>Erreurs streams</h5>
+                            <h5>{{ 'admin.dashboard.stream_errors.title'|trans }}</h5>
                             <table class="table table-striped schedule-stats">
                                 {% set stream_errors = 0 %}
                                 {% for radioStream in radio_streams_status %}
@@ -121,41 +121,43 @@
                                         {% set stream_errors = stream_errors + 1 %}
                                         <tr>
                                             <td class="radio-header"><img title="{{ radioStream.name }}" alt="{{ radioStream.name }}" src="{{ asset('img/radio/schedule/' ~ radioStream.radio_code_name ~ '.png') }}"></td>
-                                            <td class="td-auto">Erreurs pour <strong>{{ radioStream.retries }}</strong> checks.</td>
-                                            <td><a target="_blank" href="{{ radioStream.url }}">lien</a></td>
+                                            <td class="td-auto">{{ 'admin.dashboard.stream_errors.error'|trans({'%number%': radioStream.retries})| raw }}</td>
+                                            <td><a target="_blank" href="{{ radioStream.url }}">{{ 'admin.dashboard.stream_errors.link'|trans }}</a></td>
                                             <td><a href="{{ path('admin_reset_stream_retries', {'id': radioStream.id}) }}"><i class="bi bi-trash"></i></a></td>
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
 
                                 {% if stream_errors == 0 %}
-                                    <tr><td class="radio-streaming-brief"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;Tous les streams fonctionnent</td></tr>
+                                    <tr><td class="radio-streaming-brief"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;{{ 'admin.dashboard.stream_errors.no_errors'|trans }}</td></tr>
                                 {% endif %}
                             </table>
                         </div>
                         <div class="col-md-3 col-sm-12">
                             <div>
                                 <div class="float-end"><a href="{{ path('admin_reset_current_song_retries_all') }}">reset all</a></div>
-                                <h5>Erreurs titre en cours</h5>
+                                <h5>{{ 'admin.dashboard.live_song_errors.title'|trans }}</h5>
                             </div>
                             <table class="table table-striped schedule-stats">
                                 {% for radioStream in current_song_status %}
                                     <tr>
                                         <td class="radio-header"><img title="{{ radioStream.name }}" alt="{{ radioStream.name }}" src="{{ asset('img/radio/schedule/' ~ radioStream.radio_code_name ~ '.png') }}"></td>
-                                        <td class="td-auto">Erreurs pour <strong>{{ radioStream.currentSongRetries }}</strong> checks.</td>
-                                        <td><a target="_blank" href="{{ radioStream.url }}">lien</a></td>
+                                        <td class="td-auto">
+                                            {{ 'admin.dashboard.live_song_errors.error'|trans({'%number%': radioStream.currentSongRetries})| raw }}
+                                        </td>
+                                        <td><a target="_blank" href="{{ radioStream.url }}">{{ 'admin.dashboard.live_song_errors.link'|trans }}</a></td>
                                         <td><a href="{{ path('admin_reset_current_song_retries', {'id': radioStream.id}) }}"><i class="bi bi-trash"></i></a></td>
                                     </tr>
                                 {% endfor %}
                                 {% for stream in stream_song_status %}
                                     <tr>
                                         <td class="radio-header"><img title="{{ stream.name }}" alt="{{ stream.name }}" src="{{ self.streamPicture(stream) }}"></td>
-                                        <td class="td-auto">Erreurs pour <strong>{{ stream.retries }}</strong> checks.</td>
-                                        <td><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">lien</a></td>
+                                        <td class="td-auto">{{ 'admin.dashboard.live_song_errors.error'|trans({'%number%': stream.retries})| raw }}</td>
+                                        <td><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ 'admin.dashboard.live_song_errors.link'|trans }}</a></td>
                                     </tr>
                                 {% endfor %}
                                 {% if current_song_status|length == 0 and stream_song_status|length == 0 %}
-                                    <tr><td class="radio-streaming-brief"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;Pas d'erreur enregistrées</td></tr>
+                                    <tr><td class="radio-streaming-brief"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;{{ 'admin.dashboard.live_song_errors.no_errors'|trans }}</td></tr>
                                 {% endif %}
                             </table>
                         </div>
@@ -172,12 +174,12 @@
                         </tr>
                         <tr>
                             <th></th>
-                            <th>St.</th>
+                            <th>{{ 'admin.dashboard.table.stream_abbr'|trans }}</th>
                             {% for entry in stats|first %}
                                 <th>
                                     <div class="row">
-                                        <div class="col-md-6">Programmes</div>
-                                        <div class="col-md-6">Chroniques</div>
+                                        <div class="col-md-6">{{ 'admin.dashboard.table.shows'|trans }}</div>
+                                        <div class="col-md-6">{{ 'admin.dashboard.table.sections'|trans }}</div>
                                     </div>
                                 </th>
                             {% endfor %}

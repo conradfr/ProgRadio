@@ -26,7 +26,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractBaseController
 {
-    #[Route('/admin', name: 'admin')]
+    #[Route('/{_locale}/admin', name: 'admin')]
     public function indexAction(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository(Radio::class)->getActiveRadiosFull();
@@ -58,7 +58,7 @@ class AdminController extends AbstractBaseController
         ]);
     }
 
-    #[Route('/admin/listening/{dateRange}/{countryCode}', name: 'admin_listening', requirements: ['dateRange' => '\w+'])]
+    #[Route('/{_locale}/admin/listening/{dateRange}/{countryCode}', name: 'admin_listening', requirements: ['dateRange' => '\w+'])]
     public function listeningAction(DateUtils $dateUtils, EntityManagerInterface $em, Request $request, string $dateRange='today', ?string $countryCode=null): Response
     {
         $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
@@ -203,7 +203,7 @@ class AdminController extends AbstractBaseController
         );
     }
 
-    #[Route('/admin/playing_errors', name: 'admin_playing_errors')]
+    #[Route('/{_locale}/admin/playing_errors', name: 'admin_playing_errors')]
     public function playingErrorsAction(EntityManagerInterface $em): Response
     {
         $errors = $em->getRepository(Stream::class)->getStreamsWithPlayingError();

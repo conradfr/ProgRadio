@@ -207,3 +207,52 @@ cookie:
     deny: Deny
     disclaimer: (This website does not track its visitors or sell data)
 
+admin:
+    dashboard:
+        title: Dashboard
+        menu:
+            brief: Brief
+            table: Table
+        table:
+            shows: Shows
+            sections: Sections
+            stream_abbr: St.
+        accounts:
+            title: Accounts
+            active: '%number% active accounts'
+            email: email
+            created_at: Created
+            last: (last %number%)
+        no_schedule:
+            title: Radios with no schedule today
+            shows: Sections
+            sections: Sections
+            all_ok: All radios have schedule today.
+        stream_errors:
+            title: Stream errors
+            error: Errors for <strong>%number%</strong> checks
+            link: link
+            no_errors: All streams working.
+        live_song_errors:
+            title: Live song errors
+            error: Errors for <strong>%number%</strong> checks
+            reset_all: reset all
+            link: link
+            no_errors: No errors recorded.
+
+    listening:
+        title: currently listening
+        today: Today
+        yesterday: Yesterday
+        this_month: This month
+        last_month: Last month
+        ratings: Ratings
+
+    stream_errors:
+        title: Streaming errors
+        name: Name
+        errors: Errors
+        view: See
+        edit: Edit
+        reset: Reset
+        reset_all: Reset all

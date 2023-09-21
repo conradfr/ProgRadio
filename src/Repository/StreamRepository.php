@@ -25,7 +25,7 @@ class StreamRepository extends ServiceEntityRepository
         parent::__construct($registry, Stream::class);
     }
 
-    public function getStreamsWithPlayingError($threshold=3)
+    public function getStreamsWithPlayingError($threshold=1)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
