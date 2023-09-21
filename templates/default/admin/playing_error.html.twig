@@ -1,22 +1,39 @@
 {% extends 'default/admin/admin_base.html.twig' %}
 
-{% block title %}Erreurs streams{% endblock %}
+{% block title %}Streams errors{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+      const appWebSocket = false;
+      const appSendStatistics = false;
+      const appVolume = 0.3;
+    </script>
+
+    {% include('_partials/mini_player.html.twig') %}
+{% endblock %}
 
 {% block body %}
 <div id="admin" class="container">
     <div class="row">
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-10">
 
             <div class="d-flex justify-content-between mt-2 mb-4">
-                <div><h5>Erreurs Streams</h5></div>
+                <div><h5>Stream errors</h5></div>
                 <div><a href="{{ path('admin_reset_all_stream_paying_errors') }}">Reset all</a></div>
+            </div>
+
+            <div id="playing-alert" class="alert alert-danger d-none mt-2 mb-3" role="alert">
+                <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
             </div>
 
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th scope="col">Nom</th>
-                    <th scope="col" class="text-center">Erreurs</th>
+                    <th scope="col">Name</th>
+                    <th scope="col" class="text-center">Errors</th>
+                    <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -29,6 +46,21 @@
                         <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">View</a></td>
                         <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">Edit</a></td>
                         <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">Reset</a></td>
+                        <td class="text-start" v-scope>
+                            <div
+                                v-if="playing === false || radioId !== '{{ stream_error.id }}'"
+                                @click="play('{{ stream_error.streamUrl }}', '{{ stream_error.id }}', null, null)"
+                                class="admin-play">
+                                <i class="bi bi-play-circle"></i>&nbsp;&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream_error.name}) }}
+                            </div>
+
+                            <div
+                                v-if="playing === true && radioId === '{{ stream_error.id }}'"
+                                @click="stop('{{ stream_error.id }}')"
+                                class="admin-play">
+                                <i class="bi bi-stop-circle"></i>&nbsp;&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream_error.name}) }}
+                            </div>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>

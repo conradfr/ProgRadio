@@ -3,11 +3,7 @@ defmodule ProgRadioApiWeb.SongChannel do
   use Phoenix.Channel
   alias ProgRadioApiWeb.Presence
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.RadioStream
-  alias ProgRadioApi.StreamSong
-  alias ProgRadioApi.Stream
-  alias ProgRadioApi.Radio
-  alias ProgRadioApi.Collection
+  alias ProgRadioApi.{RadioStream, StreamSong, Stream, Radio, Collection}
 
   def join("song:" <> radio_stream_code_name, _params, socket) do
     # check radio first, if null, check stream
@@ -38,17 +34,17 @@ defmodule ProgRadioApiWeb.SongChannel do
     end
   end
 
-  def join("collection:" <> collection_code_name, _params, socket) do
-    # check collection radios first
-    case get_collection_streams(collection_code_name) do
-      nil ->
-        {:error, "not available"}
-
-      data ->
-        send(self(), {:after_join_collection, "collection:" <> collection_code_name, data})
-        {:ok, socket}
-    end
-  end
+#  def join("collection:" <> collection_code_name, _params, socket) do
+#    # check collection radios first
+#    case get_collection_streams(collection_code_name) do
+#      nil ->
+#        {:error, "not available"}
+#
+#      data ->
+#        send(self(), {:after_join_collection, "collection:" <> collection_code_name, data})
+#        {:ok, socket}
+#    end
+#  end
 
   def handle_info({:after_join, song_topic, radio_stream_data}, socket) do
     {:ok, _} =
@@ -60,19 +56,19 @@ defmodule ProgRadioApiWeb.SongChannel do
     {:noreply, socket}
   end
 
-  def handle_info({:after_join_collection, collection_topic, radios_stream_data}, socket) do
-    {:ok, _} =
-      Presence.track(self(), collection_topic, :rand.uniform(), %{
-        online_at: inspect(System.system_time(:second))
-      })
-
-    radios_stream_data
-    |> Enum.each(fn data ->
-      ProgRadioApi.SongManager.join("song:" <> data.radio_stream_code_name, data)
-    end)
-
-    {:noreply, socket}
-  end
+#  def handle_info({:after_join_collection, collection_topic, radios_stream_data}, socket) do
+#    {:ok, _} =
+#      Presence.track(self(), collection_topic, :rand.uniform(), %{
+#        online_at: inspect(System.system_time(:second))
+#      })
+#
+#    radios_stream_data
+#    |> Enum.each(fn data ->
+#      ProgRadioApi.SongManager.join("song:" <> data.radio_stream_code_name, data)
+#    end)
+#
+#    {:noreply, socket}
+#  end
 
   # ----- Internal -----
 

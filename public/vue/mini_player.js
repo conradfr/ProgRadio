@@ -7,7 +7,9 @@ import { Socket } from '../js/phoenix';
 // from config
 import {
   LISTENING_SESSION_MIN_SECONDS,
-  LISTENING_SESSION_SOURCE_SSR
+  LISTENING_SESSION_SOURCE_SSR,
+  WEBSOCKET_DISCONNECT_AFTER,
+  WEBSOCKET_MAX_RETRIES
 } from './config/config';
 
 const LISTENING_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
@@ -117,6 +119,10 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
 };
 
 const sendPlayingError = (radioId) => {
+  if (!this.options.sendStatistics) {
+    return;
+  }
+
   // only streams
   if (!radioId.includes('-')) {
     return;
@@ -148,10 +154,22 @@ const setPlayingAlertVisible = (visible) => {
   }
 };
 
+const setAudioVolume = (volume) => {
+  if (volume) {
+    window.audio.volume = volume;
+    return;
+  }
+
+  if (typeof appVolume !== 'undefined') {
+    window.audio.volume = appVolume;
+  }
+}
+
 createApp({
   hls: null,
   dash: null,
   socket: null,
+  socketTimer: null,
   channels: {},
   playing: false,
   song: null,
@@ -161,7 +179,13 @@ createApp({
   playingStart: null,
   sessionId: null,
   listeningInterval: null,
-  play(streamingUrl, codeName, topic, stream_code_name) {
+  options: {
+    /* eslint-disable no-undef */
+    webSocket: typeof appWebSocket !== 'undefined' ? appWebSocket : true,
+    /* eslint-disable no-undef */
+    sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
+  },
+  play(streamingUrl, codeName, topic, streamCodeName) {
     setPlayingAlertVisible(false);
 
     if (this.playing === true) {
@@ -174,8 +198,10 @@ createApp({
       this.listeningInterval = null;
     }
 
-    /* eslint-disable no-undef */
-    sendGaEvent('play', 'SSR', codeName, 3);
+    if (this.options.sendStatistics) {
+      /* eslint-disable no-undef */
+      sendGaEvent('play', 'SSR', codeName, 3);
+    }
 
     this.playing = true;
     this.radioId = codeName;
@@ -192,21 +218,17 @@ createApp({
 
           this.hls.on(Hls.Events.ERROR, (event, data) => {
             if (data.fatal) {
-              setTimeout(
-                () => {
-                  setPlayingAlertVisible(true);
-                  sendPlayingError(codeName);
-                },
-                2000
-              );
+              this.playingError();
             }
           });
 
           this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
             this.hls.loadSource(streamingUrl);
             this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+              setAudioVolume();
+
               window.audio.play().then(() => {
-                this.playingStarted(topic, stream_code_name);
+                this.playingStarted(topic, streamCodeName);
               });
             });
           });
@@ -220,18 +242,14 @@ createApp({
         this.dash.initialize(window.audio, streamingUrl, false);
 
         this.dash.on('error', () => {
-          setTimeout(
-            () => {
-              setPlayingAlertVisible(true);
-              sendPlayingError(codeName);
-            },
-            2500
-          );
+          this.playingError();
         });
 
         this.dash.on('canPlay', () => {
+          setAudioVolume();
+
           window.audio.play().then(() => {
-            this.playingStarted(topic, stream_code_name);
+            this.playingStarted(topic, streamCodeName);
           });
         });
       });
@@ -240,19 +258,14 @@ createApp({
         ? `${streamsProxy}?stream=${streamingUrl}` : streamingUrl;
 
       window.audio = new Audio(`${streamUrl}`);
+      setAudioVolume();
+
       window.audio.onerror = () => {
-        // the delay prevents sending an error when the user just click a link and goes to another page...
-        setTimeout(
-          () => {
-            setPlayingAlertVisible(true);
-            sendPlayingError(codeName);
-          },
-          2500
-        );
+        this.playingError();
       };
 
       window.audio.play().then(() => {
-        this.playingStarted(topic, stream_code_name);
+        this.playingStarted(topic, streamCodeName);
       });
     }
   },
@@ -281,8 +294,9 @@ createApp({
     window.audio = null;
     delete window.audio;
 
-    if (this.playing !== false) {
+    if (this.playing !== false &&  this.options.sendStatistics) {
       updateListeningSession(this.radioId, this.playingStart, this.sessionId, true);
+
       /* eslint-disable no-undef */
       sendGaEvent('stop', 'SSR', this.radioId, 1);
     }
@@ -293,50 +307,111 @@ createApp({
     this.sessionId = null;
     this.playingStart = null;
   },
-  playingStarted(topic, stream_code_name) {
+  playingStarted(topic, streamCodeName) {
     this.lastUpdated = new Date();
     this.playingStart = new Date();
 
     // For some reason the interval was not set when the code was at the end of this function
-    this.listeningInterval = setInterval(() => {
-      updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((data) => {
-        if (data.id !== null) {
-          this.sessionId = data.id;
-          this.playingStart = new Date(data.date_time_start);
-        }
-      });
-    }, LISTENING_INTERVAL);
+    if (this.options.sendStatistics) {
+      this.listeningInterval = setInterval(() => {
+        updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((data) => {
+          if (data.id !== null) {
+            this.sessionId = data.id;
+            this.playingStart = new Date(data.date_time_start);
+          }
+        });
+      }, LISTENING_INTERVAL);
+    }
 
     window.audio.addEventListener('timeupdate', () => {
       this.lastUpdated = new Date();
     });
 
     if (topic !== undefined && topic !== null && topic !== '') {
-      this.connectSocket();
       this.joinChannel(topic);
     }
 
-    if (stream_code_name !== undefined && stream_code_name !== null && stream_code_name !== '') {
-      this.connectSocket();
-      this.joinChannel(`listeners:${stream_code_name}`);
+    if (streamCodeName !== undefined && streamCodeName !== null && streamCodeName !== '') {
+      this.joinChannel(`listeners:${streamCodeName}`);
     }
 
   },
+  playingError() {
+    // the delay prevents sending an error when the user just click a link and goes to another page...
+    setTimeout(
+      () => {
+        this.playing = false;
+
+        setPlayingAlertVisible(true);
+
+        if (this.options.sendStatistics) {
+          sendPlayingError(codeName);
+        }
+      },
+      2500
+    );
+  },
   connectSocket() {
-    if (this.socket !== null) {
+    if (!this.options.webSocket) {
       return;
     }
 
-    this.socket = new Socket(`wss://${apiUrl}/socket`);
-    this.socket.connect();
-    this.socket.onError(() => {
-      this.song = null;
-      this.listeners = null;
-      // this.socket = null;
-    });
+    if (!this.socket) {
+      const opts = {
+        reconnectAfterMs: (tries) => {
+          if (tries >= WEBSOCKET_MAX_RETRIES) {
+            return null;
+          }
+
+          return [10, 50, 100, 150, 200, 250, 500, 1000, 2000, 5000, 10000, 20000][tries - 1] || 30000;
+        }
+      };
+
+      this.socket = new Socket(`wss://${apiUrl}/socket`, opts);
+
+      this.socket.onOpen(() => {
+        this.setSocketTimer();
+      });
+
+      this.socket.onClose(() => {
+        this.song = null;
+        this.listeners = null;
+        this.clearSocketTimer();
+      });
+    }
+
+    if (this.socket && !this.socket.isConnected()) {
+      this.socket.connect();
+    }
+  },
+  setSocketTimer() {
+    // reset if currently one
+    this.clearSocketTimer();
+
+    this.socketTimer = setTimeout(() => {
+      if (this.socket) {
+        this.socket.disconnect();
+        this.socketTimer = null;
+      }
+    }, WEBSOCKET_DISCONNECT_AFTER);
+  },
+  clearSocketTimer() {
+    if (this.socketTimer) {
+      clearTimeout(this.socketTimer);
+      this.socketTimer = null;
+    }
   },
   joinChannel(topic) {
-    this.channels[topic] = this.socket.channel(topic, {});
+    if (!this.options.webSocket) {
+      return;
+    }
+
+    this.connectSocket();
+
+    // Channel already exists?
+    if (!Object.prototype.hasOwnProperty.call(this.channels, topic)) {
+      this.channels[topic] = this.socket.channel(topic, {});
+    }
 
     this.channels[topic].join()
       .receive('error', resp => {

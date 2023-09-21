@@ -100,6 +100,13 @@
   }
 }
 
+.admin-play {
+  &:hover {
+    cursor: pointer;
+    color: $radio-stream-hover;
+  }
+}
+
 .admin-listening-side {
   @include media-breakpoint-up(sm) {
     position: sticky; top: 60px;

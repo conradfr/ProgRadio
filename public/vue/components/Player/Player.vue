@@ -272,6 +272,7 @@ export default defineComponent({
       volumeFocusDispatch: 'volumeFocus',
       joinChannel: 'joinChannel',
       updateFlux: 'updateFlux',
+      playError: 'playError',
       setStreamPlayingError: 'setStreamPlayingError'
     }),
     beforeWindowUnload() {
@@ -364,6 +365,8 @@ export default defineComponent({
                   type: 'error'
                 });
 
+                this.playError();
+
                 if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
                   this.setStreamPlayingError(this.radio.code_name);
                 }
@@ -394,6 +397,8 @@ export default defineComponent({
               message: (this.$i18n as any).tc('message.player.play_error'),
               type: 'error'
             });
+
+            this.playError();
 
             if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
               this.setStreamPlayingError(this.radio.code_name);
@@ -441,6 +446,8 @@ export default defineComponent({
               message: (this.$i18n as any).tc('message.player.play_error'),
               type: 'error'
             });
+
+            this.playError();
 
             if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
               this.setStreamPlayingError(this.radio.code_name);

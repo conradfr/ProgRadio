@@ -265,6 +265,9 @@ export const usePlayerStore = defineStore('player', {
         this.sessionInterval = null;
       }
     },
+    playError() {
+      this.playing = false;
+    },
     // Previous in collection
     playPrevious() {
       this.playNext('backward');

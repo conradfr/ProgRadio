@@ -3,8 +3,8 @@ defmodule ProgRadioApiWeb.ListenersChannel do
 
   alias ProgRadioApi.ListenersCounter
 
-  def join("listeners:" <> _stream_code_name, _params, socket) do
-#    send(self(), {:after_join, stream_code_name})
+  def join("listeners:" <> stream_code_name, _params, socket) do
+    send(self(), {:after_join, stream_code_name})
 
     {:ok, socket}
   end
