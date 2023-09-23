@@ -9,7 +9,9 @@
 {% endmacro %}
 
 {% block head_supp %}
-    <meta http-equiv="refresh" content="130">
+    {% if dateRange == 'today' %}
+        <meta http-equiv="refresh" content="130">
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

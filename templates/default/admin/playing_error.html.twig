@@ -24,10 +24,6 @@
                 <div><a href="{{ path('admin_reset_all_stream_paying_errors') }}">{{ 'admin.stream_errors.reset_all'|trans }}</a></div>
             </div>
 
-            <div id="playing-alert" class="alert alert-danger d-none mt-2 mb-3" role="alert">
-                <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
-            </div>
-
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -40,7 +36,7 @@
                 </tr>
                 </thead>
                 {% for stream_error in errors %}
-                    <tr>
+                    <tr :class="{ 'table-secondary': '{{ stream_error.id }}' === radioId }">
                         <td class="text-start">{{ stream_error.name }}</td>
                         <td class="text-center" style="width: 250px !important">{{ stream_error.playingError }}</td>
                         <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a></td>
@@ -57,13 +53,21 @@
                             <div
                                 v-if="playing === true && radioId === '{{ stream_error.id }}'"
                                 @click="stop('{{ stream_error.id }}')"
-                                class="admin-play">
+                                class="admin-play admin-play-playing">
                                 <i class="bi bi-stop-circle"></i>&nbsp;&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream_error.name}) }}
                             </div>
                         </td>
                     </tr>
                 {% endfor %}
             </table>
+
+
+            <div class="position-sticky top-50 end-0 w-50 d-none" id="playing-alert">
+                <div class="alert alert-danger mt-2 mb-3" role="alert">
+                    <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

@@ -203,7 +203,7 @@ defmodule ProgRadioApi.Streams do
 
   defp base_count_query() do
     from s in Stream,
-      where: s.enabled == true,
+      where: s.enabled == true and is_nil(s.redirect_to),
       select: count()
   end
 
