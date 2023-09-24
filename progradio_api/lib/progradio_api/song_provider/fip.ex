@@ -4,20 +4,8 @@ defmodule ProgRadioApi.SongProvider.Fip do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_fallback 3
-
-  @stream_ids %{
-    "fip_main" => 7,
-    "fip_rock" => 64,
-    "fip_jazz" => 65,
-    "fip_groove" => 66,
-    "fip_pop" => 78,
-    "fip_electro" => 74,
-    "fip_monde" => 69,
-    "fip_reggae" => 71,
-    "fip_nouveautes" => 70,
-    "fip_metal" => 77
-  }
+  @refresh_fallback_s 3
+  @refresh_fallback_ms 3000
 
   @impl true
   def has_custom_refresh(), do: true
@@ -29,8 +17,8 @@ defmodule ProgRadioApi.SongProvider.Fip do
   def get_refresh(_name, data, default_refresh) do
     next = Map.get(data, "delayToRefresh", default_refresh) + 5
 
-    if next < @refresh_fallback do
-      @refresh_fallback * 1000
+    if next < @refresh_fallback_s do
+      @refresh_fallback_ms
     else
       next
     end
@@ -39,27 +27,20 @@ defmodule ProgRadioApi.SongProvider.Fip do
   @impl true
   def get_data(name, _last_data) do
     id =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> case do
+           value when value == "fip_main" -> "fip"
+           value -> value
+         end
 
-    url = "https://api.radiofrance.fr/livemeta/live/#{id}/webrf_fip_player"
+    url = "https://www.radiofrance.fr/api/v2.1/stations/fip/webradios/#{id}"
 
     try do
-      data =
-        url
-        |> SongProvider.get()
-        |> Map.get(:body)
-        |> Jason.decode!()
-
-      now_unix = SongProvider.now_unix()
-
-      if data != nil and Map.get(data, "now") != nil and
-           Map.get(data["now"], "startTime") != nil and Map.get(data["now"], "endTime") != nil and
-           now_unix >= data["now"]["startTime"] and now_unix <= data["now"]["endTime"] do
-        data
-      else
-        nil
-      end
+      url
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> Jason.decode!()
     rescue
       _ -> nil
     end
