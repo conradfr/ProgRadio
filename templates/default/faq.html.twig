@@ -138,7 +138,75 @@
                 '<p style="margin-top: 5px">También puedes escuchar radios en cualquier idioma y de todo el mundo en <a href="' ~ path('app') ~ 'streaming">la página de streaming</a>, como <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italia ) o <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Alemania).</p>'
             ]
         }
-    ]
+    ],
+    "de": [
+        {
+            'question': "What is Programmes-Radio.com?",
+            'answer': [
+            "Programmes-Radio.com is an independant website displaying schedules from French and more broadly French speaking radios.",
+            "Data are updated each day from radios' websites.",
+            "You can also listen to any radio by clicking on its logo."
+        ]
+        },
+        {   'question': "How are radios sorted?",
+            'answer': [
+            "Radios are sorted by their ratings or alphabetically depending on the category."
+        ]
+        },
+        {
+            'question': "Some radios have an ad at the start of their streaming.",
+            'answer': [
+            "These ads are added by the radios themselves and not Programmes-Radio.com."
+        ]
+        },
+        {
+            'question': "I want to add my (web)radio:",
+            'answer': [
+            'We use the Radio-Browser API. To add your radio in it, <a target="_blank" href="https://www.radio-browser.info/#/add">click here</a>.'
+        ]
+        },
+        {
+            'question': "Available radios:",
+            'answer': [
+            self.radios_list(collections, radios, app.request.locale),
+            '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>, like <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italie) or <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germany).</p>'
+        ]
+        }
+    ],
+    "pt": [
+        {
+            'question': "What is Programmes-Radio.com?",
+            'answer': [
+            "Programmes-Radio.com is an independant website displaying schedules from French and more broadly French speaking radios.",
+            "Data are updated each day from radios' websites.",
+            "You can also listen to any radio by clicking on its logo."
+        ]
+        },
+        {   'question': "How are radios sorted?",
+            'answer': [
+            "Radios are sorted by their ratings or alphabetically depending on the category."
+        ]
+        },
+        {
+            'question': "Some radios have an ad at the start of their streaming.",
+            'answer': [
+            "These ads are added by the radios themselves and not Programmes-Radio.com."
+        ]
+        },
+        {
+            'question': "I want to add my (web)radio:",
+            'answer': [
+            'We use the Radio-Browser API. To add your radio in it, <a target="_blank" href="https://www.radio-browser.info/#/add">click here</a>.'
+        ]
+        },
+        {
+            'question': "Available radios:",
+            'answer': [
+            self.radios_list(collections, radios, app.request.locale),
+            '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>, like <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italie) or <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germany).</p>'
+        ]
+        }
+    ],
 }
 %}
 

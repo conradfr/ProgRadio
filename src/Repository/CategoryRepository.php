@@ -13,7 +13,7 @@ class CategoryRepository extends EntityRepository
 
     public function getCategories(): array {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT c.codeName as code_name, c.name as name_FR
+            'SELECT c.codeName as code_name, c.name_fr as name_FR, c.name_en as name_EN, c.name_es as name_ES, c.name_de as name_DE, c.name_PT as name_PT
                 FROM ' . Category::class . ' c
                 ORDER BY c.id asc
             '

@@ -76,7 +76,9 @@ class DefaultController extends AbstractBaseController
             path: [
                 'en' => '/{_locale}/schedule-streaming-{codeName}-{subRadioCodeName}/{date?}',
                 'fr' => '/{_locale}/grille-ecouter-{codeName}-{subRadioCodeName}/{date?}',
-                'es' => '/{_locale}/escuchar-{codeName}-{subRadioCodeName}/{date?}'
+                'es' => '/{_locale}/escuchar-{codeName}-{subRadioCodeName}/{date?}',
+                'de' => '/{_locale}/zuhören-{codeName}-{subRadioCodeName}/{date?}',
+                'pt' => '/{_locale}/ouvir-{codeName}-{subRadioCodeName}/{date?}'
             ],
             name: 'radio_subradio',
             defaults: [
@@ -158,7 +160,9 @@ class DefaultController extends AbstractBaseController
             path: [
                 'en' => '/{_locale}/schedule-streaming-{codeName}/{date?}',
                 'fr' => '/{_locale}/grille-ecouter-{codeName}/{date?}',
-                'es' => '/{_locale}/escuchar-{codeName}/{date?}'
+                'es' => '/{_locale}/escuchar-{codeName}/{date?}',
+                'de' => '/{_locale}/zuhören-{codeName}/{date?}',
+                'pt' => '/{_locale}/ouvir-{codeName}/{date?}'
             ],
             name: 'radio',
             defaults: [
@@ -190,7 +194,9 @@ class DefaultController extends AbstractBaseController
             path: [
                 'en' => '/{_locale}/stream-{shortId}/listen-{codename}',
                 'fr' => '/{_locale}/stream-{shortId}/ecouter-{codename}',
-                'es' => '/{_locale}/stream-{shortId}/escuchar-{codename}'
+                'es' => '/{_locale}/stream-{shortId}/escuchar-{codename}',
+                'de' => '/{_locale}/stream-{shortId}/zuhören-{codename}',
+                'pt' => '/{_locale}/stream-{shortId}/ouvir-{codename}'
             ],
             name: 'streams_one_short',
             defaults: [
@@ -255,7 +261,9 @@ class DefaultController extends AbstractBaseController
             path: [
                 'en' => '/{_locale}/stream/{id}/listen-{codename}',
                 'fr' => '/{_locale}/stream/{id}/ecouter-{codename}',
-                'es' => '/{_locale}/stream/{id}/escuchar-{codename}'
+                'es' => '/{_locale}/stream/{id}/escuchar-{codename}',
+                'de' => '/{_locale}/stream/{id}/zuhören-{codename}',
+                'pt' => '/{_locale}/stream/{id}/ouvir-{codename}'
             ],
             name: 'streams_one',
             defaults: [
@@ -302,7 +310,7 @@ class DefaultController extends AbstractBaseController
                 'priority' => '0.5',
                 'changefreq' => 'weekly'
             ],
-            requirements: ['_locale' => 'en|fr|es']
+            requirements: ['_locale' => 'en|fr|es|de|pt']
         )
     ]
     public function top(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
@@ -508,7 +516,7 @@ class DefaultController extends AbstractBaseController
             defaults: [ 'subdomain' => 'www'],
             requirements: [
                 'subdomain' => 'www|local',
-                '_locale' => 'en|fr|es'
+                '_locale' => 'en|fr|es|de|pt'
             ]
         )
     ]
@@ -529,7 +537,7 @@ class DefaultController extends AbstractBaseController
                 'changefreq' => 'daily'
             ],
             requirements: [
-                '_locale' => 'en|fr|es'
+                '_locale' => 'en|fr|es|de|pt'
             ]
         )
     ]

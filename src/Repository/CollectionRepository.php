@@ -28,7 +28,7 @@ class CollectionRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('c.codeName as code_name, c.name_fr as name_FR, c.name_en as name_EN, c.name_es as name_ES, c.shortName as short_name, 
+        $qb->select('c.codeName as code_name, c.name_fr as name_FR, c.name_en as name_EN, c.name_es as name_ES, c.name_de as name_DE, c.name_pt as name_PT, c.shortName as short_name, 
                 c.priority, c.sortField as sort_field, c.sortOrder as sort_order,
                 GROUP_CONCAT(r.codeName) as radios')
             ->from(Collection::class, 'c')

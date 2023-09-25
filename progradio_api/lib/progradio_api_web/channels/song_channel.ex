@@ -114,26 +114,26 @@ defmodule ProgRadioApiWeb.SongChannel do
     Repo.one(query)
   end
 
-  @spec get_collection_streams(String.t()) :: any()
-  defp get_collection_streams(collection_code_name) do
-    query =
-      from(rs in RadioStream,
-        join: r in Radio,
-        on: r.id == rs.radio_id,
-        join: c in Collection,
-        on: c.id == r.collection_id,
-        select: %{
-          radio_code_name: r.code_name,
-          radio_stream_code_name: rs.code_name,
-          id: rs.id,
-          type: "radio_stream",
-          collection_code_name: c.code_name
-        },
-        where:
-          r.active == true and rs.main == true and rs.enabled == true and
-            rs.current_song == true and c.code_name == ^collection_code_name
-      )
-
-    Repo.all(query)
-  end
+#  @spec get_collection_streams(String.t()) :: any()
+#  defp get_collection_streams(collection_code_name) do
+#    query =
+#      from(rs in RadioStream,
+#        join: r in Radio,
+#        on: r.id == rs.radio_id,
+#        join: c in Collection,
+#        on: c.id == r.collection_id,
+#        select: %{
+#          radio_code_name: r.code_name,
+#          radio_stream_code_name: rs.code_name,
+#          id: rs.id,
+#          type: "radio_stream",
+#          collection_code_name: c.code_name
+#        },
+#        where:
+#          r.active == true and rs.main == true and rs.enabled == true and
+#            rs.current_song == true and c.code_name == ^collection_code_name
+#      )
+#
+#    Repo.all(query)
+#  end
 end

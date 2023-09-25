@@ -21,6 +21,26 @@ class Category
     #[ORM\Column(type: 'string', length: 100)]
     private ?string $name = null;
 
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_fr;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_en;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_es;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_de;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_pt;
+
     public function getId(): int
     {
         return $this->id;

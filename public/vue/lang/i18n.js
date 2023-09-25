@@ -5,7 +5,7 @@ import { messages, dateTimeFormats } from './lang';
 const i18n = createI18n({
   // legacy: false,
   // globalInjection: true,
-  fallbackLocale: 'fr',
+  fallbackLocale: 'en',
   locale,
   messages,
   dateTimeFormats

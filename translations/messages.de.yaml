@@ -1,0 +1,258 @@
+general:
+    main_description: Radio-Streaming richtig gemacht
+    main_title: Streamen Sie Radios aus der ganzen Welt.
+
+menu:
+    account: Mein Konto
+    admin:
+        dashboard: Armaturenbrett
+        listening: Zuhören
+        overloading: Überladen von Streams
+        playing_errors: Streams-Fehler
+        shares: Aktien
+    all: Alle Radios
+    app: App für Android
+    contact: Kontakt
+    faq: Häufig gestellte Fragen
+
+    favorites: Meine Favoriten
+    favorites_menu:
+        all: Weltweit
+        be: Belgien
+        ch: Schweiz
+        fr: Frankreich
+        usa: Vereinigte Staaten
+        mx: Mexiko
+
+    songs: Gespeicherte Songs
+
+    home:
+        enable: Diese Seite als Homescreen einrichten
+        disable: Löschen Sie den benutzerdefinierten Homescreen
+    logout: Abmelden
+    mode:
+        dark: Dunkler Modus
+        light: Licht-Modus
+    now: Aktuell auf Sendung
+    params: Params
+    plus: Mehr
+    schedule: Radioführer
+    signon: Einloggen
+    signup: Melde dich an
+    streaming: Weltweites Streaming
+    timer: Timer
+    title: Menü
+
+page:
+    contact:
+        title: Kontakt
+        email: E-Mail
+        message: 'Nachricht *'
+        name: 'Name *'
+        send: 'Senden'
+        sent: 'Ihre Nachricht wurde gesendet.'
+
+    faq:
+        page_title: 'FAQ - Radiosendungen in Frankreich'
+        page_description: 'Fragen'
+        title: 'Häufig gestellte Fragen'
+
+    forgotten_password:
+        error: <strong>Es ist ein Fehler aufgetreten.</strong><br>Wenn der Link veraltet war, starten Sie den Vorgang bitte erneut.
+        click_here: hier klicken
+        done_title: Neuinitialisierung des Passworts
+        done: '<strong>Ihr Passwort wurde aktualisiert.</strong><br>Sie können sich anmelden %link%hier%link_end%.'
+        page_title: Passwort vergessen
+        success: Wenn ein Konto <strong>%email%</strong> gefunden wurde, wurde eine E-Mail mit einem Link zur Reinitialisierung gesendet.
+        submit: Einreichen
+
+    login:
+        forgotten_password: Passwort vergessen
+        page_title: Einloggen
+
+    now:
+        back: '← Zurück zum Radio Guid'
+        no_schedule: '<strong>Ups...</strong> Es können keine Sendungen angezeigt werden.'
+        title: 'Aktuell im Radio'
+
+    radio:
+        advanced: Benutze den fortgeschrittenen Player <br>(Webradios, aktueller Titel...)
+        back: '← Zurück zum Radio Guid'
+        current: '↓ Gehe zur aktuellen Sendung'
+        description: 'Tagesablauf von Radio %radio%!'
+        goto_today: Überprüfen Sie den heutigen Zeitplan
+        goto_schedule: Überprüfen Sie den Radioplan
+        more_radios: 'Mehr Radios'
+        no_schedule: 'Zeitplan nicht verfügbar'
+        not_today: Du durchsuchst einen anderen Tagesplan
+        play: 'Höre %radio%'
+        stop: 'Stopp %radio%'
+        summary: 'Zusammenfassung'
+        title: '%radio% live hören'
+        website: Webseite'
+
+    registered:
+        page_title: Melde dich an
+        alert_1: Ihr Konto wurde erstellt!
+        alert_2: Ihre Favoriten (falls vorhanden) wurden zu Ihrem Konto hinzugefügt.
+        what_now_question: Was möchtest du jetzt tun?
+        what_now_choice1: Mit meinem Konto verbinden
+        what_now_choice2: Überprüfen Sie die Zeitpläne
+        what_now_choice3: Streaming-Radios anhören
+
+    stream:
+        country: Land
+        description: 'Hören Sie Radios aus der ganzen Welt'
+        discover: Entdecken Sie mehr Radios, suchen Sie nach Land und Stil...
+        find: Suche
+        find_deezer: Auf Deezer finden
+        find_spotify: Auf Spotify finden
+        find_youtube: Auf Youtube finden
+        Zuhörer: Zuhörer
+        spielen: Abspielen
+        playing_error: Abspielfehler (Radio-Streaming ist möglicherweise nicht verfügbar)
+        vorgeschlagen: Vorgeschlagene Radios
+        Stichworte: Schlagworte
+        Titel: 'Höre %radio% an'
+        Webseite: Webseite
+
+    top:
+        page_title: Die besten Radios in %country%
+        Beschreibung: 'Höre die besten Radios aus %country%'
+        mehr: Weitere Radios von %country%
+
+    user:
+        page_title: Ein Konto erstellen
+
+    account:
+        prefix: My account
+        menu:
+            E-Mail: E-Mail
+            Passwort: Passwort
+            löschen: Löschen
+        email:
+            page_title: Aktualisiere meine E-Mail
+            info_1: Dadurch wird die E-Mail-Adresse aktualisiert, die als Login verwendet wurde.
+            info_2: Eine Bestätigung wird an die frühere E-Mail-Adresse gesendet.
+            erfolgreich: Die E-Mail wurde aktualisiert.
+            new_email: 'Neue E-Mail-Adresse: '
+            new_email_placeholder: example@email.com
+            update_btn: Aktualisieren
+        password:
+            page_title: Aktualisiere mein Passwort
+            erfolgreich: Das Passwort wurde aktualisiert.
+            update_btn: Aktualisieren
+        delete:
+            page_title: Mein Konto löschen
+            Warnung: Dieser Vorgang ist irreversibel. Ihre Favoriten werden gelöscht.
+            bestätigen: Bist du sicher, dass du dein Konto löschen möchtest?
+            delete_btn: Lösche meinen Account
+        delete_confirm:
+            success: Ihr Konto wurde erfolgreich gelöscht.
+
+boxes:
+    already_account:
+        title: Hast du ein Konto?
+        content: Klicken Sie hier um sich anzumelden
+
+    no_account:
+        title: Noch kein Konto?
+        content: Klicken Sie hier um sich anzumelden!
+
+    why_account:
+        title: Warum anmelden?
+        content: "- Sie können Ihre Favoriten zwischen Ihren Geräten synchronisieren."
+        content2: "- Speichern Sie die ausgestrahlten Songs."
+        content3: "- Weniger Werbung."
+
+registrationForm:
+    email: 'E-mail'
+    error:
+        captcha: 'Ungültiges Captcha, bitte versuchen Sie es erneut.'
+        empty: Dieses Feld darf nicht leer sein
+        password_min: 'Das Passwort muss mindestens 8 Zeichen lang sein.'
+        password: 'Passwort und Bestätigung sind nicht identisch.'
+    captcha: 'Schreiben Sie unten stehende Buchstaben und Zahlen'
+    password: 'Passwort'
+    password_confirm: 'Bestätigung des Passworts'
+    submit_create: 'Ein Konto erstellen'
+
+connectionForm:
+    already_logged: Sie sind derzeit als %email% angemeldet
+    logout: abmelden
+    email: 'E-mail'
+    password: 'Passwort'
+    remember_me: 'Erinnere dich an mich'
+    submit_connect: 'Einloggen'
+
+updatePasswordForm:
+    new: 'Neues Passwort:'
+    new_confirm: Bestätigung des neuen Passworts
+    error_not_same: Neue Passwörter sind nicht identisch.
+    error_not_empty: Dieses Feld darf nicht leer sein
+    error_length: Das neue Passwort muss mindestens 8 Zeichen lang sein.
+
+footer:
+    alternate_lang: Français
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+
+legal: Rechtlicher Hinweis
+
+cookie:
+    accept: Akzeptieren
+    allow: Personalisierte Werbung zulassen?
+    deny: Verweigern
+    disclaimer: (Diese Website verfolgt ihre Besucher nicht und verkauft keine Daten)
+
+admin:
+    dashboard:
+        title: Dashboard
+        menu:
+            brief: Brief
+            table: Table
+        table:
+            shows: Shows
+            sections: Sections
+            stream_abbr: St.
+        accounts:
+            title: Accounts
+            active: '%number% active accounts'
+            email: email
+            created_at: Created
+            last: (last %number%)
+        no_schedule:
+            title: Radios with no schedule today
+            shows: Sections
+            sections: Sections
+            all_ok: All radios have schedule today.
+        stream_errors:
+            title: Stream errors
+            error: Errors for <strong>%number%</strong> checks
+            link: link
+            no_errors: All streams working.
+        live_song_errors:
+            title: Live song errors
+            error: Errors for <strong>%number%</strong> checks
+            reset_all: reset all
+            link: link
+            no_errors: No errors recorded.
+
+    listening:
+        title: currently listening
+        today: Today
+        yesterday: Yesterday
+        this_month: This month
+        last_month: Last month
+        ratings: Ratings
+
+    stream_errors:
+        title: Streaming errors
+        name: Name
+        errors: Errors
+        view: See
+        edit: Edit
+        reset: Reset
+        reset_all: Reset all

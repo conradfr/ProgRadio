@@ -21,7 +21,7 @@ const adsense_tag_horiz_key = '{{ adsense_tag_radio_horiz_key }}';
 const adsense_tag_horiz_fix_key = '{{ adsense_tag_radio_horiz_fix_key }}';
 
 const scrollToCursor = function() {
-  const homePaths = ['/fr/', '/en/'];
+  const homePaths = ['/fr/', '/en/', '/es/', '/de/', '/pt/'];
   if (window.location.href.includes('schedule') || (homePaths.indexOf(window.location.pathname) !== -1)) {
     document.getElementById('app').__vue_app__.config.globalProperties.$pinia._s.get('schedule').scrollToCursor();
   }

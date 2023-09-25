@@ -1,0 +1,32 @@
+general:
+    hello: Hallo,
+
+signature:
+    regards: Mit freundlichen Grüßen
+
+signup:
+    subject:  '%name% - Willkommen! '
+    welcome: Willkommen!
+    text_1: Du bist jetzt auf %link% registriert
+    text2: Ihre Favoriten (falls vorhanden) wurden auf Ihr Konto übertragen.
+
+reset:
+    subject: '%name% - Passwort zurückgesetzt'
+    header: Passwort zurückgesetzt
+    text_1: Eine Anfrage zum Zurücksetzen des mit dieser E-Mail verknüpften Passworts wurde auf %url% gestellt
+    text_2: "Um Ihr Passwort zu aktualisieren, klicken Sie hier (24 Stunden gültig): %link%"
+    text_3: Wenn Sie keine Anfrage gestellt haben, können Sie diese E-Mail ignorieren.
+
+email_change:
+    subject: '%name% - E-Mail-Aktualisierung'
+    header: E-Mail-Aktualisierung
+    text_1: Eine Anfrage zur Aktualisierung der E-Mail-Adresse eines Kontos auf %new_email% wurde auf %url% gestellt.
+    text_2:
+    text_3: "Falls Sie sie nicht initiiert haben, können Sie diese Anfrage stornieren, indem Sie hier klicken (gültig für 24 Stunden): %link%"
+    text_4: Du solltest auch dein Passwort aktualisieren.
+
+password_update:
+    subject: '%name% - Passwort aktualisiert'
+    header: Kennwortaktualisierung
+    text_1: Das mit diesem Konto verknüpfte Passwort wurde auf %url% erstellt
+    text_2: "Wenn Sie es nicht initiiert haben, können Sie diese Anfrage stornieren und ein neues Passwort festlegen, indem Sie hier klicken (24 Stunden gültig): %link%"

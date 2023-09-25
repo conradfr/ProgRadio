@@ -167,7 +167,7 @@ boxes:
         title: Pourquoi s'enregistrer ?
         content: "- Un compte vous permet d'accéder à vos favoris radios et streamings depuis n'importe quel navigateur et depuis l'application."
         content2: "- Sauvegarder le titre des chansons en cours d'écoute."
-        content3: "- Pas de publicités !"
+        content3: "- Moins de publicités"
 
 registrationForm:
     email: 'Courriel'
@@ -201,6 +201,8 @@ footer:
     es: Español
     en: English
     fr: Français
+    de: Deutsch
+    pt: Portuguesa
 
 legal: 'Mentions légales'
 

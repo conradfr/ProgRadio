@@ -178,7 +178,7 @@ export const messages = {
         updated: 'Parameters has been updated.'
       },
       player: {
-        autoplay_error: 'Your browser does not allow autoplay. Please ckick play one more time',
+        autoplay_error: 'Your browser does not allow autoplay. Please click play one more time',
         play_error: 'Media error',
         placeholder: 'Click on a radio logo to start streaming',
         previous: 'Play {radio} again',
@@ -413,5 +413,273 @@ export const messages = {
         }
       },
     }
+  },
+  de: {
+    message: {
+      consent: {
+        accept: 'Akzeptieren',
+        allow: 'Bevorzugen Sie personalisierte Werbung? ',
+        deny: 'Verweigern',
+        disclaimer: '(Diese Website verfolgt ihre Besucher nicht und verkauft keine Daten)'
+      },
+      loading: 'Wird geladen...',
+      generic: {
+        delete: 'Löschen',
+        error: 'Es ist ein Fehler aufgetreten.'
+      },
+      now_page: {
+        back: '← Zurück zum Radioguide',
+        title: 'Aktuell im Radio'
+      },
+      params_page: {
+        automatic: 'Automatisch',
+        automatic_help: 'Basierend auf Ihrer Verbindung und Bandbreite.',
+        deactivated: 'Deaktiviert',
+        description: 'Um die Werbung zu Beginn eines Radiostreams und die Ladezeiten zu reduzieren, kann der Player zwei Streams gleichzeitig lesen, wenn Sie das Radio umschalten oder pausieren.',
+        duration_10: 'Während 10 Minuten',
+        duration_30: 'Während 30 Minuten',
+        no_support: 'Ihr Browser unterstützt keine automatische Erkennung.',
+        save: 'Speichern',
+        sub_title: 'Multiplex streamen',
+        title: 'Spielerparameter',
+        two_flux: 'Zwei gleichzeitige Streams',
+        updated: 'Die Parameter wurden aktualisiert.'
+      },
+      player: {
+        autoplay_error: 'Ihr Browser erlaubt kein Autoplay. Bitte klicken Sie noch einmal auf Play.',
+        play_error: 'Medienfehler',
+        placeholder: 'Klicken Sie auf ein Radio-Logo, um das Streaming zu starten',
+        previous: '{radio} erneut abspielen',
+        save_song: 'Dieses Lied speichern ({song})',
+        song_saved: 'Das Lied wurde gespeichert',
+        favorites: {
+          add: 'Zu den Favoriten hinzufügen',
+          remove: 'Aus den Favoriten entfernen'
+        },
+        timer: {
+          cancelled: 'Der Timer wurde storniert',
+          end_in: 'Timer endet in 0 Minute | Timer endet in {minutes} Minute | Timer endet in {minutes} Minuten',
+          finish: 'Wiedergabe gestoppt (Timer)',
+          modal: {
+            abrv: 'mn',
+            add: 'Hinzufügen',
+            cancel: 'Stornieren',
+            close: 'Schliessen',
+            length: 'Länge der Zeit',
+            placeholder: 'Minuten',
+            quick: 'Tastenkürzeleinstellung',
+            set: 'Timer einstellen',
+            title: 'Timer',
+            x_minutes: '{minutes} Minuten'
+          },
+          set: 'Der Timer wurde auf {minutes} Minute (n) eingestellt',
+          title: 'Timer',
+          tooltip: 'Klicken Sie hier, um den Timer einzustellen'
+        }
+      },
+      radio_page: {
+        back: '← Zurück zum Radioguide',
+        current: '↓ Gehe zur aktuellen Sendung',
+        play: '{radio} anhören',
+        stop: 'Stopp',
+        no_schedule: 'Zeitplan nicht verfügbar',
+        title: 'Zeitplan des Radios {radio}',
+        webradios: 'Webradios'
+      },
+      schedule: {
+        no_schedule: 'Zeitplan nicht verfügbar :(',
+        no_radio: 'Kein Radio in dieser Sammlung',
+        no_radio_favorites: 'Sie haben keine Lieblingsradios',
+        preroll_filter: 'Radios mit Werbung am Anfang',
+        title: 'Radioprogramme in Frankreich, Streaming und mehr!',
+        today: 'Heute',
+        tomorrow: 'Morgen',
+        tooltip: 'Weitere Radios hier',
+        radio_list: {
+          page: 'Seite „Zeitplan“',
+          pick_region_title: 'Wählen Sie einen Bereich',
+          region: {
+            modal: {
+              close: 'Schliessen',
+            }
+          }
+        }
+      },
+      songs_page: {
+        find: 'Search',
+        find_deezer: 'Deezer',
+        find_spotify: 'Spotify',
+        find_youtube: 'Youtube',
+        no_songs: 'You have no songs saved yet.',
+        title: 'Saved songs',
+      },
+      streaming: {
+        categories: {
+          all_countries: 'Alle Länder',
+          favorites: 'Favoriten',
+          last: 'Die Leute hören gerade ...',
+        },
+        close: 'Zurück',
+        country: 'Land',
+        country_search_no_result: 'Kein Land gefunden',
+        listeners_title: 'Zuhörer',
+        listeners: 'Derzeit kein Zuhörer. | Derzeit ein Zuhörer. | Derzeit {how_many} Zuhörer.',
+        more: 'Mehr sehen',
+        no_results: 'Kein Radio',
+        play: '{radio} anhören',
+        playing: 'Spielend',
+        random: 'Spiel ein zufälliges Radio',
+        search_placeholder: 'Suche nach Name, Stil, Inhalt...',
+        stop: 'Stopp',
+        sort: {
+          name: 'In alphabetischer Reihenfolge',
+          popularity: 'Nach Beliebtheit',
+          random: 'In zufälliger Reihenfolge',
+          last: 'Von zuletzt gespielt'
+        },
+        title: 'Streame Radios aus der ganzen Welt!',
+        website: 'Webseite'
+      },
+      toast: {
+        home: {
+          enabled: 'Diese Seite wurde als Homescreen eingerichtet.',
+          disabled: 'Diese Seite wurde als Homescreen entfernt.'
+        }
+      },
+    },
+  },
+  pt: {
+    message: {
+      consent: {
+        accept: 'Aceitar',
+        allow: 'Prefere anúncios personalizados?',
+        deny: 'Negar',
+        disclaimer: '(Este site não rastreia seus visitantes nem vende dados)'
+      },
+      loading: 'Carregando...',
+      generic: {
+        delete: 'Excluir',
+        error: 'Ocorreu um erro.'
+      },
+      now_page: {
+        back: '← Voltar ao guia de rádio',
+        title: 'Atualmente no rádio'
+      },
+      params_page: {
+        automatic: 'Automático',
+        automatic_help: 'Com base na sua conexão e largura de banda.',
+        deactivated: 'Desativado',
+        description: 'Para reduzir os anúncios no início de uma transmissão de rádio e o tempo de carregamento, o player pode ler duas transmissões simultâneas quando você troca ou pausa o rádio.',
+        duration_10: 'Durante 10 min',
+        duration_30: 'Durante 30 min',
+        no_support: 'Seu navegador não suporta a detecção automática. ',
+        save: 'Salvar',
+        sub_title: 'Transmissão múltipla',
+        title: 'Parâmetros do jogador',
+        two_flux: 'Dois fluxos simultâneos',
+        updated: 'Os parâmetros foram atualizados. '
+      },
+      player: {
+        autoplay_error: 'Seu navegador não permite a reprodução automática.',
+        play_error: 'Erro de mídia',
+        placeholder: 'Clique no logotipo de uma rádio para começar a transmitir',
+        previous: 'Toque {radio} novamente',
+        save_song: 'Salve esta música ({song})',
+        song_saved: 'A música foi salva',
+        favorites: {
+          add: 'Adicionar aos favoritos',
+          remove: 'Remover dos favoritos'
+        },
+        timer: {
+          cancelled: 'O cronômetro foi cancelado',
+          end_in: 'O cronômetro termina em 0 minuto | O cronômetro termina em {minutes} minuto | O cronômetro termina em {minutos} minutos',
+          finish: 'A reprodução foi interrompida (cronômetro) ',
+          modal: {
+            abrv: 'n',
+            add: 'Adicionar',
+            cancel: 'Cancelar',
+            close: 'Fechar',
+            length: 'Duração do tempo',
+            placeholder: 'Minutos',
+            quick: 'Configuração de atalho',
+            set: 'Definir temporizador',
+            title: 'Timer',
+            x_minutes: '{minutes} minutos'
+          },
+          set: 'O cronômetro foi configurado para {minutos} minuto (s)',
+          title: 'Timer',
+          tooltip: 'Clique aqui para definir o temporizador'
+        }
+      },
+      radio_page: {
+        back: '← Voltar ao guia de rádio',
+        current: '↓ Ir para o programa atual',
+        play: 'Ouça {radio} ',
+        stop: 'Parar',
+        no_schedule: 'Programação não disponível',
+        title: 'Horário da rádio {rádio}',
+        webradios: 'Webrádios'
+      },
+      schedule: {
+        no_schedule: 'Programação não disponível :( ',
+        no_radio: 'Não há rádio nesta coleção',
+        no_radio_favorites: 'Você não tem rádios favoritas',
+        preroll_filter: 'Rádios com anúncios no início',
+        title: 'Horários de rádio na França, streaming e muito mais!',
+        today: 'Hoje',
+        tomorrow: 'Amanhã',
+        tooltip: 'Mais rádios aqui',
+        radio_list: {
+          page: 'Página de programação',
+          pick_region_title: 'Selecione uma área',
+          region: {
+            modal: {
+              close: 'Fechar',
+            }
+          }
+        }
+      },
+      songs_page: {
+        find: 'Pesquisar',
+        find_deezer: 'Deezer',
+        find_spotify: 'Spotify',
+        find_youtube: 'Youtube',
+        no_songs: 'Você ainda não tem músicas salvas. ',
+        title: 'Músicas salvas',
+      },
+      streaming: {
+        categories: {
+          all_countries: 'Todos os países',
+          favorites: 'Favoritos',
+          last: 'As pessoas atualmente ouvem...',
+        },
+        close: 'Voltar',
+        country: 'País',
+        country_search_no_result: 'Nenhum país encontrado',
+        listeners_title: 'Ouvintes',
+        listeners: 'Nenhum ouvinte no momento. | Atualmente, um ouvinte. | Atualmente {how_many} ouvintes.',
+        more: 'Veja mais',
+        no_results: 'Sem rádio',
+        play: 'Ouça {radio} ',
+        playing: 'Jogando',
+        random: 'Tocar uma rádio aleatória',
+        search_placeholder: 'Pesquisar por nome, estilo, conteúdo...',
+        stop: 'Parar',
+        sort: {
+          name: 'Por ordem alfabética',
+          popularity: 'Por popularidade',
+          random: 'Por ordem aleatória',
+          last: 'Por último jogado'
+        },
+        title: 'Transmita rádios de todo o mundo!',
+        website: 'Site'
+      },
+      toast: {
+        home: {
+          enabled: 'Esta página foi configurada como tela inicial.',
+          disabled: 'Esta página foi removida como tela inicial.'
+        }
+      },
+    },
   },
 };

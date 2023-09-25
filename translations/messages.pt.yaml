@@ -1,0 +1,260 @@
+general:
+    main_description: Streaming de rádio feito corretamente
+    main_title: Transmita rádios de todo o mundo.
+
+menu:
+    account: My account
+    admin:
+        dashboard: Painel
+        listening: Ouvindo
+        overloading: Sobrecarga do fluxo
+        playing_errors: Erros de transmissões
+        shares: Ações
+    all: Todos os rádios
+    app: Aplicativo Android
+    contact: Contacto
+    faq: Perguntas frequentes
+
+    favorites: Meus favoritos
+    favorites_menu:
+        all: Em todo o mundo
+        be: Bélgica
+        ch: Suíça
+        fr: França
+        usa: Estados Unidos
+        mx: México
+
+    songs: Músicas salvas
+
+    home:
+        enable: Defina esta página como tela inicial
+        disable: Exclua a tela inicial personalizada
+    logout: Sair
+    mode:
+        dark: Modo escuro
+        light: Modo de luz
+    now: Atualmente no ar
+    params: Parâmetros
+    plus: Mais
+    schedule: Guia de rádio
+    signon: Entrar
+    signup: Inscrever-se
+    streaming: Streaming mundial
+    timer: Temporizador
+    title: Menu
+
+page:
+    contact:
+        title: 'Entre em contato'
+        email: 'E-mail'
+        message: 'Mensagem *'
+        name: 'Nome *'
+        send: 'Enviar'
+        sent: 'Sua mensagem foi enviada.'
+
+    faq:
+        page_title: 'Perguntas frequentes - Programas de rádio na França'
+        page_description: 'Perguntas'
+        title: 'Perguntas frequentes'
+
+    forgotten_password:
+        error: <strong>Ocorreu um erro.</strong> <br>Se o link estiver obsoleto, inicie o processo novamente.
+        click_here: clique aqui
+        done_title: Reinicialização da senha
+        done: '<strong>Sua senha foi atualizada.</strong> <br>Você pode fazer login em %link%here%link_end%.'
+        page_title: Senha esquecida
+        success: Se uma conta <strong>%email%</strong> foi encontrada, um e-mail com um link de reinicialização foi enviado.
+        submit: Enviar
+
+    login:
+        forgotten_password: Senha esquecida?
+        page_title: Login
+
+    now:
+        back: '← Voltar ao guia de rádio'
+        no_schedule: '<strong>Ops...</strong> nenhum programa para exibir. '
+        title: 'Atualmente no rádio'
+
+    radio:
+        advanced: Use o player avançado <br>(rádios web, faixa atual...)
+        back: '← Voltar ao guia de rádio'
+        current: '↓ Ir para o programa atual'
+        description: 'Horário diário da rádio %radio%! '
+        goto_today: Confira a programação de hoje
+        goto_schedule: Verifique a programação da rádio
+        more_radios: 'Mais rádios'
+        no_schedule: 'Programação não disponível'
+        not_today: Você está navegando na programação de outro dia
+        play: 'Ouça %radio%'
+        stop: 'Stop %radio%'
+        summary: 'Resumo'
+        title: 'Ouça %radio% ao vivo'
+        website: 'Site'
+
+    registered:
+        page_title: Inscreva-se
+        alert_1: Sua conta foi criada!
+        alert_2: Seus favoritos (se houver) foram adicionados à sua conta.
+        what_now_question: O que você quer fazer agora?
+        what_now_choice1: Conectar à minha conta
+        what_now_choice2: Verifique os horários
+        what_now_choice3: Ouça rádios em streaming
+
+    stream:
+        country: País
+        description: 'Ouça rádios de todo o mundo'
+        discover: Descubra mais rádios, pesquise por país e estilo...
+        find: Pesquisar
+        find_deezer: Encontre na Deezer
+        find_spotify: Encontre no Spotify
+        find_youtube: Encontre no Youtube
+        listeners: Ouvintes
+        playing: Jogando
+        playing_error: Erro de reprodução (a transmissão de rádio pode estar indisponível)
+        suggested: Rádios sugeridos
+        tags: Etiquetas
+        title: 'Ouça %radio%'
+        website: Site
+
+    top:
+        page_title: As melhores rádios em %country%
+        description: 'Ouça as melhores rádios de %country%'
+        more: Mais rádios de %country%
+
+    user:
+        page_title: Crie uma conta
+
+    account:
+        prefix: Minha conta
+        menu:
+            email: E-mail
+            password: Senha
+            delete: Excluir
+        email:
+            page_title: Atualizar meu e-mail
+            info_1: Isso atualizará o e-mail usado como login.
+            info_2: Uma confirmação será enviada para o antigo endereço de e-mail.
+            success: O e-mail foi atualizado.
+            new_email: 'Novo endereço de e-mail: '
+            new_email_placeholder: example@email.com
+            update_btn: Atualizar
+        password:
+            page_title: Atualizar minha senha
+            success: a senha foi atualizada.
+            update_btn: Atualizar
+        delete:
+            page_title: Excluir minha conta
+            warning: Esta operação é irreversível. Seus favoritos serão excluídos.
+            confirm: Tem certeza de que deseja excluir sua conta?
+            delete_btn: Excluir minha conta
+        delete_confirm:
+            success: Sua conta foi excluída com sucesso.
+
+
+boxes:
+    already_account:
+        title: Você tem uma conta?
+        content: Clique aqui para fazer login
+
+    no_account:
+        title: Ainda não tem conta?
+        content: Clique aqui para se inscrever!
+
+    why_account:
+        title: Por que se inscrever?
+        content: "- Você pode sincronizar seus favoritos entre seus dispositivos."
+        content2: "- Salvar músicas transmitidas."
+        content3: "- Menos anúncios."
+
+registrationForm:
+    email: 'E-mail'
+    error:
+        captcha: 'Captcha inválido, tente novamente. '
+        empty: Este campo não pode estar vazio
+        password_min: 'A senha deve ter pelo menos 8 caracteres.'
+        password: 'password_min: A senha deve ter pelo menos 8 caracteres.'
+    captcha: 'Escreva letras e números escritos abaixo'
+    password: 'Senha'
+    password_confirm: 'Confirmação de senha'
+    submit_create: 'Criar uma conta'
+
+connectionForm:
+    already_logged: Você está atualmente logado como %email%
+    logout: logout
+    email: 'E-mail'
+    password: 'Senha'
+    remember _me: 'Lembre-se de mim'
+    submit_connect: 'Login'
+
+updatePasswordForm:
+    new: 'Nova senha: '
+    new_confirm: Confirmação da nova senha
+    error_not_same: As novas senhas não são idênticas.
+    error_not_empty: Este campo não pode estar vazio
+    error_length: A nova senha deve ter pelo menos 8 caracteres.
+
+footer:
+    alternate_lang: Français
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Portuguesa
+
+legal: Aviso legal
+
+cookie:
+    accept: Aceitar
+    allow: Permitir anúncios personalizados?
+    deny: Negar
+    disclaimer: (Este site não rastreia seus visitantes nem vende dados)
+
+admin:
+    dashboard:
+        title: Dashboard
+        menu:
+            brief: Brief
+            table: Table
+        table:
+            shows: Shows
+            sections: Sections
+            stream_abbr: St.
+        accounts:
+            title: Accounts
+            active: '%number% active accounts'
+            email: email
+            created_at: Created
+            last: (last %number%)
+        no_schedule:
+            title: Radios with no schedule today
+            shows: Sections
+            sections: Sections
+            all_ok: All radios have schedule today.
+        stream_errors:
+            title: Stream errors
+            error: Errors for <strong>%number%</strong> checks
+            link: link
+            no_errors: All streams working.
+        live_song_errors:
+            title: Live song errors
+            error: Errors for <strong>%number%</strong> checks
+            reset_all: reset all
+            link: link
+            no_errors: No errors recorded.
+
+    listening:
+        title: currently listening
+        today: Today
+        yesterday: Yesterday
+        this_month: This month
+        last_month: Last month
+        ratings: Ratings
+
+    stream_errors:
+        title: Streaming errors
+        name: Name
+        errors: Errors
+        view: See
+        edit: Edit
+        reset: Reset
+        reset_all: Reset all

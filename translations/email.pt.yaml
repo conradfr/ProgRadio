@@ -1,0 +1,32 @@
+general:
+    hello: Olá,
+
+signature:
+    regards: Atenciosamente,
+
+signup:
+    subject: '%name% - Bem-vindo! '
+    welcome: Bem-vindo!
+    text_1: Agora você está registrado em %link%
+    text2: Seus favoritos (se houver) foram transferidos para sua conta.
+
+reset:
+    subject: '%name% - Redefinição de senha'
+    header: Redefinição de senha
+    text_1: Uma solicitação para redefinir a senha associada a este e-mail foi feita em %url%
+    text_2: "Para atualizar sua senha clique aqui (válido por 24h): %link%"
+    text_3: Se você não fez nenhuma solicitação, pode ignorar este e-mail.
+
+email_change:
+    subject: '%name% - Atualização por e-mail'
+    header: Atualização por e-mail
+    text_1: Uma solicitação para atualizar o e-mail de uma conta para %new_email% foi feita em %url%.
+    text_2:
+    text_3: "Se você não iniciou, você pode cancelar esta solicitação clicando aqui (válido por 24h): %link%"
+    text_4: Você também deve atualizar sua senha.
+
+password_update:
+    subject: '%name% - Atualização de senha'
+    header: Atualização de senha
+    text_1: A senha associada a esta conta foi criada em %url%
+    text_2: "Se você não iniciou, você pode cancelar esta solicitação e definir uma nova senha clicando aqui (válida por 24h): %link%"

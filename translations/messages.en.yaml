@@ -58,7 +58,7 @@ page:
         title: 'Frequently Asked Questions'
 
     forgotten_password:
-        error: <strong>An error occured.</strong><br>If the link was obselete please start the process again.
+        error: <strong>An error occurred.</strong><br>If the link was obselete please start the process again.
         click_here: click here
         done_title: Password reinitialization
         done: '<strong>Your password has been updated.</strong><br>You can sign-in %link%here%link_end%.'
@@ -80,11 +80,11 @@ page:
         back: '← Back to radio guide'
         current: '↓ Go to current show'
         description: 'Day schedule of radio %radio% !'
-        goto_today: Check today's schedule
-        goto_schedule: Check radio's schedule
+        goto_today: Check today schedule
+        goto_schedule: Check radio schedule
         more_radios: 'More radios'
         no_schedule: 'Schedule not available'
-        not_today: You're browsing another's schedule
+        not_today: You're browsing another day schedule
         play: 'Listen to %radio%'
         stop: 'Stop %radio%'
         summary: 'Summary'
@@ -148,7 +148,7 @@ page:
             confirm: Are you sure you want to delete your account?
             delete_btn: Delete my account
         delete_confirm:
-            success: Your account has been succesfully deleted.
+            success: Your account has been successfully deleted.
 
 
 boxes:
@@ -164,7 +164,7 @@ boxes:
         title: Why sign-up?
         content: "- You can synchronize your favorites between your devices."
         content2: "- Save broadcasted songs."
-        content3: "- No ads."
+        content3: "- Less ads."
 
 registrationForm:
     email: 'Email'
@@ -198,6 +198,8 @@ footer:
     es: Español
     en: English
     fr: Français
+    de: Deutsch
+    pt: Portuguesa
 
 legal: Legal notice
 
