@@ -80,7 +80,7 @@ class StreamRepository extends ServiceEntityRepository
             ->where("s.img is not null")
             ->andWhere("RANDOM() < 0.01")
             ->andWhere('s.id != :id')
-            ->andWhere('s.enabled = true')
+            ->andWhere('s.enabled = true and s.redirectToStream IS NULL')
             ->setMaxResults($limit);
 
         $qb->setParameter('id', $id);
@@ -107,7 +107,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true')
+            ->where('s.enabled = true and s.redirectToStream IS NULL')
             ->setMaxResults($limit);
 
         if ($offset !== null) {
@@ -124,10 +124,10 @@ class StreamRepository extends ServiceEntityRepository
                     $favorites = $favoritesFromCookies;
                 }
 
-                $qb->where('s.id IN (:favorites)')
+                $qb->andWhere('s.id IN (:favorites)')
                     ->setParameter('favorites', $favorites);
             } else {
-                $qb->where('s.countryCode = :country')
+                $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
         }
@@ -182,7 +182,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true')
+            ->where('s.enabled = true and s.redirectToStream IS NULL')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
             //->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
@@ -265,7 +265,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true')
+            ->where('s.enabled = true and s.redirectToStream IS NULL')
             ->addOrderBy('s.name', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults(1);
@@ -280,10 +280,10 @@ class StreamRepository extends ServiceEntityRepository
                     $favorites = $favoritesFromCookies;
                 }
 
-                $qb->where('s.id IN (:favorites)')
+                $qb->andWhere('s.id IN (:favorites)')
                     ->setParameter('favorites', $favorites);
             } else {
-                $qb->where('s.countryCode = :country')
+                $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
         }
@@ -334,7 +334,8 @@ class StreamRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('count(s.id)')
-            ->from(Stream::class, 's');
+            ->from(Stream::class, 's')
+            ->where('s.enabled = true and s.redirectToStream IS NULL');
 
         if ($countryOrCategory !== null) {
             if ($countryOrCategory === Stream::FAVORITES) {
@@ -346,10 +347,10 @@ class StreamRepository extends ServiceEntityRepository
                     $favorites = $favoritesFromCookies;
                 }
 
-                $qb->where('s.id IN (:favorites)')
+                $qb->andWhere('s.id IN (:favorites)')
                     ->setParameter('favorites', $favorites);
             } else {
-                $qb->where('s.countryCode = :country')
+                $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
         }
@@ -417,6 +418,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb->select('DISTINCT UPPER(s.countryCode) as countryCode')
             ->from(Stream::class, 's')
             ->where('s.countryCode IS NOT NULL')
+            ->andWhere('s.enabled = true and s.redirectToStream IS NULL')
             ->andWhere('s.countryCode <> \'\'')
             ->orderBy('countryCode', 'ASC');
 
@@ -440,7 +442,7 @@ class StreamRepository extends ServiceEntityRepository
             ->from(Stream::class, 's')
             ->innerJoin('s.radioStream', 'rs')
             ->where('rs.id = :id')
-            ->andWhere('s.enabled = true')
+            ->andWhere('s.enabled = true and s.redirectToStream IS NULL')
             ->orderBy('s.clicksLast24h', 'DESC')
             ->setFirstResult(0)
             ->setMaxResults(1)
