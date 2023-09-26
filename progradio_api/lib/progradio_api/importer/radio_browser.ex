@@ -1,4 +1,5 @@
 defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
+  require Logger
   import Ecto.Query, only: [from: 2]
   alias Ecto.Multi
   alias ProgRadioApi.Repo
@@ -16,12 +17,15 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   @task_timeout 1_000_000
 
   def import() do
-    get_one_random_server()
-    |> get_radios()
-    |> format()
-    |> import_images()
-    |> delete_images_from_removed_stations()
-    |> store()
+    {result, _} =
+      get_one_random_server()
+      |> get_radios()
+      |> format()
+      |> import_images()
+      |> delete_images_from_removed_stations()
+      |> store()
+
+    Logger.info("Streams import: #{result}")
 
     overload_disabled()
     reattach_image_of_stream_with_no_image()
@@ -127,6 +131,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         enabled: enabled
       }
     end)
+    |> Enum.filter(fn s -> s.name !== nil and String.trim(s.name) !== "" end)
   end
 
   def format_from_stream(%Stream{} = stream) do
@@ -275,6 +280,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     multi_upsert =
       Multi.new()
       |> upsert_streams(streams)
+
+    Logger.debug("Streams import upsert: #{Kernel.length(multi_upsert.operations)}")
 
     multi_combine = Ecto.Multi.append(multi_delete, multi_upsert)
     Repo.transaction(multi_combine, timeout: :infinity)

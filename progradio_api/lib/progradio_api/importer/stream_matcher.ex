@@ -39,7 +39,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.StreamMatcher do
               ^String.downcase(s.name),
               r.country_code,
               ^s.country_code
-            )
+            ),
+          limit: 1,
+          order_by: [desc: rs.id]
 
       radio_stream = Repo.one(query)
 
