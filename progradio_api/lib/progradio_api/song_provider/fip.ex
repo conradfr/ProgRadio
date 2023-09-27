@@ -34,7 +34,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
            value -> value
          end
 
-    url = "https://www.radiofrance.fr/api/v2.1/stations/fip/webradios/#{id}"
+    url = "https://www.radiofrance.fr/api/v2.1/stations/fip/live/webradios/#{id}"
 
     try do
       url
