@@ -19,6 +19,7 @@ class StreamRepository extends ServiceEntityRepository
     protected const CACHE_TTL = 21600; // six hours
 
     protected const DEFAULT_MORE_LIMIT = 12;
+    protected const POPULAR_THRESHOLD = 20;
 
     public function __construct(private readonly Security $security, ManagerRegistry $registry)
     {
@@ -53,14 +54,17 @@ class StreamRepository extends ServiceEntityRepository
 
         // country
 
-        $qbCountry = $this->getMoreStreamQuery($stream->getId(), $limitHalf);
+        $qbCountry = $this->getMoreStreamQuery($stream->getId(), 50);
 
         if ($stream->getCountryCode() !== null) {
             $qbCountry->andWhere('s.countryCode = :countryCode')
                ->setParameter('countryCode', $stream->getCountryCode());
+
+            $qbCountry->andWhere('s.clicksLast24h > :clicks')
+                ->setParameter('clicks', self::POPULAR_THRESHOLD);
         }
 
-        $resultCountry = $qbCountry->getQuery()->getResult();
+        $resultCountry = array_slice($qbCountry->getQuery()->getResult(), 0, $limitHalf);
 
         // random
 

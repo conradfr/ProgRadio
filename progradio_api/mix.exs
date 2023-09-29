@@ -76,7 +76,7 @@ defmodule ProgRadioApi.MixProject do
       {:nebulex, "~> 2.3"},
       {:decorator, "~> 1.3"},
       {:observer_cli, "~> 1.7"},
-      {:request_cache_plug, "~> 0.2"},
+      {:request_cache_plug, "~> 1.0"},
       {:ex_cldr, "~> 2.33"},
       {:ex_cldr_territories, "~> 2.0"},
       {:ex_cldr_collation, "~> 0.7.0"}

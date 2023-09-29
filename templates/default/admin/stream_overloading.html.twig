@@ -23,26 +23,52 @@
             {% endfor %}
 
             {{ form_start(form) }}
-            {{ form_widget(form) }}
+                {{ form_errors(form) }}
+{#            {{ form_widget(form) }}#}
+                {{ form_row(form.name) }}
+                {{ form_row(form.img) }}
+                {{ form_row(form.streamUrl) }}
+
+                <div id="streamUrlHelpBlock" class="form-text">
+                    https://playerservices.streamtheworld.com/api/livestream-redirect/
+                </div>
+
+                {{ form_row(form.countryCode) }}
+                {{ form_row(form.website) }}
+                {{ form_row(form.redirect) }}
+
             {{ form_end(form) }}
         </div>
         <div class="col-12 col-md-5 offset-md-1">
             <h5 class="mt-2">Stream data</h5>
             <div class="mb-1"><strong>Name:</strong> {{ stream.name }}</div>
             <div class="mb-1"><strong>Stream url:</strong> <a target="_blank" href="{{ stream.streamUrl }}">{{ stream.streamUrl }}</a></div>
+
             {% if stream.originalStreamUrl is defined and stream.originalStreamUrl is not empty %}
                 <div class="mb-1"><strong>Original stream url:</strong> <a target="_blank" href="{{ stream.originalStreamUrl }}">{{ stream.originalStreamUrl }}</a></div>
             {% endif %}
+
             <div class="mb-1"><strong>Country:</strong> {{ stream.countryCode }}</div>
             <div class="mb-1"><strong>Website:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a></div>
-            <div class="mb-1"><strong>Enabled:</strong> {{ stream.enabled }}</div>
-            <div class="mb-1"><strong>Picture:</strong></div>
-            {% if stream.originalStreamUrl is defined and stream.originalStreamUrl is not empty %}
-                <div class="mb-1"><strong>Original:</strong> <a target="_blank" href="{{ stream.originalImg }}">{{ stream.originalImg }}</a></div>
-            {% endif %}
+
+            <div class="mb-1"><strong>Enabled:</strong>
+                {% if stream.enabled == true %}Yes{% else %}No{% endif %}
+            </div>
+
             {% if stream.img is defined and stream.img is not empty %}
+                <div class="mb-1"><strong>Picture:</strong></div>
+                {% if stream.originalStreamUrl is defined and stream.originalStreamUrl is not empty %}
+                    <div class="mb-1"><strong>Original:</strong> <a target="_blank" href="{{ stream.originalImg }}">{{ stream.originalImg }}</a></div>
+                {% endif %}
                 <div class="mb-1"><img src="{{ asset('media/stream/' ~ stream.img) }}" /></div>
                 <div class="mb-1"><a href="{{ path('admin_delete_stream_picture', {id: stream.id}) }}">Delete</a></div>
+            {% endif %}
+
+            {% if stream.redirectToStream is not empty %}
+                <div class="mt-5 mb-1"><strong>Redirect:</strong>
+                    <div class="mb-1"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream.redirectToStream.id}) }}">{{ stream.redirectToStream.name }}</a> - {{ stream.redirectToStream.id }}</div>
+                    <div class="mb-1"><a href="{{ path('admin_overloading', {streamId: stream.id}) }}">Remove</a></div>
+                </div>
             {% endif %}
 
             <div class="mt-5 mb-1"><strong>Playing errors:</strong> {{ stream.playingError }}</div>

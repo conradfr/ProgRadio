@@ -60,6 +60,7 @@ class ScheduleManager
     public function getDayScheduleOfRadio(\DateTime $dateTime, string $radioCodeName, SubRadio $subRadio = null): array
     {
         $scheduleResource = new ScheduleResource($dateTime, ScheduleResource::TYPE_RADIO, $radioCodeName, $subRadio);
+
         return $this->getDaySchedule($scheduleResource);
     }
 
@@ -76,7 +77,7 @@ class ScheduleManager
             return $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($scheduleResource);
         }
 
-        return $this->cache->get(self::getKey($scheduleResource), function (ItemInterface $item) use($scheduleResource) {
+        return $this->cache->get(self::getKey($scheduleResource), function (ItemInterface $item) use ($scheduleResource) {
             $item->expiresAfter(self::CACHE_SCHEDULE_TTL);
 
             return $this->em->getRepository(ScheduleEntry::class)->getDaySchedule($scheduleResource);

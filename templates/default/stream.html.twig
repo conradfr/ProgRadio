@@ -34,7 +34,7 @@
     <div class="row">
         <div class="col-sm-2 col-12">
             <div class="radio-page-side sticky">
-                <div class="text-center mb-2">
+                <div class="text-center mb-3">
                     <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ self.picture(stream) }}">
                 </div>
             </div>
@@ -52,7 +52,13 @@
                 <div class="col-sm-9 col-12 order-2 order-sm-1">
                     <h4 class="mb-5">{{ stream.name }}</h4>
 
-                    <div class="stream-page-stream mt-0 mt-sm-0 mb-5" v-scope>
+                    {% if stream.enabled== false %}
+                        <div class="alert alert-warning mb-5" role="alert">
+                            <i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.disabled'|trans }}
+                        </div>
+                    {% endif %}
+
+                    <div class="stream-page-stream mt-0 mb-5" v-scope>
                         <div class="radio-page-streams-one d-none d-flex align-items-center justify-content-center justify-content-sm-start"
                              @vue:mounted="$el.classList.remove('d-none')">
                             <div>
@@ -159,6 +165,12 @@
                         </div>
                     {% endif %}
 
+                    <div class="pt-5 px-3 d-sm-none">
+                        {% if app.environment == 'prod' %}
+                            {{ include('_partials/adblock.html.twig', {vertical: false}) }}
+                        {% endif %}
+                    </div>
+
                     <div class="more-streams">
                         <div class="mt-5 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
 
@@ -168,22 +180,17 @@
                             </div>
                         {% endif %}
 
-                        {% for i in [0, 6] %}
-                            <div class="d-flex flex-wrap clearfix">
-                                {% for entry in more_streams|slice(i, 6) %}
-                                    <a class="more-streams-one" href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug }) }}">
-                                        <div class="h-100 mb-1 text-center d-flex flex-column align-items-center">
-                                            <div class="mt-auto mb-auto">
-                                                <img src="/media/stream/{{ entry.img }}" alt="" title="{{ entry.name }}">
-                                            </div>
-                                            <div class="pt-1">
-                                                {{ entry.name }}
-                                            </div>
-                                        </div>
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
+                        <div class="d-flex clearfix streams">
+                            {% for entry in more_streams %}
+                                <div class="streams-one streams-one-more streams-one-play-hide">
+                                    <div class="streams-one-img" style="background-image: url({{ self.picture(entry) }})"></div>
+
+                                    <div class="streams-one-name" title="{{ entry.name }}">
+                                        <a class="streams-one-name-detail" href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">{{ entry.name }}</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
 
                         <div class="clearfix mt-5 mb-5">
                             <a class="more-link" href="{{ path('streaming_spa') }}">{{ 'page.stream.discover'|trans }}</a>
@@ -193,11 +200,6 @@
                 <div class="offset-sm-0 col-sm-3 d-none d-sm-block order-sm-2 pt-4 pt-sm-2 text-center">
                     {% if app.environment == 'prod' %}
                         {{ include('_partials/adblock.html.twig', {vertical: true}) }}
-                    {% endif %}
-                </div>
-                <div class="offset-1 col-10 d-block d-sm-none order-1 my-3">
-                    {% if app.environment == 'prod' %}
-                        {{ include('_partials/adblock.html.twig', {vertical: false}) }}
                     {% endif %}
                 </div>
             </div>

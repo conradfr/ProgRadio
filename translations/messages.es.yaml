@@ -106,6 +106,7 @@ page:
     stream:
         country: País
         description: 'Escuchar radios de todo el mundo'
+        disabled: 'Esta radio está inactiva.'
         discover: Descubra más radios, busque por país y estilos de música ...
         find: Busque
         find_deezer: Busque en Deezer

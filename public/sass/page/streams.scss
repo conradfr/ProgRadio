@@ -87,6 +87,10 @@
     background-color: $program-bg-color;
     border: 1px solid darken($background-color, 20%);
 
+    &.streams-one-more {
+      border: 0;
+    }
+
     margin-bottom: 10px;
     margin-right: 10px;
 
@@ -264,10 +268,13 @@
       }
     }
 
-    &:hover:not(.streams-one-play-hide), &.streams-one-play-active:not(.streams-one-play-hide) {
+    // "more" on stream page, tags are not displayed
+    &.streams-one-more .streams-one-name {
+      height: 75px;
+    }
+
+    &:hover:not(.streams-one-play-hide), &:hover:not(.streams-one-more), &.streams-one-play-active:not(.streams-one-play-hide) {
       box-shadow: 0 0 7px 0 rgba(0,0,0,.35);
-
-
 
       &.streams-one-play-active:not(:hover) {
         .streams-one-img-play {

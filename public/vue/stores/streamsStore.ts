@@ -79,14 +79,16 @@ export const useStreamsStore = defineStore('streams', {
               code: key
             }
           );
-        } else if (i18n.global.locale === 'es' && ['MX', 'ES', 'CO', 'PE', 'AR'].indexOf(key) !== -1) {
+        } else if (i18n.global.locale === 'es'
+          && ['MX', 'ES', 'CO', 'PE', 'AR'].indexOf(key) !== -1) {
           countriesOptions.unshift(
             {
               label: value,
               code: key
             }
           );
-        } else if (i18n.global.locale === 'en' && ['US', 'GB', 'CA', 'AU', 'NZ'].indexOf(key) !== -1) {
+        } else if (i18n.global.locale === 'en'
+          && ['US', 'GB', 'CA', 'AU', 'NZ'].indexOf(key) !== -1) {
           countriesOptions.unshift(
             {
               label: value,

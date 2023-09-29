@@ -187,6 +187,14 @@ class AdminController extends AbstractBaseController
 
             $stream->setEnabled($streamOverloading->getEnabled());
 
+            if (!empty($form->get('redirect')->getData())) {
+                $streamRedirect = $em->getRepository(Stream::class)->find($form->get('redirect')->getData());
+
+                if ($streamRedirect) {
+                    $stream->setRedirectToStream($streamRedirect);
+                }
+            }
+
             $em->flush();
 
             $this->addFlash(
@@ -262,6 +270,17 @@ class AdminController extends AbstractBaseController
     public function goaccessiframe(): Response
     {
         return $this->render('default/admin/goaccessiframe.html.twig');
+    }
+
+    #[Route('/reset_stream_redirect/{id}', name: 'admin_reset_redirect')]
+    public function resetStreamRedirect(Stream $stream, EntityManagerInterface $em): Response
+    {
+        $stream->setRedirectToStream(null);
+
+        $em->persist($stream);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_playing_errors', [], 301);
     }
 
     #[Route('/reset_stream_playing_error/{id}', name: 'admin_reset_stream_paying_error')]

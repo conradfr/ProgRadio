@@ -234,7 +234,7 @@ class DefaultController extends AbstractBaseController
             return $this->redirect($redirectUrl, 301);
         }
 
-        if ($stream->isEnabled() === false && $stream->getRedirectToStream() !== null) {
+        if ($stream->getRedirectToStream() !== null) {
             $slugger = new AsciiSlugger();
 
             $shortId = $shortener->reduce($stream->getRedirectToStream()->getId());

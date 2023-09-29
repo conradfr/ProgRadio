@@ -69,7 +69,7 @@ defmodule ProgRadioApi.Importer.ScheduleCache do
   # So we look it up here based on the rest of the key
   @spec find_cache_key(String.t()) :: String.t() | nil
   defp find_cache_key(pattern) do
-    {:ok, keys} = Redix.command(:redix, ["KEYS", "*:" <> pattern])
+    {:ok, keys} = Redix.command(:redix, ["KEYS", "*:" <> pattern <> "*"])
 
     case Kernel.length(keys) do
       0 -> nil

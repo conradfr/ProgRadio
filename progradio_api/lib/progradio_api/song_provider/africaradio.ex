@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://api-africaradio.bocir.fr/graphql"
+  @url "https://api.africaradio.com/graphql"
   @radio_id "2180540611545792571"
 
   @impl true

@@ -103,6 +103,7 @@ page:
     stream:
         country: Land
         description: 'Hören Sie Radios aus der ganzen Welt'
+        disabled: 'Dieses Radio ist inaktiv.'
         discover: Entdecken Sie mehr Radios, suchen Sie nach Land und Stil...
         find: Suche
         find_deezer: Auf Deezer finden
