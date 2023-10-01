@@ -143,7 +143,7 @@
 
                     {% if stream.website is defined and stream.website is not null %}
                         <div class="mb-4">
-                            <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a>
+                            <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a> ↗
                         </div>
                     {% endif %}
 
@@ -192,7 +192,7 @@
                             {% endfor %}
                         </div>
 
-                        <div class="clearfix mt-5 mb-5">
+                        <div class="clearfix mt-2 mb-5">
                             <a class="more-link" href="{{ path('streaming_spa') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>
