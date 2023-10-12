@@ -16,6 +16,8 @@
 {% macro picture(stream) %}
     {% if stream.radioStream.id is defined and stream.radioStream.id is not null %}
         /img/radio/page/{{ stream.radioStream.radio.codeName }}.png
+    {% elseif stream.img_alt is defined and stream.img_alt is not null %}
+        /img/radio/page/{{ stream.img_alt }}.png
     {% elseif stream.img is not null and stream.img != '' %}
         /media/stream/{{ stream.img }}
     {% else %}
@@ -23,10 +25,16 @@
     {% endif %}
 {% endmacro %}
 
-{% macro topic(stream) %}url:{{ stream.streamUrl }}{% endmacro %}
+{% macro topic(stream) %}
+{% if stream.radioStream is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% else %}url:{{ stream.streamUrl }}{% endif %}
+{% endmacro %}
 
 {% macro stream_code_name(stream) %}
 {% if stream.radioStream.radio.codeName is defined %}{{ stream.radioStream.radio.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
+{% endmacro %}
+
+{% macro stream_url(stream) %}
+{% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
 {% endmacro %}
 
 {% block body %}
@@ -64,7 +72,7 @@
                             <div>
                                 <div
                                     v-if="playing === false"
-                                    @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
+                                    @click="play('{{ self.stream_url(stream) }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
                                     class="radio-page-play">
                                     <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
                                          src="/img/play-button-inside-a-circle.svg">
@@ -81,7 +89,7 @@
                             <div class="ps-2">
                                 <div
                                         v-if="playing === false"
-                                        @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
+                                        @click="play('{{ self.stream_url(stream) }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
                                         class="radio-page-play">
                                     <div>&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
                                 </div>
@@ -165,6 +173,10 @@
                         </div>
                     {% endif %}
 
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <p class="mt-5 mb-5"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></p>
+                    {% endif %}
+
                     <div class="pt-5 px-3 d-sm-none">
                         {% if app.environment == 'prod' %}
                             {{ include('_partials/adblock.html.twig', {vertical: false}) }}
@@ -183,7 +195,9 @@
                         <div class="d-flex clearfix streams">
                             {% for entry in more_streams %}
                                 <div class="streams-one streams-one-more streams-one-play-hide">
-                                    <div class="streams-one-img" style="background-image: url({{ self.picture(entry) }})"></div>
+                                    <a href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">
+                                        <div class="streams-one-img" style="background-image: url({{ self.picture(entry) }})"></div>
+                                    </a>
 
                                     <div class="streams-one-name" title="{{ entry.name }}">
                                         <a class="streams-one-name-detail" href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">{{ entry.name }}</a>

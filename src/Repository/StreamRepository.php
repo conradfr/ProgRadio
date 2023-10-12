@@ -18,8 +18,7 @@ class StreamRepository extends ServiceEntityRepository
 {
     protected const CACHE_TTL = 21600; // six hours
 
-    protected const DEFAULT_MORE_LIMIT = 12;
-    protected const POPULAR_THRESHOLD = 20;
+    protected const DEFAULT_MORE_LIMIT = 15;
 
     public function __construct(private readonly Security $security, ManagerRegistry $registry)
     {
@@ -50,28 +49,22 @@ class StreamRepository extends ServiceEntityRepository
 
     public function getMoreStreams(Stream $stream, int $limit=self::DEFAULT_MORE_LIMIT)
     {
-        $limitHalf = $limit / 2;
+        $limitThird = (int) round($limit / 3, 0);
 
-        // country
+        // popular country
 
-        $qbCountry = $this->getMoreStreamQuery($stream->getId(), 50);
+        $resultCountry = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'popularity');
 
-        if ($stream->getCountryCode() !== null) {
-            $qbCountry->andWhere('s.countryCode = :countryCode')
-               ->setParameter('countryCode', $stream->getCountryCode());
+        // last country
 
-            $qbCountry->andWhere('s.clicksLast24h > :clicks')
-                ->setParameter('clicks', self::POPULAR_THRESHOLD);
-        }
-
-        $resultCountry = array_slice($qbCountry->getQuery()->getResult(), 0, $limitHalf);
+        $resultCountryLast = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'last');
 
         // random
 
-        $qbRandom = $this->getMoreStreamQuery($stream->getId(), $limitHalf);
+        $qbRandom = $this->getMoreStreamQuery($stream->getId(), $limitThird);
         $resultRandom = $qbRandom->getQuery()->getResult();
 
-        return array_merge($resultCountry, $resultRandom);
+        return array_merge($resultCountry, $resultCountryLast, $resultRandom);
     }
 
     protected function getMoreStreamQuery(string $id, int $limit) {
