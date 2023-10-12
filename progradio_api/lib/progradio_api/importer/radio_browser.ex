@@ -11,7 +11,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   # TODO unbundle if we diversify streams sources
 
   @servers_dns "all.api.radio-browser.info"
-  @api_all_radios "/stations"
+  @api_all_radios "stations"
 
   @max_concurrency 4
   @task_timeout 1_000_000
@@ -57,23 +57,37 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         "https://#{host}/json/#{@api_all_radios}"
       end
 
-    HTTPoison.get!(
-      url,
-      [{"User-Agent", "radio-addict.com"}]
-    )
-    |> Map.get(:body)
-    |> Jason.decode!()
-    |> Enum.uniq_by(fn s -> Map.get(s, "stationuuid") end)
-    |> Enum.filter(fn s ->
-      Map.get(s, "lastcheckok") !== 0 and Map.get(s, "stationuuid") !== "" and
+    Logger.info("Streams import: url - #{url}")
+
+    try do
+      HTTPoison.get!(
+        url,
+        [{"User-Agent", "radio-addict.com"}]
+      )
+      |> Map.get(:body)
+      |> Jason.decode!()
+      |> Enum.uniq_by(fn s -> Map.get(s, "stationuuid") end)
+      |> Enum.filter(fn s ->
+        Map.get(s, "lastcheckok") !== 0 and Map.get(s, "stationuuid") !== "" and
         Map.get(s, "name") !== "" and
         (Map.get(s, "url_resolved") !== "" or Map.get(s, "url") !== "")
-    end)
-    # the app can't read hls streams that are not served by https (cross-origin problem)
-    |> Enum.reject(fn s ->
-      Map.get(s, "url") |> String.downcase() |> String.starts_with?("https") === false and
+      end)
+        # the app can't read hls streams that are not served by https (cross-origin problem)
+      |> Enum.reject(fn s ->
+        Map.get(s, "url") |> String.downcase() |> String.starts_with?("https") === false and
         Map.get(s, "url") |> String.downcase() |> String.ends_with?(".m3u8") === true
-    end)
+      end)
+    rescue
+      _ ->
+        Logger.warning("Streams import: error importing radios")
+        []
+    catch
+      _ ->
+        Logger.warning("Streams import: error importing radios")
+        []
+    end
+
+
   end
 
   defp format(data) do
