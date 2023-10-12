@@ -34,17 +34,17 @@ defmodule ProgRadioApiWeb.SongChannel do
     end
   end
 
-#  def join("collection:" <> collection_code_name, _params, socket) do
-#    # check collection radios first
-#    case get_collection_streams(collection_code_name) do
-#      nil ->
-#        {:error, "not available"}
-#
-#      data ->
-#        send(self(), {:after_join_collection, "collection:" <> collection_code_name, data})
-#        {:ok, socket}
-#    end
-#  end
+  #  def join("collection:" <> collection_code_name, _params, socket) do
+  #    # check collection radios first
+  #    case get_collection_streams(collection_code_name) do
+  #      nil ->
+  #        {:error, "not available"}
+  #
+  #      data ->
+  #        send(self(), {:after_join_collection, "collection:" <> collection_code_name, data})
+  #        {:ok, socket}
+  #    end
+  #  end
 
   def handle_info({:after_join, song_topic, radio_stream_data}, socket) do
     {:ok, _} =
@@ -56,19 +56,19 @@ defmodule ProgRadioApiWeb.SongChannel do
     {:noreply, socket}
   end
 
-#  def handle_info({:after_join_collection, collection_topic, radios_stream_data}, socket) do
-#    {:ok, _} =
-#      Presence.track(self(), collection_topic, :rand.uniform(), %{
-#        online_at: inspect(System.system_time(:second))
-#      })
-#
-#    radios_stream_data
-#    |> Enum.each(fn data ->
-#      ProgRadioApi.SongManager.join("song:" <> data.radio_stream_code_name, data)
-#    end)
-#
-#    {:noreply, socket}
-#  end
+  #  def handle_info({:after_join_collection, collection_topic, radios_stream_data}, socket) do
+  #    {:ok, _} =
+  #      Presence.track(self(), collection_topic, :rand.uniform(), %{
+  #        online_at: inspect(System.system_time(:second))
+  #      })
+  #
+  #    radios_stream_data
+  #    |> Enum.each(fn data ->
+  #      ProgRadioApi.SongManager.join("song:" <> data.radio_stream_code_name, data)
+  #    end)
+  #
+  #    {:noreply, socket}
+  #  end
 
   # ----- Internal -----
 
@@ -114,26 +114,26 @@ defmodule ProgRadioApiWeb.SongChannel do
     Repo.one(query)
   end
 
-#  @spec get_collection_streams(String.t()) :: any()
-#  defp get_collection_streams(collection_code_name) do
-#    query =
-#      from(rs in RadioStream,
-#        join: r in Radio,
-#        on: r.id == rs.radio_id,
-#        join: c in Collection,
-#        on: c.id == r.collection_id,
-#        select: %{
-#          radio_code_name: r.code_name,
-#          radio_stream_code_name: rs.code_name,
-#          id: rs.id,
-#          type: "radio_stream",
-#          collection_code_name: c.code_name
-#        },
-#        where:
-#          r.active == true and rs.main == true and rs.enabled == true and
-#            rs.current_song == true and c.code_name == ^collection_code_name
-#      )
-#
-#    Repo.all(query)
-#  end
+  #  @spec get_collection_streams(String.t()) :: any()
+  #  defp get_collection_streams(collection_code_name) do
+  #    query =
+  #      from(rs in RadioStream,
+  #        join: r in Radio,
+  #        on: r.id == rs.radio_id,
+  #        join: c in Collection,
+  #        on: c.id == r.collection_id,
+  #        select: %{
+  #          radio_code_name: r.code_name,
+  #          radio_stream_code_name: rs.code_name,
+  #          id: rs.id,
+  #          type: "radio_stream",
+  #          collection_code_name: c.code_name
+  #        },
+  #        where:
+  #          r.active == true and rs.main == true and rs.enabled == true and
+  #            rs.current_song == true and c.code_name == ^collection_code_name
+  #      )
+  #
+  #    Repo.all(query)
+  #  end
 end

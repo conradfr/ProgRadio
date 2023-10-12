@@ -69,13 +69,13 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> Enum.uniq_by(fn s -> Map.get(s, "stationuuid") end)
       |> Enum.filter(fn s ->
         Map.get(s, "lastcheckok") !== 0 and Map.get(s, "stationuuid") !== "" and
-        Map.get(s, "name") !== "" and
-        (Map.get(s, "url_resolved") !== "" or Map.get(s, "url") !== "")
+          Map.get(s, "name") !== "" and
+          (Map.get(s, "url_resolved") !== "" or Map.get(s, "url") !== "")
       end)
-        # the app can't read hls streams that are not served by https (cross-origin problem)
+      # the app can't read hls streams that are not served by https (cross-origin problem)
       |> Enum.reject(fn s ->
         Map.get(s, "url") |> String.downcase() |> String.starts_with?("https") === false and
-        Map.get(s, "url") |> String.downcase() |> String.ends_with?(".m3u8") === true
+          Map.get(s, "url") |> String.downcase() |> String.ends_with?(".m3u8") === true
       end)
     rescue
       _ ->
@@ -86,8 +86,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         Logger.warning("Streams import: error importing radios")
         []
     end
-
-
   end
 
   defp format(data) do
@@ -130,7 +128,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       %{
         id: id,
         code_name: id,
-        name: (Map.get(overloading, :name) || name),
+        name: Map.get(overloading, :name) || name,
         img_url: Map.get(overloading, :img) || img_url,
         original_img: img_url,
         img: nil,
@@ -149,36 +147,37 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   end
 
   def format_from_stream(%Stream{} = stream) do
-      overloading =
-        case Repo.get(StreamOverloading, stream.id) do
-          nil -> %{}
-          data -> data
-        end
+    overloading =
+      case Repo.get(StreamOverloading, stream.id) do
+        nil -> %{}
+        data -> data
+      end
 
-      enabled =
-        case Map.get(overloading, :enabled, nil) do
-          true -> true
-          false -> false
-          _ -> stream.enabled
-        end
+    enabled =
+      case Map.get(overloading, :enabled, nil) do
+        true -> true
+        false -> false
+        _ -> stream.enabled
+      end
 
-      %{
-        id: stream.id,
-        code_name: stream.id,
-        name: (Map.get(overloading, :name) || stream.name),
-        img_url: Map.get(overloading, :img) || stream.original_img,
-        img: stream.img,
-        original_img: stream.original_img,
-        website: Map.get(overloading, :website) || stream.website,
-        stream_url: (Map.get(overloading, :stream_url) || stream.stream_url) |> stream_url_transformer(),
-        original_stream_url: stream.original_stream_url,
-        tags: stream.tags,
-        country_code: Map.get(overloading, :country_code) || stream.country_code,
-        language: stream.language,
-        votes: stream.votes,
-        clicks_last_24h: stream.clicks_last_24h,
-        enabled: enabled
-      }
+    %{
+      id: stream.id,
+      code_name: stream.id,
+      name: Map.get(overloading, :name) || stream.name,
+      img_url: Map.get(overloading, :img) || stream.original_img,
+      img: stream.img,
+      original_img: stream.original_img,
+      website: Map.get(overloading, :website) || stream.website,
+      stream_url:
+        (Map.get(overloading, :stream_url) || stream.stream_url) |> stream_url_transformer(),
+      original_stream_url: stream.original_stream_url,
+      tags: stream.tags,
+      country_code: Map.get(overloading, :country_code) || stream.country_code,
+      language: stream.language,
+      votes: stream.votes,
+      clicks_last_24h: stream.clicks_last_24h,
+      enabled: enabled
+    }
   end
 
   # Images
@@ -332,26 +331,26 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   @spec delete_streams(Multi.t(), list()) :: any
   defp delete_streams(multi, _to_not_delete) do
     multi
-#    ids_to_keep =
-#      from(so in StreamOverloading,
-#        where: so.enabled == true,
-#        select: so.id
-#      )
-#      |> Repo.all()
-#      |> Enum.map(fn stream_id ->
-#        Ecto.UUID.dump!(stream_id)
-#      end)
-#      |> Enum.concat(to_not_delete)
-#
-#    # soft delete
-#    q =
-#      from(
-#        s in "stream",
-#        where: s.id not in ^ids_to_keep,
-#        update: [set: [enabled: false]]
-#      )
-#
-#    Multi.update_all(multi, :update_enabled, q, [])
+    #    ids_to_keep =
+    #      from(so in StreamOverloading,
+    #        where: so.enabled == true,
+    #        select: so.id
+    #      )
+    #      |> Repo.all()
+    #      |> Enum.map(fn stream_id ->
+    #        Ecto.UUID.dump!(stream_id)
+    #      end)
+    #      |> Enum.concat(to_not_delete)
+    #
+    #    # soft delete
+    #    q =
+    #      from(
+    #        s in "stream",
+    #        where: s.id not in ^ids_to_keep,
+    #        update: [set: [enabled: false]]
+    #      )
+    #
+    #    Multi.update_all(multi, :update_enabled, q, [])
   end
 
   # overload the streams that are no longer on radio-browser but that we keep

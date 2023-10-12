@@ -170,7 +170,7 @@ defmodule ProgRadioApi.Radios do
           name_EN: c.name_en,
           name_ES: c.name_es,
           name_DE: c.name_de,
-          name_PT: c.name_pt,
+          name_PT: c.name_pt
         },
         order_by: [asc: c.id]
 

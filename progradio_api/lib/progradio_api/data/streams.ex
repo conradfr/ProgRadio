@@ -271,10 +271,16 @@ defmodule ProgRadioApi.Streams do
   end
 
   defp add_text(query, %{:text => text}) when is_binary(text) do
-    text_search = "%" <> text <> "%"
-
     query
-    |> where([s], fragment("? ILIKE ? or ? ILIKE ?", s.name, ^text_search, s.tags, ^text_search))
+    |> where(
+      [s],
+      fragment(
+        "to_tsvector('progradio_unaccent', ? || ' ' || ?) @@ plainto_tsquery('progradio_unaccent', ?)",
+        s.name,
+        s.tags,
+        ^text
+      )
+    )
   end
 
   defp add_text(query, _) do

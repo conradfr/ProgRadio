@@ -30,9 +30,9 @@ defmodule ProgRadioApi.SongProvider.Fip do
       name
       |> SongProvider.get_stream_code_name_from_channel()
       |> case do
-           value when value == "fip_main" -> "fip"
-           value -> value
-         end
+        value when value == "fip_main" -> "fip"
+        value -> value
+      end
 
     url = "https://www.radiofrance.fr/api/v2.1/stations/fip/live/webradios/#{id}"
 

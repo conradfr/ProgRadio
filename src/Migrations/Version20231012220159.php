@@ -45,6 +45,8 @@ final class Version20231012220159 extends AbstractMigration implements Container
 
         $connection->exec('CREATE EXTENSION IF NOT EXISTS "unaccent";');
 
+        $connection->exec('CREATE TEXT SEARCH CONFIGURATION progradio_unaccent ( COPY = english );');
+
         $connection->exec("ALTER TEXT SEARCH CONFIGURATION progradio_unaccent" . PHP_EOL
         . "ALTER MAPPING FOR hword, hword_part, word" . PHP_EOL
         . "WITH unaccent;");
