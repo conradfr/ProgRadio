@@ -26,7 +26,7 @@
 {% endmacro %}
 
 {% macro topic(stream) %}
-{% if stream.radioStream is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% else %}url:{{ stream.streamUrl }}{% endif %}
+{% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% else %}url:{{ stream.streamUrl }}{% endif %}
 {% endmacro %}
 
 {% macro stream_code_name(stream) %}
