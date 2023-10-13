@@ -271,6 +271,8 @@ defmodule ProgRadioApi.Streams do
   end
 
   defp add_text(query, %{:text => text}) when is_binary(text) do
+    search_text = "*:" <> text <> ":*"
+
     query
     |> where(
       [s],
@@ -278,7 +280,7 @@ defmodule ProgRadioApi.Streams do
         "to_tsvector('progradio_unaccent', ? || ' ' || ?) @@ plainto_tsquery('progradio_unaccent', ?)",
         s.name,
         s.tags,
-        ^text
+        ^search_text
       )
     )
   end

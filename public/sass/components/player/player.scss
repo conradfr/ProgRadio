@@ -18,7 +18,7 @@ $icon-play-size-hover: 1.846rem;
 
   margin-top: 5px;
   background-color: $player-background;
-  border-radius: 5px;
+  border-radius: 4px;
 
   color: $player-color;
 
@@ -36,16 +36,17 @@ $icon-play-size-hover: 1.846rem;
   @include media-breakpoint-down(sm) {
     top: auto;
     bottom: 10px;
-    width: 242px;
+    width: 262px;
+    height: 47px;
     //left: ~"calc(50% - @{radio-list-width})";
   }
 
   @include media-breakpoint-up(sm) {
-    width: 305px;
+    width: 315px;
   }
 
   @include media-breakpoint-up(xxl) {
-    width: 405px;
+    width: 415px;
   }
 
   @media (min-width: 1920px) {
@@ -115,7 +116,6 @@ $icon-play-size-hover: 1.846rem;
     padding-left: 0;
     padding-right: 5px;
 
-    //font-size: 11px;
     color: white;
     text-align: center;
     line-height: 1.3em;
@@ -123,6 +123,11 @@ $icon-play-size-hover: 1.846rem;
     cursor: pointer;
 
     $player-info-height: 32px;
+
+    /* on mobile, put player at the bottom */
+    @include media-breakpoint-down(sm) {
+      font-size: 0.923rem;
+    }
 
     /* rolodex effect */
     ul {
@@ -234,6 +239,10 @@ $icon-play-size-hover: 1.846rem;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 
+    @include media-breakpoint-down(sm) {
+      top: 12px;
+    }
+
     i {
       color: mix($player-color, $player-background, 70%);
       font-size: 1rem;
@@ -274,6 +283,10 @@ $icon-play-size-hover: 1.846rem;
     background-color: $player-background;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+
+    @include media-breakpoint-down(sm) {
+      top: 12px;
+    }
 
     a {
       color: mix($player-color, $player-background, 70%);

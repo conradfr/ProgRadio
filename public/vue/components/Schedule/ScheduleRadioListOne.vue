@@ -27,9 +27,9 @@
          :style="subMenuStyleObject"
          :class="{ 'radio-submenu': hover }">
       <div v-on:click="toggleFavorite" class="radio-submenu-entry radio-submenu-entry-favorites">
-        <img v-if="isFavorite" src="/img/favorite.svg" class="filter-fav"/>
+        <img v-if="isFavorite" src="/img/favorite_heart.svg" class="filter-fav"/>
         <p v-if="isFavorite">{{ $t('message.player.favorites.remove') }}</p>
-        <img v-if="!isFavorite" src="/img/favorite-empty.svg" class="filter-fav"/>
+        <img v-if="!isFavorite" src="/img/favorite-empty_heart.svg" class="filter-fav"/>
         <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
       <router-link class="radio-submenu-entry radio-submenu-entry-radiopage"

@@ -16,10 +16,10 @@
 
         {# Favorites #}
         <div id="mobile-schedule-favorites-shortcut" class="d-block d-sm-none d-none">
-            <a title="{{ 'menu.favorites'|trans }}" class="nav-top-icon spa-link" href="{{ path('app') }}schedule/favorites"><i class="bi bi-star-fill"></i></a>
+            <a title="{{ 'menu.favorites'|trans }}" class="nav-top-icon spa-link" href="{{ path('app') }}schedule/favorites"><i class="bi bi-heart-fill"></i></a>
         </div>
         <div id="mobile-streaming-favorites-shortcut" class="d-block d-sm-none d-none">
-            <a title="{{ 'menu.favorites'|trans }}" class="nav-top-icon spa-link" href="{{ path('app') }}streaming/favorites"><i class="bi bi-star-fill"></i></a>
+            <a title="{{ 'menu.favorites'|trans }}" class="nav-top-icon spa-link" href="{{ path('app') }}streaming/favorites"><i class="bi bi-heart-fill"></i></a>
         </div>
 
         {# Dark mode #}
@@ -39,7 +39,7 @@
                     <a class="nav-link spa-link" href="{{ path('app') }}schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a>
                 </li>
                 <li class="nav-item ps-2 pe-0 d-none d-sm-block">
-                    <a title="{{ 'menu.favorites'|trans }}" class="nav-link spa-link" href="{{ path('app') }}schedule/favorites"><i class="bi bi-star-fill"></i></a>
+                    <a title="{{ 'menu.favorites'|trans }}" class="nav-link spa-link" href="{{ path('app') }}schedule/favorites"><i class="bi bi-heart-fill"></i></a>
                 </li>
                 {{ menu.collections_menu(collections_menu) }}
                 {% endif %}
@@ -49,7 +49,7 @@
                     <a class="nav-link spa-link" href="{{ path('app') }}streaming" style="padding-right: 0">{{ 'menu.streaming'|trans }}</a>
                 </li>
                 <li id="streams-top-menu-favorites" class="nav-item ps-2 pe-0 d-none d-sm-block">
-                    <a title="{{ 'menu.favorites'|trans }}" class="nav-link pr-0 spa-link" href="{{ path('app') }}streaming/favorites"><i class="bi bi-star-fill"></i></a>
+                    <a title="{{ 'menu.favorites'|trans }}" class="nav-link pr-0 spa-link" href="{{ path('app') }}streaming/favorites"><i class="bi bi-heart-fill"></i></a>
                 </li>
                 <li class="nav-item dropdown d-none d-sm-block">
                     <a class="nav-link dropdown-toggle pe-0" href="#" id="navbarCollectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
