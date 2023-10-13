@@ -109,11 +109,17 @@ export const PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS = 600000; // 10mn
 export const PLAYER_MULTI_ALLOWED_TYPE = '4g';
 export const PLAYER_MULTI_DISABLED_TYPE = 'cellular';
 
+// from https://developer.android.com/reference/android/media/session/PlaybackState
 export const PLAYER_STATE_NONE = 0;
 export const PLAYER_STATE_STOPPED = 1;
 export const PLAYER_STATE_PAUSED = 2;
 export const PLAYER_STATE_PLAYING = 3;
+export const PLAYER_STATE_BUFFERING = 6;
+export const PLAYER_STATE_CONNECTING = 8;
 export const PLAYER_STATE_ERROR = 7;
+
+// extends Android Playback state
+export const PLAYER_STATE_LOADING = 42;
 
 export const PLAYER_STATE = [
   PLAYER_STATE_NONE,

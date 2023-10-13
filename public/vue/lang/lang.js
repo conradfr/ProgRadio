@@ -80,7 +80,7 @@ export const messages = {
         current: '↓ Aller à l\'émission en cours',
         no_schedule: 'Programmes non disponibles.',
         play: 'Ecouter {radio}',
-        stop: 'Stopper',
+        stop: 'Stopper {radio}',
         title: 'Les programmes et streaming de {radio}',
         webradios: 'Radios web'
       },
@@ -213,7 +213,7 @@ export const messages = {
         back: '← Back to radio guide',
         current: '↓ Go to current show',
         play: 'Listen to {radio}',
-        stop: 'Stop',
+        stop: 'Stop {radio}',
         no_schedule: 'Schedule not available',
         title: 'Schedule of the radio {radio}',
         webradios: 'Webradios'
@@ -348,7 +348,7 @@ export const messages = {
         current: '↓ Ir al programa actual',
         no_schedule: 'Programas no disponibles.',
         play: 'Escuchar {radio}',
-        stop: 'Detener',
+        stop: 'Detener {radio}',
         title: 'Programas de {radio} y streaming',
         webradios: 'Radios web'
       },
@@ -480,8 +480,8 @@ export const messages = {
       radio_page: {
         back: '← Zurück zum Radioguide',
         current: '↓ Gehe zur aktuellen Sendung',
-        play: '{radio} anhören',
-        stop: 'Stopp',
+        play: '{radio} hören',
+        stop: 'Stoppen {radio}',
         no_schedule: 'Zeitplan nicht verfügbar',
         title: 'Zeitplan des Radios {radio}',
         webradios: 'Webradios'
@@ -615,7 +615,7 @@ export const messages = {
         back: '← Voltar ao guia de rádio',
         current: '↓ Ir para o programa atual',
         play: 'Ouça {radio} ',
-        stop: 'Parar',
+        stop: 'Parar {radio}',
         no_schedule: 'Programação não disponível',
         title: 'Horário da rádio {rádio}',
         webradios: 'Webrádios'

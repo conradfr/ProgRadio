@@ -8,6 +8,7 @@ import type { Program } from '@/types/program';
 import type { Stream } from '@/types/stream';
 import type { Song } from '@/types/song';
 import type { ListeningSession } from '@/types/listening_session';
+import PlayerStatus from '@/types/player_status';
 
 import * as config from '../config/config';
 import typeUtils from './typeUtils';
@@ -342,13 +343,13 @@ const calculatedFlux = () => {
 /* ---------- API ---------- */
 
 const sendListeningSession = (
-  playing: boolean,
+  playingStatus: PlayerStatus,
   radio: Radio|Stream,
   radioStreamCodeName: string|null,
   session: ListeningSession,
   ending?: boolean
 ) => {
-  if (playing && session.start !== null) {
+  if (playingStatus === PlayerStatus.Playing && session.start !== null) {
     const dateTimeEnd = DateTime.local().setZone(config.TIMEZONE);
 
     if (dateTimeEnd.diff(session.start).as('seconds') < config.LISTENING_SESSION_MIN_SECONDS) {

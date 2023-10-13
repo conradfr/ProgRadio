@@ -1,23 +1,38 @@
 <template>
   <div class="radio-page-streams-one text-center mb-4">
     <div
-        v-if="playerStore.playing === false || stream.code_name !== playingStreamCodeName"
+        v-if="stream.code_name !== playingStreamCodeName
+          || playerStore.playing === PlayerStatus.Stopped"
         v-on:click="play"
         class="radio-page-play">
       <img :alt="$t('message.radio_page.play', { radio: stream.name })"
            src="/img/play-button-inside-a-circle.svg">
-      <div>
+      <div class="radio-page-play-text">
        {{ $t('message.radio_page.play', { radio: stream.name }) }}
       </div>
     </div>
     <div
-        v-if="playerStore.playing === true && stream.code_name === playingStreamCodeName"
+        v-if="stream.code_name === playingStreamCodeName
+          && playerStore.playing === PlayerStatus.Playing"
         v-on:click="stop"
         class="radio-page-play">
-      <img :alt="$t('message.radio_page.stop')"
+      <img :alt="$t('message.radio_page.stop', { radio: stream.name })"
            src="/img/rounded-pause-button.svg">
-      <div>
-       {{ $t('message.radio_page.stop') }}
+      <div class="radio-page-play-text">
+       {{ $t('message.radio_page.stop', { radio: stream.name }) }}
+      </div>
+    </div>
+    <div
+        v-if="stream.code_name === playingStreamCodeName
+          && playerStore.playing === PlayerStatus.Loading"
+        v-on:click="stop"
+        class="radio-page-play">
+      <div class="spinner-border" role="status"
+         :title="$t('message.radio_page.stop', { radio: stream.name })">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="radio-page-play-text">
+        {{ $t('message.radio_page.stop', { radio: stream.name }) }}
       </div>
     </div>
   </div>
@@ -32,6 +47,7 @@ import { usePlayerStore } from '@/stores/playerStore';
 
 import type { Radio } from '@/types/radio';
 import type { RadioStream } from '@/types/radio_stream';
+import PlayerStatus from '@/types/player_status';
 
 import {
   GTAG_CATEGORY_RADIOPAGE,
@@ -49,6 +65,11 @@ export default defineComponent({
       type: Object as PropType<RadioStream>,
       required: true
     },
+  },
+  data() {
+    return {
+      PlayerStatus
+    };
   },
   computed: {
     ...mapStores(usePlayerStore),

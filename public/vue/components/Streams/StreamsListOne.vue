@@ -4,7 +4,8 @@
     @mouseleave="hover = false"
     :class="{
      'streams-one-play-active': (radio.code_name === radioPlayingCodeName),
-     'streams-one-play-paused': (playing === false && radio.code_name === radioPlayingCodeName)
+     'streams-one-play-paused': (radio.code_name === radioPlayingCodeName
+        && playing === PlayerStatus.Stopped)
     }">
     <div class="streams-one-img" :style="styleObject" v-on:click="playStop">
       <div class="streams-one-img-play"></div>
@@ -61,6 +62,7 @@ import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
 import type { Stream } from '@/types/stream';
+import PlayerStatus from '@/types/player_status';
 
 import * as config from '../../config/config';
 import StreamsUtils from '../../utils/StreamsUtils';
@@ -75,6 +77,7 @@ export default defineComponent({
   },
   /* eslint-disable indent */
   data(): {
+    PlayerStatus: any,
     channelName: string,
     currentSong: string|null,
     hover: boolean,
@@ -86,6 +89,7 @@ export default defineComponent({
     const img = StreamsUtils.getPictureUrl(this.radio);
 
     return {
+      PlayerStatus,
       // @dodo fix null mobile app
       channelName: PlayerUtils.getChannelName(this.radio, this.radio.radio_stream_code_name) || '',
       currentSong: null,
@@ -173,7 +177,8 @@ export default defineComponent({
     },
     playStop() {
       // stop if playing
-      if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name) {
+      if (this.radioPlayingCodeName === this.radio.code_name
+        && this.playing !== PlayerStatus.Stopped) {
         if (this.externalPlayer === false) {
           (this as any).$gtag.event(config.GTAG_ACTION_STOP, {
             event_category: config.GTAG_CATEGORY_STREAMING,

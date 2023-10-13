@@ -58,29 +58,29 @@
                         <div class="streams-one"
                              :class="{
      'streams-one-play-active': '{{ stream.code_name }}' === radioId,
-     'streams-one-play-paused': playing === false && '{{ stream.code_name }}' === radioId
+     'streams-one-play-paused': playing === PLAYER_STATE_STOPPED && '{{ stream.code_name }}' === radioId
     }">
                             <div class="streams-one-img" style="background-image: url({{ self.picture(stream) }})"
-                                 v-if="playing === false || radioId !== '{{ stream.code_name }}'"
+                                 v-if="playing === PLAYER_STATE_STOPPED || radioId !== '{{ stream.code_name }}'"
                                  @click="play('{{ stream.stream_url }}', '{{ stream.code_name }}', '{{ self.topic(stream)|spaceless }}')">
                                 <div class="streams-one-img-play"></div>
                             </div>
 
                             <div class="streams-one-img" style="background-image: url({{ self.picture(stream) }})"
-                                 v-if="playing === true && radioId === '{{ stream.code_name }}'"
+                                 v-if="radioId === '{{ stream.code_name }}' && playing !== PLAYER_STATE_STOPPED"
                                  @click="stop('{{ stream.stream_url }}', '{{ stream.code_name }}')">
                                 <div class="streams-one-img-play"></div>
                             </div>
 
                             <div class="streams-one-name" title="{{ stream.name }}">
                                 <a class="streams-one-name-detail" href="{{ path('streams_one_short', {'shortId': stream.code_name|shortid, 'codename': stream.name|slug}) }}">{{ stream.name }}</a>
-                                <div class="streams-one-song" v-if="playing === true && radioId === '{{ stream.code_name }}' && song !== null">
+                                <div class="streams-one-song" v-if="radioId === '{{ stream.code_name }}' && playing !== PLAYER_STATE_STOPPED && song !== null">
                                     {% verbatim %}
                                         ♫ {{ song }}
                                     {% endverbatim %}
                                 </div>
                                 {% if stream.tags != null %}
-                                <div class="streams-one-tags" v-if="playing === false || radioId !== '{{ stream.code_name }}' || song === null">
+                                <div class="streams-one-tags" v-if="radioId !== '{{ stream.code_name }}' || playing === PLAYER_STATE_STOPPED || song === null">
                                         {% for tag in stream.tags|split(',') %}
                                             <a style="text-decoration: none" href="{{ path('streaming_spa') }}/all?s={{ tag }}">
                                             <span class="badge badge-inverse" >

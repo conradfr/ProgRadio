@@ -268,7 +268,7 @@ EOT;
             ->addSelect('r.name as radio_name, r.share as radio_share, rs.name as radio_stream_name, rs.url as streaming_url, c.codeName as collectionCodeName')
             ->from(ScheduleEntry::class, 'se')
             ->innerJoin('se.radio', 'r')
-            ->leftJoin('se.subRadio', 'sr')
+            ->innerJoin('se.subRadio', 'sr')
             ->leftJoin('r.streams', 'rs')
             ->innerJoin('r.collection', 'c')
             ->leftJoin('se.sectionEntries', 'sc')

@@ -49,23 +49,35 @@
                                         <div class="radio-page-streams-one text-center mb-4 d-none"
                                              @vue:mounted="$el.classList.remove('d-none')">
                                             <div
-                                                v-if="playing === false || radioId !== '{{ entry.radio.codeName }}'"
+                                                v-if="radioId !== '{{ entry.radio.codeName }}' || playing === PLAYER_STATE_STOPPED"
                                                 @click="play('{{ entry.radio.streamingUrl }}', '{{ entry.radio.codeName }}')"
                                                 class="radio-page-play">
                                                 <img alt="{{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}"
                                                      src="/img/play-button-inside-a-circle.svg">
-                                                <div>
+                                                <div class="radio-page-play-text">
                                                     {{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}
                                                 </div>
                                             </div>
                                             <div
-                                                    v-if="playing === true && radioId === '{{ entry.radio.codeName }}'"
-                                                    @click="stop('{{ entry.radio.codeName }}')"
-                                                    class="radio-page-play">
-                                                <img alt="{{ 'page.radio.stop'|trans() }}"
+                                                v-if="radioId === '{{ entry.radio.codeName }}' && playing === PLAYER_STATE_PLAYING"
+                                                @click="stop('{{ entry.radio.codeName }}')"
+                                                class="radio-page-play">
+                                                <img alt="{{ 'page.radio.stop'|trans({'%radio%': entry.radio.name}) }}"
                                                      src="/img/rounded-pause-button.svg">
-                                                <div>
-                                                    {{ 'page.radio.stop'|trans() }}
+                                                <div class="radio-page-play-text">
+                                                    {{ 'page.radio.stop'|trans({'%radio%': entry.radio.name}) }}
+                                                </div>
+                                            </div>
+                                            <div
+                                                v-if="radioId === '{{ entry.radio.codeName }}' && playing === PLAYER_STATE_LOADING"
+                                                @click="stop('{{ entry.radio.codeName }}')"
+                                                class="radio-page-play">
+                                                <div class="spinner-border spinner-border-sm" style="width: 1.7rem; height: 1.7rem;" role="status"
+                                                     title="{{ 'page.radio.stop'|trans({'%radio%': entry.radio.name}) }}">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                                <div class="radio-page-play-text">
+                                                    {{ 'page.radio.stop'|trans({'%radio%': entry.radio.name}) }}
                                                 </div>
                                             </div>
                                         </div>

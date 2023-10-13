@@ -44,14 +44,14 @@
                         <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">{{ 'admin.stream_errors.reset'|trans }}</a></td>
                         <td class="text-start" v-scope>
                             <div
-                                v-if="playing === false || radioId !== '{{ stream_error.id }}'"
+                                v-if="radioId !== '{{ stream_error.id }}' && playing === PLAYER_STATE_STOPPED"
                                 @click="play('{{ stream_error.streamUrl }}', '{{ stream_error.id }}', null, null)"
                                 class="admin-play">
                                 <i class="bi bi-play-circle"></i>&nbsp;&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream_error.name}) }}
                             </div>
 
                             <div
-                                v-if="playing === true && radioId === '{{ stream_error.id }}'"
+                                v-if="radioId === '{{ stream_error.id }}' && playing !== PLAYER_STATE_STOPPED"
                                 @click="stop('{{ stream_error.id }}')"
                                 class="admin-play admin-play-playing">
                                 <i class="bi bi-stop-circle"></i>&nbsp;&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream_error.name}) }}

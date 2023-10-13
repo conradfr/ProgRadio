@@ -99,6 +99,10 @@ $icon-play-size-hover: 1.846rem;
       padding-top: 1px;
       font-size: $icon-play-size-hover;
     }
+
+    .spinner-border.spinner-border-sm {
+      --bs-spinner-border-width: 0.13em !important;
+    }
   }
 
   .player-infos {

@@ -468,7 +468,8 @@ class DefaultController extends AbstractBaseController
     {
         $dateTime = new \DateTime();
 
-        $schedule = $em->getRepository(ScheduleEntry::class)->getTimeSpecificSchedule($dateTime);
+        $schedule = $em->getRepository(ScheduleEntry::class)->getTimeSpecificSchedule($dateTime, ['europe1']);
+
         $collections = $em->getRepository(Collection::class)->getCollections();
         $collections = array_filter($collections, fn($collection) => $collection['code_name'] !== Radio::FAVORITES);
 

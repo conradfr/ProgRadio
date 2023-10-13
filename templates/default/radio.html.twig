@@ -44,7 +44,7 @@
                 <div class="radio-page-streams" v-scope>
                     <div class="radio-page-streams-one text-center mb-4 v-cloak">
                         <div
-                            v-if="playing === false"
+                            v-if="playing === PLAYER_STATE_STOPPED"
                             @click="play('{{ sub_radio.radioStream.url }}', '{{ radio.codename }}')"
                             class="radio-page-play">
                             <img alt="{{ 'page.radio.play'|trans({'%radio%': radio.name}) }}"
@@ -54,11 +54,23 @@
                             </div>
                         </div>
                         <div
-                            v-if="playing === true"
-                            @click="stop('{{ radio.codename }}')"
+                            v-if="playing === PLAYER_STATE_PLAYING"
+                            @click="stop('{{ radio.codeName }}')"
                             class="radio-page-play">
                             <img alt="{{ 'page.radio.stop'|trans({'%radio%': radio.name}) }}"
                                  src="/img/rounded-pause-button.svg">
+                            <div>
+                                {{ 'page.radio.stop'|trans({'%radio%': radio.name}) }}
+                            </div>
+                        </div>
+                        <div
+                            v-if="playing === PLAYER_STATE_LOADING"
+                            @click="stop('{{ radio.codeName }}')"
+                            class="radio-page-play">
+                            <div class="spinner-border" style="width: 3rem; height: 3rem; " role="status"
+                                 title="{{ 'page.radio.stop'|trans({'%radio%': radio.name}) }}">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                             <div>
                                 {{ 'page.radio.stop'|trans({'%radio%': radio.name}) }}
                             </div>

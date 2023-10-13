@@ -18,6 +18,8 @@ import { useScheduleStore } from '@/stores/scheduleStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
+import PlayerStatus from '@/types/player_status';
+
 import { COLLECTION_FAVORITES } from '@/config/config';
 
 import typeUtils from '../utils/typeUtils';
@@ -40,9 +42,11 @@ export default defineComponent({
   },
   /* eslint-disable indent */
   data(): {
+    PlayerStatus: any,
     containerRef: HTMLElement|null
   } {
     return {
+      PlayerStatus,
       containerRef: null
     };
   },
@@ -113,7 +117,7 @@ export default defineComponent({
       this.switchCollection(COLLECTION_FAVORITES);
     },
     updateTitle() {
-      if (this.playing === true && this.playingRadio
+      if (this.playing === PlayerStatus.Playing && this.playingRadio
           && typeUtils.isRadio(this.playingRadio)) {
         let preTitle = '♫ ';
         if (this.currentSong) {

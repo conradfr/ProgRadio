@@ -24,6 +24,8 @@ import { useStreamsStore } from '@/stores/streamsStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
+import PlayerStatus from '@/types/player_status';
+
 import { PLAYER_TYPE_STREAM } from '@/config/config';
 
 import StreamsListFilters from './Streams/StreamsListFilters.vue';
@@ -40,6 +42,11 @@ export default defineComponent({
     StreamsOne,
     Loading,
     Adsense
+  },
+  data() {
+    return {
+      PlayerStatus,
+    };
   },
   created() {
     this.getConfig();
@@ -135,7 +142,7 @@ export default defineComponent({
   methods: {
     ...mapActions(useStreamsStore, ['getConfig', 'getCountries']),
     updateTitle() {
-      if (this.playing === true && this.playingRadio
+      if (this.playing === PlayerStatus.Playing && this.playingRadio
           && this.playingRadio.type === PLAYER_TYPE_STREAM) {
         let preTitle = '♫ ';
 

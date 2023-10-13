@@ -48,7 +48,8 @@
           <div class="radio-logo-play"
                :class="{
         'radio-logo-play-active': (entry.code_name === playingStreamCodeName),
-        'radio-logo-play-paused': (playing === false && entry.code_name === playingStreamCodeName),
+        'radio-logo-play-paused': (entry.code_name === playingStreamCodeName
+          && playing === PlayerStatus.Stopped),
         'radio-logo-play-hide': (radio.streaming_enabled === false)
       }">
           </div>
@@ -63,9 +64,10 @@
            :style="styleObject">
         <div class="radio-logo-play"
            :class="{
-          'radio-logo-play-active': radio.code_name === radioPlayingCodeName,
-          'radio-logo-play-paused': playing === false && radio.code_name === radioPlayingCodeName,
           'radio-logo-play-hide': radio.streaming_enabled === false,
+          'radio-logo-play-active': radio.code_name === radioPlayingCodeName,
+          'radio-logo-play-paused': radio.code_name === radioPlayingCodeName
+            && playing === PlayerStatus.Stopped,
           'radio-logo-play-secondary':
             (radio.code_name === radioPlayingCodeName
               && isWebRadio(radio.code_name, playingStreamCodeName))
@@ -83,6 +85,7 @@ import { mapState, mapActions } from 'pinia';
 import filter from 'lodash/filter';
 
 import type { Radio } from '@/types/radio';
+import PlayerStatus from '@/types/player_status';
 
 /* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
@@ -114,6 +117,7 @@ export default defineComponent({
   },
   /* eslint-disable indent */
   data(): {
+    PlayerStatus: any,
     channelName: string,
     hover: boolean,
     hoverTimer: number|null,
@@ -121,6 +125,7 @@ export default defineComponent({
     styleObject: object,
   } {
     return {
+      PlayerStatus,
       // @dodo fix null mobile app
       channelName: PlayerUtils.getChannelName(this.radio, `${this.radio.code_name}_main`) || '',
       hover: false,
@@ -218,7 +223,8 @@ export default defineComponent({
         : this.getSubRadio(radioCodeName).radio_stream;
 
       // stop if playing
-      if (this.playing === true && this.radioPlayingCodeName === this.radio.code_name
+      if (this.playing !== PlayerStatus.Stopped
+        && this.radioPlayingCodeName === this.radio.code_name
         && ((isSubStream && this.playingStreamCodeName === streamCodeName)
           || !isSubStream)) {
         if (this.externalPlayer === false) {

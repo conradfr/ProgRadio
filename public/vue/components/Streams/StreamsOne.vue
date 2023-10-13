@@ -26,14 +26,16 @@
                 align-items-center justify-content-center justify-content-sm-start">
                 <div>
                   <div
-                    v-if="playing === false || stream.code_name !== radioPlayingCodeName"
+                    v-if="stream.code_name !== radioPlayingCodeName
+                      || playing === PlayerStatus.Stopped"
                     v-on:click="playStop"
                     class="radio-page-play">
                     <img :alt="$t('message.streaming.play', { radio: stream.name})"
                       src="/img/play-button-inside-a-circle.svg">
                   </div>
                   <div
-                    v-if="playing === true && stream.code_name === radioPlayingCodeName"
+                    v-if="stream.code_name === radioPlayingCodeName
+                      && playing !== PlayerStatus.Stopped"
                     v-on:click="playStop"
                     class="radio-page-play">
                     <img :alt="$t('message.streaming.stop')"
@@ -43,13 +45,15 @@
 
                 <div class="ps-2">
                   <div
-                    v-if="playing === false || stream.code_name !== radioPlayingCodeName"
+                    v-if="stream.code_name !== radioPlayingCodeName
+                      || playing === PlayerStatus.Stopped"
                     v-on:click="playStop"
                     class="radio-page-play">
                     <div>{{ $t('message.streaming.play', { radio: stream.name}) }}</div>
                   </div>
                   <div
-                    v-if="playing === true && stream.code_name === radioPlayingCodeName"
+                    v-if="stream.code_name === radioPlayingCodeName
+                      && playing !== PlayerStatus.Stopped"
                     v-on:click="playStop"
                     class="radio-page-play">
                     <div>{{ $t('message.streaming.stop') }}</div>
@@ -141,6 +145,8 @@ import { useStreamsStore } from '@/stores/streamsStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
+import PlayerStatus from '@/types/player_status';
+
 import * as config from '../../config/config';
 import StreamsUtils from '../../utils/StreamsUtils';
 import Adsense from '../Utils/Adsense.vue';
@@ -157,6 +163,7 @@ export default defineComponent({
   },
   data() {
     return {
+      PlayerStatus,
       locale: this.$i18n.locale
     };
   },
@@ -214,7 +221,8 @@ export default defineComponent({
       }
 
       // stop if playing
-      if (this.playing === true && this.radioPlayingCodeName === this.stream.code_name) {
+      if (this.radioPlayingCodeName === this.stream.code_name
+        && this.playing !== PlayerStatus.Stopped) {
         if (this.externalPlayer === false) {
           (this as any).$gtag.event(config.GTAG_ACTION_STOP, {
             event_category: config.GTAG_CATEGORY_STREAMING,

@@ -18,6 +18,8 @@ import { useGlobalStore } from '@/stores/globalStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
+import PlayerStatus from '@/types/player_status';
+
 import typeUtils from '../utils/typeUtils';
 import * as config from '../config/config';
 import cache from '../utils/cache';
@@ -329,7 +331,7 @@ export const useScheduleStore = defineStore('schedule', {
         this.getSchedule();
       }
 
-      if (player.playing === true && player.radio !== null
+      if (player.playing === PlayerStatus.Playing && player.radio !== null
         && typeUtils.isRadio(player.radio)) {
         player.updateShow();
       }

@@ -112,7 +112,17 @@
 
     div {
       color: $radio-stream;
-      margin-top: 2px;
+
+      &.radio-page-play-text {
+        margin-top: 5px;
+      }
+    }
+
+    .spinner-border {
+      width: 40px;
+      height: 40px;
+
+      margin-top: 3px;
     }
 
     &:hover {
@@ -138,6 +148,13 @@
 
     div {
       font-size: 0.846rem !important;
+    }
+
+    .spinner-border {
+      width: 20px;
+      height: 20px;
+
+      margin-top: 2px;
     }
   }
 }

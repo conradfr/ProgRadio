@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { nextTick, toRaw, markRaw } from 'vue';
+import { markRaw, nextTick, toRaw } from 'vue';
 import { DateTime } from 'luxon';
 import find from 'lodash/find';
 
@@ -10,6 +10,7 @@ import type { Songs } from '@/types/song';
 import type { Listeners } from '@/types/listeners';
 import type { ListeningSession } from '@/types/listening_session';
 import type { ChannelsRefCount } from '@/types/channels_ref_count';
+import PlayerStatus from '@/types/player_status';
 
 /* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
@@ -34,10 +35,10 @@ interface Focus {
 
 interface State {
   socket: any
-  socketTimer: number|null,
+  socketTimer: number|null
   channels:any
-  channelsRefCount: ChannelsRefCount,
-  playing: boolean
+  channelsRefCount: ChannelsRefCount
+  playing: PlayerStatus
   externalPlayer: boolean
   externalPlayerVersion: number|null
   radio: Radio|Stream|null
@@ -66,7 +67,7 @@ export const usePlayerStore = defineStore('player', {
     socketTimer: null,
     channels: {},
     channelsRefCount: {},
-    playing: false,
+    playing: PlayerStatus.Stopped,
     externalPlayer: AndroidApi.hasAndroid,
     externalPlayerVersion: AndroidApi.getVersion(),
     radio: cookies.getJson(config.COOKIE_LAST_RADIO_PLAYED),
@@ -96,7 +97,8 @@ export const usePlayerStore = defineStore('player', {
     radioPlayingCodeName: state => (state.radio !== null ? state.radio.code_name : null),
     displayVolume: state => state.focus.icon || state.focus.fader || false,
     timerIsActive: state => state.timer !== undefined && state.timer !== null && state.timer !== 0,
-    timerDisplay: state => state.playing || (state.timer !== null && state.timer > 0),
+    timerDisplay: state => state.playing === PlayerStatus.Playing
+      || (state.timer !== null && state.timer > 0),
     streamUrl: (state) => {
       if (state.radio === null) { return null; }
 
@@ -204,7 +206,7 @@ export const usePlayerStore = defineStore('player', {
       });
     },
     togglePlay() {
-      if (this.playing === true) {
+      if (this.playing !== PlayerStatus.Stopped) {
         if (this.externalPlayer === true) {
           AndroidApi.pause();
           return;
@@ -226,7 +228,7 @@ export const usePlayerStore = defineStore('player', {
       this.radio = radio;
       this.radioStreamCodeName = streamCodeName || null;
       this.show = null;
-      this.playing = true;
+      this.playing = PlayerStatus.Loading;
       // state.song = {};
       this.session = {
         start: DateTime.local().setZone(config.TIMEZONE),
@@ -235,7 +237,7 @@ export const usePlayerStore = defineStore('player', {
       };
     },
     resume() {
-      this.playing = true;
+      this.playing = PlayerStatus.Loading;
       // state.song = null;
       this.session = {
         start: DateTime.local().setZone(config.TIMEZONE),
@@ -249,15 +251,17 @@ export const usePlayerStore = defineStore('player', {
         return;
       }
 
-      PlayerUtils.sendListeningSession(
-        this.playing,
-        this.radio!,
-        this.radioStreamCodeName,
-        this.session,
-        true);
+      if (this.playing === PlayerStatus.Playing) {
+        PlayerUtils.sendListeningSession(
+          this.playing,
+          this.radio!,
+          this.radioStreamCodeName,
+          this.session,
+          true);
+      }
 
       // commit
-      this.playing = false;
+      this.playing = PlayerStatus.Stopped;
       // state.song = null;
       this.session = { start: null, id: null, ctrl: null };
       if (this.sessionInterval !== null) {
@@ -265,8 +269,14 @@ export const usePlayerStore = defineStore('player', {
         this.sessionInterval = null;
       }
     },
+    setPlayerStatus(playerStatus: PlayerStatus) {
+      this.playing = playerStatus;
+    },
+    playStarted() {
+      this.playing = PlayerStatus.Playing;
+    },
     playError() {
-      this.playing = false;
+      this.playing = PlayerStatus.Stopped;
     },
     // Previous in collection
     playPrevious() {
@@ -747,7 +757,7 @@ export const usePlayerStore = defineStore('player', {
 
       if (radio !== undefined /* && radio.streaming_enabled === true */
         && config.PLAYER_STATE.indexOf(playbackState) !== -1) {
-        this.playing = playbackState === config.PLAYER_STATE_PLAYING;
+        this.playing = playbackState === config.PLAYER_STATE_PLAYING ? PlayerStatus.Playing : PlayerStatus.Stopped;
         this.radio = radio;
         this.radioStreamCodeName = radioStream !== null
           && radioStream !== undefined ? radioStream.code_name : null;

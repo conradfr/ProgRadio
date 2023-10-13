@@ -29,11 +29,19 @@
       </div>
       <div class="player-playpause" v-on:click="togglePlay"
            :class="{ 'player-playpause-disabled': radio === null }">
-        <i class="bi"
-           :class="{
-          'bi-play-circle': !playing,
-          'bi-pause-circle': playing
-        }"></i>
+        <i
+          v-if="playing !== PlayerStatus.Loading"
+          class="bi"
+          :class="{
+            'bi-play-circle': playing === PlayerStatus.Stopped,
+            'bi-pause-circle': playing !== PlayerStatus.Stopped
+          }"></i>
+        <div
+          v-if="playing === PlayerStatus.Loading"
+          class="spinner-border spinner-border-sm" role="status"
+            style="width: 1em; height: 1em;">
+          <span class="visually-hidden">Loading....</span>
+        </div>
       </div>
       <player-info v-if="radio"></player-info>
       <transition name="timer-fade" mode="out-in">
@@ -70,6 +78,8 @@ import { usePlayerStore } from '@/stores/playerStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 import { useUserStore } from '@/stores/userStore';
+
+import PlayerStatus from '@/types/player_status';
 
 import PlayerInfo from './PlayerInfo.vue';
 import PlayerSaveSong from './PlayerSaveSong.vue';
@@ -125,6 +135,7 @@ const loadDash = () => {
 };
 
 interface PlayerRadio {
+  id: 1|2,
   url: string|null
   timer: number|null
   hls: Hls|null
@@ -149,17 +160,19 @@ export default defineComponent({
   },
   /* eslint-disable indent */
   data(): {
+    PlayerStatus: any,
     audio: PlayerAudio,
     hls: Hls|null,
     // dash: Dash|null,
     debounce: boolean,
-    lastUpdated: Date|null,
     locale: string
   } {
     return {
+      PlayerStatus,
       audio: {
         current: null,
         player1: {
+          id: 1,
           url: null,
           timer: null,
           hls: null,
@@ -169,6 +182,7 @@ export default defineComponent({
           startedAt: null
         },
         player2: {
+          id: 2,
           url: null,
           timer: null,
           hls: null,
@@ -186,7 +200,6 @@ export default defineComponent({
       debounce: false,
       hls: null,
       // dash: null,
-      lastUpdated: null,
       locale: this.$i18n.locale,
     };
   },
@@ -255,6 +268,7 @@ export default defineComponent({
           : (this.$i18n as any).tc('message.player.favorites.add'));
     },
     /* used to watch multiple properties at once (will not be necessary in Vue3) */
+    /* todo revisit now that we use Vue 3 */
     radioShowWatching(): string {
       const radio = this.radio !== null ? this.radio.code_name : 'null';
       const show = this.show !== null ? this.show.hash : 'null';
@@ -273,10 +287,11 @@ export default defineComponent({
       joinChannel: 'joinChannel',
       updateFlux: 'updateFlux',
       playError: 'playError',
+      setPlayerStatus: 'setPlayerStatus',
       setStreamPlayingError: 'setStreamPlayingError'
     }),
     beforeWindowUnload() {
-      if (this.externalPlayer === false && this.playing === true) {
+      if (this.externalPlayer === false && this.playing !== PlayerStatus.Stopped) {
         this.stop();
       }
     },
@@ -326,6 +341,7 @@ export default defineComponent({
           this.currentPlayer.timer = null;
         }
         this.currentPlayer.element.volume = (this.volume * 0.1);
+        this.playingStarted(this.currentPlayer);
         return;
       }
       // }
@@ -341,6 +357,7 @@ export default defineComponent({
       // previous stream is the same as this one
       if (this.currentPlayer.url === url) {
         this.currentPlayer.element.volume = (this.volume * 0.1);
+        this.playingStarted(this.currentPlayer);
         return;
       }
 
@@ -359,6 +376,10 @@ export default defineComponent({
 
             // @ts-ignore
             this.currentPlayer.hls.on(Hls.Events.ERROR, (event, data) => {
+              if (this.currentPlayer.id !== this.audio.current) {
+                return;
+              }
+
               if (data.fatal) {
                 this.displayToast({
                   message: (this.$i18n as any).tc('message.player.play_error'),
@@ -381,6 +402,7 @@ export default defineComponent({
                 this.currentPlayer.element.muted = this.muted;
                 this.currentPlayer.element.volume = (this.volume * 0.1);
                 startPlayPromise = this.currentPlayer.element.play();
+                this.playingStarted(this.currentPlayer);
               });
             });
           }
@@ -393,6 +415,10 @@ export default defineComponent({
           this.currentPlayer.dash.initialize(this.currentPlayer.element, url, false);
 
           this.currentPlayer.dash.on('error', () => {
+            if (this.currentPlayer.id !== this.audio.current) {
+              return;
+            }
+
             this.displayToast({
               message: (this.$i18n as any).tc('message.player.play_error'),
               type: 'error'
@@ -406,9 +432,13 @@ export default defineComponent({
           });
 
           this.currentPlayer.dash.on('canPlay', () => {
-            this.currentPlayer.element.muted = this.muted;
-            this.currentPlayer.element.volume = (this.volume * 0.1);
+            if (this.currentPlayer.id !== this.audio.current) {
+              this.currentPlayer.element.muted = this.muted;
+              this.currentPlayer.element.volume = (this.volume * 0.1);
+            }
+
             startPlayPromise = this.currentPlayer.element.play();
+            this.playingStarted(this.currentPlayer);
           });
         });
       } else {
@@ -417,7 +447,7 @@ export default defineComponent({
             // @ts-expect-error apiUrl is defined on the global scope
             ? `${streamsProxy}?stream=${url}` : url;
 
-        this.currentPlayer.element = new Audio(`${streamUrl}`);
+        this.currentPlayer.element = new Audio(streamUrl);
         this.currentPlayer.element.muted = this.muted;
         this.currentPlayer.element.volume = (this.volume * 0.1);
         startPlayPromise = this.currentPlayer.element.play();
@@ -425,15 +455,13 @@ export default defineComponent({
 
       if (startPlayPromise !== undefined) {
         startPlayPromise.then(() => {
-          // this.currentPlayer.element.currentTime += 1;
-          // check if stream playing
-          this.currentPlayer.element.addEventListener('timeupdate', () => {
-            this.lastUpdated = new Date();
-          });
-
-          this.lastUpdated = new Date();
-          tooltip.set('player-timer', config.COOKIE_TOOLTIP_TIMER);
+          this.playingStarted(this.currentPlayer);
         }).catch((error: any) => {
+          if (this.currentPlayer.id !== this.audio.current) {
+            return;
+          }
+
+          this.setPlayerStatus(PlayerStatus.Stopped);
           this.stop();
 
           if (error.name === 'NotAllowedError') {
@@ -546,6 +574,15 @@ export default defineComponent({
       // delete window.audio;
       // delete window.audio;
     },
+    playingStarted(player: PlayerRadio) {
+      if (player.id !== this.audio.current) {
+        return;
+      }
+
+      this.setPlayerStatus(PlayerStatus.Playing);
+
+      tooltip.set('player-timer', config.COOKIE_TOOLTIP_TIMER);
+    },
     favoriteToggle() {
       if (this.radio !== null) {
         (this as any).$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
@@ -581,16 +618,16 @@ export default defineComponent({
       this.togglePreviousDispatch();
     },
     setNextPlayer(nextUrl: string) {
-      const nextPlayer = this.audio.current === 1 ? 2 : 1;
+      const nextPlayerId = this.audio.current === 1 ? 2 : 1;
 
-      if (this.audio[`player${nextPlayer}`] !== null
-          && this.audio[`player${nextPlayer}`].element !== null
-          && this.audio[`player${nextPlayer}`].url !== null
-          && this.audio[`player${nextPlayer}`].url !== nextUrl) {
-        this.resetPlayer(nextPlayer);
+      if (this.audio[`player${nextPlayerId}`] !== null
+          && this.audio[`player${nextPlayerId}`].element !== null
+          && this.audio[`player${nextPlayerId}`].url !== null
+          && this.audio[`player${nextPlayerId}`].url !== nextUrl) {
+        this.resetPlayer(nextPlayerId);
       }
 
-      this.audio.current = nextPlayer;
+      this.audio.current = nextPlayerId;
     }
   },
   /* eslint-disable operator-linebreak */
@@ -598,12 +635,12 @@ export default defineComponent({
   /* eslint-disable quote-props */
   /* eslint-disable func-names */
   watch: {
-    'playing': function (val: boolean) {
+    'playing': function (val: PlayerStatus) {
       if (this.radio === null) {
         return;
       }
 
-      if (val === true) {
+      if (val === PlayerStatus.Playing) {
         let channelName = null;
 
         if ((this.radio.type === config.PLAYER_TYPE_RADIO
@@ -625,7 +662,7 @@ export default defineComponent({
         Array.prototype.forEach.call(mobileTimerElems, (element) => {
           element.classList.remove('disabled');
         });
-      } else if (this.timerIsActive !== true) {
+      } else if (val === PlayerStatus.Stopped && this.timerIsActive !== true) {
         // timer on mobile menu
         const mobileTimerElems =
             document.getElementsByClassName(config.MOBILE_MENU_TIMER_CLASSNAME);
@@ -636,9 +673,9 @@ export default defineComponent({
 
       if (this.externalPlayer === true) { return; }
 
-      if (val === true && this.streamUrl !== null) {
+      if (val === PlayerStatus.Loading && this.streamUrl !== null) {
         this.play(this.streamUrl);
-      } else {
+      } else if (val === PlayerStatus.Stopped) {
         this.pause();
         // this.stop();
       }
@@ -666,7 +703,7 @@ export default defineComponent({
       }
     },
     'radioShowWatching': function (newVal, oldVal) {
-      if (this.externalPlayer === true || this.playing === false) { return; }
+      if (this.externalPlayer === true || this.playing !== PlayerStatus.Playing) { return; }
 
       let display = false;
       const [oldPlaying, oldRadio, oldShow] = oldVal.split('|');

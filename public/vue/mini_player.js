@@ -9,7 +9,10 @@ import {
   LISTENING_SESSION_MIN_SECONDS,
   LISTENING_SESSION_SOURCE_SSR,
   WEBSOCKET_DISCONNECT_AFTER,
-  WEBSOCKET_MAX_RETRIES
+  WEBSOCKET_MAX_RETRIES,
+  PLAYER_STATE_LOADING,
+  PLAYER_STATE_PLAYING,
+  PLAYER_STATE_STOPPED
 } from './config/config';
 
 const LISTENING_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
@@ -171,7 +174,7 @@ createApp({
   socket: null,
   socketTimer: null,
   channels: {},
-  playing: false,
+  playing: PLAYER_STATE_STOPPED,
   song: null,
   listeners: null,
   lastUpdated: null,
@@ -188,7 +191,7 @@ createApp({
   play(streamingUrl, codeName, topic, streamCodeName) {
     setPlayingAlertVisible(false);
 
-    if (this.playing === true) {
+    if (this.playing !== PLAYER_STATE_STOPPED) {
       this.stop();
     }
 
@@ -203,7 +206,7 @@ createApp({
       sendGaEvent('play', 'SSR', codeName, 3);
     }
 
-    this.playing = true;
+    this.playing = PLAYER_STATE_LOADING;
     this.radioId = codeName;
     this.sessionId = null;
     this.playerStart = new Date();
@@ -301,13 +304,14 @@ createApp({
       sendGaEvent('stop', 'SSR', this.radioId, 1);
     }
 
-    this.playing = false;
+    this.playing = PLAYER_STATE_STOPPED;
     this.radioId = null;
     this.listeningInterval = null;
     this.sessionId = null;
     this.playingStart = null;
   },
   playingStarted(topic, streamCodeName) {
+    this.playing = PLAYER_STATE_PLAYING;
     this.lastUpdated = new Date();
     this.playingStart = new Date();
 
@@ -340,7 +344,7 @@ createApp({
     // the delay prevents sending an error when the user just click a link and goes to another page...
     setTimeout(
       () => {
-        this.playing = false;
+        this.playing = PLAYER_STATE_STOPPED;
 
         setPlayingAlertVisible(true);
 
@@ -409,9 +413,11 @@ createApp({
     this.connectSocket();
 
     // Channel already exists?
-    if (!Object.prototype.hasOwnProperty.call(this.channels, topic)) {
-      this.channels[topic] = this.socket.channel(topic, {});
+    if (Object.prototype.hasOwnProperty.call(this.channels, topic)) {
+      return;
     }
+
+    this.channels[topic] = this.socket.channel(topic, {});
 
     this.channels[topic].join()
       .receive('error', resp => {
@@ -445,6 +451,7 @@ createApp({
       this.song = null;
       this.listeners = null;
       this.channels[topic] = null;
+      delete this.channels[topic];
     });
   },
   formatSong(songData) {

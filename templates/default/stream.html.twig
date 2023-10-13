@@ -71,30 +71,40 @@
                              @vue:mounted="$el.classList.remove('d-none')">
                             <div>
                                 <div
-                                    v-if="playing === false"
+                                    v-if="playing === PLAYER_STATE_STOPPED"
                                     @click="play('{{ self.stream_url(stream) }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
                                     class="radio-page-play">
                                     <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
                                          src="/img/play-button-inside-a-circle.svg">
                                 </div>
                                 <div
-                                    v-if="playing === true"
+                                    v-if="playing === PLAYER_STATE_PLAYING"
                                     @click="stop('{{ stream.id }}')"
                                     class="radio-page-play">
                                     <img alt="{{ 'page.radio.stop'|trans() }}"
                                          src="/img/rounded-pause-button.svg">
                                 </div>
+                                <div
+                                    v-if="playing === PLAYER_STATE_LOADING"
+                                    @click="stop('{{ stream.id }}')"
+                                    class="radio-page-play"
+                                    style="margin-right: 7px; margin-bottom: 2px;">
+                                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"
+                                        title="{{ 'page.radio.stop'|trans() }}">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="ps-2">
                                 <div
-                                        v-if="playing === false"
-                                        @click="play('{{ self.stream_url(stream) }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
-                                        class="radio-page-play">
+                                    v-if="playing === PLAYER_STATE_STOPPED"
+                                    @click="play('{{ self.stream_url(stream) }}', '{{ stream.id }}', '{{ self.topic(stream) }}', '{{ self.stream_code_name(stream) }}')"
+                                    class="radio-page-play">
                                     <div>&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
                                 </div>
                                 <div
-                                        v-if="playing === true"
+                                        v-if="playing !== PLAYER_STATE_STOPPED"
                                         @click="stop('{{ stream.id }}')"
                                         class="radio-page-play">
                                     <div>&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream.name}) }}</div>
