@@ -20,7 +20,7 @@ final class Version20210103213306 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE INDEX name_idx ON stream (name)');
+        $this->addSql('CREATE INDEX name_idx ON stream (lower(name))');
         $this->addSql('CREATE INDEX click24_idx ON stream (clicks_last_24h)');
         $this->addSql('CREATE INDEX country_code_idx ON stream (country_code)');
     }

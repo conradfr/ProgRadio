@@ -271,18 +271,27 @@ defmodule ProgRadioApi.Streams do
   end
 
   defp add_text(query, %{:text => text}) when is_binary(text) do
-    search_text = "*:" <> text <> ":*"
+    text_search =
+      text
+      |> String.trim()
+      |> String.downcase()
+      |> then(fn t -> "%" <> t <> "%" end)
 
     query
-    |> where(
-      [s],
-      fragment(
-        "to_tsvector('progradio_unaccent', ? || ' ' || ?) @@ plainto_tsquery('progradio_unaccent', ?)",
-        s.name,
-        s.tags,
-        ^search_text
-      )
-    )
+    |> where([s], fragment("lower(?) LIKE ? or lower(?) LIKE ?", s.name, ^text_search, s.tags, ^text_search))
+
+#    search_text = "*:" <> text <> ":*"
+#
+#    query
+#    |> where(
+#      [s],
+#      fragment(
+#        "to_tsvector('progradio_unaccent', ? || ' ' || ?) @@ plainto_tsquery('progradio_unaccent', ?)",
+#        s.name,
+#        s.tags,
+#        ^search_text
+#      )
+#    )
   end
 
   defp add_text(query, _) do

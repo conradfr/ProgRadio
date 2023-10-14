@@ -21,7 +21,7 @@ final class Version20210106185645 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE stream ADD tags text DEFAULT NULL');
-        $this->addSql('CREATE INDEX stream_tags_idx ON stream (tags)');
+        $this->addSql('CREATE INDEX stream_tags_idx ON stream (lower(tags))');
     }
 
     public function down(Schema $schema) : void
