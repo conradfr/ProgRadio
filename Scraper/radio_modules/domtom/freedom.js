@@ -7,7 +7,10 @@ const format = dateObj => {
   dateObj.tz('Indian/Reunion');
   const dayNum = dateObj.isoWeekday();
 
+  let newEntry = {};
+
   // Brace yourself, I brute force
+  // Because Freedom schedule page is IMAGES for some reasons ffs
 
   // semaine
 
@@ -224,7 +227,6 @@ const format = dateObj => {
   }
 
   // samedi
-
   if (dayNum === 6) {
     startDateTime = moment(dateObj);
     startDateTime.hour(5);
@@ -256,7 +258,7 @@ const format = dateObj => {
     startDateTime.minute(30);
     startDateTime.second(0);
 
-    let newEntry = {
+    newEntry = {
       'title': 'Journal local',
       'host': 'Charles Luylier',
       'img': 'https://s3.eu-central-1.wasabisys.com/monbucket4/2021/07/FD_HOME_journal_1200x300_C.LUYLIER.jpg',
@@ -406,7 +408,7 @@ const format = dateObj => {
     startDateTime.minute(0);
     startDateTime.second(0);
 
-    let newEntry = {
+    newEntry = {
       'title': 'Libre antenne',
       'description': 'Vos histoires de vie, vos appels, vos réactions au 0262 99 12 00',
       'date_time_start': startDateTime.toISOString(),
