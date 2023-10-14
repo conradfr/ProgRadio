@@ -1,5 +1,4 @@
 let moment = require('moment-timezone');
-const logger = require('../../lib/logger.js');
 
 const format = (dateObj, subRadio) => {
     let startDateTime = moment(dateObj);
