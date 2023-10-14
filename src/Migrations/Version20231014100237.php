@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231012220159 extends AbstractMigration implements ContainerAwareInterface
+final class Version20231014100237 extends AbstractMigration implements ContainerAwareInterface
 {
     private $container;
 
@@ -31,6 +31,9 @@ final class Version20231012220159 extends AbstractMigration implements Container
     {
         // this up() migration is auto-generated, please modify it to your needs
 
+        $this->addSql(
+            'INSERT INTO collection (id, code_name, name, priority, sort_field, sort_order, short_name, name_fr, name_en, name_es, name_de, name_pt) VALUES (10, \'switzerland\', \'Suisse\', 8, \'share\', \'desc\', \'Suisse\', \'Suisse\', \'Switzerland\', \'Suizo\', \'Schweizerisch\', \'Suíço\')'
+        );
     }
 
     public function down(Schema $schema): void
@@ -41,16 +44,14 @@ final class Version20231012220159 extends AbstractMigration implements Container
 
     public function postUp(Schema $schema): void
     {
-/*        $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
+        $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
 
-        $connection->exec('CREATE EXTENSION IF NOT EXISTS "unaccent";');
+        $connection->exec(
+            "UPDATE collection SET priority = 9 WHERE id = 4"
+        );
 
-        $connection->exec('CREATE TEXT SEARCH CONFIGURATION progradio_unaccent ( COPY = english );');
-
-        $connection->exec("ALTER TEXT SEARCH CONFIGURATION progradio_unaccent" . PHP_EOL
-        . "ALTER MAPPING FOR hword, hword_part, word" . PHP_EOL
-        . "WITH unaccent;");
-
-        $connection->exec("CREATE INDEX stream_fulltext_name_tags_idx ON stream USING GIN (to_tsvector('progradio_unaccent', name || ' ' || tags));");*/
+        $connection->exec(
+            "UPDATE radio SET collection_id = 10 WHERE id in (78, 79, 80, 81)"
+        );
     }
 }
