@@ -755,9 +755,17 @@ export const usePlayerStore = defineStore('player', {
         }
       }
 
+      let newPlaybackState = PlayerStatus.Stopped;
+
+      if (playbackState === config.PLAYER_STATE_PLAYING) {
+        newPlaybackState = PlayerStatus.Playing;
+      } else if (playbackState === config.PLAYER_STATE_BUFFERING) {
+        newPlaybackState = PlayerStatus.Loading;
+      }
+
       if (radio !== undefined /* && radio.streaming_enabled === true */
         && config.PLAYER_STATE.indexOf(playbackState) !== -1) {
-        this.playing = playbackState === config.PLAYER_STATE_PLAYING ? PlayerStatus.Playing : PlayerStatus.Stopped;
+        this.playing = newPlaybackState;
         this.radio = radio;
         this.radioStreamCodeName = radioStream !== null
           && radioStream !== undefined ? radioStream.code_name : null;

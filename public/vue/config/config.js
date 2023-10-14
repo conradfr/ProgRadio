@@ -115,7 +115,7 @@ export const PLAYER_STATE_STOPPED = 1;
 export const PLAYER_STATE_PAUSED = 2;
 export const PLAYER_STATE_PLAYING = 3;
 export const PLAYER_STATE_BUFFERING = 6;
-export const PLAYER_STATE_CONNECTING = 8;
+// export const PLAYER_STATE_CONNECTING = 8;
 export const PLAYER_STATE_ERROR = 7;
 
 // extends Android Playback state
