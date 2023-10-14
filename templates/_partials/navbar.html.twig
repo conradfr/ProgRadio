@@ -64,10 +64,10 @@
 
                 {# Plus #}
                 <li class="nav-item dropdown pe-0">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarPlusDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ 'menu.plus'|trans}}
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarPlusDropdown">
                         {% if isProgRadio(app.request) == true %}
                             <li><a class="dropdown-item spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -90,8 +90,42 @@
                         <li><hr class="dropdown-divider"></li>
 
                         <li><a class="dropdown-item" href="{{ getField('play_store', app.request) }}"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
-                        <li><hr class="dropdown-divider"></li>
 
+                        {% if isProgRadio(app.request) == true %}
+                            <li><hr class="dropdown-divider"></li>
+
+                            {% for locale in locales %}
+                                {% if app.request.locale != locale %}
+                                    <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}">
+                                            <div class="menu-flag-icon">
+                                                <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                                            </div>
+                                            {{ "footer.#{locale}"|trans }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </li>
+
+                <li class="nav-item ps-0 pe-1">
+                    <a title="{{ 'menu.mode.light'|trans }}" class="nav-link nav-link-lightmode{% if isDarkModeTime(app.request) == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i>
+                        <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.light'|trans }}</span>
+                    </a>
+                    <a title="{{ 'menu.mode.dark'|trans }}" class="nav-link nav-link-darkmode {% if isDarkModeTime(app.request) %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i>
+                        <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.dark'|trans }}</span>
+                    </a>
+                </li>
+
+                {# Locale #}
+                {% if isProgRadio(app.request) == false %}
+                <li class="nav-item dropdown ps-1 pe-2">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarLocaleDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="menu-flag-icon">
+                            <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[app.request.locale] ~ '.svg') }}" alt="{{ "footer.#{app.request.locale}"|trans }}">
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarLocaleDropdown">
                         {% for locale in locales %}
                             {% if app.request.locale != locale %}
                                 <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}">
@@ -104,15 +138,7 @@
                         {% endfor %}
                     </ul>
                 </li>
-
-                <li class="nav-item ps-0 pe-1">
-                    <a title="{{ 'menu.mode.light'|trans }}" class="nav-link nav-link-lightmode{% if isDarkModeTime(app.request) == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i>
-                        <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.light'|trans }}</span>
-                    </a>
-                    <a title="{{ 'menu.mode.dark'|trans }}" class="nav-link nav-link-darkmode {% if isDarkModeTime(app.request) %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i>
-                        <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.dark'|trans }}</span>
-                    </a>
-                </li>
+                {% endif %}
 
                 {# User #}
                 <li class="nav-item dropdown pe-0">

@@ -17,12 +17,25 @@ menu:
 
     favorites: My Favorites
     favorites_menu:
-        all: Worldwide
+        all: All countries
         be: Belgium
         ch: Switzerland
         fr: France
-        usa: United States
+        us: United States
         mx: Mexico
+        co: Colombia
+        ar: Argentina
+        pe: Peru
+        de: Germany
+        at: Austria
+        es: Spain
+        pt: Portugal
+        br: Brazil
+        ca: Canada
+        au: Australia
+        nz: New Zealand
+        gb: Great Britain
+        ie: Ireland
 
     songs: Songs Saved
 

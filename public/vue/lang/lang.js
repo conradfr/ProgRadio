@@ -115,7 +115,7 @@ export const messages = {
         categories: {
           all_countries: 'Tous les pays',
           favorites: 'Favoris',
-          last: 'Radios écoutées dernièrement ...',
+          last: 'Les gens écoutent ...',
         },
         close: 'Retour',
         country: 'Pays',
@@ -249,7 +249,7 @@ export const messages = {
         categories: {
           all_countries: 'All countries',
           favorites: 'Favorites',
-          last: 'People currently listen to ...',
+          last: 'People listen to ...',
         },
         close: 'Back',
         country: 'Country',
@@ -383,7 +383,7 @@ export const messages = {
         categories: {
           all_countries: 'Todos los países',
           favorites: 'Favoritos',
-          last: 'Radios actualmente escuchadas ...',
+          last: 'La gente escucha...',
         },
         close: 'Atrás',
         country: 'País',
@@ -651,7 +651,7 @@ export const messages = {
         categories: {
           all_countries: 'Todos os países',
           favorites: 'Favoritos',
-          last: 'As pessoas atualmente ouvem...',
+          last: 'As pessoas estão ouvindo...',
         },
         close: 'Voltar',
         country: 'País',

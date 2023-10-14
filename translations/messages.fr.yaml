@@ -18,12 +18,26 @@ menu:
 
     favorites: Mes Favoris
     favorites_menu:
-        all: Monde entier
+        all: Tous les pays
         be: Belgique
         ch: Suisse
         fr: France
-        usa: Etats-Unis
+        us: Etats-Unis
         mx: Mexique
+        co: Colombie
+        ar: Argentine
+        pe: Pérou
+        de: Allemagne
+        at: Autriche
+        es: Espagne
+        pt: Portugal
+        br: Brésil
+        ca: Canada
+        au: Australie
+        nz: Nouvelle-Zélande
+        gb: Grande-Bretagne
+        ie: Irlande
+
 
     songs: Titres Sauvegardés
 

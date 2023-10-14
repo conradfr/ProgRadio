@@ -44,23 +44,79 @@
 
 {% macro streaming_menu() %}
     <ul class="dropdown-menu" aria-labelledby="navbarCollectionsDropdown">
-        <li>
-            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/fr">{{ 'menu.favorites_menu.fr'|trans }}</a>
-        </li>
+        {% if app.request.locale == 'fr' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/fr">{{ 'menu.favorites_menu.fr'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/be">{{ 'menu.favorites_menu.be'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/ch">{{ 'menu.favorites_menu.ch'|trans }}</a>
+            </li>
+        {% endif %}
+
+        {% if app.request.locale == 'es' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/mx">{{ 'menu.favorites_menu.es'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/mx">{{ 'menu.favorites_menu.mx'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/mx">{{ 'menu.favorites_menu.co'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/mx">{{ 'menu.favorites_menu.ar'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/mx">{{ 'menu.favorites_menu.pe'|trans }}</a>
+            </li>
+        {% endif %}
+
+        {% if app.request.locale == 'en' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.us'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.ca'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.gb'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.au'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.nz'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.ie'|trans }}</a>
+            </li>
+        {% endif %}
+
+        {% if app.request.locale == 'de' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.de'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.at'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.ch'|trans }}</a>
+            </li>
+        {% endif %}
+
+        {% if app.request.locale == 'pt' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.pt'|trans }}</a>
+            </li>
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.br'|trans }}</a>
+            </li>
+        {% endif %}
+
         <li><hr class="dropdown-divider"></li>
-        <li>
-            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/be">{{ 'menu.favorites_menu.be'|trans }}</a>
-        </li>
-        <li>
-            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/ch">{{ 'menu.favorites_menu.ch'|trans }}</a>
-        </li>
-        <li><hr class="dropdown-divider"></li>
-        <li>
-            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/us">{{ 'menu.favorites_menu.usa'|trans }}</a>
-        </li>
-        <li>
-            <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/mx">{{ 'menu.favorites_menu.mx'|trans }}</a>
-        </li>
         <li>
             <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/all">{{ 'menu.favorites_menu.all'|trans }}</a>
         </li>

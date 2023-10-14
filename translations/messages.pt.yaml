@@ -17,12 +17,25 @@ menu:
 
     favorites: Meus favoritos
     favorites_menu:
-        all: Em todo o mundo
+        all: Todos os países
         be: Bélgica
         ch: Suíça
         fr: França
-        usa: Estados Unidos
+        us: Estados Unidos
         mx: México
+        co: Colômbia
+        ar: Argentina
+        pe: Perú
+        de: Alemanha
+        at: Austria
+        es: Espanha
+        pt: Portugal
+        br: Brasil
+        ca: Canadá
+        au: Austrália
+        nz: Nova Zelândia
+        gb: Grã-Bretanha
+        ie: Irlanda
 
     songs: Músicas salvas
 
