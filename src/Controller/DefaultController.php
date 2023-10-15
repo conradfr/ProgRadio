@@ -340,6 +340,42 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
+    #[Route('/{_locale}/last/{countryCode}',
+        name: 'streams_last',
+        defaults: [
+            'priority' => '0.5',
+            'changefreq' => 'weekly'
+        ],
+        requirements: ['_locale' => 'en|fr|es|de|pt']
+    )
+    ]
+    public function last(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
+    {
+        // redirect non-fr stream seo pages to new host
+        if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
+            $redirectUrl = $router->generate('streams_last', [
+                '_locale' => $request->getLocale(),
+                'countryCode' => $countryCode
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
+        $howMany = StreamsController::DEFAULT_RESULTS;
+        $offset = 0;
+
+        $streams = $em->getRepository(Stream::class)->getStreams($howMany, $offset, $countryCode, 'last');
+        $totalCount = $em->getRepository(Stream::class)->countStreams($countryCode);
+
+        return $this->render('default/last.html.twig', [
+            'streams' => $streams,
+            'total'   => $totalCount,
+            'country' => $countryCode !== null ? Countries::getName(strtoupper($countryCode), $request->getLocale()) : null,
+            'country_code' => $countryCode
+        ]);
+    }
+
     #[Route('/user', name: 'user_config')]
     public function user(Request $request, EntityManagerInterface $em): Response
     {

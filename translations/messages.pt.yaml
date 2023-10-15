@@ -135,6 +135,11 @@ page:
         description: 'Ouça as melhores rádios de %country%'
         more: Mais rádios de %country%
 
+    last:
+        page_title: Últimas estações de rádio ouvidas em %country%
+        description: 'Ouça as melhores rádios de %country%'
+        more: Veja mais estações de rádio ouvidas recentemente em %country%
+
     user:
         page_title: Crie uma conta
 
@@ -163,7 +168,6 @@ page:
             delete_btn: Excluir minha conta
         delete_confirm:
             success: Sua conta foi excluída com sucesso.
-
 
 boxes:
     already_account:

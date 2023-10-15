@@ -135,6 +135,11 @@ page:
         description: 'Listen to the best radios from %country%'
         more: More radios from %country%
 
+    last:
+        page_title: Recently listened radios in %country%
+        description: 'Listen to the best radios from %country%'
+        more: More recently listened radios from %country%
+
     user:
         page_title: Create an account
 

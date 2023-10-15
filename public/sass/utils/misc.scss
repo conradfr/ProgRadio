@@ -35,3 +35,23 @@
     cursor: pointer;
   }
 }
+
+.flags-container {
+  /* taken from vue plugin */
+
+  .gb-flag--micro {
+    height: 13px;
+  }
+
+  .gb-flag {
+    filter: grayscale(50%);
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    user-select: none;
+
+    &:hover {
+      filter: grayscale(0);
+    }
+  }
+}

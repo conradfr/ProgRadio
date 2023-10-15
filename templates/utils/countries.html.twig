@@ -1,9 +1,20 @@
-{% macro list(locale) %}
+{% macro list(locale, sort) %}
     {% set countries = country_list(locale) %}
+    {% set last_letter = '' %}
+
     {% for code, country  in countries %}
-        <a href="{{ path('streams_top', {'countryCode': code|lower}) }}">{{ 'page.top.page_title'|trans({'%country%': country}) }}</a>
-        {% if loop.last == false %}
-            &nbsp;|&nbsp;
+        {% if country|slice(0,1) != last_letter %}
+            {% set last_letter = country|slice(0,1) %}
+
+            {% if loop.first == false %}
+                </div>
+            {% endif %}
+
+            <h5>{{ last_letter|upper }}</h5>
+            <div class="d-flex flex-row flex-wrap flags-container">
         {% endif %}
+
+        <div class="me-2 pe-2"><img class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ code|lower ~ '.svg') }}" alt="flag" />&nbsp;<a href="{{ path('streams_' ~ sort , {'countryCode': code|lower}) }}">{{ ('page.' ~ sort ~ '.page_title')|trans({'%country%': country}) }}</a></div>
     {% endfor %}
+        </div>
 {% endmacro %}

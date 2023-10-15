@@ -138,6 +138,11 @@ page:
         description: 'Escuche las mejores radios de %country%'
         more: Más radios de %country%
 
+    last:
+        page_title: Últimas emisoras de radio escuchadas en %country%
+        description: 'Escuche las mejores radios de %country%'
+        more: Más radios de %country%
+
     user:
         page_title: Crear una cuenta
 

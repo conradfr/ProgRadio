@@ -132,8 +132,13 @@ page:
 
     top:
         page_title: Die besten Radios in %country%
-        Beschreibung: 'Höre die besten Radios aus %country%'
-        mehr: Weitere Radios von %country%
+        description: 'Höre die besten Radios aus %country%'
+        more: Weitere Radios von %country%
+
+    last:
+        page_title: Letzte Radiosender, die in %country% gehört wurden
+        description: 'Höre die besten Radios aus %country%'
+        more: Sehen Sie sich die zuletzt gehörten Radiosender in %country% an
 
     user:
         page_title: Ein Konto erstellen
@@ -142,24 +147,24 @@ page:
         prefix: My account
         menu:
             E-Mail: E-Mail
-            Passwort: Passwort
-            löschen: Löschen
+            password: Passwort
+            delete: Löschen
         email:
             page_title: Aktualisiere meine E-Mail
             info_1: Dadurch wird die E-Mail-Adresse aktualisiert, die als Login verwendet wurde.
             info_2: Eine Bestätigung wird an die frühere E-Mail-Adresse gesendet.
-            erfolgreich: Die E-Mail wurde aktualisiert.
+            success: Die E-Mail wurde aktualisiert.
             new_email: 'Neue E-Mail-Adresse: '
             new_email_placeholder: example@email.com
             update_btn: Aktualisieren
         password:
             page_title: Aktualisiere mein Passwort
-            erfolgreich: Das Passwort wurde aktualisiert.
+            success: Das Passwort wurde aktualisiert.
             update_btn: Aktualisieren
         delete:
             page_title: Mein Konto löschen
-            Warnung: Dieser Vorgang ist irreversibel. Ihre Favoriten werden gelöscht.
-            bestätigen: Bist du sicher, dass du dein Konto löschen möchtest?
+            warning: Dieser Vorgang ist irreversibel. Ihre Favoriten werden gelöscht.
+            confirm: Bist du sicher, dass du dein Konto löschen möchtest?
             delete_btn: Lösche meinen Account
         delete_confirm:
             success: Ihr Konto wurde erfolgreich gelöscht.

@@ -13,8 +13,8 @@
 {#    {% endif %}#}
 {% endblock %}
 
-{% block title %}{{ 'page.top.page_title'|trans({'%country%': country}) }}{% endblock %}
-{% block description %}{{ 'page.top.description'|trans({'%country%': country}) }}{% endblock %}
+{% block title %}{{ 'page.last.page_title'|trans({'%country%': country}) }}{% endblock %}
+{% block description %}{{ 'page.last.description'|trans({'%country%': country}) }}{% endblock %}
 
 {% macro picture(stream) %}
     {% if stream.img_alt is not null %}
@@ -35,7 +35,7 @@
 {% endmacro %}
 
 {% block body %}
-<h2 class="my-4 text-center">{{ 'page.top.page_title'|trans({'%country%': country}) }}</h2>
+<h2 class="my-4 text-center">{{ 'page.last.page_title'|trans({'%country%': country}) }}</h2>
 
 <div class="app-streams">
     <div class="container">
@@ -50,7 +50,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="mt-2 mb-4 text-center">
-                    <a href="{{ path('streams_last', {'countryCode': country_code|lower}) }}">{{ 'page.last.page_title'|trans({'%country%': country}) }}</a>
+                    <a href="{{ path('streams_top', {'countryCode': country_code|lower}) }}">{{ 'page.top.page_title'|trans({'%country%': country}) }}</a>
                 </div>
 
                 <div id="playing-alert" class="mt-4 mb-4 alert alert-danger d-none" role="alert">
@@ -99,11 +99,11 @@
                     {% endfor %}
                 </div>
                 {% if total > constant('App\\Controller\\StreamsController::DEFAULT_RESULTS') %}
-                    <div class="text-center mt-4 mb-5"><a href="{{ path('streaming_spa') }}/{{ country_code }}/2">{{ 'page.top.more'|trans({'%country%': country}) }}</a></div>
+                    <div class="text-center mt-4 mb-5"><a href="{{ path('streaming_spa') }}/{{ country_code }}/2">{{ 'page.last.more'|trans({'%country%': country}) }}</a></div>
                 {% endif %}
                 <hr class="mb-5">
                 <div class="mb-3">
-                    {{ countries.list(app.request.locale, 'top') }}
+                    {{ countries.list(app.request.locale, 'last') }}
                 </div>
 
             </div>
