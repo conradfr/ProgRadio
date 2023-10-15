@@ -141,11 +141,11 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addOrderBy('RANDOM()');
                     break;
                 case 'last':
-                    $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
+                    $qb->addSelect('MAX(s.lastListeningAt) as last_listen')
                        //->distinct()
-                       ->leftJoin('s.listeningSessions', 'ls')
+                       ->andWhere('s.lastListeningAt IS NOT NULL')
                        ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName, rs.url')
-                       ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
+                       ->addOrderBy('MAX(s.lastListeningAt)', 'DESC');
                     break;
             }
         }

@@ -61,6 +61,12 @@ class Stream
     #[ORM\Column(type: 'integer', name: 'clicks_last_24h', options: ['default' => 0])]
     private ?int $clicksLast24h = null;
 
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTime $lastListeningAt = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTime $importUpdatedAt = null;
+
     /**
      * @var ListeningSession[]
      */
@@ -327,4 +333,25 @@ class Stream
     {
         $this->originalStreamUrl = $originalStreamUrl;
     }
+
+    public function getLastListeningAt(): ?\DateTime
+    {
+        return $this->lastListeningAt;
+    }
+
+    public function setLastListeningAt(?\DateTime $lastListeningAt): void
+    {
+        $this->lastListeningAt = $lastListeningAt;
+    }
+
+    public function getImportUpdatedAt(): ?\DateTime
+    {
+        return $this->importUpdatedAt;
+    }
+
+    public function setImportUpdatedAt(?\DateTime $importUpdatedAt): void
+    {
+        $this->importUpdatedAt = $importUpdatedAt;
+    }
+
 }

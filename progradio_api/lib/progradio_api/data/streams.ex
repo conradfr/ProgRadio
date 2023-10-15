@@ -9,7 +9,7 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamSong, ListeningSession}
+  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamSong}
 
   @default_limit 40
 
@@ -241,13 +241,12 @@ defmodule ProgRadioApi.Streams do
 
       "last" ->
         query
-        |> join(:inner, [s, rs, r, ss], ls in ListeningSession, on: s.id == ls.stream_id)
         |> where(
-          [s, rs, r, ss, ls],
-          fragment("? < now() at time zone 'utc' + interval '120 second'", ls.date_time_end)
+          [s, rs, r, ss],
+          fragment("? < now() at time zone 'utc' + interval '120 second'", s.last_listening_at)
         )
-        |> order_by([s, rs, r, ss, ls], desc: max(ls.date_time_start))
-        |> group_by([s, rs, r, ss, ls], [
+        |> order_by([s, rs, r, ss], desc: max(s.last_listening_at))
+        |> group_by([s, rs, r, ss], [
           s.id,
           r.code_name,
           ss.code_name,
