@@ -101,7 +101,7 @@ page:
         play: 'Ouça %radio%'
         stop: 'Stop %radio%'
         summary: 'Resumo'
-        title: 'Ouça %radio% ao vivo'
+        title: '%radio% - Ouça ao vivo'
         website: 'Site'
 
     registered:
@@ -127,7 +127,7 @@ page:
         playing_error: Erro de reprodução (a transmissão de rádio pode estar indisponível)
         suggested: Rádios sugeridos
         tags: Etiquetas
-        title: 'Ouça %radio%'
+        title: '%radio% Ouça ao vivo'
         website: Site
 
     top:

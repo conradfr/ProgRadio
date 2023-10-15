@@ -106,7 +106,7 @@ page:
         play: 'Écouter %radio%'
         stop: 'Stopper %radio%'
         summary: 'Description'
-        title: 'Écouter %radio% en direct - streaming en ligne'
+        title: '%radio% - Écouter en direct streaming'
         website: 'Site web'
 
     registered:
@@ -132,7 +132,7 @@ page:
         playing_error: Erreur de lecture
         suggested: Radios suggérées
         tags: Tags
-        title: 'Écouter %radio% en direct et gratuit'
+        title: '%radio% - Écouter en direct et gratuit'
         website: Site web
 
     top:

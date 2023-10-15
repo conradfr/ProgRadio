@@ -104,7 +104,7 @@ page:
         play: 'Reproducir %radio%'
         stop: 'Detener %radio%'
         summary: 'Descripción'
-        title: 'Reproducir %radio% en vivo - streaming'
+        title: '%radio% - Reproducir en vivo'
         website: 'Sitio web'
 
     registered:
@@ -130,7 +130,7 @@ page:
         playing_error: Error de transmisión
         suggested: Radios sugeridos
         tags: Tags
-        title: 'Escuchar %radio% en vivo'
+        title: '%radio% - Escuchar en vivo'
         website: 'Sitio web'
 
     top:
