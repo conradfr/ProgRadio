@@ -185,6 +185,10 @@ class AdminController extends AbstractBaseController
                 $stream->setWebsite($streamOverloading->getWebsite());
             }
 
+            if ($streamOverloading->getTags() !== null) {
+                $stream->setTags($streamOverloading->getTags());
+            }
+
             $stream->setEnabled($streamOverloading->getEnabled());
 
             if (!empty($form->get('redirect')->getData())) {

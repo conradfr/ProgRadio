@@ -87,7 +87,7 @@ defmodule ProgRadioApi.ListeningSessions do
   """
   def create_listening_session(attrs \\ %{}, remote_ip \\ nil)
 
-  # listening session for radios
+  # listening session for radios or streams
   def create_listening_session(
         %{"id" => id} = attrs,
         remote_ip
@@ -125,12 +125,24 @@ defmodule ProgRadioApi.ListeningSessions do
   # listening session for streams
   def create_listening_session(%{"stream_id" => stream_id} = attrs, remote_ip)
       when is_map_key(attrs, "stream_id") do
-    ip_binary = get_ip_as_binary(remote_ip)
+    with stream <- Repo.get(Stream, stream_id) do
+      params = %{
+        "last_listening_at" => NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+      }
 
-    Repo.get(Stream, stream_id)
-    |> Ecto.build_assoc(:listening_session, %ListeningSession{ip_address: ip_binary})
-    |> ListeningSession.changeset(attrs)
-    |> Repo.insert()
+      stream
+      |> Stream.changeset_last_listening_at(params)
+      |> Repo.update()
+
+      ip_binary = get_ip_as_binary(remote_ip)
+
+      stream
+      |> Ecto.build_assoc(:listening_session, %ListeningSession{ip_address: ip_binary})
+      |> ListeningSession.changeset(attrs)
+      |> Repo.insert()
+    else
+      _ -> {:error, nil}
+    end
   end
 
   def update_listening_session(%ListeningSession{} = listening_session, attrs, remote_ip) do

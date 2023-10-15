@@ -48,6 +48,12 @@
                 <div class="mb-1"><strong>Original stream url:</strong> <a target="_blank" href="{{ stream.originalStreamUrl }}">{{ stream.originalStreamUrl }}</a></div>
             {% endif %}
 
+            <div class="mb-1"><strong>Tags:</strong> {{ stream.tags }}</div>
+
+            {% if stream.originalTags is defined and stream.originalTags is not empty %}
+                <div class="mb-1"><strong>Original tags:</strong> {{ stream.originalTags }}</a></div>
+            {% endif %}
+
             <div class="mb-1"><strong>Country:</strong> {{ stream.countryCode }}</div>
             <div class="mb-1"><strong>Website:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a></div>
 

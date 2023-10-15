@@ -43,6 +43,9 @@ class Stream
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $tags = null;
 
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    private ?string $originalTags = null;
+
     #[ORM\Column(type: 'string', length: 2, nullable: true)]
     private ?string $countryCode = null;
 
@@ -141,6 +144,16 @@ class Stream
     public function setTags(string $tags=null): void
     {
         $this->tags = $tags;
+    }
+
+    public function getOriginalTags(): ?string
+    {
+        return $this->originalTags;
+    }
+
+    public function setOriginalTags(?string $originalTags): void
+    {
+        $this->originalTags = $originalTags;
     }
 
     public function getCountryCode(): ?string

@@ -30,6 +30,9 @@ class StreamOverloading
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string  $website = null;
 
+    #[ORM\Column(type: 'string', length: 2, nullable: true)]
+    private ?string $tags = null;
+
     #[ORM\Column(type: 'boolean')]
     private ?bool $enabled = null;
 
@@ -104,6 +107,16 @@ class StreamOverloading
     public function getEnabled(): ?bool
     {
         return $this->enabled;
+    }
+
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): void
+    {
+        $this->tags = $tags;
     }
 
     public function setEnabled(?bool $enabled): void

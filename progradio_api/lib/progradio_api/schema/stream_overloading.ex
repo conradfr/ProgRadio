@@ -8,6 +8,7 @@ defmodule ProgRadioApi.StreamOverloading do
     field(:name, :string)
     field(:img, :string)
     field(:stream_url, :string)
+    field(:tags, :string)
     field(:country_code, :string)
     field(:website, :string)
     field(:enabled, :boolean)
@@ -22,6 +23,7 @@ defmodule ProgRadioApi.StreamOverloading do
       :name,
       :img,
       :stream_url,
+      :tags,
       :country_code,
       :website,
       :enabled

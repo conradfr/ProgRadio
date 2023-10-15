@@ -125,6 +125,10 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
           _ -> true
         end
 
+      import_updated_at =
+        NaiveDateTime.utc_now()
+        |> NaiveDateTime.truncate(:second)
+
       %{
         id: id,
         code_name: id,
@@ -135,12 +139,14 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         website: Map.get(overloading, :website) || website,
         stream_url: (Map.get(overloading, :stream_url) || stream_url) |> stream_url_transformer(),
         original_stream_url: stream_url,
-        tags: Map.get(stream, "tags"),
+        tags: Map.get(overloading, :tags) || Map.get(stream, "tags"),
+        original_tags: Map.get(stream, "tags"),
         country_code: Map.get(overloading, :country_code) || country_code,
         language: Map.get(stream, "language"),
         votes: Map.get(stream, "votes"),
         clicks_last_24h: Map.get(stream, "clickcount"),
-        enabled: enabled
+        enabled: enabled,
+        import_updated_at: import_updated_at
       }
     end)
     |> Enum.filter(fn s -> s.name !== nil and String.trim(s.name) !== "" end)
@@ -160,6 +166,10 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         _ -> stream.enabled
       end
 
+    import_updated_at =
+      NaiveDateTime.utc_now()
+      |> NaiveDateTime.truncate(:second)
+
     %{
       id: stream.id,
       code_name: stream.id,
@@ -172,11 +182,13 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         (Map.get(overloading, :stream_url) || stream.stream_url) |> stream_url_transformer(),
       original_stream_url: stream.original_stream_url,
       tags: stream.tags,
+      original_tags: stream.original_tags,
       country_code: Map.get(overloading, :country_code) || stream.country_code,
       language: stream.language,
       votes: stream.votes,
       clicks_last_24h: stream.clicks_last_24h,
-      enabled: enabled
+      enabled: enabled,
+      import_updated_at: import_updated_at
     }
   end
 
@@ -314,13 +326,15 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             original_img: s.original_img,
             country_code: s.country_code,
             tags: s.tags,
+            original_tags: s.original_tags,
             website: s.website,
             language: s.language,
             stream_url: s.stream_url |> stream_url_transformer(),
             original_stream_url: s.original_stream_url,
             votes: s.votes,
             clicks_last_24h: s.clicks_last_24h,
-            enabled: s.enabled
+            enabled: s.enabled,
+            import_updated_at: s.import_updated_at
           ]
         ],
         conflict_target: :id
@@ -364,6 +378,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
           id: s.id,
           code_name: s.id,
           tags: s.tags,
+          original_tags: s.original_tags,
           language: s.language,
           votes: s.votes,
           clicks_last_24h: s.clicks_last_24h,
@@ -375,7 +390,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
           original_stream_url: s.original_stream_url,
           country_code: fragment("COALESCE(?, ?)", so.country_code, s.country_code),
           enabled: fragment("COALESCE(?, ?)", so.enabled, s.enabled),
-          website: fragment("COALESCE(?, ?)", so.website, s.website)
+          website: fragment("COALESCE(?, ?)", so.website, s.website),
+          import_updated_at: s.import_updated_at
         }
       )
       |> Repo.all()

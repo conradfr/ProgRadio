@@ -220,11 +220,16 @@
             </div>
         </div>
         <div class="offset-1 offset-md-0 col-md-3 col-10 d-none d-sm-block" >
-{#            {% if app.environment == 'prod' %}#}
+            {% if app.environment == 'prod' %}
                 <div class="sticky-md-top" style="top: 60px">
                 {{ include('_partials/adblock.html.twig', {vertical: true}) }}
                 </div>
-{#            {% endif %}#}
+            {% endif %}
+
+<!--            {% if app.request.locale == 'fr' or (no_affil is defined and no_affil != true) %}
+                {{ oneAffiliateLink(app.request.locale)|raw }}
+            {% endif %}-->
+
         </div>
     </div>
 

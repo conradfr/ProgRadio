@@ -15,6 +15,7 @@ defmodule ProgRadioApi.Stream do
     field(:stream_url, :string)
     field(:original_stream_url, :string)
     field(:tags, :string)
+    field(:original_tags, :string)
     field(:website, :string)
     field(:country_code, :string)
     field(:language, :string)
@@ -25,6 +26,9 @@ defmodule ProgRadioApi.Stream do
     field(:redirect_to, :binary_id)
     field(:playing_error, :integer, default: 0)
     #    field(:editing_key, :string)
+    field(:import_updated_at, :utc_datetime, default: nil)
+    field(:last_listening_at, :utc_datetime, default: nil)
+
     belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream_song, StreamSong)
     has_many(:listening_session, ListeningSession)
@@ -42,12 +46,14 @@ defmodule ProgRadioApi.Stream do
       :stream_url,
       :original_stream_url,
       :tags,
+      :original_tags,
       :country_code,
       :language,
       :votes,
       :clicks_last_24h,
       :enabled,
-      :redirect_to
+      :redirect_to,
+      :import_updated_at
     ])
     |> validate_required([:id, :name, :stream_url])
   end
@@ -63,5 +69,13 @@ defmodule ProgRadioApi.Stream do
       :enabled
     ])
     |> validate_required([:id, :enabled])
+  end
+
+  def changeset_last_listening_at(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :last_listening_at
+    ])
+    |> validate_required([:id, :last_listening_at])
   end
 end
