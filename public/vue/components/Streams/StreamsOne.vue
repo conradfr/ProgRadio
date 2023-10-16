@@ -19,6 +19,9 @@
               :title="$t('message.streaming.close')"
               v-on:click="quit"
             ><i class="bi bi-x-lg"></i></div>
+            <div v-if="userLogged && userIsAdmin" class="d-none d-md-block float-end me-4">
+              <a class="link-no-to-bold" v-on:click="copyIdToClipboard">Copy id</a>&nbsp;-&nbsp;<a target="_blank" :href="`/admin/overloading/${stream.code_name}`">Edit</a>
+            </div>
             <h4 class="mb-4">{{ stream.name }}</h4>
 
             <div class="stream-page-stream mt-3 mb-5">
@@ -150,6 +153,7 @@ import PlayerStatus from '@/types/player_status';
 import * as config from '../../config/config';
 import StreamsUtils from '../../utils/StreamsUtils';
 import Adsense from '../Utils/Adsense.vue';
+import {useGlobalStore} from "@/stores/globalStore";
 
 export default defineComponent({
   components: {
@@ -168,7 +172,7 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapState(useUserStore, { userLogged: 'logged' }),
+    ...mapState(useUserStore, { userLogged: 'logged', userIsAdmin: 'isAdmin' }),
     ...mapState(useStreamsStore, ['selectedCountry', 'getOneStream', 'getCountryName', 'page']),
     ...mapState(usePlayerStore, [
       'playing',
@@ -208,6 +212,7 @@ export default defineComponent({
     },
   },
   methods: {
+    ...mapActions(useGlobalStore, ['displayToast']),
     ...mapActions(usePlayerStore, ['playStream', 'stop']),
     ...mapActions(useStreamsStore, [
       'setSearchText',
@@ -266,6 +271,25 @@ export default defineComponent({
         name: 'streaming',
         params: { countryOrCategoryOrUuid: this.selectedCountry.toLowerCase(), page: this.page }
       });
+    },
+    copyIdToClipboard() {
+      if (!this.stream) {
+        return;
+      }
+
+      try {
+        navigator.clipboard.writeText(this.stream.code_name);
+
+        this.displayToast({
+          message: 'Id copied',
+          type: 'success'
+        });
+      } catch (err) {
+        this.displayToast({
+          message: 'Error copying id',
+          type: 'error'
+        });
+      }
     }
   }
 });

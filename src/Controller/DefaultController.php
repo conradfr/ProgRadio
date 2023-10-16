@@ -22,6 +22,7 @@ use Symfony\Component\Intl\Countries;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -377,7 +378,7 @@ class DefaultController extends AbstractBaseController
     }
 
     #[Route('/user', name: 'user_config')]
-    public function user(Request $request, EntityManagerInterface $em): Response
+    public function user(Request $request, AuthorizationCheckerInterface $authChecker): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -403,7 +404,8 @@ class DefaultController extends AbstractBaseController
                 'favoritesRadio' => $favorites,
                 'favoritesStream' => $favoritesStream,
                 'songs' => $songs,
-                'logged' => $user !== null
+                'logged' => $user !== null,
+                'isAdmin' => $user !== null && $authChecker->isGranted('ROLE_ADMIN')
             ]
         ]);
     }

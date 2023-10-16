@@ -27,6 +27,7 @@ import StreamsApi from '../api/StreamsApi';
 
 interface State {
   logged: boolean
+  isAdmin: boolean,
   subRadios: Record<string, string>
   songs: Record<string, string>
   favoritesRadio: Array<string>
@@ -38,6 +39,7 @@ export const useUserStore = defineStore('user', {
   state: (): State => (
     {
       logged: false,
+      isAdmin: false,
       subRadios: cookies.getJson(COOKIE_SUBRADIOS, {}),
       songs: {},
       favoritesRadio: cache.hasCache(CACHE_KEY_RADIO_FAVORITES)
@@ -63,6 +65,7 @@ export const useUserStore = defineStore('user', {
           }
 
           this.logged = user?.logged || false;
+          this.isAdmin = user?.isAdmin || false;
           this.songs = user?.songs || {};
           this.favoritesRadio = user?.favoritesRadio || [];
           this.favoritesStream = user?.favoritesStream || [];

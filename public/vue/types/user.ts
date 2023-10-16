@@ -3,4 +3,5 @@ export interface User {
   favoritesStream: string[]
   songs: Record<string, string>
   logged: boolean
+  isAdmin: boolean
 }
