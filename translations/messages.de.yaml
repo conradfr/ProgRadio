@@ -127,6 +127,7 @@ page:
         playing_error: Abspielfehler (Radio-Streaming ist möglicherweise nicht verfügbar)
         suggested: Vorgeschlagene Radios
         tags: Schlagworte
+        share: Radio teilen
         title: '%radio% - Live hören'
         website: Webseite
 

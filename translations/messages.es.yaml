@@ -130,6 +130,7 @@ page:
         playing_error: Error de transmisión
         suggested: Radios sugeridos
         tags: Tags
+        share: Compartir radio
         title: '%radio% - Escuchar en vivo'
         website: 'Sitio web'
 

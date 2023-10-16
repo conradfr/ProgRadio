@@ -100,7 +100,9 @@
             'question': "Available radios:",
             'answer': [
             self.radios_list(collections, radios, app.request.locale),
-                '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>, like <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italie) or <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germany).</p>'
+                '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>, like <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italie) or <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germany).</p>',
+                 '<p style="margin-top: 5px"><strong>Top radios of all countries:</strong></p>',
+                 countries.list(app.request.locale, 'top')
             ]
         }
     ],
@@ -135,7 +137,9 @@
             'question': "Radios disponibles:",
             'answer': [
                 self.radios_list(collections, radios, app.request.locale),
-                '<p style="margin-top: 5px">También puedes escuchar radios en cualquier idioma y de todo el mundo en <a href="' ~ path('app') ~ 'streaming">la página de streaming</a>, como <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italia ) o <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Alemania).</p>'
+                '<p style="margin-top: 5px">También puedes escuchar radios en cualquier idioma y de todo el mundo en <a href="' ~ path('app') ~ 'streaming">la página de streaming</a>, como <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italia ) o <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Alemania).</p>',
+                 '<p style="margin-top: 5px"><strong>Las principales radios de todos los países:</strong></p>',
+                 countries.list(app.request.locale, 'top')
             ]
         }
     ],

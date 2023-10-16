@@ -8,6 +8,25 @@
 {#    {% if app.request.locale != 'fr' %}#}
         {{ include('_partials/adsense.html.twig') }}
 {#    {% endif %}#}
+
+{# todo: move to own file if reused #}
+<script type="application/javascript">
+  const shareButton = document.querySelector('.share-button');
+
+   shareButton.addEventListener('click', event => {
+    if (navigator.share) {
+      navigator.share({
+        title: '{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}',
+        url: '{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}'
+      }).then(() => {
+        // console.log('Thanks for sharing!');
+      })
+      .catch(console.error);
+    } else {
+      // fallback
+    }
+  });
+</script>
 {% endblock %}
 
 {% block title %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endblock %}
@@ -58,7 +77,13 @@
         <div class="col-sm-10 col-10 offset-1 offset-sm-0 pb-3">
             <div class="row">
                 <div class="col-sm-9 col-12 order-2 order-sm-1">
-                    <h4 class="mb-5">{{ stream.name }}</h4>
+                    <div>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <div class="float-end">&nbsp;&nbsp;<a target="_blank" href="{{ path('admin_overloading', {streamId: stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></div>
+                        {% endif %}
+                        <h4 class="mb-4">{{ stream.name }}</h4>
+                    </div>
+
 
                     {% if stream.enabled== false %}
                         <div class="alert alert-warning mb-5" role="alert">
@@ -66,8 +91,8 @@
                         </div>
                     {% endif %}
 
-                    <div class="stream-page-stream mt-0 mb-5" v-scope>
-                        <div class="radio-page-streams-one d-none d-flex align-items-center justify-content-center justify-content-sm-start"
+                    <div class="stream-page-stream mt-0 mb-4 py-1" v-scope>
+                        <div class="radio-page-streams-one py-1 d-none d-flex align-items-center justify-content-center justify-content-sm-start"
                              @vue:mounted="$el.classList.remove('d-none')">
                             <div>
                                 <div
@@ -116,13 +141,13 @@
                             <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
                         </div>
 
-                        <div class="mt-5" v-if="song !== null || listeners !== null">
-                            <div class="mb-4" v-if="song !== null">
+                        <div class="mt-4 py-3 py-sm-4 px-sm-3 stream-page-live" v-if="song !== null || listeners !== null">
+                            <div class="mb-3" v-if="song !== null">
                                 <div>
                                     <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
                                     {% verbatim %}♫ {{ song }}{% endverbatim %}
                                 </div>
-                                <div class="mt-4" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                                <div class="mt-3" v-if="song !== undefined && song !== null && song.trim() !== ''">
                                     <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;
                                     <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
                                        :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
@@ -138,29 +163,27 @@
                                     </a>&nbsp;&nbsp;
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="mb-4" v-if="listeners !== null">
-                            <div>
-                                <strong>{{ 'page.stream.listeners'|trans }}:&nbsp;&nbsp;</strong>
+                            <div v-if="listeners !== null">
+                              <strong>{{ 'page.stream.listeners'|trans }}:&nbsp;&nbsp;</strong>
                                 {% verbatim %}
-                                  <i v-if="listeners === 1" class="bi bi-person-fill"></i>
-                                  <i v-if="listeners > 1" class="bi bi-people-fill"></i>
-                                  &nbsp;{{ listeners }}
-                                {% endverbatim %}
+                              <i v-if="listeners === 1" class="bi bi-person-fill"></i>
+                              <i v-if="listeners > 1" class="bi bi-people-fill"></i>
+                              &nbsp;{{ listeners }}
+                            {% endverbatim %}
                             </div>
                         </div>
                     </div>
 
                     {% if stream.countryCode is not null and stream.countryCode != '' %}
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <strong>{{ 'page.stream.country'|trans }}:</strong>
                             {{ stream.getCountry(app.request.locale) }}
                         </div>
                     {% endif %}
 
                     {% if stream.website is defined and stream.website is not null %}
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a> ↗
                         </div>
                     {% endif %}
@@ -169,7 +192,8 @@
                         <div class="row">
                             <div class="col-12 col-sm-9">
                                 <div class="stream-one-tags">
-                                    <div class="d-flex flex-wrap">
+                                    <div class="d-flex flex-wrap align-items-center">
+{#                                        <div class="me-2"><strong>{{ 'page.stream.tags'|trans }}:</strong></div>#}
                                         {% for tag in stream.tags|split(',') %}
                                             <a href="{{ path('streaming_spa') }}/all?s={{ tag }}">
                                             <span class="badge badge-inverse badge-link">
@@ -183,18 +207,20 @@
                         </div>
                     {% endif %}
 
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <p class="mt-5 mb-5"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></p>
-                    {% endif %}
-
-                    <div class="pt-5 px-3 d-sm-none">
+                    <div class="pt-3 px-3 d-sm-none">
                         {% if app.environment == 'prod' %}
                             {{ include('_partials/adblock.html.twig', {vertical: false}) }}
                         {% endif %}
                     </div>
 
+                    <div class="d-sm-none mt-4 text-center">
+                        <button type="button" class="btn btn-sm share-button">
+                            <i class="bi bi-share-fill"></i>&nbsp;&nbsp;{{ 'page.stream.share'|trans }}
+                        </button>
+                    </div>
+
                     <div class="more-streams">
-                        <div class="mt-5 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
+                        <div class="mt-4 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
 
                         {% if stream.countryCode is not null and stream.countryCode != '' %}
                             <div class="mt-3 mb-3">

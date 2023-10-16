@@ -3,14 +3,14 @@
     {% set last_letter = '' %}
 
     {% for code, country  in countries %}
-        {% if country|slice(0,1) != last_letter %}
-            {% set last_letter = country|slice(0,1) %}
+        {% if country|slice(0,1)|lower|replace({'é':'e'}) != last_letter %}
+            {% set last_letter = country|slice(0,1)|lower|replace({'é':'e'}) %}
 
             {% if loop.first == false %}
                 </div>
             {% endif %}
 
-            <h5>{{ last_letter|upper }}</h5>
+            <h5 class="mt-3">{{ last_letter|upper }}</h5>
             <div class="d-flex flex-row flex-wrap flags-container">
         {% endif %}
 

@@ -127,6 +127,7 @@ page:
         playing_error: Playing error (radio streaming may be unavailable)
         suggested: Suggested radios
         tags: Tags
+        share: Share this radio
         title: 'Listen to %radio%'
         website: Website
 

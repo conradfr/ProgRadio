@@ -12,6 +12,18 @@
     }
   }
 
+  .stream-page-live {
+    background-color: $live-song-background-color;
+    border-radius: 5px;
+  }
+
+  .stream-one-tags {
+    span.badge {
+      padding: 6px 8px;
+      border-radius: 4px;
+    }
+  }
+
   .more-streams {
     .more-streams-one {
       width: 100px;

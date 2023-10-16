@@ -2,10 +2,11 @@
   top: $padding-top;
 
   .radio-page-logo {
-    width: 140px;
+    min-width: 75px;
+    max-width: 140px;
 
     @include media-breakpoint-down(sm) {
-      width: 110px;
+      max-width: 110px;
     }
   }
 }
