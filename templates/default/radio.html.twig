@@ -222,7 +222,7 @@
         <div class="offset-1 offset-md-0 col-md-3 col-10 d-none d-sm-block" >
             {% if app.environment == 'prod' %}
                 <div class="sticky-md-top" style="top: 60px">
-                {{ include('_partials/adblock.html.twig', {vertical: true}) }}
+                {{ include('_partials/adblock.html.twig', {style: 'vertical2'}) }}
                 </div>
             {% endif %}
 
@@ -236,7 +236,7 @@
 {#    {% if app.environment == 'prod' %}#}
     <div class="row">
         <div class="col-12 pt-5 mt-5 mb-5 d-sm-none">
-            {{ include('_partials/adblock.html.twig', {'no_affil': true, vertical: false}) }}
+            {{ include('_partials/adblock.html.twig', {'no_affil': true, style: 'horizontal'}) }}
         </div>
     </div>
 {#    {% endif %}#}

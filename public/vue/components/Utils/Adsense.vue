@@ -23,7 +23,7 @@
       <ins class="adsbygoogle"
         style="display:block; margin:auto;"
         :data-ad-client="adsense_key"
-        :data-ad-slot="adsense_tag_key"
+        :data-ad-slot="adsense_tag_vert_key"
         data-ad-format="auto"
         data-full-width-responsive="true"></ins>
     </div>
@@ -59,7 +59,7 @@ export default defineComponent({
   /* eslint-disable indent */
   data(): {
     adsense_key: string,
-    adsense_tag_key: string,
+    adsense_tag_vert_key: string,
     adsense_tag_horiz_fix_key: string,
     tagRef: HTMLElement|null,
     toast: any|null,
@@ -70,7 +70,7 @@ export default defineComponent({
       // @ts-expect-error defined on global scope
       adsense_key,
       // @ts-expect-error defined on global scope
-      adsense_tag_key,
+      adsense_tag_vert_key,
       // @ts-expect-error defined on global scope
       adsense_tag_horiz_fix_key,
       tagRef: null,

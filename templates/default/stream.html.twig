@@ -209,7 +209,7 @@
 
                     <div class="pt-3 px-3 d-sm-none">
                         {% if app.environment == 'prod' %}
-                            {{ include('_partials/adblock.html.twig', {vertical: false}) }}
+                            {{ include('_partials/adblock.html.twig', {style: 'horizontal'}) }}
                         {% endif %}
                     </div>
 
@@ -249,7 +249,7 @@
                 </div>
                 <div class="offset-sm-0 col-sm-3 d-none d-sm-block order-sm-2 pt-4 pt-sm-2 text-center">
                     {% if app.environment == 'prod' %}
-                        {{ include('_partials/adblock.html.twig', {vertical: true}) }}
+                        {{ include('_partials/adblock.html.twig', {style: 'vertical2'}) }}
                     {% endif %}
                 </div>
             </div>

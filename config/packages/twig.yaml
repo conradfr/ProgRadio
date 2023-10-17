@@ -9,6 +9,7 @@ twig:
         adsense_key: "%env(ADSENSE_KEY)%"
         adsense_tag_radio_horiz_key: "%env(ADSENSE_TAG_RADIO_HORIZ_KEY)%"
         adsense_tag_radio_vert_key: "%env(ADSENSE_TAG_RADIO_VERT_KEY)%"
+        adsense_tag_radio_vert2_key: "%env(ADSENSE_TAG_RADIO_VERT2_KEY)%"
         adsense_tag_radio_horiz_fix_key: "%env(ADSENSE_TAG_RADIO_HORIZ_FIX_KEY)%"
         geocode: "%env(GEOCODE)%"
 
