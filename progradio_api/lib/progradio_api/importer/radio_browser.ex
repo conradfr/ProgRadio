@@ -265,6 +265,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   end
 
   # upgrade urls with known formats to newer one that will work anytime
+  # todo as most of these are similar maybe streamline to less functions
   defp stream_url_transformer(stream_url) do
     {_, updated_stream_url} =
       {:continue, stream_url}
@@ -276,6 +277,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> stream_url_transformer_181()
       |> stream_url_transformer_exclusive()
       |> stream_url_transformer_harmony()
+      |> stream_url_transformer_streamabc()
 
     updated_stream_url
   end
@@ -398,6 +400,20 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   end
 
   defp stream_url_transformer_harmony(stream_url), do: stream_url
+
+  defp stream_url_transformer_streamabc({:continue, stream_url}) do
+    pattern = ~r/http:\/\/(.+)\.streamabc(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        {:ok, String.replace_leading(stream_url, "http://", "https://")}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  defp stream_url_transformer_streamabc(stream_url), do: stream_url
 
   # Store
 
