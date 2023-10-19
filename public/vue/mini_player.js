@@ -10,6 +10,7 @@ import {
   LISTENING_SESSION_SOURCE_SSR,
   WEBSOCKET_DISCONNECT_AFTER,
   WEBSOCKET_MAX_RETRIES,
+  WEBSOCKET_HEARTBEAT,
   PLAYER_STATE_LOADING,
   PLAYER_STATE_PLAYING,
   PLAYER_STATE_STOPPED
@@ -362,6 +363,7 @@ createApp({
 
     if (!this.socket) {
       const opts = {
+        heartbeatIntervalMs: WEBSOCKET_HEARTBEAT,
         reconnectAfterMs: (tries) => {
           if (tries >= WEBSOCKET_MAX_RETRIES) {
             return null;

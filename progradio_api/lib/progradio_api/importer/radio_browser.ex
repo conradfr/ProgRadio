@@ -279,6 +279,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> stream_url_transformer_harmony()
       |> stream_url_transformer_streamabc()
       |> stream_url_transformer_radioparadise()
+      |> stream_url_transformer_creacast()
 
     updated_stream_url
   end
@@ -429,6 +430,20 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   end
 
   defp stream_url_transformer_radioparadise(stream_url), do: stream_url
+
+  defp stream_url_transformer_creacast({:continue, stream_url}) do
+    pattern = ~r/http:\/\/(.+)creacast\.com(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        {:ok, String.replace_leading(stream_url, "http://", "https://")}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  defp stream_url_transformer_creacast(stream_url), do: stream_url
 
   # Store
 

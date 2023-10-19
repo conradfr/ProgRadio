@@ -82,8 +82,9 @@ export const PLAYER_NOTIFICATION_LENGTH = 3000; /* ms */
 export const PLAYER_TYPE_RADIO = 'radio';
 export const PLAYER_TYPE_STREAM = 'stream';
 
-export const WEBSOCKET_DISCONNECT_AFTER = 43200000; /* 12h in ms */
+export const WEBSOCKET_DISCONNECT_AFTER = 36000000; /* 10h in ms */
 export const WEBSOCKET_MAX_RETRIES = 50;
+export const WEBSOCKET_HEARTBEAT = 50000; /* ms */
 
 export const LISTENING_SESSION_MIN_SECONDS = 15;
 export const LISTENING_SESSION_SOURCE = 'web';

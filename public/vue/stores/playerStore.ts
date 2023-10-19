@@ -409,6 +409,8 @@ export const usePlayerStore = defineStore('player', {
     connectSocket() {
       if (!this.socket) {
         const opts = {
+
+          heartbeatIntervalMs: config.WEBSOCKET_HEARTBEAT,
           reconnectAfterMs: (tries: number) => {
             if (tries >= config.WEBSOCKET_MAX_RETRIES) {
               return null;
