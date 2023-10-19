@@ -31,10 +31,12 @@ app.get('/', cors(corsOptions), async (req, res) => {
       got.stream(req.query.stream),
       res
     ).catch(() => {
+      process.stdout.write(`End: ${req.query.stream}\n`);
       res.end();
     });
   }
   catch (error) {
+    process.stdout.write(`Error: ${req.query.stream}\n`);
     res.status(500).send('Error');
   }
 });
