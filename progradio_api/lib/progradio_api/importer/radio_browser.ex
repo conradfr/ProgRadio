@@ -278,6 +278,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> stream_url_transformer_exclusive()
       |> stream_url_transformer_harmony()
       |> stream_url_transformer_streamabc()
+      |> stream_url_transformer_radioparadise()
 
     updated_stream_url
   end
@@ -414,6 +415,20 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   end
 
   defp stream_url_transformer_streamabc(stream_url), do: stream_url
+
+  defp stream_url_transformer_radioparadise({:continue, stream_url}) do
+    pattern = ~r/http:\/\/(.+)\.stream\.radioparadise\.com(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        {:ok, String.replace_leading(stream_url, "http://", "https://")}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  defp stream_url_transformer_radioparadise(stream_url), do: stream_url
 
   # Store
 
