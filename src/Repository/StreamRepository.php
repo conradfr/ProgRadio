@@ -17,6 +17,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 class StreamRepository extends ServiceEntityRepository
 {
     protected const CACHE_TTL = 21600; // six hours
+    protected const CACHE_QUICK_TTL = 30;
 
     protected const DEFAULT_MORE_LIMIT = 15;
 
@@ -154,6 +155,9 @@ class StreamRepository extends ServiceEntityRepository
 
         if ($sort !== 'random' && $sort !== 'last') {
             $query->enableResultCache(self::CACHE_TTL);
+        } else {
+            // because bots
+            $query->enableResultCache(self::CACHE_QUICK_TTL);
         }
 
         return $query->getResult();

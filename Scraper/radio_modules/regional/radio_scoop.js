@@ -61,9 +61,14 @@ const format = (dateObj, subRadio) => {
       'host': curr.host || null
     };
 
+    /*
+    Image are a php script that output the data, not dealt by the importer for now
+    todo revisit later
+
     if (curr.img !== undefined) {
       newEntry.img = image_prefix + curr.img;
     }
+    */
 
     prev.push(newEntry);
     return prev;

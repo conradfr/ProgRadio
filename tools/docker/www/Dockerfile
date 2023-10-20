@@ -135,10 +135,6 @@ ENV APP_ENV=${APP_ENV} \
 # Set working directory
 WORKDIR /var/www
 
-#RUN ping 10.0.1.8
-
-#RUN (printf "PING\r\n";) | nc 10.0.1.8 6379
-
 # Copy existing application directory
 COPY --chown=www-data:www-data ./ /var/www/
 
@@ -156,6 +152,7 @@ RUN mkdir -p /var/www/var/log/
 
 RUN rm -rf /var/www/public/media
 RUN rm -rf /var/www/public/vue
+RUN rm -rf /var/www/public/sass
 RUN ln -s /var/shared/media /var/www/public/
 
 #RUN chown -R www-data:www-data /var/shared/media

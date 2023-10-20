@@ -3,3 +3,7 @@
 User-agent: *
 Disallow: /media/
 Disallow: /img/radio/
+Crawl-delay: 10
+
+User-agent: Bytespider
+Disallow: /
