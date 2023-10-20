@@ -10,13 +10,14 @@ import express from 'express';
 import cors from 'cors';
 
 const serverPort = (process.env.PORT || process.env.PROXY_PORT || 3000);
+const apiKeys = (process.env.KEYS || process.env.PROXY_KEYS || '').split(',');
 
 const app = express();
 const hostname = os.hostname();
 const pipeline = promisify(stream.pipeline);
 
 const corsOptions = {
-  origin: process.env.PROXY_CORS || false,
+  origin: (process.env.PROXY_CORS || '').split(',') || false,
   preflightContinue: true,
   methods: 'GET, HEAD'
 }
@@ -24,7 +25,18 @@ const corsOptions = {
 app.options('/', cors(corsOptions));
 
 app.get('/', cors(corsOptions), async (req, res) => {
-  process.stdout.write(`Request: ${req.query.stream}\n`);
+  let apiKey = req.query.k;
+  let apiKeyStatus = req.query.k ? req.query.k : 'none';
+
+  if (apiKey) {
+    if (apiKeys.indexOf(apiKey) !== -1) {
+      apiKeyStatus = 'OK';
+    } else {
+      apiKeyStatus = 'wrong';
+    }
+  }
+
+  process.stdout.write(`Request: ${req.query.stream} (key: ${apiKey}, status: ${apiKeyStatus})\n`);
 
   try {
     await pipeline(

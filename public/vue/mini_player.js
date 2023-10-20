@@ -259,7 +259,7 @@ createApp({
       });
     } else {
       const streamUrl = (streamingUrl.substring(0, 5) !== 'https')
-        ? `${streamsProxy}?stream=${streamingUrl}` : streamingUrl;
+        ? `${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}` : streamingUrl;
 
       window.audio = new Audio(`${streamUrl}`);
       setAudioVolume();

@@ -1,4 +1,4 @@
-FROM node:14.17.6
+FROM node:18-alpine
 
 RUN mkdir -p /scripts
 COPY ./tools/docker/proxy/docker-entry.sh /scripts

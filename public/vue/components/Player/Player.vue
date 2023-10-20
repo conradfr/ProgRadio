@@ -445,7 +445,7 @@ export default defineComponent({
         const streamUrl = (url.substring(0, 5) !== 'https')
             /* eslint-disable no-undef */
             // @ts-expect-error apiUrl is defined on the global scope
-            ? `${streamsProxy}?stream=${url}` : url;
+            ? `${streamsProxy}?k=${streamsProxyKey}&stream=${url}` : url;
 
         this.currentPlayer.element = new Audio(streamUrl);
         this.currentPlayer.element.muted = this.muted;

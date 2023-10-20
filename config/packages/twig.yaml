@@ -4,6 +4,7 @@ twig:
         analytics: "%env(analytics)%"
         timezone: "%timezone%"
         streams_proxy: "%env(streams_proxy)%"
+        streams_proxy_key: "%env(STREAMS_PROXY_KEY)%"
         api_url: "%env(API_URL)%"
         legacy: "%env(LEGACY)%"
         adsense_key: "%env(ADSENSE_KEY)%"
