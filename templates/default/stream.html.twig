@@ -249,7 +249,7 @@
                 </div>
                 <div class="offset-sm-0 col-sm-3 d-none d-sm-block order-sm-2 pt-4 pt-sm-2 text-center">
                     {% if app.environment == 'prod' %}
-                        {{ include('_partials/adblock.html.twig', {style: 'vertical2'}) }}
+                        {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2'])}) }}
                     {% endif %}
                 </div>
             </div>
