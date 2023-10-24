@@ -1,5 +1,5 @@
-{% set locales = ['fr', 'en', 'es', 'de', 'pt'] %}
-{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt'} %}
+{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it'] %}
+{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it'} %}
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}" class="h-100{% block htmlsupp %}{% endblock %}" {% if isDarkModeTime(app.request) %}data-bs-theme="dark"{% endif %}>
 <head>

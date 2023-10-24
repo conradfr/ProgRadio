@@ -41,6 +41,14 @@ class Category
     #[ORM\Column(type: 'string', length: 100)]
     private string $name_pt;
 
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_it;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_el;
+
     public function getId(): int
     {
         return $this->id;

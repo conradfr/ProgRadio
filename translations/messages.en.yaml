@@ -36,6 +36,12 @@ menu:
         nz: New Zealand
         gb: Great Britain
         ie: Ireland
+        it: Italy
+        lu: Luxembourg
+        mc: Monaco
+        sm: Saint-Marin
+        mt: Malta
+        va: Vatican
 
     songs: Songs Saved
 
@@ -190,7 +196,7 @@ registrationForm:
     email: 'Email'
     error:
         captcha: 'Invalid Captcha, please try again.'
-        empty: This field can\'t be empty
+        empty: This field can't be empty
         password_min: 'Password must be at least 8 characters.'
         password: 'Password and its confirmation are not the same.'
     captcha: 'Write letters and numbers written below'
@@ -220,6 +226,7 @@ footer:
     fr: Français
     de: Deutsch
     pt: Portuguesa
+    it: Italiano
 
 legal: Legal notice
 

@@ -1,0 +1,32 @@
+general:
+    hello: Salve,
+
+signature:
+    regards: Saluti,
+
+signup:
+    subject: '%name% - Benvenuto !'
+    welcome: Benvenuto !
+    text_1: Ora è registrato su %link%
+    text2: I suoi preferiti (se presenti) sono stati trasferiti sul suo account.
+
+reset:
+    subject: '%name% - Reimpostazione della password'
+    header: Reimpostazione della password
+    text_1: Una richiesta di reimpostazione della password associata a questa email è stata fatta su %url%
+    text_2: "Per aggiornare la sua password clicca qui (valido per 24 ore): %link%"
+    text_3: Se non ha fatto alcuna richiesta, può ignorare questa email.
+
+email_change:
+    subject: '%name% - Aggiornamento via email'
+    header: Aggiornamento via email
+    text_1: Una richiesta di aggiornamento dell'email di un account a %new_email% è stata fatta su %url%.
+    text_2:
+    text_3: "Se non l'ha avviato, può annullare questa richiesta facendo clic qui (valido per 24 ore): %link%"
+    text_4: Inoltre dovrebbe aggiornare la sua password.
+
+password_update:
+    subject: '%name% - Aggiornamento della password'
+    header: Aggiornamento della password
+    text_1: La password associata a questo account è stata creata su %url%
+    text_2: "Se non l'ha avviato, può annullare questa richiesta e impostare una nuova password facendo clic qui (valida per 24 ore): %link%"

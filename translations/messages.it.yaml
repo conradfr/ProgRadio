@@ -1,0 +1,286 @@
+general:
+    main_description: Streaming radiofonico fatto bene
+    main_title: Streaming di radio da tutto il mondo.
+
+menu:
+    account: Il mio account
+    admin:
+        dashboard: Pannello di controllo
+        listening: Ascolto
+        overloading: Stream Overloading
+        playing_errors: Errori di streaming
+        shares: Shares
+    all: Tutte le radio
+    app: Android App
+    contact: Contatto
+    faq: Domande frequenti
+
+    favorites: I miei preferiti
+    favorites_menu:
+        all: Tutti i Paesi
+        be: Belgio
+        ch: Svizzera
+        fr: Francia
+        us: Stati Uniti
+        mx: Messico
+        co: Colombia
+        ar: Argentina
+        pe: Perù
+        de: Germania
+        at: Austria
+        es: Spagna
+        pt: Portogallo
+        br: Brasile
+        ca: Canada
+        au: Australia
+        nz: Nuova Zelanda
+        gb: Gran Bretagna
+        ie: Irlanda
+        it: Italia
+        lu: Lussemburgo
+        mc: Monaco
+        sm: Saint-Marin
+        mt: Malta
+        va: Vaticano
+
+    songs: Canzoni salvate
+
+    home:
+        enable: Imposta questa pagina come schermata iniziale
+        disable: Elimini la schermata iniziale personalizzata
+    logout: Si disconnetta
+    mode:
+        dark: Modalità oscura
+        light: modalità Light
+    now: Attualmente in onda
+    params: Parametri
+    plus: Altro
+    schedule: Radioguida
+    signon: Registrarsi
+    signup: Si iscriva
+    streaming: Streaming in tutto il mondo
+    timer: Timer
+    title: Menu
+
+page:
+    contact:
+        title: Contatti
+        email: E-mail
+        message: 'Messaggio *'
+        name: 'Nome *'
+        send: Invia
+        sent: 'Il suo messaggio è stato inviato'
+
+    faq:
+        page_title: 'FAQ - Programmi radiofonici in Francia'
+        page_description: 'Domande'
+        title: 'Domande frequenti'
+
+    forgotten_password:
+        error: <strong>Si è verificato un errore.</strong><br>Se il link non è più valido, ricomincia la procedura.
+        click_here: clicca qui
+        done_title: Reinizializzazione della password
+        done: '<strong>La sua password è stata aggiornata.</strong><br>Può accedere %link%clicca qui%link_end%.'
+        page_title: Password dimenticata
+        success: Se è stato trovato un account <strong>%email%</strong>, è stata inviata un'email con un link di reinizializzazione.
+        submit: Inviare
+
+    login:
+        forgotten_password: Password dimenticata?
+        page_title: Login
+
+    now:
+        back: '← Torna alla radioguida'
+        no_schedule: '<strong>Ahah...</strong> nessun programma da mostrare.'
+        title: 'Attualmente alla radio'
+
+    radio:
+        advanced: Usa il lettore avanzato <br>(webradio, traccia attuale...)
+        back: '← Torna alla radioguida'
+        current: '↓ Vai allo spettacolo attuale'
+        description: 'Programma diurno della radio %radio%!'
+        goto_today: Controlli il programma di oggi
+        goto_schedule: Controlli il palinsesto della radio
+        more_radios: 'Altre radio'
+        no_schedule: 'Orario non disponibile'
+        not_today: Sta consultando un altro orario giornaliero
+        play: 'Ascolti %radio%'
+        stop: 'Ferma %radio%'
+        summary: 'Riepilogo'
+        title: '%radio% - Ascolti il live streaming'
+        website: 'Sito web'
+
+    registered:
+        page_title: Registrarsi
+        alert_1: Il suo account è stato creato!
+        alert_2: I suoi preferiti (se presenti) sono stati aggiunti al suo account.
+        what_now_question: Cosa vuole fare adesso?
+        what_now_choice1: Si connetta al mio account
+        what_now_choice2: Controlli gli orari
+        what_now_choice3: Ascolti le radio in streaming
+
+    stream:
+        country: Paese
+        description: 'Ascolta le radio di tutto il mondo'
+        disabled: 'Questa radio non è attiva.'
+        discover: Scopra altre radio, cerchi per Paese e stile...
+        find: Ricerca
+        find_deezer: Trova su Deezer
+        find_spotify: Trova su Spotify
+        find_youtube: Cerca su Youtube
+        listeners: Ascoltatori
+        playing: Giocando
+        playing_error: Errore di riproduzione (lo streaming radio potrebbe non essere disponibile)
+        suggested: Radio consigliate
+        tags: Etichette
+        share: Condividi questa radio
+        title: 'Ascolta %radio%'
+        website: Sito web
+
+    top:
+        page_title: Le migliori radio di %country%
+        description: 'Ascolti le migliori radio di %country%'
+        more: Altre radio da %country%
+
+    last:
+        page_title: Recently listened radios in %country%
+        description: 'Listen to the best radios from %country%'
+        more: More recently listened radios from %country%
+
+    user:
+        page_title: Creare un account
+
+    account:
+        prefix: Il mio account
+        menu:
+            email: E-mail
+            password: Password
+            delete: Eliminare
+        email:
+            page_title: Aggiorna la mia email
+            info_1: Questo aggiornerà l'email usata come login.
+            info_2: Una conferma verrà inviata al precedente indirizzo email.
+            success: L'email è stata aggiornata.
+            new_email: 'Nuovo indirizzo email:'
+            new_email_placeholder: esempio@email.com
+            update_btn: Aggiornamento
+        password:
+            page_title: Elimini il mio account
+            success: La password è stata aggiornata.
+            update_btn: Aggiornamento
+        delete:
+            page_title: Delete my account
+            warning: Questa operazione è irreversibile. I suoi preferiti verranno eliminati.
+            confirm: È sicuro di voler eliminare il suo account?
+            delete_btn: Cancelli il mio account
+        delete_confirm:
+            success: Il suo account è stato eliminato con successo.
+
+boxes:
+    already_account:
+        title: Ha un account?
+        content: Clicca qui per accedere
+
+    no_account:
+        title: Non ha ancora un account?
+        content: Clicca qui per registrarsi!
+
+    why_account:
+        title: Perché registrarsi?
+        content: "- Può sincronizzare i suoi preferiti tra i suoi dispositivi."
+        content2: "- Salva le canzoni trasmesse."
+        content3: "- Meno pubblicità."
+
+registrationForm:
+    email: 'E-mail'
+    error:
+        captcha: 'Codice Captcha non valido, riprovi.'
+        empty: Questo campo non può essere vuoto
+        password_min: 'La password deve contenere almeno 8 caratteri.'
+        password: 'La password e la sua conferma non sono la stessa cosa.'
+    captcha: 'Scriva lettere e numeri scritti qui sotto'
+    password: 'Password'
+    password_confirm: 'Conferma della password'
+    submit_create: 'Crea un account'
+
+connectionForm:
+    already_logged: Attualmente è registrato come %email%
+    logout: disconnettersi
+    email: 'E-mail'
+    password: 'Password'
+    remember_me: 'Ricordati di me'
+    submit_connect: 'Login'
+
+updatePasswordForm:
+    new: 'Nuova password:'
+    new_confirm: Conferma della nuova password
+    error_not_same: Le nuove password non sono identiche.
+    error_not_empty: Questo campo non può essere vuoto
+    error_length: La nuova password deve contenere almeno 8 caratteri.
+
+footer:
+    alternate_lang: Français
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Portuguesa
+    it: Italiano
+
+legal: Avviso legale
+
+cookie:
+    accept: Accettare
+    allow: Consentire annunci personalizzati?
+    deny: Negare
+    disclaimer: (Questo sito web non traccia i suoi visitatori né vende dati)
+
+admin:
+    dashboard:
+        title: Dashboard
+        menu:
+            brief: Breve
+            table: Table
+        table:
+            shows: Shows
+            sections: Tavolo
+            stream_abbr: St.
+        accounts:
+            title: Accounts
+            active: '%number% account attivi'
+            email: email
+            created_at: Creato
+            last: (ultimo %number%)
+        no_schedule:
+            title: Radio senza programmazione odierna
+            shows: Spettacoli
+            sections: Sezioni
+            all_ok: Tutte le radio hanno orari odierni.
+        stream_errors:
+            title: Errori di streaming
+            error: Errori per i controlli <strong>%number%</strong>
+            link: link
+            no_errors: Tutti gli stream funzionano.
+        live_song_errors:
+            title: Errori di canzoni dal vivo
+            error: Errori per i controlli <strong>%number%</strong>
+            reset_all: resetta tutto
+            link: link
+            no_errors: Nessun errore registrato.
+
+    listening:
+        title: Attualmente in ascolto
+        today: Oggi
+        yesterday: Ieri
+        this_month: Questo mese
+        last_month: Il mese scorso
+        ratings: Valutazioni
+
+    stream_errors:
+        title: Errori di streaming
+        name: Nome
+        errors: Errori
+        view: Vedere
+        edit: Modificare
+        reset: Azzerare
+        reset_all: Azzera tutto

@@ -20,7 +20,9 @@
               v-on:click="quit"
             ><i class="bi bi-x-lg"></i></div>
             <div v-if="userLogged && userIsAdmin" class="d-none d-md-block float-end me-4">
-              <a class="link-no-to-bold" v-on:click="copyIdToClipboard">Copy id</a>&nbsp;-&nbsp;<a target="_blank" :href="`/admin/overloading/${stream.code_name}`">Edit</a>
+              <a class="link-no-to-bold" v-on:click="copyIdToClipboard">Copy id</a>
+              &nbsp;-&nbsp;<a target="_blank" :href="`/admin/overloading/${stream.code_name}`">
+              Edit</a>
             </div>
             <h4 class="mb-4">{{ stream.name }}</h4>
 
@@ -147,13 +149,13 @@ import { mapState, mapActions } from 'pinia';
 import { useStreamsStore } from '@/stores/streamsStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
+import { useGlobalStore } from '@/stores/globalStore';
 
 import PlayerStatus from '@/types/player_status';
 
 import * as config from '../../config/config';
 import StreamsUtils from '../../utils/StreamsUtils';
 import Adsense from '../Utils/Adsense.vue';
-import {useGlobalStore} from "@/stores/globalStore";
 
 export default defineComponent({
   components: {

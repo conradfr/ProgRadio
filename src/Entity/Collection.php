@@ -47,6 +47,14 @@ class Collection
     private string $name_pt;
 
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_it;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_el;
+
+    #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 25)]
     private ?string $shortName = null;
 

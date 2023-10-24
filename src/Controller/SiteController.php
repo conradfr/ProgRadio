@@ -23,7 +23,7 @@ use App\Form\ContactType;
 
 class SiteController extends AbstractController
 {
-   final public const LANG = ['fr', 'en', 'es', 'de', 'pt'];
+   final public const LANG = ['fr', 'en', 'es', 'de', 'pt', 'it'];
 
     #[
         Route('/{_locale}/faq',

@@ -36,6 +36,12 @@ menu:
         nz: Nova Zelândia
         gb: Grã-Bretanha
         ie: Irlanda
+        it: Itália
+        lu: Luxemburgo
+        mc: Mônaco
+        sm: Saint-Marin
+        mt: Malta
+        va: Vaticano
 
     songs: Músicas salvas
 
@@ -219,6 +225,7 @@ footer:
     fr: Français
     de: Deutsch
     pt: Portuguesa
+    it: Italiano
 
 legal: Aviso legal
 

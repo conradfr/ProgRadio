@@ -37,7 +37,12 @@ menu:
         nz: Nouvelle-Zélande
         gb: Grande-Bretagne
         ie: Irlande
-
+        it: Italie
+        lu: Luxembourg
+        mc: Monaco
+        sm: Saint-Marin
+        mt: Malte
+        va: Vatican
 
     songs: Titres Sauvegardés
 
@@ -224,6 +229,7 @@ footer:
     fr: Français
     de: Deutsch
     pt: Portuguesa
+    it: Italiano
 
 legal: 'Mentions légales'
 

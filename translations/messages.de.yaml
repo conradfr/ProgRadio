@@ -36,6 +36,12 @@ menu:
         nz: Neuseeland
         gb: Großbritannien
         ie: Irland
+        it: Italien
+        lu: Luxemburg
+        mc: Monaco
+        sm: Saint-Marin
+        mt: Malta
+        va: Vatikan
 
     songs: Gespeicherte Songs
 
@@ -218,6 +224,7 @@ footer:
     en: English
     fr: Français
     de: Deutsch
+    it: Italiano
 
 legal: Rechtlicher Hinweis
 

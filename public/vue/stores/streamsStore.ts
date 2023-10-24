@@ -72,7 +72,7 @@ export const useStreamsStore = defineStore('streams', {
       );
 
       for (const [key, value] of Object.entries(state.countries)) {
-        if (i18n.global.locale === 'fr' && ['FR', 'BE', 'CH'].indexOf(key) !== -1) {
+        if (i18n.global.locale === 'fr' && ['FR', 'BE', 'CH', 'LU', 'MC'].indexOf(key) !== -1) {
           countriesOptions.unshift(
             {
               label: value,
@@ -80,7 +80,7 @@ export const useStreamsStore = defineStore('streams', {
             }
           );
         } else if (i18n.global.locale === 'es'
-          && ['MX', 'ES', 'CO', 'PE', 'AR'].indexOf(key) !== -1) {
+          && ['MX', 'ES', 'CO', 'AR', 'PE', 'CL'].indexOf(key) !== -1) {
           countriesOptions.unshift(
             {
               label: value,
@@ -103,6 +103,14 @@ export const useStreamsStore = defineStore('streams', {
             }
           );
         } else if (i18n.global.locale === 'pt' && ['PT', 'BR'].indexOf(key) !== -1) {
+          countriesOptions.unshift(
+            {
+              label: value,
+              code: key
+            }
+          );
+        } else if (i18n.global.locale === 'it'
+          && ['IT', 'CH', 'SM', 'VA', 'MT', 'MC', 'SI'].indexOf(key) !== -1) {
           countriesOptions.unshift(
             {
               label: value,

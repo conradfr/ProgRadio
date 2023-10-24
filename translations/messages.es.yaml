@@ -36,6 +36,12 @@ menu:
         nz: Nueva Zelanda
         gb: Gran Bretaña
         ie: Irlanda
+        it: Italia
+        lu: Luxemburgo
+        mc: Mónaco
+        sm: Saint-Marin
+        mt: Malta
+        va: Vaticano
 
     songs: Canciones Guardadas
 
@@ -222,6 +228,7 @@ footer:
     fr: Français
     de: Deutsch
     pt: Portuguesa
+    it: Italiano
 
 legal: 'Notas legales'
 
