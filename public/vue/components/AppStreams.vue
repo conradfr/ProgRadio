@@ -7,7 +7,6 @@
           <streams-list-filters></streams-list-filters>
           <streams-one v-if="solo" :code-name="solo"></streams-one>
           <streams-list v-if="solo === null"></streams-list>
-          <adsense v-if="!userLogged" mode="horizontal_fix"></adsense>
         </div>
       </div>
     </div>
@@ -22,7 +21,6 @@ import { mapState, mapActions } from 'pinia';
 import { useGlobalStore } from '@/stores/globalStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 import { usePlayerStore } from '@/stores/playerStore';
-import { useUserStore } from '@/stores/userStore';
 
 import PlayerStatus from '@/types/player_status';
 
@@ -31,7 +29,6 @@ import { PLAYER_TYPE_STREAM } from '@/config/config';
 import StreamsListFilters from './Streams/StreamsListFilters.vue';
 import StreamsList from './Streams/StreamsList.vue';
 import StreamsOne from './Streams/StreamsOne.vue';
-import Adsense from './Utils/Adsense.vue';
 import Loading from './Utils/Loading.vue';
 
 /* eslint-disable no-prototype-builtins */
@@ -40,8 +37,7 @@ export default defineComponent({
     StreamsListFilters,
     StreamsList,
     StreamsOne,
-    Loading,
-    Adsense
+    Loading
   },
   data() {
     return {
@@ -80,9 +76,6 @@ export default defineComponent({
       playing: 'playing',
       playingRadio: 'radio',
       currentSong: 'currentSong'
-    }),
-    ...mapState(useUserStore, {
-      userLogged: 'logged'
     })
   },
   beforeRouteEnter(to, from, next) {

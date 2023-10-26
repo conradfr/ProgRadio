@@ -1,5 +1,5 @@
 <template>
-  <div :ref="setRef" style="margin:auto;">
+  <div :ref="setRef" style="margin:auto;" class="mb-3">
     <div v-if="showToast" class="fixed-bottom p-4 toast-cookie-container-app">
       <div class="toast toast-cookie-app bg-dark text-white"
         role="alert" data-bs-autohide="false">
@@ -24,7 +24,6 @@
         style="display:block; margin:auto;"
         :data-ad-client="adsense_key"
         :data-ad-slot="adsense_tag_vert_key"
-        data-ad-format="auto"
         data-full-width-responsive="true"></ins>
     </div>
     <div class="mt-2" v-if="mode === 'horizontal_fix'">
@@ -32,7 +31,8 @@
         style="display:block;min-width:360px;max-width:728px;height:100px;margin:auto;"
         :data-ad-client="adsense_key"
         :data-ad-slot="adsense_tag_horiz_fix_key"
-        data-full-width-responsive="true"></ins>
+        data-ad-format="auto"
+        data-full-width-responsive="false"></ins>
     </div>
   </div>
 </template>
@@ -112,7 +112,7 @@ export default defineComponent({
     adScript.text = text;
 
     if (this.tagRef !== null) {
-      this.tagRef.appendChild(adScriptExt);
+      this.tagRef.appendChild(adScript);
     }
 
     /* eslint-disable no-undef */

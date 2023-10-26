@@ -14,6 +14,7 @@
       </div>
     </div>
     <streams-list-pagination v-if="radios.length"></streams-list-pagination>
+    <div class="mt-2" v-if="!userLogged"><adsense mode="horizontal_fix"></adsense></div>
   </div>
 </template>
 
@@ -24,17 +25,23 @@ import { mapState } from 'pinia';
 /* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { useStreamsStore } from '@/stores/streamsStore';
+import { useUserStore } from '@/stores/userStore';
 
 import StreamsListPagination from './StreamsListPagination.vue';
 import StreamsListOne from './StreamsListOne.vue';
+import Adsense from '../Utils/Adsense.vue';
 
 export default defineComponent({
   components: {
     StreamsListPagination,
-    StreamsListOne
+    StreamsListOne,
+    Adsense
   },
   computed: {
     ...mapState(useGlobalStore, ['isLoading']),
+    ...mapState(useUserStore, {
+      userLogged: 'logged'
+    }),
     ...mapState(useStreamsStore, {
       radios: 'streamRadios'
     })

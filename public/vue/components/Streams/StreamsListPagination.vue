@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-md-12 pb-5 pb-sm-5 pb-md-0">
+      <div class="col-md-12 pb-5 pb-sm-3 pb-md-0">
         <nav aria-label="navigation">
           <ul class="pagination">
             <li class="page-item" :class="{ 'disabled': page === 1 }">

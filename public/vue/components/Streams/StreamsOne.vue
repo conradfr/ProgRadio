@@ -131,10 +131,14 @@
               </div>
             </div>
 
+            <div class="pt-3 px-3 d-sm-none" v-if="!userLogged">
+              <adsense mode="horizontal_fix"></adsense>
+            </div>
+
           </div>
         </div>
       </div>
-      <div class="col-sm-3 col-12 text-center" v-if="!userLogged">
+      <div class="col-sm-3 col-12 text-center d-none d-sm-block" v-if="!userLogged">
         <adsense></adsense>
       </div>
     </div>
