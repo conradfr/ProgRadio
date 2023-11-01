@@ -15,60 +15,65 @@
 {% endblock %}
 
 {% block body %}
-<div id="admin" class="container">
-    <div class="row">
-        <div class="col-12">
+    <div id="admin" class="container">
+        <div class="row">
+            <div class="col-12">
 
-            <div class="d-flex justify-content-between mt-2 mb-4">
-                <div><h5>{{ 'admin.stream_errors.title'|trans }}</h5></div>
-                <div><a href="{{ path('admin_reset_all_stream_paying_errors') }}">{{ 'admin.stream_errors.reset_all'|trans }}</a></div>
-            </div>
-
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">{{ 'admin.stream_errors.name'|trans }}</th>
-                    <th scope="col" class="text-center">{{ 'admin.stream_errors.errors'|trans }}</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-                </thead>
-                {% for stream_error in errors %}
-                    <tr :class="{ 'table-secondary': '{{ stream_error.id }}' === radioId }">
-                        <td class="text-start">{{ stream_error.name }}</td>
-                        <td class="text-center" style="width: 250px !important">{{ stream_error.playingError }}</td>
-                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a></td>
-                        <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></td>
-                        <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">{{ 'admin.stream_errors.reset'|trans }}</a></td>
-                        <td class="text-start" v-scope>
-                            <div
-                                v-if="radioId !== '{{ stream_error.id }}' || playing === PLAYER_STATE_STOPPED"
-                                @click="play('{{ stream_error.streamUrl }}', '{{ stream_error.id }}', null, null)"
-                                class="admin-play">
-                                <i class="bi bi-play-circle"></i>&nbsp;&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream_error.name}) }}
-                            </div>
-
-                            <div
-                                v-if="radioId === '{{ stream_error.id }}' && playing !== PLAYER_STATE_STOPPED"
-                                @click="stop('{{ stream_error.id }}')"
-                                class="admin-play admin-play-playing">
-                                <i class="bi bi-stop-circle"></i>&nbsp;&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream_error.name}) }}
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-
-
-            <div class="position-sticky top-50 end-0 w-50 d-none" id="playing-alert">
-                <div class="alert alert-danger mt-2 mb-3" role="alert">
-                    <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+                <div class="d-flex justify-content-between mt-2 mb-4">
+                    <div><h5>{{ 'admin.stream_errors.title'|trans }}</h5></div>
+                    <div><a href="{{ path('admin_reset_all_stream_paying_errors') }}">{{ 'admin.stream_errors.reset_all'|trans }}</a></div>
                 </div>
-            </div>
 
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">{{ 'admin.stream_errors.name'|trans }}</th>
+                        <th scope="col" class="text-center">{{ 'admin.stream_errors.errors'|trans }}</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    {% for stream_error in errors %}
+                        <tr>
+                            <td class="text-start">{{ stream_error.name }}</td>
+                            <td class="text-center" style="width: 250px !important">{{ stream_error.playingError }}</td>
+                            <td class="text-center" style="width: 100px !important">
+                                <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a> /
+                                <a target="_blank" href="{{ path('app') }}streaming/{{ stream_error.id }}">{{ 'admin.stream_errors.view'|trans }}</a>
+                            </td>
+                            <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></td>
+                            <td class="text-center" style="width: 100px !important"><a href="{{ path('admin_reset_stream_paying_error', {id: stream_error.id}) }}">{{ 'admin.stream_errors.reset'|trans }}</a></td>
+                            <td class="text-start" v-scope>
+                                <div
+                                        v-if="radioId !== '{{ stream_error.id }}' || playing === PLAYER_STATE_STOPPED"
+                                        @click="play('{{ stream_error.streamUrl }}', '{{ stream_error.id }}', null, null)"
+                                        class="admin-play">
+                                    <i class="bi bi-play-circle"></i>&nbsp;&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream_error.name}) }}
+                                </div>
+
+                                <div
+                                        v-if="radioId === '{{ stream_error.id }}' && playing !== PLAYER_STATE_STOPPED"
+                                        @click="stop('{{ stream_error.id }}')"
+                                        class="admin-play admin-play-playing">
+                                    <i class="bi bi-stop-circle"></i>&nbsp;&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream_error.name}) }}
+                                </div>
+                            </td>
+                            <td class="text-center">{{ stream_error.countryCode }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+
+                <div class="position-sticky top-50 end-0 w-50 d-none" id="playing-alert">
+                    <div class="alert alert-danger mt-2 mb-3" role="alert">
+                        <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

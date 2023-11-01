@@ -30,7 +30,7 @@ class StreamRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, s.name, s.playingError, s.streamUrl')
+        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode')
             ->from(Stream::class, 's')
             ->where('s.playingError >= :threshold')
             ->orderBy('s.playingError', 'DESC');
