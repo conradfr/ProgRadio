@@ -32,14 +32,19 @@
         }
       }
 
-      window.addEventListener('load', function() {
-        (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;
+      window.addEventListener('load', () => {
+        // ensure this loads as there is conflict w/ the responsive grid
+        window.setTimeout(() => {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }, 2000);
+
+        (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 1;
         if (isAdProtected === true && getConsentCookie() === null) {
           if (typeof bootstrap === 'undefined') {
-            (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+            (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
             (adsbygoogle = window.adsbygoogle || []).push({});
           } else {
-            (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;
+            (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 1;
             (adsbygoogle = window.adsbygoogle || []).push({});
             const toastCookieElem = document.getElementsByClassName('toast-cookie')[0];
             const toast = new bootstrap.Toast(toastCookieElem);
@@ -51,8 +56,8 @@
               allowBtnElem.addEventListener('click', () => {
                 setCookie(consentCookieName, true);
                 toast.hide();
-                (adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;
-                (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+                (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
+                (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
                 (adsbygoogle = window.adsbygoogle || []).push({});
               });
             }
@@ -61,7 +66,7 @@
               denyBtnElem.addEventListener('click', () => {
                 setCookie(consentCookieName, false);
                 toast.hide();
-                (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+                (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
                 (adsbygoogle = window.adsbygoogle || []).push({});
               });
             }
@@ -70,9 +75,9 @@
           }
         } else {
           if (isAdProtected !== true || getConsentCookie() === true) {
-            (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds=0;
+            (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
           }
-          (adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=0;
+          (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
           (adsbygoogle = window.adsbygoogle || []).push({});
         }
       })
