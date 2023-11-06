@@ -1,6 +1,7 @@
 general:
     main_description: El mejor sitio web de streaming
-    main_title: Radio de todo el mundo
+    main_title_progradio: Todas las estaciones de radio, todos los programas y la escucha en línea
+    main_title_radioaddict: ¡Transmisión de todas las estaciones de radio en Francia y en todo el mundo!
 
 menu:
     account: Mi cuenta
@@ -42,6 +43,8 @@ menu:
         sm: Saint-Marin
         mt: Malta
         va: Vaticano
+        pl: Polonia
+        gr: Grecia
 
     songs: Canciones Guardadas
 
@@ -229,6 +232,8 @@ footer:
     de: Deutsch
     pt: Portuguesa
     it: Italiano
+    pl: Polskie
+    el: Ελληνικά
 
 legal: 'Notas legales'
 

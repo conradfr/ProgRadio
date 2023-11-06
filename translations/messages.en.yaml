@@ -1,6 +1,7 @@
 general:
     main_description: Radio streaming done right
-    main_title: Stream radios from all over the world.
+    main_title_progradio: French radios schedule and worldwide streaming
+    main_title_radioaddict: Stream radios from all over the world.
 
 menu:
     account: My account
@@ -42,13 +43,16 @@ menu:
         sm: Saint-Marin
         mt: Malta
         va: Vatican
+        pl: Poland
+        gr: Greece
 
-    songs: Songs Saved
+    songs: Saved Songs
 
     home:
         enable: Set this page as homescreen
         disable: Delete the custom homescreen
     logout: Logout
+    menu: Menu
     mode:
         dark: Dark mode
         light: Light mode
@@ -92,6 +96,8 @@ page:
     now:
         back: '← Back to radio guide'
         no_schedule: '<strong>Oups ...</strong> no shows to display.'
+        page_description: 'What to listen right now?'
+        page_title: 'Current radios schedule'
         title: 'Currently on the radio'
 
     radio:
@@ -176,7 +182,6 @@ page:
         delete_confirm:
             success: Your account has been successfully deleted.
 
-
 boxes:
     already_account:
         title: You have an account?
@@ -227,6 +232,8 @@ footer:
     de: Deutsch
     pt: Portuguesa
     it: Italiano
+    pl: Polskie
+    el: Ελληνικά
 
 legal: Legal notice
 

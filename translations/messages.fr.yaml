@@ -43,6 +43,8 @@ menu:
         sm: Saint-Marin
         mt: Malte
         va: Vatican
+        pl: Polande
+        gr: Grèce
 
     songs: Titres Sauvegardés
 
@@ -230,6 +232,8 @@ footer:
     de: Deutsch
     pt: Portuguesa
     it: Italiano
+    pl: Polskie
+    el: Ελληνικά
 
 legal: 'Mentions légales'
 

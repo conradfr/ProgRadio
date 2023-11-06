@@ -1,6 +1,7 @@
 general:
     main_description: Streaming radiofonico fatto bene
-    main_title: Streaming di radio da tutto il mondo.
+    main_title_progradio: Tutte le stazioni radio, tutti i programmi e l'ascolto online
+    main_title_radioaddict: Streaming di tutte le stazioni radio in Francia e nel mondo!
 
 menu:
     account: Il mio account
@@ -42,6 +43,8 @@ menu:
         sm: Saint-Marin
         mt: Malta
         va: Vaticano
+        pl: Polonia
+        gr: Grecia
 
     songs: Canzoni salvate
 
@@ -49,6 +52,7 @@ menu:
         enable: Imposta questa pagina come schermata iniziale
         disable: Elimini la schermata iniziale personalizzata
     logout: Si disconnetta
+    meu:
     mode:
         dark: Modalità oscura
         light: modalità Light
@@ -92,6 +96,8 @@ page:
     now:
         back: '← Torna alla radioguida'
         no_schedule: '<strong>Ahah...</strong> nessun programma da mostrare.'
+        page_description: 'Cosa ascoltare adesso? '
+        page_title: 'Programmi radiofonici in questo momento'
         title: 'Attualmente alla radio'
 
     radio:
@@ -226,6 +232,8 @@ footer:
     de: Deutsch
     pt: Portuguesa
     it: Italiano
+    pl: Polskie
+    el: Ελληνικά
 
 legal: Avviso legale
 

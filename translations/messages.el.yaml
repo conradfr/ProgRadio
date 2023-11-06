@@ -1,0 +1,294 @@
+general:
+    main_description: Η ροή ραδιοφώνου έγινε σωστά
+    main_title_progradio: Toutes les grilles radio, tous les programmes et écoute en ligne
+    main_title_radioaddict: Streaming de toutes les radios en France et dans le monde !
+
+menu:
+    account: Ο λογαριασμός μου
+    admin:
+        dashboard: Πίνακας ελέγχου
+        listening: Ακούγοντας
+        overloading: Υπερφόρτωση ροής
+        playing_errors: Σφάλματα ροής
+        shares: Μετοχές
+    all: Όλα τα ραδιόφωνα
+    app: Εφαρμογή Android
+    contact: Επικοινωνία
+    faq: Συχνές ερωτήσεις
+
+    favorites: My Favorites
+    favorites_menu:
+        all: Όλες οι χώρες
+        be: Βέλγιο
+        ch: Ελβετία
+        fr: Γαλλία
+        us: Ηνωμένες Πολιτείες
+        mx: Μεξικό
+        co: Κολομβία
+        ar: Αργεντινή
+        pe: Περού
+        de: Γερμανία
+        at: Αυστρία
+        es: Ισπανία
+        pt: Πορτογαλία
+        br: Βραζιλία
+        ca: Καναδάς
+        au: Αυστραλία
+        nz: Νέα Ζηλανδία
+        gb: Μεγάλη Βρετανία
+        ie: Ιρλανδία
+        it: Ιταλία
+        lu: Λουξεμβούργο
+        mc: Μονακό
+        sm: Άγιος Μαρίνος
+        mt: Μάλτα
+        va: Βατικανό
+        pl: Πολωνία
+        gr: Ελλάδα
+
+    songs: Αποθηκευμένα τραγούδια
+
+    home:
+        enable: Ορίστε αυτήν τη σελίδα ως αρχική οθόνη
+        disable: Διαγράψτε την προσαρμοσμένη αρχική οθόνη
+    logout: Αποσύνδεση
+    menu: Μενού
+    mode:
+        dark: Σκοτεινή λειτουργία
+        light: Λειτουργία φωτός
+    now: Αυτήν τη στιγμή στον αέρα
+    params: Παράμετροι
+    plus: Περισσότερα
+    schedule: Ραδιοφωνικός οδηγός
+    signon: Σύνδεση
+    signup: Εγγραφή
+    streaming: Παγκόσμια ροή
+    timer: Χρονόμετρο
+    title: Μενού
+
+page:
+    contact:
+        title: 'Επικοινωνία'
+        email: 'Ηλεκτρονικό ταχυδρομείο'
+        message: 'Μήνυμα *'
+        name: 'Όνομα *'
+        send: 'Αποστολή'
+        sent: 'Το μήνυμά σας έχει σταλεί. '
+
+    faq:
+        page_title: 'Συχνές ερωτήσεις - Ραδιοφωνικές εκπομπές στη Γαλλία'
+        page_description: 'Ερωτήσεις'
+        title: 'Συχνές Ερωτήσεις'
+
+    forgotten_password:
+        error: <strong>Παρουσιάστηκε σφάλμα.</strong> <br>Εάν ο σύνδεσμος ήταν ακυρωμένος, ξεκινήστε ξανά τη διαδικασία.
+        click_here: κάντε κλικ εδώ
+        done_title: Επανεκκίνηση κωδικού πρόσβασης
+        done: 'Ο κ <strong>ωδικός πρόσβασής σας έχει ενημερωθεί.</strong> <br>Μπορείτε να συνδεθείτε %link% εδώ%link_end%.'
+        page_title: Ξεχάσατε τον κωδικό πρόσβασης
+        success: Εάν βρεθεί ένας λογαριασμός <strong>%email%</strong>, έχει σταλεί ένα μήνυμα ηλεκτρονικού ταχυδρομείου με έναν σύνδεσμο επανεκκίνησης.
+        submit: Υποβολή
+
+    login:
+        forgotten_password: Ξεχάσατε τον κωδικό πρόσβασης;
+        κατάληξη_σελίδας: Σύνδεση
+
+    now:
+        back: '← Επιστροφή στον οδηγό ραδιοφωνίας'
+        no_schedule: '<strong>Ωχ...</strong> δεν υπάρχουν εκπομπές για εμφάνιση.'
+        page_description: 'Τι να ακούσετε τώρα; '
+        page_title: 'Ραδιοφωνικά προγράμματα αυτή τη στιγμή'
+        title: 'En ce moment à la radio'
+
+    radio:
+        advanced:  Χρησιμοποιήστε το προηγμένο πρόγραμμα αναπαραγωγής <br>(webradios, τρέχον κομμάτι...)
+        back: '← Επιστροφή στον οδηγό ραδιοφωνίας'
+        current: '↓ Μετάβαση στην τρέχουσα εκπομπή'
+        description: 'Πρόγραμμα ημέρας ραδιοφώνου %radio%!'
+        goto_today: Δείτε το σημερινό πρόγραμμα
+        goto_schedule: Έλεγχος ραδιοφωνικού προγράμματος
+        more_radios: 'Περισσότερα ραδιόφωνο'
+        no_schedule: 'Το πρόγραμμα δεν είναι διαθέσιμο'
+        not_today: Περιηγείστε σε πρόγραμμα άλλης ημέρας
+        play: 'Ακούστε το %radio%'
+        stop: 'Διακοπή %radio%'
+        summary: 'Περίληψη'
+        title: '%radio% - Ακούστε τη ζωντανή μετάδοση'
+        website: 'Ιστότοπος'
+
+    registered:
+        page_title: Εγγραφή
+        alert_1: Ο λογαριασμός σας έχει δημιουργηθεί!
+        alert_2: Τα αγαπημένα σας (αν υπάρχουν) έχουν προστεθεί στον λογαριασμό σας.
+        what_now_question: Τι θέλετε να κάνετε τώρα;
+        what_now_choice1: Συνδεθείτε στο λογαριασμό μου
+        what_now_choice2: Έλεγχος χρονοδιαγραμμάτων
+        what_now_choice3: Ακούστε ραδιόφωνα συνεχούς ροής
+
+    stream:
+        country: Χώρα
+        description: 'Ακούστε ραδιόφωνα από όλο τον κόσμο'
+        disabled: 'Αυτό το ραδιόφωνο είναι ανενεργό. '
+        discover: Ανακαλύψτε περισσότερα ραδιόφωνα, αναζητήστε ανά χώρα και στυλ...
+        find: Αναζήτηση
+        find_deezer: Βρείτε στο Deezer
+        find_spotify: Βρείτε στο Spotify
+        find_youtube: Βρείτε στο Youtube
+        listeners: Ακροατές
+        playing: Παίζοντας
+        playing_error: Σφάλμα αναπαραγωγής (η ροή ραδιοφώνου ενδέχεται να μην είναι διαθέσιμη)
+        suggested: Προτεινόμενα ραδιόφωνα
+        tags: Ετικέτες
+        share: Μοιραστείτε αυτό το ραδιόφωνο
+        title: 'Ακούστε το %radio%'
+        website: Δικτυακός τόπος
+
+    top:
+        page_title: Top radios in %country%
+        description: 'Listen to the best radios from %country%'
+        more: More radios from %country%
+
+    last:
+        page_title: Top radios in %country%
+        description: 'Listen to the best radios from %country%'
+        more: More radios from %country%
+
+    user:
+        page_title: Δημιουργία λογαριασμού
+
+    account:
+        prefix: Ο λογαριασμός μου
+        menu:
+            email: Ηλεκτρονική
+            password: Κωδικός πρόσβασης
+            delete: Διαγραφή
+        email:
+            page_title: Ενημέρωση του ηλεκτρονικού ταχυδρομείου μου
+            info_1: Αυτό θα ενημερώσει το email που χρησιμοποιείται ως σύνδεση.
+            info_2: Θα σταλεί επιβεβαίωση στην προηγούμενη διεύθυνση ηλεκτρονικού ταχυδρομείου.
+            success: Το email έχει ενημερωθεί.
+            new_email: 'Νέα διεύθυνση ηλεκτρονικού ταχυδρομείου:'
+            new_email_placeholder: παράδειγμα@email.com
+            update_btn: Ενημέρωση
+        password:
+            page_title: Ενημέρωση του κωδικού πρόσβασής μου
+            success: Ο κωδικός πρόσβασης έχει ενημερωθεί.
+            update_btn: Ενημέρωση
+        delete:
+            page_title: Διαγραφή του λογαριασμού μου
+            warning: Αυτή η λειτουργία είναι μη αναστρέψιμη. Τα αγαπημένα σας θα διαγραφούν.
+            confirm: 'Είστε βέβαιοι ότι θέλετε να διαγράψετε τον λογαριασμό σας;'
+            delete_btn: Διαγραφή του λογαριασμού μου
+        delete_confirm:
+            success: Ο λογαριασμός σας διαγράφηκε επιτυχώς.
+
+boxes:
+    already_account:
+        title: Έχετε λογαριασμό;
+        content: Κάντε κλικ εδώ για να συνδεθείτε
+
+    no_account:
+        title: Δεν υπάρχει λογαριασμός ακόμα?
+        content: Κάντε κλικ εδώ για να εγγραφείτε!
+
+    why_account:
+        title: Γιατί να εγγραφείτε?
+        content: "- Μπορείτε να συγχρονίσετε τα αγαπημένα σας μεταξύ των συσκευών σας."
+        content2: "- Αποθήκευση ραδιοτηλεοπτικών τραγουδιών."
+        content3: "- Λιγότερες διαφημίσεις."
+
+registrationForm:
+    email: 'Ηλεκτρονικό ταχυδρομείο'
+    error:
+        captcha: 'Μη έγκυρο Captcha, δοκιμάστε ξανά. '
+        empty: Αυτό το πεδίο δεν μπορεί να είναι κενό
+        password_min: 'Ο κωδικός πρόσβασης πρέπει να έχει τουλάχιστον 8 χαρακτήρες. '
+        password: 'Ο κωδικός πρόσβασης και η επιβεβαίωσή του δεν είναι οι ίδιοι. '
+    captcha: 'Γράψτε γράμματα και αριθμούς που γράφονται παρακάτω'
+    password: 'Κωδικός πρόσβασης'
+    password_confirm: 'Επιβεβαίωση κωδικού πρόσβασης'
+    submit_create: 'Δημιουργία λογαριασμού'
+
+connectionForm:
+    already_logged: Αυτή τη στιγμή είστε συνδεδεμένοι ως %email%
+    logout: αποσύνδεση
+    email:  'Ηλεκτρονικό ταχυδρομείο'
+    password: 'Κωδικός πρόσβασης'
+    remember_me: 'Να με θυμάσαι'
+    submit_connect: 'Σύνδεση'
+
+updatePasswordForm:
+    new: 'Νέος κωδικός πρόσβασης:'
+    new_confirm: Επιβεβαίωση νέου κωδικού πρόσβασης
+    error_not_same: Οι νέοι κωδικοί πρόσβασης δεν είναι πανομοιότυποι.
+    error_not_empty: Αυτό το πεδίο δεν μπορεί να είναι κενό
+    error_length: Ο νέος κωδικός πρόσβασης πρέπει να έχει τουλάχιστον 8 χαρακτήρες.
+
+footer:
+    alternate_lang: Français
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Portuguesa
+    it: Italiano
+    pl: Polskie
+    el: Ελληνικά
+
+legal: Νομική ειδοποίηση
+
+cookie:
+    accept: Αποδοχή
+    allow: Να επιτρέπονται εξατομικευμένες διαφημίσεις;
+    deny: Αρνήσου
+    disclaimer: (Αυτός ο ιστότοπος δεν παρακολουθεί τους επισκέπτες του ή πωλεί δεδομένα)
+
+admin:
+    dashboard:
+        title: Πίνακας ελέγχου
+        menu:
+            brief: Σύντομη
+            table: Πίνακας
+        table:
+            shows: Παραστάσεις
+            sections: Τμήματα
+            stream_abbr: St.
+        accounts:
+            title: Λογαριασμοί
+            active: '%number% ενεργών λογαριασμού'
+            email: ηλεκτρονικό ταχυδρομείο
+            created_at: Δημιουργήθηκε
+            last: (τελευταίος %number%)
+        no_schedule:
+            title: Ραδιόφωνα χωρίς πρόγραμμα σήμερα
+            shows: Τμήματα
+            sections: Τμήματα
+            all_ok: Όλα τα ραδιόφωνα έχουν πρόγραμμα σήμερα.
+        stream_errors:
+            title: Σφάλματα ροής
+            error: Σφάλματα για ελέγχ <strong>ους %number%</strong>
+            link: σύνδεσμος
+            no_errors: Όλες οι ροές λειτουργούν.
+        live_song_errors:
+            title: Σφάλματα ζωντανών τραγουδιών
+            error: Σφάλματα για ελέγχ <strong>ους %number%</strong>
+            reset_all: επαναφορά όλων
+            link: σύνδεσμος
+            no_errors: Δεν καταγράφηκαν σφάλματα.
+
+    listening:
+        title: Ακούω
+        today: Σήμερα
+        yesterday: Χθες
+        this_month: Αυτός ο μήνας
+        last_month: Τελευταίος μήνας
+        ratings: Βαθμολογίες
+
+    stream_errors:
+        title: Σφάλματα ροής
+        name: Όνομα
+        errors: Σφάλματα
+        view: Βλέπε
+        edit: Επεξεργασία
+        reset: Επαναφορά
+        reset_all: Επαναφορά όλων

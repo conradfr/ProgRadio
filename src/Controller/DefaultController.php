@@ -80,7 +80,9 @@ class DefaultController extends AbstractBaseController
                 'es' => '/{_locale}/escuchar-{codeName}-{subRadioCodeName}/{date?}',
                 'de' => '/{_locale}/zuhören-{codeName}-{subRadioCodeName}/{date?}',
                 'pt' => '/{_locale}/ouvir-{codeName}-{subRadioCodeName}/{date?}',
-                'it' => '/{_locale}/ascolti-{codeName}-{subRadioCodeName}/{date?}'
+                'it' => '/{_locale}/ascolti-{codeName}-{subRadioCodeName}/{date?}',
+                'pl' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
+                'el' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}'
             ],
             name: 'radio_subradio',
             defaults: [
@@ -165,7 +167,9 @@ class DefaultController extends AbstractBaseController
                 'es' => '/{_locale}/escuchar-{codeName}/{date?}',
                 'de' => '/{_locale}/zuhören-{codeName}/{date?}',
                 'pt' => '/{_locale}/ouvir-{codeName}/{date?}',
-                'it' => '/{_locale}/ascolti-{codeName}/{date?}'
+                'it' => '/{_locale}/ascolti-{codeName}/{date?}',
+                'pl' => '/{_locale}/streaming-{codeName}/{date?}',
+                'el' => '/{_locale}/streaming-{codeName}/{date?}'
             ],
             name: 'radio',
             defaults: [
@@ -200,7 +204,9 @@ class DefaultController extends AbstractBaseController
                 'es' => '/{_locale}/stream-{shortId}/escuchar-{codename}',
                 'de' => '/{_locale}/stream-{shortId}/zuhören-{codename}',
                 'pt' => '/{_locale}/stream-{shortId}/ouvir-{codename}',
-                'it' => '/{_locale}/stream-{shortId}/ascolti-{codename}'
+                'it' => '/{_locale}/stream-{shortId}/ascolti-{codename}',
+                'pl' => '/{_locale}/stream-{shortId}/słuchaj-{codename}',
+                'el' => '/{_locale}/stream-{shortId}/ακούω-{codename}'
             ],
             name: 'streams_one_short',
             defaults: [
@@ -268,7 +274,9 @@ class DefaultController extends AbstractBaseController
                 'es' => '/{_locale}/stream/{id}/escuchar-{codename}',
                 'de' => '/{_locale}/stream/{id}/zuhören-{codename}',
                 'pt' => '/{_locale}/stream/{id}/ouvir-{codename}',
-                'it' => '/{_locale}/stream/{id}/ascolti-{codename}'
+                'it' => '/{_locale}/stream/{id}/ascolti-{codename}',
+                'pl' => '/{_locale}/stream/{id}/słuchaj-{codename}',
+                'el' => '/{_locale}/stream/{id}/ακούω-{codename}'
             ],
             name: 'streams_one',
             defaults: [
@@ -315,7 +323,7 @@ class DefaultController extends AbstractBaseController
                 'priority' => '0.5',
                 'changefreq' => 'weekly'
             ],
-            requirements: ['_locale' => 'en|fr|es|de|pt|it']
+            requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el']
         )
     ]
     public function top(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
@@ -351,7 +359,7 @@ class DefaultController extends AbstractBaseController
             'priority' => '0.5',
             'changefreq' => 'weekly'
         ],
-        requirements: ['_locale' => 'en|fr|es|de|pt|it']
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el']
     )
     ]
     public function last(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
@@ -559,7 +567,7 @@ class DefaultController extends AbstractBaseController
             defaults: [ 'subdomain' => 'www'],
             requirements: [
                 'subdomain' => 'www|local',
-                '_locale' => 'en|fr|es|de|pt|it'
+                '_locale' => 'en|fr|es|de|pt|it|pl|el'
             ]
         )
     ]
@@ -580,7 +588,7 @@ class DefaultController extends AbstractBaseController
                 'changefreq' => 'daily'
             ],
             requirements: [
-                '_locale' => 'en|fr|es|de|pt|it'
+                '_locale' => 'en|fr|es|de|pt|it|pl|el'
             ]
         )
     ]

@@ -1,6 +1,7 @@
 general:
     main_description: Streaming de rádio feito corretamente
-    main_title: Transmita rádios de todo o mundo.
+    main_title_progradio: Todas as grades de rádio, todos os programas e ouça online
+    main_title_radioaddict: Streaming de todas as rádios na França e no mundo!
 
 menu:
     account: My account
@@ -42,6 +43,8 @@ menu:
         sm: Saint-Marin
         mt: Malta
         va: Vaticano
+        pl: Polônia
+        gr: Grécia
 
     songs: Músicas salvas
 
@@ -49,6 +52,7 @@ menu:
         enable: Defina esta página como tela inicial
         disable: Exclua a tela inicial personalizada
     logout: Sair
+    menu: Menu
     mode:
         dark: Modo escuro
         light: Modo de luz
@@ -226,6 +230,8 @@ footer:
     de: Deutsch
     pt: Portuguesa
     it: Italiano
+    pl: Polskie
+    el: Ελληνικά
 
 legal: Aviso legal
 

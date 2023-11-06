@@ -1,0 +1,292 @@
+general:
+    main_description: Wszystkie stacje radiowe, wszystkie programy i słuchanie online
+    main_title: Przesyłanie strumieniowe wszystkich stacji radiowych we Francji i na całym świecie!
+
+menu:
+    account: Moje konto
+    admin:
+        dashboard: Dashboard
+        listening: Słuchanie
+        overloading: przeciążenie strumienia
+        playing_errors: Błędy strumieni strumieniowych
+        shares:  Akcje
+    all: Wszystkie radia
+    app: Android App
+    contact: Kontakt
+    faq: FAQ
+
+    favorites: Moje ulubione
+    favorites_menu:
+        all: szystkie kraje
+        be: Belgia
+        ch: Szwajcaria
+        fr: Francja
+        us: Stany Zjednoczone
+        mx: Meksyk
+        co: Kolumbia
+        ar: Argentyna
+        pe: Peru
+        de: Germany
+        at: Austria
+        es: Hiszpania
+        pt: Portugalia
+        br: Brazylia
+        ca: Kanada
+        au: Australia
+        nz: Nowa Zelandia
+        gb: Wielka Brytania
+        ie: Irlandia
+        it: Włochy
+        lu: Luksemburg
+        mc: Monako
+        sm: Saint-Marin
+        mt: Malta
+        va: Watykan
+        pl: Polska
+
+    songs: Zapisane utwory
+
+    home:
+        enable: Ustaw tę stronę jako ekran główny
+        disable: Usuń niestandardowy ekran główny
+    logout: Wyloguj się
+    menu: Menu
+    mode:
+        dark: tryb ciemny
+        light: Tryb świetlny
+    now: Obecnie na antenie
+    params: Params
+    plus: Więcej
+    schedule: Przewodnik radiowy
+    signon: Zaloguj się
+    signup: Zarejestruj się
+    streaming: Streaming na całym świecie
+    timer: Timer
+    title: Menu
+
+page:
+    contact:
+        title: 'Kontakt'
+        email: 'E-mail'
+        message: 'Wiadomość*'
+        name: 'Nazwa *'
+        send: 'Wyślij'
+        sent: 'Twoja wiadomość została wysłana. '
+
+    faq:
+        page_title: 'FAQ - Programy radiowe we Francji'
+        page_description: 'Pytania'
+        title: Często zadawane pytania
+
+    forgotten_password:
+        error: Wy <strong>stąpił błąd.</strong> <br>Jeśli link został obselete, rozpocznij proces ponownie.
+        click_here: kliknij tutaj
+        done_title: Reinicjalizacja hasła
+        done: '<strong>Twoje hasło zostało zaktualizowane.</strong> <br>Możesz zalogować się %link%here%link_end%. '
+        page_title: Zapomniane hasło
+        success: Jeśli znaleziono konto <strong>%email%</strong>, wysłano wiadomość e-mail z linkiem do ponownej inicjalizacji.
+        submit: Prześlij
+
+    login:
+        forgotten_password: Zapomniałeś hasła?
+        page_title: Zaloguj się
+
+    now:
+        back: '← Powrót do przewodnika radiowego'
+        no_schedule: '<strong>Opupy...</strong> brak pokazów do wyświetlenia.'
+        page_description: 'Czego teraz słuchać?'
+        page_title: 'Programy radiowe aktualne'
+        title: 'Obecnie w radiu'
+
+    radio:
+        advanced: Użyj zaawansowanego odtwarzacza <br>(radia internetowe, bieżąca ścieżka...)
+        back: '← Powrót do przewodnika radiowa'
+        current: '↓ Przejdź do bieżącego pokazu'
+        description: 'Harmonogram dnia radia %radio%!'
+        goto_today: Sprawdź dzisiejszy harmonogram
+        goto_schedule: Sprawdź harmonogram radiowy
+        more_radios: 'Więcej radi'
+        no_schedule: 'Harmonogram niedostępny'
+        not_today: Przeglądasz inny harmonogram dnia
+        play: 'Słuchaj %radio%'
+        stop: 'Zatrzymaj %radio%'
+        summary: 'Podsumowanie'
+        title: '%radio% - Słuchaj transmisji na żywo'
+        website: 'Strona internetowa'
+
+    registered:
+        page_title: Rejestracja
+        alert_1: Twoje konto zostało utworzone!
+        alert_2: Twoje ulubione (jeśli istnieją) zostały dodane do Twojego konta.
+        what_now_question: Co chcesz teraz zrobić?
+        what_now_choice1: Połącz się z moim kontem
+        what_now_choice2: Sprawdź harmonogramy
+        what_now_choice3: Słuchaj radia strumieniowego
+
+    stream:
+        country: Kraj
+        description: 'Słuchaj radia z całego świata'
+        disabled: 'To radio jest nieaktywne.'
+        discover:  Odkryj więcej radia, szukaj według kraju i stylu...
+        find: Szukaj
+        find_deezer: Znajdź na Deezerze
+        find_spotify: Znajdź na Spotify
+        find_youtube: Znajdź na Youtube
+        listeners: Słuchacze
+        playing: Gra
+        playing_error: Błąd odtwarzania (strumieniowanie radiowe może być niedostępne)
+        suggested: Sugerowane radia
+        tags: Tagi
+        share:  Udostępnij to radio
+        title: 'Słuchaj %radio%'
+        website: Strona
+
+    top:
+        page_title: Top radios in %country%
+        description: 'Listen to the best radios from %country%'
+        more: More radios from %country%
+
+    last:
+        page_title: Najpopularniejsze radia w %country%
+        description: 'Słuchaj najlepszych radia z %country%'
+        more: Więcej radia z %country%
+
+    user:
+        page_title: Utwórz konto
+
+    account:
+        prefix: MMoje konto
+        menu:
+            email: E-mail
+            password: Hasło
+            delete: Usuń
+        email:
+            page_title: Zaktualizuj mój e-mail
+            info_1: Spowoduje to zaktualizowanie wiadomości e-mail używanej jako login.
+            info_2: Potwierdzenie zostanie wysłane na poprzedni adres e-mail.
+            success: e-mail został zaktualizowany.
+            new_email: 'Nowy adres e-mail: '
+            new_email_placeholder: example@email.com
+            update_btn: Aktualizacja
+        password:
+            page_title: Zaktualizuj moje hasło
+            success: Hasło zostało zaktualizowane.
+            update_btn: Aktualizacja
+        delete:
+            page_title: Usuń moje konto
+            warning: Ta operacja jest nieodwracalna. Twoje ulubione zostaną usunięte.
+            confirm: Czy na pewno chcesz usunąć swoje konto?
+            delete_btn: Usuń moje konto
+        delete_confirm:
+            success: Twoje konto zostało pomyślnie usunięte.
+
+boxes:
+    already_account:
+        title: Masz konto?
+        content: Kliknij tutaj, aby się zarejestrować!
+
+    no_account:
+        title: NNie ma jeszcze konta?
+        content: Click here to sign up!
+
+    why_account:
+        title: Dlaczego warto się zarejestrować?
+        content: "- Możesz synchronizować swoje ulubione między urządzeniami."
+        content2: "- Zapisz nadawane utwory."
+        content3: "- Mniej reklam."
+
+registrationForm:
+    email: 'E-mail'
+    error:
+        captcha: 'Nieprawidłowy Captcha, spróbuj ponownie. '
+        empty: To pole nie może być puste
+        password_min: 'Hasło musi zawierać co najmniej 8 znaków. '
+        password: 'Hasło i jego potwierdzenie nie są takie same. '
+    captcha: "Napisz litery i cyfry napisane poniżej"
+    password: 'Hasło'
+    password_verify: 'Potwierdzenie hasła'
+    submit_create: 'Utwórz konto'
+
+connectionForm:
+    already_logged: Aktualnie jesteś zalogowany jako %email%
+    logout: wylogowanie
+    email: 'E-mail'
+    password: 'Hasło'
+    remember_me: 'Zapamiętaj mnie'
+    submit_connect: 'Zaloguj się'
+
+updatePasswordForm:
+    new: 'Nowe hasło:'
+    new_verify: Potwierdzenie nowego hasła
+    error_not_same: Nowe hasła nie są identyczne.
+    error_not_empty: To pole nie może być puste
+    error_length: Nowe hasło musi zawierać co najmniej 8 znaków.
+
+footer:
+    alternate_lang: Français
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Portuguesa
+    it: Italiano
+    pl: Polskie
+    el: Ελληνικά
+
+legal: Informacja prawna
+
+cookie:
+    accept: Akceptuj
+    allow: Zezwalaj na spersonalizowane reklamy?
+    deny: Zaprzeczyć
+    disclaimer: (Ta strona nie śledzi odwiedzających ani nie sprzedaje danych)
+
+admin:
+    dashboard:
+        title: Pulpit nawigacyjny
+        menu:
+            brief: Krótki
+            table: Stół
+        table:
+            shows: Pokazy
+            sections: Sekcje
+            stream_abbr: St.
+        accounts:
+            title: Rachunki
+            active: '%number% aktywnych konta'
+            email: e-mail
+            created_at: Stworzony
+            last: (ostatnia %liczba%)
+        no_schedule:
+            title: Radia bez harmonogramu dzisiaj
+            shows: Sekcje
+            sections: Sekcje
+            all_ok: Wszystkie radia mają dzisiaj harmonogram.
+        stream_errors:
+            title: Błędy strumieniowe
+            error: Błędy sprawdzania <strong>%number%</strong>
+            link: link
+            no_errors: Wszystkie strumienie działają.
+        live_song_errors:
+            title: Błędy piosenek na żywo
+            error: Błędy sprawdzania <strong>%number%</strong>
+            reset_all: zresetuj wszystko
+            link: link
+            no_errors: Nie odnotowano błędów.
+
+    listening:
+        title: obecnie słuchamy
+        today: Dzisiaj
+        yesterday: Wczoraj
+        this_month: W tym miesiącu
+        last_month: Ostatni miesiąc
+        ratings: Oceny
+
+    stream_errors:
+        title: Błędy strumieniowe
+        name: Nazwa
+        errors: Błędy
+        view: Zobacz
+        edit: Edytuj
+        reset: Resetuj
+        reset_all: Zresetuj wszystko

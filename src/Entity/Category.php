@@ -47,6 +47,10 @@ class Category
 
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 100)]
+    private string $name_pl;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private string $name_el;
 
     public function getId(): int
@@ -77,5 +81,85 @@ class Category
     public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    public function getNameFr(): string
+    {
+        return $this->name_fr;
+    }
+
+    public function setNameFr(string $name_fr): void
+    {
+        $this->name_fr = $name_fr;
+    }
+
+    public function getNameEn(): string
+    {
+        return $this->name_en;
+    }
+
+    public function setNameEn(string $name_en): void
+    {
+        $this->name_en = $name_en;
+    }
+
+    public function getNameEs(): string
+    {
+        return $this->name_es;
+    }
+
+    public function setNameEs(string $name_es): void
+    {
+        $this->name_es = $name_es;
+    }
+
+    public function getNameDe(): string
+    {
+        return $this->name_de;
+    }
+
+    public function setNameDe(string $name_de): void
+    {
+        $this->name_de = $name_de;
+    }
+
+    public function getNamePt(): string
+    {
+        return $this->name_pt;
+    }
+
+    public function setNamePt(string $name_pt): void
+    {
+        $this->name_pt = $name_pt;
+    }
+
+    public function getNameIt(): string
+    {
+        return $this->name_it;
+    }
+
+    public function setNameIt(string $name_it): void
+    {
+        $this->name_it = $name_it;
+    }
+
+    public function getNamePl(): string
+    {
+        return $this->name_pl;
+    }
+
+    public function setNamePl(string $name_pl): void
+    {
+        $this->name_pl = $name_pl;
+    }
+
+    public function getNameEl(): string
+    {
+        return $this->name_el;
+    }
+
+    public function setNameEl(string $name_el): void
+    {
+        $this->name_el = $name_el;
     }
 }
