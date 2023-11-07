@@ -38,6 +38,12 @@ app.get('/', cors(corsOptions), async (req, res) => {
 
   process.stdout.write(`Request: ${req.query.stream} (key: ${apiKey}, status: ${apiKeyStatus})\n`);
 
+  if (apiKeyStatus !== 'OK') {
+    process.stdout.write(`Rejected: ${req.query.stream} (no key)\n`);
+    res.status(500).send('Error');
+    return;
+  }
+
   try {
     await pipeline(
       got.stream(req.query.stream),
