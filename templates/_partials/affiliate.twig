@@ -1,0 +1,5 @@
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false or isProgRadio(app.request) == false  %}
+<div class="mt-5 text-center" style="margin:auto">
+    {{ oneAffiliateLink(app.request.locale)|raw }}
+</div>
+{% endif %}

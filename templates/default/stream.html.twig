@@ -246,10 +246,20 @@
                             <a class="more-link" href="{{ path('streaming_spa') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>
+
+                    <div class="pt-3 d-block d-sm-none">
+                        {% if app.environment == 'prod' %}
+                            {{ include('_partials/affiliate.twig') }}
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="offset-sm-0 col-sm-3 d-none d-sm-block order-sm-2 pt-4 pt-sm-2 text-center">
                     {% if app.environment == 'prod' %}
                         {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2'])}) }}
+                    {% endif %}
+
+                    {% if app.environment == 'prod' %}
+                        {{ include('_partials/affiliate.twig') }}
                     {% endif %}
                 </div>
             </div>
