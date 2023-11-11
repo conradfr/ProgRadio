@@ -144,7 +144,7 @@ class AdminController extends AbstractBaseController
         ]);
     }
 
-    #[Route('/admin/overloading/{streamId}', name: 'admin_overloading')]
+    #[Route('/{_locale}/admin/overloading/{streamId}', name: 'admin_overloading')]
     public function streamOverloading(string $streamId, EntityManagerInterface $em, Request $request): Response
     {
         $streamOverloading = $em->getRepository(StreamOverloading::class)->find($streamId);
@@ -225,7 +225,7 @@ class AdminController extends AbstractBaseController
         ]);
     }
 
-    #[Route('/admin/shares', name: 'admin_shares')]
+    #[Route('/{_locale}/admin/shares', name: 'admin_shares')]
     public function shares(EntityManagerInterface $em, Request $request): Response
     {
         $dbData = $em->getRepository(Radio::class)->getNameAndShares();
@@ -287,7 +287,7 @@ class AdminController extends AbstractBaseController
         return $this->redirectToRoute('admin_playing_errors', [], 301);
     }
 
-    #[Route('/reset_stream_playing_error/{id}', name: 'admin_reset_stream_paying_error')]
+    #[Route('/{_locale}/reset_stream_playing_error/{id}', name: 'admin_reset_stream_paying_error')]
     public function resetStreamPlayingErrors(Stream $stream, EntityManagerInterface $em): Response
     {
         $stream->setPlayingError(0);
