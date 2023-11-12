@@ -37,7 +37,8 @@ const hasCache = (key: string): boolean => {
     try {
       // @ts-ignore
       const cached = JSON.parse(localStorage.getItem(key));
-      if (Array.isArray(cached) || typeof cached === 'object') {
+
+      if (Array.isArray(cached) || typeof cached === 'object' || typeof cached === 'string') {
         return true;
       }
     } catch (e) {

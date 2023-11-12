@@ -19,6 +19,7 @@ import { useStreamsStore } from '@/stores/streamsStore';
 
 import * as config from '../config/config';
 import cookies from '../utils/cookies';
+import cache from '../utils/cache';
 import i18n from '../lang/i18n';
 import typeUtils from '../utils/typeUtils';
 import PlayerUtils from '../utils/PlayerUtils';
@@ -70,10 +71,14 @@ export const usePlayerStore = defineStore('player', {
     playing: PlayerStatus.Stopped,
     externalPlayer: AndroidApi.hasAndroid,
     externalPlayerVersion: AndroidApi.getVersion(),
-    radio: cookies.getJson(config.COOKIE_LAST_RADIO_PLAYED),
-    radioStreamCodeName: cookies.get(config.COOKIE_LAST_RADIO_STREAM_PLAYED),
-    prevRadio: cookies.getJson(config.COOKIE_PREV_RADIO_PLAYED),
-    prevRadioStreamCodeName: cookies.get(config.COOKIE_PREV_RADIO_STREAM_PLAYED),
+    radio: cache.hasCache(config.LAST_RADIO_PLAYED)
+      ? cache.getCache(config.LAST_RADIO_PLAYED) : null,
+    radioStreamCodeName: cache.hasCache(config.LAST_RADIO_STREAM_PLAYED)
+      ? cache.getCache(config.LAST_RADIO_STREAM_PLAYED) : null,
+    prevRadio: cache.hasCache(config.PREV_RADIO_PLAYED)
+      ? cache.getCache(config.PREV_RADIO_PLAYED) : null,
+    prevRadioStreamCodeName: cache.hasCache(config.PREV_RADIO_STREAM_PLAYED)
+      ? cache.getCache(config.PREV_RADIO_STREAM_PLAYED) : null,
     show: null,
     song: {},
     listeners: {},
@@ -153,8 +158,8 @@ export const usePlayerStore = defineStore('player', {
       const stream = ScheduleUtils.getStreamFromCodeName(streamCodeName, radio);
 
       if (stream !== null) {
-        cookies.set(config.COOKIE_LAST_RADIO_PLAYED, PlayerUtils.reduceRadioSize(radio));
-        cookies.set(config.COOKIE_LAST_RADIO_STREAM_PLAYED, stream.code_name);
+        cache.setCache(config.LAST_RADIO_PLAYED, radio);
+        cache.setCache(config.LAST_RADIO_STREAM_PLAYED, stream.code_name);
 
         this.setPrevious({ radio, streamCodeName: stream.code_name });
 
@@ -185,7 +190,7 @@ export const usePlayerStore = defineStore('player', {
         StreamsApi.incrementPlayCount(stream.code_name, streamsStore.radioBrowserApi);
       }, 500);
 
-      cookies.set(config.COOKIE_LAST_RADIO_PLAYED, stream);
+      cache.setCache(config.LAST_RADIO_PLAYED, stream);
 
       this.setPrevious({ radio: stream });
 
@@ -362,8 +367,8 @@ export const usePlayerStore = defineStore('player', {
     setPrevious({ radio, streamCodeName = null }: { radio: Radio|Stream, streamCodeName?: string|null }) {
       if (this.radio !== null && (this.radio.code_name !== radio.code_name
         || this.radioStreamCodeName !== (streamCodeName || null))) {
-        cookies.set(config.COOKIE_PREV_RADIO_PLAYED, this.radio);
-        cookies.set(config.COOKIE_PREV_RADIO_STREAM_PLAYED, this.radioStreamCodeName);
+        cache.setCache(config.PREV_RADIO_PLAYED, this.radio);
+        cache.setCache(config.PREV_RADIO_STREAM_PLAYED, this.radioStreamCodeName);
 
         this.prevRadio = this.radio;
         this.prevRadioStreamCodeName = this.radioStreamCodeName || null;
