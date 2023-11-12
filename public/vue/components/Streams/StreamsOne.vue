@@ -66,45 +66,8 @@
                 </div>
               </div>
 
-              <div class="mt-4" v-if="liveSongTitle">
-                <strong>{{ $t('message.streaming.playing') }}:</strong>&nbsp;
-                ♫ {{ liveSongTitle }}
-
-                <div class="mt-3">
-                  <strong>{{ $t('message.songs_page.find') }}:</strong>&nbsp;&nbsp;
-                  <a class="link-no-to-bold" target="_blank"
-                     :title="$t( 'message.songs_page.find_youtube')"
-                     :href="encodeURI(
-                      `https://www.youtube.com/results?search_query=${liveSongTitle}`)"
-                  >
-                    <i class="bi bi-youtube"></i>&nbsp;&nbsp;
-                    <span class="d-none d-sm-inline">
-                    {{ $t('message.songs_page.find_youtube') }}
-                  </span>
-                  </a>&nbsp;&nbsp;
-                  <a class="link-no-to-bold" target="_blank"
-                     :title="$t( 'message.songs_page.find_spotify')"
-                     :href="encodeURI(`https://open.spotify.com/search/${liveSongTitle}`)">
-                    <i class="bi bi-spotify"></i>&nbsp;&nbsp;
-                    <span class="d-none d-sm-inline">
-                    {{ $t('message.songs_page.find_spotify') }}
-                  </span>
-                  </a>&nbsp;&nbsp;
-                  <a class="link-no-to-bold" target="_blank"
-                     :title="$t( 'message.songs_page.find_deezer')"
-                     :href="encodeURI(`https://www.deezer.com/search/${liveSongTitle}`)">
-                    <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
-                    <span class="d-none d-sm-inline">
-                    {{ $t('message.songs_page.find_deezer') }}
-                  </span>
-                  </a>
-                </div>
-              </div>
-
-              <div class="mt-4" v-if="liveListenersCount && liveListenersCount > 0">
-                <strong>{{ $t('message.streaming.listeners_title') }}:</strong>&nbsp;
-      {{ $tc('message.streaming.listeners', liveListenersCount, { how_many: liveListenersCount}) }}
-              </div>
+              <live-song v-if="stream" :stream="stream"></live-song>
+              <live-listeners v-if="stream" :stream="stream"></live-listeners>
             </div>
 
             <div class="mb-3" v-if="country">
@@ -157,13 +120,18 @@ import { useGlobalStore } from '@/stores/globalStore';
 
 import PlayerStatus from '@/types/player_status';
 
+import StreamsUtils from '@/utils/StreamsUtils';
+import PlayerUtils from '@/utils/PlayerUtils';
 import * as config from '../../config/config';
-import StreamsUtils from '../../utils/StreamsUtils';
 import Adsense from '../Utils/Adsense.vue';
+import LiveSong from '../Utils/LiveSong.vue';
+import LiveListeners from '../Utils/LiveListeners.vue';
 
 export default defineComponent({
   components: {
-    Adsense
+    Adsense,
+    LiveSong,
+    LiveListeners
   },
   props: {
     codeName: {
@@ -171,11 +139,35 @@ export default defineComponent({
       required: true
     }
   },
-  data() {
+  /* eslint-disable indent */
+  data(): {
+    PlayerStatus: any
+    channelName: null|string,
+    locale: any
+  } {
     return {
       PlayerStatus,
+      channelName: null,
       locale: this.$i18n.locale
     };
+  },
+  mounted() {
+    setTimeout(() => {
+      if (this.stream) {
+        this.channelName = PlayerUtils.getChannelName(
+          this.stream,
+          this.stream.radio_stream_code_name
+        ) || '';
+        this.joinChannel(this.channelName);
+        this.joinListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
+      }
+    }, 2500);
+  },
+  beforeUnmount() {
+    if (this.stream && this.channelName) {
+      this.leaveChannel(this.channelName);
+      this.leaveListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
+    }
   },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged', userIsAdmin: 'isAdmin' }),
@@ -183,8 +175,6 @@ export default defineComponent({
     ...mapState(usePlayerStore, [
       'playing',
       'radioPlayingCodeName',
-      'liveSong',
-      'listeners',
       'externalPlayer'
     ]),
     stream() {
@@ -196,30 +186,17 @@ export default defineComponent({
     country() {
       return this.getCountryName(this.stream!.country_code);
     },
-    liveSongTitle() {
-      return this.liveSong(this.stream!, this.stream!.radio_stream_code_name);
-    },
-    liveListenersCount() {
-      if (!this.stream) {
-        return null;
-      }
-
-      const topicName = this.stream.radio_stream_code_name || this.stream.code_name;
-
-      if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
-        return null;
-      }
-
-      if (!this.listeners[topicName] || this.listeners[topicName] === 0) {
-        return null;
-      }
-
-      return this.listeners[topicName];
-    },
   },
   methods: {
     ...mapActions(useGlobalStore, ['displayToast']),
-    ...mapActions(usePlayerStore, ['playStream', 'stop']),
+    ...mapActions(usePlayerStore, [
+      'joinChannel',
+      'leaveChannel',
+      'joinListenersChannel',
+      'leaveListenersChannel',
+      'playStream',
+      'stop'
+    ]),
     ...mapActions(useStreamsStore, [
       'setSearchText',
       'setSearchActive',

@@ -45,7 +45,9 @@
       </div>
       <player-info v-if="radio"></player-info>
       <transition name="timer-fade" mode="out-in">
-        <player-save-song v-if="userLogged && currentSong"></player-save-song>
+        <div v-if="userLogged && currentSong" class="player-add-song">
+          <player-save-song></player-save-song>
+        </div>
       </transition>
       <div v-if="!radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}

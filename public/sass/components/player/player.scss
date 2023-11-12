@@ -178,19 +178,11 @@ $icon-play-size-hover: 1.846rem;
   }
 
   .player-favorite, .player-add-song {
-    cursor: pointer;
     width: 25px;
     padding-top: 2px;
 
-    i {
-      font-size: $icon-size;
-    }
-
     &:hover {
       padding-top: 1px;
-      i {
-        font-size: $icon-size-hover;
-      }
     }
   }
 
@@ -312,5 +304,19 @@ $icon-play-size-hover: 1.846rem;
   .timer-fade-enter, .timer-fade-leave-to,
   .play-prev-fade-enter, .play-prev-fade-leave-to {
     opacity: 0;
+  }
+}
+
+.player-add-song-inner {
+  cursor: pointer;
+
+  i {
+    font-size: $icon-size;
+  }
+
+  &:hover {
+    i {
+      font-size: $icon-size-hover;
+    }
   }
 }

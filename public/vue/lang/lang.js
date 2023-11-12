@@ -122,6 +122,8 @@ export const messages = {
         }
       },
       songs_page: {
+        buy: 'Acheter',
+        buy_amazon: 'Amazon',
         find: 'Rechercher',
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',
@@ -256,6 +258,8 @@ export const messages = {
         }
       },
       songs_page: {
+        buy: 'Buy',
+        buy_amazon: 'Amazon',
         find: 'Search',
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',
@@ -390,6 +394,8 @@ export const messages = {
         }
       },
       songs_page: {
+        buy: 'Comprar',
+        buy_amazon: 'Amazon',
         find: 'Busque',
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',
@@ -524,6 +530,8 @@ export const messages = {
         }
       },
       songs_page: {
+        buy: 'Kaufen',
+        buy_amazon: 'Amazon',
         find: 'Search',
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',
@@ -658,6 +666,8 @@ export const messages = {
         }
       },
       songs_page: {
+        buy: 'Comprar',
+        buy_amazon: 'Amazon',
         find: 'Pesquisar',
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',
@@ -792,6 +802,8 @@ export const messages = {
         }
       },
       songs_page: {
+        buy: 'Comperare',
+        buy_amazon: 'Amazon',
         find: 'Cerca',
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',
@@ -926,6 +938,8 @@ export const messages = {
         }
       },
       songs_page: {
+        buy: 'Kupić',
+        buy_amazon: 'Amazon',
         find: 'Szukaj',
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',
@@ -1060,6 +1074,8 @@ export const messages = {
         }
       },
       songs_page: {
+        buy: 'Αγορά',
+        buy_amazon: 'Amazon',
         find: 'Αναζήτηση',
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',

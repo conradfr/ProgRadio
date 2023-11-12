@@ -293,7 +293,7 @@ const showNotification = (
   }
 };
 
-/* ---------- API ---------- */
+/* ---------- MISC ---------- */
 
 const calculatedFlux = () => {
   const data = {
@@ -340,6 +340,16 @@ const calculatedFlux = () => {
   return data;
 };
 
+const getAmazonSongLink = (song: string): string => {
+  const songCleaned = song.replace(' - ', ' ');
+
+  /* eslint-disable max-len */
+  /* eslint-disable camelcase */
+  /* eslint-disable no-undef */
+  // @ts-expect-error amazon_affiliate_id is defined on the global scope
+  return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&tag=${amazon_affiliate_id}&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
+};
+
 /* ---------- API ---------- */
 
 const sendListeningSession = (
@@ -382,5 +392,6 @@ export default {
   showNotification,
   sendListeningSession,
   calculatedFlux,
+  getAmazonSongLink,
   extractTopicName
 };

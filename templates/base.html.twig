@@ -11,12 +11,12 @@
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Lobster&text=AdictRadoProgmes&display=swap" as="font" crossorigin>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     {% block head_supp %}
     {% endblock %}
@@ -41,6 +41,7 @@
       const streamsProxyKey = '{{ streams_proxy_key }}';
       const apiUrl = '{{ api_url }}';
       const isAdProtected = {{ isAdProtected(app.request) == true ? 'true' : 'false' }};
+      const amazon_affiliate_id = '{{ amazon_affiliate_id }}';
 
       {% block javascript_head %}
       // placeholder

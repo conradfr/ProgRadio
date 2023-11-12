@@ -27,7 +27,7 @@
         </div>
 
         <div v-if="hasSubRadios" class="row">
-          <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
+          <div class="col-md-12 mt-sm-0 text-center text-sm-start">
             <ul class="nav nav-tabs">
               <li v-for="sub_radio in radio.sub_radios" :key="sub_radio.code_name"
                 class="nav-item" >
@@ -42,11 +42,15 @@
         </div>
 
         <div class="row">
-          <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
+          <div class="col-md-12 mt-sm-0 text-center text-sm-start">
             <a href="#media-current">{{ $t('message.radio_page.current') }}</a>
           </div>
         </div>
-        <div class="radio-page-shows">
+
+        <live-song v-if="radio" :stream="radio"></live-song>
+        <live-listeners v-if="radio" :stream="radio"></live-listeners>
+
+        <div class="radio-page-shows mt-2">
           <radio-show
               v-for="entry in schedule" :key="entry.hash"
               :show="entry">
@@ -92,11 +96,15 @@ import type { Collection } from '@/types/collection';
 import RadioShow from './Radio/RadioShow.vue';
 import RadioStreams from './Radio/RadioStreams.vue';
 import Adsense from './Utils/Adsense.vue';
+import LiveSong from './Utils/LiveSong.vue';
+import LiveListeners from './Utils/LiveListeners.vue';
 
 export default defineComponent({
   components: {
     RadioShow,
     RadioStreams,
+    LiveSong,
+    LiveListeners,
     Adsense
   },
   data() {

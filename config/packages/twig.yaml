@@ -13,6 +13,7 @@ twig:
         adsense_tag_radio_vert2_key: "%env(ADSENSE_TAG_RADIO_VERT2_KEY)%"
         adsense_tag_radio_horiz_fix_key: "%env(ADSENSE_TAG_RADIO_HORIZ_FIX_KEY)%"
         geocode: "%env(GEOCODE)%"
+        amazon_affiliate_id: "%env(AMAZON_AFFILIATE_ID)%"
 
 when@test:
     twig:

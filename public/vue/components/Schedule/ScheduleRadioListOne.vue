@@ -136,7 +136,7 @@ export default defineComponent({
       }
     };
   },
-  created() {
+  mounted() {
     setTimeout(() => {
       this.joinChannel(this.channelName);
       this.joinListenersChannel(`${this.radio.code_name}_main`);

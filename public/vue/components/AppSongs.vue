@@ -9,7 +9,12 @@
             <tr v-for="(song, index) in songs" :key="index">
               <td  class="ps-3" style="width: 60%;">{{ song }}</td>
               <td class="text-center" style="width: 25%;">
-                {{ $t('message.songs_page.find') }}:&nbsp;&nbsp;
+                <a v-if="amazonLink(song)" class="link-no-to-bold" target="_blank"
+                   :title="$t( 'message.songs_page.buy_amazon')"
+                   :href="amazonLink(song)">
+                  <i class="bi bi-amazon"></i>&nbsp;&nbsp;
+                </a>&nbsp;&nbsp;
+
                 <a class="link-no-to-bold" target="_blank"
                    :title="$t( 'message.songs_page.find_youtube')"
                    :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
@@ -61,15 +66,24 @@ import {
   GTAG_CATEGORY_SONGS
 } from '@/config/config';
 
+import PlayerUtils from '../utils/PlayerUtils';
+
 export default defineComponent({
   mounted() {
     document.title = (this.$i18n as any).t('message.songs_page.title');
   },
   computed: {
-    ...mapState(useUserStore, ['songs']),
+    ...mapState(useUserStore, ['songs'])
   },
   methods: {
     ...mapActions(useUserStore, ['deleteSong']),
+    amazonLink(song: string) {
+      if (!song || song === '') {
+        return null;
+      }
+
+      return PlayerUtils.getAmazonSongLink(song);
+    },
     removeSong(songId: number) {
       this.deleteSong(songId);
 

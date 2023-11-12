@@ -63,10 +63,9 @@ import { useUserStore } from '@/stores/userStore';
 
 import type { Stream } from '@/types/stream';
 import PlayerStatus from '@/types/player_status';
-
+import StreamsUtils from '@/utils/StreamsUtils';
+import PlayerUtils from '@/utils/PlayerUtils';
 import * as config from '../../config/config';
-import StreamsUtils from '../../utils/StreamsUtils';
-import PlayerUtils from '../../utils/PlayerUtils';
 
 export default defineComponent({
   props: {
@@ -91,7 +90,10 @@ export default defineComponent({
     return {
       PlayerStatus,
       // @dodo fix null mobile app
-      channelName: PlayerUtils.getChannelName(this.radio, this.radio.radio_stream_code_name) || '',
+      channelName: PlayerUtils.getChannelName(
+          this.radio,
+          this.radio.radio_stream_code_name
+      ) || '',
       currentSong: null,
       hover: false,
       code_all: config.STREAMING_CATEGORY_ALL,
