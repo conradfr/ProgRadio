@@ -131,6 +131,7 @@ page:
         disabled: 'Cette radio est inactive.'
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
         find: Rechercher
+        find_amazon: Rechercher sur Amazon
         find_deezer: Rechercher sur Deezer
         find_spotify: Rechercher sur Spotify
         find_youtube: Rechercher sur Youtube

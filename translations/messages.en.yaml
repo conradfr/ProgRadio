@@ -131,6 +131,7 @@ page:
         disabled: 'This radio is inactive.'
         discover: Discover more radios, search by country and style ...
         find: Search
+        find_amazon: Find on Amazon
         find_deezer: Find on Deezer
         find_spotify: Find on Spotify
         find_youtube: Find on Youtube

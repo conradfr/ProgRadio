@@ -129,7 +129,8 @@ page:
         disabled: 'To radio jest nieaktywne.'
         discover:  Odkryj więcej radia, szukaj według kraju i stylu...
         find: Szukaj
-        find_deezer: Znajdź na Deezerze
+        find_amazon: Znajdź na Amazon
+        find_deezer: Znajdź na Deezer
         find_spotify: Znajdź na Spotify
         find_youtube: Znajdź na Youtube
         listeners: Słuchacze

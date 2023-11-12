@@ -131,6 +131,7 @@ page:
         disabled: 'Questa radio non è attiva.'
         discover: Scopra altre radio, cerchi per Paese e stile...
         find: Ricerca
+        find_amazon: Trova su Amazon
         find_deezer: Trova su Deezer
         find_spotify: Trova su Spotify
         find_youtube: Cerca su Youtube

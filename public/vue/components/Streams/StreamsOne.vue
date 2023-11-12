@@ -21,7 +21,7 @@
             ><i class="bi bi-x-lg"></i></div>
             <div v-if="userLogged && userIsAdmin" class="d-none d-md-block float-end me-4">
               <a class="link-no-to-bold" v-on:click="copyIdToClipboard">Copy id</a>
-              &nbsp;-&nbsp;<a target="_blank" :href="`/admin/overloading/${stream.code_name}`">
+              &nbsp;-&nbsp;<a target="_blank" :href="`/${locale}/admin/overloading/${stream.code_name}`">
               Edit</a>
             </div>
             <h4 class="mb-4">{{ stream.name }}</h4>
