@@ -89,7 +89,8 @@ class SecurityController extends AbstractController
                 ->htmlTemplate('emails/signup.html.twig')
                 ->context([
                     'url' => $host->getField('url', $request),
-                    'name' => $host->getField('name_host', $request)
+                    'name' => $host->getField('name_host', $request),
+                    'user_locale' => $request->getLocale()
                 ]);
 
             $mailer->send($email);
@@ -131,7 +132,8 @@ class SecurityController extends AbstractController
                     ->context([
                         'token' => $user->getPasswordResetToken(),
                         'name' => $host->getField('name_host', $request),
-                        'url' => $host->getField('url', $request)
+                        'url' => $host->getField('url', $request),
+                        'user_locale' => $request->getLocale()
                     ]);
 
                 $mailer->send($email);

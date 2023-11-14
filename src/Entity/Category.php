@@ -53,6 +53,10 @@ class Category
     #[ORM\Column(type: 'string', length: 100)]
     private string $name_el;
 
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_ar;
+
     public function getId(): int
     {
         return $this->id;
@@ -162,4 +166,16 @@ class Category
     {
         $this->name_el = $name_el;
     }
+
+    public function getNameAr(): string
+    {
+        return $this->name_ar;
+    }
+
+    public function setNameAr(string $name_ar): void
+    {
+        $this->name_ar = $name_ar;
+    }
+
+
 }

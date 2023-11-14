@@ -43,8 +43,11 @@ menu:
         sm: Saint-Marin
         mt: Malte
         va: Vatican
-        pl: Polande
+        pl: Pologne
         gr: Grèce
+        dz: Algérie
+        ma: Maroc
+        tn: Tunisie
 
     songs: Titres Sauvegardés
 
@@ -226,7 +229,6 @@ updatePasswordForm:
     error_length: Le mot de passe doit contenir au moins 8 caractères.
 
 footer:
-    alternate_lang: English
     es: Español
     en: English
     fr: Français
@@ -235,6 +237,7 @@ footer:
     it: Italiano
     pl: Polskie
     el: Ελληνικά
+    ar: عربي
 
 legal: 'Mentions légales'
 

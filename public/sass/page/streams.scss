@@ -48,6 +48,20 @@
     }
   }
 
+  .streams-filters-search {
+    /* apparently start and end are not reversed in rtl w/ Bootstrap */
+    &:dir(rtl) {
+      margin-right: inherit !important;
+      margin-left: auto !important;
+
+      button {
+        margin-right: 0 !important;
+        margin-left: .25rem !important;
+      }
+
+    }
+  }
+
   .input-group-text {
     padding-top: 0;
     padding-bottom: 0;

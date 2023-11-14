@@ -274,8 +274,54 @@
         {
             'question': "Available radios:",
             'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>, like <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italie) or <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germany).</p>'
+            ]
+        }
+    ],
+    "ar": [
+        {
+            'question': "Qu'est-ce que Programmes-radio.com ?",
+            'answer': [
+            "Programmes-radio.com هو موقع مستقل يركز على جداول البرامج الإذاعية الفرنسية والدولية.",
+            "يتم تحديث البيانات كل يوم من مواقع الراديو.",
+            "يمكنك أيضًا بث أي محطة راديو من خلال النقر على شعارها."
+        ]
+        },
+        {
+            'question': "كيف يتم تصنيف أجهزة الراديو؟",
+            'answer': [
+            "اعتمادًا على الفئات، يعتمد الترتيب على حصة الجمهور التراكمية لموجة Médiametrie الأخيرة أو بالترتيب الأبجدي."
+        ]
+        },
+        {
+            'question': "تحتوي بعض محطات الراديو على إعلان في بداية القراءة.",
+            'answer': [
+            "تتم إضافة هذه الإعلانات من قبل محطات الراديو نفسها وليس بواسطة Programmes-radio.com",
+            "يحاول مشغل برنامج الراديو تقليل هذه الإعلانات عند التبديل بين جهازي راديو أو إيقاف محطة راديو مؤقتًا.",
+            "في بعض الحالات، قد يمنع مانع الإعلانات تشغيل الراديو (مثال: RMC)."
+        ]
+        },
+        {
+            'question': "لا يوجد راديو مفضل لدي.",
+            'answer': [
+            "تتم إضافة أجهزة الراديو تدريجيًا، فأخبرنا في صفحة الاتصال بالراديو الذي تريد إضافته."
+        ]
+        },
+        {
+            'question': "أريد إضافة راديو (الويب) الخاص بي، كيف أفعل ذلك؟",
+            'answer': [
+            'بالنسبة لجزء «جميع أجهزة الراديو»، نستخدم واجهة برمجة تطبيقات Radio-Browser. لإرسال الراديو الخاص بك، <a target="_blank" href="https://www.radio-browser.info/#/add">انقر هنا</a>.',
+            'إذا كان لديك راديو بجدول زمني للبرنامج، فاكتب إلينا باستخدام نموذج الاتصال.'
+        ]
+        },
+        {
+            'question': "قائمة أجهزة الراديو المتاحة.",
+            'answer': [
             self.radios_list(collections, radios, app.request.locale),
-            '<p style="margin-top: 5px">You can also listen to radios on any language and from all over the world on <a href="' ~ path('app') ~ 'streaming">the streaming page</a>, like <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italie) or <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germany).</p>'
+            '<p style="margin-top: 5px">Vous pouvez aussi écouter des radios du monde entier sur <a href="' ~ path('app') ~ 'streaming">la page streaming</a>, comme par exemple <a href="' ~ path('streams_one_short', {'shortId': '97d830f4-c35f-11e9-8502-52543be04c81'|shortid, 'codename': 'Alternative Radio'|slug }) ~ '">Alternative Radio</a> (France), <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italie) ou <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Allemagne).</p>',
+            '<p style="margin-top: 5px"><strong>أفضل محطات الراديو في جميع البلدان:</strong></p>',
+            countries.list(app.request.locale, 'top')
         ]
         }
     ],

@@ -73,8 +73,8 @@ class UserController extends AbstractBaseController
                             'token' => $userEmailChange->getToken(),
                             'new_email' => $user->getEmail(),
                             'name' => $host->getField('name_host', $request),
-                            'url' => $host->getField('url', $request)
-
+                            'url' => $host->getField('url', $request),
+                            'user_locale' => $request->getLocale()
                         ]
                     );
 
@@ -92,7 +92,8 @@ class UserController extends AbstractBaseController
                             'old_email' => $userEmailChange->getEmail(),
                             'new_email' => $user->getEmail(),
                             'name' => $host->getField('name_host', $request),
-                            'url' => $host->getField('url', $request)
+                            'url' => $host->getField('url', $request),
+                            'user_locale' => $request->getLocale()
                         ]
                     );
 
@@ -151,7 +152,8 @@ class UserController extends AbstractBaseController
                     [
                         'token' => $user->getPasswordResetToken(),
                         'name' => $host->getField('name_host', $request),
-                        'url' => $host->getField('url', $request)
+                        'url' => $host->getField('url', $request),
+                        'user_locale' => $request->getLocale()
                     ]
                 );
 

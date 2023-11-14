@@ -43,6 +43,9 @@ menu:
         mt: Malta
         va: Watykan
         pl: Polska
+        dz: Algieria
+        ma: Maroko
+        tn: Tunezja
 
     songs: Zapisane utwory
 
@@ -224,7 +227,6 @@ updatePasswordForm:
     error_length: Nowe hasło musi zawierać co najmniej 8 znaków.
 
 footer:
-    alternate_lang: Français
     es: Español
     en: English
     fr: Français
@@ -233,6 +235,7 @@ footer:
     it: Italiano
     pl: Polskie
     el: Ελληνικά
+    ar: عربي
 
 legal: Informacja prawna
 

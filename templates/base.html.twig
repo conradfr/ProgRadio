@@ -1,7 +1,7 @@
-{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el'] %}
-{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr'} %}
+{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar'] %}
+{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'dz'} %}
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}" class="h-100{% block htmlsupp %}{% endblock %}" {% if isDarkModeTime(app.request) %}data-bs-theme="dark"{% endif %}>
+<html lang="{{ app.request.locale }}"{% if app.request.locale == "ar"%} dir="rtl"{% endif %} class="h-100{% block htmlsupp %}{% endblock %}" {% if isDarkModeTime(app.request) %}data-bs-theme="dark"{% endif %}>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

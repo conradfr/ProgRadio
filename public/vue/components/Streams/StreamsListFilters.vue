@@ -1,6 +1,6 @@
 <template>
   <div class="streams-filters-container mt-3 mb-0 d-flex flex-row flex-wrap">
-      <div class="mb-3 me-auto">
+      <div class="mb-3 me-auto streams-filters-search">
         <div class="input-group" v-if="searchActive">
           <span class="input-group-text" id="search-addon1">
             <i class="bi bi-search"></i>

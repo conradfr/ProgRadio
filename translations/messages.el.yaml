@@ -45,6 +45,9 @@ menu:
         va: Βατικανό
         pl: Πολωνία
         gr: Ελλάδα
+        dz: Αλγερία
+        ma: Μαρόκο
+        tn: Τυνησία
 
     songs: Αποθηκευμένα τραγούδια
 
@@ -226,7 +229,6 @@ updatePasswordForm:
     error_length: Ο νέος κωδικός πρόσβασης πρέπει να έχει τουλάχιστον 8 χαρακτήρες.
 
 footer:
-    alternate_lang: Français
     es: Español
     en: English
     fr: Français
@@ -235,6 +237,7 @@ footer:
     it: Italiano
     pl: Polskie
     el: Ελληνικά
+    ar: عربي
 
 legal: Νομική ειδοποίηση
 

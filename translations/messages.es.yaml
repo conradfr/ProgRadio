@@ -45,6 +45,9 @@ menu:
         va: Vaticano
         pl: Polonia
         gr: Grecia
+        dz: Argelía
+        ma: Marrueco
+        tn: Túnez
 
     songs: Canciones Guardadas
 
@@ -226,7 +229,6 @@ updatePasswordForm:
     error_length: 'La contraseña debe contener al menos 8 caracteres.'
 
 footer:
-    alternate_lang: English
     es: Español
     en: English
     fr: Français
@@ -235,6 +237,7 @@ footer:
     it: Italiano
     pl: Polskie
     el: Ελληνικά
+    ar: عربي
 
 legal: 'Notas legales'
 

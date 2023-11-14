@@ -133,6 +133,14 @@ export const useStreamsStore = defineStore('streams', {
               code: key
             }
           );
+        } else if (i18n.global.locale === 'ar'
+          && ['DZ', 'MA', 'TN'].indexOf(key) !== -1) {
+          countriesOptions.unshift(
+            {
+              label: value,
+              code: key
+            }
+          );
         } else {
           countriesOptions.push(
             {

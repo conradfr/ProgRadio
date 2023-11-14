@@ -45,6 +45,9 @@ menu:
         va: Vatican
         pl: Poland
         gr: Greece
+        dz: Algeria
+        ma: Morocco
+        tn: Tunisia
 
     songs: Saved Songs
 
@@ -226,7 +229,6 @@ updatePasswordForm:
     error_length: The new password must be at least 8 characters.
 
 footer:
-    alternate_lang: Français
     es: Español
     en: English
     fr: Français
@@ -235,6 +237,7 @@ footer:
     it: Italiano
     pl: Polskie
     el: Ελληνικά
+    ar: عربي
 
 legal: Legal notice
 

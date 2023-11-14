@@ -1,5 +1,7 @@
+{% extends 'emails/base_email.html.twig' %}
 {% trans_default_domain 'email' %}
 
+{% block content %}
 <h3>{{ 'email_change.header'|trans }}</h3>
 
 <p>
@@ -19,3 +21,4 @@
     {{ 'signature.regards'|trans }}<br>
     {{ name }}
 </p>
+{% endblock %}

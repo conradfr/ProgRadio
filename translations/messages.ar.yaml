@@ -1,0 +1,298 @@
+general:
+    main_description: Écoute en ligne et les programmes radio en France.
+    main_title_progradio: جميع محطات الراديو وجميع البرامج والاستماع عبر الإنترنت
+    main_title_radioaddict: بث جميع محطات الراديو في فرنسا وحول العالم!
+
+menu:
+    account: الحساب الخاص بي
+    admin:
+        dashboard: Tableau de bord
+        listening: Écoutes
+        overloading: Stream Overloading
+        playing_errors: Erreurs Streams
+        shares: Parts de marché
+    all:  جميع أجهزة الراديو
+    app: تطبيق أندرويد
+    contact: اتصل
+    faq: الأسئلة الشائعة
+
+    favorites: مفضلاتي
+    favorites_menu:
+        all: جميع البلدان
+        be: بلجيكا
+        ch: سويسرا
+        fr: فرنسا
+        us: الولايات المتحدة
+        mx: المكسيك
+        co: كولومبيا
+        ar: الأرجنتين
+        pe: بيرو
+        de: ألمانيا
+        at: النمسا
+        es: إسبانيا
+        pt: البرتغال
+        br: برازيل
+        ca: كندا
+        au: أستراليا
+        nz: نيوزيلاندا
+        gb: بريطانيا العظمى
+        ie: أيرلندا
+        it: إيطاليا
+        lu: لكسمبورج
+        mc: موناكو
+        sm: سان مارينو
+        mt: مالطا
+        va: الفاتيكان
+        pl: بولندا
+        gr: اليونان
+        dz: الجزائر
+        ma: المغرب
+        tn: تونس
+
+    songs: العناوين المحفوظة
+
+    home:
+        enable: حدد كصفحة رئيسية
+        disable: احذف الصفحة الرئيسية المخصصة
+    logout: قطع الاتصال
+    menu: قائمة طعام
+    mode:
+        dark: وضع الظلام
+        light: وضع المسح
+    now: الآن
+    params: المعلمات
+    plus: زائد
+    schedule: جدول البرنامج
+    signon: تسجيل الدخول
+    signup: قم بإنشاء حساب
+    streaming: جميع أجهزة الراديو
+    timer: جهاز ضبط الوقت
+    title: قائمة طعام
+
+page:
+    contact:
+        title: 'اتصل'
+        email: 'البريد الإلكتروني'
+        message: 'رسالة* '
+        name: الاسم*
+        send: 'أرسل'
+        sent: 'تم إرسال رسالتك بنجاح.'
+
+    faq:
+        title: 'أسئلة متكررة'
+        page_title: 'أسئلة وأجوبة - برامج إذاعية في فرنسا'
+        page_description: 'أسئلة'
+
+    forgotten_password:
+        error: إذا كان رابط استرداد كلمة المرور قديمًا، فيرجى تجربة الإجراء مرة أخرى <br>لقد حدث خطأ
+        click_here: انقر هنا
+        done_title: إعادة تعيين كلمة المرور
+        done: '<strong>تم تحديث كلمة المرور.</strong> <br>يمكنك توصيل %link% بالنقر هنا %link_end%.'
+        page_title: كلمة مرور منسية
+        success: إذا تم العثور على حساب يستخدم البريد الإلكتروني <strong>%email%</strong>، فقد تم إرسال رسالة تحتوي على رابط لإعادة تعيين كلمة المرور إليه.
+        submit: أرسل
+
+    login:
+        forgotten_password: هل نسيت كلمة المرور الخاصة بك؟
+        page_title: اتصال
+
+    now:
+        back: 'انتقل إلى جدول البرنامج'
+        no_schedule: عفوًا... لا توجد برامج متاحة.
+        page_description: 'ما الذي يجب الاستماع إليه على الفور؟'
+        page_title: 'البرامج على الراديو الآن'
+        title: 'الآن على الراديو'
+
+    radio:
+        advanced: استخدم المشغل المتقدم <br>(راديو الويب والعناوين الحالية...)
+        back: 'انتقل إلى جدول البرنامج لجميع محطات الراديو'
+        current: ↓ انتقل إلى العرض الحالي
+        description: '%radio% برامج الراديو والاستماع عبر الإنترنت'
+        goto_today: شاهد برامج اليوم
+        goto_schedule: راجع جدول البرنامج
+        more_radios: 'المزيد من أجهزة الراديو'
+        no_schedule: 'البرامج غير متوفرة.'
+        not_today: أنت تشاهد البرامج ليوم آخر غير اليوم
+        play: 'استمع إلى %radio%'
+        stop: '%radio% سدادة'
+        summary: 'وصف'
+        title: '%radio% - استمع إلى البث المباشر'
+        website: 'الموقع الإلكتروني'
+
+    registered:
+        page_title: قم بإنشاء حساب
+        alert_1: تم إنشاء حسابك بنجاح!
+        alert_2: إذا كانت لديك أجهزة راديو وبث مفضلة، فقد تمت إضافتها تلقائيًا إلى حسابك.
+        what_now_question: ماذا تريد أن تفعل الآن؟
+        what_now_choice1: قم بتسجيل الدخول إلى حسابي
+        what_now_choice2: استشر برامج الراديو
+        what_now_choice3: استمع إلى أجهزة الراديو المتدفقة
+
+    stream:
+        country: البلدان
+        description: 'استمع إلى أجهزة الراديو من جميع أنحاء العالم'
+        disabled: 'هذا الراديو غير نشط.'
+        discover: اكتشف المزيد من محطات الراديو، وابحث حسب البلد وأنماط الموسيقى...
+        find: ابحث
+        find_amazon: Rechercher sur Amazon
+        find_deezer: Rechercher sur Deezer
+        find_spotify: Rechercher sur Spotify
+        find_youtube: Rechercher sur Youtube
+        listeners: مدققو حسابات
+        playing: العنوان
+        playing_error: خطأ في القراءة
+        suggested: أجهزة الراديو المقترحة
+        tags: العلامات
+        share: شارك الراديو
+        title: '%radio% - استمع مباشرة ومجانًا'
+        website: الموقع الإلكتروني
+
+    top:
+        page_title: أفضل محطات الراديو في %country%
+        description: 'استمع إلى أفضل أجهزة الراديو في %country%'
+        more: شاهد المزيد من أفضل أجهزة الراديو في %country%
+
+    last:
+        page_title: آخر محطات الراديو التي تم الاستماع إليها في %country%
+        description: 'استمع إلى أفضل أجهزة الراديو في %country%'
+        more: شاهد المزيد من أجهزة الراديو التي تم الاستماع إليها مؤخرًا في %country%
+
+    user:
+        page_title: قم بإنشاء حساب
+
+    account:
+        prefix: الحساب الخاص بي
+        menu:
+            email: البريد الإلكتروني
+            password: كلمة المرور
+            delete: قمع
+        email:
+            page_title: تغيير بريدي الإلكتروني
+            info_1: سيؤدي هذا إلى تحديث البريد الإلكتروني المستخدم للاتصال بالموقع.
+            info_2: سيتم إرسال تأكيد إلى العناوين القديمة والجديدة.
+            success: تم تحديث عنوان البريد الإلكتروني.
+            new_email: 'عنوان بريد إلكتروني جديد:'
+            new_email_placeholder: exemple@email.com
+            update_btn: تحديث
+        password:
+            page_title: تغيير كلمة المرور الخاصة بي
+            success: تم تحديث كلمة المرور.
+            update_btn: تحديث
+        delete:
+            page_title: حذف الحساب
+            warning: 'انتبه: هذه العملية لا رجعة فيها. ستتم إزالة مفضلاتك'
+            confirm: هل تريد بالتأكيد حذف حسابك؟
+            delete_btn: حذف حسابي
+        delete_confirm:
+            success: تم حذف حسابك بنجاح.
+
+boxes:
+    already_account:
+        title: هل لديك حساب بالفعل؟
+        content: انقر هنا لتسجيل الدخول
+
+    no_account:
+        title: ليس لديك حساب حتى الآن؟
+        content: انقر هنا للتسجيل
+
+    why_account:
+        title: لماذا التسجيل؟
+        content: "- يسمح لك الحساب بالوصول إلى أجهزة الراديو والبث المفضلة لديك من أي متصفح ومن التطبيق."
+        content2: "- احفظ عنوان الأغاني التي تستمع إليها."
+        content3: "- إعلانات أقل"
+
+registrationForm:
+    email: 'البريد الإلكتروني'
+    error:
+        captcha: 'كلمة التحقق غير صالحة، يرجى المحاولة مرة أخرى'
+        empty: 'لا يمكن ترك هذا الحقل فارغًا.'
+        password_min: 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.'
+        password: 'كلمات المرور ليست هي نفسها.'
+    captcha: 'اكتب الحروف والأرقام المدرجة أدناه'
+    password: 'كلمة المرور'
+    password_confirm: 'قم بتأكيد كلمة المرور'
+    submit_create: 'قم بإنشاء حسابي'
+
+connectionForm:
+    already_logged: تم تسجيل دخولك حاليًا باسم %email%
+    logout: قطع الاتصال
+    email: 'البريد الإلكتروني'
+    password: 'كلمة المرور'
+    remember_me: 'تذكرني'
+    submit_connect: 'تسجيل الدخول'
+
+updatePasswordForm:
+    new: كلمة مرور جديدة
+    new_confirm: تأكيد كلمة المرور الجديدة
+    error_not_same: كلمات المرور ليست هي نفسها.
+    error_not_empty: لا يمكن ترك هذا الحقل فارغًا.
+    error_length: يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.
+
+footer:
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Portuguesa
+    it: Italiano
+    pl: Polskie
+    el: Ελληνικά
+    ar: عربي
+
+legal: 'الإشارات القانونية'
+
+cookie:
+    accept: نعم
+    allow: هل تقبل الإعلانات المخصصة؟
+    deny: لا
+    disclaimer: (%name% لا يبيع بيانات الزائر)
+
+admin:
+    dashboard:
+        title: Tableau de bord
+        menu:
+            brief: Résumé
+            table: Tableau
+        table:
+            shows: Programmes
+            sections: Chroniques
+            stream_abbr: St.
+        accounts:
+            title: Comptes
+            active: '%number% comptes actifs'
+            email: email
+            created_at: Création
+            last: (%number% derniers)
+        no_schedule:
+            title: Radios sans programmes aujourd'hui
+            shows: Programmes
+            sections: Chroniques
+            all_ok: Toutes les radios ont des programmes affichés.
+        stream_errors:
+            title: Erreurs streams
+            error: Erreurs pour <strong>%number%</strong> check
+            link: lien
+            no_errors: Tous les streams fonctionnent
+        live_song_errors:
+            title: Erreurs titre en cours
+            error: Erreurs pour <strong>%number%</strong> check
+            reset_all: reset all
+            link: lien
+            no_errors: Pas d'erreur enregistrées
+
+    listening:
+        title: Ecoutes
+        today: Aujourd'hui
+        yesterday: Hier
+        this_month: Ce mois-ci
+        last_month: Mois dernier
+        ratings: Sondages
+
+    stream_errors:
+        title: Erreur streams
+        name: Nom
+        errors: Erreurs
+        view: Voir
+        edit: Edit
+        reset: Reset
+        reset_all: Tout reset

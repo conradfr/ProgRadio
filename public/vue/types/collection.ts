@@ -8,6 +8,7 @@ export interface Collection {
   name_IT: string
   name_PL: string
   name_EL: string
+  name_AR: string
   priority: number
   radios: string[]
   short_name: string

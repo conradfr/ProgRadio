@@ -1,5 +1,5 @@
 <template>
-  <div class="container now-page">
+  <div class="container now-page" style="direction:ltr/*rtl:ignore*/;">
     <div class="row">
       <div class="col-md-12">
         <h4 class="mb-3">{{ $t('message.now_page.title') }}</h4>

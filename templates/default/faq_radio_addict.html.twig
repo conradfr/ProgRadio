@@ -191,6 +191,34 @@
         ]
         }
     ],
+    "ar": [
+        {
+            'question': "ما هو {Radio-addict.com}؟",
+            'answer': [
+                "Radio-addict.com هو موقع مستقل يستمع إلى محطات الراديو من جميع أنحاء العالم."
+            ]
+        },
+        {
+            'question': "تحتوي بعض محطات الراديو على إعلان في بداية القراءة.",
+            'answer': [
+                "تتم إضافة هذه الإعلانات بواسطة محطات الراديو نفسها وليس بواسطة Radio-addict.com.",
+                "يحاول مشغل Radio-Addict تقليل هذه الإعلانات عند التبديل بين جهازي راديو أو إيقاف الراديو مؤقتًا.",
+                "في بعض الحالات، قد يمنع مانع الإعلانات تشغيل الراديو."
+            ]
+        },
+        {
+            'question': "أريد إضافة راديو (الويب) الخاص بي، كيف أفعل ذلك؟",
+            'answer': [
+                'Nous utilisons l\'API Radio-Browser. Pour y soumettre votre radio, <a target="_blank" href="https://www.radio-browser.info/#/add">cliquez ici</a>'
+            ]
+        },
+        {
+            'question': "أفضل محطات الراديو حسب البلد:",
+            'answer': [
+                countries.list(app.request.locale, 'top')
+            ]
+        }
+    ],
 }
 %}
 

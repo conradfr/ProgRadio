@@ -87,11 +87,11 @@
                             <strong>{{ 'page.radio.website'|trans }}:</strong> <a target="_blank" href="{{ radio.website }}">{{ radio.website }}</a>
                         </div>
                     {% endif %}
-                    {% if attribute(radio, 'description' ~ app.request.locale|capitalize) %}
+                    {% if attribute(radio, 'description' ~ app.request.locale|capitalize) is defined %}
                         <div class="mt-2"><strong>{{ 'page.radio.summary'|trans }}:</strong></div>
                         <p class="radio-page-infos-description mt-1">{{ attribute(radio, 'description' ~ app.request.locale|capitalize) | nl2br }}</p>
                     {% endif %}
-                    {% if attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) %}
+                    {% if attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) is defined %}
                         <div class="mt-2"><a target="_blank" href="{{ attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) }}">Wikipedia</a></div>
                     {% endif %}
                 </div>

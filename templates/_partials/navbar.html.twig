@@ -4,7 +4,7 @@
 
 {% include('_partials/mobilemenu.html.twig') %}
 
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" style="direction:ltr/*rtl:ignore*/;">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app') }}{% if isProgRadio(app.request) == true %}schedule{% else %}streaming{% endif %}" onclick="return scrollToCursor();">
             <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="{{ getDomainName(app.request) }}" class="d-inline-block align-text-top">{{ getDomainName(app.request) }}</a>

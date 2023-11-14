@@ -6,7 +6,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.StreamMatcher do
   alias ProgRadioApi.Stream
   alias ProgRadioApi.RadioStream
 
-  @countries ["FR", "BE", "CH"]
+  @countries ["FR", "BE", "CH", "LU"]
 
   def match() do
     get_streams_without_match()
