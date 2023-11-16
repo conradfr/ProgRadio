@@ -150,7 +150,9 @@
             <li class="nav-item offcanvas-divider mt-3 mb-1"></li>
 
             <!-- more -->
-            <li class="nav-item"><a class="nav-link pb-1 spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
+            {% if isProgRadio(app.request) == true %}
+                <li class="nav-item"><a class="nav-link pb-1 spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
+            {% endif %}
             <li class="nav-item"><a class="nav-link py-1" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
             <li class="nav-item"><a class="nav-link py-1" href="{{ path('contact') }}">{{ 'menu.contact'|trans }}</a></li>
 
