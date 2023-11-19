@@ -86,8 +86,8 @@ class SiteController extends AbstractController
             $contact = $form->getData();
 
             $email = (new TemplatedEmail())
-                ->from('noreply@programmes-radio.com')
-                ->to('contact@programmes-radio.com')
+                ->from($_ENV['EMAIL_FROM'])
+                ->to($_ENV['EMAIL_TO'])
                 ->subject('Contact page')
                 ->htmlTemplate('emails/contact.html.twig')
                 ->context([
