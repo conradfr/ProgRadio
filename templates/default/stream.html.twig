@@ -2,6 +2,37 @@
 
 {% import _self as self %}
 
+{% macro picture(stream) %}{%- if stream.radioStream.id is defined and stream.radioStream.id is not null %}
+/img/radio/page/{{ stream.radioStream.radio.codeName }}.png
+{%- elseif stream.img_alt is defined and stream.img_alt is not null %}
+/img/radio/page/{{ stream.img_alt }}.png
+{%- elseif stream.img is not null and stream.img != '' %}
+/media/stream/{{ stream.img }}
+{%- else %}
+/img/stream-placeholder.png
+{% endif -%}{% endmacro %}
+
+{% macro topic(stream) %}
+    {% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% else %}url:{{ stream.streamUrl }}{% endif %}
+{% endmacro %}
+
+{% macro stream_code_name(stream) %}
+    {% if stream.radioStream.radio.codeName is defined %}{{ stream.radioStream.radio.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
+{% endmacro %}
+
+{% macro stream_url(stream) %}
+    {% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
+{% endmacro %}
+
+{% block head_supp %}
+    {{ parent() }}
+    <meta property="og:title" content="{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}">
+    <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
+    <meta property="og:type" content="website"><meta property="og:site_name" content="{{ getDomainName(app.request) }}">
+    <meta property="og:image" content="https://www.{{ getDomainRootDomain(app.request) }}{{- self.picture(stream) -}}">
+    <meta name="thumbnail" content="https://www.{{ getDomainRootDomain(app.request) }}{{- self.picture(stream) -}}">
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     {% include('_partials/mini_player.html.twig') %}
@@ -31,30 +62,6 @@
 
 {% block title %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endblock %}
 {% block description %}{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}{% endblock %}
-
-{% macro picture(stream) %}
-    {% if stream.radioStream.id is defined and stream.radioStream.id is not null %}
-        /img/radio/page/{{ stream.radioStream.radio.codeName }}.png
-    {% elseif stream.img_alt is defined and stream.img_alt is not null %}
-        /img/radio/page/{{ stream.img_alt }}.png
-    {% elseif stream.img is not null and stream.img != '' %}
-        /media/stream/{{ stream.img }}
-    {% else %}
-        /img/stream-placeholder.png
-    {% endif %}
-{% endmacro %}
-
-{% macro topic(stream) %}
-{% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% else %}url:{{ stream.streamUrl }}{% endif %}
-{% endmacro %}
-
-{% macro stream_code_name(stream) %}
-{% if stream.radioStream.radio.codeName is defined %}{{ stream.radioStream.radio.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
-{% endmacro %}
-
-{% macro stream_url(stream) %}
-{% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
-{% endmacro %}
 
 {% block body %}
 <div class="container stream-page">

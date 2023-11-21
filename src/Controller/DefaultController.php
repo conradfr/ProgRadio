@@ -237,7 +237,7 @@ class DefaultController extends AbstractBaseController
 
         // redirect non-fr stream seo pages to new host
         if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
-            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
                 'shortId' => $shortener->reduce($stream->getId()),
@@ -297,7 +297,7 @@ class DefaultController extends AbstractBaseController
 
         // redirect non-fr stream seo pages to new host
         if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
-            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
                 'shortId' => $shortener->reduce($stream->getId()),
@@ -334,7 +334,7 @@ class DefaultController extends AbstractBaseController
     {
         // redirect non-fr stream seo pages to new host
         if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
-            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
             $redirectUrl = $router->generate('streams_top', [
                 '_locale' => $request->getLocale(),
                 'countryCode' => $countryCode
@@ -370,7 +370,7 @@ class DefaultController extends AbstractBaseController
     {
         // redirect non-fr stream seo pages to new host
         if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
-            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain'][0]);
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
             $redirectUrl = $router->generate('streams_last', [
                 '_locale' => $request->getLocale(),
                 'countryCode' => $countryCode

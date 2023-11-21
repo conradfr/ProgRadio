@@ -12,7 +12,7 @@ class Host
 
     public const DATA = [
         'progradio' => [
-            'domain' =>  ['programmes-radio.com', 'programmes-radio.fr'],
+            'domain' => 'programmes-radio.com',
             'name' => 'Programmes Radio',
             'name_host' => 'Programmes-Radio.com',
             'url' => 'https://www.programmes-radio.com',
@@ -25,7 +25,7 @@ class Host
             'play_store' => 'https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio'
         ],
         'radioaddict' => [
-            'domain' =>  ['radio-addict.com'],
+            'domain' => 'radio-addict.com',
             'name' => 'Radio Addict',
             'name_host' => 'Radio-Addict.com',
             'url' => 'https://www.radio-addict.com',
@@ -51,7 +51,7 @@ class Host
 
     public function getRootDomain(Request $request): string
     {
-        return $this->getField('domain', $request)[0];
+        return $this->getField('domain', $request);
     }
 
     public function isProgRadio(Request $request): bool
@@ -71,10 +71,8 @@ class Host
         $host = $request->getHost();
 
         foreach (self::DATA as $k => $subData) {
-            foreach ($subData['domain'] as $domain) {
-                if (str_ends_with($host, $domain) === true) {
-                    return ['key' => $k, 'data' => self::DATA[$k]];
-                }
+            if (str_ends_with($host, $subData['domain']) === true) {
+                return ['key' => $k, 'data' => self::DATA[$k]];
             }
         }
 

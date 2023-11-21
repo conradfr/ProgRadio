@@ -28,10 +28,19 @@
 
     <link href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
     <link href="{{ asset('build/css/main_dark.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
+
     <style>
         {% block stylesheets %}
         {% endblock %}
     </style>
+
+    {% if app.request.locale is defined %}
+        {% for locale in locales %}
+            {% if app.request.locale != locale %}
+                <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))) }}" />
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 
     <script type="text/javascript">
       const darkModeStartHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_START_HOUR') }};

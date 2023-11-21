@@ -2,21 +2,6 @@
 
 {% import _self as self %}
 
-{% block head_supp %}
-    {{ parent() }}
-    {% if schedule|length == 0 %}
-        <meta name="robots" content="noindex">
-    {% endif %}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {% if sub_radio.radioStream is not null %}
-        {% include('_partials/mini_player.html.twig') %}
-    {% endif %}
-    {{ include('_partials/adsense.html.twig') }}
-{% endblock %}
-
 {% macro is_current(date_start, date_end) %}
     {% if date(date_start) < date() and date(date_end) > date() %}
         media-current
@@ -28,6 +13,28 @@
         <a class="anchor" id="media-current"></a>
     {% endif %}
 {% endmacro %}
+
+{% block head_supp %}
+    {{ parent() }}
+
+    {% if schedule|length == 0 %}
+        <meta name="robots" content="noindex">
+    {% endif %}
+
+    <meta property="og:title" content="{{ 'page.radio.title'|trans({'%radio%': sub_radio.name}) }}">
+    <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
+    <meta property="og:type" content="website"><meta property="og:site_name" content="{{ getDomainName(app.request) }}">
+    <meta property="og:image" content="{{ absolute_url(asset('/img/radio/page/' ~ radio.codename ~ '.png')) }}">
+    <meta name="thumbnail" content="{{ absolute_url(asset('/img/radio/page/' ~ radio.codename ~ '.png')) }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if sub_radio.radioStream is not null %}
+        {% include('_partials/mini_player.html.twig') %}
+    {% endif %}
+    {{ include('_partials/adsense.html.twig') }}
+{% endblock %}
 
 {% block title %}{{ 'page.radio.title'|trans({'%radio%': sub_radio.name}) }}{% endblock %}
 {% block description %}{{ 'page.radio.description'|trans({'%radio%': radio.name}) }}{% endblock %}
@@ -254,7 +261,7 @@
                     </a>
                 {% endfor %}
             </div>
-            <div class="d-flex flex-row justify-content-evenly align-items-center mt-3">
+            <div class="d-flex flex-row justify-content-evenly align-items-center mt-3 mb-5">
                 {% for entry in more_radios2 %}
                     <a class="radio-page-more-one d-flex align-items-center justify-content-center"
                        href="{{ path('radio', {'codeName': entry.codeName}) }}" title="{{ entry.name }}">
