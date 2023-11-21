@@ -1,5 +1,9 @@
 // Inspired from https://gist.github.com/sixertoy/6b5433220a45aa754354287ff54a1e2a
 
+// Shoutcast servers will not work as they respond with "ICY 200 OK"
+// Couldn't find a simple way to override parsing of different http clients
+// todo: fork?
+
 import { promisify } from 'node:util';
 import stream from 'node:stream';
 import got from 'got';
@@ -25,6 +29,12 @@ const corsOptions = {
 app.options('/', cors(corsOptions));
 
 app.get('/', cors(corsOptions), async (req, res) => {
+  // redirect https stream requests as those don't need a cors proxy
+  if (typeof req.query.stream === 'string' && req.query.stream.startsWith('https://')) {
+    res.redirect(req.query.stream);
+    return;
+  }
+
   let apiKey = req.query.k;
   let apiKeyStatus = req.query.k ? req.query.k : 'none';
 
