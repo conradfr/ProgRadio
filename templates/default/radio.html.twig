@@ -52,7 +52,7 @@
                     <div class="radio-page-streams-one text-center mb-4 v-cloak">
                         <div
                             v-if="playing === PLAYER_STATE_STOPPED"
-                            @click="play('{{ sub_radio.radioStream.url }}', '{{ radio.codename }}')"
+                            @click="play('{{- sub_radio.radioStream.url -}}', '{{- radio.codename -}}')"
                             class="radio-page-play">
                             <img alt="{{ 'page.radio.play'|trans({'%radio%': radio.name}) }}"
                                  src="/img/play-button-inside-a-circle.svg">

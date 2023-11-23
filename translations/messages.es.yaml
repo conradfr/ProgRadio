@@ -110,7 +110,7 @@ page:
         description: 'Programas de radio %radio% y escucha en línea'
         goto_today: Ver los programas de hoy.
         goto_schedule: Ver los programas de hoy
-        more_radios: 'Más radios '
+        more_radios: 'Más radios'
         no_schedule: 'Programas no disponibles.'
         not_today: Usted está revisando los programas en otro día que hoy
         play: 'Reproducir %radio%'
@@ -131,7 +131,7 @@ page:
     stream:
         country: País
         description: 'Escuchar radios de todo el mundo'
-        disabled: 'Esta radio está inactiva.'
+        disabled: 'Esta radio puede estar inactiva.'
         discover: Descubra más radios, busque por país y estilos de música ...
         find: Busque
         find_amazon: Busque en amazon
@@ -202,7 +202,7 @@ boxes:
         content3: "- Sin publicidad."
 
 registrationForm:
-    email: 'Correo electrónico '
+    email: 'Correo electrónico'
     error:
         captcha: 'Captcha inválido Por favor intente nuevamente.'
         empty: 'Este formulario no puede estar vacío.'
@@ -211,7 +211,7 @@ registrationForm:
     captcha: 'Escribe las letras y números grabados a continuación.'
     password: 'Contraseña'
     password_confirm: 'contraseña de nuevo'
-    submit_create: 'Crear mi cuenta '
+    submit_create: 'Crear mi cuenta'
 
 connectionForm:
     already_logged: Actualmente estás conectado como %email%

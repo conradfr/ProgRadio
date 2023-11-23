@@ -74,7 +74,7 @@ page:
         message: 'Wiadomość*'
         name: 'Nazwa *'
         send: 'Wyślij'
-        sent: 'Twoja wiadomość została wysłana. '
+        sent: 'Twoja wiadomość została wysłana.'
 
     faq:
         page_title: 'FAQ - Programy radiowe we Francji'
@@ -85,7 +85,7 @@ page:
         error: Wy <strong>stąpił błąd.</strong> <br>Jeśli link został obselete, rozpocznij proces ponownie.
         click_here: kliknij tutaj
         done_title: Reinicjalizacja hasła
-        done: '<strong>Twoje hasło zostało zaktualizowane.</strong> <br>Możesz zalogować się %link%here%link_end%. '
+        done: '<strong>Twoje hasło zostało zaktualizowane.</strong> <br>Możesz zalogować się %link%here%link_end%.'
         page_title: Zapomniane hasło
         success: Jeśli znaleziono konto <strong>%email%</strong>, wysłano wiadomość e-mail z linkiem do ponownej inicjalizacji.
         submit: Prześlij
@@ -129,7 +129,7 @@ page:
     stream:
         country: Kraj
         description: 'Słuchaj radia z całego świata'
-        disabled: 'To radio jest nieaktywne.'
+        disabled: 'To radio może być nieaktywne.'
         discover:  Odkryj więcej radia, szukaj według kraju i stylu...
         find: Szukaj
         find_amazon: Znajdź na Amazon
@@ -169,7 +169,7 @@ page:
             info_1: Spowoduje to zaktualizowanie wiadomości e-mail używanej jako login.
             info_2: Potwierdzenie zostanie wysłane na poprzedni adres e-mail.
             success: e-mail został zaktualizowany.
-            new_email: 'Nowy adres e-mail: '
+            new_email: 'Nowy adres e-mail:'
             new_email_placeholder: example@email.com
             update_btn: Aktualizacja
         password:
@@ -202,10 +202,10 @@ boxes:
 registrationForm:
     email: 'E-mail'
     error:
-        captcha: 'Nieprawidłowy Captcha, spróbuj ponownie. '
+        captcha: 'Nieprawidłowy Captcha, spróbuj ponownie.'
         empty: To pole nie może być puste
-        password_min: 'Hasło musi zawierać co najmniej 8 znaków. '
-        password: 'Hasło i jego potwierdzenie nie są takie same. '
+        password_min: 'Hasło musi zawierać co najmniej 8 znaków.'
+        password: 'Hasło i jego potwierdzenie nie są takie same.'
     captcha: "Napisz litery i cyfry napisane poniżej"
     password: 'Hasło'
     password_verify: 'Potwierdzenie hasła'

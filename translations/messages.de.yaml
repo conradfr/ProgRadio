@@ -99,7 +99,7 @@ page:
     now:
         back: '← Zurück zum Radio Guid'
         no_schedule: '<strong>Ups...</strong> Es können keine Sendungen angezeigt werden.'
-        page_description: 'Was soll ich mir gerade anhören? '
+        page_description: 'Was soll ich mir gerade anhören?'
         page_title: 'Radioprogramme im Moment'
         title: 'Aktuell im Radio'
 
@@ -131,7 +131,7 @@ page:
     stream:
         country: Land
         description: 'Hören Sie Radios aus der ganzen Welt'
-        disabled: 'Dieses Radio ist inaktiv.'
+        disabled: 'Dieses Radio kann inaktiv sein.'
         discover: Entdecken Sie mehr Radios, suchen Sie nach Land und Stil...
         find: Suche
         find_amazon: Auf Deezer Amazon
@@ -171,7 +171,7 @@ page:
             info_1: Dadurch wird die E-Mail-Adresse aktualisiert, die als Login verwendet wurde.
             info_2: Eine Bestätigung wird an die frühere E-Mail-Adresse gesendet.
             success: Die E-Mail wurde aktualisiert.
-            new_email: 'Neue E-Mail-Adresse: '
+            new_email: 'Neue E-Mail-Adresse:'
             new_email_placeholder: example@email.com
             update_btn: Aktualisieren
         password:

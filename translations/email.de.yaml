@@ -5,7 +5,7 @@ signature:
     regards: Mit freundlichen Grüßen
 
 signup:
-    subject:  '%name% - Willkommen! '
+    subject:  '%name% - Willkommen!'
     welcome: Willkommen!
     text_1: Du bist jetzt auf %link% registriert
     text2: Ihre Favoriten (falls vorhanden) wurden auf Ihr Konto übertragen.

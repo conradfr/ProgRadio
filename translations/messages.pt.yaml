@@ -98,14 +98,14 @@ page:
 
     now:
         back: '← Voltar ao guia de rádio'
-        no_schedule: '<strong>Ops...</strong> nenhum programa para exibir. '
+        no_schedule: '<strong>Ops...</strong> nenhum programa para exibir.'
         title: 'Atualmente no rádio'
 
     radio:
         advanced: Use o player avançado <br>(rádios web, faixa atual...)
         back: '← Voltar ao guia de rádio'
         current: '↓ Ir para o programa atual'
-        description: 'Horário diário da rádio %radio%! '
+        description: 'Horário diário da rádio %radio%!'
         goto_today: Confira a programação de hoje
         goto_schedule: Verifique a programação da rádio
         more_radios: 'Mais rádios'
@@ -129,7 +129,7 @@ page:
     stream:
         country: País
         description: 'Ouça rádios de todo o mundo'
-        disabled: 'Este rádio é inativo.'
+        disabled: 'Este rádio pode estar inativo.'
         discover: Descubra mais rádios, pesquise por país e estilo...
         find: Pesquisar
         find_amazon: Encontre na Amazon
@@ -169,7 +169,7 @@ page:
             info_1: Isso atualizará o e-mail usado como login.
             info_2: Uma confirmação será enviada para o antigo endereço de e-mail.
             success: O e-mail foi atualizado.
-            new_email: 'Novo endereço de e-mail: '
+            new_email: 'Novo endereço de e-mail:'
             new_email_placeholder: example@email.com
             update_btn: Atualizar
         password:
@@ -202,7 +202,7 @@ boxes:
 registrationForm:
     email: 'E-mail'
     error:
-        captcha: 'Captcha inválido, tente novamente. '
+        captcha: 'Captcha inválido, tente novamente.'
         empty: Este campo não pode estar vazio
         password_min: 'A senha deve ter pelo menos 8 caracteres.'
         password: 'password_min: A senha deve ter pelo menos 8 caracteres.'
@@ -220,7 +220,7 @@ connectionForm:
     submit_connect: 'Login'
 
 updatePasswordForm:
-    new: 'Nova senha: '
+    new: 'Nova senha:'
     new_confirm: Confirmação da nova senha
     error_not_same: As novas senhas não são idênticas.
     error_not_empty: Este campo não pode estar vazio

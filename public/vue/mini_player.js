@@ -232,7 +232,7 @@ createApp({
               setAudioVolume();
 
               window.audio.play().then(() => {
-                this.playingStarted(topic, streamCodeName);
+                this.playingStarted(topic.trim(), streamCodeName);
               });
             });
           });
@@ -253,12 +253,12 @@ createApp({
           setAudioVolume();
 
           window.audio.play().then(() => {
-            this.playingStarted(topic, streamCodeName);
+            this.playingStarted(topic.trim(), streamCodeName);
           });
         });
       });
     } else {
-      const streamUrl = (streamingUrl.substring(0, 5) !== 'https')
+      const streamUrl = (streamingUrl.trim().substring(0, 5) !== 'https')
         ? `${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}` : streamingUrl;
 
       window.audio = new Audio(`${streamUrl}`);
@@ -269,7 +269,7 @@ createApp({
       };
 
       window.audio.play().then(() => {
-        this.playingStarted(topic, streamCodeName);
+        this.playingStarted(topic.trim(), streamCodeName);
       });
     }
   },
@@ -333,7 +333,7 @@ createApp({
     });
 
     if (topic !== undefined && topic !== null && topic !== '') {
-      this.joinChannel(topic);
+      this.joinChannel(topic.trim());
     }
 
     if (streamCodeName !== undefined && streamCodeName !== null && streamCodeName !== '') {

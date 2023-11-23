@@ -99,7 +99,7 @@ page:
     now:
         back: '← Torna alla radioguida'
         no_schedule: '<strong>Ahah...</strong> nessun programma da mostrare.'
-        page_description: 'Cosa ascoltare adesso? '
+        page_description: 'Cosa ascoltare adesso?'
         page_title: 'Programmi radiofonici in questo momento'
         title: 'Attualmente alla radio'
 
@@ -131,7 +131,7 @@ page:
     stream:
         country: Paese
         description: 'Ascolta le radio di tutto il mondo'
-        disabled: 'Questa radio non è attiva.'
+        disabled: 'Questa radio può essere inattiva.'
         discover: Scopra altre radio, cerchi per Paese e stile...
         find: Ricerca
         find_amazon: Trova su Amazon

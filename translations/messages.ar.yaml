@@ -131,7 +131,7 @@ page:
     stream:
         country: البلدان
         description: 'استمع إلى أجهزة الراديو من جميع أنحاء العالم'
-        disabled: 'هذا الراديو غير نشط.'
+        disabled: 'قد يكون هذا الراديو غير نشط.'
         discover: اكتشف المزيد من محطات الراديو، وابحث حسب البلد وأنماط الموسيقى...
         find: ابحث
         find_amazon: Rechercher sur Amazon

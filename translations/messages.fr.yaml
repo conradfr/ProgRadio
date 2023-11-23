@@ -131,7 +131,7 @@ page:
     stream:
         country: Pays
         description: 'Écoutez les radios du monde entier'
-        disabled: 'Cette radio est inactive.'
+        disabled: 'Cette radio semble inactive.'
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
         find: Rechercher
         find_amazon: Rechercher sur Amazon

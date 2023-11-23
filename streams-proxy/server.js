@@ -30,7 +30,8 @@ app.options('/', cors(corsOptions));
 
 app.get('/', cors(corsOptions), async (req, res) => {
   // redirect https stream requests as those don't need a cors proxy
-  if (typeof req.query.stream === 'string' && req.query.stream.startsWith('https://')) {
+  if (typeof req.query.stream === 'string' && req.query.stream.trim().startsWith('https://')) {
+    process.stdout.write(`Redirected: ${req.query.stream}\n`);
     res.redirect(req.query.stream);
     return;
   }
