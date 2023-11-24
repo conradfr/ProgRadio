@@ -75,7 +75,8 @@ export default defineComponent({
       adsense_tag_horiz_fix_key,
       tagRef: null,
       toast: null,
-      showToast: cookies.get(COOKIE_CONSENT, null) === null,
+      // showToast: cookies.get(COOKIE_CONSENT, null) === null,
+      showToast: false,
       consent: cookies.get(COOKIE_CONSENT, '0') === '1',
     };
   },
@@ -93,8 +94,10 @@ export default defineComponent({
 
     const adScript = document.createElement('script');
     let text = '';
-    if (this.consent) {
+    // if (this.consent) {
+      text += '(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;';
       text += '(adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;';
+      text += '(adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;';
       text += '(adsbygoogle = window.adsbygoogle || []).push({});';
 
       /*
@@ -103,12 +106,12 @@ export default defineComponent({
         data-adbreak-test="on"
       */
       // text += 'const adBreak = adConfig = function(o) {adsbygoogle.push(o);}';
-    } else if (!this.showToast) {
+/*    } else if (!this.showToast) {
       text += '(adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=1;';
       text += '(adsbygoogle = window.adsbygoogle || []).push({});';
     } else {
       text += '(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;';
-    }
+    }*/
     adScript.text = text;
 
     if (this.tagRef !== null) {
@@ -116,15 +119,15 @@ export default defineComponent({
     }
 
     /* eslint-disable no-undef */
-    if (this.showToast /* && typeof boostrap !== 'undefined' */) {
+/*    if (this.showToast /!* && typeof boostrap !== 'undefined' *!/) {
       setTimeout(() => {
         const toastCookieElem = document.getElementsByClassName('toast-cookie-app')[0];
-        /* eslint-disable no-undef */
+        /!* eslint-disable no-undef *!/
         // @ts-expect-error bootstrap is defined on global scope
         this.toast = new bootstrap.Toast(toastCookieElem);
         this.toast?.show();
       }, 250);
-    }
+    }*/
   },
   methods: {
     setRef(el: HTMLElement) {
