@@ -5,7 +5,6 @@ const fs = require('fs');
 const axios = require('axios');
 
 const radiosModule = require('./lib/radios.js');
-const logger = require("./lib/logger");
 
 (async () => {
   try {
@@ -29,7 +28,11 @@ logger.init(config.logmail);
 const optionDefinitions = [
   {name: 'radios', alias: 'r', type: String, multiple: true},
   {name: 'collection', alias: 'c', type: String, multiple: true},
-  {name: 'tomorrow', alias: 't', type: Boolean}
+  {name: 'tomorrow', alias: 't', type: Boolean},
+  // Exclude radios who support tomorrow
+  {name: 'no_tomorrow', alias: 'n', type: Boolean},
+  // Only radios who support tomorrow
+  {name: 'only_tomorrow', alias: 'o', type: Boolean}
 ];
 const options = commandLineArgs(optionDefinitions);
 
@@ -45,6 +48,15 @@ const getResults = async (radios, radiosList) => {
       }
       dateObj.add(1, 'days');
     }
+
+    if (options['no_tomorrow'] === true && radio_module.supportTomorrow === true) {
+      return true;
+    }
+
+    if (options['only_tomorrow'] === true && radio_module.supportTomorrow === false) {
+      return true;
+    }
+
     dateObj.tz('Europe/Paris');
 
     const all2 = await radio.sub_radios.map(async function (sub_radio) {
