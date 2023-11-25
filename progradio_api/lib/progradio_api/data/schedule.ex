@@ -12,13 +12,14 @@ defmodule ProgRadioApi.Schedule do
 
   @timezone "Europe/Paris"
 
-  # two days
-  @cache_ttl_schedule 172_800_000
-  @cache_ttl_schedule_now 300_000
   @cache_prefix_schedule "schedule_"
+  # 1 hour
+  @cache_ttl_schedule 3_600_000
+  # 5 mn
+  @cache_ttl_schedule_now 300_000
 
-  @cache_ttl_collection 604_800_000
   @cache_prefix_collection "collection_"
+  @cache_ttl_collection 604_800_000
 
   def list_schedule_collection(day, collection_code_name, now \\ false)
       when is_binary(collection_code_name) do
@@ -289,9 +290,17 @@ defmodule ProgRadioApi.Schedule do
   end
 
   defp get_cache_key(code_name, day, now) do
-    @cache_prefix_schedule <> day <> "_" <> to_string(now) <> "_" <> code_name
+    now_str =
+      if now == true do
+        "_now"
+      else
+        ""
+      end
+
+    @cache_prefix_schedule <> day <> now_str <> "_" <> code_name
   end
 
+  # todo separate today / past day ttls, but currently past days are accessed by bots in Symfony side anyway
   defp get_cache_ttl(now) when now == true, do: @cache_ttl_schedule_now
   defp get_cache_ttl(_now), do: @cache_ttl_schedule
 end

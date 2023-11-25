@@ -97,8 +97,8 @@ export default defineComponent({
     // if (this.consent) {
       text += '(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;';
       text += '(adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=0;';
-      text += '(adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;';
-      text += '(adsbygoogle = window.adsbygoogle || []).push({});';
+      text += '(adsbygoogle=window.adsbygoogle || []).pauseAdRequests=0;';
+      text += '(adsbygoogle=window.adsbygoogle || []).push({});';
 
       /*
         data-ad-test="on"
