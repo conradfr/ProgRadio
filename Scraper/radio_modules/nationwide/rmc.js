@@ -10,7 +10,7 @@ let dayNumber = null;
 let referenceIndex = 0;
 
 const format = dateObj => {
-  dateObj.tz("Europe/Paris");
+  dateObj.tz('Europe/Paris');
   dateObj.locale('fr');
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {

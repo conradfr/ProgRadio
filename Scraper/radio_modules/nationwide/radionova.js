@@ -69,7 +69,7 @@ const format = (dateObj, subRadio) => {
     if (curr.description !== undefined && curr.description.length > 0) {
       newEntry.description = curr.description.join("\n").trim();
     } else if (curr.description_alt !== undefined) {
-      newEntry.description = curr.description_alt.replace(/\u00a0/g, ' ').replace(/(<([^>]+)>)/gi, "");
+      newEntry.description = curr.description_alt.replace(/\u00a0/g, ' ').replace(/(<([^>]+)>)/gi, '');
     }
 
     prev.push(newEntry);

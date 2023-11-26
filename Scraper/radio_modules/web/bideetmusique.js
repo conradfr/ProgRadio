@@ -79,7 +79,7 @@ const format = async dateObj => {
     if (entry.link !== undefined && entry.link !== null) {
       let description = await fetchDesc(entry.link);
       if (description.description !== undefined && description.description !== null) {
-        // description = description.description.replace(/(\r\n|\n|\r)/gm, "").trim();
+        // description = description.description.replace(/(\r\n|\n|\r)/gm, '').trim();
         description = fixUtf8(description.description).replace(/ /g, ' ').replace(/\s\s+/g, ' ');
         if (description !== '') {
           newEntry.description = description;

@@ -15,7 +15,7 @@ const dayFr = {
 };
 
 const format = dateObj => {
-  dateObj.tz("Europe/Paris");
+  dateObj.tz('Europe/Paris');
   dateObj.locale('fr');
 
   const cleanedData = scrapedData.reduce(function (prev, entry) {

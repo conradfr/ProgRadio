@@ -61,7 +61,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-  dateObj.tz("Europe/Paris");
+  dateObj.tz('Europe/Paris');
   dateObj.locale('fr');
 
   const url = 'https://radio-verdon.com/programmation-radio-verdon/';

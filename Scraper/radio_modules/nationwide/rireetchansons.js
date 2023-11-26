@@ -11,10 +11,10 @@ const format = dateObj => {
   const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
     // we use datOfYear() because the dates on nrjpage are not accurate (next week etc)
 
-    startDateTime = moment(curr.datetime_raw_start, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+    startDateTime = moment(curr.datetime_raw_start, 'YYYY-MM-DDTHH:mm:ss', 'Europe/Paris');
     startDateTime.dayOfYear(curr.dateObj.dayOfYear());
 
-    endDateTime = moment(curr.datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+    endDateTime = moment(curr.datetime_raw_end, 'YYYY-MM-DDTHH:mm:ss', 'Europe/Paris');
     endDateTime.dayOfYear(curr.dateObj.dayOfYear());
 
     // keep only relevant time from previous day page
@@ -28,7 +28,7 @@ const format = dateObj => {
         return prev;
       }
 
-      const firstEndTimePrevDay = moment(array[0].datetime_raw_end, "YYYY-MM-DDTHH:mm:ss", "Europe/Paris");
+      const firstEndTimePrevDay = moment(array[0].datetime_raw_end, 'YYYY-MM-DDTHH:mm:ss', 'Europe/Paris');
       firstEndTimePrevDay.dayOfYear(array[0].dateObj.dayOfYear());
 
       // this is previous day normal scheduling, ignoring
@@ -44,7 +44,7 @@ const format = dateObj => {
     else {
       // if first of today, don't check
       if (prev.length > 0) {
-        const firstStartTimeToday = moment(prev[0].date_time_start, moment.ISO_8601, "Europe/Paris");
+        const firstStartTimeToday = moment(prev[0].date_time_start, moment.ISO_8601, 'Europe/Paris');
 
         // this is next day scheduling, ignoring
         if (startDateTime.isSameOrBefore(firstStartTimeToday)) {

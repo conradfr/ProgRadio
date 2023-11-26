@@ -9,7 +9,7 @@ const format = dateObj => {
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr) {
     // apparently sometimes it's empty
-    if (curr['datetime_raw'] === "") {
+    if (curr['datetime_raw'] === '') {
       return prev;
     }
 

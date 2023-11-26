@@ -7,7 +7,7 @@ const fixUtf8 = require('fix-utf8');
 let scrapedData = [];
 
 const format = dateObj => {
-  dateObj.tz("Europe/Paris");
+  dateObj.tz('Europe/Paris');
   dateObj.locale('fr');
   const dayString = utils.upperCaseWords(dateObj.format('dddd'));
 
