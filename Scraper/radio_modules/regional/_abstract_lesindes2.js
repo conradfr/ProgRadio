@@ -133,6 +133,8 @@ const format = async (dateObj, name, description_prefix) => {
     let host = null;
     if (curr.animatorsNames !== undefined && curr.animatorsNames !== null && curr.animatorsNames.length > 0) {
       host = curr.animatorsNames.join(', ');
+    } else if (curr.chapo !== undefined && curr.chapo !== null && curr.chapo !== '') {
+      host = curr.chapo.substring(5);
     }
 
     newEntry = {
