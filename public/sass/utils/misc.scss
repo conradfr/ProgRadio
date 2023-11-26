@@ -55,3 +55,23 @@
     }
   }
 }
+
+.affiliate-frame {
+  background-color: white;
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+      font-size: 1.231rem;
+    }
+  }
+
+  .affiliate-text {
+    color: black;
+    font-size: 1.154rem;
+    letter-spacing: .09rem;
+    line-height: normal;
+  }
+}

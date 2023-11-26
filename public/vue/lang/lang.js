@@ -1129,7 +1129,7 @@ export const messages = {
       loading: 'جاري التحميل...',
       generic: {
         delete: 'إزالة',
-        error: "لقد حدث خطأ."
+        error: 'لقد حدث خطأ'
       },
       now_page: {
         back: 'ارجع إلى جدول البرنامج الكامل',
@@ -1150,7 +1150,7 @@ export const messages = {
         updated: 'تم تحديث الإعدادات'
       },
       player: {
-        autoplay_error: "لا يسمح المستعرض الخاص بك بتشغيل الوسائط تلقائيًا. يرجى النقر فوق «استمع» مرة أخرى",
+        autoplay_error: 'ا يسمح المستعرض الخاص بك بتشغيل الوسائط تلقائيًا. يرجى النقر فوق «استمع» مرة أخرى',
         play_error: 'خطأ في القراءة',
         placeholder: 'انقر فوق الشعار لبدء القراءة',
         previous: 'استمع إلى {radio} مرة أخرى',
@@ -1193,10 +1193,10 @@ export const messages = {
       schedule: {
         no_schedule: 'البرامج غير متوفرة',
         no_radio: 'لا يوجد راديو في هذه الفئة',
-        no_radio_favorites: "ليس لديك محطات راديو مفضلة",
+        no_radio_favorites: 'ليس لديك محطات راديو مفضلة',
         preroll_filter: 'أجهزة راديو مع إعلان عند الإطلاق',
         title: 'جميع محطات الراديو وجميع البرامج والاستماع عبر الإنترنت',
-        today: "اليوم",
+        today: 'اليوم',
         tomorrow: 'غدًا',
         tooltip: 'المزيد من أجهزة الراديو هنا',
         radio_list: {
@@ -1216,7 +1216,7 @@ export const messages = {
         find_deezer: 'Deezer',
         find_spotify: 'Spotify',
         find_youtube: 'Youtube',
-        no_songs: "ليس لديك أي أغاني محفوظة.",
+        no_songs: 'ليس لديك أي أغاني محفوظة.',
         title: 'العناوين المحفوظة',
       },
       streaming: {
@@ -1248,8 +1248,8 @@ export const messages = {
       },
       toast: {
         home: {
-          enabled: "تم تنشيط الصفحة كصفحة رئيسية.",
-          disabled: "تمت إزالة الصفحة كصفحة رئيسية."
+          enabled: 'تم تنشيط الصفحة كصفحة رئيسية.',
+          disabled: 'تمت إزالة الصفحة كصفحة رئيسية.'
         }
       }
     },

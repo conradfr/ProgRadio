@@ -13,13 +13,11 @@ class AffiliateRepository extends EntityRepository
    {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("a.htmlLink")
+        $qb->select('a.htmlLink, a.base64img, a.text_'. $locale . ' as locale_text')
             ->from( Affiliate::class, 'a')
-            ->where("a.locale = :locale")
+            ->where('a.text_'. $locale . ' IS NOT NULL')
             ->orderBy('RANDOM()')
             ->setMaxResults(1);
-
-        $qb->setParameter('locale', $locale);
 
         $query = $qb->getQuery();
         return $query->getOneOrNullResult();

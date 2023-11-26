@@ -1,5 +1,6 @@
 <template>
-  <div v-on:keyup.f="keyupFav" style="overflow: hidden; padding: 0 0 !important; direction:ltr/*rtl:ignore*/;">
+  <div v-on:keyup.f="keyupFav"
+    style="overflow: hidden; padding: 0 0 !important; direction:ltr/*rtl:ignore*/;">
     <collection-switcher></collection-switcher>
     <timeline></timeline>
     <timeline-cursor-head v-if="rankedRadios.length > 0"></timeline-cursor-head>

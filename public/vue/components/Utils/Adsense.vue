@@ -111,7 +111,7 @@ export default defineComponent({
       text += '(adsbygoogle = window.adsbygoogle || []).push({});';
     } else {
       text += '(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;';
-    }*/
+    } */
     adScript.text = text;
 
     if (this.tagRef !== null) {
@@ -127,7 +127,7 @@ export default defineComponent({
         this.toast = new bootstrap.Toast(toastCookieElem);
         this.toast?.show();
       }, 250);
-    }*/
+    } */
   },
   methods: {
     setRef(el: HTMLElement) {
