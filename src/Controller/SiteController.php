@@ -160,8 +160,9 @@ class SiteController extends AbstractController
         // @todo move to service
 
         // @todo if route list grows, get collection & filter
-        $routesToExport = ['app', 'now', 'faq', 'contact'];
+        $routesToExport = $host->isProgRadio($request) === true ? ['app', 'now', 'faq', 'contact'] : ['app', 'faq', 'contact'];
         $routes = [];
+
         foreach ($routesToExport as $entry) {
             $routes[$entry] = $router->getRouteCollection()->get($entry);
         }

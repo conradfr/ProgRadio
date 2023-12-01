@@ -9,17 +9,24 @@ use Doctrine\ORM\EntityRepository;
 
 class AffiliateRepository extends EntityRepository
 {
+   private const locales = ['fr', 'en', 'es', 'de'];
+
    public function getOneAffiliate(string $locale)
    {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+       if (!in_array($locale,  self::locales)) {
+           return null;
+       }
 
-        $qb->select('a.htmlLink, a.base64img, a.text_'. $locale . ' as locale_text')
+       $qb = $this->getEntityManager()->createQueryBuilder();
+
+       $qb->select('a.htmlLink, a.base64img, a.text_'. $locale . ' as locale_text')
             ->from( Affiliate::class, 'a')
             ->where('a.text_'. $locale . ' IS NOT NULL')
             ->orderBy('RANDOM()')
             ->setMaxResults(1);
 
-        $query = $qb->getQuery();
-        return $query->getOneOrNullResult();
+       $query = $qb->getQuery();
+
+       return $query->getOneOrNullResult();
     }
 }
