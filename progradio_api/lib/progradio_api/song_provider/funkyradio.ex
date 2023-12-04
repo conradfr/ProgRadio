@@ -2,6 +2,9 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
   require Logger
   alias ProgRadioApi.SongProvider
 
+  # deprecated as icecast works for it now
+  # kept for reference
+
   @behaviour ProgRadioApi.SongProvider
 
   @stream_referer %{
