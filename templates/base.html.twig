@@ -34,6 +34,10 @@
         {% endblock %}
     </style>
 
+    {% if 'www' in app.request.uri == false %}
+        <link rel="canonical" href="{{ app.request.uri|replace({'https://': 'https://www.'})|default(app.request.uri) }}" />
+    {% endif %}
+
     {% if app.request.locale is defined %}
         {% for locale in locales %}
             {% if app.request.locale != locale %}
