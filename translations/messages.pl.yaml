@@ -142,7 +142,8 @@ page:
         suggested: Sugerowane radia
         tags: Tagi
         share:  Udostępnij to radio
-        title: 'Słuchaj %radio%'
+        title: 'Słuchaj %radio% live'
+        title_country: 'Słuchaj %radio% - %country% - Live'
         website: Strona
 
     top:

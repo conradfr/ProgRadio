@@ -116,7 +116,7 @@ page:
         play: 'Écouter %radio%'
         stop: 'Stopper %radio%'
         summary: 'Description'
-        title: '%radio% - Écouter en direct streaming'
+        title: 'Écouter %radio% en direct streaming'
         website: 'Site web'
 
     registered:
@@ -130,7 +130,7 @@ page:
 
     stream:
         country: Pays
-        description: 'Écoutez les radios du monde entier'
+        description: 'Écoutez %radio% en direct et gratuit'
         disabled: 'Cette radio semble inactive.'
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
         find: Rechercher
@@ -144,7 +144,8 @@ page:
         suggested: Radios suggérées
         tags: Tags
         share: Partager la radio
-        title: '%radio% - Écouter en direct et gratuit'
+        title: 'Écouter %radio% en direct'
+        title_country: 'Écouter %radio% - %country% - En direct'
         website: Site web
 
     top:

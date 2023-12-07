@@ -30,6 +30,7 @@
     <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
     <meta property="og:type" content="website"><meta property="og:site_name" content="{{ getDomainName(app.request) }}">
     <meta property="og:image" content="https://www.{{ getDomainRootDomain(app.request) }}{{- self.picture(stream) -}}">
+    <meta property="og:description" content="{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}">
     <meta name="thumbnail" content="https://www.{{ getDomainRootDomain(app.request) }}{{- self.picture(stream) -}}">
 {% endblock %}
 
@@ -60,7 +61,14 @@
 </script>
 {% endblock %}
 
-{% block title %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endblock %}
+{% block title %}
+{% if stream.countryCode is not null and stream.countryCode != '' %}
+   {{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}
+{% else %}
+    {{ 'page.stream.title'|trans({'%radio%': stream.name}) }}
+{% endif %}
+{% endblock %}
+
 {% block description %}{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}{% endblock %}
 
 {% block body %}

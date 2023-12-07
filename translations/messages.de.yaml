@@ -144,7 +144,8 @@ page:
         suggested: Vorgeschlagene Radios
         tags: Schlagworte
         share: Radio teilen
-        title: '%radio% - Live hören'
+        title: '%radio% live hören'
+        title_country: '%radio% hören - %country% - Live'
         website: Webseite
 
     top:

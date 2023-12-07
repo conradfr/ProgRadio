@@ -142,7 +142,8 @@ page:
         suggested: Rádios sugeridos
         tags: Etiquetas
         share: Compartilhar o rádio
-        title: '%radio% Ouça ao vivo'
+        title: 'Ouça %radio% ao vivo'
+        title_country: 'Ouça %radio% - %country% - Ao vivo'
         website: Site
 
     top:

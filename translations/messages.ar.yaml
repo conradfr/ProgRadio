@@ -144,7 +144,8 @@ page:
         suggested: أجهزة الراديو المقترحة
         tags: العلامات
         share: شارك الراديو
-        title: '%radio% - استمع مباشرة ومجانًا'
+        title: 'استمع إلى %radio% مباشرة'
+        title_country: 'استمع إلى %radio% - %country% - بث مباشر'
         website: الموقع الإلكتروني
 
     top:

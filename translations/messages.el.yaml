@@ -144,7 +144,8 @@ page:
         suggested: Προτεινόμενα ραδιόφωνα
         tags: Ετικέτες
         share: Μοιραστείτε αυτό το ραδιόφωνο
-        title: 'Ακούστε το %radio%'
+        title: 'Ακούστε το %radio% ζωντανά'
+        title_country: 'Ακούστε το %radio% - %country% - Ζωντά'
         website: Δικτυακός τόπος
 
     top:

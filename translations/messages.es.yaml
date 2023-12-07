@@ -144,7 +144,8 @@ page:
         suggested: Radios sugeridos
         tags: Tags
         share: Compartir radio
-        title: '%radio% - Escuchar en vivo'
+        title: 'Escucha %radio% en directo'
+        title_country: 'Escucha %radio% - %country% - En directo'
         website: 'Sitio web'
 
     top:

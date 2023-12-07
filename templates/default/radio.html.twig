@@ -25,6 +25,7 @@
     <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
     <meta property="og:type" content="website"><meta property="og:site_name" content="{{ getDomainName(app.request) }}">
     <meta property="og:image" content="{{ absolute_url(asset('/img/radio/page/' ~ radio.codename ~ '.png')) }}">
+    <meta property="og:description" content="{{ 'page.radio.description'|trans({'%radio%': radio.name}) }}">
     <meta name="thumbnail" content="{{ absolute_url(asset('/img/radio/page/' ~ radio.codename ~ '.png')) }}">
 {% endblock %}
 

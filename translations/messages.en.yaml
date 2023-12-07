@@ -145,6 +145,7 @@ page:
         tags: Tags
         share: Share this radio
         title: 'Listen to %radio%'
+        title_country: 'Listen to %radio% - %country%'
         website: Website
 
     top:
