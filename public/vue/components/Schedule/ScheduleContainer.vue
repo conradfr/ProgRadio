@@ -47,9 +47,7 @@ export default defineComponent({
 
         if (this.$route.params.collection) {
           this.switchCollection((this.$route.params.collection as string));
-        } /* else {
-          this.joinChannel(`collection:${this.currentCollection}`);
-        } */
+        }
       },
       25
     );
@@ -60,9 +58,6 @@ export default defineComponent({
       },
       3500
     ); */
-  },
-  beforeUnmount() {
-    /* this.leaveChannel(`collection:${this.currentCollection}`); */
   },
   watch: {
     $route(to, from) {
@@ -80,12 +75,10 @@ export default defineComponent({
     'displayRegionModal'
   ]),
   methods: {
-    ...mapActions(usePlayerStore, ['joinChannel', 'leaveChannel']),
     ...mapActions(useScheduleStore, [
       'getSchedule',
       'switchCollection',
-      'getRadiosData',
-      'getSchedule'
+      'getRadiosData'
     ])
   }
 });

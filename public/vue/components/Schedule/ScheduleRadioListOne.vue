@@ -143,8 +143,10 @@ export default defineComponent({
     }, 1000);
   },
   beforeUnmount() {
-    this.leaveChannel(this.channelName);
-    this.leaveListenersChannel(`${this.radio.code_name}_main`);
+    setTimeout(() => {
+      this.leaveChannel(this.channelName);
+      this.leaveListenersChannel(`${this.radio.code_name}_main`);
+    }, 250);
   },
   computed: {
     ...mapState(usePlayerStore, [

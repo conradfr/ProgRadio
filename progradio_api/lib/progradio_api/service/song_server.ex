@@ -27,7 +27,6 @@ defmodule ProgRadioApi.SongServer do
         song: nil,
         last_data: nil,
         retries: 0,
-        collection_topic: nil,
         db_data: nil
       },
       name: name
@@ -43,12 +42,6 @@ defmodule ProgRadioApi.SongServer do
       |> (&("Elixir.ProgRadioApi.SongProvider." <> &1)).()
       |> String.to_existing_atom()
 
-    collection_topic =
-      case Map.get(db_data, :collection_code_name, nil) do
-        nil -> nil
-        collection_code_name -> "collection:" <> collection_code_name
-      end
-
     GenServer.start_link(
       __MODULE__,
       %{
@@ -57,7 +50,6 @@ defmodule ProgRadioApi.SongServer do
         song: nil,
         last_data: nil,
         retries: 0,
-        collection_topic: collection_topic,
         db_data: db_data
       },
       name: name
@@ -81,7 +73,7 @@ defmodule ProgRadioApi.SongServer do
 
   @impl true
   def handle_cast(:broadcast, state) do
-    broadcast_song(state.name, state.song, state.collection_topic)
+    broadcast_song(state.name, state.song)
     {:noreply, state}
   end
 
@@ -94,11 +86,11 @@ defmodule ProgRadioApi.SongServer do
     with {data, song} <- get_data_song(module, name, last_data),
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error do
-      broadcast_song(name, song, state.collection_topic)
+      broadcast_song(name, song)
 
       update_status(song, db_data)
 
-      how_many_connected = how_many_connected(name, state.collection_topic)
+      how_many_connected = how_many_connected(name)
 
       refresh_rate =
         cond do
@@ -123,14 +115,14 @@ defmodule ProgRadioApi.SongServer do
       {:noreply, %{state | song: song, last_data: data, retries: updated_retries}, :hibernate}
     else
       _ ->
-        broadcast_song(name, nil, nil)
+        broadcast_song(name, nil)
 
-        Process.send_after(self(), {:refresh, :auto}, @refresh_song_retries_max_interval)
-        {:noreply, %{state | song: nil, last_data: nil}, :hibernate}
+#        Process.send_after(self(), {:refresh, :auto}, @refresh_song_retries_max_interval)
+#        {:noreply, %{state | song: nil, last_data: nil}, :hibernate}
 
-        #        ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
-        #        Logger.error("Data provider - #{state.name}: fetching error, exiting")
-        #        {:stop, :normal, nil}
+        ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
+        Logger.error("Data provider - #{state.name}: fetching error, exiting")
+        {:stop, :normal, nil}
     end
   end
 
@@ -140,7 +132,7 @@ defmodule ProgRadioApi.SongServer do
         %{module: module, name: name, last_data: last_data, db_data: db_data} = state
       ) do
     {data, song} = get_data_song(module, name, last_data)
-    broadcast_song(name, song, state.collection_topic)
+    broadcast_song(name, song)
 
     update_status(song, db_data)
 
@@ -159,12 +151,12 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_info(:presence, %{name: name, collection_topic: collection_topic} = state) do
-    how_many_connected = how_many_connected(name, collection_topic)
+  def handle_info(:presence, %{name: name} = state) do
+    how_many_connected = how_many_connected(name)
 
     case how_many_connected do
       0 ->
-        broadcast_song(name, nil, nil)
+        broadcast_song(name, nil)
         Logger.debug("Data provider - #{name}: no client connected, exiting")
         {:stop, :normal, nil}
 
@@ -183,17 +175,9 @@ defmodule ProgRadioApi.SongServer do
 
   # ----- Internal -----
 
-  @spec broadcast_song(String.t(), map() | nil, String.t() | nil) :: none()
-  defp broadcast_song(name, song, collection_topic) do
+  @spec broadcast_song(String.t(), map() | nil) :: none()
+  defp broadcast_song(name, song) do
     data = %{name: name, song: song}
-
-    unless collection_topic == nil,
-      do:
-        ProgRadioApiWeb.Endpoint.broadcast!(
-          collection_topic,
-          "playing",
-          Map.put(data, :topic, collection_topic)
-        )
 
     ProgRadioApiWeb.Endpoint.broadcast!(
       name,
@@ -252,21 +236,10 @@ defmodule ProgRadioApi.SongServer do
     Logger.debug("Updating status, no match: #{inspect(song)} - #{inspect(db_data)}")
   end
 
-  defp how_many_connected(topic, collection_topic) do
-    [
-      how_many_connected_stream(topic),
-      how_many_connected_collection(collection_topic)
-    ]
-    |> Enum.max()
-  end
+  defp how_many_connected(topic), do: how_many_connected_stream(topic)
 
   defp how_many_connected_stream(topic) do
     Presence.list(topic)
-    |> Kernel.map_size()
-  end
-
-  defp how_many_connected_collection(collection_topic) do
-    Presence.list(collection_topic)
     |> Kernel.map_size()
   end
 
