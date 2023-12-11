@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongManager do
   def join(song_topic, radio_stream_data)
 
   def join("url:" <> song_topic, _params) do
-    case Registry.lookup(SongSongProviderRegistry, song_topic) do
+    case Registry.lookup(SongSongProviderRegistry, "url:" <> song_topic) do
       [] ->
         DynamicSupervisor.start_child(
           ProgRadioApi.SongDynamicSupervisor,
