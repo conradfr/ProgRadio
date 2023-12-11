@@ -92,8 +92,35 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    public function radioSubRadio(string $codeName, string $subRadioCodeName, EntityManagerInterface $em, ScheduleManager $scheduleManager, \DateTime $date=null): Response
+    public function radioSubRadio(
+        string $codeName,
+        string $subRadioCodeName,
+        EntityManagerInterface $em,
+        ScheduleManager $scheduleManager,
+        Host $host,
+        RouterInterface $router,
+        Request $request,
+        \DateTime $date=null): Response
     {
+        // redirect to progradio if not (for seo)
+        if ($host->isProgRadio($request) === false) {
+            $router->getContext()->setHost('www.' . Host::DATA['progradio']['domain']);
+
+            $routeParams = [
+                '_locale' => $request->getLocale(),
+                'codeName' => $codeName,
+                'subRadioCodeName' => $subRadioCodeName
+            ];
+
+            if ($date !== null) {
+                $routeParams['date'] = $date->format('Y-m-d');
+            }
+
+            $redirectUrl = $router->generate('radio_subradio', $routeParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
         if ($date === null) {
             $date = new \DateTime();
         }
@@ -180,8 +207,34 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    public function radio(string $codeName, EntityManagerInterface $em, ScheduleManager $scheduleManager, \DateTime $date=null): Response
+    public function radio(
+        string $codeName,
+        EntityManagerInterface $em,
+        ScheduleManager $scheduleManager,
+        Host $host,
+        RouterInterface $router,
+        Request $request,
+        \DateTime $date=null
+    ): Response
     {
+        // redirect to progradio if not (for seo)
+        if ($host->isProgRadio($request) === false) {
+            $router->getContext()->setHost('www.' . Host::DATA['progradio']['domain']);
+
+            $routeParams = [
+                '_locale' => $request->getLocale(),
+                'codeName' => $codeName
+            ];
+
+            if ($date !== null) {
+                $routeParams['date'] = $date->format('Y-m-d');
+            }
+
+            $redirectUrl = $router->generate('radio', $routeParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
         /** @var Radio $radio */
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName, 'active' => true]);
         if (!$radio) {
@@ -195,7 +248,16 @@ class DefaultController extends AbstractBaseController
         }
 
         // We don't do a redirect to keep the url clean without the default subradio.
-        return $this->radioSubRadio($codeName, $subRadio->getCodeName(), $em, $scheduleManager, $date);
+        return $this->radioSubRadio(
+            $codeName,
+            $subRadio->getCodeName(),
+            $em,
+            $scheduleManager,
+            $host,
+            $router,
+            $request,
+            $date
+        );
     }
 
     #[
