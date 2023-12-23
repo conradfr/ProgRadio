@@ -58,11 +58,26 @@ defmodule ProgRadioApi.SongProvider.Radionova do
         SongProvider.get_stream_code_name_from_channel(name)
         |> (&Map.get(@stream_name, &1)).()
 
-      "https://www.nova.fr/wp-json/radios/#{name}"
-      |> SongProvider.get()
-      |> Map.get(:body)
-      |> Jason.decode!()
-      |> Map.get("currentTrack", nil)
+      radio =
+        "https://www.nova.fr/wp-json/radios/all"
+        |> SongProvider.get()
+        |> Map.get(:body)
+        |> Jason.decode!()
+        |> Enum.find(fn r ->
+          code =
+            r
+            |> Map.get("radio", %{})
+            |> Map.get("code", nil)
+
+          code == name
+        end)
+
+      if radio != nil do
+        Map.get(radio, "currentTrack")
+      else
+        nil
+      end
+
     rescue
       _ -> nil
     end
