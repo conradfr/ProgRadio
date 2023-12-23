@@ -9,7 +9,12 @@
     <div class="row">
         <div class="col-12 col-md-6">
             <h3 class="mb-4">Stream Overloading</h3>
-            <div><h5>{{ stream.name }}</h5></div>
+            <div>
+                <div class="float-end">
+                    <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a> /
+                    <a target="_blank" href="{{ path('app') }}streaming/{{ stream.id }}">{{ 'admin.stream_errors.view'|trans }}</a>
+                </div>
+                <h5>{{ stream.name }}</h5></div>
 
             <div class="d-flex mb-3 mt-3">
                 <div class="me-5"><a target="_blank" href="https://www.google.com/search?tbm=isch&q={{ stream.name }}">Search Google Images</a></div>
