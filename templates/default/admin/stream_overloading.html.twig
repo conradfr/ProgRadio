@@ -78,7 +78,7 @@
             {% if stream.redirectToStream is not empty %}
                 <div class="mt-5 mb-1"><strong>Redirect:</strong>
                     <div class="mb-1"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream.redirectToStream.id}) }}">{{ stream.redirectToStream.name }}</a> - {{ stream.redirectToStream.id }}</div>
-                    <div class="mb-1"><a href="{{ path('admin_overloading', {streamId: stream.id}) }}">Remove</a></div>
+                    <div class="mb-1"><a href="{{ path('admin_reset_redirect', {id: stream.id}) }}">Remove</a></div>
                 </div>
             {% endif %}
 

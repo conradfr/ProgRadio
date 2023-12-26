@@ -397,6 +397,15 @@ export default defineComponent({
             });
 
             // @ts-ignore
+            this.currentPlayer.hls.on(Hls.Events.FRAG_PARSING_METADATA, (event, data) => {
+              if (data) {
+                console.log("Data", data);
+              } else {
+                console.log('no data');
+              }
+            });
+
+            // @ts-ignore
             this.currentPlayer.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
               this.currentPlayer.hls.loadSource(url);
               // @ts-ignore

@@ -276,7 +276,7 @@ class AdminController extends AbstractBaseController
         return $this->render('default/admin/goaccessiframe.html.twig');
     }
 
-    #[Route('/reset_stream_redirect/{id}', name: 'admin_reset_redirect')]
+    #[Route('/{_locale}/reset_stream_redirect/{id}', name: 'admin_reset_redirect')]
     public function resetStreamRedirect(Stream $stream, EntityManagerInterface $em): Response
     {
         $stream->setRedirectToStream(null);
@@ -284,7 +284,7 @@ class AdminController extends AbstractBaseController
         $em->persist($stream);
         $em->flush();
 
-        return $this->redirectToRoute('admin_playing_errors', [], 301);
+        return $this->redirectToRoute('admin_overloading', ['streamId' => $stream->getId()], 301);
     }
 
     #[Route('/{_locale}/reset_stream_playing_error/{id}', name: 'admin_reset_stream_paying_error')]
@@ -338,7 +338,7 @@ class AdminController extends AbstractBaseController
         return $this->redirectToRoute('admin', [], 301);
     }
 
-    #[Route('/delete_picture/{id}', name: 'admin_delete_stream_picture')]
+    #[Route('/{_locale}/delete_picture/{id}', name: 'admin_delete_stream_picture')]
     public function deletePicture(Stream $stream, EntityManagerInterface $em, Request $request): Response
     {
         $streamOverloading = new StreamOverloading();
