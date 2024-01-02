@@ -397,6 +397,7 @@ export default defineComponent({
             });
 
             // @ts-ignore
+            /*
             this.currentPlayer.hls.on(Hls.Events.FRAG_PARSING_METADATA, (event, data) => {
               if (data) {
                 console.log("Data", data);
@@ -404,6 +405,7 @@ export default defineComponent({
                 console.log('no data');
               }
             });
+             */
 
             // @ts-ignore
             this.currentPlayer.hls.on(Hls.Events.MEDIA_ATTACHED, () => {

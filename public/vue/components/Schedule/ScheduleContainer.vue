@@ -18,7 +18,6 @@ import { mapActions, mapState } from 'pinia';
 
 /* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
-import { usePlayerStore } from '@/stores/playerStore';
 
 import { DEFAULT_COLLECTION } from '@/config/config';
 

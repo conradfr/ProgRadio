@@ -191,6 +191,7 @@ export const usePlayerStore = defineStore('player', {
       }, 500);
 
       cache.setCache(config.LAST_RADIO_PLAYED, stream);
+      cache.setCache(config.LAST_RADIO_STREAM_PLAYED, null);
 
       this.setPrevious({ radio: stream });
 
