@@ -96,11 +96,14 @@
 
                             {% for locale in locales %}
                                 {% if app.request.locale != locale %}
-                                    <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}">
+                                    {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                             <div class="menu-flag-icon">
                                                 <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                                             </div>
-                                            {{ "footer.#{locale}"|trans }}</a>
+                                            {{ "footer.#{locale}"|trans }}
+                                        </a>
                                     </li>
                                 {% endif %}
                             {% endfor %}
@@ -128,11 +131,14 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarLocaleDropdown">
                         {% for locale in locales %}
                             {% if app.request.locale != locale %}
-                                <li><a class="dropdown-item" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}">
+                                {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                         <div class="menu-flag-icon">
                                             <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                                         </div>
-                                        {{ "footer.#{locale}"|trans }}</a>
+                                        {{ "footer.#{locale}"|trans }}
+                                    </a>
                                 </li>
                             {% endif %}
                         {% endfor %}
@@ -158,7 +164,7 @@
                             {% endif %}
 
                         <li><a class="dropdown-item" href="{{ path('user_page') }}">{{ 'menu.account'|trans }}</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'menu.logout'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('_logout_main') }}">{{ 'menu.logout'|trans }}</a></li>
                         {% else %}
                             <li><a class="dropdown-item" href="{{ path('app_login') }}">{{ 'menu.signon'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_register') }}">{{ 'menu.signup'|trans }}</a></li>

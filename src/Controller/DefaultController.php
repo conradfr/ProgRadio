@@ -29,10 +29,12 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Keiko\Uuid\Shortener\Dictionary;
 use Keiko\Uuid\Shortener\Shortener;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class DefaultController extends AbstractBaseController
 {
     protected const MIN_DATE = '2017-08-19';
+    protected const COOKIE_LOCALE = 'locale';
 
     // LEGACY
     #[Route('/schedule/{date}', name: 'schedule')]
@@ -612,6 +614,30 @@ class DefaultController extends AbstractBaseController
     }
 
     #[
+        Route('/locale-switch/to/{locale}',
+            name: 'locale_switch',
+            requirements: [
+                'locale' => 'en|fr|es|de|pt|it|pl|el|ar'
+            ]
+        )
+    ]
+    public function localSwitch(Request $request, string $locale): Response
+    {
+        $redirect = $request->query->get('redirect', '/');
+
+        $cookie = new Cookie(
+            self::COOKIE_LOCALE,
+            $locale,
+            time() + (2 * 365 * 24 * 60 * 60) // 2 years
+        );
+
+        $response = new RedirectResponse(urldecode($redirect));
+        $response->headers->setCookie($cookie);
+
+        return $response;
+    }
+
+    #[
         Route('/',
             name: 'index_radio_addict',
             priority: 2,
@@ -620,9 +646,17 @@ class DefaultController extends AbstractBaseController
             requirements: ['subdomain' => 'www|local']
         )
     ]
-    public function indexRadioAddict(): Response
+    public function indexRadioAddict(Host $host, Request $request): Response
     {
-        return $this->redirectToRoute('streaming_spa');
+        $locale = $request->cookies->get(self::COOKIE_LOCALE, null);
+
+        if (!$locale && $request->getPreferredLanguage() !== null && in_array(substr($request->getPreferredLanguage(), 0, 2), SiteController::LANG)) {
+            $locale = substr($request->getPreferredLanguage(), 0, 2);
+        } elseif (!$locale) {
+            $locale = $host->getDefaultLocale($request);
+        }
+
+        return $this->redirectToRoute('streaming_spa', ['_locale' => $locale], 301);
     }
 
     #[
@@ -658,7 +692,7 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    public function index(Request $request, string $collection=null): Response
+    public function index(string $collection=null): Response
     {
         return $this->render('default/index.html.twig', []);
     }
@@ -666,11 +700,16 @@ class DefaultController extends AbstractBaseController
     #[Route('/', name: 'app_legacy')]
     public function indexLegacy(Host $host, Request $request): RedirectResponse
     {
-        $locale = $host->getDefaultLocale($request);
-        if ($request->getPreferredLanguage() !== null && in_array($request->getPreferredLanguage(), SiteController::LANG)) {
-            $locale = $request->getPreferredLanguage();
+        $locale = $request->cookies->get(self::COOKIE_LOCALE, null);
+
+        if (!$locale && $request->getPreferredLanguage() !== null && in_array(substr($request->getPreferredLanguage(), 0, 2), SiteController::LANG)) {
+            $locale = substr($request->getPreferredLanguage(), 0, 2);
+        } elseif (!$locale) {
+            $locale = $host->getDefaultLocale($request);
         }
 
-        return $this->redirectToRoute('app', ['_locale' => $locale], 301);
+        $routeName = $host->isProgRadio($request) ? 'app' : 'streaming_spa';
+
+        return $this->redirectToRoute($routeName, ['_locale' => $locale], 301);
     }
 }

@@ -12,7 +12,7 @@
 
             {% if app.user %}
                 <div class="alert alert-success" role="alert">
-                    {{ 'connectionForm.already_logged'|trans({'%email%': app.user.email}) }}, <a href="{{ path('app_logout') }}">{{ 'connectionForm.logout'|trans }}</a>
+                    {{ 'connectionForm.already_logged'|trans({'%email%': app.user.email}) }}, <a href="{{ path('_logout_main') }}">{{ 'connectionForm.logout'|trans }}</a>
                 </div>
             {% endif %}
 
