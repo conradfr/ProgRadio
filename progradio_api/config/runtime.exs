@@ -50,6 +50,7 @@ if config_env() == :prod do
 
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
+  origin = (System.get_env("ORIGIN") || "") |> String.split(",")
 
   config :progradio_api, ProgRadioApiWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
@@ -62,7 +63,7 @@ if config_env() == :prod do
       compress: true
     ],
     secret_key_base: secret_key_base,
-    check_origin: [System.get_env("ORIGIN"), System.get_env("ORIGIN2")],
+    check_origin: origin,
     url: [host: System.get_env("HOST"), port: 443, scheme: "https"]
 
   # ## SSL Support
