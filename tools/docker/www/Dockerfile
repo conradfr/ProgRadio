@@ -138,17 +138,24 @@ ENV APP_ENV=${APP_ENV} \
   RECAPTCHA3_SECRET=${RECAPTCHA3_SECRET} \
   AMAZON_AFFILIATE_ID=${AMAZON_AFFILIATE_ID}
 
+# Copy vendors
+COPY --chown=www-data:www-data ./composer.json /var/www/composer.json
+COPY --chown=www-data:www-data ./composer.lock /var/www/composer.lock
+COPY --chown=www-data:www-data ./symfony.lock /var/www/symfony.lock
+
 # Set working directory
 WORKDIR /var/www
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --prefer-dist --no-scripts --no-dev --no-interaction --no-autoloader && rm -rf /root/.composer
 
 # Copy existing application directory
 COPY --chown=www-data:www-data ./ /var/www/
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --no-interaction -o
-
 COPY --from=buildjs /tmp/public/build/ ./public/build/
+
+RUN composer dump-autoload --no-scripts --no-dev --optimize
 
 # RUN mkdir -p /var/www/var/
 # RUN mkdir -p /var/www/var/cache/
