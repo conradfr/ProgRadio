@@ -11,7 +11,7 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.Cache
   alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamSong}
 
-  @default_limit 40
+  @default_limit 48
 
   # 1h
   @cache_ttl_stream 3_600_000

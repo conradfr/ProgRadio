@@ -303,6 +303,10 @@ export const useStreamsStore = defineStore('streams', {
     },
     // TODO refactor page selection
     pageSet(page: number) {
+      if (typeof page !== 'number') {
+        return;
+      }
+
       this.page = page;
     },
     sortBySelection(sortBy: string) {

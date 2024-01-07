@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/streams')]
 class StreamsController  extends AbstractBaseController
 {
-    public const DEFAULT_RESULTS = 40;
+    public const DEFAULT_RESULTS = 48;
 
     #[Route('/list', name: 'streams_radios')]
     public function list(EntityManagerInterface $em, Request $request): Response

@@ -91,7 +91,7 @@ export const LISTENING_SESSION_MIN_SECONDS = 15;
 export const LISTENING_SESSION_SOURCE = 'web';
 export const LISTENING_SESSION_SOURCE_SSR = 'seo';
 
-export const STREAMS_DEFAULT_PER_PAGE = 40;
+export const STREAMS_DEFAULT_PER_PAGE = 48;
 // export const STREAMS_MAX_PAGES_DISPLAY = 9;
 
 export const STREAMING_CATEGORY_ALL = 'ALL';
