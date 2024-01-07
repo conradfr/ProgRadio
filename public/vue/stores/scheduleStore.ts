@@ -382,8 +382,8 @@ export const useScheduleStore = defineStore('schedule', {
       const dateStr: string = this.cursorTime.toISODate();
 
       // if we have cache we display it immediately and then fetch an update silently
-      if (cache.hasCache(dateStr)) {
-        this.updateSchedule(cache.getCache(dateStr));
+      if (cache.hasSessionCache(dateStr)) {
+        this.updateSchedule(cache.getSessionCache(dateStr));
       } else {
         globalStore.setLoading(true);
       }
@@ -420,8 +420,8 @@ export const useScheduleStore = defineStore('schedule', {
           75
         );
       } else {
-        if (cache.hasCache(dateStr)) {
-          this.updateSchedule(cache.getCache(dateStr));
+        if (cache.hasSessionCache(dateStr)) {
+          this.updateSchedule(cache.getSessionCache(dateStr));
         }
 
         setTimeout(

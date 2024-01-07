@@ -49,7 +49,7 @@ const getSchedule = async (dateStr: string, params?: any): Promise<Schedule|null
     if (data.schedule !== undefined) {
       // only cache full data
       if (params === undefined || params === null) {
-        cache.setCache(dateStr, data.schedule);
+        cache.setSessionCache(dateStr, data.schedule);
       }
 
       return data.schedule;
