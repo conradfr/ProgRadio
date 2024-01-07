@@ -26,7 +26,7 @@ class StreamRepository extends ServiceEntityRepository
         parent::__construct($registry, Stream::class);
     }
 
-    public function getStreamsWithPlayingError($threshold=2)
+    public function getStreamsWithPlayingError(int $threshold=2, ?int $ceiling)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -36,6 +36,11 @@ class StreamRepository extends ServiceEntityRepository
             ->orderBy('s.playingError', 'DESC');
 
         $qb->setParameter('threshold', $threshold);
+
+        if ($ceiling) {
+            $qb->andWhere('s.playingError <= :ceiling');
+            $qb->setParameter('ceiling', $ceiling);
+        }
 
         return $qb->getQuery()->getResult();
     }

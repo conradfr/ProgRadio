@@ -215,10 +215,11 @@ class AdminController extends AbstractBaseController
         );
     }
 
-    #[Route('/{_locale}/admin/playing_errors', name: 'admin_playing_errors')]
-    public function playingErrorsAction(EntityManagerInterface $em): Response
+    #[Route('/{_locale}/admin/playing_errors/{threshold<\d+>?3}', name: 'admin_playing_errors')]
+    #[Route('/{_locale}/admin/playing_errors/{threshold<\d+>?3}/{ceiling<\d+>?}', name: 'admin_playing_errors_ceiling')]
+    public function playingErrorsAction(int $threshold, ?int $ceiling, EntityManagerInterface $em): Response
     {
-        $errors = $em->getRepository(Stream::class)->getStreamsWithPlayingError();
+        $errors = $em->getRepository(Stream::class)->getStreamsWithPlayingError($threshold, $ceiling);
 
         return $this->render('default/admin/playing_error.html.twig', [
             'errors' => $errors,
@@ -288,12 +289,20 @@ class AdminController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/reset_stream_playing_error/{id}', name: 'admin_reset_stream_paying_error')]
-    public function resetStreamPlayingErrors(Stream $stream, EntityManagerInterface $em): Response
+    public function resetStreamPlayingErrors(Stream $stream, EntityManagerInterface $em, Request $request): Response
     {
         $stream->setPlayingError(0);
 
         $em->persist($stream);
         $em->flush();
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->jsonResponse([
+                    'stream_id' => $stream->getId(),
+                    'status'   => 'OK',
+                ]
+            );
+        }
 
         return $this->redirectToRoute('admin_playing_errors', [], 301);
     }
