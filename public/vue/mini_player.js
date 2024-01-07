@@ -232,7 +232,10 @@ createApp({
               setAudioVolume();
 
               window.audio.play().then(() => {
-                this.playingStarted(topic.trim(), streamCodeName);
+                this.playingStarted(
+                  topic ? topic.trim() : null,
+                  streamCodeName ? streamCodeName.trim() : null
+                );
               });
             });
           });
@@ -253,7 +256,10 @@ createApp({
           setAudioVolume();
 
           window.audio.play().then(() => {
-            this.playingStarted(topic.trim(), streamCodeName);
+            this.playingStarted(
+              topic ? topic.trim() : null,
+              streamCodeName ? streamCodeName.trim() : null
+            );
           });
         });
       });
@@ -269,7 +275,10 @@ createApp({
       };
 
       window.audio.play().then(() => {
-        this.playingStarted(topic.trim(), streamCodeName);
+        this.playingStarted(
+          topic ? topic.trim() : null,
+          streamCodeName ? streamCodeName.trim() : null
+        );
       });
     }
   },

@@ -443,7 +443,15 @@ export const useScheduleStore = defineStore('schedule', {
       }
     },
     updateSchedule(schedule: Schedule) {
-      const updatedSchedule: any = { ...{ ...this.schedule }, ...schedule };
+      // remove null schedules
+      const filteredSchedule = Object.entries(schedule).reduce((acc: Schedule, [key, value]) => {
+        if (value !== null) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+
+      const updatedSchedule: any = { ...{ ...this.schedule }, ...filteredSchedule };
       /* eslint-disable function-paren-newline */
       const scheduleDisplay = ScheduleUtils.getScheduleDisplay(
         updatedSchedule, this.cursorTime, initialScrollIndex
