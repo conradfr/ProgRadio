@@ -46,6 +46,7 @@ const getResults = async (radios, radiosList) => {
       if (radio_module.supportTomorrow !== true) {
         return true;
       }
+
       dateObj.add(1, 'days');
     }
 
