@@ -164,6 +164,7 @@ page:
         menu:
             email: E-mail
             password: Hasło
+            preferences: Moja historia
             delete: Usuń
         email:
             page_title: Zaktualizuj mój e-mail
@@ -177,6 +178,13 @@ page:
             page_title: Zaktualizuj moje hasło
             success: Hasło zostało zaktualizowane.
             update_btn: Aktualizacja
+        preferences:
+            page_title: Preferencje
+            update_btn: Aktualizacja
+            store_history: Zachowaj historię odtwarzanych stacji radiowych
+            reset_history: Wyczyść moją historię
+            reset_verify: Czy na pewno chcesz usunąć swoją historię?
+            reset_verified: Twoja historia została usunięta.
         delete:
             page_title: Usuń moje konto
             warning: Ta operacja jest nieodwracalna. Twoje ulubione zostaną usunięte.
@@ -198,7 +206,8 @@ boxes:
         title: Dlaczego warto się zarejestrować?
         content: "- Możesz synchronizować swoje ulubione między urządzeniami."
         content2: "- Zapisz nadawane utwory."
-        content3: "- Mniej reklam."
+        content3: "- Sprawdź swoją historię (opcjonalnie)"
+        content4: "- Mniej reklam."
 
 registrationForm:
     email: 'E-mail'

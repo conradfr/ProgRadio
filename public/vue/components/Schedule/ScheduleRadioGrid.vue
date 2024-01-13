@@ -102,6 +102,7 @@ export default defineComponent({
         return {};
       }
 
+      // @ts-ignore
       return this.schedule[radioCodeName][subRadioCodeName];
     },
     hasSchedule(radioCodeName: string): boolean {

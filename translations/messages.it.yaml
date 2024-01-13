@@ -166,6 +166,7 @@ page:
         menu:
             email: E-mail
             password: Password
+            preferences: Preferenze
             delete: Eliminare
         email:
             page_title: Aggiorna la mia email
@@ -179,6 +180,13 @@ page:
             page_title: Elimini il mio account
             success: La password è stata aggiornata.
             update_btn: Aggiornamento
+        preferences:
+            page_title: Preferenze
+            update_btn: Aggiornamento
+            store_history: Conserva la cronologia delle stazioni radio riprodotte
+            reset_history: Cancella la mia cronologia
+            reset_confirm: Sei sicuro di voler eliminare la cronologia?
+            reset_confirmed: La tua cronologia è stata cancellata.
         delete:
             page_title: Delete my account
             warning: Questa operazione è irreversibile. I suoi preferiti verranno eliminati.
@@ -200,7 +208,8 @@ boxes:
         title: Perché registrarsi?
         content: "- Può sincronizzare i suoi preferiti tra i suoi dispositivi."
         content2: "- Salva le canzoni trasmesse."
-        content3: "- Meno pubblicità."
+        content3: "- Consulta la tua cronologia (opzionale)"
+        content4: "- Meno pubblicità."
 
 registrationForm:
     email: 'E-mail'

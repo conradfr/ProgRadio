@@ -3,6 +3,7 @@ import axios from 'axios';
 import {
   STREAMING_CATEGORY_ALL,
   STREAMING_CATEGORY_FAVORITES,
+  STREAMING_CATEGORY_HISTORY,
   STREAMING_CATEGORY_LAST
 } from '@/config/config';
 
@@ -36,7 +37,8 @@ const getStreams = async (
     }
   }
 
-  if (sort !== null && sort !== undefined && countryOrUuid !== STREAMING_CATEGORY_LAST) {
+  if (sort !== null && sort !== undefined && countryOrUuid !== STREAMING_CATEGORY_LAST
+    && countryOrUuid !== STREAMING_CATEGORY_HISTORY) {
     queryParamsList.push(`sort=${sort}`);
   } else if (countryOrUuid === STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);
@@ -47,7 +49,8 @@ const getStreams = async (
   }
 
   let baseUrl = '/streams/list';
-  if (countryOrUuid !== STREAMING_CATEGORY_FAVORITES) {
+  if (countryOrUuid !== STREAMING_CATEGORY_FAVORITES
+    && countryOrUuid !== STREAMING_CATEGORY_HISTORY) {
     // @ts-expect-error apiUrl is defined on the global scope
     baseUrl = `https://${apiUrl}/stream`;
   }
@@ -89,7 +92,7 @@ const searchStreams = async (
   }
 
   let baseUrl = '/streams/search';
-  if (country !== STREAMING_CATEGORY_FAVORITES) {
+  if (country !== STREAMING_CATEGORY_FAVORITES && country !== STREAMING_CATEGORY_HISTORY) {
     // @ts-expect-error apiUrl is defined on the global scope
     baseUrl = `https://${apiUrl}/stream`;
   }
@@ -161,6 +164,15 @@ const incrementPlayCount = (stationUuid: string, radioBrowserUrl: string|null): 
   }
 };
 
+const updateLastListened = (stream: Stream): void => {
+  axios.get(`/streams/listened/${stream.code_name}`)
+    .catch((error) => {
+      if (error.response.status === 403) {
+        window.location.href = '/fr/login';
+      }
+    });
+};
+
 const toggleFavoriteStream = (streamCodeName: string): Promise<any>|null => {
   return axios.get(`/streams/favorite/${streamCodeName}`)
     .catch((error) => {
@@ -192,5 +204,6 @@ export default {
   addStreamPlayingError,
   incrementPlayCount,
   toggleFavoriteStream,
-  getCountryFromLatLong
+  getCountryFromLatLong,
+  updateLastListened
 };

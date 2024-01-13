@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\UserEmailChange;
+use App\Form\StoreHistoryType;
 use App\Form\UpdateEmailType;
 use App\Form\UpdatePasswordType;
 use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -164,6 +166,45 @@ class UserController extends AbstractBaseController
             'form' => $form->createView(),
             'success' => $success
         ]);
+    }
+
+    #[Route('/{_locale}/preferences', name: 'user_page_preferences')]
+    public function preferences(Request $request, EntityManagerInterface $em,): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $form = $this->createForm( StoreHistoryType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setStreamsHistory(new ArrayCollection());
+
+            $em->persist($user);
+            $em->flush();
+        }
+        return $this->render('default/user/preferences.html.twig', [
+            'form' => $form
+        ]);
+    }
+
+    #[Route('/{_locale}/reset-history', name: 'user_page_reset_history')]
+    public function resetHistory(EntityManagerInterface $em, TranslatorInterface $translator): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $user->setStreamsHistory(new ArrayCollection());
+
+        $em->persist($user);
+        $em->flush();
+
+        $this->addFlash(
+            'success',
+            $translator->trans('page.account.preferences.reset_confirmed')
+        );
+
+        return $this->redirectToRoute('user_page_preferences');
     }
 
     #[Route('/{_locale}/delete', name: 'user_page_delete')]

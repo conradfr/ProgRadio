@@ -77,7 +77,6 @@ defmodule ProgRadioApi.SongProvider.Radionova do
       else
         nil
       end
-
     rescue
       _ -> nil
     end

@@ -63,17 +63,19 @@ const updatedProgramTextCalc = (
   /* eslint-disable @typescript-eslint/no-unused-vars */
   for (const [_key, subRadios] of Object.entries(schedule)) {
     for (const [_key2, programs] of Object.entries(subRadios)) {
-      for (const key of Object.keys(programs)) {
-        let left = 0;
+      if (programs) {
+        for (const key of Object.keys(programs)) {
+          let left = 0;
 
-        if (scheduleDisplay[key].container.left < scrollIndex
-          && (scheduleDisplay[key].container.left + scheduleDisplay[key].container.width)
-          > scrollIndex) {
-          left = scrollIndex - scheduleDisplay[key].container.left;
-        }
+          if (scheduleDisplay[key].container.left < scrollIndex
+            && (scheduleDisplay[key].container.left + scheduleDisplay[key].container.width)
+            > scrollIndex) {
+            left = scrollIndex - scheduleDisplay[key].container.left;
+          }
 
-        if (left !== scheduleDisplay[key].textLeft) {
-          update[key] = left;
+          if (left !== scheduleDisplay[key].textLeft) {
+            update[key] = left;
+          }
         }
       }
     }
@@ -100,31 +102,33 @@ const getScheduleDisplay = (schedule: Schedule, currentTime: DateTime, initialSc
   /* eslint-disable @typescript-eslint/no-unused-vars */
   for (const [_key, subRadios] of Object.entries(schedule)) {
     for (const [_key2, programs] of Object.entries(subRadios)) {
-      for (const [key, programRaw] of Object.entries(programs)) {
-        let width = config.MINUTE_PIXEL;
-        const program: Program = programRaw;
+      if (programs) {
+        for (const [key, programRaw] of Object.entries(programs)) {
+          let width = config.MINUTE_PIXEL;
+          const program: Program = programRaw;
 
-        // @todo I guess we'll look at shows that start prev day and ends next day later ...
-        if (program.end_overflow) {
-          width *= endDay.diff(DateTime.fromISO(program.start_at).setZone(config.TIMEZONE))
-            .as('minutes');
-        } else if (program.start_overflow) {
-          width *= DateTime.fromISO(program.end_at).setZone(config.TIMEZONE).diff(startDay)
-            .as('minutes');
-        } else {
-          width *= program.duration;
+          // @todo I guess we'll look at shows that start prev day and ends next day later ...
+          if (program.end_overflow) {
+            width *= endDay.diff(DateTime.fromISO(program.start_at).setZone(config.TIMEZONE))
+              .as('minutes');
+          } else if (program.start_overflow) {
+            width *= DateTime.fromISO(program.end_at).setZone(config.TIMEZONE).diff(startDay)
+              .as('minutes');
+          } else {
+            width *= program.duration;
+          }
+
+          const left = program.start_overflow ? 0 : (DateTime.fromISO(program.start_at)
+            .setZone(config.TIMEZONE).diff(startDay).as('minutes') * config.MINUTE_PIXEL);
+
+          result[key] = {
+            container: {
+              left,
+              width,
+            },
+            textLeft: 0
+          };
         }
-
-        const left = program.start_overflow ? 0 : (DateTime.fromISO(program.start_at)
-          .setZone(config.TIMEZONE).diff(startDay).as('minutes') * config.MINUTE_PIXEL);
-
-        result[key] = {
-          container: {
-            left,
-            width,
-          },
-          textLeft: 0
-        };
       }
     }
   }

@@ -15,7 +15,9 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
     with {:ok, listening_session} <-
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
       ListenersCounter.register_listening_session(listening_session, false)
-      Streams.reset_streaming_error(listening_session_params["stream_id"])
+
+      if Map.has_key?(listening_session_params, "stream_id"),
+        do: Streams.reset_streaming_error(listening_session_params["stream_id"])
 
       conn
       |> put_status(:created)

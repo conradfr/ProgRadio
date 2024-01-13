@@ -166,6 +166,7 @@ page:
         menu:
             email: Email
             password: Mot de passe
+            preferences: Préférences
             delete: Suppression
         email:
             page_title: Changer mon email
@@ -179,10 +180,17 @@ page:
             page_title: Changer mon mot de passe
             success: Le mot de passe a été mis à jour.
             update_btn: Mettre à jour
+        preferences:
+            page_title: Préférences
+            update_btn: Mettre à jour
+            store_history: Conserver l'historique des radios jouées
+            reset_history: Effacer mon historique
+            reset_confirm: Êtes-vous sur de vouloir supprimer votre historique ?
+            reset_confirmed: Votre historique a été effacé.
         delete:
             page_title: Suppression du compte
             warning: Attention cette opération est irréversible. Vos favoris seront supprimés
-            confirm: Etes-vous sur de vouloir supprimer votre compte ?
+            confirm: Êtes-vous sur de vouloir supprimer votre compte ?
             delete_btn: Supprimer mon compte
         delete_confirm:
             success: Votre compte a bien été supprimé.
@@ -200,7 +208,8 @@ boxes:
         title: Pourquoi s'enregistrer ?
         content: "- Un compte vous permet d'accéder à vos favoris radios et streamings depuis n'importe quel navigateur et depuis l'application."
         content2: "- Sauvegarder le titre des chansons en cours d'écoute."
-        content3: "- Moins de publicités"
+        content3: "- Consulter votre historique (optionnel)"
+        content4: "- Moins de publicités"
 
 registrationForm:
     email: 'Courriel'

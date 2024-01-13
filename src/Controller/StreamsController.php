@@ -185,4 +185,18 @@ class StreamsController  extends AbstractBaseController
             'count' => $user->getFavoriteStreams()->count()
         ]);
     }
+
+    #[Route('/listened/{id}', name: 'streams_update_last_listened')]
+    #[IsGranted('ROLE_USER')]
+    public function updateLastListened(Stream $stream, EntityManagerInterface $em): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $em->getRepository(Stream::class)->insertOrUpdateStreamListening($user, $stream);
+
+        return $this->jsonResponse([
+            'status' => 'OK'
+        ]);
+    }
 }

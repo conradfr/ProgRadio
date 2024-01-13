@@ -149,6 +149,8 @@ defmodule ProgRadioApi.Streams do
     end
   end
 
+  def reset_streaming_error(_stream_id), do: {:ok, nil}
+
   def get_recently_overload_updated_ids() do
     date_time =
       DateTime.utc_now()
@@ -287,20 +289,23 @@ defmodule ProgRadioApi.Streams do
       |> then(fn t -> "%" <> t <> "%" end)
 
     query
-    |> where([s], fragment("lower(?) LIKE ? or lower(?) LIKE ?", s.name, ^text_search, s.tags, ^text_search))
+    |> where(
+      [s],
+      fragment("lower(?) LIKE ? or lower(?) LIKE ?", s.name, ^text_search, s.tags, ^text_search)
+    )
 
-#    search_text = "*:" <> text <> ":*"
-#
-#    query
-#    |> where(
-#      [s],
-#      fragment(
-#        "to_tsvector('progradio_unaccent', ? || ' ' || ?) @@ plainto_tsquery('progradio_unaccent', ?)",
-#        s.name,
-#        s.tags,
-#        ^search_text
-#      )
-#    )
+    #    search_text = "*:" <> text <> ":*"
+    #
+    #    query
+    #    |> where(
+    #      [s],
+    #      fragment(
+    #        "to_tsvector('progradio_unaccent', ? || ' ' || ?) @@ plainto_tsquery('progradio_unaccent', ?)",
+    #        s.name,
+    #        s.tags,
+    #        ^search_text
+    #      )
+    #    )
   end
 
   defp add_text(query, _) do

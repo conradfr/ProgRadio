@@ -41,6 +41,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private ?string $password = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $storeHistory = true;
+
     #[ORM\JoinTable(name: 'users_radios')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'radio_id', referencedColumnName: 'id')]
@@ -54,6 +57,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Cache(usage: 'READ_ONLY')]
     #[ORM\ManyToMany(targetEntity: Stream::class)]
     private Collection $favoriteStreams;
+
+    #[ORM\OneToMany(targetEntity: UserStream::class, mappedBy: "user", fetch: "EXTRA_LAZY")]
+    #[ORM\Cache(usage: 'READ_ONLY')]
+    private Collection $streamsHistory;
 
     #[ORM\OneToMany(targetEntity: UserEmailChange::class, mappedBy: 'user')]
     private Collection $emailChanges;
@@ -78,6 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct() {
         $this->favoriteRadios = new ArrayCollection();
         $this->favoriteStreams = new ArrayCollection();
+        $this->streamsHistory = new ArrayCollection();
         $this->emailChanges = new ArrayCollection();
         $this->userSongs = new ArrayCollection();
     }
@@ -146,6 +154,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getStoreHistory(): ?bool
+    {
+        return $this->storeHistory;
+    }
+
+    public function setStoreHistory(?bool $storeHistory): void
+    {
+        $this->storeHistory = $storeHistory;
+    }
+
+    public function setStreamsHistory(Collection $streamsHistory): void
+    {
+        $this->streamsHistory = $streamsHistory;
     }
 
     /**

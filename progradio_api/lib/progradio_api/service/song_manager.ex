@@ -8,6 +8,7 @@ defmodule ProgRadioApi.SongManager do
     case Registry.lookup(SongSongProviderRegistry, "url:" <> song_topic) do
       [] ->
         Logger.debug("server for url #{song_topic} created")
+
         DynamicSupervisor.start_child(
           ProgRadioApi.SongDynamicSupervisor,
           {ProgRadioApi.SongServer, {"url:" <> song_topic, nil, nil}}
@@ -23,6 +24,7 @@ defmodule ProgRadioApi.SongManager do
     case Registry.lookup(SongSongProviderRegistry, song_topic) do
       [] ->
         Logger.debug("server for topic #{song_topic} created")
+
         DynamicSupervisor.start_child(
           ProgRadioApi.SongDynamicSupervisor,
           {ProgRadioApi.SongServer,

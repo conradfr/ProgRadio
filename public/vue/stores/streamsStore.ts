@@ -9,6 +9,7 @@ import type { GetStreamsResponse } from '@/types/streams_api';
 /* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { usePlayerStore } from '@/stores/playerStore';
+import { useUserStore } from '@/stores/userStore';
 
 import * as config from '../config/config';
 import i18n from '../lang/i18n';
@@ -63,6 +64,8 @@ export const useStreamsStore = defineStore('streams', {
   }),
   getters: {
     countriesOptions: (state): CountriesOption[] => {
+      const userStore = useUserStore();
+
       const countriesOptions: CountriesOption[] = [];
       countriesOptions.push(
         {
@@ -157,6 +160,15 @@ export const useStreamsStore = defineStore('streams', {
           code: config.STREAMING_CATEGORY_LAST
         }
       );
+
+      if (userStore.logged && userStore.storeHistory) {
+        countriesOptions.unshift(
+          {
+            label: i18n.global.tc('message.streaming.categories.history'),
+            code: config.STREAMING_CATEGORY_HISTORY
+          }
+        );
+      }
 
       countriesOptions.unshift(
         {

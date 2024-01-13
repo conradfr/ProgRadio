@@ -166,6 +166,7 @@ page:
         menu:
             email: البريد الإلكتروني
             password: كلمة المرور
+            preferences: التفضيلات
             delete: قمع
         email:
             page_title: تغيير بريدي الإلكتروني
@@ -179,6 +180,13 @@ page:
             page_title: تغيير كلمة المرور الخاصة بي
             success: تم تحديث كلمة المرور.
             update_btn: تحديث
+        preferences:
+            page_title: التفضيلات
+            update_btn: تحديث
+            store_history: حافظ على تاريخ محطات الراديو التي تم تشغيلها
+            reset_history: مسح السجل الخاص بي
+            reset_confirm: هل تريد بالتأكيد حذف السجل الخاص بك؟
+            reset_confirmed: تم حذف السجل الخاص بك.
         delete:
             page_title: حذف الحساب
             warning: 'انتبه: هذه العملية لا رجعة فيها. ستتم إزالة مفضلاتك'
@@ -201,6 +209,7 @@ boxes:
         content: "- يسمح لك الحساب بالوصول إلى أجهزة الراديو والبث المفضلة لديك من أي متصفح ومن التطبيق."
         content2: "- احفظ عنوان الأغاني التي تستمع إليها."
         content3: "- إعلانات أقل"
+        content4: "- استشر تاريخك (اختياري)"
 
 registrationForm:
     email: 'البريد الإلكتروني'

@@ -57,7 +57,8 @@
                      class="gb-flag gb-flag--mini"
                      style="max-height: 20px; max-width: 25px;"
                      :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
-                <img v-else-if="value.code === code_last"
+                <img v-else-if="value.code === code_last
+                  || value.code === code_history"
                      class="gb-flag gb-flag--mini"
                      style="max-height: 20px; max-width: 24px;"
                      :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
@@ -74,7 +75,7 @@
                    class="gb-flag gb-flag--mini"
                    style="max-height: 20px; max-width: 25px;"
                    :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
-              <img v-else-if="option.code === code_last"
+              <img v-else-if="option.code === code_last || option.code === code_history"
                    class="gb-flag gb-flag--mini"
                    style="max-height: 20px; max-width: 24px;"
                    :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
@@ -92,7 +93,8 @@
               :model-value="selectedSortByInput"
               :options="sortByOptions"
               :canClear="false"
-              :disabled="selectedCountryInput === code_last"
+              :disabled="selectedCountryInput === code_last
+                || selectedCountryInput === code_history"
               id="multisort"
           />
         </div>
@@ -111,6 +113,7 @@ import { useStreamsStore } from '@/stores/streamsStore';
 import {
   STREAMING_CATEGORY_FAVORITES,
   STREAMING_CATEGORY_ALL,
+  STREAMING_CATEGORY_HISTORY,
   STREAMING_CATEGORY_LAST,
   GTAG_CATEGORY_STREAMING,
   GTAG_STREAMING_ACTION_FILTER_COUNTRY,
@@ -134,6 +137,7 @@ export default defineComponent({
       code_all: STREAMING_CATEGORY_ALL,
       code_last: STREAMING_CATEGORY_LAST,
       code_favorites: STREAMING_CATEGORY_FAVORITES,
+      code_history: STREAMING_CATEGORY_HISTORY,
       sortByOptions: [
         {
           value: 'name',
@@ -173,7 +177,8 @@ export default defineComponent({
       return this.selectedCountry;
     },
     selectedSortByInput(): string|null {
-      if (this.selectedCountryInput === STREAMING_CATEGORY_LAST) {
+      if (this.selectedCountryInput === STREAMING_CATEGORY_LAST
+        || this.selectedCountryInput === STREAMING_CATEGORY_HISTORY) {
         return null;
       }
 

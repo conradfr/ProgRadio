@@ -485,6 +485,7 @@ class DefaultController extends AbstractBaseController
                 'favoritesStream' => $favoritesStream,
                 'songs' => $songs,
                 'logged' => $user !== null,
+                'storeHistory' => $user !== null && $user->getStoreHistory(),
                 'isAdmin' => $user !== null && $authChecker->isGranted('ROLE_ADMIN')
             ]
         ]);

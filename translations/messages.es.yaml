@@ -166,6 +166,7 @@ page:
         menu:
             email: Email
             password: Contraseña
+            preferences: Preferencias
             delete: Supresión
         email:
             page_title: Cambia mi email
@@ -179,6 +180,13 @@ page:
             page_title: Cambia mi contraseña
             success: La contraseña ha sido actualizada.
             update_btn: Poner al día
+        preferences:
+            page_title: Preferencias
+            update_btn: Actualización
+            store_history: Conserva el historial de las emisoras de radio reproducidas
+            reset_history: Borrar mi historial
+            reset_confirm: ¿Estás seguro de que quieres borrar tu historial?
+            reset_confirmed: Se ha eliminado tu historial.
         delete:
             page_title: Remoción de la cuenta
             warning: Atención Esta operación es irreversible. Tus favoritos serán eliminados.
@@ -200,7 +208,8 @@ boxes:
         title: ¿Por qué registrarse?
         content: "- Una cuenta le permite acceder a sus favoritos radios y streamings desde cualquier navegador y de la aplicación."
         content2: "- Guardar el título de canciones en el curso de la escucha."
-        content3: "- Sin publicidad."
+        content3: "- Consulta tu historial (opcional)"
+        content4: "- Sin publicidad."
 
 registrationForm:
     email: 'Correo electrónico'

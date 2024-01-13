@@ -8,9 +8,9 @@ COPY ./package-lock.json /tmp
 COPY ./tsconfig.json /tmp
 COPY ./env.d.ts /tmp
 
-RUN npm install
 RUN npm i caniuse-lite browserslist
 RUN npx update-browserslist-db@latest
+RUN npm install
 
 RUN mkdir /tmp/public/
 COPY ./public /tmp/public

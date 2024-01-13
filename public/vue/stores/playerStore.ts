@@ -16,6 +16,7 @@ import PlayerStatus from '@/types/player_status';
 import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useStreamsStore } from '@/stores/streamsStore';
+import { useUserStore } from '@/stores/userStore';
 
 import * as config from '../config/config';
 import cookies from '../utils/cookies';
@@ -184,6 +185,8 @@ export const usePlayerStore = defineStore('player', {
     /* eslint-disable no-param-reassign */
     playStream(stream: Stream) {
       const streamsStore = useStreamsStore();
+      const userStore = useUserStore();
+
       this.stop();
 
       setTimeout(() => {
@@ -194,6 +197,15 @@ export const usePlayerStore = defineStore('player', {
       cache.setCache(config.LAST_RADIO_STREAM_PLAYED, null);
 
       this.setPrevious({ radio: stream });
+
+      // update last listened if user is logged and is stream
+      // not set in interval below to no send it at each update, may change later
+      setTimeout(() => {
+        // todo move to api when support for auth users
+        if (typeUtils.isStream(stream) && userStore.logged && userStore.storeHistory) {
+          StreamsApi.updateLastListened(stream);
+        }
+      }, (config.LISTENING_SESSION_MIN_SECONDS + 5) * 1000);
 
       if (this.externalPlayer === true) {
         AndroidApi.play(stream);

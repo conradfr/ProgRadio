@@ -166,6 +166,7 @@ page:
         menu:
             E-Mail: E-Mail
             password: Passwort
+            preferences: Präferenzen
             delete: Löschen
         email:
             page_title: Aktualisiere meine E-Mail
@@ -179,6 +180,13 @@ page:
             page_title: Aktualisiere mein Passwort
             success: Das Passwort wurde aktualisiert.
             update_btn: Aktualisieren
+        preferences:
+            page_title: Präferenzen
+            update_btn: Aktualisieren
+            store_history: Behalte den Verlauf der gespielten Radiosender
+            reset_history: Lösche meinen Verlauf
+            reset_confirm: Bist du sicher, dass du deinen Verlauf löschen möchtest?
+            reset_confirmed: Dein Verlauf wurde gelöscht.
         delete:
             page_title: Mein Konto löschen
             warning: Dieser Vorgang ist irreversibel. Ihre Favoriten werden gelöscht.
@@ -200,7 +208,8 @@ boxes:
         title: Warum anmelden?
         content: "- Sie können Ihre Favoriten zwischen Ihren Geräten synchronisieren."
         content2: "- Speichern Sie die ausgestrahlten Songs."
-        content3: "- Weniger Werbung."
+        content3: "- Speichern Sie die ausgestrahlten Songs."
+        content4: "Konsultieren Sie Ihren Verlauf (optional)"
 
 registrationForm:
     email: 'E-mail'

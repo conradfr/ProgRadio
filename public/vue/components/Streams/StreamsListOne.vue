@@ -246,7 +246,8 @@ export default defineComponent({
       this.toggleStreamFavorite(this.radio);
     },
     tags() {
-      if (this.radio.tags === undefined || this.radio.tags === null) {
+      if (this.radio.tags === undefined || this.radio.tags === null
+        || typeof this.radio.tags !== 'string') {
         return [];
       }
 

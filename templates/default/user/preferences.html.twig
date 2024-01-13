@@ -1,0 +1,29 @@
+{% extends 'default/user/user.html.twig' %}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block section %}
+{{ 'page.account.preferences.page_title'|trans }}
+{% endblock %}
+
+{% block content %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="my-4">
+        {{ form_start(form) }}
+        {{ form_row(form.storeHistory) }}
+
+        <button type="submit" class="btn btn-primary">{{ 'page.account.preferences.update_btn'|trans }}</button>
+        {{ form_end(form) }}
+    </div>
+
+    <a class="btn btn-warning" href="{{ path('user_page_reset_history') }}" role="button"
+       onclick="return confirm('{{ 'page.account.preferences.reset_confirm'|trans }}')">
+        {{ 'page.account.preferences.reset_history'|trans }}
+    </a>
+
+{% endblock %}

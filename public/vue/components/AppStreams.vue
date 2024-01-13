@@ -87,7 +87,7 @@ export default defineComponent({
         if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
           streamsStore.setSoloExtended((to.params.countryOrCategoryOrUuid as string));
         } else {
-          if (to.params.hasOwnProperty('page') && to.params.page != '') {
+          if (to.params.hasOwnProperty('page') && to.params.page !== '') {
             streamsStore.pageSet(parseInt((to.params.page as string), 10));
           }
 
@@ -95,7 +95,7 @@ export default defineComponent({
           streamsStore.setSoloExtended(null);
         }
       } else {
-        if (to.params.hasOwnProperty('page') && to.params.page != '') {
+        if (to.params.hasOwnProperty('page') && to.params.page !== '') {
           streamsStore.pageSet(parseInt((to.params.page as string), 10));
         }
 
@@ -111,7 +111,7 @@ export default defineComponent({
       if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
         streamsStore.setSoloExtended((to.params.countryOrCategoryOrUuid as string));
       } else {
-        if (to.params.hasOwnProperty('page') && to.params.page != '') {
+        if (to.params.hasOwnProperty('page') && to.params.page !== '') {
           streamsStore.pageSet(parseInt((to.params.page as string), 10));
         }
 

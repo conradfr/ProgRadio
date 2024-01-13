@@ -19,6 +19,7 @@ use App\Entity\RadioStream;
 class Stream
 {
     final public const FAVORITES = 'FAVORITES';
+    final public const HISTORY = 'HISTORY';
 
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\Id]
@@ -98,8 +99,13 @@ class Stream
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private ?int $playingError = null;
 
+    #[ORM\OneToMany(targetEntity: UserStream::class, mappedBy: "stream", fetch: "EXTRA_LAZY")]
+    #[ORM\Cache(usage: 'READ_ONLY')]
+    private Collection $streamsHistory;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
+        $this->streamsHistory = new ArrayCollection();
     }
 
     public function getId(): string

@@ -215,8 +215,8 @@ class AdminController extends AbstractBaseController
         );
     }
 
-    #[Route('/{_locale}/admin/playing_errors/{threshold<\d+>?3}', name: 'admin_playing_errors')]
-    #[Route('/{_locale}/admin/playing_errors/{threshold<\d+>?3}/{ceiling<\d+>?}', name: 'admin_playing_errors_ceiling')]
+    #[Route('/{_locale}/admin/playing_errors/{threshold<\d+>?4}', name: 'admin_playing_errors')]
+    #[Route('/{_locale}/admin/playing_errors/{threshold<\d+>?4}/{ceiling<\d+>?}', name: 'admin_playing_errors_ceiling')]
     public function playingErrorsAction(int $threshold, ?int $ceiling, EntityManagerInterface $em): Response
     {
         $errors = $em->getRepository(Stream::class)->getStreamsWithPlayingError($threshold, $ceiling);

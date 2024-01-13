@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.AutorouteInfo do
   @stream_ids %{
     "autoroute_info_main" => "rhoneAlpes",
     "autoroute_info_centre_est" => "center",
-    "autoroute_info_centre_sud_ouest" => "ouest",
+    "autoroute_info_centre_sud_ouest" => "ouest"
   }
 
   @impl true

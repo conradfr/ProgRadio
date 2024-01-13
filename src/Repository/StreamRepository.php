@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Radio;
 use App\Entity\Stream;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,7 +27,7 @@ class StreamRepository extends ServiceEntityRepository
         parent::__construct($registry, Stream::class);
     }
 
-    public function getStreamsWithPlayingError(int $threshold=2, ?int $ceiling)
+    public function getStreamsWithPlayingError(int $threshold, ?int $ceiling)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -118,7 +119,7 @@ class StreamRepository extends ServiceEntityRepository
         }
 
         if ($countryOrCategory !== null) {
-            if ($countryOrCategory === Stream::FAVORITES) {
+            if (strtoupper($countryOrCategory) === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
                         fn($stream) => $stream->getId()
@@ -129,13 +130,21 @@ class StreamRepository extends ServiceEntityRepository
 
                 $qb->andWhere('s.id IN (:favorites)')
                     ->setParameter('favorites', $favorites);
-            } else {
+            } elseif (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+                $qb->innerJoin('s.streamsHistory', 'sh')
+                    ->andWhere('sh.user = :user')
+                    ->setParameter('user', $user);
+            }
+            else {
                 $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
         }
 
-        if ($sort !== null) {
+        if (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+            $qb->addOrderBy('sh.lastListenedAt', 'DESC');
+        }
+        else if ($sort !== null) {
             switch ($sort) {
                 case 'name':
                     $qb->addOrderBy('s.name', 'ASC');
@@ -158,7 +167,9 @@ class StreamRepository extends ServiceEntityRepository
 
         $query = $qb->getQuery();
 
-        if ($sort !== 'random' && $sort !== 'last') {
+        if ($sort !== 'random' && $sort !== 'last'
+            && strtoupper($countryOrCategory) !== Stream::HISTORY
+            && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
             $query->enableResultCache(self::CACHE_TTL);
         } else {
             // because bots
@@ -199,7 +210,7 @@ class StreamRepository extends ServiceEntityRepository
         }
 
         if ($countryOrCategory !== null) {
-            if ($countryOrCategory === Stream::FAVORITES) {
+            if (strtoupper($countryOrCategory) === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
                         fn($stream) => $stream->getId()
@@ -210,13 +221,22 @@ class StreamRepository extends ServiceEntityRepository
 
                 $qb->andWhere('s.id IN (:favorites)')
                     ->setParameter('favorites', $favorites);
-            } else {
+            }
+            elseif (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+                $qb->innerJoin('s.streamsHistory', 'sh')
+                    ->andWhere('sh.user = :user')
+                    ->setParameter('user', $user);
+            }
+            else {
                 $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
         }
 
-        if ($sort !== null) {
+        if (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+            $qb->addOrderBy('sh.lastListenedAt', 'DESC');
+        }
+        elseif ($sort !== null) {
             switch ($sort) {
                 case 'name':
                     $qb->addOrderBy('s.name', 'ASC');
@@ -239,7 +259,9 @@ class StreamRepository extends ServiceEntityRepository
 
         $query = $qb->getQuery();
 
-        if ($sort !== 'random') {
+        if ($sort !== 'random' && $sort !== 'last'
+            && strtoupper($countryOrCategory) !== Stream::HISTORY
+            && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
             $query->enableResultCache(self::CACHE_TTL);
         }
 
@@ -277,7 +299,7 @@ class StreamRepository extends ServiceEntityRepository
             ->setMaxResults(1);
 
         if ($countryOrCategory !== null) {
-            if ($countryOrCategory === Stream::FAVORITES) {
+            if (strtoupper($countryOrCategory) === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
                         fn($stream) => $stream->getId()
@@ -288,7 +310,13 @@ class StreamRepository extends ServiceEntityRepository
 
                 $qb->andWhere('s.id IN (:favorites)')
                     ->setParameter('favorites', $favorites);
-            } else {
+            }
+            elseif (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+                $qb->innerJoin('s.streamsHistory', 'sh')
+                    ->andWhere('sh.user = :user')
+                    ->setParameter('user', $user);
+            }
+            else {
                 $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
@@ -344,7 +372,7 @@ class StreamRepository extends ServiceEntityRepository
             ->where('s.enabled = true and s.redirectToStream IS NULL');
 
         if ($countryOrCategory !== null) {
-            if ($countryOrCategory === Stream::FAVORITES) {
+            if (strtoupper($countryOrCategory) === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
                         fn($stream) => $stream->getId()
@@ -355,7 +383,13 @@ class StreamRepository extends ServiceEntityRepository
 
                 $qb->andWhere('s.id IN (:favorites)')
                     ->setParameter('favorites', $favorites);
-            } else {
+            }
+            elseif (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+                $qb->innerJoin('s.streamsHistory', 'sh')
+                    ->andWhere('sh.user = :user')
+                    ->setParameter('user', $user);
+            }
+            else {
                 $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
@@ -367,7 +401,10 @@ class StreamRepository extends ServiceEntityRepository
         }
 
         $query = $qb->getQuery();
-        $query->enableResultCache(self::CACHE_TTL);
+        if (strtoupper($countryOrCategory) !== Stream::HISTORY
+            && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
+            $query->enableResultCache(self::CACHE_TTL);
+        }
 
         return $query->getSingleScalarResult();
     }
@@ -389,7 +426,7 @@ class StreamRepository extends ServiceEntityRepository
             ->setParameter('text', '%' . $text . '%');
 
         if ($countryOrCategory !== null) {
-            if ($countryOrCategory === Stream::FAVORITES) {
+            if (strtoupper($countryOrCategory) === Stream::FAVORITES) {
                 if ($user !== null) {
                     $favorites = $user->getFavoriteStreams()->map(
                         fn($stream) => $stream->getId()
@@ -400,7 +437,13 @@ class StreamRepository extends ServiceEntityRepository
 
                 $qb->andWhere('s.id IN (:favorites)')
                     ->setParameter('favorites', $favorites);
-            } else {
+            }
+            elseif (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+                $qb->innerJoin('s.streamsHistory', 'sh')
+                    ->andWhere('sh.user = :user')
+                    ->setParameter('user', $user);
+            }
+            else {
                 $qb->andWhere('s.countryCode = :country')
                     ->setParameter('country', strtoupper($countryOrCategory));
             }
@@ -412,7 +455,11 @@ class StreamRepository extends ServiceEntityRepository
         }
 
         $query = $qb->getQuery();
-        $query->enableResultCache(self::CACHE_TTL);
+
+        if (strtoupper($countryOrCategory) !== Stream::HISTORY
+            && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
+            $query->enableResultCache(self::CACHE_TTL);
+        }
 
         return $query->getSingleScalarResult();
     }
@@ -458,5 +505,30 @@ class StreamRepository extends ServiceEntityRepository
         $query->enableResultCache(self::CACHE_TTL);
 
         return $query->getOneOrNullResult();
+    }
+
+    public function insertOrUpdateStreamListening(User $user, Stream $stream)
+    {
+        $dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
+
+        $sql = <<<EOD
+            INSERT INTO users_streams_history (user_id, stream_id, last_listened_at)
+            VALUES
+            (?, ?, ?)
+            ON CONFLICT (user_id, stream_id)
+            DO 
+                UPDATE SET last_listened_at = ?;
+        EOD;
+
+        $rsm = new ResultSetMapping();
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameters([
+            $user->getId(),
+            $stream->getId(),
+            $dateTime->format(\DateTime::ATOM),
+            $dateTime->format(\DateTime::ATOM)
+        ]);
+
+        $query->getResult();
     }
 }

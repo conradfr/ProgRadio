@@ -164,6 +164,7 @@ page:
         menu:
             email: E-mail
             password: Senha
+            preferences: Preferências
             delete: Excluir
         email:
             page_title: Atualizar meu e-mail
@@ -177,6 +178,13 @@ page:
             page_title: Atualizar minha senha
             success: a senha foi atualizada.
             update_btn: Atualizar
+        preferences:
+            page_title: Preferências
+            update_btn: Atualizar
+            store_history: Mantenha o histórico das estações de rádio reproduzidas
+            reset_history: Limpar meu histórico
+            reset_confirm: Tem certeza de que deseja excluir seu histórico?
+            reset_confirmed: Seu histórico foi excluído.
         delete:
             page_title: Excluir minha conta
             warning: Esta operação é irreversível. Seus favoritos serão excluídos.
@@ -198,7 +206,8 @@ boxes:
         title: Por que se inscrever?
         content: "- Você pode sincronizar seus favoritos entre seus dispositivos."
         content2: "- Salvar músicas transmitidas."
-        content3: "- Menos anúncios."
+        content3: "- Consulte seu histórico (opcional)"
+        content4: "- Menos anúncios."
 
 registrationForm:
     email: 'E-mail'

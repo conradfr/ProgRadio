@@ -166,6 +166,7 @@ page:
         menu:
             email: Email
             password: Password
+            preferences: Preferences
             delete: Delete
         email:
             page_title: Update my email
@@ -179,6 +180,13 @@ page:
             page_title: Update my password
             success: The password has been updated.
             update_btn: Update
+        preferences:
+            page_title: Preferences
+            update_btn: Update
+            store_history: Keep the history of radio stations played
+            reset_history: Clear my history
+            reset_confirm: Are you sure you want to delete your history?
+            reset_confirmed: Your history has been deleted.
         delete:
             page_title: Delete my account
             warning: This operation is irreversible. Your favorites will be deleted.
@@ -200,7 +208,8 @@ boxes:
         title: Why sign-up?
         content: "- You can synchronize your favorites between your devices."
         content2: "- Save broadcasted songs."
-        content3: "- Less ads."
+        content3: "- Consult your history (optional)"
+        content4: "- Less ads."
 
 registrationForm:
     email: 'Email'

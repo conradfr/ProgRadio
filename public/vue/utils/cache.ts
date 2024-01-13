@@ -111,7 +111,7 @@ const setSessionCache = (key: string, data: any) => {
   try {
     sessionStorage.setItem(key, JSON.stringify(data));
   } catch (e) {
-    return null;
+    // return;
   }
 };
 

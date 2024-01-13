@@ -4,4 +4,5 @@ export interface User {
   songs: Record<string, string>
   logged: boolean
   isAdmin: boolean
+  storeHistory: boolean
 }
