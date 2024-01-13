@@ -78,4 +78,12 @@ defmodule ProgRadioApi.Stream do
     ])
     |> validate_required([:id, :last_listening_at])
   end
+
+  def changeset_playing_error(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :playing_error
+    ])
+    |> validate_required([:id, :playing_error])
+  end
 end

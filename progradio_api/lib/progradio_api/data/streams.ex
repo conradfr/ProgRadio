@@ -139,6 +139,16 @@ defmodule ProgRadioApi.Streams do
     end
   end
 
+  def reset_streaming_error(stream_id) when is_binary(stream_id) do
+    with %Stream{} = stream <- Repo.get(Stream, stream_id) do
+      stream
+      |> Stream.changeset_playing_error(%{"playing_error" => 0})
+      |> Repo.update()
+    else
+      _ -> {:ok, nil}
+    end
+  end
+
   def get_recently_overload_updated_ids() do
     date_time =
       DateTime.utc_now()

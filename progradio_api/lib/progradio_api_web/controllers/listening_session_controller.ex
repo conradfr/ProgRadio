@@ -4,6 +4,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
 
   alias ProgRadioApi.ListeningSessions
   alias ProgRadioApi.ListenersCounter
+  alias ProgRadioApi.Streams
 
   #  def index(conn, _params) do
   #    listening_session = ListeningSessions.list_listening_session()
@@ -14,6 +15,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
     with {:ok, listening_session} <-
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
       ListenersCounter.register_listening_session(listening_session, false)
+      Streams.reset_streaming_error(listening_session_params["stream_id"])
 
       conn
       |> put_status(:created)
