@@ -75,83 +75,12 @@ export const useStreamsStore = defineStore('streams', {
       );
 
       for (const [key, value] of Object.entries(state.countries)) {
-        if (i18n.global.locale === 'fr' && ['FR', 'BE', 'CH', 'LU', 'MC'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else if (i18n.global.locale === 'es'
-          && ['MX', 'ES', 'CO', 'AR', 'PE', 'CL'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else if (i18n.global.locale === 'en'
-          && ['US', 'GB', 'CA', 'AU', 'NZ'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else if (i18n.global.locale === 'de' && ['DE', 'AT', 'CH'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else if (i18n.global.locale === 'pt' && ['PT', 'BR'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else if (i18n.global.locale === 'it'
-          && ['IT', 'CH', 'SM', 'VA', 'MT', 'MC', 'SI'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else if (i18n.global.locale === 'pl'
-          && ['PL'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else if (i18n.global.locale === 'el'
-          && ['GR'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else if (i18n.global.locale === 'ar'
-          && ['DZ', 'MA', 'TN'].indexOf(key) !== -1) {
-          countriesOptions.unshift(
-            {
-              label: value,
-              code: key
-            }
-          );
-        } else {
-          countriesOptions.push(
-            {
-              label: value,
-              code: key
-            }
-          );
-        }
+        countriesOptions.push(
+          {
+            label: value,
+            code: key
+          }
+        );
       }
 
       countriesOptions.unshift(
