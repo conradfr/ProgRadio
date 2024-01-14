@@ -68,6 +68,12 @@ class Stream
     #[ORM\Column(type: 'datetime')]
     private ?\DateTime $importUpdatedAt = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $forceHls = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $forceMpd = null;
+
     /**
      * @var ListeningSession[]
      */
@@ -360,4 +366,29 @@ class Stream
         $this->importUpdatedAt = $importUpdatedAt;
     }
 
+    /**
+     * @return bool|null
+     */
+    public function getForceHls(): ?bool
+    {
+        return $this->forceHls;
+    }
+
+    /**
+     * @param bool|null $forceHls
+     */
+    public function setForceHls(?bool $forceHls): void
+    {
+        $this->forceHls = $forceHls;
+    }
+
+    public function getForceMpd(): ?bool
+    {
+        return $this->forceMpd;
+    }
+
+    public function setForceMpd(?bool $forceMpd): void
+    {
+        $this->forceMpd = $forceMpd;
+    }
 }

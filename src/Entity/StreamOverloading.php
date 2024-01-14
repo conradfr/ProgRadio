@@ -36,6 +36,12 @@ class StreamOverloading
     #[ORM\Column(type: 'boolean')]
     private ?bool $enabled = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $forceHls = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $forceMpd = null;
+
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private \DateTime $createdAt;
@@ -122,6 +128,32 @@ class StreamOverloading
     public function setEnabled(?bool $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getForceHls(): ?bool
+    {
+        return $this->forceHls;
+    }
+
+    /**
+     * @param bool|null $forceHls
+     */
+    public function setForceHls(?bool $forceHls): void
+    {
+        $this->forceHls = $forceHls;
+    }
+
+    public function getForceMpd(): ?bool
+    {
+        return $this->forceMpd;
+    }
+
+    public function setForceMpd(?bool $forceMpd): void
+    {
+        $this->forceMpd = $forceMpd;
     }
 
     public function getCreatedAt(): \DateTime

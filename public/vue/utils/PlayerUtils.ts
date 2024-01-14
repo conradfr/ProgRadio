@@ -8,6 +8,7 @@ import type { Program } from '@/types/program';
 import type { Stream } from '@/types/stream';
 import type { Song } from '@/types/song';
 import type { ListeningSession } from '@/types/listening_session';
+import type { PlayOptions } from '@/types/play_options';
 import PlayerStatus from '@/types/player_status';
 
 import * as config from '../config/config';
@@ -167,6 +168,22 @@ const extractTopicName = (fullTopicName: string): string|null => {
   }
 
   return fullTopicName.substring(10);
+};
+
+const buildPlayOptions = (radio: Radio|Stream) => {
+  const options: PlayOptions = {};
+
+  if (typeUtils.isRadio(radio)) {
+    return options;
+  }
+
+  if (radio.force_hls) {
+    options.force_hls = true;
+  } else if (radio.force_mpd) {
+    options.force_mpd = true;
+  }
+
+  return options;
 };
 
 /* ---------- NOTIFICATION ---------- */
@@ -385,5 +402,6 @@ export default {
   sendListeningSession,
   calculatedFlux,
   getAmazonSongLink,
-  extractTopicName
+  extractTopicName,
+  buildPlayOptions
 };

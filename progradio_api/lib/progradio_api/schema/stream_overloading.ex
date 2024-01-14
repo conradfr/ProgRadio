@@ -12,6 +12,8 @@ defmodule ProgRadioApi.StreamOverloading do
     field(:country_code, :string)
     field(:website, :string)
     field(:enabled, :boolean)
+    field(:force_hls, :boolean)
+    field(:force_mpd, :boolean)
     field(:created_at, :utc_datetime)
     field(:updated_at, :utc_datetime)
   end
@@ -26,7 +28,6 @@ defmodule ProgRadioApi.StreamOverloading do
       :tags,
       :country_code,
       :website,
-      :enabled
     ])
     |> validate_required([:id])
   end

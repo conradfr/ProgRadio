@@ -25,6 +25,8 @@ defmodule ProgRadioApi.Stream do
     field(:enabled, :boolean)
     field(:redirect_to, :binary_id)
     field(:playing_error, :integer, default: 0)
+    field(:force_hls, :boolean)
+    field(:force_mpd, :boolean)
     #    field(:editing_key, :string)
     field(:import_updated_at, :utc_datetime, default: nil)
     field(:last_listening_at, :utc_datetime, default: nil)

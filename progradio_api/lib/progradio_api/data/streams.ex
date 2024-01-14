@@ -188,6 +188,8 @@ defmodule ProgRadioApi.Streams do
         name: s.name,
         img: s.img,
         stream_url: fragment("COALESCE(?, ?)", rs.url, s.stream_url),
+        force_hls: s.force_hls,
+        force_mpd: s.force_mpd,
         tags: s.tags,
         country_code: s.country_code,
         website: s.website,

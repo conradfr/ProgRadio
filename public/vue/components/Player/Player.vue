@@ -82,6 +82,7 @@ import { useStreamsStore } from '@/stores/streamsStore';
 import { useUserStore } from '@/stores/userStore';
 
 import PlayerStatus from '@/types/player_status';
+import type { PlayOptions } from '@/types/play_options';
 
 import PlayerInfo from './PlayerInfo.vue';
 import PlayerSaveSong from './PlayerSaveSong.vue';
@@ -331,7 +332,7 @@ export default defineComponent({
       this.togglePlayDispatch();
     },
     /* eslint-disable no-undef */
-    play(url: string) {
+    play(url: string, options?: PlayOptions) {
       // this.stop();
       // if (this.playerStore.playing === true) {
       //   this.pause();
@@ -366,7 +367,7 @@ export default defineComponent({
       this.currentPlayer.startedAt = Date.now();
       this.currentPlayer.url = url;
 
-      if (url.indexOf('.m3u8') !== -1) {
+      if (url.indexOf('.m3u8') !== -1 || (options && options.force_hls)) {
         loadHls().then(() => {
           // @ts-ignore
           if (Hls.isSupported()) {
@@ -420,7 +421,7 @@ export default defineComponent({
             });
           }
         });
-      } else if (url.indexOf('.mpd') !== -1) {
+      } else if (url.indexOf('.mpd') !== -1 || (options && options.force_mpd)) {
         loadDash().then(() => {
           this.currentPlayer.element = document.getElementById(this.currentPlayer.elementId);
           // @ts-ignore
@@ -687,7 +688,8 @@ export default defineComponent({
       if (this.externalPlayer === true) { return; }
 
       if (val === PlayerStatus.Loading && this.streamUrl !== null) {
-        this.play(this.streamUrl);
+        const options = PlayerUtils.buildPlayOptions(this.radio);
+        this.play(this.streamUrl, options);
       } else if (val === PlayerStatus.Stopped) {
         this.pause();
         // this.stop();

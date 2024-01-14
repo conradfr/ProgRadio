@@ -191,6 +191,9 @@ class AdminController extends AbstractBaseController
 
             $stream->setEnabled($streamOverloading->getEnabled());
 
+            $stream->setForceHls($streamOverloading->getForceHls());
+            $stream->setForceMpd($streamOverloading->getForceMpd());
+
             if (!empty($form->get('redirect')->getData())) {
                 $streamRedirect = $em->getRepository(Stream::class)->find($form->get('redirect')->getData());
 

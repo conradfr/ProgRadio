@@ -34,8 +34,14 @@
                 {{ form_row(form.img) }}
                 {{ form_row(form.streamUrl) }}
 
-                <div id="streamUrlHelpBlock" class="form-text">
-                    https://playerservices.streamtheworld.com/api/livestream-redirect/
+                <div id="streamUrlHelpBlock" class="d-flex justify-content-between form-text">
+                    <div>https://playerservices.streamtheworld.com/api/livestream-redirect/</div>
+                    <div>http://stream.zeno.fm/</div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <div class="flex-fill">{{ form_row(form.forceHls) }}</div>
+                    <div class="flex-fill">{{ form_row(form.forceMpd) }}</div>
                 </div>
 
                 {{ form_row(form.countryCode) }}
