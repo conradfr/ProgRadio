@@ -18,15 +18,7 @@ import {
 
 const LISTENING_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
 
-const createVideoElem = () => {
-  let videoElem = document.getElementById('videoplayer');
-  if (!videoElem) {
-    videoElem = document.createElement('audio');
-    videoElem.id = 'videoplayer';
-    videoElem.style = 'display:none';
-    document.body.appendChild(videoElem);
-  }
-}
+// todo now that we removed the dynamic video tag, refactor the window.audio = elem.
 
 /* we load the hls script dynamically once, reducing initial app load */
 /* eslint-disable arrow-body-style */
@@ -37,8 +29,6 @@ const loadHls = () => {
       resolve();
       return;
     }
-
-    createVideoElem();
 
     const hlsScript = document.createElement('script');
     hlsScript.type = 'text/javascript';
@@ -59,8 +49,6 @@ const loadDash = () => {
       resolve(true);
       return;
     }
-
-    createVideoElem();
 
     const dashScript = document.createElement('script');
     dashScript.type = 'text/javascript';
@@ -264,10 +252,13 @@ createApp({
         });
       });
     } else {
+      /*
       const streamUrl = (streamingUrl.trim().substring(0, 5) !== 'https')
-        ? `${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}` : streamingUrl;
+        ? `${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}` : streamingUrl; */
 
-      window.audio = new Audio(`${streamUrl}`);
+      // window.audio = new Audio(`${streamUrl}`);
+      window.audio = document.getElementById('videoplayer');
+      window.audio.src = streamingUrl.trim();
       setAudioVolume();
 
       window.audio.onerror = () => {

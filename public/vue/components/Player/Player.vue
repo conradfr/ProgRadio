@@ -460,12 +460,16 @@ export default defineComponent({
           });
         });
       } else {
-        const streamUrl = (url.substring(0, 5) !== 'https')
+        // const streamUrl = (url.substring(0, 5) !== 'https')
             /* eslint-disable no-undef */
-            // @ts-expect-error apiUrl is defined on the global scope
-            ? `${streamsProxy}?k=${streamsProxyKey}&stream=${url}` : url;
+            // _@ts-expect-error apiUrl is defined on the global scope
+            // ? `${streamsProxy}?k=${streamsProxyKey}&stream=${url}` : url;
 
-        this.currentPlayer.element = new Audio(streamUrl);
+        const streamUrl = url;
+        this.currentPlayer.element = document.getElementById(this.currentPlayer.elementId);
+        this.currentPlayer.element.src = streamUrl;
+
+        // this.currentPlayer.element = new Audio(streamUrl);
         this.currentPlayer.element.muted = this.muted;
         this.currentPlayer.element.volume = (this.volume * 0.1);
         startPlayPromise = this.currentPlayer.element.play();
@@ -659,7 +663,7 @@ export default defineComponent({
       }
 
       if (val === PlayerStatus.Playing) {
-        let channelName = null;
+        let channelName;
 
         if ((this.radio.type === config.PLAYER_TYPE_RADIO
             && this.radio.streams[this.radioStreamCodeName!].current_song === true)
