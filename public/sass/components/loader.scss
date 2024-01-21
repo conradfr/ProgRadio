@@ -1,7 +1,8 @@
 .loading {
   position: fixed; /* or absolute */
   top: 50%;
-  left: 49%;
+  // left: 49%;
+  left: calc(49% - (11.154rem / 2));
 
   z-index: 6;
   opacity: 0.77;
