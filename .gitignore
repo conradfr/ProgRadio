@@ -74,6 +74,8 @@
 /public/vue/utils/petite-vue.es.js
 /public/phpinfo.php
 
+/public/js/bootstrap.bundle.min.js.map
+
 # Elixir
 
 # The directory Mix will write compiled artifacts to.
