@@ -2,14 +2,14 @@
   <div>
     <player></player>
     <toast-container></toast-container>
-    <timer-modal v-if="timerDisplay"></timer-modal>
+    <timer-modal></timer-modal>
     <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions, mapState } from 'pinia';
+import { mapActions } from 'pinia';
 import throttle from 'lodash/throttle';
 
 import { useGlobalStore } from '@/stores/globalStore';
@@ -130,7 +130,6 @@ export default defineComponent({
       );
     }
   },
-  computed: mapState(usePlayerStore, ['timerDisplay']),
   methods: {
     ...mapActions(useUserStore, ['getUserData']),
     ...mapActions(useGlobalStore, ['displayToast']),

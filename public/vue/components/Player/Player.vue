@@ -10,9 +10,6 @@
         <i class="bi-arrow-left-right"></i>
       </div>
     </transition>
-    <transition name="timer-fade" mode="out-in">
-      <timer v-if="timerDisplay"></timer>
-    </transition>
     <div class="player-wrap">
       <div class="player-sound player-sound-fader"
            v-if="!externalPlayer"
@@ -63,6 +60,7 @@
         'bi-heart': !isFavorite
         }"></i>
       </div>
+      <timer></timer>
     </div>
     <volume-fader v-if="displayVolume"/>
     <audio id="videoplayer1" style="display:none"></audio>
@@ -218,6 +216,13 @@ export default defineComponent({
   },
   created() {
     window.addEventListener('beforeunload', this.beforeWindowUnload);
+
+    // timer on mobile menu
+    const mobileTimerElems = document.getElementsByClassName(config.MOBILE_MENU_TIMER_CLASSNAME);
+
+    Array.prototype.forEach.call(mobileTimerElems, (element) => {
+      element.classList.remove('disabled');
+    });
   },
   computed: {
     ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite', collection: 'collections' }),
@@ -231,7 +236,6 @@ export default defineComponent({
       'timer',
       'displayVolume',
       'streamUrl',
-      'timerDisplay',
       'timerIsActive',
       'radio',
       'show',
@@ -669,20 +673,6 @@ export default defineComponent({
         }
 
         this.joinChannel(channelName);
-
-        // timer on mobile menu
-        const mobileTimerElems =
-            document.getElementsByClassName(config.MOBILE_MENU_TIMER_CLASSNAME);
-        Array.prototype.forEach.call(mobileTimerElems, (element) => {
-          element.classList.remove('disabled');
-        });
-      } else if (val === PlayerStatus.Stopped && this.timerIsActive !== true) {
-        // timer on mobile menu
-        const mobileTimerElems =
-            document.getElementsByClassName(config.MOBILE_MENU_TIMER_CLASSNAME);
-        Array.prototype.forEach.call(mobileTimerElems, (element) => {
-          element.classList.add('disabled');
-        });
       }
 
       if (this.externalPlayer === true) { return; }

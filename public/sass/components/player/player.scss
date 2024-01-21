@@ -1,8 +1,8 @@
 @import "volume";
 @import "player-modal";
 
-$icon-size: 1.231rem;
-$icon-size-hover: 1.385rem;
+$icon-size: 1.154rem;
+$icon-size-hover: 1.231rem;
 $icon-play-size: 1.769rem;
 $icon-play-size-hover: 1.846rem;
 
@@ -14,6 +14,7 @@ $icon-play-size-hover: 1.846rem;
   transform: translateX(-50%);
 
   height: 41px;
+  width: 302px;
   //width: 505px;
 
   margin-top: 5px;
@@ -36,17 +37,17 @@ $icon-play-size-hover: 1.846rem;
   @include media-breakpoint-down(sm) {
     top: auto;
     bottom: 10px;
-    width: 262px;
+    width: 322px;
     height: 47px;
     //left: ~"calc(50% - @{radio-list-width})";
   }
 
   @include media-breakpoint-up(sm) {
-    width: 315px;
+    width: 362px;
   }
 
   @include media-breakpoint-up(xxl) {
-    width: 415px;
+    width: 447px;
   }
 
   @media (min-width: 1920px) {
@@ -177,12 +178,22 @@ $icon-play-size-hover: 1.846rem;
     line-height: 1.5em;
   }
 
-  .player-favorite, .player-add-song {
+  .player-favorite, .player-add-song, .player-timer {
     width: 25px;
     padding-top: 2px;
 
+    cursor: pointer !important;
+
+    i {
+      font-size: $icon-size;
+    }
+
     &:hover {
       padding-top: 1px;
+
+      i {
+        font-size: $icon-size-hover;
+      }
     }
   }
 
@@ -258,6 +269,12 @@ $icon-play-size-hover: 1.846rem;
   }
 
   .player-timer {
+    &.player-timer-active {
+      color: $timer-active;
+    }
+  }
+/*
+  .player-timer {
     //visibility: hidden;
     //opacity: 0;
     //transition: opacity 250ms ease-in-out 250ms, background-color 250ms ease-in-out 250ms;
@@ -296,7 +313,7 @@ $icon-play-size-hover: 1.846rem;
       }
     }
   }
-
+*/
   .timer-fade-enter-active, .timer-fade-leave-active,
   .play-prev-fade-enter-active, .play-prev-fade-leave-active {
     transition: opacity .3s ease;
@@ -304,19 +321,5 @@ $icon-play-size-hover: 1.846rem;
   .timer-fade-enter, .timer-fade-leave-to,
   .play-prev-fade-enter, .play-prev-fade-leave-to {
     opacity: 0;
-  }
-}
-
-.player-add-song-inner {
-  cursor: pointer;
-
-  i {
-    font-size: $icon-size;
-  }
-
-  &:hover {
-    i {
-      font-size: $icon-size-hover;
-    }
   }
 }

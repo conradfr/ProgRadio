@@ -67,7 +67,7 @@ export const messages = {
         placeholder: 'Cliquer sur un logo pour lancer la lecture',
         previous: 'Ecouter {radio} de nouveau',
         save_song: 'Sauvegarder ce titre ({song})',
-        song_saved: 'Le titre a été sauvegardé',
+        song_saved: 'Le titre a été sauvegardé.',
         favorites: {
           add: 'Ajouter aux favoris',
           remove: 'Retirer des favoris'
@@ -204,7 +204,7 @@ export const messages = {
         placeholder: 'Click on a radio logo to start streaming',
         previous: 'Play {radio} again',
         save_song: 'Save this song ({song})',
-        song_saved: 'The song has been saved',
+        song_saved: 'The song has been saved.',
         favorites: {
           add: 'Add to favorites',
           remove: 'Remove from favorites'
@@ -341,7 +341,7 @@ export const messages = {
         placeholder: 'Haga clic en un logotipo para reproducir',
         previous: 'Escucha {radio} de nuevo',
         save_song: 'La canción fue salvada ({song})',
-        song_saved: 'Le titre a été sauvegardé',
+        song_saved: 'La canción fue salvada.',
         favorites: {
           add: 'Agregar a los favoritos',
           remove: 'eliminar de los favoritos'
@@ -478,7 +478,7 @@ export const messages = {
         placeholder: 'Klicken Sie auf ein Radio-Logo, um das Streaming zu starten',
         previous: '{radio} erneut abspielen',
         save_song: 'Dieses Lied speichern ({song})',
-        song_saved: 'Das Lied wurde gespeichert',
+        song_saved: 'Das Lied wurde gespeichert.',
         favorites: {
           add: 'Zu den Favoriten hinzufügen',
           remove: 'Aus den Favoriten entfernen'
@@ -615,7 +615,7 @@ export const messages = {
         placeholder: 'Clique no logotipo de uma rádio para começar a transmitir',
         previous: 'Toque {radio} novamente',
         save_song: 'Salve esta música ({song})',
-        song_saved: 'A música foi salva',
+        song_saved: 'A música foi salva.',
         favorites: {
           add: 'Adicionar aos favoritos',
           remove: 'Remover dos favoritos'
@@ -752,7 +752,7 @@ export const messages = {
         placeholder: 'Fare clic sul logo di una radio per iniziare lo streaming',
         previous: 'Riproduci {radio} di nuovo',
         save_song: 'Salva questo brano ({song})',
-        song_saved: 'La canzone è stata salvata',
+        song_saved: 'La canzone è stata salvata.',
         favorites: {
           add: 'Aggiungi ai preferiti',
           remove: 'Rimuovi dai preferiti'
@@ -1021,15 +1021,15 @@ export const messages = {
         updated: 'Οι παράμετροι έχουν ενημερωθεί.'
       },
       player: {
-        autoplay_error: 'Your browser does not allow autoplay. Please click play one more time',
-        play_error: 'Media error',
-        placeholder: 'Click on a radio logo to start streaming',
-        previous: 'Play {radio} again',
-        save_song: 'Save this song ({song})',
-        song_saved: 'The song has been saved',
+        autoplay_error: 'Το πρόγραμμα περιήγησής σας δεν επιτρέπει την αυτόματη αναπαραγωγή. Παρακαλώ κάντε κλικ στην αναπαραγωγή για άλλη μια φορά.',
+        play_error: 'Σφάλμα μέσου',
+        placeholder: 'Κάντε κλικ σε ένα λογότυπο ραδιοφώνου για να ξεκινήσετε τη ροή',
+        previous: 'Παίξτε ξανά το {radio}',
+        save_song: 'Αποθηκεύστε αυτό το τραγούδι ({τραγούδι})',
+        song_save: 'Το τραγούδι έχει αποθηκευτεί.',
         favorites: {
-          add: 'Add to favorites',
-          remove: 'Remove from favorites'
+          add: 'Προσθήκη στα αγαπημένα',
+          remove: 'Αφαίρεση από τα αγαπημένα'
         },
         timer: {
           cancelled: 'Ο χρονοδιακόπτης ακυρώθηκε',

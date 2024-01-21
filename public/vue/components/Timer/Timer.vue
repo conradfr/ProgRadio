@@ -1,9 +1,8 @@
 <template>
-  <div class="player-timer" data-bs-toggle="modal" data-bs-target="#timerModal"
+  <div class="player-timer" :class="{ 'player-timer-active': timerIsActive }"
+     data-bs-toggle="modal" data-bs-target="#timerModal"
        :title="$t('message.player.timer.tooltip')">
-    <a :class="{ 'player-timer-active': timerIsActive }">
-      <i class="bi bi-clock-history"></i>
-    </a>
+    <i class="bi bi-clock-history"></i>
   </div>
 </template>
 
