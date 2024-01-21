@@ -45,3 +45,9 @@ $radio-list-width: 71px;
 $margin-from-radio-list: calc(#{$radio-list-width} + 5px);
 
 $grid-row-height: 64px;
+
+
+// oerloading
+
+$table-color: $body-color;
+$table-striped-color: $body-color;
