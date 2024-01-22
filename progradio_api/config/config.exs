@@ -39,11 +39,11 @@ config :progradio_api, ProgRadioApi.Scheduler,
       task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :overload_recently_updated, []}
     ],
     warm_radios_cache: [
-      schedule: "4 0,12 * * *",
+      schedule: "15 0,12 * * *",
       task: {ProgRadioApi.Radios, :list_active_radios, []}
     ],
     warm_schedule_cache: [
-      schedule: "5 0,12 * * *",
+      schedule: "15 0,12 * * *",
       task: {ProgRadioApi.Schedule, :list_schedule, []}
     ]
   ]
@@ -98,7 +98,7 @@ config :progradio_api, ProgRadioApi.Cache,
   # When using :shards as backend
   # backend: :shards,
   # GC interval for pushing new generation: 12 hrs
-  gc_interval: :timer.hours(12),
+  gc_interval: :timer.hours(1),
   # Max 1 million entries in cache
   max_size: 1_00_000,
   # Max 2 GB of memory
