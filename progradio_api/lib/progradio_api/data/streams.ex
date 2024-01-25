@@ -123,13 +123,19 @@ defmodule ProgRadioApi.Streams do
     end)
   end
 
-  def register_streaming_error(stream_id) when is_binary(stream_id) do
+  def register_streaming_error(stream_id, reason \\ nil) when is_binary(stream_id) do
     with %Stream{} = stream <- Repo.get(Stream, stream_id) do
       # we insert a new entry or increase the count if already set for this stream
-      on_conflict = [set: [playing_error: dynamic([s], fragment("? + ?", s.playing_error, 1))]]
+      on_conflict = [set:
+        [
+          playing_error_reason: reason,
+          playing_error: dynamic([s], fragment("? + ?", s.playing_error, 1))
+        ]
+      ]
 
       stream
       |> Map.put(:playing_error, 1)
+      |> Map.put(:playing_error_reason, reason)
       |> Repo.insert(
         on_conflict: on_conflict,
         conflict_target: [:id]
@@ -142,7 +148,7 @@ defmodule ProgRadioApi.Streams do
   def reset_streaming_error(stream_id) when is_binary(stream_id) do
     with %Stream{} = stream <- Repo.get(Stream, stream_id) do
       stream
-      |> Stream.changeset_playing_error(%{"playing_error" => 0})
+      |> Stream.changeset_playing_error(%{"playing_error" => 0, "playing_error_reason" => nil})
       |> Repo.update()
     else
       _ -> {:ok, nil}

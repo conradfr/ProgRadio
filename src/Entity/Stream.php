@@ -105,6 +105,9 @@ class Stream
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private ?int $playingError = null;
 
+    #[ORM\Column(type: 'string', options: ['default' => null])]
+    private ?string $playingErrorReason = null;
+
     #[ORM\OneToMany(targetEntity: UserStream::class, mappedBy: "stream", fetch: "EXTRA_LAZY")]
     #[ORM\Cache(usage: 'READ_ONLY')]
     private Collection $streamsHistory;
@@ -324,6 +327,16 @@ class Stream
     public function setPlayingError(?int $playingError): void
     {
         $this->playingError = $playingError;
+    }
+
+    public function getPlayingErrorReason(): ?string
+    {
+        return $this->playingErrorReason;
+    }
+
+    public function setPlayingErrorReason(?string $playingErrorReason): void
+    {
+        $this->playingErrorReason = $playingErrorReason;
     }
 
     public function getOriginalImg(): ?string

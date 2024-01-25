@@ -129,11 +129,20 @@ const getBestFromRadio = async (radioCodeName: string): Promise<Stream|null> => 
   }
 };
 
-const addStreamPlayingError = async (radioCodeName: string): Promise<string|null> => {
+const addStreamPlayingError = async (radioCodeName: string, errorText?: string): Promise<string|null> => {
   try {
-    /* eslint-disable no-underscore-dangle */
-    // @ts-expect-error apiUrl is defined on the global scope
-    const { data } = await axios.post<GetStreamPlayingError>(`https://${apiUrl}/stream_error/${radioCodeName}`, {});
+    const params = {};
+
+    if (errorText) {
+      // @ts-ignore
+      params.error = errorText;
+    }
+
+    const { data } = await axios.post<GetStreamPlayingError>(
+      // @ts-expect-error apiUrl is defined on the global scope
+      `https://${apiUrl}/stream_error/${radioCodeName}`,
+      params
+    );
 
     return data.status;
   } catch (error) {

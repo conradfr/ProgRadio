@@ -110,11 +110,7 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
     });
 };
 
-const sendPlayingError = (radioId) => {
-  if (!this.options.sendStatistics) {
-    return;
-  }
-
+const sendPlayingError = (radioId, errorText) => {
   // only streams
   if (!radioId.includes('-')) {
     return;
@@ -123,11 +119,17 @@ const sendPlayingError = (radioId) => {
   /* eslint-disable no-undef */
   let url = `https://${apiUrl}/stream_error/${radioId}`;
 
+  const params = {};
+
+  if (errorText) {
+    params.error = errorText;
+  }
+
   /* eslint-disable consistent-return */
   return fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({})
+    body: JSON.stringify(params)
   })
   .then(response => response.json());
 }
@@ -210,7 +212,7 @@ createApp({
 
           this.hls.on(Hls.Events.ERROR, (event, data) => {
             if (data.fatal) {
-              this.playingError();
+              this.playingError(codeName, data.details);
             }
           });
 
@@ -237,7 +239,7 @@ createApp({
         this.dash.initialize(window.audio, streamingUrl, false);
 
         this.dash.on('error', () => {
-          this.playingError();
+          this.playingError(codeName);
         });
 
         this.dash.on('canPlay', () => {
@@ -261,8 +263,15 @@ createApp({
       window.audio.src = streamingUrl.trim();
       setAudioVolume();
 
-      window.audio.onerror = () => {
-        this.playingError();
+      window.audio.onerror = (error) => {
+        // if stream failed and is http we try to switch to our https proxy
+        if (streamingUrl.trim().substring(0, 5) !== 'https') {
+          this.stop();
+          this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}`, codeName, topic, streamCodeName);
+          return;
+        }
+
+        this.playingError(codeName, error.target.error.message || null);
       };
 
       window.audio.play().then(() => {
@@ -341,7 +350,7 @@ createApp({
     }
 
   },
-  playingError() {
+  playingError(codeName, errorText) {
     // the delay prevents sending an error when the user just click a link and goes to another page...
     setTimeout(
       () => {
@@ -350,7 +359,7 @@ createApp({
         setPlayingAlertVisible(true);
 
         if (this.options.sendStatistics) {
-          sendPlayingError(codeName);
+          sendPlayingError(codeName, errorText);
         }
       },
       2500

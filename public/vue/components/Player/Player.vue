@@ -396,7 +396,7 @@ export default defineComponent({
                 this.playError();
 
                 if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
-                  this.setStreamPlayingError(this.radio.code_name);
+                  this.setStreamPlayingError(this.radio.code_name, data.details);
                 }
               }
             });
@@ -483,6 +483,13 @@ export default defineComponent({
             return;
           }
 
+          // if stream failed and is http we try to switch to our https proxy
+          if (url.trim().substring(0, 5) !== 'https') {
+            // @ts-expect-error apiUrl is defined on the global scope
+            this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${url}`, options);
+            return;
+          }
+
           this.setPlayerStatus(PlayerStatus.Stopped);
           this.stop();
 
@@ -500,7 +507,7 @@ export default defineComponent({
             this.playError();
 
             if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
-              this.setStreamPlayingError(this.radio.code_name);
+              this.setStreamPlayingError(this.radio.code_name, error.name);
             }
           }
         });

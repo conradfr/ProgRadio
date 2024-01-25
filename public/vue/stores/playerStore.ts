@@ -404,8 +404,8 @@ export const usePlayerStore = defineStore('player', {
         this.session.start = DateTime.fromISO(data.date_time_start).setZone(config.TIMEZONE);
       }
     },
-    async setStreamPlayingError(codeName: string) {
-      await StreamsApi.addStreamPlayingError(codeName);
+    async setStreamPlayingError(codeName: string, errorText?: string) {
+      await StreamsApi.addStreamPlayingError(codeName, errorText);
     },
     updateRadio() {
       this.show = null;

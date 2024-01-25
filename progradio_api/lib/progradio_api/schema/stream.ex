@@ -25,6 +25,7 @@ defmodule ProgRadioApi.Stream do
     field(:enabled, :boolean)
     field(:redirect_to, :binary_id)
     field(:playing_error, :integer, default: 0)
+    field(:playing_error_reason, :string, default: nil)
     field(:force_hls, :boolean)
     field(:force_mpd, :boolean)
     #    field(:editing_key, :string)
@@ -84,7 +85,8 @@ defmodule ProgRadioApi.Stream do
   def changeset_playing_error(stream, params \\ %{}) do
     stream
     |> cast(params, [
-      :playing_error
+      :playing_error,
+      :playing_error_reason
     ])
     |> validate_required([:id, :playing_error])
   end

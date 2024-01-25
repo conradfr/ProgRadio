@@ -87,7 +87,8 @@
                                     <i class="bi bi-stop-circle"></i>&nbsp;&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream_error.name}) }}
                                 </div>
                             </td>
-                            <td class="text-center" style="width: 250px !important">{{ stream_error.playingError }}</td>
+                            <td class="text-center" style="width: 150px !important">{{ stream_error.playingError }}</td>
+                            <td class="text-center" style="width: 300px !important">{{ stream_error.playingErrorReason }}</td>
                             <td class="text-center" style="width: 100px !important">
                                 <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a> /
                                 <a target="_blank" href="{{ path('app') }}streaming/{{ stream_error.id }}">{{ 'admin.stream_errors.view'|trans }}</a>
