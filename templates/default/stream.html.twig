@@ -112,7 +112,7 @@
                             <div>
                                 <div
                                     v-if="playing === PLAYER_STATE_STOPPED"
-                                    @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', '{{- self.topic(stream)|spaceless -}}', '{{- self.stream_code_name(stream)|spaceless -}}')"
+                                    @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
                                     class="radio-page-play">
                                     <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
                                          src="/img/play-button-inside-a-circle.svg">
@@ -139,7 +139,7 @@
                             <div class="ps-2">
                                 <div
                                     v-if="playing === PLAYER_STATE_STOPPED"
-                                    @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', '{{- self.topic(stream)|spaceless -}}', '{{- self.stream_code_name(stream)|spaceless -}}')"
+                                    @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
                                     class="radio-page-play">
                                     <div>&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
                                 </div>

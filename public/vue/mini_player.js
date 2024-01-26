@@ -179,7 +179,11 @@ createApp({
     /* eslint-disable no-undef */
     sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
   },
-  play(streamingUrl, codeName, topic, streamCodeName) {
+  play(streamingUrl, codeName, options) {
+    if (!options) {
+      options = {};
+    }
+
     setPlayingAlertVisible(false);
 
     if (this.playing !== PLAYER_STATE_STOPPED) {
@@ -202,7 +206,7 @@ createApp({
     this.sessionId = null;
     this.playerStart = new Date();
 
-    if (streamingUrl.indexOf('.m3u8') !== -1) {
+    if (streamingUrl.indexOf('.m3u8') !== -1 || (options.force_hls && options.force_hls === true)) {
       loadHls().then(() => {
         if (Hls.isSupported()) {
           window.audio = document.getElementById('videoplayer');
@@ -223,15 +227,15 @@ createApp({
 
               window.audio.play().then(() => {
                 this.playingStarted(
-                  topic ? topic.trim() : null,
-                  streamCodeName ? streamCodeName.trim() : null
+                  options.topic ? options.topic.trim() : null,
+                  options.streamCodeName ? options.streamCodeName.trim() : null
                 );
               });
             });
           });
         }
       });
-    } else if (streamingUrl.indexOf('.mpd') !== -1) {
+    } else if (streamingUrl.indexOf('.mpd') !== -1 || (options.force_mpd && options.force_mpd === true)) {
       loadDash().then(() => {
         window.audio = document.getElementById('videoplayer');
 
@@ -247,8 +251,8 @@ createApp({
 
           window.audio.play().then(() => {
             this.playingStarted(
-              topic ? topic.trim() : null,
-              streamCodeName ? streamCodeName.trim() : null
+              options.topic ? options.topic.trim() : null,
+              options.streamCodeName ? options.streamCodeName.trim() : null
             );
           });
         });
@@ -267,7 +271,7 @@ createApp({
         // if stream failed and is http we try to switch to our https proxy
         if (streamingUrl.trim().substring(0, 5) !== 'https') {
           this.stop();
-          this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}`, codeName, topic, streamCodeName);
+          this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}`, codeName, options.topic, options.streamCodeName);
           return;
         }
 
@@ -276,8 +280,8 @@ createApp({
 
       window.audio.play().then(() => {
         this.playingStarted(
-          topic ? topic.trim() : null,
-          streamCodeName ? streamCodeName.trim() : null
+          options.topic ? options.topic.trim() : null,
+          options.streamCodeName ? options.streamCodeName.trim() : null
         );
       });
     }

@@ -75,7 +75,7 @@
                             <td class="text-start" v-scope>
                                 <div
                                     v-if="radioId !== '{{ stream_error.id }}' || playing === PLAYER_STATE_STOPPED"
-                                    @click="play('{{ stream_error.streamUrl }}', '{{ stream_error.id }}', null, null)"
+                                    @click="play('{{ stream_error.streamUrl }}', '{{ stream_error.id }}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}})"
                                     class="admin-play">
                                     <i class="bi bi-play-circle"></i>&nbsp;&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream_error.name}) }}
                                 </div>

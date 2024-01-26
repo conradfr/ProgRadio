@@ -62,7 +62,8 @@
                         }">
                             <div class="streams-one-img" style="background-image: url({{ self.picture(stream) }})"
                                  v-if="playing === PLAYER_STATE_STOPPED || radioId !== '{{- stream.code_name }}'"
-                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', '{{- self.topic(stream)|spaceless -}}')">
+                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}'})"
+                            >
                                 <div class="streams-one-img-play"></div>
                             </div>
 
