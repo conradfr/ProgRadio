@@ -88,7 +88,7 @@ const format = (dateObj, name) => {
 
 const fetch = (url, name, dateObj) => {
   const day = dateObj.format('YYYY-MM-DD');
-  const day_url = `${url}${day}`;
+  const day_url = `${url}?date=${day}`;
 
   logger.log('info', `fetching ${day_url}`);
 
