@@ -123,21 +123,21 @@ const fetch = (dateObj, url) => {
     return osmosis
       .get(url)
       .find(`#nav-${dayFormat}`)
-      .select('ol.list-unstyled li.sud-schedule__show')
+      .select('ul.related-chronical__list li.sud_planning_ligne')
       .set({
         'img': 'img.sud-show__thumbnail-image@data-src',
-        'datetime_raw_start': 'time.sud-show__meta-date-start',
-        'datetime_raw_end': 'time.sud-show__meta-date-end',
-        'title': 'h3 > a',
-        'host': 'address',
-        'description': '.sud-show__excerpt.sud-excerpt p',
+        'datetime_raw_start': '.sud_planning_program_time .program-start',
+        'datetime_raw_end': '.sud_planning_program_time .program-end',
+        'title': 'h3.sud_planning_program_name > a',
+        'host': '.sud_planning_animateur',
+        'description': '.sud_planning_extrait p',
         'sub': [
-          osmosis.select('section.sud-podcast header')
+          osmosis.select('.sud_planning_ligne .panel ul li')
             .set({
-              'datetime_raw': 'time.sud-podcast__meta-date-start',
-              'title': 'h4 a',
-              // 'description': '.step-list-element-content-editorial-infos-title h3',
-              'presenter': 'address'
+              'datetime_raw': '.sud_deb_chronique',
+              'title': '.sud_podcast_chronique_link',
+              'description': '.sud_podcast_chronique_description',
+              'presenter': '.sud_podcast_chronique_author'
             })
         ]
       })
