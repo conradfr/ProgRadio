@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AffiliateRepository;
 
 #[ORM\Table]
-#[ORM\Index(name: 'affiliate_id_seq', columns: ['locale'])]
 #[ORM\Entity(repositoryClass: AffiliateRepository::class)]
 class Affiliate
 {

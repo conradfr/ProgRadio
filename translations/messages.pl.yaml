@@ -10,6 +10,7 @@ menu:
         overloading: przeciążenie strumienia
         playing_errors: Błędy strumieni strumieniowych
         shares:  Akcje
+        suggestions: Propozycje strumieni
     all: Wszystkie radia
     app: Android App
     contact: Kontakt
@@ -145,6 +146,16 @@ page:
         title: 'Słuchaj %radio% live'
         title_country: 'Słuchaj %radio% - %country% - Live'
         website: Strona
+
+        modification:
+            at_leat_one: Wypełnij co najmniej jedno pole.
+            img: Adres URL logo
+            name: Nazwa
+            radio: Radio
+            stream_url: Adres URL strumienia
+            success: Twoja sugestia została zapisana i wkrótce zostanie podana recenzji.
+            suggest: Zaproponuj modyfikację
+            website: Strona
 
     top:
         page_title: Top radios in %country%

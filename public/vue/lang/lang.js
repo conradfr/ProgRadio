@@ -156,6 +156,7 @@ export const messages = {
           random: 'Par ordre aléatoire',
           last: 'Par dernière écoute'
         },
+        suggest: 'Suggérer une modification',
         title: 'Les radios du monde entier en streaming',
         website: 'Site web'
       },
@@ -293,6 +294,7 @@ export const messages = {
           random: 'By random order',
           last: 'By last played'
         },
+        suggest: 'Suggest a modification',
         title: 'Stream radios from all over the world!',
         website: 'Website'
       },
@@ -430,6 +432,7 @@ export const messages = {
           random: 'Orden aleatorio',
           last: 'Por la escucha reciente'
         },
+        suggest: 'Sugerir una modificación',
         title: 'Emisoras de radio de todo el mundo en streaming',
         website: 'Sitio web'
       },
@@ -567,6 +570,7 @@ export const messages = {
           random: 'In zufälliger Reihenfolge',
           last: 'Von zuletzt gespielt'
         },
+        suggest: 'Schlagen Sie eine Änderung vor',
         title: 'Streame Radios aus der ganzen Welt!',
         website: 'Webseite'
       },
@@ -704,6 +708,7 @@ export const messages = {
           random: 'Por ordem aleatória',
           last: 'Por último jogado'
         },
+        suggest: 'Sugira uma modificação',
         title: 'Transmita rádios de todo o mundo!',
         website: 'Site'
       },
@@ -841,6 +846,7 @@ export const messages = {
           random: 'Per ordine casuale',
           last: 'Per ultimo giocato'
         },
+        suggest: 'Suggerisci una modifica',
         title: 'Stream radios from all over the world!',
         website: 'Sito web'
       },
@@ -978,6 +984,7 @@ export const messages = {
           random: 'W kolejności losowej',
           last: 'Ostatnio odtwarzany'
         },
+        suggest: 'Zaproponuj modyfikację',
         title: 'Przesyłaj strumieniowo radia z całego świata!',
         website: 'Strona'
       },
@@ -1115,6 +1122,7 @@ export const messages = {
           random: 'Με τυχαία διατάξη',
           last: 'Από το τελευταίο παιξίστη'
         },
+        suggest: 'Προτείνετε μια τροποποίηση',
         title: 'Μεταδώστε ραδιόφωνα από όλο τον κόσμο!',
         website: 'Ιστότοπος'
       },
@@ -1252,6 +1260,7 @@ export const messages = {
           random: 'بترتيب عشوائي',
           last: 'من خلال الاستماع الأخير'
         },
+        suggest: 'قترح تعديلً',
         title: 'بث محطات الراديو من جميع أنحاء العالم',
         website: 'الموقع الإلكتروني'
       },

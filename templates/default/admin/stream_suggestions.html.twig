@@ -1,0 +1,78 @@
+{% extends 'default/admin/admin_base.html.twig' %}
+
+{% block title %}Stream Suggestions{% endblock %}
+
+{% block body %}
+<div id="admin" class="container">
+    <h3 class="mb-4">Stream Suggestions</h3>
+
+    <div class="row">
+        <div class="col-3">
+            <div class="list-group">
+            {% for entry in suggestions %}
+                <a href="{{ path('admin_stream_suggestions', {id: entry.id}) }}" class="list-group-item list-group-item-action{% if stream_suggestion is defined and entry.id == stream_suggestion.id %} active"  aria-current="true{% endif %}">
+                    {{ entry.name }}
+                </a>
+            {% endfor %}
+            {% if suggestions is empty %}
+                No suggestions
+            {% endif %}
+            </div>
+        </div>
+        <div class="col-9">
+            {% if stream_suggestion is defined and stream_suggestion is not empty %}
+                <h3>{{ stream_suggestion.stream.name }}</h3>
+                <div class="mb-4"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_suggestion.stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></div>
+
+                {% if stream_suggestion.name %}
+                    <div class="mb-5">
+                        <h5>Name:</h5>
+                        <p><strong>Current:</strong> {{ stream_suggestion.stream.name }}</p>
+                        <p><strong>Suggested:</strong> {{ stream_suggestion.name }}</p>
+                        <a class="btn btn-primary btn-sm" href="{{ path('admin_stream_suggestions_commit', {id: stream_suggestion.id, field: 'name'}) }}" role="button">Commit</a>
+                    </div>
+                {% endif %}
+
+                {% if stream_suggestion.img %}
+                    <div class="mb-5">
+                        <h5>Img url:</h5>
+                        <p>
+                            <strong>Current:</strong>
+
+                            {% if stream_suggestion.stream.originalImg is defined and stream_suggestion.stream.originalImg is not empty  %}
+                                <a target="_blank" href="{{ stream_suggestion.stream.originalImg }}">{{ stream_suggestion.stream.originalImg }}</a>
+                            {% endif %}
+
+                            {% if stream_suggestion.stream.img is defined and stream_suggestion.stream.img is not empty  %}
+                                <div class="mb-1"><img alt="current" src="{{ asset('media/stream/' ~ stream_suggestion.stream.img) }}" /></div>
+                            {% endif %}
+                        </p>
+                        <p><strong>Suggested:</strong> <a target="_blank" href="{{ stream_suggestion.img }}">{{ stream_suggestion.img }}</a></p>
+                        <a class="btn btn-primary btn-sm" href="{{ path('admin_stream_suggestions_commit', {id: stream_suggestion.id, field: 'img'}) }}" role="button">Commit</a>
+                    </div>
+                {% endif %}
+
+                {% if stream_suggestion.streamUrl %}
+                    <div class="mb-5">
+                        <h5>Stream url:</h5>
+                        <p><strong>Current:</strong> <a target="_blank" href="{{ stream_suggestion.stream.streamUrl }}">{{ stream_suggestion.stream.streamUrl }}</a></p>
+                        <p><strong>Suggested:</strong> <a target="_blank" href="{{ stream_suggestion.streamUrl }}">{{ stream_suggestion.streamUrl }}</a></p>
+                        <a class="btn btn-primary btn-sm" href="{{ path('admin_stream_suggestions_commit', {id: stream_suggestion.id, field: 'streamUrl'}) }}" role="button">Commit</a>
+                    </div>
+                {% endif %}
+
+                {% if stream_suggestion.website %}
+                    <div class="mb-5">
+                        <h5>Website:</h5>
+                        <p><strong>Current:</strong> {% if stream_suggestion.stream.website is defined and stream_suggestion.stream.website is not empty %}<a target="_blank" href="{{ stream_suggestion.stream.website }}">{{ stream_suggestion.stream.website }}</a>{% endif %}</p>
+                        <p><strong>Suggested:</strong> <a target="_blank" href="{{ stream_suggestion.website }}">{{ stream_suggestion.website }}</a></p>
+                        <a class="btn btn-primary btn-sm" href="{{ path('admin_stream_suggestions_commit', {id: stream_suggestion.id, field: 'website'}) }}" role="button">Commit</a>
+                    </div>
+                {% endif %}
+
+                <p class="mt-5"><a class="btn btn-danger" href="{{ path('admin_stream_suggestion_delete', {id: stream_suggestion.id}) }}" role="button">Delete</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,7 +6,9 @@ namespace App\Controller;
 
 use App\Entity\Affiliate;
 use App\Entity\Stream;
+use App\Entity\StreamSuggestion;
 use App\Entity\UserSong;
+use App\Form\StreamSuggestionType;
 use App\Service\Host;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
@@ -30,6 +32,7 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 use Keiko\Uuid\Shortener\Dictionary;
 use Keiko\Uuid\Shortener\Shortener;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DefaultController extends AbstractBaseController
 {
@@ -597,6 +600,38 @@ class DefaultController extends AbstractBaseController
             'collections' => $collections,
             'date' => $dateTime,
         ]);
+    }
+
+    #[Route('/{_locale}/streams/suggestion/{id}', name: 'streams_suggestion')]
+    public function suggestion(Stream $stream, Request $request, EntityManagerInterface $em, TranslatorInterface $translator): Response
+    {
+        $streamSuggestion = new StreamSuggestion();
+        $streamSuggestion->setStream($stream);
+
+        $form = $this->createForm(StreamSuggestionType::class, $streamSuggestion);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($streamSuggestion);
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                $translator->trans('page.stream.modification.success')
+            );
+
+            $streamSuggestion = new StreamSuggestion();
+            $streamSuggestion->setStream($stream);
+            $form = $this->createForm(StreamSuggestionType::class, $streamSuggestion);
+        }
+
+        return $this->render('default/stream_suggestion.html.twig',
+            [
+                'stream' => $stream,
+                'stream_suggestion' => $streamSuggestion,
+                'form' => $form->createView()
+            ]
+        );
     }
 
     #[Route('/{_locale}/affiliate', name: 'affiliate')]

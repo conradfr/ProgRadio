@@ -11,6 +11,7 @@ menu:
         overloading: Υπερφόρτωση ροής
         playing_errors: Σφάλματα ροής
         shares: Μετοχές
+        suggestions: Προτάσεις ροών
     all: Όλα τα ραδιόφωνα
     app: Εφαρμογή Android
     contact: Επικοινωνία
@@ -147,6 +148,16 @@ page:
         title: 'Ακούστε το %radio% ζωντανά'
         title_country: 'Ακούστε το %radio% - %country% - Ζωντά'
         website: Δικτυακός τόπος
+
+        modification:
+            at_leat_one: Συμπληρώστε τουλάχιστον ένα πεδίο.
+            img: ιεύθυνση URL λογότυπου
+            name: Όνομα
+            radio: Ραδιόφωνο
+            stream_url: Διεύθυνση URL ροής
+            success: Η πρότασή σας έχει αποθηκευτεί και θα αναθεωρηθεί σύντομα.
+            suggest: Προτείνετε μια τροποποίηση
+            website: Δικτυακός τόπος
 
     top:
         page_title: Top radios in %country%

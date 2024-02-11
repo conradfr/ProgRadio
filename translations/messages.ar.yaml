@@ -11,6 +11,7 @@ menu:
         overloading: Stream Overloading
         playing_errors: Erreurs Streams
         shares: Parts de marché
+        suggestions: اقتراحات البث
     all:  جميع أجهزة الراديو
     app: تطبيق أندرويد
     contact: اتصل
@@ -147,6 +148,16 @@ page:
         title: 'استمع إلى %radio% مباشرة'
         title_country: 'استمع إلى %radio% - %country% - بث مباشر'
         website: الموقع الإلكتروني
+
+        modification:
+            at_leat_one: املأ حقلاً واحدًا على الأقل.
+            img: رابط الشعار
+            name:  الاسم
+            radio: راديو
+            stream_url: رابط البث
+            success: تم تخزين اقتراحك وستتم مراجعته قريبًا.
+            suggest: قترح تعديلًا
+            website: Wالموقع الإلكتروني
 
     top:
         page_title: أفضل محطات الراديو في %country%

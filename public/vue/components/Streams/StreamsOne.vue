@@ -12,18 +12,24 @@
           ><i class="bi bi-arrow-left"></i> {{ $t('message.streaming.close') }}</div>
         </div>
       </div>
-      <div class="col-sm-7 col-10 offset-1 offset-sm-0 pb-3">
+      <div class="col-sm-8 col-10 offset-1 offset-sm-0 pb-3">
         <div class="row">
           <div class="col-sm-9 col-12">
             <div class="d-none d-md-block float-end cursor-pointer"
               :title="$t('message.streaming.close')"
               v-on:click="quit"
             ><i class="bi bi-x-lg"></i></div>
-            <div v-if="userLogged && userIsAdmin" class="d-none d-md-block float-end me-4">
-              <a class="link-no-to-bold" v-on:click="copyIdToClipboard">Copy id</a>
-              &nbsp;-&nbsp;<a target="_blank"
-                :href="`/${locale}/admin/overloading/${stream.code_name}`">
-              Edit</a>
+            <div class="d-none d-md-block float-end me-4">
+              <a target="_blank" class="link-no-to-bold"
+                 :href="`/${locale}/streams/suggestion/${stream.code_name}`">
+                {{ $t('message.streaming.suggest') }}
+              </a>
+              <div class="text-end" v-if="userLogged && userIsAdmin">
+                <a class="link-no-to-bold" v-on:click="copyIdToClipboard">Copy id</a>
+                &nbsp;-&nbsp;<a target="_blank"
+                  :href="`/${locale}/admin/overloading/${stream.code_name}`">
+                Edit</a>
+              </div>
             </div>
             <h4 class="mb-4">{{ stream.name }}</h4>
 

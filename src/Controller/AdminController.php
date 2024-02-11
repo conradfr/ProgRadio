@@ -12,6 +12,7 @@ use App\Entity\Stream;
 use App\Entity\StreamOverloading;
 use App\Entity\StreamSong;
 use App\Entity\ScheduleEntry;
+use App\Entity\StreamSuggestion;
 use App\Entity\User;
 use App\Form\SharesType;
 use App\Form\StreamOverloadingType;
@@ -227,6 +228,62 @@ class AdminController extends AbstractBaseController
         return $this->render('default/admin/playing_error.html.twig', [
             'errors' => $errors,
         ]);
+    }
+
+    #[Route('/{_locale}/admin/stream_suggestions/{id?}', name: 'admin_stream_suggestions')]
+    #[Route('/{_locale}/admin/stream_suggestions/{id}/{field}',
+        name: 'admin_stream_suggestions_commit',
+        requirements: [
+            'field' => 'name|img|streamUrl|website'
+        ])]
+    public function streamSuggestionsAction(StreamSuggestion $streamSuggestion = null, ?string $field, EntityManagerInterface $em): Response
+    {
+        $suggestions = $em->getRepository(StreamSuggestion::class)->getSuggestions();
+
+        if (!$streamSuggestion && count($suggestions) > 0) {
+            $streamSuggestion = $em->getRepository(StreamSuggestion::class)->find($suggestions[0]['id']);
+        }
+
+        if ($streamSuggestion && $field && call_user_func([$streamSuggestion, 'get' . ucfirst($field)], []) !== null) {
+            $stream = $streamSuggestion->getStream();
+            $value = call_user_func([$streamSuggestion, 'get' . ucfirst($field)], []);
+            call_user_func([$stream, 'set' . ucfirst($field)], $value);
+            call_user_func([$streamSuggestion, 'set' . ucfirst($field)], null);
+
+            $em->persist($stream);
+            $em->persist($streamSuggestion);
+
+            // all empty: delete
+            $removed = false;
+            if ($streamSuggestion->getName() === null
+            && $streamSuggestion->getImg() === null
+            && $streamSuggestion->getStreamUrl() === null
+            && $streamSuggestion->getWebsite() === null) {
+                $em->remove($streamSuggestion);
+            }
+
+            $em->flush();
+
+            if ($removed) {
+                return $this->redirectToRoute('admin_stream_suggestions', [], 301);
+            }
+
+            return $this->redirectToRoute('admin_stream_suggestions', ['id' => $streamSuggestion->getId()], 301);
+        }
+
+        return $this->render('default/admin/stream_suggestions.html.twig', [
+            'suggestions' => $suggestions,
+            'stream_suggestion' => $streamSuggestion
+        ]);
+    }
+
+    #[Route('/{_locale}/admin/delete_stream_suggestion/{id}', name: 'admin_stream_suggestion_delete')]
+    public function deleteStreamSuggestionAction(StreamSuggestion $streamSuggestion, EntityManagerInterface $em): Response
+    {
+        $em->remove($streamSuggestion);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_stream_suggestions', [], 301);
     }
 
     #[Route('/{_locale}/admin/shares', name: 'admin_shares')]

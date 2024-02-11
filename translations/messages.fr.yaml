@@ -11,6 +11,7 @@ menu:
         overloading: Stream Overloading
         playing_errors: Erreurs Streams
         shares: Parts de marché
+        suggestions: Suggestions Streams
     all: Toutes les radios
     app: App Android
     contact: Contact
@@ -147,6 +148,16 @@ page:
         title: 'Écouter %radio% en direct'
         title_country: 'Écouter %radio% - %country% - En direct'
         website: Site web
+
+        modification:
+            at_leat_one: Remplir un champs ou plus.
+            img: Logo url
+            name: Nom
+            radio: Radio
+            stream_url: Stream url
+            success: Vos suggestions ont été enregistrées et seront étudiées très prochainement.
+            suggest: Suggérer une modification
+            website: Site web
 
     top:
         page_title: Top des radios en %country%

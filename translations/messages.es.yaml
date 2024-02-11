@@ -6,11 +6,12 @@ general:
 menu:
     account: Mi cuenta
     admin:
-        dashboard: Tableau de bord
-        listening: Écoutes
-        overloading: Stream Overloading
-        playing_errors: Erreurs Streams
-        shares: Parts de marché
+        dashboard: Tablero de bord
+        listening: Escucha
+        overloading: Sobrecarga de transmisión
+        playing_errors: Transmisiones de errores
+        shares: Cuotas de mercado
+        suggestions: SSugerencias de transmisiones
     all: Todas las radios
     app: App Android
     contact: Contactar
@@ -147,6 +148,16 @@ page:
         title: 'Escucha %radio% en directo'
         title_country: 'Escucha %radio% - %country% - En directo'
         website: 'Sitio web'
+
+        modification:
+            at_leat_one: rellena al menos un campo.
+            img: URL del logotipo
+            name: Nombre
+            radio: Radio
+            stream_url: URL de transmisión
+            success: Tu sugerencia se ha almacenado y se revisará en breve.
+            suggest: Sugerir una modificación
+            website: Sitio web
 
     top:
         page_title: Las mejores radios en %country%

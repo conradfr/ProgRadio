@@ -11,6 +11,7 @@ menu:
         overloading: Sobrecarga do fluxo
         playing_errors: Erros de transmissões
         shares: Ações
+        suggestions: Sugestões de streams
     all: Todos os rádios
     app: Aplicativo Android
     contact: Contacto
@@ -145,6 +146,16 @@ page:
         title: 'Ouça %radio% ao vivo'
         title_country: 'Ouça %radio% - %country% - Ao vivo'
         website: Site
+
+        modification:
+            at_leat_one: Preencha pelo menos um campo.
+            img: URL do logotipo
+            name: Nome
+            radio: Radio
+            stream_url: URL da transmissão
+            success: Sua sugestão foi armazenada e será analisada em breve.
+            suggest: Sugira uma modificação
+            website: Site
 
     top:
         page_title: As melhores rádios em %country%

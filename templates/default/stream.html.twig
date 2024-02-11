@@ -93,12 +93,14 @@
             <div class="row">
                 <div class="col-sm-9 col-12 order-2 order-sm-1">
                     <div>
+                        <div class="float-end text-end">
+                            <span class="d-none d-sm-block"><a target="_blank" class="link-no-to-bold" href="{{ path('streams_suggestion', {id: stream.id}) }}">{{ 'page.stream.modification.suggest'|trans }}</a></span>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <div class="float-end">&nbsp;&nbsp;<a target="_blank" href="{{ path('admin_overloading', {streamId: stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></div>
+                            <a target="_blank" href="{{ path('admin_overloading', {streamId: stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a>
                         {% endif %}
+                        </div>
                         <h4 class="mb-4">{{ stream.name }}</h4>
                     </div>
-
 
                     {% if stream.enabled== false %}
                         <div class="alert alert-warning mb-5" role="alert">
@@ -232,7 +234,9 @@
                         {% endif %}
                     </div>
 
-                    <div class="d-sm-none mt-4 text-center">
+                    <div class="d-sm-none mt-4 mb-2 text-center">
+                        <div class="mb-4"><a target="_blank" class="link-no-to-bold" href="{{ path('streams_suggestion', {id: stream.id}) }}">{{ 'page.stream.modification.suggest'|trans }}</a></div>
+
                         <button type="button" class="btn btn-sm share-button">
                             <i class="bi bi-share-fill"></i>&nbsp;&nbsp;{{ 'page.stream.share'|trans }}
                         </button>
