@@ -58,6 +58,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       false ->
         {:continue, stream_url}
     end
+    |> remove_query_string()
   end
 
   def zeno(stream_url), do: stream_url
@@ -72,6 +73,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       false ->
         {:continue, stream_url}
     end
+    |> remove_query_string()
   end
 
   def laut(stream_url), do: stream_url
@@ -128,6 +130,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       false ->
         {:continue, stream_url}
     end
+    |> remove_query_string()
   end
 
   def streamabc(stream_url), do: stream_url
@@ -184,6 +187,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       false ->
         {:continue, stream_url}
     end
+    |> remove_query_string()
   end
 
   def radiojar(stream_url), do: stream_url
@@ -201,4 +205,74 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   end
 
   def prohifi(stream_url), do: stream_url
+
+  def revma({:continue, stream_url}) do
+    pattern = ~r/(.+)\.revma\.com\/(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        remove_query_string({:continue, stream_url})
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def revma(stream_url), do: stream_url
+
+  def r80s80s({:continue, stream_url}) do
+    pattern = ~r/(.+)\.80s80s\.de\/(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        remove_query_string({:continue, stream_url})
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def r80s80s(stream_url), do: stream_url
+
+  def bobde({:continue, stream_url}) do
+    pattern = ~r/(.+)\.bob\.de\/(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        remove_query_string({:continue, stream_url})
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def bobde(stream_url), do: stream_url
+
+  def regenbogen({:continue, stream_url}) do
+    pattern = ~r/(.+)\.regenbogen\.de\/(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        remove_query_string({:continue, stream_url})
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def regenbogen(stream_url), do: stream_url
+
+  # ---------- UTILS ----------
+
+  defp remove_query_string({status, stream_url}) do
+    pattern = ~r/([^?]*)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        {:ok, stream_url |> String.split("?") |> hd()}
+
+      false ->
+        {status, stream_url}
+    end
+  end
 end

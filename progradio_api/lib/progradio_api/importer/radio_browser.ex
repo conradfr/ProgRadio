@@ -284,7 +284,10 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> StreamTransformers.network1fm()
       |> StreamTransformers.radiojar()
       |> StreamTransformers.prohifi()
-
+      |> StreamTransformers.revma()
+      |> StreamTransformers.r80s80s()
+      |> StreamTransformers.bobde()
+      |> StreamTransformers.regenbogen()
     updated_stream_url
   end
 
