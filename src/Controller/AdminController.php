@@ -245,12 +245,26 @@ class AdminController extends AbstractBaseController
         }
 
         if ($streamSuggestion && $field && call_user_func([$streamSuggestion, 'get' . ucfirst($field)], []) !== null) {
-            $stream = $streamSuggestion->getStream();
             $value = call_user_func([$streamSuggestion, 'get' . ucfirst($field)], []);
-            call_user_func([$stream, 'set' . ucfirst($field)], $value);
+
+            // img are not directly updated
+            if ($field === 'img') {
+                $streamOverloading = $em->getRepository(StreamOverloading::class)->find($suggestions[0]['id']);
+                if (!$streamOverloading) {
+                    $streamOverloading = new StreamOverloading();
+                    $streamOverloading->setEnabled(true);
+                }
+
+                $streamOverloading->setImg($value);
+                $em->persist($streamOverloading);
+            } else {
+                $stream = $streamSuggestion->getStream();
+                call_user_func([$stream, 'set' . ucfirst($field)], $value);
+                $em->persist($stream);
+            }
+
             call_user_func([$streamSuggestion, 'set' . ucfirst($field)], null);
 
-            $em->persist($stream);
             $em->persist($streamSuggestion);
 
             // all empty: delete
@@ -265,10 +279,11 @@ class AdminController extends AbstractBaseController
             $em->flush();
 
             if ($removed) {
-                return $this->redirectToRoute('admin_stream_suggestions', [], 301);
+                $streamSuggestion = null;
+                // return $this->redirectToRoute('admin_stream_suggestions', [], 301);
+            } else {
+                return $this->redirectToRoute('admin_stream_suggestions', ['id' => $streamSuggestion->getId()], 301);
             }
-
-            return $this->redirectToRoute('admin_stream_suggestions', ['id' => $streamSuggestion->getId()], 301);
         }
 
         return $this->render('default/admin/stream_suggestions.html.twig', [
