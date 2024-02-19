@@ -58,7 +58,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       false ->
         {:continue, stream_url}
     end
-    |> remove_query_string()
   end
 
   def zeno(stream_url), do: stream_url
@@ -73,7 +72,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       false ->
         {:continue, stream_url}
     end
-    |> remove_query_string()
   end
 
   def laut(stream_url), do: stream_url
@@ -125,12 +123,11 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
     case Regex.match?(pattern, stream_url) do
       true ->
-        {:ok, String.replace_leading(stream_url, "http://", "https://")}
+        {:ok, String.replace_leading(stream_url, "http://", "https://") |> remove_query_string()}
 
       false ->
         {:continue, stream_url}
     end
-    |> remove_query_string()
   end
 
   def streamabc(stream_url), do: stream_url
@@ -182,12 +179,11 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
     case Regex.match?(pattern, stream_url) do
       true ->
-        {:ok, String.replace_leading(stream_url, "http://", "https://")}
+        {:ok, String.replace_leading(stream_url, "http://", "https://") |> remove_query_string()}
 
       false ->
         {:continue, stream_url}
     end
-    |> remove_query_string()
   end
 
   def radiojar(stream_url), do: stream_url
@@ -211,7 +207,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
     case Regex.match?(pattern, stream_url) do
       true ->
-        remove_query_string({:continue, stream_url})
+        {:ok, remove_query_string(stream_url)}
 
       false ->
         {:continue, stream_url}
@@ -225,7 +221,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
     case Regex.match?(pattern, stream_url) do
       true ->
-        remove_query_string({:continue, stream_url})
+        {:ok, remove_query_string(stream_url)}
 
       false ->
         {:continue, stream_url}
@@ -239,7 +235,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
     case Regex.match?(pattern, stream_url) do
       true ->
-        remove_query_string({:continue, stream_url})
+        {:ok, remove_query_string(stream_url)}
 
       false ->
         {:continue, stream_url}
@@ -253,7 +249,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
     case Regex.match?(pattern, stream_url) do
       true ->
-        remove_query_string({:continue, stream_url})
+        {:ok, remove_query_string(stream_url)}
 
       false ->
         {:continue, stream_url}
@@ -264,15 +260,15 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
   # ---------- UTILS ----------
 
-  defp remove_query_string({status, stream_url}) do
+  defp remove_query_string(stream_url) do
     pattern = ~r/([^?]*)/
 
     case Regex.match?(pattern, stream_url) do
       true ->
-        {:ok, stream_url |> String.split("?") |> hd()}
+        stream_url |> String.split("?") |> hd()
 
       false ->
-        {status, stream_url}
+        stream_url
     end
   end
 end
