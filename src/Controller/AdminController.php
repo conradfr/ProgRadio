@@ -274,13 +274,14 @@ class AdminController extends AbstractBaseController
             && $streamSuggestion->getStreamUrl() === null
             && $streamSuggestion->getWebsite() === null) {
                 $em->remove($streamSuggestion);
+                $removed = true;
             }
 
             $em->flush();
 
             if ($removed) {
                 $streamSuggestion = null;
-                // return $this->redirectToRoute('admin_stream_suggestions', [], 301);
+                return $this->redirectToRoute('admin_stream_suggestions', [], 301);
             } else {
                 return $this->redirectToRoute('admin_stream_suggestions', ['id' => $streamSuggestion->getId()], 301);
             }
