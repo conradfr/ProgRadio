@@ -31,6 +31,15 @@ ENV TZ=Europe/Paris
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    lsb-release
+
+RUN wget -O - https://deb.goaccess.io/gnugpg.key | gpg --dearmor | tee /usr/share/keyrings/goaccess.gpg >/dev/null
+RUN echo "deb [signed-by=/usr/share/keyrings/goaccess.gpg arch=$(dpkg --print-architecture)] https://deb.goaccess.io/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/goaccess.list
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
     iputils-ping \
     netcat-traditional \
     build-essential \
