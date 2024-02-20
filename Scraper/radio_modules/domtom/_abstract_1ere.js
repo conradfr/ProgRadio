@@ -123,19 +123,19 @@ const format = async (dateObj, dayWanted, name) => {
     let endIndex = null;
 
     for(let i=0;i<curr.json.length;i++) {
-      startIndex = curr.json[i].indexOf('const data = [null,null,');
+      startIndex = curr.json[i].indexOf('const data = [null,');
 
       if (startIndex === -1) {
         continue;
       }
 
-      endIndex = curr.json[i].indexOf('}];');
+      endIndex = curr.json[i].indexOf('Promise.all([');
 
       if (endIndex === -1) {
         continue;
       }
 
-      content = safeEval(curr.json[i].substring(startIndex + 24, endIndex + 1));
+      content = safeEval(curr.json[i].substring(startIndex + 13, endIndex - 1))[2];
     }
 
     if (!content) {
@@ -368,7 +368,7 @@ const fetch = (dateObj, name, url) => {
     return osmosis
       .get(url)
       .set({
-        'json': ['script']
+        'json': ['script:not(type)']
       })
       .data(function (listing) {
         listing.dateObj = dateObj;
