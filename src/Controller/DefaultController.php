@@ -88,7 +88,8 @@ class DefaultController extends AbstractBaseController
                 'it' => '/{_locale}/ascolti-{codeName}-{subRadioCodeName}/{date?}',
                 'pl' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
                 'el' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
-                'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/{date?}'
+                'ro' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
+                'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/{date?}',
             ],
             name: 'radio_subradio',
             defaults: [
@@ -203,6 +204,7 @@ class DefaultController extends AbstractBaseController
                 'it' => '/{_locale}/ascolti-{codeName}/{date?}',
                 'pl' => '/{_locale}/streaming-{codeName}/{date?}',
                 'el' => '/{_locale}/streaming-{codeName}/{date?}',
+                'ro' => '/{_locale}/streaming-{codeName}/{date?}',
                 'ar' => '/{_locale}/البث-{codeName}/{date?}'
             ],
             name: 'radio',
@@ -276,6 +278,7 @@ class DefaultController extends AbstractBaseController
                 'it' => '/{_locale}/stream-{shortId}/ascolti-{codename}',
                 'pl' => '/{_locale}/stream-{shortId}/słuchaj-{codename}',
                 'el' => '/{_locale}/stream-{shortId}/ακούω-{codename}',
+                'ro' => '/{_locale}/stream-{shortId}/asculta-{codename}',
                 'ar' => '/{_locale}/stream-{shortId}/استمع-{codename}'
             ],
             name: 'streams_one_short',
@@ -347,6 +350,7 @@ class DefaultController extends AbstractBaseController
                 'it' => '/{_locale}/stream/{id}/ascolti-{codename}',
                 'pl' => '/{_locale}/stream/{id}/słuchaj-{codename}',
                 'el' => '/{_locale}/stream/{id}/ακούω-{codename}',
+                'ro' => '/{_locale}/stream/{id}/asculta-{codename}',
                 'ar' => '/{_locale}/stream/{id}/استمع-{codename}'
             ],
             name: 'streams_one',
@@ -394,7 +398,7 @@ class DefaultController extends AbstractBaseController
                 'priority' => '0.5',
                 'changefreq' => 'weekly'
             ],
-            requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar']
+            requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro']
         )
     ]
     public function top(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
@@ -430,7 +434,7 @@ class DefaultController extends AbstractBaseController
             'priority' => '0.5',
             'changefreq' => 'weekly'
         ],
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar']
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro']
     )
     ]
     public function last(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
@@ -653,7 +657,7 @@ class DefaultController extends AbstractBaseController
         Route('/locale-switch/to/{locale}',
             name: 'locale_switch',
             requirements: [
-                'locale' => 'en|fr|es|de|pt|it|pl|el|ar'
+                'locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro'
             ]
         )
     ]
@@ -703,7 +707,7 @@ class DefaultController extends AbstractBaseController
             defaults: [ 'subdomain' => 'www'],
             requirements: [
                 'subdomain' => 'www|local',
-                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar'
+                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro'
             ]
         )
     ]
@@ -724,7 +728,7 @@ class DefaultController extends AbstractBaseController
                 'changefreq' => 'daily'
             ],
             requirements: [
-                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar'
+                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro'
             ]
         )
     ]

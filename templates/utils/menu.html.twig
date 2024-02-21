@@ -155,6 +155,12 @@
             </li>
         {% endif %}
 
+        {% if app.request.locale == 'ro' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/ro">{{ 'menu.favorites_menu.ro'|trans }}</a>
+            </li>
+        {% endif %}
+
         {% if app.request.locale == 'ar' %}
             <li>
                 <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/dz">{{ 'menu.favorites_menu.dz'|trans }}</a>

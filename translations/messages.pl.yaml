@@ -47,6 +47,7 @@ menu:
         dz: Algieria
         ma: Maroko
         tn: Tunezja
+        ro: Rumuński
 
     songs: Zapisane utwory
 
@@ -257,6 +258,7 @@ footer:
     pl: Polskie
     el: Ελληνικά
     ar: عربي
+    ro: Român
 
 legal: Informacja prawna
 

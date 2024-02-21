@@ -26,6 +26,12 @@ export const dateTimeFormats = {
   },
   pl: {
     date_title: { year: 'numeric', month: 'long', day: 'numeric' }
+  },
+  ar: {
+    date_title: { year: 'numeric', month: 'long', day: 'numeric' }
+  },
+  ro: {
+    date_title: { year: 'numeric', month: 'long', day: 'numeric' }
   }
 };
 
@@ -1268,6 +1274,144 @@ export const messages = {
         home: {
           enabled: 'تم تنشيط الصفحة كصفحة رئيسية.',
           disabled: 'تمت إزالة الصفحة كصفحة رئيسية.'
+        }
+      }
+    },
+  },
+  ro: {
+    message: {
+      consent: {
+        accept: 'Da',
+        allow: 'Preferați pub-urile personalizate? ' ,
+        deny: 'Nu',
+        disclaimer: '(Nu vindem datele utilizatorilor noștri)'
+      },
+      loading: 'Se încarcă... ',
+      generic: {
+        delete: 'Șterge',
+        error: 'A apărut o eroare.'
+      },
+      now_page: {
+        back: '← Reveniți la programul complet al programelor',
+        title: 'Chiar acum la radio'
+      },
+      params_page: {
+        automatic: 'Automat',
+        automatic_help: 'Pe baza tipului de conexiune (ADSL, fibră, 4g...) și lățimii de bandă.',
+        deactivated: 'Dezactivat',
+        description: 'Pentru a reduce anunțurile la începutul streamingului și timpii de încărcare, playerul poate continua să redea fluxul anterior timp de câteva minute atunci când schimbați radioul sau când întrerupeți redarea.',
+        duration_10: 'Timp de 10 mine',
+        duration_30: 'Timp de 30 de mine',
+        no_support: 'Browserul dvs. nu acceptă detectarea automată. ',
+        save: 'Salvează',
+        sub_title: 'Citiri simultane în flux',
+        title: 'Configurarea cititorului',
+        two_flux: 'Două fluxuri simultane',
+        updated: 'Setări actualizate'
+      },
+      player: {
+        autoplay_error: "Votre navigateur n'autorise pas la lecture automatique de médias. Merci de cliquer sur \"Ecouter\" une fois de plus",
+        play_error: 'Erreur de lecture',
+        placeholder: 'Cliquer sur un logo pour lancer la lecture',
+        previous: 'Ecouter {radio} de nouveau',
+        save_song: 'Sauvegarder ce titre ({song})',
+        song_saved: 'Le titre a été sauvegardé.',
+        favorites: {
+          add: 'Ajouter aux favoris',
+          remove: 'Retirer des favoris'
+        },
+        timer: {
+          cancelled: 'Le minuteur a été annulé',
+          end_in: 'Cronometrul se termină în 0 minute | Cronometrul se termină în {minute} minute | Cronometrul se termină în {minute} minute',
+          finish: 'Opriți redarea (temporizator) ',
+          modal: {
+            abrv: 'mn',
+            add: 'Adaugă',
+            cancel: 'Anulează',
+            close: 'Închidere',
+            length: 'Durată',
+            placeholder: 'Minute',
+            quick: 'Selectare rapidă',
+            set: 'Porniți temporizatorul',
+            title: 'Cronometru',
+            x_minutes: '{minute} minute'
+          },
+          set: 'Cronometrul este pornit timp de 0 minute | Cronometrul este pornit pentru {minute} minut |Cronometrul este pornit pentru {minute} minute',
+          title: 'Cronometru',
+          tooltip: 'Faceți clic aici pentru a activa cronometrul'
+        }
+      },
+      radio_page: {
+        back: '← Reveniți la programul complet al programelor',
+        current: '↓ Du-te la spectacolul curent',
+        no_schedule: 'Programele nu sunt disponibile. ',
+        play: 'Ascultă {radio} ',
+        stop: 'Opriți {radio} ',
+        title: 'Programele și streamingul {radio} ',
+        webradios: 'Radiouri web'
+      },
+      schedule: {
+        no_schedule: 'Programele nu sunt disponibile :(',
+        no_radio: 'Nu există radio în această categorie',
+        no_radio_favorite: 'Nu aveți radiouri preferate',
+        preroll_filter: 'Radiouri cu anunț la lansare',
+        title: 'Toate programele radio, toate programele și ascultarea online',
+        today: 'Astăzi',
+        tomorrow: 'Mâine',
+        tooltip: 'Mai multe radiouri aici',
+        radio_list: {
+          page: 'Pagina programe',
+          pick_region_title: 'Alegeți o regiune',
+          region: {
+            modal: {
+              close: 'Închidere',
+            }
+          }
+        }
+      },
+      songs_page: {
+        buy: 'Cumpără',
+        buy_amazon: 'Amazon',
+        find: 'Căutare',
+        find_deezer: 'Deezer',
+        find_spotify: 'Spotify',
+        find_youtube: 'YouTube',
+        no_songs: 'Nu aveți nicio melodie salvată.',
+        title: 'Titluri salvate',
+      },
+      streaming: {
+        categories: {
+          all_countries: 'Toate țările',
+          favorites: 'Favorite',
+          last: 'Oamenii ascultă...',
+          history: 'Istoria mea'
+        },
+        close: 'Înapoi',
+        country: 'Țară',
+        country_search_no_result: 'Nicio țară găsită',
+        listeners_title: 'Ascultători',
+        listeners: 'Nu există ascultători momentan. | Un ascultător în prezent. | {how_many} ascultători în prezent.',
+        more: 'Vezi mai multe',
+        no_results: 'Fără radio',
+        play: 'Ascultă {radio}',
+        playing: 'Title',
+        random: 'Redați un radio aleator',
+        search_placeholder: 'Căutaţi după nume, stil, conţinut...',
+        stop: 'Stop',
+        sort: {
+          name: 'În ordine alfabetică',
+          popularity: 'După popularitate',
+          random: 'În ordine aleatorie',
+          last: 'După ultima ascultă'
+        },
+        suggest: 'Sugerați o schimbare',
+        title: 'Posturi de radio din întreaga lume difuzează în flux',
+        website: 'Site'
+      },
+      toast: {
+        home: {
+          enabled: 'Pagina a fost activată ca pagină de pornire.',
+          disabled: 'Pagina a fost eliminată ca pagină de pornire.'
         }
       }
     },

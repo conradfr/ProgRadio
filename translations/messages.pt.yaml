@@ -49,6 +49,7 @@ menu:
         dz: Argélia
         ma: Marrocos
         tn: Tunisia
+        ro: Romena
 
     songs: Músicas salvas
 
@@ -257,6 +258,7 @@ footer:
     pl: Polskie
     el: Ελληνικά
     ar: عربي
+    ro: Român
 
 legal: Aviso legal
 

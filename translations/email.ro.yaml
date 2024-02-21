@@ -1,0 +1,32 @@
+general:
+    hello: Bună ziua,
+
+signature:
+    regards: Salutări,
+
+signup:
+    subject: '%name% - Bine ați venit! '
+    welcome: Bine ați venit!
+    text_1: Acum sunteți înregistrat pe %link%
+    text2: Preferatele dvs. (dacă există) au fost transferate în contul dvs.
+
+reset:
+    subject: '%name% - Resetarea parolei'
+    header: Resetare parolă
+    text_1: O solicitare de resetare a parolei asociate acestui e-mail a fost făcută pe %url%
+    text_2: "Pentru a vă actualiza parola faceți clic aici (valabil 24 de ore): %link%"
+    text_3: Dacă nu ați făcut nicio solicitare, puteți ignora acest e-mail.
+
+email_change:
+    subject: '%name% - Actualizare e-mail'
+    header: Actualizare e-mail
+    text_1: O solicitare de actualizare a e-mailului unui cont la %new_email% a fost făcută pe %url%.
+    text_2:
+    text_3: "Dacă nu ați inițiat-o, puteți anula această solicitare făcând clic aici (valabil 24 de ore): %link%"
+    text_4: De asemenea, ar trebui să vă actualizați parola.
+
+password_update:
+    subject: '%name% - Password update'
+    header: Password update
+    text_1: The password associated with this account has been made on %url%
+    text_2: "If you didn't initiate it you can cancel this request and set a new password by clicking here (valid for 24h) : %link%"
