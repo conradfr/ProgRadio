@@ -52,14 +52,14 @@ const format = dateObj => {
         }
       }
     }
-
+/*
     let regexp = new RegExp(/https:\/\/(.*)(smart\/)(.*)/);
     let match = curr.img.match(regexp);
     let img = curr.img;
 
     if (match !== null) {
       img = decodeURIComponent(match[3])
-    }
+    }*/
 
     if (startDateTime.hour() > endDateTime.hour()) {
       endDateTime.add(1, 'days');
@@ -69,7 +69,8 @@ const format = dateObj => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,
-      'img': `${process.env.PROXY_URL}nrj.jpg?key=${process.env.PROXY_KEY}&url=${img}`,
+      // 'img': `${process.env.PROXY_URL}nrj.jpg?key=${process.env.PROXY_KEY}&url=${img}`,
+      'img': curr.img || null,
       // 'img': img,
       'description': curr.description
     };
@@ -106,7 +107,7 @@ const fetch = dateObj => {
       .set({
         'datetime_raw_start': '.timelineShedule-header time[1]@datetime',
         'datetime_raw_end': '.timelineShedule-header time[2]@datetime',
-        'img': '.timelineShedule-header picture.thumbnail-inner > img@data-src',
+        'img': '.timelineShedule-header picture.thumbnail-inner img@data-src',
         'title': '.timelineShedule-content h3.a-heading-3',
         'description': '.timelineShedule-content p.description'
       })

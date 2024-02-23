@@ -52,14 +52,14 @@ const format = dateObj => {
         }
       }
     }
-
+/*
     let regexp = new RegExp(/https:\/\/(.*)(smart\/)(.*)/);
     let match = curr.img.match(regexp);
     let img = curr.img;
 
     if (match !== null) {
       img = decodeURIComponent(match[3])
-    }
+    }*/
 
     if (startDateTime.hour() > endDateTime.hour()) {
       endDateTime.add(1, 'days');
@@ -69,7 +69,8 @@ const format = dateObj => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,
-      'img': `${process.env.PROXY_URL}cherie.jpg?key=${process.env.PROXY_KEY}&url=${img}`,
+      // 'img': `${process.env.PROXY_URL}cherie.jpg?key=${process.env.PROXY_KEY}&url=${img}`,
+      'img': curr.img || null,
       'description': curr.description
     };
 
