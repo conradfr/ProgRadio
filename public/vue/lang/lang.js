@@ -1282,7 +1282,7 @@ export const messages = {
     message: {
       consent: {
         accept: 'Da',
-        allow: 'Preferați pub-urile personalizate? ' ,
+        allow: 'Preferați pub-urile personalizate?',
         deny: 'Nu',
         disclaimer: '(Nu vindem datele utilizatorilor noștri)'
       },

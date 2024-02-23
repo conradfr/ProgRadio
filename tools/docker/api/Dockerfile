@@ -56,8 +56,8 @@ COPY  ./progradio_api/mix.* /var/progradio_api/
 
 WORKDIR /var/progradio_api/
 
-RUN rm -Rf _build && \
-    mix local.hex --force && \
+#RUN rm -Rf _build && \
+RUN mix local.hex --force && \
     mix local.rebar --force && \
     mix deps.get --only prod
 
