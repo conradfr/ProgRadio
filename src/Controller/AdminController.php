@@ -247,21 +247,23 @@ class AdminController extends AbstractBaseController
         if ($streamSuggestion && $field && call_user_func([$streamSuggestion, 'get' . ucfirst($field)], []) !== null) {
             $value = call_user_func([$streamSuggestion, 'get' . ucfirst($field)], []);
 
+            $streamOverloading = $em->getRepository(StreamOverloading::class)->find($suggestions[0]['id']);
+            if (!$streamOverloading) {
+                $streamOverloading = new StreamOverloading();
+                $streamOverloading->setEnabled(true);
+            }
+
             // img are not directly updated
             if ($field === 'img') {
-                $streamOverloading = $em->getRepository(StreamOverloading::class)->find($suggestions[0]['id']);
-                if (!$streamOverloading) {
-                    $streamOverloading = new StreamOverloading();
-                    $streamOverloading->setEnabled(true);
-                }
-
                 $streamOverloading->setImg($value);
-                $em->persist($streamOverloading);
             } else {
                 $stream = $streamSuggestion->getStream();
                 call_user_func([$stream, 'set' . ucfirst($field)], $value);
-                $em->persist($stream);
+                call_user_func([$streamOverloading, 'set' . ucfirst($field)], $value);
             }
+
+            $em->persist($streamOverloading);
+            $em->persist($stream);
 
             call_user_func([$streamSuggestion, 'set' . ucfirst($field)], null);
 
