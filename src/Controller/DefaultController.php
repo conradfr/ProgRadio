@@ -590,11 +590,11 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    public function now(EntityManagerInterface $em, Request $request): Response
+    public function now(EntityManagerInterface $em): Response
     {
         $dateTime = new \DateTime();
 
-        $schedule = $em->getRepository(ScheduleEntry::class)->getTimeSpecificSchedule($dateTime, ['europe1']);
+        $schedule = $em->getRepository(ScheduleEntry::class)->getTimeSpecificSchedule($dateTime);
 
         $collections = $em->getRepository(Collection::class)->getCollections();
         $collections = array_filter($collections, fn($collection) => $collection['code_name'] !== Radio::FAVORITES);
