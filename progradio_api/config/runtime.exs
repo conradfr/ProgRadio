@@ -125,5 +125,5 @@ if config_env() == :prod do
     image_path: System.get_env("MEDIA_PATH")
 
   config :request_cache_plug,
-    enabled?: true
+    enabled?: false
 end
