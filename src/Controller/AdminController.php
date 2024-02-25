@@ -247,9 +247,12 @@ class AdminController extends AbstractBaseController
         if ($streamSuggestion && $field && call_user_func([$streamSuggestion, 'get' . ucfirst($field)], []) !== null) {
             $value = call_user_func([$streamSuggestion, 'get' . ucfirst($field)], []);
 
+            $stream = $streamSuggestion->getStream();
+
             $streamOverloading = $em->getRepository(StreamOverloading::class)->find($suggestions[0]['id']);
             if (!$streamOverloading) {
                 $streamOverloading = new StreamOverloading();
+                $streamOverloading->setId($stream->getId());
                 $streamOverloading->setEnabled(true);
             }
 
@@ -257,13 +260,13 @@ class AdminController extends AbstractBaseController
             if ($field === 'img') {
                 $streamOverloading->setImg($value);
             } else {
-                $stream = $streamSuggestion->getStream();
                 call_user_func([$stream, 'set' . ucfirst($field)], $value);
                 call_user_func([$streamOverloading, 'set' . ucfirst($field)], $value);
+
+                $em->persist($stream);
             }
 
             $em->persist($streamOverloading);
-            $em->persist($stream);
 
             call_user_func([$streamSuggestion, 'set' . ucfirst($field)], null);
 
@@ -385,7 +388,7 @@ class AdminController extends AbstractBaseController
         return $this->redirectToRoute('admin_playing_errors', [], 301);
     }
 
-    #[Route('/reset_all_stream_playing_errors', name: 'admin_reset_all_stream_paying_errors')]
+    #[Route('/{_locale}/reset_all_stream_playing_errors', name: 'admin_reset_all_stream_paying_errors')]
     public function resetAllStreamPlayingErrors(EntityManagerInterface $em): Response
     {
         $em->getRepository(Stream::class)->resetAllPlayingErrors();
