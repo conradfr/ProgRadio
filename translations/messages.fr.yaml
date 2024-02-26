@@ -151,11 +151,12 @@ page:
 
         modification:
             at_leat_one: Remplir un champs ou plus.
+            comment: Commentaire
             img: Logo url
             name: Nom
             radio: Radio
             stream_url: Stream url
-            success: Vos suggestions ont été enregistrées et seront étudiées très prochainement.
+            success: Merci pour vos suggestions. Elles ont été enregistrées et seront étudiées très prochainement.
             suggest: Suggérer une modification
             website: Site web
 

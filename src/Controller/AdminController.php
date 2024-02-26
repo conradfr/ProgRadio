@@ -249,7 +249,7 @@ class AdminController extends AbstractBaseController
 
             $stream = $streamSuggestion->getStream();
 
-            $streamOverloading = $em->getRepository(StreamOverloading::class)->find($suggestions[0]['id']);
+            $streamOverloading = $em->getRepository(StreamOverloading::class)->find($stream->getId());
             if (!$streamOverloading) {
                 $streamOverloading = new StreamOverloading();
                 $streamOverloading->setId($stream->getId());

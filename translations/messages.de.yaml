@@ -152,6 +152,7 @@ page:
 
         modification:
             at_leat_one: Fülle mindestens ein Feld aus.
+            comment: Kommentar
             img: Logo-URL
             name: Nom
             radio: Radio

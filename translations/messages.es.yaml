@@ -152,6 +152,7 @@ page:
 
         modification:
             at_leat_one: rellena al menos un campo.
+            comment: Comentario
             img: URL del logotipo
             name: Nombre
             radio: Radio

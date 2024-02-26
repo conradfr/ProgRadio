@@ -29,7 +29,10 @@ class StreamSuggestion
     private ?string $streamUrl = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string  $website = null;
+    private ?string $website = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $message = null;
 
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -92,6 +95,16 @@ class StreamSuggestion
     public function setWebsite(?string $website): void
     {
         $this->website = $website;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): void
+    {
+        $this->message = $message;
     }
 
     public function getCreatedAt(): \DateTime

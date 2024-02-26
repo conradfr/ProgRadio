@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -29,6 +30,7 @@ class StreamSuggestionType extends AbstractType implements EventSubscriberInterf
             ->add('img', TextType::class, ['label' => $this->translator->trans('page.stream.modification.img'), 'required' => false])
             ->add('streamUrl', TextType::class, ['label' => $this->translator->trans('page.stream.modification.stream_url'), 'required' => false])
             ->add('website', TextType::class, ['label' => $this->translator->trans('page.stream.modification.website'), 'required' => false])
+            ->add('message', TextareaType::class, ['label'=> 'page.stream.modification.comment','attr' => ['class' => 'form-control']])
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3([
                     'message' => 'karser_recaptcha3.message',

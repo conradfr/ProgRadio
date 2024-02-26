@@ -65,8 +65,15 @@
                     <div class="mb-5">
                         <h5>Website:</h5>
                         <p><strong>Current:</strong> {% if stream_suggestion.stream.website is defined and stream_suggestion.stream.website is not empty %}<a target="_blank" href="{{ stream_suggestion.stream.website }}">{{ stream_suggestion.stream.website }}</a>{% endif %}</p>
-                        <p><strong>Suggested:</strong> <a target="_blank" href="{{ stream_suggestion.website }}">{{ stream_suggestion.website }}</a></p>
+                        <p><strong>Suggested:</strong> <a target="_blank" href="{% if stream_suggestion.website starts with 'http' == false %}https://{% endif %}{{ stream_suggestion.website }}">{{ stream_suggestion.website }}</a></p>
                         <a class="btn btn-primary btn-sm" href="{{ path('admin_stream_suggestions_commit', {id: stream_suggestion.id, field: 'website'}) }}" role="button">Commit</a>
+                    </div>
+                {% endif %}
+
+                {% if stream_suggestion.message %}
+                    <div class="mb-5">
+                        <h5>Comment:</h5>
+                        <p>{{ stream_suggestion.message|nl2br }}</p>
                     </div>
                 {% endif %}
 
