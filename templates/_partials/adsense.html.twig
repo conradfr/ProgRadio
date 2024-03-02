@@ -1,37 +1,8 @@
-{#{% set cookie_consent = app.request.cookies.get('progradio-consent')  %}#}
-
-{#{% if (isAdProtected(app.request) != false and cookie_consent == '') %}#}
-{#<div class="fixed-bottom p-4 toast-cookie-container">#}
-{#    <div class="toast toast-cookie bg-dark text-white" role="alert" data-bs-autohide="false">#}
-{#        <div class="toast-body p-2 d-flex flex-row justify-content-between align-items-center">#}
-{#            <p class="flex-fill m-0 px-2 fs-6">#}
-{#              {{ 'cookie.allow'|trans }}<br>#}
-{#                <small>{{ 'cookie.disclaimer'|trans({'%name%': getField('name', app.request) }) }}</small>#}
-{#            </p>#}
-{#            <div>#}
-{#                <button type="button" class="btn btn-sm btn-outline-success" id="btnCookieAccept">{{ 'cookie.accept'|trans }}</button>#}
-{#                <button type="button" class="btn btn-sm btn-outline-warning mr-3" id="btnCookieDeny">{{ 'cookie.deny'|trans }}</button>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#</div>#}
-{#{% endif %}#}
-
 {#{% if app.environment == 'prod' %}#}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_key }}"
             crossorigin="anonymous"></script>
     <script type="text/javascript">(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;</script>
     <script type="text/javascript">
-/*      const consentCookieName = 'progradio-consent';
-      const getConsentCookie = () => {
-        const match = document.cookie.match(new RegExp(`(^| )${consentCookieName}=([^;]+)`));
-        if (match) {
-          return match[2] === '1';
-        } else {
-          return null;
-        }
-      }*/
-
       window.addEventListener('load', () => {
         // ensure this loads as there is conflict w/ the responsive grid
         window.setTimeout(() => {
@@ -40,49 +11,6 @@
 
         (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
         (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
-
-        /*(adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 1;
-        if (isAdProtected === true && getConsentCookie() === null) {
-          if (typeof bootstrap === 'undefined') {
-            (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          } else {
-            (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 1;
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            const toastCookieElem = document.getElementsByClassName('toast-cookie')[0];
-            const toast = new bootstrap.Toast(toastCookieElem);
-
-            const allowBtnElem = document.getElementById('btnCookieAccept');
-            const denyBtnElem = document.getElementById('btnCookieDeny');
-
-            if (allowBtnElem) {
-              allowBtnElem.addEventListener('click', () => {
-                setCookie(consentCookieName, true);
-                toast.hide();
-                (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
-                (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              });
-            }
-
-            if (denyBtnElem) {
-              denyBtnElem.addEventListener('click', () => {
-                setCookie(consentCookieName, false);
-                toast.hide();
-                (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              });
-            }
-
-            toast.show();
-          }
-        } else {
-          if (isAdProtected !== true || getConsentCookie() === true) {
-            (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;
-          }
-          (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        }*/
       })
     </script>
 {#{% endif %}#}

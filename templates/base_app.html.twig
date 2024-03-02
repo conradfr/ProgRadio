@@ -15,6 +15,7 @@ const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }
 const locale = '{{ app.request.locale }}';
 const geocode = '{{ geocode }}';
 const defaultCountry ='{{ getField('default_country', app.request) }}';
+const isProgRadio = {% if isProgRadio(app.request) == true %}true{% else %}false{% endif%};
 const adsense_key = '{{ adsense_key }}';
 const adsense_tag_vert_key = '{{ adsense_tag_radio_vert_key }}';
 const adsense_tag_vert2_key = '{{ adsense_tag_radio_vert2_key }}';

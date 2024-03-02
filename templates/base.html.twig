@@ -55,7 +55,7 @@
       const streamsProxy = '{{ streams_proxy }}';
       const streamsProxyKey = '{{ streams_proxy_key }}';
       const apiUrl = '{{ api_url }}';
-      const isAdProtected = {{ isAdProtected(app.request) == true ? 'true' : 'false' }};
+      {# const isAdProtected = {{ isAdProtected(app.request) == true ? 'true' : 'false' }}; #}
       const amazon_affiliate_id = '{{ amazon_affiliate_id }}';
 
       {% block javascript_head %}

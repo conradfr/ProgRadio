@@ -209,6 +209,10 @@
                         </div>
                     {% endif %}
 
+                    <div class="pt-2 pb-3 px-3 d-block d-sm-none">
+                        {{ include('_partials/adblock.html.twig', {style: 'horizontal'}) }}
+                    </div>
+
                     {% if stream.tags is not null and stream.tags != '' %}
                         <div class="row">
                             <div class="col-12 col-sm-9">
@@ -227,12 +231,6 @@
                             </div>
                         </div>
                     {% endif %}
-
-                    <div class="pt-3 px-3 d-block d-sm-none">
-                        {% if app.environment == 'prod' %}
-                            {{ include('_partials/adblock.html.twig', {style: 'horizontal'}) }}
-                        {% endif %}
-                    </div>
 
                     <div class="d-sm-none mt-4 mb-2 text-center">
                         <div class="mb-4"><a target="_blank" class="link-no-to-bold" href="{{ path('streams_suggestion', {id: stream.id}) }}">{{ 'page.stream.modification.suggest'|trans }}</a></div>
@@ -270,19 +268,17 @@
                         </div>
                     </div>
 
-                    <div class="pt-3 d-block d-sm-none">
-                        {% if app.environment == 'prod' %}
-                            {{ include('_partials/affiliate.twig') }}
-                        {% endif %}
-                    </div>
+{#                    <div class="pt-3 d-block d-sm-none">#}
+{#                        {% if app.environment == 'prod' %}#}
+{#                            {{ include('_partials/affiliate.twig') }}#}
+{#                        {% endif %}#}
+{#                    </div>#}
                 </div>
                 <div class="offset-sm-0 col-sm-3 d-none d-sm-block order-sm-2 pt-4 pt-sm-2 text-center">
-                    {% if app.environment == 'prod' %}
-                        {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2'])}) }}
-                    {% endif %}
+                    {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2'])}) }}
 
 {#                    {% if app.environment == 'prod' %}#}
-                        {{ include('_partials/affiliate.twig') }}
+{#                        {{ include('_partials/affiliate.twig') }}#}
 {#                    {% endif %}#}
                 </div>
             </div>
