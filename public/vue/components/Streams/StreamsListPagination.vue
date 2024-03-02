@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-md-12 pb-5 pb-sm-3 pb-md-0">
+      <div class="col-md-12 pb-3 pb-md-0">
         <nav aria-label="navigation">
-          <ul class="pagination">
+          <ul class="pagination justify-content-center">
             <li class="page-item" :class="{ 'disabled': page === 1 }">
               <a class="page-link" v-on:click="gotoPage(page - 1)" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>

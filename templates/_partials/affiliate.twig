@@ -1,11 +1,11 @@
-{% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false or isProgRadio(app.request) == false  %}
-<div class="mt-5 text-center affiliate-frame" style="margin:auto">
-    {% set affiliate = oneAffiliateLink(app.request.locale) %}
-    {% if affiliate is defined and affiliate is not empty %}
-        <a target="_blank" href="{{ affiliate.htmlLink }}">
-            <img src="{{ affiliate.base64img|raw }}" alt="{{ affiliate.locale_text }}">
-            <div class="affiliate-text mt-3">{{ affiliate.locale_text|nl2br }}</div>
-        </a>
-    {% endif %}
-</div>
-{% endif %}
+{#{% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false or isProgRadio(app.request) == false  %}#}
+{#<div class="mt-5 text-center affiliate-frame" style="margin:auto">#}
+{#    {% set affiliate = oneAffiliateLink(app.request.locale) %}#}
+{#    {% if affiliate is defined and affiliate is not empty %}#}
+{#        <a target="_blank" href="{{ affiliate.htmlLink }}">#}
+{#            <img src="{{ affiliate.base64img|raw }}" alt="{{ affiliate.locale_text }}">#}
+{#            <div class="affiliate-text mt-3">{{ affiliate.locale_text|nl2br }}</div>#}
+{#        </a>#}
+{#    {% endif %}#}
+{#</div>#}
+{#{% endif %}#}

@@ -14,7 +14,7 @@
       </div>
     </div>
     <streams-list-pagination v-if="radios.length"></streams-list-pagination>
-    <div class="mt-2" v-if="!userLogged"><adsense mode="horizontal_fix"></adsense></div>
+    <div class="mt-0 mt-sm-2" v-if="!isProgRadio || !userLogged"><adsense mode="horizontal_fix"></adsense></div>
   </div>
 </template>
 
@@ -36,6 +36,15 @@ export default defineComponent({
     StreamsListPagination,
     StreamsListOne,
     Adsense
+  },
+  /* eslint-disable indent */
+  data(): {
+    isProgRadio: boolean
+  } {
+    return {
+      // @ts-expect-error defined on global scope
+      isProgRadio
+    };
   },
   computed: {
     ...mapState(useGlobalStore, ['isLoading']),

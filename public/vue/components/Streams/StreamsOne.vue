@@ -101,16 +101,16 @@
               </div>
             </div>
 
-            <div class="pt-3 px-3 d-sm-none" v-if="!userLogged">
+            <div class="pt-3 px-3 w-100" v-if="!isProgRadio || !userLogged">
               <adsense mode="horizontal_fix"></adsense>
             </div>
 
           </div>
         </div>
       </div>
-      <div class="col-sm-3 col-12 text-center d-none d-sm-block" v-if="!userLogged">
+      <!-- <div class="col-sm-2 col-12 text-center d-none d-sm-block" v-if="!isProgRadio || !userLogged">
         <adsense></adsense>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -149,13 +149,16 @@ export default defineComponent({
   /* eslint-disable indent */
   data(): {
     PlayerStatus: any
-    channelName: null|string,
+    channelName: null|string
     locale: any
+    isProgRadio: boolean
   } {
     return {
       PlayerStatus,
       channelName: null,
-      locale: this.$i18n.locale
+      locale: this.$i18n.locale,
+      // @ts-expect-error defined on global scope
+      isProgRadio
     };
   },
   mounted() {
