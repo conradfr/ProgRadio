@@ -1334,7 +1334,7 @@ export const messages = {
             quick: 'Selectare rapidă',
             set: 'Porniți temporizatorul',
             title: 'Cronometru',
-            x_minutes: '{minute} minute'
+            x_minutes: '{minutes} minute'
           },
           set: 'Cronometrul este pornit timp de 0 minute | Cronometrul este pornit pentru {minute} minut |Cronometrul este pornit pentru {minute} minute',
           title: 'Cronometru',
