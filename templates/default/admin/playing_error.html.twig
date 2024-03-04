@@ -68,14 +68,17 @@
                     -->
                     {% for stream_error in errors %}
                         <tr id="row-{{ stream_error.id }}">
-                            <td class="text-center" style="width: 100px !important"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></td>
+                            <td class="text-center" style="width: 100px !important"><a target="_blank"
+                                                                                       href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a>
+                            </td>
                             <td class="text-center" style="width: 100px !important">
-                                <a href="javascript:;" onclick="resetStream('{{ stream_error.id }}')">{{ 'admin.stream_errors.reset'|trans }}</a>
+                                <a href="javascript:;"
+                                   onclick="resetStream('{{ stream_error.id }}')">{{ 'admin.stream_errors.reset'|trans }}</a>
                             </td>
                             <td class="text-start" v-scope>
                                 <div
                                     v-if="radioId !== '{{ stream_error.id }}' || playing === PLAYER_STATE_STOPPED"
-                                    @click="play('{{ stream_error.streamUrl }}', '{{ stream_error.id }}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}})"
+                                    @click="play('{{ stream_error.streamUrl }}', '{{ stream_error.id }}', {force_hls: {{- stream_error.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream_error.forceMpd ? 'true' : 'false' -}}})"
                                     class="admin-play">
                                     <i class="bi bi-play-circle"></i>&nbsp;&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream_error.name}) }}
                                 </div>
