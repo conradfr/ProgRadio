@@ -108,7 +108,7 @@ const loadHls = () => {
     const hlsScript = document.createElement('script');
     hlsScript.type = 'text/javascript';
     hlsScript.id = 'hls-script';
-    hlsScript.src = '/js/hls.min.js';
+    hlsScript.src = '/js/hls.light.min.js';
     hlsScript.onload = resolve;
     hlsScript.onerror = reject;
     document.body.appendChild(hlsScript);
