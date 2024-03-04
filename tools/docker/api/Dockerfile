@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.15.5-erlang-26.0.2-ubuntu-focal-20230126
+FROM hexpm/elixir:1.15.7-erlang-26.2.2-ubuntu-focal-20240123
 
 EXPOSE 80
 
@@ -53,7 +53,6 @@ RUN pkg-config --libs icu-uc icu-io
 RUN mkdir -p /var/progradio_api
 RUN mkdir -p /var/www
 
-COPY  ./progradio_api/config /var/progradio_api/config/
 COPY  ./progradio_api/mix.* /var/progradio_api/
 
 WORKDIR /var/progradio_api/
@@ -62,6 +61,8 @@ WORKDIR /var/progradio_api/
 RUN mix local.hex --force && \
     mix local.rebar --force && \
     mix deps.get --only prod
+
+COPY  ./progradio_api/config /var/progradio_api/config/
 
 RUN mix deps.compile --skip-local-deps
 

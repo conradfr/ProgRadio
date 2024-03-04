@@ -11,11 +11,13 @@ config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
 config :progradio_api,
   namespace: ProgRadioApi,
-  ecto_repos: [ProgRadioApi.Repo]
+  ecto_repos: [ProgRadioApi.Repo],
+  generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
 config :progradio_api, ProgRadioApiWeb.Endpoint,
   url: [host: "localhost"],
+  adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [json: ProgRadioApiWeb.ErrorJSON],
     layout: false

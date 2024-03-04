@@ -8,11 +8,10 @@ defmodule ProgRadioApi.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      ProgRadioApi.Cache,
-      # Start the Telemetry supervisor
       ProgRadioApiWeb.Telemetry,
-      # Start the Ecto repository
+      ProgRadioApi.Cache,
       ProgRadioApi.Repo,
+      {DNSCluster, query: Application.get_env(:progradio_api, :dns_cluster_query) || :ignore},
       {Redix,
        host: Application.get_env(:progradio_api, :redis_host),
        database: Application.get_env(:progradio_api, :redis_db),
@@ -26,14 +25,14 @@ defmodule ProgRadioApi.Application do
       {Registry, [keys: :unique, name: SongSongProviderRegistry]},
       {DynamicSupervisor, strategy: :one_for_one, name: ProgRadioApi.SongDynamicSupervisor},
       ProgRadioApi.ListenersCounter,
-      # Start Finch
+      # Start the Finch HTTP client for sending emails
       {Finch, name: ProgRadioApi.Finch},
-      # Start the Endpoint (http/https)
+      # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
+      # {ProgRadioApi.Worker, arg}
+      # Start to serve requests, typically the last entry
       ProgRadioApiWeb.Endpoint,
       ProgRadioApi.Scheduler,
       ProgRadioApi.Checker.StreamsSupervisor
-      # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
-      # {ProgRadioApi.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
