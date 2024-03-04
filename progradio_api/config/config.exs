@@ -81,6 +81,7 @@ config :cors_plug,
 # Configure redis
 config :progradio_api,
   image_path: "/var/www/progradio/public/media/",
+  banned_ips: "" |> String.split(","),
   redis_host: "127.0.0.1",
   redis_db: "0"
 
