@@ -146,8 +146,8 @@ page:
         suggested: Radio consigliate
         tags: Etichette
         share: Condividi questa radio
-        title: 'Ascolta %radio% live'
-        title_country: 'Ascolta %radio% - %country% - Live'
+        title: '%radio% - Ascolta live'
+        title_country: '%radio% - %country% - Ascolta'
         website: Sito web
 
         modification:

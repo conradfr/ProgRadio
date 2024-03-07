@@ -145,8 +145,8 @@ page:
         suggested: Radiouri sugerate
         tags: Etichete
         share: Partajarea radioului
-        title: 'Ascultă %radio% live'
-        title_country: 'Ascultă %radio% - %country% - Live'
+        title: '%radio% - Ascultă live'
+        title_country: '%radio% - %country% - Ascultă live'
         website: Site
 
         modification:

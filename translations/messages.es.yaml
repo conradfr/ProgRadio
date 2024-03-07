@@ -147,7 +147,7 @@ page:
         tags: Tags
         share: Compartir radio
         title: 'Escucha %radio% en directo'
-        title_country: 'Escucha %radio% - %country% - En directo'
+        title_country: '%radio% - %country% - Escucha en directo'
         website: 'Sitio web'
 
         modification:

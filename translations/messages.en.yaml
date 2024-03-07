@@ -146,8 +146,8 @@ page:
         suggested: Suggested radios
         tags: Tags
         share: Share this radio
-        title: 'Listen to %radio%'
-        title_country: 'Listen to %radio% - %country%'
+        title: '%radio% - Streaming live'
+        title_country: '%radio% - %country% - Streaming live'
         website: Website
 
         modification:
