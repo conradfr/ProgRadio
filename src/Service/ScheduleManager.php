@@ -16,11 +16,13 @@ use Symfony\Contracts\Cache\ItemInterface;
 class ScheduleManager
 {
     protected const CACHE_SCHEDULE_PREFIX = 'cache_schedule_';
-    protected const CACHE_SCHEDULE_TTL = 604800; // in seconds = one week
+    public const CACHE_SCHEDULE_TTL = 604800; // in seconds = one week
 
     protected const CACHE_KEY_DAY_FORMAT = 'Y-m-d';
 
-    public function __construct(protected EntityManagerInterface $em, protected CacheItemPoolInterface $cache) { }
+    public function __construct(protected EntityManagerInterface $em, protected CacheItemPoolInterface $cache)
+    {
+    }
 
     /*
     * Basically there would be a bug is any radio would have the same name as a collection

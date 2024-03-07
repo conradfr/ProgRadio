@@ -23,7 +23,7 @@ framework:
 
 when@prod:
     framework:
-        http_cache: false
+        http_cache: true
 
 when@test:
     framework:

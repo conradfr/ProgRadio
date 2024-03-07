@@ -20,6 +20,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Intl\Countries;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -127,7 +128,9 @@ class DefaultController extends AbstractBaseController
             return $this->redirect($redirectUrl, 301);
         }
 
+        $noDate = false;
         if ($date === null) {
+            $noDate = true;
             $date = new \DateTime();
         }
 
@@ -176,7 +179,7 @@ class DefaultController extends AbstractBaseController
             $nextSchedule = $scheduleManager->getDayScheduleOfRadio($nextDate, $codeName);
         }
 
-        return $this->render('default/radio.html.twig', [
+        $response = $this->render('default/radio.html.twig', [
             'schedule' => $scheduleRadio,
             'radio' => $radio,
             'sub_radio' => $subRadio,
@@ -188,6 +191,17 @@ class DefaultController extends AbstractBaseController
             'more_radios' => $moreRadios,
             'more_radios2' => $moreRadios2
         ]);
+
+        //cache prev dates
+        if ($noDate === false) {
+            $response->setCache([
+                'no_cache' => false,
+                'max_age' => ScheduleManager::CACHE_SCHEDULE_TTL,
+                's_maxage' => ScheduleManager::CACHE_SCHEDULE_TTL
+            ]);
+        }
+
+        return $response;
     }
 
     /**
@@ -288,6 +302,7 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
+    #[Cache(public: true, maxage: 60, mustRevalidate: true)]
     public function oneShort(string $shortId, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
     {
         // !!! NOTE !!! could not find in the doc how to do a custom ParamConverter in Symfony 6.3 like with ExtraBundle before
@@ -360,6 +375,7 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
+    #[Cache(public: true, maxage: 60, mustRevalidate: true)]
     public function one(Stream $stream, string $codename, RouterInterface $router, Host $host, Request $request): Response
     {
         $shortener = Shortener::make(
@@ -393,14 +409,15 @@ class DefaultController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/top/{countryCode}',
-            name: 'streams_top',
-            defaults: [
-                'priority' => '0.5',
-                'changefreq' => 'weekly'
-            ],
-            requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro']
-        )
+        name: 'streams_top',
+        defaults: [
+            'priority' => '0.5',
+            'changefreq' => 'weekly'
+        ],
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro']
+    )
     ]
+    #[Cache(public: true, maxage: ScheduleManager::CACHE_SCHEDULE_TTL, mustRevalidate: true)]
     public function top(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
     {
         // redirect non-fr stream seo pages to new host
@@ -432,11 +449,12 @@ class DefaultController extends AbstractBaseController
         name: 'streams_last',
         defaults: [
             'priority' => '0.5',
-            'changefreq' => 'weekly'
+            'changefreq' => 'daily'
         ],
         requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro']
     )
     ]
+    #[Cache(public: true, maxage: 60, mustRevalidate: true)]
     public function last(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
     {
         // redirect non-fr stream seo pages to new host
@@ -603,7 +621,8 @@ class DefaultController extends AbstractBaseController
             'schedule' => $schedule,
             'collections' => $collections,
             'date' => $dateTime,
-        ]);
+        ])
+            ->expire();
     }
 
     #[Route('/{_locale}/streams/suggestion/{id}', name: 'streams_suggestion')]
