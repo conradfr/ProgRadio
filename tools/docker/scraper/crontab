@@ -3,7 +3,7 @@
 01 06 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r franceinter rmc >> /var/log/cron.log 2>&1
 03 06 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r rfi_afrique >> /var/log/cron.log 2>&1
 04 07 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r rfi_monde >> /var/log/cron.log 2>&1
-01 12 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js >> /var/log/cron.log 2>&1
-30 06 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -t >> /var/log/cron.log 2>&1
-35 06 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -t -c belgium >> /var/log/cron.log 2>&1
-01 17 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -t >> /var/log/cron.log 2>&1
+50 11 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js >> /var/log/cron.log 2>&1
+40 06 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -t >> /var/log/cron.log 2>&1
+45 06 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -t -c belgium >> /var/log/cron.log 2>&1
+06 17 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -t >> /var/log/cron.log 2>&1
