@@ -7,6 +7,8 @@ use App\Repository\ListeningSessionRepository;
 use App\Entity\RadioStream;
 use App\Entity\Stream;
 use Darsyn\IP\Version\Multi as IP;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table]
 #[ORM\Index(name: 'ls_radio_stream_idx', columns: ['radio_stream_id'])]
@@ -18,22 +20,22 @@ class ListeningSession
     public const TYPE_RADIO = 'radio';
     public const TYPE_STREAM = 'stream';
 
-    public const MINIMUM_SECONDS = 30;
-    public const MAX_DIFFERENCE_WITH_CURRENT_SECONDS = 60;
-
+/*
     public const SOURCE_WEB = 'web';
     public const SOURCE_ANDROID = 'android';
     public const SOURCE_SEO = 'seo';
 
     public const SOURCES = [
         self::SOURCE_WEB,
-        self::SOURCE_ANDROID
+        self::SOURCE_ANDROID,
+        self::SOURCE_SEO,
     ];
+*/
 
-    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'NONE')]
-    private ?string $id = null;
+    private ?Uuid $id;
 
     private ?string $type = null;
 
@@ -57,14 +59,14 @@ class ListeningSession
     #[ORM\Column(type: 'ip', nullable: true)]
     protected $ipAddress;
 
-    public function setId(string $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): string
+    public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function setId(Uuid $id): void
+    {
+        $this->id = $id;
     }
 
     public function getType(): ?string

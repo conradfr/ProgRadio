@@ -147,9 +147,10 @@ page:
         title: 'Słuchaj %radio% live'
         title_country: 'Słuchaj %radio% - %country% - Live'
         website: Strona
+        banned: Questa stazione radio è vietata.
 
         modification:
-            at_leat_one: Wypełnij co najmniej jedno pole.
+            at_least_one: Wypełnij co najmniej jedno pole.
             comment: Komentarz
             img: Adres URL logo
             name: Nazwa
@@ -158,6 +159,28 @@ page:
             success: Twoja sugestia została zapisana i wkrótce zostanie podana recenzji.
             suggest: Zaproponuj modyfikację
             website: Strona
+            submit: Invia
+
+        submission:
+            my_radios: Moje radia
+            no_radios: Nie masz radia.
+            title_new: Dodaj radio
+            title_edit: Edycja radia
+            img: Adres URL logo
+            name: Nazwa
+            radio: Radio
+            stream_url: Adres URL strumienia
+            success_new: Twoje radio zostało pomyślnie zarejestrowane, wkrótce będzie dostępne.
+            success_edit: Twoje radio zostało pomyślnie zmienione.
+            success_delete: Twoje radio zostało pomyślnie usunięte.
+            add: Dodaj radio
+            edit: Edytuj radio
+            website: Strona internetowa
+            country: Kraj
+            language: Język
+            submit: Prześlij
+            delete: Usuń
+            delete_confirm: Czy na pewno chcesz usunąć tę stację radiową? Ta operacja jest nieodwracalna.
 
     top:
         page_title: Top radios in %country%
@@ -179,6 +202,7 @@ page:
             password: Hasło
             preferences: Moja historia
             delete: Usuń
+            streams: Moje radia
         email:
             page_title: Zaktualizuj mój e-mail
             info_1: Spowoduje to zaktualizowanie wiadomości e-mail używanej jako login.

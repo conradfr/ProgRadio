@@ -58,12 +58,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Stream::class)]
     private Collection $favoriteStreams;
 
-    #[ORM\OneToMany(targetEntity: UserStream::class, mappedBy: "user", fetch: "EXTRA_LAZY")]
+    #[ORM\OneToMany(targetEntity: UserStream::class, mappedBy: 'user', fetch: "EXTRA_LAZY")]
     #[ORM\Cache(usage: 'READ_ONLY')]
     private Collection $streamsHistory;
 
     #[ORM\OneToMany(targetEntity: UserEmailChange::class, mappedBy: 'user')]
     private Collection $emailChanges;
+
+    #[ORM\OneToMany(targetEntity: Stream::class, mappedBy: 'user', fetch: "EXTRA_LAZY")]
+    private Collection $streams;
 
     #[ORM\OneToMany(targetEntity: UserSong::class, mappedBy: 'user')]
     private Collection $userSongs;
@@ -88,6 +91,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->streamsHistory = new ArrayCollection();
         $this->emailChanges = new ArrayCollection();
         $this->userSongs = new ArrayCollection();
+        $this->streams = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -210,6 +214,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->favoriteRadios->contains($favoriteRadio) === true) {
             $this->favoriteRadios->removeElement($favoriteRadio);
+        }
+    }
+
+    public function getStreams(): Collection
+    {
+        return $this->streams;
+    }
+
+    public function setStreams(Collection $streams): void
+    {
+        $this->streams = $streams;
+    }
+
+    public function addStream(Stream $stream): void
+    {
+        if ($this->streams->contains($stream) === false) {
+            $this->streams->add($stream);
+        }
+    }
+
+    public function removeStream(Stream $stream): void
+    {
+        if ($this->streams->contains($stream) === true) {
+            $this->streams->removeElement($stream);
         }
     }
 

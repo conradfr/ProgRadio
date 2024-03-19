@@ -325,7 +325,7 @@ class DefaultController extends AbstractBaseController
             $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
-                'shortId' => $shortener->reduce($stream->getId()),
+                'shortId' => $shortener->reduce($stream->getId()->toRfc4122()),
                 'codename' => $codename
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -335,7 +335,7 @@ class DefaultController extends AbstractBaseController
         if ($stream->getRedirectToStream() !== null) {
             $slugger = new AsciiSlugger();
 
-            $shortId = $shortener->reduce($stream->getRedirectToStream()->getId());
+            $shortId = $shortener->reduce($stream->getRedirectToStream()->getId()->toRfc4122());
 
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
@@ -387,7 +387,7 @@ class DefaultController extends AbstractBaseController
             $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
-                'shortId' => $shortener->reduce($stream->getId()),
+                'shortId' => $shortener->reduce($stream->getId()->toRfc4122()),
                 'codename' => $codename
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -401,7 +401,7 @@ class DefaultController extends AbstractBaseController
 
         $redirectUrl = $router->generate('streams_one_short', [
             '_locale' => $request->getLocale(),
-            'shortId' =>  $shortener->reduce($shortId),
+            'shortId' =>  $shortener->reduce($shortId->toRfc4122()),
             'codename' => $slugger->slug($name)
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -494,7 +494,7 @@ class DefaultController extends AbstractBaseController
             )->toArray();
 
             $favoritesStream = $user->getFavoriteStreams()->map(
-                fn($stream) => $stream->getId()
+                fn($stream) => $stream->getId()->toRfc4122()
             )->toArray();
 
             $songs = $user->getUserSongsAsArray();

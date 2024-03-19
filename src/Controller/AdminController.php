@@ -153,7 +153,7 @@ class AdminController extends AbstractBaseController
 
         if (!$streamOverloading) {
             $streamOverloading = new StreamOverloading();
-            $streamOverloading->setId($streamId);
+            $streamOverloading->setId($stream->getId());
         }
 
         $form = $this->createForm(StreamOverloadingType::class, $streamOverloading);

@@ -97,6 +97,7 @@
                                 <a target="_blank" href="{{ path('app') }}streaming/{{ stream_error.id }}">{{ 'admin.stream_errors.view'|trans }}</a>
                             </td>
                             <td class="text-center">{{ stream_error.countryCode }}</td>
+                            <td class="text-center">{% if stream_error.updatedAt is not null %}{{ stream_error.updatedAt|format_datetime('short', 'short') }}{% endif %}</td>
                         </tr>
                     {% endfor %}
                 </table>

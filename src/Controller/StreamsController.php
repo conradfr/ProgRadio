@@ -79,7 +79,7 @@ class StreamsController  extends AbstractBaseController
         $streamToReturn = null;
 
         if ($stream !== null) {
-            $streamToReturn = $em->getRepository(Stream::class)->getOneSpecificStream($stream->getId());
+            $streamToReturn = $em->getRepository(Stream::class)->getOneSpecificStream($stream->getId()->toRfc4122());
         }
 
         return $this->jsonResponse([
@@ -144,7 +144,7 @@ class StreamsController  extends AbstractBaseController
         else {
             $favorites = $user->getFavoriteStreams()->map(
                 function ($stream) {
-                    return $stream->getId();
+                    return $stream->getId()->toRfc4122();
                 }
             )->toArray();
         }

@@ -149,9 +149,10 @@ page:
         title: 'Ακούστε το %radio% ζωντανά'
         title_country: 'Ακούστε το %radio% - %country% - Ζωντά'
         website: Δικτυακός τόπος
+        banned: Αυτός ο ραδιοφωνικός σταθμός απαγορεύεται.
 
         modification:
-            at_leat_one: Συμπληρώστε τουλάχιστον ένα πεδίο.
+            at_least_one: Συμπληρώστε τουλάχιστον ένα πεδίο.
             comment: σχόλιο
             img: ιεύθυνση URL λογότυπου
             name: Όνομα
@@ -160,6 +161,28 @@ page:
             success: Η πρότασή σας έχει αποθηκευτεί και θα αναθεωρηθεί σύντομα.
             suggest: Προτείνετε μια τροποποίηση
             website: Δικτυακός τόπος
+            submit: Υποβολή
+
+        submission:
+            my_radios: Τα ραδιόφωνα μου
+            no_radios: Δεν έχετε ραδιόφωνα.
+            title_new: Προσθήκη ραδιοφώνου
+            title_edit: Επεξεργασία ραδιοφώνου
+            img: Διεύθυνση URL λογότυπου
+            name: Όνομα
+            radio: Ραδιόφωνο
+            stream_url: Διεύθυνση URL ροής
+            success_new: Το ραδιόφωνό σας καταχωρήθηκε με επιτυχία, θα είναι διαθέσιμο πολύ σύντομα.
+            success_edit: Το ραδιόφωνό σας άλλαξε με επιτυχία.
+            success_delete: Το ραδιόφωνό σας διαγράφηκε επιτυχώς.
+            add: Προσθήκη ραδιοφώνου
+            edit: Επεξεργασία ραδιοφώνου
+            website: Δικτυακός τόπος
+            country: Χώρα
+            language: Γλώσσα
+            submit: Υποβολή
+            delete: Διαγραφή
+            delete_confirm: Êtes-vous sûrs de vouloir supprimer cette radio ? Cette opération est irréversible.
 
     top:
         page_title: Top radios in %country%
@@ -181,6 +204,7 @@ page:
             password: Κωδικός πρόσβασης
             preferences: Προτιμήσεις
             delete: Διαγραφή
+            streams: α ραδιόφωνα μου
         email:
             page_title: Ενημέρωση του ηλεκτρονικού ταχυδρομείου μου
             info_1: Αυτό θα ενημερώσει το email που χρησιμοποιείται ως σύνδεση.

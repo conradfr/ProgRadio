@@ -149,9 +149,10 @@ page:
         title: '%radio% - Streaming live'
         title_country: '%radio% - %country% - Streaming live'
         website: Website
+        banned: This radio is banned.
 
         modification:
-            at_leat_one: Fill at least one field.
+            at_least_one: Fill at least one field.
             comment: Comment
             img: Logo url
             name: Name
@@ -160,6 +161,28 @@ page:
             success: Thank you for your suggestion. It has been recorded and will be reviewed shortly.
             suggest: Suggest a modification
             website: Website
+            submit: Submit
+
+        submission:
+            my_radios: My radios
+            no_radios: You have no radios.
+            title_new: Add a radio
+            title_edit: Edit a radio
+            img: Logo url
+            name: Name
+            radio: Radio
+            stream_url: Stream url
+            success_new: Your radio has been saved. It will be available shortly.
+            success_edit: Your radio has been updated.
+            success_delete: Your radio has been deleted.
+            add: Add a radio
+            edit: Update a radio
+            website: Website
+            country: Country
+            language: Language
+            submit: Submit
+            delete: Delete
+            delete_confirm: Are you sure you want to delete this radio?
 
     top:
         page_title: Top radios in %country%
@@ -181,6 +204,7 @@ page:
             password: Password
             preferences: Preferences
             delete: Delete
+            streams: My radios
         email:
             page_title: Update my email
             info_1: This will update the email used as login.

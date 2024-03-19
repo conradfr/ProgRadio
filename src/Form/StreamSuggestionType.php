@@ -68,7 +68,7 @@ class StreamSuggestionType extends AbstractType implements EventSubscriberInterf
                 'at_least_one',
                 0,
                 null,
-                $this->translator->trans('page.stream.modification.at_leat_one'),
+                $this->translator->trans('page.stream.modification.at_least_one'),
                 [] // message context for the translater
             );
         }

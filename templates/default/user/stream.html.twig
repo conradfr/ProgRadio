@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block title %}
+{% apply spaceless %}
+    {% if edit == true %}
+        {{ 'page.stream.submission.title_edit'|trans }}
+    {% else %}
+        {{ 'page.stream.submission.title_new'|trans }}
+    {% endif %}
+{% endapply %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+      const streamsSelectElement = document.getElementById('streamsSelect');
+
+      streamsSelectElement.addEventListener('change', (event) => {
+        if (event.target.value === '') {
+          return;
+        }
+
+        const url = '{{ path('user_page_streams') }}';
+        window.location = `${url}/${event.target.value}`;
+      });
+    </script>
+{% endblock %}
+
+{% block body %}
+<div id="admin" class="container">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <h3 class="mb-4">
+                {{ 'page.stream.submission.my_radios'|trans }}
+            </h3>
+
+            <div class="mb-5">
+                {% if app.user.streams is empty %}
+                    {{ 'page.stream.submission.no_radios'|trans }}
+                {% else %}
+                    <select class="form-select w-md-50 w-75" aria-label="Radios" name="streamsSelect" id="streamsSelect">
+                        <option value=""></option>
+                        {% for item in app.user.streams %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                    </select
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <h3 class="mb-4">
+                {% if edit == true %}
+                    {{ 'page.stream.submission.title_edit'|trans }}
+                {% else %}
+                    {{ 'page.stream.submission.title_new'|trans }}
+                {% endif %}
+            </h3>
+
+{#            <h5>{{ 'page.stream.modification.radio'|trans }}: {{ stream.name }}</h5>#}
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+
+            {{ form_start(form) }}
+                {{ form_errors(form) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.countryCode) }}
+                {{ form_row(form.language) }}
+                {{ form_row(form.img) }}
+                {{ form_row(form.streamUrl) }}
+                {{ form_row(form.website) }}
+            {{ form_end(form) }}
+
+            {% if edit == true %}
+            <div class="my-5 text-center">
+                <a class="btn btn-danger"
+                   onclick="return confirm('{{ 'page.stream.submission.delete_confirm'|trans }}')"
+                   href="{{ url('user_page_streams_delete', {'id': stream.id}) }}">{{ 'page.stream.submission.delete'|trans }}</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

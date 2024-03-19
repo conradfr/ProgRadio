@@ -188,7 +188,7 @@ defmodule ProgRadioApi.Streams do
       on: r.id == rs.radio_id,
       left_join: ss in StreamSong,
       on: ss.id == s.stream_song_id,
-      where: s.enabled == true and is_nil(s.redirect_to),
+      where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
       limit: @default_limit,
       select: %{
         code_name: s.id,
@@ -224,7 +224,7 @@ defmodule ProgRadioApi.Streams do
 
   defp base_count_query() do
     from s in Stream,
-      where: s.enabled == true and is_nil(s.redirect_to),
+      where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
       select: count()
   end
 

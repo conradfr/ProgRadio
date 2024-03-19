@@ -149,9 +149,10 @@ page:
         title: '%radio% live hören'
         title_country: '%radio% hören - %country% - Live'
         website: Webseite
+        banned: Dieser Radiosender ist gesperrt.
 
         modification:
-            at_leat_one: Fülle mindestens ein Feld aus.
+            at_least_one: Fülle mindestens ein Feld aus.
             comment: Kommentar
             img: Logo-URL
             name: Nom
@@ -160,6 +161,28 @@ page:
             success: Ihr Vorschlag wurde gespeichert und wird in Kürze überprüft.
             suggest: Schlagen Sie eine Änderung vor
             website: Webseite
+            submit: Abschicken
+
+        submission:
+            my_radios: Meine Radios
+            no_radios: Du hast keine Funkgeräte.
+            title_new: Radio hinzufügen
+            title_edit: Ein Radio bearbeiten
+            img: Logo-URL
+            name: Nom
+            radio: Radio
+            stream_url: Stream-URL
+            success_new: Dein Radio wurde erfolgreich registriert, es wird sehr bald verfügbar sein.
+            success_edit: Ihr Radio wurde erfolgreich geändert.
+            success_delete: Ihr Radio wurde erfolgreich gelöscht.
+            add: Fügt ein Radio hinzu
+            edit:  Ein Radio bearbeiten
+            website: Webseite
+            country: Land
+            language: Sprache
+            submit: Abschicken
+            delete: Löschen
+            delete_confirm: Bist du sicher, dass du diesen Radiosender löschen möchtest? Dieser Vorgang kann nicht rückgängig gemacht werden.
 
     top:
         page_title: Die besten Radios in %country%
@@ -181,6 +204,7 @@ page:
             password: Passwort
             preferences: Präferenzen
             delete: Löschen
+            streams: Meine Radios
         email:
             page_title: Aktualisiere meine E-Mail
             info_1: Dadurch wird die E-Mail-Adresse aktualisiert, die als Login verwendet wurde.

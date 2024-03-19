@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Stream;
 use App\Entity\UserEmailChange;
 use App\Form\StoreHistoryType;
+use App\Form\StreamSubmissionType;
 use App\Form\UpdateEmailType;
 use App\Form\UpdatePasswordType;
 use App\Service\Host;
@@ -20,6 +22,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/my-account')]
 #[IsGranted('ROLE_USER')]
@@ -207,6 +210,80 @@ class UserController extends AbstractBaseController
         return $this->redirectToRoute('user_page_preferences');
     }
 
+    #[Route('/{_locale}/radios/{id?}', name: 'user_page_streams')]
+    public function submission(Request $request, EntityManagerInterface $em, TranslatorInterface $translator, Stream $stream = null): Response
+    {
+        $edit = true;
+
+        if (!$stream) {
+            $stream = new Stream();
+            $edit = false;
+        }
+
+        $form = $this->createForm(StreamSubmissionType::class, $stream);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($edit === false) {
+                $uuid = Uuid::v4();
+                $stream->setId($uuid);
+            }
+
+            $stream->setSource(Stream::SOURCE_PROGRADIO);
+
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+
+            $stream->setUser($user);
+
+            // For some reason stream id is set to null if we flush with $em->flush() on insert;
+            // So let's do it manually
+            // (lost too many hours on this)
+
+            if ($edit === true) {
+                $em->persist($stream);
+                $em->flush();
+            } else {
+                $em->getRepository(Stream::class)->insertNewStream($stream);
+            }
+
+            $this->addFlash(
+                'success',
+                $edit ? $translator->trans('page.stream.submission.success_edit') : $translator->trans('page.stream.submission.success_new')
+            );
+
+            return $this->redirectToRoute('user_page_streams', ['id' => $stream->getId()]);
+        }
+
+        return $this->render('default/user/stream.html.twig',
+            [
+                'edit' => $edit,
+                'stream' => $stream,
+                'form' => $form->createView()
+            ]
+        );
+    }
+
+    #[Route('/{_locale}/radios_delete/{id}', name: 'user_page_streams_delete')]
+    public function submissionDelete(Request $request, EntityManagerInterface $em, TranslatorInterface $translator, Stream $stream): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $user->removeStream($stream);
+
+        $em->remove($stream);
+        $em->persist($user);
+        $em->flush();
+
+        $this->addFlash(
+            'success',
+            $translator->trans('page.stream.submission.success_delete')
+        );
+
+        return $this->redirectToRoute('user_page_streams', []);
+    }
+
     #[Route('/{_locale}/delete', name: 'user_page_delete')]
     public function delete(): Response
     {
@@ -220,7 +297,7 @@ class UserController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/delete/confirm/{token}', name: 'user_page_delete_confirm')]
-    public function deleteConfirm(string $token, Request $request, EntityManagerInterface $em): Response
+    public function deleteConfirm(string $token, EntityManagerInterface $em): Response
     {
         $session = $this->requestStack->getSession();
         if ($token !== $session->get(self::SESSION_DELETE_ATTR)) {

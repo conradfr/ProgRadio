@@ -7,16 +7,15 @@ namespace App\Twig;
 use Twig\Extension\RuntimeExtensionInterface;
 use Keiko\Uuid\Shortener\Dictionary;
 use Keiko\Uuid\Shortener\Shortener;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Lazy\LazyUuidFromString;
+use Symfony\Component\Uid\Uuid;
 
 class ShortIdRuntime implements RuntimeExtensionInterface
 {
     public function shortId($id): string
     {
-        /** @var LazyUuidFromString|Uuid $id */
+        /** @var Uuid $id */
         if (is_object($id)) {
-            $id = $id->toString();
+            $id = (string) $id;
         }
 
         $shortener = Shortener::make(

@@ -12,12 +12,12 @@ use App\Entity\Stream;
 class UserStream
 {
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'streamsHistory', fetch: "EXTRA_LAZY")]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private User $user;
 
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Stream::class)]
+    #[ORM\ManyToOne(targetEntity: Stream::class, inversedBy: 'streamsHistory', fetch: "EXTRA_LAZY")]
     #[ORM\JoinColumn(name: 'stream_id', referencedColumnName: 'id')]
     private Stream $stream;
 

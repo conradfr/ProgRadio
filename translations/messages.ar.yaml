@@ -149,9 +149,10 @@ page:
         title: 'استمع إلى %radio% مباشرة'
         title_country: 'استمع إلى %radio% - %country% - بث مباشر'
         website: الموقع الإلكتروني
+        banned:  محطة الراديو هذه محظورة
 
         modification:
-            at_leat_one: املأ حقلاً واحدًا على الأقل.
+            at_least_one: املأ حقلاً واحدًا على الأقل.
             comment: تعليق
             img: رابط الشعار
             name:  الاسم
@@ -160,6 +161,28 @@ page:
             success: تم تخزين اقتراحك وستتم مراجعته قريبًا.
             suggest: قترح تعديلًا
             website: Wالموقع الإلكتروني
+            submit: إرسال
+
+        submission:
+            my_radios: أجهزة الراديو الخاصة بي
+            no_radios: ليس لديك أجهزة راديو.
+            title_new: إضافة راديو
+            title_edit: تحرير راديو
+            img: عنوان URL الخاص بالشعار
+            name: الاسم
+            radio: راديو
+            stream_url: رابط البث
+            success_new: تم تسجيل الراديو الخاص بك بنجاح، وسيكون متاحًا قريبًا جدًا.
+            success_edit: تم تغيير الراديو الخاص بك بنجاح.
+            success_delete: تم حذف الراديو الخاص بك بنجاح.
+            add: إضافة راديو
+            edit: تحرير راديو
+            website: موقع الويب
+            country: البلد
+            language: اللغة
+            submit: إرسال
+            delete:  حذف
+            delete_confirm: هل تريد بالتأكيد حذف محطة الراديو هذه؟ هذه العملية لا رجعة فيها.
 
     top:
         page_title: أفضل محطات الراديو في %country%
@@ -181,6 +204,7 @@ page:
             password: كلمة المرور
             preferences: التفضيلات
             delete: قمع
+            streams: أجهزة الراديو الخاصة بي
         email:
             page_title: تغيير بريدي الإلكتروني
             info_1: سيؤدي هذا إلى تحديث البريد الإلكتروني المستخدم للاتصال بالموقع.

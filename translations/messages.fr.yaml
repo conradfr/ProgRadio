@@ -148,9 +148,10 @@ page:
         title: 'Écouter %radio% en direct'
         title_country: '%radio% - %country% - Écouter en direct'
         website: Site web
+        banned: Cette radio est bannie.
 
         modification:
-            at_leat_one: Remplir un champs ou plus.
+            at_least_one: Remplir un champs ou plus.
             comment: Commentaire
             img: Logo url
             name: Nom
@@ -159,6 +160,28 @@ page:
             success: Merci pour vos suggestions. Elles ont été enregistrées et seront étudiées très prochainement.
             suggest: Suggérer une modification
             website: Site web
+            submit: Soumettre
+
+        submission:
+            my_radios: Mes radios
+            no_radios: Vous n'avez pas de radios.
+            title_new: Ajouter une radio
+            title_edit: Modifier une radio
+            img: Logo url
+            name: Nom
+            radio: Radio
+            stream_url: Stream url
+            success_new: Votre radio a bien été enregistrée, elle sera disponible très prochainement.
+            success_edit: Votre radio a bien été modifiée.
+            success_delete: Votre radio a bien été supprimée.
+            add: Ajouter une radio
+            edit: Modifier une radio
+            website: Site web
+            country: Pays
+            language: Langue
+            submit: Soumettre
+            delete: Supprimer
+            delete_confirm: Êtes-vous sûrs de vouloir supprimer cette radio ? Cette opération est irréversible.
 
     top:
         page_title: Top des radios en %country%
@@ -180,6 +203,7 @@ page:
             password: Mot de passe
             preferences: Préférences
             delete: Suppression
+            streams: Mes radios
         email:
             page_title: Changer mon email
             info_1: Cela mettra à jour l'email utilisé pour se connecter au site.

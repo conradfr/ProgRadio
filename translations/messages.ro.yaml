@@ -148,9 +148,10 @@ page:
         title: '%radio% - Ascultă live'
         title_country: '%radio% - %country% - Ascultă live'
         website: Site
+        banned: Acest post de radio este interzis.
 
         modification:
-            at_leat_one: Completați unul sau mai multe câmpuri.
+            at_least_one: Completați unul sau mai multe câmpuri.
             comment: Cometariu
             img: Adresa URL a logo-ului
             name: Nume
@@ -159,6 +160,28 @@ page:
             success: Sugestiile dvs. au fost înregistrate și vor fi studiate foarte curând.
             suggest: Sugerați o schimbare
             website: Site
+            submit: Trimite
+
+        submission:
+            my_radios: Radiourile mele
+            no_radios: Nu aveți radiouri.
+            title_new: Adaugă radio
+            title_edit: Editează un radio
+            img: Adresa URL a logo-ului
+            name: Nume
+            radio: Radio
+            stream_url: Adresa URL a fluxului
+            success_new: Radioul dvs. a fost înregistrat cu succes, va fi disponibil foarte curând.
+            success_edit: Radioul dvs. a fost schimbat cu succes.
+            success_delete: Radioul dvs. a fost șters cu succes.
+            add: Adăugați un radio
+            edit: Editați un radio
+            website: Site web
+            country: Țară
+            language: Limba
+            submit: Trimite
+            delete: Șterge
+            delete_confirm: Sigur doriți să ștergeți acest post de radio? Această operație este ireversibilă.
 
     top:
         page_title: Cele mai bune posturi de radio din %country%
@@ -180,6 +203,7 @@ page:
             password: Parola
             preferences: Preferințe
             delete: Ștergere
+            streams: Radiourile mele
         email:
             page_title: Schimbă adresa mea de e-mail
             info_1: Aceasta va actualiza e-mailul folosit pentru conectarea la site.

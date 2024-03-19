@@ -11,6 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Uid\Uuid;
 
 /*
  @TODO reduce code duplication for queries
@@ -31,8 +32,9 @@ class StreamRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.playingErrorReason, s.forceHls, s.forceMpd')
+        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.playingErrorReason, s.forceHls, s.forceMpd, so.updatedAt')
             ->from(Stream::class, 's')
+            ->leftJoin('s.streamOverloading', 'so')
             ->where('s.playingError >= :threshold')
             ->orderBy('s.playingError', 'DESC');
 
@@ -74,7 +76,7 @@ class StreamRepository extends ServiceEntityRepository
         return array_merge($resultCountry, $resultCountryLast, $resultRandom);
     }
 
-    protected function getMoreStreamQuery(string $id, int $limit) {
+    protected function getMoreStreamQuery(Uuid $id, int $limit) {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('s.id as code_name, s.name as name, s.img, COALESCE(r.codeName) as img_alt, s.website')
@@ -84,7 +86,7 @@ class StreamRepository extends ServiceEntityRepository
             ->where("s.img is not null")
             ->andWhere("RANDOM() < 0.01")
             ->andWhere('s.id != :id')
-            ->andWhere('s.enabled = true and s.redirectToStream IS NULL')
+            ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->setMaxResults($limit);
 
         $qb->setParameter('id', $id);
@@ -111,7 +113,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true and s.redirectToStream IS NULL')
+            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->setMaxResults($limit);
 
         if ($offset !== null) {
@@ -199,7 +201,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true and s.redirectToStream IS NULL')
+            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
             //->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
@@ -293,7 +295,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true and s.redirectToStream IS NULL')
+            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->addOrderBy('s.name', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults(1);
@@ -347,7 +349,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.id = :id')
-            ->andWhere('s.enabled = true')
+            ->andWhere('s.enabled = true and s.banned = false')
             ->setMaxResults(1);
 
         $qb->setParameter('id', $id);
@@ -369,7 +371,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb->select('count(s.id)')
             ->from(Stream::class, 's')
-            ->where('s.enabled = true and s.redirectToStream IS NULL');
+            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL');
 
         if ($countryOrCategory !== null) {
             if (strtoupper($countryOrCategory) === Stream::FAVORITES) {
@@ -421,7 +423,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb->select('count(s.id)')
             ->from(Stream::class, 's')
-            ->where('s.enabled = true')
+            ->where('s.enabled = true and s.banned = false')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
             ->setParameter('text', '%' . $text . '%');
 
@@ -471,7 +473,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb->select('DISTINCT UPPER(s.countryCode) as countryCode')
             ->from(Stream::class, 's')
             ->where('s.countryCode IS NOT NULL')
-            ->andWhere('s.enabled = true and s.redirectToStream IS NULL')
+            ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->andWhere('s.countryCode <> \'\'')
             ->orderBy('countryCode', 'ASC');
 
@@ -481,7 +483,7 @@ class StreamRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    public function getBestStreamForRadio(Radio $radio)
+    public function getBestStreamForRadio(Radio $radio): ?Stream
     {
         $radioStream = $radio->getMainStream();
 
@@ -495,7 +497,7 @@ class StreamRepository extends ServiceEntityRepository
             ->from(Stream::class, 's')
             ->innerJoin('s.radioStream', 'rs')
             ->where('rs.id = :id')
-            ->andWhere('s.enabled = true and s.redirectToStream IS NULL')
+            ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->orderBy('s.clicksLast24h', 'DESC')
             ->setFirstResult(0)
             ->setMaxResults(1)
@@ -530,5 +532,29 @@ class StreamRepository extends ServiceEntityRepository
         ]);
 
         $query->getResult();
+    }
+
+    public function insertNewStream(Stream $stream)
+    {
+        $sql = <<<EOD
+            INSERT INTO stream (id, name, img, country_code, language, stream_url, user_id, source)
+            VALUES
+            (?, ?, ?, ?, ?, ?, ?, ?);
+        EOD;
+
+        $rsm = new ResultSetMapping();
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameters([
+            $stream->getId(),
+            $stream->getName(),
+            $stream->getImg(),
+            $stream->getCountryCode(),
+            $stream->getLanguage(),
+            $stream->getStreamUrl(),
+            $stream->getUser()->getId(),
+            $stream->getSource()
+        ]);
+
+        return $query->getResult();
     }
 }

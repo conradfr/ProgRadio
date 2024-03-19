@@ -5,15 +5,17 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table(name: '`stream_overloading`')]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamOverloadingRepository')]
 class StreamOverloading
 {
-    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'NONE')]
-    private ?string $id = null;
+    private ?Uuid $id;
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $name = null;
@@ -50,12 +52,12 @@ class StreamOverloading
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private \DateTime $updatedAt;
 
-    public function getId(): string
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    public function setId(string $id): void
+    public function setId(Uuid $id): void
     {
         $this->id = $id;
     }

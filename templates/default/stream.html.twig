@@ -109,50 +109,54 @@
                     {% endif %}
 
                     <div class="stream-page-stream mt-0 mb-4 py-1" v-scope>
-                        <div class="radio-page-streams-one py-1 d-none d-flex align-items-center justify-content-center justify-content-sm-start"
-                             @vue:mounted="$el.classList.remove('d-none')">
-                            <div>
-                                <div
-                                    v-if="playing === PLAYER_STATE_STOPPED"
-                                    @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
-                                    class="radio-page-play">
-                                    <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
-                                         src="/img/play-button-inside-a-circle.svg">
+                        {% if stream.banned == true %}
+                            <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
+                        {% else %}
+                            <div class="radio-page-streams-one py-1 d-none d-flex align-items-center justify-content-center justify-content-sm-start"
+                                 @vue:mounted="$el.classList.remove('d-none')">
+                                <div>
+                                    <div
+                                        v-if="playing === PLAYER_STATE_STOPPED"
+                                        @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
+                                        class="radio-page-play">
+                                        <img alt="{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}"
+                                             src="/img/play-button-inside-a-circle.svg">
+                                    </div>
+                                    <div
+                                        v-if="playing === PLAYER_STATE_PLAYING"
+                                        @click="stop('{{ stream.id }}')"
+                                        class="radio-page-play">
+                                        <img alt="{{ 'page.radio.stop'|trans({'%radio%': stream.name}) }}"
+                                             src="/img/rounded-pause-button.svg">
+                                    </div>
+                                    <div
+                                        v-if="playing === PLAYER_STATE_LOADING"
+                                        @click="stop('{{ stream.id }}')"
+                                        class="radio-page-play"
+                                        style="margin-right: 7px; margin-bottom: 2px;">
+                                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"
+                                            title="{{ 'page.radio.stop'|trans({'%radio%': stream.name}) }}">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div
-                                    v-if="playing === PLAYER_STATE_PLAYING"
-                                    @click="stop('{{ stream.id }}')"
-                                    class="radio-page-play">
-                                    <img alt="{{ 'page.radio.stop'|trans({'%radio%': stream.name}) }}"
-                                         src="/img/rounded-pause-button.svg">
-                                </div>
-                                <div
-                                    v-if="playing === PLAYER_STATE_LOADING"
-                                    @click="stop('{{ stream.id }}')"
-                                    class="radio-page-play"
-                                    style="margin-right: 7px; margin-bottom: 2px;">
-                                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"
-                                        title="{{ 'page.radio.stop'|trans({'%radio%': stream.name}) }}">
-                                        <span class="visually-hidden">Loading...</span>
+
+                                <div class="ps-2">
+                                    <div
+                                        v-if="playing === PLAYER_STATE_STOPPED"
+                                        @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
+                                        class="radio-page-play">
+                                        <div>&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
+                                    </div>
+                                    <div
+                                            v-if="playing !== PLAYER_STATE_STOPPED"
+                                            @click="stop('{{ stream.id }}')"
+                                            class="radio-page-play">
+                                        <div>&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream.name}) }}</div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="ps-2">
-                                <div
-                                    v-if="playing === PLAYER_STATE_STOPPED"
-                                    @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
-                                    class="radio-page-play">
-                                    <div>&nbsp;{{ 'page.radio.play'|trans({'%radio%': stream.name}) }}</div>
-                                </div>
-                                <div
-                                        v-if="playing !== PLAYER_STATE_STOPPED"
-                                        @click="stop('{{ stream.id }}')"
-                                        class="radio-page-play">
-                                    <div>&nbsp;{{ 'page.radio.stop'|trans({'%radio%': stream.name}) }}</div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endif %}
 
                         <div id="playing-alert" class="alert alert-danger d-none mt-5 mb-5" role="alert">
                             <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}

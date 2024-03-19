@@ -23,6 +23,7 @@ defmodule ProgRadioApi.Stream do
     field(:clicks_last_24h, :integer, default: 0)
     field(:stream_song_code_name, :string)
     field(:enabled, :boolean)
+    field(:banned, :boolean)
     field(:redirect_to, :binary_id)
     field(:playing_error, :integer, default: 0)
     field(:playing_error_reason, :string, default: nil)

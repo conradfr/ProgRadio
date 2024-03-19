@@ -151,7 +151,7 @@ page:
         website: Sito web
 
         modification:
-            at_leat_one: Compila almeno un campo.
+            at_least_one: Compila almeno un campo.
             comment: Commento
             img: URL del logo
             name: Nome
@@ -160,6 +160,28 @@ page:
             success: Il tuo suggerimento è stato archiviato e verrà esaminato a breve.
             suggest: Suggerisci una modifica
             website:  Sito Web
+            submit: Le mie radio
+
+        submission:
+            my_radios: Le mie radio
+            no_radios: Non hai radio.
+            title_new: Aggiungi radio
+            title_edit: Modifica una radio
+            img: URL del logo
+            name: Nome
+            radio: Radio
+            stream_url: URL dello streaming
+            success_new: La tua radio è stata registrata con successo, sarà disponibile molto presto.
+            success_edit: La tua radio è stata cambiata con successo.
+            success_delete: La tua radio è stata cancellata con successo.
+            add: Aggiungi una radio
+            edit: Modifica una radio
+            website: Sito Web
+            country: Paese
+            language: Lingua
+            submit: Invia
+            delete: Elimina
+            delete_confirm: Sei sicuro di voler eliminare questa stazione radio? Questa operazione è irreversibile.
 
     top:
         page_title: Le migliori radio di %country%
@@ -181,6 +203,7 @@ page:
             password: Password
             preferences: Preferenze
             delete: Eliminare
+            streams: Le mie radio
         email:
             page_title: Aggiorna la mia email
             info_1: Questo aggiornerà l'email usata come login.

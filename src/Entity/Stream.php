@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Intl\Countries;
 use App\Entity\StreamOverloading;
 use App\Entity\RadioStream;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table(name: '`stream`')]
 #[ORM\Index(name: 'name_idx', columns: ['name'])]
@@ -21,10 +23,13 @@ class Stream
     final public const FAVORITES = 'FAVORITES';
     final public const HISTORY = 'HISTORY';
 
-    #[ORM\Column(type: 'uuid', unique: true)]
+    final public const SOURCE_RADIOBROWSER = 'radio-browser';
+    final public const SOURCE_PROGRADIO = 'progradio';
+
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'NONE')]
-    private ?string $id = null;
+    private ?Uuid $id;
 
     #[ORM\Column(type: 'string', length: 500)]
     private ?string $name = null;
@@ -74,6 +79,9 @@ class Stream
     #[ORM\Column(type: 'boolean')]
     private ?bool $forceMpd = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private ?bool $banned = null;
+
     /**
      * @var ListeningSession[]
      */
@@ -108,6 +116,13 @@ class Stream
     #[ORM\Column(type: 'string', options: ['default' => null])]
     private ?string $playingErrorReason = null;
 
+    #[ORM\Column(type: 'string', length: 15, options: ['default' => self::SOURCE_RADIOBROWSER])]
+    private ?string $source = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'streams', fetch: "EXTRA_LAZY")]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
+    private ?User $user = null;
+
     #[ORM\OneToMany(targetEntity: UserStream::class, mappedBy: "stream", fetch: "EXTRA_LAZY")]
     #[ORM\Cache(usage: 'READ_ONLY')]
     private Collection $streamsHistory;
@@ -117,12 +132,12 @@ class Stream
         $this->streamsHistory = new ArrayCollection();
     }
 
-    public function getId(): string
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    public function setId(string $id): void
+    public function setId(Uuid $id): void
     {
         $this->id = $id;
     }
@@ -403,5 +418,35 @@ class Stream
     public function setForceMpd(?bool $forceMpd): void
     {
         $this->forceMpd = $forceMpd;
+    }
+
+    public function getSource(): ?string
+    {
+        return $this->source;
+    }
+
+    public function setSource(?string $source): void
+    {
+        $this->source = $source;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user = null): void
+    {
+        $this->user = $user;
+    }
+
+    public function getBanned(): ?bool
+    {
+        return $this->banned;
+    }
+
+    public function setBanned(?bool $banned): void
+    {
+        $this->banned = $banned;
     }
 }

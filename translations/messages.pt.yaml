@@ -147,9 +147,10 @@ page:
         title: '%radio% ao vivo'
         title_country: '%radio% - %country% - Ao vivo'
         website: Site
+        banned: Ta stacja radiowa jest zakazana.
 
         modification:
-            at_leat_one: Preencha pelo menos um campo.
+            at_least_one: Preencha pelo menos um campo.
             comment: Comente
             img: URL do logotipo
             name: Nome
@@ -158,6 +159,28 @@ page:
             success: Sua sugestão foi armazenada e será analisada em breve.
             suggest: Sugira uma modificação
             website: Site
+            submit: Prześlij
+
+        submission:
+            my_radios: Meus rádios
+            no_radios: Você não tem rádios.
+            title_new: Adicionar rádio
+            title_edit: Editar um rádio
+            img: URL do logotipo
+            name: Nome
+            radio: Rádio
+            stream_url: URL da transmissão
+            success_new: Seu rádio foi registrado com sucesso e estará disponível em breve.
+            success_edit: Seu rádio foi alterado com sucesso.
+            success_delete: Seu rádio foi excluído com sucesso.
+            add: Adicionar um rádio
+            edit: Editar um rádio
+            website: Site
+            country: País
+            language: Idioma
+            submit: Enviar
+            delete: Excluir
+            delete_confirm: Tem certeza de que deseja excluir esta estação de rádio? Essa operação é irreversível.
 
     top:
         page_title: As melhores rádios em %country%
@@ -179,6 +202,7 @@ page:
             password: Senha
             preferences: Preferências
             delete: Excluir
+            streams: Meus rádios
         email:
             page_title: Atualizar meu e-mail
             info_1: Isso atualizará o e-mail usado como login.
