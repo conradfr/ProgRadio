@@ -143,7 +143,7 @@ class StreamRepository extends ServiceEntityRepository
             }
         }
 
-        if (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+        if ($countryOrCategory !== null && strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
             $qb->addOrderBy('sh.lastListenedAt', 'DESC');
         }
         else if ($sort !== null) {
