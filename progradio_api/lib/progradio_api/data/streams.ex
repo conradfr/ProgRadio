@@ -13,6 +13,9 @@ defmodule ProgRadioApi.Streams do
 
   @default_limit 48
 
+  @text_key "searches"
+  @text_min_length 3
+
   # 1h
   @cache_ttl_stream 3_600_000
   # 15s
@@ -296,6 +299,11 @@ defmodule ProgRadioApi.Streams do
       |> String.trim()
       |> String.downcase()
       |> then(fn t -> "%" <> t <> "%" end)
+
+      spawn(fn ->
+        cleaned_text_search = String.trim(text_search, "%")
+        if String.length(cleaned_text_search) >= @text_min_length, do: Redix.command!(:redix, ["ZINCRBY", @text_key, 1, cleaned_text_search])
+      end)
 
     query
     |> where(
