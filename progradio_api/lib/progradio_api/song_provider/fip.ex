@@ -54,7 +54,19 @@ defmodule ProgRadioApi.SongProvider.Fip do
         %{}
 
       _ ->
-        %{artist: Map.get(data["now"], "secondLine"), title: Map.get(data["now"], "firstLine")}
+        artist =
+          data
+          |> Map.get("now", %{})
+          |> Map.get("secondLine", %{})
+          |> Map.get("title")
+
+        title =
+          data
+          |> Map.get("now", %{})
+          |> Map.get("firstLine", %{})
+          |> Map.get("title")
+
+        %{artist: artist, title: title}
     end
   end
 end
