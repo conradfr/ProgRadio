@@ -12,8 +12,12 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   #  end
 
   def create(conn, listening_session_params) do
-    with false <- (conn.remote_ip |> Tuple.to_list() |> Enum.join(".")) in Application.get_env(:progradio_api, :banned_ips),
-      {:ok, listening_session} <-
+    with false <-
+           (conn.remote_ip |> Tuple.to_list() |> Enum.join(".")) in Application.get_env(
+             :progradio_api,
+             :banned_ips
+           ),
+         {:ok, listening_session} <-
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
       ListenersCounter.register_listening_session(listening_session, false)
 
@@ -34,9 +38,13 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   end
 
   def update(conn, %{"id" => id} = listening_session_params) do
-    with false <- (conn.remote_ip |> Tuple.to_list() |> Enum.join(".")) in Application.get_env(:progradio_api, :banned_ips),
-      existing_listening_session when not is_nil(existing_listening_session) <-
-        ListeningSessions.get_listening_session!(id, listening_session_params),
+    with false <-
+           (conn.remote_ip |> Tuple.to_list() |> Enum.join(".")) in Application.get_env(
+             :progradio_api,
+             :banned_ips
+           ),
+         existing_listening_session when not is_nil(existing_listening_session) <-
+           ListeningSessions.get_listening_session!(id, listening_session_params),
          {:ok, updated_listening_session} <-
            ListeningSessions.update_listening_session(
              existing_listening_session,

@@ -22,7 +22,7 @@ class StreamSubmissionType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, ['label' => $this->translator->trans('page.stream.submission.name'), 'required' => true])
-            ->add('img', TextType::class, ['label' => $this->translator->trans('page.stream.submission.img'), 'required' => false])
+            ->add('originalImg', TextType::class, ['label' => $this->translator->trans('page.stream.submission.img'), 'required' => false])
             ->add('streamUrl', TextType::class, ['label' => $this->translator->trans('page.stream.submission.stream_url'), 'required' => true])
             ->add('website', TextType::class, ['label' => $this->translator->trans('page.stream.submission.website'), 'required' => false])
             ->add('countryCode', CountryType::class, ['label' => $this->translator->trans('page.stream.submission.country'), 'required' => true])

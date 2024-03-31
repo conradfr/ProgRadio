@@ -130,8 +130,8 @@ defmodule ProgRadioApi.Streams do
     with %Stream{} = stream <- Repo.get(Stream, stream_id),
          true <- stream.enabled do
       # we insert a new entry or increase the count if already set for this stream
-      on_conflict = [set:
-        [
+      on_conflict = [
+        set: [
           playing_error_reason: reason,
           playing_error: dynamic([s], fragment("? + ?", s.playing_error, 1))
         ]
@@ -164,12 +164,27 @@ defmodule ProgRadioApi.Streams do
   def get_recently_overload_updated_ids() do
     date_time =
       DateTime.utc_now()
-      |> DateTime.add(-86400)
+      # 30mn
+      |> DateTime.add(-1802)
 
     query =
       from so in StreamOverloading,
         select: so.id,
         where: so.updated_at > ^date_time
+
+    Repo.all(query)
+  end
+
+  def get_recently_modified_progradio() do
+    date_time =
+      DateTime.utc_now()
+      # 1h
+      |> DateTime.add(-3602)
+
+    query =
+      from s in Stream,
+           select: s.id,
+        where: s.updated_at > ^date_time and not is_nil(s.original_img)
 
     Repo.all(query)
   end
@@ -300,10 +315,12 @@ defmodule ProgRadioApi.Streams do
       |> String.downcase()
       |> then(fn t -> "%" <> t <> "%" end)
 
-      spawn(fn ->
-        cleaned_text_search = String.trim(text_search, "%")
-        if String.length(cleaned_text_search) >= @text_min_length, do: Redix.command!(:redix, ["ZINCRBY", @text_key, 1, cleaned_text_search])
-      end)
+    spawn(fn ->
+      cleaned_text_search = String.trim(text_search, "%")
+
+      if String.length(cleaned_text_search) >= @text_min_length,
+        do: Redix.command!(:redix, ["ZINCRBY", @text_key, 1, cleaned_text_search])
+    end)
 
     query
     |> where(

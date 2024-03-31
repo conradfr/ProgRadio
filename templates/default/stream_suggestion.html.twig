@@ -4,6 +4,12 @@
 
 {% block title %}Suggest Modification{% endblock %}
 
+{% block head_supp %}
+    {{ parent() }}
+
+    <meta name="robots" content="noindex">
+{% endblock %}
+
 {% block body %}
 <div id="admin" class="container">
     <div class="row">

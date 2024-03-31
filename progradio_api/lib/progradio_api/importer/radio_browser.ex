@@ -47,6 +47,17 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     end)
   end
 
+  # todo move to own module as it's not related to RadioBrowser
+  def progradio_source_img do
+    Streams.get_recently_modified_progradio()
+    |> Enum.each(fn stream_id when is_binary(stream_id) ->
+      Repo.get(Stream, stream_id)
+      |> __MODULE__.format_from_stream()
+      |> import_image()
+      |> store_one()
+    end)
+  end
+
   # Data
 
   defp get_radios(host, stream_id \\ nil) do
@@ -205,12 +216,12 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   end
 
   @spec import_image(struct) :: struct
-  defp import_image(stream) do
-    case stream.img_url do
+  defp import_image(stream, field \\ :img_url) do
+    case Map.get(stream, field) do
       url when is_binary(url) and url !== "" ->
         case String.ends_with?(url, ".svg") do
           false ->
-            Map.delete(stream, :img_url)
+            if (field == :mg_url), do: Map.delete(stream, :img_url)
 
             try do
               with {:ok, filename} <- ImageImporter.import_stream(url, stream) do
@@ -288,6 +299,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> StreamTransformers.r80s80s()
       |> StreamTransformers.bobde()
       |> StreamTransformers.regenbogen()
+
     updated_stream_url
   end
 

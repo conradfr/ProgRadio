@@ -39,6 +39,9 @@ class StreamOverloading
     private ?bool $enabled = null;
 
     #[ORM\Column(type: 'boolean')]
+    private ?bool $banned = null;
+
+    #[ORM\Column(type: 'boolean')]
     private ?bool $forceHls = null;
 
     #[ORM\Column(type: 'boolean')]
@@ -117,6 +120,21 @@ class StreamOverloading
         return $this->enabled;
     }
 
+    public function setEnabled(?bool $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function getBanned(): ?bool
+    {
+        return $this->banned;
+    }
+
+    public function setBanned(?bool $banned): void
+    {
+        $this->banned = $banned;
+    }
+
     public function getTags(): ?string
     {
         return $this->tags;
@@ -125,11 +143,6 @@ class StreamOverloading
     public function setTags(?string $tags): void
     {
         $this->tags = $tags;
-    }
-
-    public function setEnabled(?bool $enabled): void
-    {
-        $this->enabled = $enabled;
     }
 
     /**

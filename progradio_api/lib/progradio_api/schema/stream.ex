@@ -22,6 +22,7 @@ defmodule ProgRadioApi.Stream do
     field(:votes, :integer, default: 0)
     field(:clicks_last_24h, :integer, default: 0)
     field(:stream_song_code_name, :string)
+    field(:source, :string, default: "radio-browser")
     field(:enabled, :boolean)
     field(:banned, :boolean)
     field(:redirect_to, :binary_id)
@@ -32,6 +33,8 @@ defmodule ProgRadioApi.Stream do
     #    field(:editing_key, :string)
     field(:import_updated_at, :utc_datetime, default: nil)
     field(:last_listening_at, :utc_datetime, default: nil)
+    field(:created_at, :utc_datetime)
+    field(:updated_at, :utc_datetime)
 
     belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream_song, StreamSong)
@@ -65,6 +68,13 @@ defmodule ProgRadioApi.Stream do
   def changeset_radio_stream_match(stream, params \\ %{}) do
     stream
     |> change(params)
+  end
+
+  def changeset_img(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :img
+    ])
   end
 
   def changeset_enabled(stream, params \\ %{}) do

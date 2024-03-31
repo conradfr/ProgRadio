@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Intl\Countries;
 use App\Entity\StreamOverloading;
 use App\Entity\RadioStream;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
@@ -118,6 +120,14 @@ class Stream
 
     #[ORM\Column(type: 'string', length: 15, options: ['default' => self::SOURCE_RADIOBROWSER])]
     private ?string $source = null;
+
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private \DateTime $createdAt;
+
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private \DateTime $updatedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'streams', fetch: "EXTRA_LAZY")]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
@@ -448,5 +458,25 @@ class Stream
     public function setBanned(?bool $banned): void
     {
         $this->banned = $banned;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

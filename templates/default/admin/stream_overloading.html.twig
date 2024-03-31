@@ -4,6 +4,25 @@
 
 {% block title %}Stream Overloading{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+      document.getElementById('nameHeader').onclick = () => {
+        document.getElementById('stream_overloading_name').value = '{{ stream.name }}';
+      };
+
+      document.getElementById('streamTheWorld').onclick = () => {
+        document.getElementById('stream_overloading_streamUrl').value = 'https://playerservices.streamtheworld.com/api/livestream-redirect/';
+      };
+
+      document.getElementById('zeno').onclick = () => {
+        document.getElementById('stream_overloading_streamUrl').value = 'https://stream.zeno.fm/';
+      };
+
+    </script>
+{% endblock %}
+
 {% block body %}
 <div id="admin" class="container">
     <div class="row">
@@ -14,7 +33,7 @@
                     <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a> /
                     <a target="_blank" href="{{ path('app') }}streaming/{{ stream.id }}">{{ 'admin.stream_errors.view'|trans }}</a>
                 </div>
-                <h5>{{ stream.name }}</h5></div>
+                <h5 id="nameHeader">{{ stream.name }}</h5></div>
 
             <div class="d-flex mb-3 mt-3">
                 <div class="me-5"><a target="_blank" href="https://www.google.com/search?tbm=isch&q={{ stream.name }}">Search Google Images</a></div>
@@ -35,8 +54,8 @@
                 {{ form_row(form.streamUrl) }}
 
                 <div id="streamUrlHelpBlock" class="d-flex justify-content-between form-text">
-                    <div>https://playerservices.streamtheworld.com/api/livestream-redirect/</div>
-                    <div>https://stream.zeno.fm/</div>
+                    <div id="streamTheWorld">https://playerservices.streamtheworld.com/api/livestream-redirect/</div>
+                    <div id="zeno">https://stream.zeno.fm/</div>
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
@@ -70,6 +89,10 @@
 
             <div class="mb-1"><strong>Enabled:</strong>
                 {% if stream.enabled == true %}Yes{% else %}No{% endif %}
+            </div>
+
+            <div class="mb-1"><strong>Banned :</strong>
+                {% if stream.banned == true %}Yes{% else %}No{% endif %}
             </div>
 
             {% if stream.img is defined and stream.img is not empty %}

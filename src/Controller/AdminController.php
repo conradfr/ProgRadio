@@ -191,6 +191,7 @@ class AdminController extends AbstractBaseController
             }
 
             $stream->setEnabled($streamOverloading->getEnabled());
+            $stream->setBanned($streamOverloading->getBanned());
 
             $stream->setForceHls($streamOverloading->getForceHls());
             $stream->setForceMpd($streamOverloading->getForceMpd());
