@@ -9,6 +9,7 @@ use App\Entity\ListeningSession;
 use App\Entity\Radio;
 use App\Entity\RadioStream;
 use App\Entity\Stream;
+use App\Entity\StreamCheck;
 use App\Entity\StreamOverloading;
 use App\Entity\StreamSong;
 use App\Entity\ScheduleEntry;
@@ -27,6 +28,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractBaseController
 {
+    protected const STREAM_CHECK_PER_PAGE = 25;
+
     #[Route('/{_locale}/admin', name: 'admin')]
     public function indexAction(EntityManagerInterface $em): Response
     {
@@ -306,6 +309,50 @@ class AdminController extends AbstractBaseController
         $em->flush();
 
         return $this->redirectToRoute('admin_stream_suggestions', [], 301);
+    }
+
+    #[Route('/{_locale}/admin/stream_check', name: 'admin_stream_check')]
+    public function playingStreamCheckAction(Request $request, EntityManagerInterface $em): Response
+    {
+        $pagination = $em->getRepository(Stream::class)->getStreamCheckListPagination(
+            $request->query->getInt('page', 1),
+            self::STREAM_CHECK_PER_PAGE,
+        );
+
+        return $this->render('default/admin/stream_check.html.twig', [
+            'pagination' => $pagination
+        ]);
+    }
+
+    #[Route('/{_locale}/admin/stream_check_commit_ssl/{id}', name: 'admin_stream_check_commit_ssl')]
+    public function streamCheckCommitSsl(Stream $stream, EntityManagerInterface $em): Response
+    {
+        $streamOverloading = $stream->getStreamOverloading();
+
+        if (!$streamOverloading) {
+            $streamOverloading = new StreamOverloading();
+            $streamOverloading->setId($stream->getId());
+            $streamOverloading->setEnabled(true);
+
+            $em->persist($streamOverloading);
+            $em->flush();
+        }
+
+        $url = str_replace( 'http://', 'https://', $stream->getWebsite());
+
+        $stream->setWebsite($url);
+        $streamOverloading->setWebsite($url);
+
+        $em->persist($stream);
+        $em->persist($streamOverloading);
+
+        $em->flush();
+
+        return $this->jsonResponse([
+                'stream_id' => $stream->getId(),
+                'status'   => 'OK',
+            ]
+        );
     }
 
     #[Route('/{_locale}/admin/shares', name: 'admin_shares')]

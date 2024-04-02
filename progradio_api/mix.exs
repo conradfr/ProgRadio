@@ -79,7 +79,8 @@ defmodule ProgRadioApi.MixProject do
       {:request_cache_plug, "~> 1.0"},
       {:ex_cldr, "~> 2.33"},
       {:ex_cldr_territories, "~> 2.0"},
-      {:ex_cldr_collation, "~> 0.7.0"}
+      {:ex_cldr_collation, "~> 0.7.0"},
+      {:req, "~> 0.4.0"}
     ]
   end
 

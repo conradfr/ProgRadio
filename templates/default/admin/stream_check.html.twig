@@ -1,0 +1,129 @@
+{% extends 'default/admin/admin_base.html.twig' %}
+
+{% import _self as self %}
+
+{% macro check(status) %}
+    {% if status is not null and status == true %}
+        <i class="bi bi-check-circle" style="color: var(--bs-success)"></i>
+    {% elseif status is not null and status == false %}
+        <i class="bi bi-x-circle" style="color: var(--bs-danger)"></i>
+    {% endif %}
+{% endmacro %}
+
+{% block title %}{{ 'admin.stream_check.title'|trans }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+      const setToSsl = (id) => {
+        // generate the url w/ symfony and put the correct id at runtime w/ javascript
+        const url = '{{ path('admin_stream_check_commit_ssl', {'id' : 666}) }}';
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url.replace('666', id) , true);
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const element = document.getElementById(`ssl-${id}`);
+
+            if (element) {
+              element.parentNode.removeChild(element);
+            }
+          }
+        };
+
+        xhr.send();
+      }
+    </script>
+
+    <script>
+      const appWebSocket = false;
+      const appSendStatistics = false;
+      const appVolume = 0.3;
+    </script>
+
+    {% include('_partials/mini_player.html.twig') %}
+{% endblock %}
+
+{% block body %}
+    <div id="admin" class="container">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col" class="text-center" style="width: 150px !important;"></th>
+                        <th scope="col" class="text-center" style="width: 70px !important;">{{ 'admin.stream_check.img'|trans }}</th>
+                        <th scope="col" class="text-center" style="width: 70px !important;"></th>
+                        <th scope="col" class="text-center" style="width: 70px !important;">{{ 'admin.stream_check.stream'|trans }}</th>
+                        <th scope="col" class="text-center" style="width: 70px !important;">{{ 'admin.stream_check.website'|trans }}</th>
+                        <th scope="col" class="text-center" style="width: 70px !important;">{{ 'admin.stream_check.ssl'|trans }}</th>
+                        <th scope="col" class="text-center" style="width: 125px !important;"></th>
+                        <th scope="col" class="text-center" style="width: 70px !important;"></th>
+                        <th scope="col" class="text-center" style="width: 70px !important;"></th>
+                        <th scope="col" class="text-center" style="width: 100px !important;">{{ 'admin.stream_check.edit'|trans }}</th>
+                        <th scope="col" class="text-center" style="width: 150px !important;">{{ 'admin.stream_check.last_checked'|trans }}</th>
+                    </tr>
+                    </thead>
+                    {% for stream in pagination %}
+                        <tr>
+                            <td>{{ stream.name }}</td>
+                            <td class="text-center">
+                                <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ 'admin.stream_check.view'|trans }}</a> /
+                                <a target="_blank" href="{{ path('app') }}streaming/{{ stream.id }}">{{ 'admin.stream_check.view'|trans }}</a>
+                            </td>
+                            <td class="text-center">
+                                {{ self.check(stream.check_img) }}
+                            </td>
+                            <td class="text-center" v-scope>
+                                <div
+                                    v-if="radioId !== '{{ stream.id }}' || playing === PLAYER_STATE_STOPPED"
+                                    @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}})"
+                                    class="admin-play">
+                                    <i class="bi bi-play-circle"></i>
+                                </div>
+
+                                <div
+                                    v-if="radioId === '{{ stream.id }}' && playing !== PLAYER_STATE_STOPPED"
+                                    @click="stop('{{ stream.id }}')"
+                                    class="admin-play admin-play-playing">
+                                    <i class="bi bi-stop-circle"></i>
+                                </div>
+                            </td>
+                            <td class="text-center">{{ self.check(stream.check_stream) }}</td>
+                            <td class="text-center">
+                                {% if stream.website is defined and stream.website is not null %}
+                                    {{ self.check(stream.check_website) }}
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if stream.website is defined and stream.website is not null %}
+                                    {{ self.check(stream.check_ssl) }}
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if stream.check_ssl is not null and stream.check_ssl == true %}
+                                    <button class="btn btn-light btn-sm" id="ssl-{{ stream.id }}" onclick="setToSsl('{{ stream.id }}')">{{ 'admin.stream_check.commit'|trans }}</button>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {{ self.check(stream.enabled) }}
+                            </td>
+                            <td class="text-center">{{ stream.countryCode }}</td>
+                            <td class="text-center"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream.id}) }}">{{ 'admin.stream_check.edit'|trans }}</a></td>
+                            <td class="text-center">{% if stream.checkedAt is not null %}{{ stream.checkedAt|format_datetime('short', 'short') }}{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="navigation">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

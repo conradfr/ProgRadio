@@ -10,6 +10,7 @@ menu:
         listening: Écoutes
         overloading: Stream Overloading
         playing_errors: Erreurs Streams
+        check: Stream Check
         shares: Parts de marché
         suggestions: Suggestions Streams
     all: Toutes les radios
@@ -343,3 +344,14 @@ admin:
         edit: Edit
         reset: Reset
         reset_all: Tout reset
+
+    stream_check:
+        title: Check streams
+        img: Img
+        stream: Stream
+        website: Site
+        ssl: SSL
+        commit: Commit
+        last_checked: Checked
+        view: Voir
+        edit: Edit

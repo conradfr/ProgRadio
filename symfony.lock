@@ -120,6 +120,9 @@
             "config/packages/karser_recaptcha3.yaml"
         ]
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v6.3.0"
+    },
     "laminas/laminas-code": {
         "version": "4.5.0"
     },

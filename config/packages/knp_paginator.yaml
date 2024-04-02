@@ -1,0 +1,3 @@
+knp_paginator:
+  template:
+    pagination: '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig'

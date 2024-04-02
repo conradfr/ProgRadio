@@ -104,9 +104,13 @@ class Stream
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $enabled = true;
 
-    #[ORM\OneToOne(targetEntity: StreamOverloading::class)]
+    #[ORM\OneToOne(targetEntity: StreamOverloading::class, fetch: "EAGER")]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
     private ?StreamOverloading $streamOverloading = null;
+
+    #[ORM\OneToOne(targetEntity: StreamCheck::class, fetch: "EAGER")]
+    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
+    private ?StreamCheck $streamCheck = null;
 
     #[ORM\OneToOne(targetEntity: Stream::class)]
     #[ORM\JoinColumn(name: 'redirect_to', referencedColumnName: 'id')]
@@ -324,7 +328,7 @@ class Stream
         $this->enabled = $enabled;
     }
 
-    public function getStreamOverloading(): StreamOverloading
+    public function getStreamOverloading():? StreamOverloading
     {
         return $this->streamOverloading;
     }
@@ -332,6 +336,16 @@ class Stream
     public function setStreamOverloading(StreamOverloading $streamOverloading): void
     {
         $this->streamOverloading = $streamOverloading;
+    }
+
+    public function getStreamCheck():? StreamCheck
+    {
+        return $this->streamCheck;
+    }
+
+    public function setStreamCheck(StreamCheck $streamCheck): void
+    {
+        $this->streamCheck = $streamCheck;
     }
 
     public function getRedirectToStream(): ?Stream

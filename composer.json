@@ -41,6 +41,7 @@
         "gedmo/doctrine-extensions": "^3.0",
         "karser/karser-recaptcha3-bundle": "^0.1.22",
         "keiko/uuid-shortener": "^1.0.0",
+        "knplabs/knp-paginator-bundle": "^6.3",
         "liip/imagine-bundle": "^2.7",
         "oro/doctrine-extensions": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.2",

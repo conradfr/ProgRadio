@@ -9,6 +9,7 @@ menu:
         dashboard: Dashboard
         listening: Listening
         overloading: Stream Overloading
+        check: Stream Check
         playing_errors: Streams Errors
         shares: Shares
         suggestions: Streams Suggestions
@@ -344,3 +345,15 @@ admin:
         edit: Edit
         reset: Reset
         reset_all: Reset all
+
+    stream_check:
+        title: Streaming check
+        img: Img
+        stream: Stream
+        website: Web
+        ssl: SSL
+        commit: Commit
+        last_checked: Checked
+        view: See
+        edit: Edit
+

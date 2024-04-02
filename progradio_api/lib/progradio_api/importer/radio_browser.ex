@@ -221,7 +221,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       url when is_binary(url) and url !== "" ->
         case String.ends_with?(url, ".svg") do
           false ->
-            if (field == :mg_url), do: Map.delete(stream, :img_url)
+            if field == :mg_url, do: Map.delete(stream, :img_url)
 
             try do
               with {:ok, filename} <- ImageImporter.import_stream(url, stream) do

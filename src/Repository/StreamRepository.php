@@ -10,6 +10,8 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Uuid;
 
@@ -23,7 +25,7 @@ class StreamRepository extends ServiceEntityRepository
 
     protected const DEFAULT_MORE_LIMIT = 15;
 
-    public function __construct(private readonly Security $security, ManagerRegistry $registry)
+    public function __construct(private readonly Security $security, protected PaginatorInterface $paginator, ManagerRegistry $registry, )
     {
         parent::__construct($registry, Stream::class);
     }
@@ -556,5 +558,20 @@ class StreamRepository extends ServiceEntityRepository
         ]);
 
         return $query->getResult();
+    }
+
+    public function getStreamCheckListPagination(int $page, int $perPage): PaginationInterface
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->select('s.id, s.enabled, s.name, s.streamUrl, s.forceHls, s.forceMpd, s.website, s.countryCode, sc.checkedAt, sc.img as check_img, sc.streamUrl as check_stream, sc.website as check_website, sc.websiteSsl as check_ssl')
+           ->where('sc.img = false or sc.website = false or sc.websiteSsl = false')
+           ->join('s.streamCheck', 'sc')
+           ->orderBy('s.clicksLast24h', 'desc');
+
+        return $this->paginator->paginate(
+            $qb->getQuery(),
+            $page,
+            $perPage
+        );
     }
 }

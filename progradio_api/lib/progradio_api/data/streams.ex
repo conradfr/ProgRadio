@@ -2,19 +2,23 @@ defmodule ProgRadioApi.Streams do
   @moduledoc """
   The Streams context.
   """
-
+  require Logger
   import Ecto.Query
   use Nebulex.Caching
 
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamSong}
+  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamCheck, StreamSong}
 
   @default_limit 48
 
   @text_key "searches"
   @text_min_length 3
+
+  @check_batch_size 20
+  @check_timeout 60_000
+  @check_task_timeout 90_000
 
   # 1h
   @cache_ttl_stream 3_600_000
@@ -26,6 +30,8 @@ defmodule ProgRadioApi.Streams do
   @cache_prefix_stream "stream_"
   @cache_prefix_stream_count "stream_count_"
   @cache_prefix_countries "countries_"
+
+  # ---------- DATA ----------
 
   @decorate cacheable(
               cache: Cache,
@@ -183,7 +189,7 @@ defmodule ProgRadioApi.Streams do
 
     query =
       from s in Stream,
-           select: s.id,
+        select: s.id,
         where: s.updated_at > ^date_time and not is_nil(s.original_img)
 
     Repo.all(query)
@@ -344,5 +350,176 @@ defmodule ProgRadioApi.Streams do
 
   defp add_text(query, _) do
     query
+  end
+
+  # ---------- CHECK ----------
+
+  def check() do
+    total = count_streams_to_check()
+
+    Logger.info("Streams to check: #{total}")
+
+    Range.new(0, total, @check_batch_size)
+    |> Enum.each(fn r ->
+      Logger.info("Checking: #{r} to #{r + @check_batch_size}")
+
+      @check_batch_size
+      |> get_streams_to_check(r)
+      |> Enum.each(fn s ->
+        check_stream(s)
+      end)
+    end)
+  end
+
+  defp get_streams_to_check(how_many, offset) do
+    query =
+      from s in Stream,
+        select: s,
+        left_join: so in StreamOverloading,
+        on: so.id == s.id,
+        # where: is_nil(so.id) and s.enabled == true and s.banned == false and is_nil(s.redirect_to),
+        where: (is_nil(so.enabled) or so.enabled != false) and s.banned == false and is_nil(s.redirect_to),
+#        where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
+        order_by: [desc: s.clicks_last_24h],
+        limit: ^how_many,
+        offset: ^offset
+
+    Repo.all(query)
+  end
+
+  defp count_streams_to_check() do
+    query =
+      from s in Stream,
+        select: count(),
+        left_join: so in StreamOverloading,
+        on: so.id == s.id,
+#        where: is_nil(so.id) and s.enabled == true and s.banned == false and is_nil(s.redirect_to)
+        where: (is_nil(so.enabled) or so.enabled != false) and s.banned == false and is_nil(s.redirect_to)
+
+    Repo.one(query)
+  end
+
+  defp check_stream(stream) do
+    stream_check = Repo.get(StreamCheck, stream.id) || %StreamCheck{id: stream.id}
+
+    params = %{
+      checked_at: DateTime.utc_now() |> DateTime.truncate(:second)
+    }
+
+    params =
+      if stream.img != nil do
+        status =
+          File.exists?("#{Application.get_env(:progradio_api, :image_path)}stream/#{stream.img}")
+
+        Map.put(params, :img, status)
+      else
+        params
+      end
+
+    params =
+      if stream.website != nil do
+        status =
+          try do
+            # We put it in a task to mitigate websites that are actually audio streams
+            task =
+              Task.async(fn ->
+                Logger.info("checking #{stream.website}")
+
+                try do
+                  stream.website
+                  |> Req.get!(receive_timeout: @check_timeout)
+                  |> Map.get(:status)
+                rescue
+                  _ -> 666
+                end
+              end)
+
+            Task.await(task, @check_task_timeout)
+          rescue
+            _ -> 666
+          catch
+            :exit, _ ->
+              666
+          end
+
+        Map.put(params, :website, status == 200)
+      else
+        params
+      end
+
+    params =
+      if stream.website != nil and String.starts_with?(stream.website, "http://") do
+        status =
+          try do
+            # We put it in a task to mitigate websites that are actually audio streams
+            task =
+              Task.async(fn ->
+                Logger.info("checking ssl #{stream.website}")
+
+                try do
+                  stream.website
+                  |> String.replace("http://", "https://", global: false)
+                  |> Req.get!(receive_timeout: @check_timeout)
+                  |> Map.get(:status)
+                rescue
+                  _ -> 666
+                end
+              end)
+
+            Task.await(task, @check_task_timeout)
+          rescue
+            _ -> 666
+          catch
+            :exit, _ ->
+              666
+
+            _ ->
+              666
+          end
+
+        Map.put(params, :website_ssl, status == 200)
+      else
+        params
+      end
+
+    params =
+      if stream.stream_url != nil do
+        status =
+          try do
+            # We put it in a task to not really dealing with streams
+            task =
+              Task.async(fn ->
+                Logger.info("checking stream #{stream.stream_url}")
+
+                try do
+                  stream.website
+                  |> Req.get!(receive_timeout: @check_timeout)
+                  |> Map.get(:status)
+                rescue
+                  _ -> 666
+                end
+              end)
+
+            Task.await(task)
+          rescue
+            _ -> 666
+          catch
+            :exit, _ ->
+              666
+          end
+
+        # for now, we only check 404 for simplicity
+        if status == 404 do
+          Map.put(params, :stream_url, false)
+        else
+          Map.put(params, :stream_url, nil)
+        end
+      else
+        params
+      end
+
+    stream_check
+    |> StreamCheck.changeset(params)
+    |> Repo.insert_or_update()
   end
 end
