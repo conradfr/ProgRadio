@@ -107,7 +107,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd,"
+        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd,"
             . 'COALESCE(r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_stream_code_name')
@@ -154,7 +154,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addOrderBy('s.name', 'ASC');
                     break;
                 case 'popularity':
-                    $qb->addOrderBy('s.clicksLast24h', 'DESC');
+                    $qb->addOrderBy('s.score', 'DESC');
                     break;
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
@@ -195,7 +195,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd,"
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd,"
             . 'COALESCE(r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_stream_code_name')
@@ -246,7 +246,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addOrderBy('s.name', 'ASC');
                     break;
                 case 'popularity':
-                    $qb->addOrderBy('s.clicksLast24h', 'DESC');
+                    $qb->addOrderBy('s.score', 'DESC');
                     break;
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
@@ -289,7 +289,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name as name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd,"
+        $qb->select("s.id as code_name, s.name as name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd,"
             . 'COALESCE(r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_stream_code_name')
@@ -342,7 +342,7 @@ class StreamRepository extends ServiceEntityRepository
     ): ?array {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd,"
+        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd,"
             . 'COALESCE(r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(s.streamSongCodeName IS NOT NULL and ss.enabled = TRUE) THEN s.streamSongCodeName ELSE rs.codeName END as radio_stream_code_name')
@@ -500,7 +500,7 @@ class StreamRepository extends ServiceEntityRepository
             ->innerJoin('s.radioStream', 'rs')
             ->where('rs.id = :id')
             ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
-            ->orderBy('s.clicksLast24h', 'DESC')
+            ->orderBy('s.score', 'DESC')
             ->setFirstResult(0)
             ->setMaxResults(1)
             ->setParameter('id', $radioStream->getId());

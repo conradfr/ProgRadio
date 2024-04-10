@@ -21,6 +21,7 @@ defmodule ProgRadioApi.Stream do
     field(:language, :string)
     field(:votes, :integer, default: 0)
     field(:clicks_last_24h, :integer, default: 0)
+    field(:score, :integer, default: 0)
     field(:stream_song_code_name, :string)
     field(:source, :string, default: "radio-browser")
     field(:enabled, :boolean)
@@ -58,6 +59,7 @@ defmodule ProgRadioApi.Stream do
       :language,
       :votes,
       :clicks_last_24h,
+      :score,
       :enabled,
       :redirect_to,
       :import_updated_at

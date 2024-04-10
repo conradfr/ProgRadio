@@ -15,7 +15,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table(name: '`stream`')]
 #[ORM\Index(name: 'name_idx', columns: ['name'])]
-#[ORM\Index(name: 'click24_idx', columns: ['clicks_last_24h'])]
+#[ORM\Index(name: 'score_idx', columns: ['score'])]
 #[ORM\Index(name: 'countrycode_idx', columns: ['country_code'])]
 #[ORM\Index(name: 'stream_tags_idx', columns: ['tags'])]
 #[ORM\Index(name: 'stream_playing_error_index', columns: ['playing_error'])]
@@ -68,6 +68,9 @@ class Stream
 
     #[ORM\Column(type: 'integer', name: 'clicks_last_24h', options: ['default' => 0])]
     private ?int $clicksLast24h = null;
+
+    #[ORM\Column(type: 'integer', name: 'score', options: ['default' => 0])]
+    private ?int $score = null;
 
     #[ORM\Column(type: 'datetime')]
     private ?\DateTime $lastListeningAt = null;
@@ -244,6 +247,16 @@ class Stream
     public function setClicksLast24h(int $clicksLast24h): void
     {
         $this->clicksLast24h = $clicksLast24h;
+    }
+
+    public function getScore(): int
+    {
+        return $this->score;
+    }
+
+    public function setScore(int $score): void
+    {
+        $this->score = $score;
     }
 
     public function getListeningSessions(): Collection

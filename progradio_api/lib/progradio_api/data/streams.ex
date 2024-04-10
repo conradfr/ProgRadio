@@ -2,6 +2,7 @@ defmodule ProgRadioApi.Streams do
   @moduledoc """
   The Streams context.
   """
+
   require Logger
   import Ecto.Query
   use Nebulex.Caching
@@ -225,6 +226,7 @@ defmodule ProgRadioApi.Streams do
         country_code: s.country_code,
         website: s.website,
         clicks_last_24h: s.clicks_last_24h,
+        score: s.score,
         type: "stream",
         radio_code_name: fragment("COALESCE(?)", r.code_name),
         img_alt: fragment("COALESCE(?)", r.code_name),
@@ -282,7 +284,7 @@ defmodule ProgRadioApi.Streams do
 
       "popularity" ->
         query
-        |> order_by([s], desc: s.clicks_last_24h)
+        |> order_by([s], desc: s.score)
 
       "last" ->
         query
@@ -354,12 +356,12 @@ defmodule ProgRadioApi.Streams do
 
   # ---------- CHECK ----------
 
-  def check() do
+  def check(initial_offset \\ 0) do
     total = count_streams_to_check()
 
     Logger.info("Streams to check: #{total}")
 
-    Range.new(0, total, @check_batch_size)
+    Range.new(initial_offset, (total - initial_offset), @check_batch_size)
     |> Enum.each(fn r ->
       Logger.info("Checking: #{r} to #{r + @check_batch_size}")
 

@@ -503,7 +503,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # If a stream has no image (usually from a dead link) we reuse the former one if any,
   # (as we don't delete previous images)
-  def reattach_image_of_stream_with_no_image() do
+  defp reattach_image_of_stream_with_no_image() do
     get_streams_with_no_image()
     |> Enum.map(fn s -> ImageImporter.find_image_for_stream(s) end)
     |> Enum.filter(fn {_stream_id, filename} -> filename != nil end)
@@ -524,5 +524,28 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         where: s.id == ^stream_id
 
     Repo.update_all(query, set: [img: filename])
+  end
+
+  # merge redirected streams
+  def consolidate_stats() do
+    from(s in Stream,
+      left_join: s2 in Stream,
+      on: s2.redirect_to == s.id,
+      where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
+      group_by: [s.id],
+      select: %{
+        id: s.id,
+        clicks_last_24h: s.clicks_last_24h,
+        clicks: fragment("COALESCE(sum(?), 0)", s2.clicks_last_24h),
+      }
+    )
+    |> Repo.all()
+    |> Enum.each(fn e ->
+      Ecto.Adapters.SQL.query!(
+        Repo,
+        "UPDATE stream SET score = $1 where id = $2",
+        [(e.clicks_last_24h + Decimal.to_integer(e.clicks)), Ecto.UUID.dump!(e.id)]
+      )
+    end)
   end
 end
