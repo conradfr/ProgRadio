@@ -64,8 +64,8 @@ class StreamRepository extends ServiceEntityRepository
 
         // popular country
 
-        $resultCountry = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'popularity');
-
+        // $resultCountry = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'popularity');
+        $resultCountry = [];
         // last country
 
         $resultCountryLast = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'last');

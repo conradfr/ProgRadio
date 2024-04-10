@@ -8,6 +8,8 @@ parameters:
     timezone: 'Europe/Paris'
     liip_imagine.jpegoptim.tempDir: /run/shm/progradio
     email_from: '%env(resolve:EMAIL_FROM)%'
+    .container.dumper.inline_factories: true
+    debug.container.dump: false
 
 services:
     # default configuration for services in *this* file

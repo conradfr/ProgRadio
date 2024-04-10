@@ -164,7 +164,7 @@ COPY --chown=www-data:www-data ./ /var/www/
 
 COPY --from=buildjs /tmp/public/build/ ./public/build/
 
-RUN composer dump-autoload --no-scripts --no-dev --optimize
+RUN composer dump-autoload --no-scripts --no-dev --optimize --classmap-authoritative
 
 # RUN mkdir -p /var/www/var/
 # RUN mkdir -p /var/www/var/cache/

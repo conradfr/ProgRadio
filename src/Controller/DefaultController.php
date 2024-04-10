@@ -347,6 +347,7 @@ class DefaultController extends AbstractBaseController
         }
 
         $moreStreams = $em->getRepository(Stream::class)->getMoreStreams($stream);
+        // $moreStreams = [];
 
         return $this->render('default/stream.html.twig', [
             'stream' => $stream,
