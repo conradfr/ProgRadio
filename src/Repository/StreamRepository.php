@@ -297,7 +297,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
+            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL and s.playingError < 4')
             ->addOrderBy('s.name', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults(1);

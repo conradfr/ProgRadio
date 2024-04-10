@@ -113,7 +113,7 @@
                             <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
                         {% else %}
                             <div class="radio-page-streams-one py-1 d-none d-flex align-items-center justify-content-center justify-content-sm-start"
-                                 @vue:mounted="$el.classList.remove('d-none')">
+                                 @vue:mounted="$el.classList.remove('d-none')" v-cloak>
                                 <div>
                                     <div
                                         v-if="playing === PLAYER_STATE_STOPPED"
@@ -162,7 +162,7 @@
                             <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
                         </div>
 
-                        <div class="mt-4 py-3 py-sm-4 px-sm-3 stream-page-live" v-if="song !== null || listeners !== null">
+                        <div class="mt-4 py-3 py-sm-4 px-sm-3 stream-page-live" v-if="song !== null || listeners !== null" v-cloak>
                             <div class="mb-3" v-if="song !== null">
                                 <div>
                                     <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
@@ -245,7 +245,7 @@
                     </div>
 
                     <div class="more-streams">
-                        <div class="mt-4 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
+                        <div class="mt-5 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
 
                         {% if stream.countryCode is not null and stream.countryCode != '' %}
                             <div class="mt-3 mb-3">
@@ -267,7 +267,7 @@
                             {% endfor %}
                         </div>
 
-                        <div class="clearfix mt-2 mb-5">
+                        <div class="clearfix mt-4 mb-5">
                             <a class="more-link" href="{{ path('streaming_spa') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>

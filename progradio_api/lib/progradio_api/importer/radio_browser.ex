@@ -32,6 +32,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     reattach_image_of_stream_with_no_image()
     find_redirect_for_disabled_streams()
     StreamMatcher.match()
+    consolidate_stats()
     :ok
   end
 

@@ -25,12 +25,18 @@
   }
 
   .more-streams {
-    .more-streams-one {
+    .streams-one-more {
       width: 100px;
       height: 155px;
 
       font-size: 0.769rem;
       color: $more-stream-text-color;
+
+      border: 0;
+
+      @include media-breakpoint-down(sm) {
+        width: 80px !important;
+      }
 
       img {
         max-width: 75px;
