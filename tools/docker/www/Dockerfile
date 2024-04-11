@@ -47,6 +47,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
+    libgmp-dev \
     locales \
     zip \
     jpegoptim optipng pngquant gifsicle \
