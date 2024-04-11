@@ -45,7 +45,7 @@ $zindex-tooltip: 1270;
 
 body {
   padding-top: $padding-top;
-  padding-bottom: $padding-bottom;
+  // padding-bottom: $padding-bottom;
 
   &.body-app {
     background-color: $background-color !important;

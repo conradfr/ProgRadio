@@ -93,6 +93,7 @@ RUN pecl install apcu \
  && docker-php-ext-install -j$(nproc) gd \
  && docker-php-ext-configure opcache --enable-opcache \
  && docker-php-ext-install opcache \
+ && docker-php-ext-install gmp \
  && docker-php-ext-enable apcu \
  && pecl clear-cache
 

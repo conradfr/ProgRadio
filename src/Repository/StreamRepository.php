@@ -64,8 +64,8 @@ class StreamRepository extends ServiceEntityRepository
 
         // popular country
 
-        // $resultCountry = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'popularity');
-        $resultCountry = [];
+        $resultCountry = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'popularity');
+
         // last country
 
         $resultCountryLast = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'last');
@@ -73,7 +73,7 @@ class StreamRepository extends ServiceEntityRepository
         // random
 
         $qbRandom = $this->getMoreStreamQuery($stream->getId(), $limitThird);
-        $resultRandom = $qbRandom->getQuery()->getResult();
+        $resultRandom = $qbRandom->getQuery()->enableResultCache(self::CACHE_QUICK_TTL)->getResult();
 
         return array_merge($resultCountry, $resultCountryLast, $resultRandom);
     }
@@ -172,6 +172,7 @@ class StreamRepository extends ServiceEntityRepository
         $query = $qb->getQuery();
 
         if ($sort !== 'random' && $sort !== 'last'
+            && $countryOrCategory !== null
             && strtoupper($countryOrCategory) !== Stream::HISTORY
             && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
             $query->enableResultCache(self::CACHE_TTL);
@@ -264,6 +265,7 @@ class StreamRepository extends ServiceEntityRepository
         $query = $qb->getQuery();
 
         if ($sort !== 'random' && $sort !== 'last'
+            && $countryOrCategory !== null
             && strtoupper($countryOrCategory) !== Stream::HISTORY
             && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
             $query->enableResultCache(self::CACHE_TTL);
@@ -405,7 +407,8 @@ class StreamRepository extends ServiceEntityRepository
         }
 
         $query = $qb->getQuery();
-        if (strtoupper($countryOrCategory) !== Stream::HISTORY
+        if ($countryOrCategory !== null
+            && strtoupper($countryOrCategory) !== Stream::HISTORY
             && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
             $query->enableResultCache(self::CACHE_TTL);
         }
@@ -460,7 +463,8 @@ class StreamRepository extends ServiceEntityRepository
 
         $query = $qb->getQuery();
 
-        if (strtoupper($countryOrCategory) !== Stream::HISTORY
+        if ($countryOrCategory !== null
+            && strtoupper($countryOrCategory) !== Stream::HISTORY
             && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
             $query->enableResultCache(self::CACHE_TTL);
         }

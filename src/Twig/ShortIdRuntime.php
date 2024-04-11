@@ -11,6 +11,15 @@ use Symfony\Component\Uid\Uuid;
 
 class ShortIdRuntime implements RuntimeExtensionInterface
 {
+    protected Shortener $shortener;
+
+    public function __construct()
+    {
+        $this->shortener = Shortener::make(
+            Dictionary::createUnmistakable() // or pass your own characters set
+        );
+    }
+
     public function shortId($id): string
     {
         /** @var Uuid $id */
@@ -18,10 +27,6 @@ class ShortIdRuntime implements RuntimeExtensionInterface
             $id = (string) $id;
         }
 
-        $shortener = Shortener::make(
-            Dictionary::createUnmistakable() // or pass your own characters set
-        );
-
-        return $shortener->reduce($id);
+        return $this->shortener->reduce($id);
     }
 }
