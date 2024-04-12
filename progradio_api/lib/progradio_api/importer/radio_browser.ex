@@ -537,7 +537,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       select: %{
         id: s.id,
         clicks_last_24h: s.clicks_last_24h,
-        clicks: fragment("COALESCE(sum(?), 0)", s2.clicks_last_24h),
+        clicks: fragment("COALESCE(sum(?), 0)", s2.clicks_last_24h)
       }
     )
     |> Repo.all()
@@ -545,7 +545,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       Ecto.Adapters.SQL.query!(
         Repo,
         "UPDATE stream SET score = $1 where id = $2",
-        [(e.clicks_last_24h + Decimal.to_integer(e.clicks)), Ecto.UUID.dump!(e.id)]
+        [e.clicks_last_24h + Decimal.to_integer(e.clicks), Ecto.UUID.dump!(e.id)]
       )
     end)
   end

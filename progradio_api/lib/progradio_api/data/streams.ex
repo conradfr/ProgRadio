@@ -321,19 +321,26 @@ defmodule ProgRadioApi.Streams do
       text
       |> String.trim()
       |> String.downcase()
+
+    text_search_like =
+      text_search
+      |> String.replace(" ", "%")
       |> then(fn t -> "%" <> t <> "%" end)
-
-    spawn(fn ->
-      cleaned_text_search = String.trim(text_search, "%")
-
-      if String.length(cleaned_text_search) >= @text_min_length,
-        do: Redix.command!(:redix, ["ZINCRBY", @text_key, 1, cleaned_text_search])
-    end)
 
     query
     |> where(
       [s],
-      fragment("lower(?) LIKE ? or lower(?) LIKE ?", s.name, ^text_search, s.tags, ^text_search)
+      fragment(
+        "? % ? or ? % ? or lower(?) LIKE ? or lower(?) LIKE ?",
+        s.name,
+        ^text_search,
+        s.tags,
+        ^text_search,
+        s.name,
+        ^text_search_like,
+        s.tags,
+        ^text_search_like
+      )
     )
 
     #    search_text = "*:" <> text <> ":*"
@@ -361,7 +368,7 @@ defmodule ProgRadioApi.Streams do
 
     Logger.info("Streams to check: #{total}")
 
-    Range.new(initial_offset, (total - initial_offset), @check_batch_size)
+    Range.new(initial_offset, total - initial_offset, @check_batch_size)
     |> Enum.each(fn r ->
       Logger.info("Checking: #{r} to #{r + @check_batch_size}")
 
@@ -380,8 +387,10 @@ defmodule ProgRadioApi.Streams do
         left_join: so in StreamOverloading,
         on: so.id == s.id,
         # where: is_nil(so.id) and s.enabled == true and s.banned == false and is_nil(s.redirect_to),
-        where: (is_nil(so.enabled) or so.enabled != false) and s.banned == false and is_nil(s.redirect_to),
-#        where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
+        where:
+          (is_nil(so.enabled) or so.enabled != false) and s.banned == false and
+            is_nil(s.redirect_to),
+        #        where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
         order_by: [desc: s.clicks_last_24h],
         limit: ^how_many,
         offset: ^offset
@@ -395,8 +404,10 @@ defmodule ProgRadioApi.Streams do
         select: count(),
         left_join: so in StreamOverloading,
         on: so.id == s.id,
-#        where: is_nil(so.id) and s.enabled == true and s.banned == false and is_nil(s.redirect_to)
-        where: (is_nil(so.enabled) or so.enabled != false) and s.banned == false and is_nil(s.redirect_to)
+        #        where: is_nil(so.id) and s.enabled == true and s.banned == false and is_nil(s.redirect_to)
+        where:
+          (is_nil(so.enabled) or so.enabled != false) and s.banned == false and
+            is_nil(s.redirect_to)
 
     Repo.one(query)
   end
