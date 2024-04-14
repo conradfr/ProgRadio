@@ -70,7 +70,7 @@ const format = dateObj => {
     newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'img': curr.img
+      'img': `https:${curr.img}`
     };
 
     // Title - host
@@ -109,6 +109,7 @@ const fetch = dateObj => {
         'host_title': '.heading-3',
       })
       .data(function (listing) {
+        console.log(listing);
         listing.dateObj = dateObj;
         scrapedData.push(listing);
       })
