@@ -108,7 +108,8 @@
           </div>
         </div>
       </div>
-      <!-- <div class="col-sm-2 col-12 text-center d-none d-sm-block" v-if="!isProgRadio || !userLogged">
+      <!-- <div class="col-sm-2 col-12 text-center d-none d-sm-block"
+        v-if="!isProgRadio || !userLogged">
         <adsense></adsense>
       </div> -->
     </div>
@@ -158,6 +159,7 @@ export default defineComponent({
       channelName: null,
       locale: this.$i18n.locale,
       // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
       isProgRadio
     };
   },

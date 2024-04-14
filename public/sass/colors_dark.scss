@@ -7,6 +7,12 @@ $gray-800: #303030 !default;
 // ---
 
 $white: #f8f8f8;
+$black: #000;
+
+// ---
+
+$white-darken-10: darken($white, 10%);
+$white-darken-15: darken($white, 15%);
 
 $primary-source: #2196F3;
 $primary: #1c486a;
@@ -42,7 +48,10 @@ $radio-stream-filter: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) b
 $radio-stream-filter-hover: invert(41%) sepia(98%) saturate(1173%) hue-rotate(185deg) brightness(99%) contrast(92%);
 
 $player-color: $white;
+$player-link-color: mix($player-color, $player-background, 70%);
 $fader-primary: #337ab7;
+$fader-primary-top: $fader-primary;
+$fader-primary-bottom: darken($fader-primary, 5%);
 $timer-active: #5eff3b;
 
 $timeline-color: mix(#1c2327, $white, 55%); // lighten($background-color, 45%);
@@ -58,11 +67,14 @@ $collection-background: darken($primary, 5%);
 $filter-background: darken($primary, 5%);
 $filter-background-hover: $primary;
 
+$collection-control-hover-bg: darken($collection-background, 3%);
+
 $radio-list-submenu-color: $white;
 $radio-list-background: $body-bg-alt;
 $radio-list-submenu-bg-color: $body-bg-alt;
 //$radio-logo-play: mix($primary-source, $body-bg-alt, 90%);
 $radio-logo-play: darken($primary-source, 10%);
+$radio-logo-border-b: lighten($black, 3.6%);
 
 $program-text-color: mix($body-bg, $white, 10%);
 $program-song-color: mix($body-bg, $white, 50%);
@@ -76,9 +88,14 @@ $program-inner-fade-3: rgba(28, 35, 39, 1);
 $program-inner-fade-1-hover: rgba(28, 35, 39, 0);
 $program-inner-fade-2-hover: rgba(28, 35, 39, 0.8);
 $program-inner-fade-3-hover: rgba(28, 35, 39, 1);
+$program-current-border-l: mix($program-border-color, $timeline-cursor-color, 85%);
 
 $program-section: lighten($program-bg-color, 7%);
 $program-section-hover: $primary;
+
+$program-container-color: darken($background-color, 35%);
+$program-container-none-bg: lighten($background-color, 3%);
+$schedule-display-color: darken($program-text-color, 25%);
 
 $streams-filter-search-close: $gray-800;
 
@@ -91,6 +108,9 @@ $stream-select-option-text: $body-bg-alt;
 $stream-select-border: $body-bg-alt;
 $stream-select-background-hover: $radio-stream;
 $stream-select-search: $white;
+$stream-select-pointed: darken($stream-select-background-hover, 5%);
+
+$streams-one-border: darken($background-color, 20%);
 
 $badge-color: $gray-500;
 $badge-color-hover: $white;
@@ -105,3 +125,5 @@ $live-song-background-color: #2e3133;;
 $radio-page-more-one-hover-background: $body-bg-alt;
 
 $more-stream-text-color: $body-color;
+
+$footer-a: lighten($timeline-color, 5%);

@@ -18,17 +18,17 @@ $icon-play-size-hover: 1.846rem;
   //width: 505px;
 
   margin-top: 5px;
-  background-color: $player-background;
+  background-color: var(--progradio-player-background);
   border-radius: 4px;
 
-  color: $player-color;
+  color: var(--progradio-player-color);
 
   &:hover {
     @include media-breakpoint-up(sm) {
       .player-radio-link {
         visibility: visible !important;
         opacity: 1;
-        background-color: $player-background;
+        background-color: var(--progradio-player-background);
       }
     }
   }
@@ -215,10 +215,10 @@ $icon-play-size-hover: 1.846rem;
     border-bottom-left-radius: 5px;
 
     a {
-      color: mix($player-color, $player-background, 70%);
+      color: var(--progradio-player-link-color);
 
       &:hover {
-        color: $player-color;
+        color: var(--progradio-player-color);
       }
 
       i {
@@ -238,7 +238,7 @@ $icon-play-size-hover: 1.846rem;
     cursor: pointer;
 
     padding: 5px 20px 6px 5px;
-    background-color: $player-background;
+    background-color: var(--progradio-player-background);
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 
@@ -247,19 +247,19 @@ $icon-play-size-hover: 1.846rem;
     }
 
     i {
-      color: mix($player-color, $player-background, 70%);
+      color: var(--progradio-player-link-color);
       font-size: 1rem;
 
       &:hover {
-        color: $player-color;
+        color: var(--progradio-player-color);
       }
     }
 
     a {
-      color: mix($player-color, $player-background, 70%);
+      color: var(--progradio-player-link-color);
 
       &:hover {
-        color: $player-color;
+        color: var(--progradio-player-color);
       }
 
       i {
@@ -298,7 +298,7 @@ $icon-play-size-hover: 1.846rem;
     }
 
     a {
-      color: mix($player-color, $player-background, 70%);
+      color: var(--progradio-player-link-color);
 
       &:hover {
         color: $player-color;

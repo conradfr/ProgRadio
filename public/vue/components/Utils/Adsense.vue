@@ -22,9 +22,6 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
-import { COOKIE_CONSENT } from '@/config/config';
-import cookies from '../../utils/cookies';
-
 /* eslint-disable no-undef */
 /* eslint-disable camelcase */
 export default defineComponent({

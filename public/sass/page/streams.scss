@@ -1,5 +1,5 @@
 @mixin img_play {
-  background-color: $stream-play-color;
+  background-color: var(--progradio-stream-play-color);
 
   mask-image: url('../../img/play-button-inside-a-circle.svg');
   mask-repeat: no-repeat;
@@ -30,12 +30,12 @@
     cursor: pointer;
 
     &.badge-inverse {
-      color: $badge-color;
-      border: 1px solid $badge-color;
+      color: var(--progradio-badge-color);
+      border: 1px solid var(--progradio-badge-color);
 
       &:hover {
-        color: $badge-color-hover;
-        border: 1px solid $badge-color-hover;
+        color: var(--progradio-badge-color-hover);
+        border: 1px solid var(--progradio-badge-color);
       }
     }
   }
@@ -82,7 +82,7 @@
     text-align: center;
     cursor: pointer;
     opacity: 0.8;
-    color: $streams-filter-search-close;
+    color: var(--progradio-streams-filter-search-close);
 
     &:hover {
       opacity: 1;
@@ -98,8 +98,8 @@
     position: relative;
     width: 150px;
     //border: 1px solid red;
-    background-color: $program-bg-color;
-    border: 1px solid darken($background-color, 20%);
+    background-color: var(--progradio-program-bg-color);
+    border: 1px solid var(--progradio-streams-one-border);
 
     margin-bottom: 10px;
     margin-right: 10px;
@@ -187,7 +187,7 @@
 
       //line-height: 60px;
       line-height: 1.5em;
-      color: $stream-text-color;
+      color: var(--progradio-stream-text-color);
       font-size: 0.923rem;
 
       //cursor: pointer;
@@ -200,11 +200,11 @@
       }
 
       a.streams-one-name-detail {
-        color: $stream-text-color;
+        color: var(--progradio-stream-text-color);
         text-decoration: none;
 
         &:hover {
-          color: $stream-text-color;
+          color: var(--progradio-stream-text-color);
           text-decoration: underline;
         }
       }
@@ -241,12 +241,12 @@
           background-image: none;
 
           &.badge-inverse {
-            color: $stream-badge-color;
-            border: 1px solid $stream-badge-color;
+            color: var(--progradio-stream-badge-color);
+            border: 1px solid var(--progradio-stream-badge-color);
 
             &:hover {
-              color: $stream-badge-color-hover;
-              border: 1px solid $stream-badge-color-hover;
+              color: var(--progradio-stream-badge-color-hover);
+              border: 1px solid var(--progradio-stream-badge-color-hover);
             }
           }
         }
@@ -334,7 +334,7 @@ li.ellipsis {
     position: absolute;
     top: 0;
     left: -25px;
-    color: $body-color;
+    color: var(--bs-body-color);
   }
 }
 }

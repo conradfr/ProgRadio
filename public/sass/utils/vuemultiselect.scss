@@ -9,7 +9,7 @@
   cursor: pointer;
   outline: none;
   //border: var(--ms-border-width, 1px) solid var(--ms-border-color, #D1D5DB);
-  border: 1px solid $stream-select-border;
+  border: 1px solid var(--progradio-stream-select-border);
   border-radius: var(--ms-radius, 4px);
   // background: var(--ms-bg, #FFFFFF);
   //background: $body-color;
@@ -64,7 +64,7 @@
   padding-right: calc(1.25rem + var(--ms-px, 0.875rem) * 3);
   box-sizing: border-box;
   max-width: 100%;
-  color: $stream-select-selected-text;
+  color: var(--progradio-stream-select-selected-text);
 }
 
 .multiselect-placeholder {
@@ -98,7 +98,7 @@
   border-radius: var(--ms-radius, 4px);
   padding-left: var(--ms-px, 0.875rem);
 
-  color: $stream-select-search;
+  color: var(--progradio-stream-select-search);
   box-shadow: none !important;
 
   &::-webkit-search-decoration,
@@ -405,7 +405,7 @@
   align-items: center;
   justify-content: flex-start;
   text-align: left;
-  color: $stream-select-option-text;
+  color: var(--progradio-stream-select-option-text);
 
   &.is-pointed {
     background: var(--ms-option-bg-pointed, #F3F4F6);
@@ -414,7 +414,7 @@
 
   &.is-selected {
     //background: var(--ms-option-bg-selected, #10B981);
-    background-color: $stream-select-background-hover;
+    background-color: var(--progradio-stream-select-background-hover);
     color: var(--ms-option-color-selected, #FFFFFF);
   }
 
@@ -426,7 +426,7 @@
 
   &.is-selected.is-pointed {
     //background: var(--ms-option-bg-selected-pointed, #26c08e);
-    background-color: darken($stream-select-background-hover, 5%);
+    background-color: var(--progradio-stream-select-pointed);
     color: var(--ms-option-color-selected-pointed, #FFFFFF);
   }
 

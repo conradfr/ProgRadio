@@ -47,8 +47,11 @@ $margin-from-radio-list: calc(#{$radio-list-width} + 5px);
 
 $grid-row-height: 64px;
 
-
-// oerloading
+// Overloading
 
 $table-color: $body-color;
 $table-striped-color: $body-color;
+
+// Tooltip
+
+$zindex-tooltip: 1270;

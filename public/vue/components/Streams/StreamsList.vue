@@ -1,20 +1,20 @@
 <template>
-  <div>
-    <div class="streams d-flex justify-content-center" v-if="radios.length">
-      <streams-list-one
-          v-for="entry in radios"
-          :key="entry.code_name"
-          :radio="entry"
-      ></streams-list-one>
+  <div class="streams d-flex justify-content-center" v-if="radios.length">
+    <streams-list-one
+        v-for="entry in radios"
+        :key="entry.code_name"
+        :radio="entry"
+    ></streams-list-one>
+  </div>
+  <div class="row" v-else-if="isLoading === false">
+    <div class="offset-md-3 col-md-6">
+      <div class="alert alert-warning space-up-20 text-center" role="alert">
+        {{ $t('message.streaming.no_results') }}</div>
     </div>
-    <div class="row" v-else-if="isLoading === false">
-      <div class="offset-md-3 col-md-6">
-        <div class="alert alert-warning space-up-20 text-center" role="alert">
-          {{ $t('message.streaming.no_results') }}</div>
-      </div>
-    </div>
-    <streams-list-pagination v-if="radios.length"></streams-list-pagination>
-    <div class="mt-0 mt-sm-2" v-if="!isProgRadio || !userLogged"><adsense mode="horizontal_fix"></adsense></div>
+  </div>
+  <streams-list-pagination v-if="radios.length"></streams-list-pagination>
+  <div class="mt-0 mt-sm-2" v-if="!isProgRadio || !userLogged">
+    <adsense mode="horizontal_fix"></adsense>
   </div>
 </template>
 
@@ -43,6 +43,7 @@ export default defineComponent({
   } {
     return {
       // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
       isProgRadio
     };
   },

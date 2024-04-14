@@ -1,15 +1,15 @@
 footer {
   font-size: 0.8125rem;
-  color: $timeline-color;
+  color: var(--progradio-timeline-color);
 
   padding: 100px 0 5px;
 
   a {
-    color: lighten($timeline-color, 5%);
+    color: var(--progradio-footer-a);
 
     &:hover,
     &:focus {
-      color: $timeline-color;
+      color: var(--progradio-timeline-color);
     }
   }
 

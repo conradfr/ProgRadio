@@ -16,12 +16,11 @@
     padding-top: 1px;
     padding-bottom: 1px;
 
-    color: darken($white, 10%);
+    color: var(--progradio-collection-switcher-next-color);
     font-size: 0.769rem;
     text-align: center;
 
-    //background-color: darken(@collection-background, 3%);
-    background-color: $collection-background;
+    background-color: var(--progradio-collection-background);
 
     transition: top 150ms ease-in-out 25ms;
   }
@@ -40,17 +39,17 @@
     @include width(35px);
 
     text-align: center;
-    color: darken(white, 15%);
+    color: var(--progradio-collection-control-color);
     font-size: 1.385rem;
     cursor: pointer;
 
-    background-color: $collection-background;
+    background-color: var(--progradio-collection-background);
     padding-top: 5px;
     padding-bottom: 3px;
 
     &:hover {
-      color: darken(white, 10%);
-      background-color: darken($collection-background, 3%);
+      color: var(--progradio-collection-control-hover-color);
+      background-color: var(--progradio-collection-control-hover-bg);
     }
 
     &.collection-backward {

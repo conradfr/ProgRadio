@@ -31,7 +31,7 @@
 
       .trend {
         &.trend-up {
-          color: darken($success, 20%);
+          color: $success;
         }
 
         &.trend-down {
@@ -103,7 +103,7 @@
 .admin-play {
   &:hover {
     cursor: pointer;
-    color: $radio-stream-hover;
+    color: var(--progradio-radio-stream-hover);
   }
 }
 

@@ -8,7 +8,7 @@ $program-height: 60px;
         font-weight: bold;
         font-size: 2rem;
         letter-spacing: -2px;
-        color: darken($background-color, 35%);
+        color: var(--progradio-program-container-color);
         cursor: e-resize;
 
         position: absolute;
@@ -43,7 +43,7 @@ $program-height: 60px;
 
         @include width(350px);
 
-        background-color: lighten($background-color, 3%);
+        background-color: var(--progradio-program-container-none-bg);
 
         transition: left 200ms ease-in-out 300ms;
 
@@ -61,16 +61,16 @@ $program-height: 60px;
         box-sizing: border-box;
 
         margin-right: 5px;
-        background-color: $program-bg-color;
+        background-color: var(--progradio-program-bg-color);
         border: none;
-        border-left: 3px solid $program-border-color;
+        border-left: 3px solid var(--progradio-program-border-color);
 
         transition: box-shadow 20ms ease-in-out;
         user-select: none;
 
         &.program-current {
-          background-color: $program-hover-color;
-          border-left: 3px solid mix($program-border-color, $timeline-cursor-color, 85%);
+          background-color: var(--progradio-program-hover-color);
+          border-left: 3px solid var(--progradio-program-current-border-l);
         }
 
         &.program-full {
@@ -106,10 +106,6 @@ $program-height: 60px;
           .program-description-short-inner-text {
             visibility: visible !important;
             opacity: 1 !important;
-
-/*            padding-left: 4px;
-            margin-left: 4px;
-            border-left: 1px solid darken(@background-color, 25%);*/
           }
         }
 
@@ -121,12 +117,12 @@ $program-height: 60px;
 
           .program-description-short-inner {
             &:before {
-              background: linear-gradient(to right, $program-inner-fade-1-hover 90%, $program-inner-fade-2-hover 95%, $program-inner-fade-3-hover 99%) !important;
+              background: linear-gradient(to right, var(--progradio-program-inner-fade-1-hover) 90%, var(--progradio-program-inner-fade-2-hover) 95%, var(--progradio-program-inner-fade-3-hover) 99%) !important;
             }
           }
 
           .schedule-display {
-            background-color: $program-hover-color !important;
+            background-color: var(--progradio-program-hover-color) !important;
           }
         }
 
@@ -137,7 +133,7 @@ $program-height: 60px;
           width: 100%;
 
           padding: 7px 10px 0 10px;
-          border: 1px solid $program-border-color;
+          border: 1px solid var(--progradio-program-border-color);
           border-left: 0;
 
           user-select: none;
@@ -176,7 +172,7 @@ $program-height: 60px;
           .program-title {
             z-index: 1;
             font-weight: bold;
-            color: $program-text-color;
+            color: var(--progradio-program-text-color);
             line-height: 1;
 
             user-select: none;
@@ -194,16 +190,16 @@ $program-height: 60px;
               visibility: hidden;
               opacity: 0;
               transition: opacity 300ms ease-out;
-              background-color: $program-bg-color;
+              background-color: var(--progradio-program-bg-color);
 
-              color: darken($program-text-color, 25%);
+              color: var(--progradio-schedule-display-color);
               font-weight: normal;
               font-size: $font-size-sm;
             }
           }
 
           .program-host {
-            color: $program-text-color;
+            color: var(--progradio-program-text-color);
             font-size: 0.846rem;
 
             user-select: none;
@@ -232,7 +228,7 @@ $program-height: 60px;
                 position: absolute;
                 left: 0;
                 top: 0;
-                background: linear-gradient(to right, $program-inner-fade-1 90%, $program-inner-fade-2 95%, $program-inner-fade-3 99%);
+                background: linear-gradient(to right, var(--progradio-program-inner-fade-1) 90%, var(--progradio-program-inner-fade-2) 95%, var(--progradio-program-inner-fade-3) 99%);
               }
 
               .program-description-short-inner-text {
@@ -240,7 +236,7 @@ $program-height: 60px;
                 opacity: 0;
                 transition: opacity 300ms ease-out;
 
-                color: $program-text-color;
+                color: var(--progradio-program-text-color);
                 font-weight: normal;
 
                 &.program-description-short-inner-text-current {
@@ -252,12 +248,10 @@ $program-height: 60px;
               }
 
               .program-description-short-inner-song {
-                color: $program-song-color;
-                //font-weight: bold;
+                color: var(--progradio-program-song-color);
 
                 padding-right: 4px;
                 margin-right: 7px;
-                //border-right: 1px solid darken(@background-color, 25%);
               }
 
               font-size: 0.846rem;
@@ -276,14 +270,14 @@ $program-height: 60px;
 
             height: 6px;
             width: 6px;
-            background-color: $program-section;
+            background-color: var(--progradio-program-section);
             border-radius: 50%;
             display: inline-block;
 
             cursor: pointer;
 
             &:hover {
-             background-color: $program-section-hover;
+             background-color: var(--progradio-program-section-hover);
             }
           }
         }

@@ -1,10 +1,10 @@
 
 .alert-light {
   background: none !important;
-  background-color: $alert-light-bg !important;
-  color: $alert-light-color;
+  background-color: var(--progradio-alert-light-bg) !important;
+  color: var(--progradio-alert-light-color);
   h5 {
-    color: $alert-light-color;
+    color: var(--progradio-alert-light-bg);
   }
 
   a:not(:hover) {
@@ -25,7 +25,7 @@
 }
 
 .link-no-to-bold {
-  color: $body-color;
+  color: var(--bs-body-color);
   text-decoration: none;
   cursor: pointer;
 

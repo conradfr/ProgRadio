@@ -29,9 +29,11 @@ module.exports = {
     app: [
       './public/vue/app.ts'
     ],
-    light: path.resolve(__dirname, '../public/sass/main_light.scss'),
-    dark: path.resolve(__dirname, '../public/sass/main_dark.scss'),
-    global: path.resolve(__dirname, '../public/sass/main_global.scss')
+    // light: path.resolve(__dirname, '../public/sass/main_light.scss'),
+    // kept only ro regenerate colors in case of Bootstrap or theme update
+    // we do not use the full theme for dark mode, only the generated css variables
+    // dark: path.resolve(__dirname, '../public/sass/main_dark.scss'),
+    theme: path.resolve(__dirname, '../public/sass/main_global.scss')
   },
   output: {
     path: path.resolve(__dirname, '../public/build/js'),

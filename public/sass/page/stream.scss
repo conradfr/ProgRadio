@@ -13,7 +13,7 @@
   }
 
   .stream-page-live {
-    background-color: $live-song-background-color;
+    background-color: var(--progradio-live-song-background-color);
     border-radius: 5px;
   }
 
@@ -30,7 +30,7 @@
       height: 155px;
 
       font-size: 0.769rem;
-      color: $more-stream-text-color;
+      color: var(--progradio-more-stream-text-color);
 
       border: 0;
 

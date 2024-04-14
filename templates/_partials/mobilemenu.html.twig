@@ -181,7 +181,7 @@
                 <div class="d-flex flex-row align-items-center">
                     <div class="align-self-center offmenu-item-icon">
                         <a class="nav-link pb-1" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio">
-                            <img style="max-width: 22px" src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}">
+                            <img style="width: 22px" src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}">
                         </a>
                     </div>
                     <div>
@@ -203,7 +203,7 @@
                             <div class="align-self-center offmenu-item-icon">
                                 {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode %}
                                 <a class="nav-link" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
-                                    <img style="max-width: 22px" class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                                    <img style="width: 22px" class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                                 </a>
                             </div>
                             <div>

@@ -55,7 +55,6 @@ export const COOKIE_PREROLL_EXCLUDED = `${COOKIE_PREFIX}-preroll_excluded`;
 export const COOKIE_COLLECTION = `${COOKIE_PREFIX}-collection`;
 export const COOKIE_VOLUME = `${COOKIE_PREFIX}-volume`;
 export const COOKIE_MUTED = `${COOKIE_PREFIX}-muted`;
-export const COOKIE_CONSENT = 'progradio-consent';
 export const COOKIE_HOME = 'progradio-home';
 export const COOKIE_RADIO_FAVORITES = `${COOKIE_PREFIX}-${COLLECTION_FAVORITES}`;
 export const COOKIE_SUBRADIOS = `${COOKIE_PREFIX}-subradios`;

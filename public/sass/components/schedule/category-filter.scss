@@ -7,7 +7,7 @@
   left: 6px;
   width: 280px;
 
-  background-color: $filter-background;
+  background-color: var(--progradio-filter-background);
 
   .category-one {
     padding: 4px 10px;
@@ -20,7 +20,7 @@
     }
 
     &:hover {
-      background-color: $filter-background-hover;
+      background-color: var(--progradio-filter-background-hover);
     }
 
     span {

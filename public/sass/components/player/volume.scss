@@ -11,9 +11,6 @@ $fader-gray-6: #F9F9F9;
 $fader-line-height: 18px;
 $fader-height: 110px;
 
-$fader-primary-top: $fader-primary;
-$fader-primary-bottom: darken($fader-primary, 5%);
-
 #volume-fader {
   width: 24px;
   height: 114px;
@@ -61,7 +58,7 @@ $fader-primary-bottom: darken($fader-primary, 5%);
       top: 0;
       width: $fader-line-height;
       height: $fader-line-height;
-      background-color: $fader-primary;
+      background-color: var(--progradio-fader-primary);
       @include gradient-y($fader-primary-top, $fader-primary-bottom);
       filter: none;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);

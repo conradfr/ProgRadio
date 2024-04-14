@@ -21,7 +21,7 @@
   min-width: 85px;
 
   &:hover {
-    background-color: $radio-page-more-one-hover-background;
+    background-color: var(--progradio-radio-page-more-one-hover-background);
   }
 
   .radio-page-more-one-logo {
@@ -110,11 +110,11 @@
     img {
       height: 46px;
       width: 46px;
-      filter: $radio-stream-filter;
+      filter: var(--progradio-radio-stream-filter);
     }
 
     div {
-      color: $radio-stream;
+      color: var(--progradio-radio-stream);
 
       &.radio-page-play-text {
         margin-top: 5px;
@@ -132,11 +132,11 @@
       cursor: pointer;
 
       img {
-        filter: $radio-stream-filter-hover;
+        filter: var(--progradio-radio-stream-filter-hover);
       }
 
       div {
-        color: $radio-stream-hover;
+        color: var(--progradio-radio-stream-hover);
       }
     }
   }

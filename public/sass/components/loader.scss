@@ -8,8 +8,8 @@
   opacity: 0.77;
 
   .alert-progradio {
-    background-color: $loader-background;
-    color: $loader-text;
+    background-color: var(--progradio-loader-background);
+    color: var(--progradio-loader-text);
     padding: 0.923rem;
     width: 11.154rem;
 

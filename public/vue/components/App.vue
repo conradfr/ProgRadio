@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <player></player>
-    <toast-container></toast-container>
-    <timer-modal></timer-modal>
-    <router-view></router-view>
-  </div>
+  <player></player>
+  <toast-container></toast-container>
+  <timer-modal></timer-modal>
+  <router-view></router-view>
 </template>
 
 <script lang="ts">

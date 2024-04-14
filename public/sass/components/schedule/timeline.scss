@@ -17,7 +17,7 @@
   font-size: 0;
 
   padding-left: $margin-from-radio-list;
-  background-color: $background-color;
+  // background-color: $background-color;
 
   backface-visibility: hidden;
   transition: left 350ms cubic-bezier(.21,1.12,.67,.99);
@@ -29,7 +29,7 @@
     top: $navbar-height;
 
     box-sizing: border-box;
-    background-color: $timeline-controls-bg-color;
+    background-color: var(--progradio-timeline-controls-bg-color);
 
     opacity: 0.8;
     transition: opacity 70ms ease-out;
@@ -37,7 +37,7 @@
     height: 41px;
     padding-top: 2px;
 
-    color: $timeline-cursor-color;
+    color: var(--progradio-timeline-cursor-color);
     font-size: 1.385rem;
     cursor: pointer;
 
@@ -51,7 +51,7 @@
       max-width: 110px;
 
       box-shadow: -1px 2px 4px -3px rgba(0,0,0,0.4);
-      background-color: $timeline-calendar-bg-color;
+      background-color: var(--progradio-timeline-calendar-bg-color);
 
       font-size: 0.923rem;
       text-align: center;
@@ -96,11 +96,11 @@
 
         &:hover, &.filter-icon-active {
           color: white;
-          background-color: $filter-background;
+          background-color: var(--progradio-filter-background);
         }
 
         &.filter-icon-enabled {
-          color: $filter-background;
+          color: var(--progradio-filter-background);
         }
       }
     }
@@ -132,7 +132,7 @@
     user-select: none;
 
     padding-left: 11px;
-    border-left: 1px solid $timeline-color;
+    border-left: 1px solid var(--progradio-timeline-color);
   }
 }
 
@@ -146,10 +146,10 @@
   width: 2px;
 
   opacity: 0.8;
-  background-color: $timeline-cursor-color;
+  background-color: var(--progradio-timeline-cursor-color);
 
   &.timeline-cursor-today {
-    background-color: $timeline-cursor-color-today;
+    background-color: var(--progradio-timeline-cursor-color-today);
   }
 }
 
@@ -165,7 +165,7 @@
   backface-visibility: hidden;
   transition: left 850ms cubic-bezier(.21,1.12,.67,.99);
 
-  background-color: $timeline-cursor-color;
+  background-color: var(--progradio-timeline-cursor-color);
 
   &:after {
     position: absolute;
@@ -179,14 +179,14 @@
     transform: translate3d(-50%,0,0);
     border: 8px solid transparent;
     opacity: 0.8;
-    border-top-color: $timeline-cursor-color;
+    border-top-color: var(--progradio-timeline-cursor-color);
   }
 
   &.timeline-cursor-head-today {
-    background-color: $timeline-cursor-color-today;
+    background-color: var(--progradio-timeline-cursor-color-today);
 
     &:after {
-      border-top-color: $timeline-cursor-color-today;
+      border-top-color: var(--progradio-timeline-cursor-color-today);
     }
   }
 }
