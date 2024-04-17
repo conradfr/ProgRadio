@@ -54,7 +54,7 @@ defmodule ProgRadioApi.MixProject do
       {:hackney, git: "https://github.com/benoitc/hackney.git", tag: "1.18.1", override: true},
       {:tzdata, "~> 1.1.1"},
       {:cors_plug, "~> 2.0"},
-      {:remote_ip, "~> 1.0.0"},
+      {:remote_ip, "~> 1.1.0"},
       {:dns, "~> 2.2.0"},
       {:quantum, "~> 3.5.0"},
       {:redix, ">= 0.0.0"},

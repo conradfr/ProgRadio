@@ -3,6 +3,7 @@ defmodule ProgRadioApi.ListenersCounter do
   require Logger
 
   alias ProgRadioApi.Repo
+  alias ProgRadioApi.Cache
   alias ProgRadioApi.Streams
   alias ProgRadioApi.{ListeningSession, RadioStream}
 
@@ -13,6 +14,8 @@ defmodule ProgRadioApi.ListenersCounter do
   @refresh_counter 15000
 
   @timestamp_threshold_seconds 32
+
+  @redis_ttl 172800
 
   # state:
   # %{
@@ -33,7 +36,7 @@ defmodule ProgRadioApi.ListenersCounter do
 
     GenServer.cast(
       @name,
-      {:register_listening_session, {stream_code_name, listening_session.id}, is_update}
+      {:register_listening_session, {stream_code_name, listening_session}, is_update}
     )
   end
 
@@ -75,7 +78,7 @@ defmodule ProgRadioApi.ListenersCounter do
 
   @impl true
   def handle_cast(
-        {:register_listening_session, {stream_code_name, listening_session_id}, is_update},
+        {:register_listening_session, {stream_code_name, listening_session}, is_update},
         state
       ) do
     unix_timestamp = System.os_time(:second)
@@ -85,13 +88,29 @@ defmodule ProgRadioApi.ListenersCounter do
         state,
         [
           :sessions,
-          Access.key(stream_code_name, %{listening_session_id => nil}),
-          listening_session_id
+          Access.key(stream_code_name, %{listening_session.id => nil}),
+          listening_session.id
         ],
         unix_timestamp
       )
 
-    unless is_update == true, do: Process.send(self(), {:refresh_counter, stream_code_name}, [])
+    unless is_update == true do
+      Process.send(self(), {:refresh_counter, stream_code_name}, [])
+
+      # We store sessions in redis for popularity sort (consolidated per day)
+      # We restrict to one combo ip/radio per day
+      date_string = Date.utc_today() |> Date.to_iso8601()
+      ip_key = "#{date_string}-#{stream_code_name}-#{listening_session.ip_address}"
+
+      if Cache.has_key?(ip_key) == false or Redix.command!(:redix, ["GET", ip_key]) == nil do
+        Redix.command!(:redix, ["SET", ip_key, "1", "EX", @redis_ttl])
+        Cache.put(ip_key, "1", ttl: (@redis_ttl * 1000))
+
+        Redix.command!(:redix, ["ZINCRBY", "#{date_string}-listens", 1, stream_code_name])
+        Redix.command!(:redix, ["EXPIRE", "#{date_string}-listens", @redis_ttl, "NX"])
+      end
+
+    end
 
     {:noreply, updated_state}
   end

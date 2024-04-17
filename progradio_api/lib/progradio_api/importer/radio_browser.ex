@@ -531,7 +531,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   def consolidate_stats() do
     from(s in Stream,
       left_join: s2 in Stream,
-      on: s2.redirect_to == s.id,
+      on: s2.redirect_to == s.id and not is_nil(s2.import_updated_at),
       where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
       group_by: [s.id],
       select: %{
