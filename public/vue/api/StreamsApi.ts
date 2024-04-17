@@ -4,7 +4,8 @@ import {
   STREAMING_CATEGORY_ALL,
   STREAMING_CATEGORY_FAVORITES,
   STREAMING_CATEGORY_HISTORY,
-  STREAMING_CATEGORY_LAST
+  STREAMING_CATEGORY_LAST,
+  STREAMING_SORT_USER_LAST
 } from '@/config/config';
 
 import type { Stream } from '@/types/stream';
@@ -50,7 +51,8 @@ const getStreams = async (
 
   let baseUrl = '/streams/list';
   if (countryOrUuid !== STREAMING_CATEGORY_FAVORITES
-    && countryOrUuid !== STREAMING_CATEGORY_HISTORY) {
+    && countryOrUuid !== STREAMING_CATEGORY_HISTORY
+    && sort !== STREAMING_SORT_USER_LAST) {
     // @ts-expect-error apiUrl is defined on the global scope
     baseUrl = `https://${apiUrl}/stream`;
   }

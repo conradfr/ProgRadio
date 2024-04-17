@@ -145,7 +145,15 @@ class StreamRepository extends ServiceEntityRepository
             }
         }
 
-        if ($countryOrCategory !== null && strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
+        if ((($countryOrCategory !== null && strtoupper($countryOrCategory) === Stream::HISTORY)
+            || ($sort !== null && strtoupper($sort) === Stream::USER_LISTENED))
+            && $user !== null) {
+            if ($countryOrCategory === null || strtoupper($countryOrCategory) !== Stream::HISTORY) {
+                $qb->innerJoin('s.streamsHistory', 'sh')
+                    ->andWhere('sh.user = :user')
+                    ->setParameter('user', $user);
+            }
+
             $qb->addOrderBy('sh.lastListenedAt', 'DESC');
         }
         else if ($sort !== null) {

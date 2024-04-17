@@ -109,6 +109,7 @@ import Multiselect from '@vueform/multiselect';
 
 /* eslint-disable import/no-cycle */
 import { useStreamsStore } from '@/stores/streamsStore';
+import { useUserStore } from '@/stores/userStore';
 
 import {
   STREAMING_CATEGORY_FAVORITES,
@@ -137,8 +138,27 @@ export default defineComponent({
       code_all: STREAMING_CATEGORY_ALL,
       code_last: STREAMING_CATEGORY_LAST,
       code_favorites: STREAMING_CATEGORY_FAVORITES,
-      code_history: STREAMING_CATEGORY_HISTORY,
-      sortByOptions: [
+      code_history: STREAMING_CATEGORY_HISTORY
+    };
+  },
+  mounted() {
+    if (this.$route.query.s !== undefined && typeof this.$route.query.s === 'string') {
+      this.searchActivate();
+      this.searchTextChange(this.$route.query.s);
+    }
+  },
+  computed: {
+    ...mapState(useUserStore, { userLogged: 'logged' }),
+    ...mapState(useStreamsStore, [
+      'favorites',
+      'countriesOptions',
+      'searchText',
+      'searchActive',
+      'selectedCountry',
+      'selectedSortBy'
+    ]),
+    sortByOptions(): Array<any> {
+      const options = [
         {
           value: 'name',
           label: (this.$i18n as any).t('message.streaming.sort.name')
@@ -150,29 +170,23 @@ export default defineComponent({
         {
           value: 'last',
           label: (this.$i18n as any).t('message.streaming.sort.last')
-        },
-        {
-          value: 'random',
-          label: (this.$i18n as any).t('message.streaming.sort.random')
         }
-      ]
-    };
-  },
-  mounted() {
-    if (this.$route.query.s !== undefined && typeof this.$route.query.s === 'string') {
-      this.searchActivate();
-      this.searchTextChange(this.$route.query.s);
-    }
-  },
-  computed: {
-    ...mapState(useStreamsStore, [
-      'favorites',
-      'countriesOptions',
-      'searchText',
-      'searchActive',
-      'selectedCountry',
-      'selectedSortBy'
-    ]),
+      ];
+
+      if (this.userLogged) {
+        options.push({
+          value: 'user_last',
+          label: (this.$i18n as any).t('message.streaming.sort.user_last')
+        });
+      }
+
+      options.push({
+        value: 'random',
+        label: (this.$i18n as any).t('message.streaming.sort.random')
+      });
+
+      return options;
+    },
     selectedCountryInput(): string {
       return this.selectedCountry;
     },

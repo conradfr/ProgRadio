@@ -160,7 +160,8 @@ export const messages = {
           name: 'Par ordre alphabétique',
           popularity: 'Par popularité',
           random: 'Par ordre aléatoire',
-          last: 'Par dernière écoute'
+          last: 'Par dernière écoute (monde)',
+          user_last: 'Par dernière écoute (moi)'
         },
         suggest: 'Suggérer une modification',
         title: 'Les radios du monde entier en streaming',
@@ -298,7 +299,8 @@ export const messages = {
           name: 'By alphabetical order',
           popularity: 'By popularity',
           random: 'By random order',
-          last: 'By last played'
+          last: 'By last played (world)',
+          user_last: 'By last played (me)'
         },
         suggest: 'Suggest a modification',
         title: 'Stream radios from all over the world!',
@@ -436,7 +438,8 @@ export const messages = {
           name: 'Por orden alfabético',
           popularity: 'Por popularidad',
           random: 'Orden aleatorio',
-          last: 'Por la escucha reciente'
+          last: 'Por última vez jugado (mundo)',
+          user_last: 'Por última vez jugado (yo)'
         },
         suggest: 'Sugerir una modificación',
         title: 'Emisoras de radio de todo el mundo en streaming',
@@ -574,7 +577,8 @@ export const messages = {
           name: 'In alphabetischer Reihenfolge',
           popularity: 'Nach Beliebtheit',
           random: 'In zufälliger Reihenfolge',
-          last: 'Von zuletzt gespielt'
+          last: 'Von zuletzt gespielt (Welt)',
+          user_last: 'Zuletzt gespielt (ich)'
         },
         suggest: 'Schlagen Sie eine Änderung vor',
         title: 'Streame Radios aus der ganzen Welt!',
@@ -712,7 +716,8 @@ export const messages = {
           name: 'Por ordem alfabética',
           popularity: 'Por popularidade',
           random: 'Por ordem aleatória',
-          last: 'Por último jogado'
+          last: 'Por último jogado (mundo)',
+          user_last: 'Por último jogado (eu)'
         },
         suggest: 'Sugira uma modificação',
         title: 'Transmita rádios de todo o mundo!',
@@ -850,7 +855,8 @@ export const messages = {
           name: 'In ordine alfabetico',
           popularity: 'Per popolarità',
           random: 'Per ordine casuale',
-          last: 'Per ultimo giocato'
+          last: 'Per ultima giocata (mondo)',
+          user_last: 'Per ultimo giocato (io)'
         },
         suggest: 'Suggerisci una modifica',
         title: 'Stream radios from all over the world!',
@@ -988,7 +994,8 @@ export const messages = {
           name: 'Według kolejności alfabetycznej',
           popularity: 'Według popularności',
           random: 'W kolejności losowej',
-          last: 'Ostatnio odtwarzany'
+          last: 'Ostatnio odtwarzane przez (świat)',
+          user_last: 'Ostatnio odtwarzane przez (mi)'
         },
         suggest: 'Zaproponuj modyfikację',
         title: 'Przesyłaj strumieniowo radia z całego świata!',
@@ -1126,7 +1133,8 @@ export const messages = {
           name: 'Κατά αλφαβητική σειρά',
           popularity: 'Με δημοτικότητα',
           random: 'Με τυχαία διατάξη',
-          last: 'Από το τελευταίο παιξίστη'
+          last: 'Ανά τελευταία αναπαραγωγή (κόσμος)',
+          user_last: 'Με τελευταία αναπαραγωγή (εγώ)'
         },
         suggest: 'Προτείνετε μια τροποποίηση',
         title: 'Μεταδώστε ραδιόφωνα από όλο τον κόσμο!',
@@ -1264,7 +1272,8 @@ export const messages = {
           name: 'بالترتيب الأبجدي',
           popularity: 'حسب الشعبية',
           random: 'بترتيب عشوائي',
-          last: 'من خلال الاستماع الأخير'
+          last: 'حسب آخر مباراة (العالم)',
+          user_last: 'حسب آخر مباراة (أنا)'
         },
         suggest: 'قترح تعديلً',
         title: 'بث محطات الراديو من جميع أنحاء العالم',
@@ -1402,7 +1411,8 @@ export const messages = {
           name: 'În ordine alfabetică',
           popularity: 'După popularitate',
           random: 'În ordine aleatorie',
-          last: 'După ultima ascultă'
+          last: 'După ultima dată jucat (lume)',
+          user_last: 'De ultima dată jucat (eu)'
         },
         suggest: 'Sugerați o schimbare',
         title: 'Posturi de radio din întreaga lume difuzează în flux',

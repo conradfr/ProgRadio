@@ -98,6 +98,7 @@ export const STREAMING_CATEGORY_FAVORITES = 'FAVORITES';
 export const STREAMING_CATEGORY_HISTORY = 'HISTORY';
 export const STREAMING_CATEGORY_LAST = 'LAST';
 
+export const STREAMING_SORT_USER_LAST = 'user_last';
 export const STREAMING_DEFAULT_SORT = 'popularity';
 
 export const PLAYER_MAX_SECONDS_TO_STOP = 3;

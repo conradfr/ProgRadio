@@ -24,6 +24,7 @@ class Stream
 {
     final public const FAVORITES = 'FAVORITES';
     final public const HISTORY = 'HISTORY';
+    final public const USER_LISTENED = 'USER_LAST';
 
     final public const SOURCE_RADIOBROWSER = 'radio-browser';
     final public const SOURCE_PROGRADIO = 'progradio';
