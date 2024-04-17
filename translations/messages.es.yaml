@@ -79,6 +79,10 @@ page:
         name: 'Apellido *'
         send: 'Enviar a'
         sent: 'Su mensaje ha sido enviado correctamente'
+        add_radio_1: 'Quiero añadir mi radio (web)'
+        add_radio_2: 'Tienes dos opciones:'
+        add_radio_3: '1/ Crea una cuenta y envía tu radio a tu página de usuario.'
+        add_radio_4: '2/ Usa la API de Radio-Browser. <a target="_blank" href="https://www.radio-browser.info/#/add">Para enviar su radio, haga clic aquí.</a>'
 
     faq:
         title: 'Preguntas más frecuentes'

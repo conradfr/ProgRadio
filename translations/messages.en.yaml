@@ -80,6 +80,10 @@ page:
         name: 'Name *'
         send: 'Send'
         sent: 'Your message has been sent.'
+        add_radio_1: 'I want to add my (web)radio'
+        add_radio_2: 'You have two choices:'
+        add_radio_3: '1/ Create a account and submit your radio in your user page.'
+        add_radio_4: '2/ Use the Radio-Browser API. To submit your radio, <a target="_blank" href="https://www.radio-browser.info/#/add">click here</a>.'
 
     faq:
         page_title: 'FAQ - Radio shows in France'

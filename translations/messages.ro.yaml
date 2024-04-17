@@ -78,6 +78,10 @@ page:
         name: 'Nume*'
         send: 'Trimite'
         sent: 'Mesajul dvs. a fost trimis cu succes.'
+        add_radio_1: 'Vreau să adaug radioul meu (web)'
+        add_radio_2: 'Ai două opțiuni:'
+        add_radio_3: '1/ Creează un cont și trimite radioul în pagina ta de utilizator.'
+        add_radio_4: '2/ Utilizați API-ul Radio-Browser. Pentru a trimite radioul, <a target="_blank" href="https://www.radio-browser.info/#/add">faceți clic aici</a>.'
 
     faq:
         title: 'Întrebări frecvente'

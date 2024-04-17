@@ -79,6 +79,10 @@ page:
         name: 'Name *'
         send: 'Senden'
         sent: 'Ihre Nachricht wurde gesendet.'
+        add_radio_1: 'Ich möchte mein (Web-) Radio hinzufügen'
+        add_radio_2: 'Du hast zwei Möglichkeiten:'
+        add_radio_3: '1/ Erstelle ein Konto und reiche dein Radio auf deiner Benutzerseite ein.'
+        add_radio_4: '2/ Benutze die Radio-Browser-API. <a target="_blank" href="https://www.radio-browser.info/#/add">Um dein Radio einzureichen, klicke hier.</a>'
 
     faq:
         page_title: 'FAQ - Radiosendungen in Frankreich'

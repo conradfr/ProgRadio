@@ -8,6 +8,13 @@
         <div class="col-md-6 col-12">
             <h3 class="mb-4">{{ 'page.contact.title'|trans }}</h3>
 
+            <div class="alert alert-light mb-5" role="alert">
+                <p>{{ 'page.contact.add_radio_1'|trans }}</p>
+                <p>{{ 'page.contact.add_radio_2'|trans }}</p>
+                <p>{{ 'page.contact.add_radio_3'|trans }}<br>
+                {{ 'page.contact.add_radio_4'|trans|raw }}</p>
+            </div>
+
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>

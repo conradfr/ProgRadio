@@ -79,6 +79,10 @@ page:
         name: 'Nom *'
         send: 'Envoyer'
         sent: 'Votre message a bien été envoyé.'
+        add_radio_1: Je souhaite ajouter ma (web)radio, comment faire ?
+        add_radio_2: 'Vous avez deux choix:'
+        add_radio_3: 1/ Créez un compte et ajoutez votre radio dans votre espace utilisateur.
+        add_radio_4: 2/ Utiliser l'API Radio-Browser. Pour y soumettre votre radio, <a target="_blank" href="https://www.radio-browser.info/#/add">cliquez ici</a>.
 
     faq:
         title: 'Foire aux questions'
