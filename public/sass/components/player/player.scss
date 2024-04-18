@@ -36,7 +36,7 @@ $icon-play-size-hover: 1.846rem;
   /* on mobile, put player at the bottom */
   @include media-breakpoint-down(sm) {
     top: auto;
-    bottom: 10px;
+    bottom: 13px;
     width: 322px;
     height: 47px;
     //left: ~"calc(50% - @{radio-list-width})";
