@@ -112,6 +112,7 @@ import { useStreamsStore } from '@/stores/streamsStore';
 import { useUserStore } from '@/stores/userStore';
 
 import {
+  STREAMING_SEARCH_DELAY_BEFORE_SEND,
   STREAMING_CATEGORY_FAVORITES,
   STREAMING_CATEGORY_ALL,
   STREAMING_CATEGORY_HISTORY,
@@ -132,9 +133,18 @@ export default defineComponent({
   components: {
     Multiselect,
   },
-  data() {
+  /* eslint-disable indent */
+  data(): {
+    refs: any,
+    searchTimeout: number|null,
+    code_all: string,
+    code_last: string,
+    code_favorites: string,
+    code_history: string
+  } {
     return {
       refs: {},
+      searchTimeout: null,
       code_all: STREAMING_CATEGORY_ALL,
       code_last: STREAMING_CATEGORY_LAST,
       code_favorites: STREAMING_CATEGORY_FAVORITES,
@@ -203,6 +213,7 @@ export default defineComponent({
     ...mapActions(useStreamsStore, [
       'setSearchActive',
       'setSearchText',
+      'sendSearchText',
       'getStreamRadios',
       'sortBySelection',
       'playRandom'
@@ -236,6 +247,17 @@ export default defineComponent({
         ? event : (event.target as HTMLTextAreaElement).value;
 
       if (this.setSearchText(value)) {
+        if (this.searchTimeout) {
+          clearTimeout(this.searchTimeout);
+        }
+
+        this.searchTimeout = setTimeout(
+            () => {
+              this.sendSearchText(value.trim());
+            },
+            STREAMING_SEARCH_DELAY_BEFORE_SEND
+        );
+
         nextTick(() => {
           this.getStreamRadios();
         });

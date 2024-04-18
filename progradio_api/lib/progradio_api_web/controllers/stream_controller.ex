@@ -51,4 +51,9 @@ defmodule ProgRadioApiWeb.StreamController do
 
     render(conn, "playing_error.json", %{})
   end
+
+  def search_term(conn, %{"term" => term} = _params) when is_binary(term) do
+    Streams.add_search_term(term)
+    render(conn, "search.json", %{})
+  end
 end

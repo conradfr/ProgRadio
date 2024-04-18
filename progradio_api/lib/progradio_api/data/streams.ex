@@ -20,6 +20,9 @@ defmodule ProgRadioApi.Streams do
   @check_timeout 60_000
   @check_task_timeout 90_000
 
+  @redis_ttl 172800
+  @text_key "searches"
+
   # 1h
   @cache_ttl_stream 3_600_000
   # 15s
@@ -368,10 +371,36 @@ defmodule ProgRadioApi.Streams do
 
   # ---------- STATS ----------
 
+  def switch_search_terms_day() do
+    date_string = Date.utc_today() |> Date.add(-1) |> Date.to_iso8601()
+    redis_key = "#{date_string}-#{@text_key}"
+
+    if Redix.command!(:redix, ["EXISTS", redis_key]) == 1 do
+      Redix.command!(:redix, ["COPY", redis_key, @text_key, "REPLACE"])
+    end
+  end
+
+  def add_search_term(term) when is_binary(term) do
+    date_string = Date.utc_today() |> Date.to_iso8601()
+    redis_key = "#{date_string}-#{@text_key}"
+
+    cleaned_term =
+      term
+      |> String.downcase()
+      |> String.trim()
+
+    # we store term for a day and use it next day, while still incrementing both for some dynamic
+
+    Redix.command!(:redix, ["ZINCRBY", @text_key, 1, cleaned_term])
+
+    Redix.command!(:redix, ["ZINCRBY", redis_key, 1, cleaned_term])
+    Redix.command!(:redix, ["EXPIRE", redis_key, @redis_ttl, "NX"])
+  end
+
   def update_stats_from_previous_day() do
     date_string = Date.utc_today() |> Date.add(-1) |> Date.to_iso8601()
     redis_key = "#{date_string}-listens"
-    has_data = Redix.command!(:redix, ["EXISTS", redis_key]) != nil
+    has_data = Redix.command!(:redix, ["EXISTS", redis_key]) == 1
 
     Repo.transaction(fn ->
     Ecto.Adapters.SQL.query!(

@@ -40,6 +40,10 @@ config :progradio_api, ProgRadioApi.Scheduler,
       schedule: "40 01 */1 * *",
       task: {ProgRadioApi.Checker.Streams, :import, []}
     ],
+    search_term_switch: [
+      schedule: "12 0 */1 * *",
+      task: {ProgRadioApi.Checker.Streams, :switch_search_terms_day, []}
+    ],
     import_overload: [
       schedule: "15,45 * * * *",
       task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :overload_recently_updated, []}

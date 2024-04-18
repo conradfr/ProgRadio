@@ -10,4 +10,8 @@ defmodule ProgRadioApiWeb.StreamJSON do
   def playing_error(_params) do
     %{status: :ok}
   end
+
+  def search(_params) do
+    %{status: :ok}
+  end
 end

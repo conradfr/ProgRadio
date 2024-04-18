@@ -314,6 +314,13 @@ export const useStreamsStore = defineStore('streams', {
 
       this.pageSet(1);
       return true;
+    },
+    sendSearchText(text: string|null): void {
+      if (!text || text === '') {
+        return;
+      }
+
+      StreamsApi.sendSearchTerm(text);
     }
   }
 });

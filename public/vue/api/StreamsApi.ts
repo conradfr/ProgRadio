@@ -184,6 +184,11 @@ const updateLastListened = (stream: Stream): void => {
     });
 };
 
+const sendSearchTerm = (term: string): void => {
+  // @ts-expect-error apiUrl is defined on the global scope
+  axios.post(`https://${apiUrl}/search_term`, { term });
+};
+
 const toggleFavoriteStream = (streamCodeName: string): Promise<any>|null => {
   return axios.get(`/streams/favorite/${streamCodeName}`)
     .catch((error) => {
@@ -216,5 +221,6 @@ export default {
   incrementPlayCount,
   toggleFavoriteStream,
   getCountryFromLatLong,
-  updateLastListened
+  updateLastListened,
+  sendSearchTerm
 };
