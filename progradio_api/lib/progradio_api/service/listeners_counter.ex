@@ -102,6 +102,7 @@ defmodule ProgRadioApi.ListenersCounter do
       date_string = Date.utc_today() |> Date.to_iso8601()
       ip_key = "#{date_string}-#{stream_code_name}-#{listening_session.ip_address}"
 
+      # TODO use set instead ?
       if Cache.has_key?(ip_key) == false or Redix.command!(:redix, ["GET", ip_key]) == nil do
         Redix.command!(:redix, ["SET", ip_key, "1", "EX", @redis_ttl])
         Cache.put(ip_key, "1", ttl: (@redis_ttl * 1000))

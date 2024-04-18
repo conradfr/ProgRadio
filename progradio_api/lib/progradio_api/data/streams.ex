@@ -3,6 +3,8 @@ defmodule ProgRadioApi.Streams do
   The Streams context.
   """
 
+  # TODO : refactor to different files as this is getting big
+
   require Logger
   import Ecto.Query
   use Nebulex.Caching
@@ -13,9 +15,6 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamCheck, StreamSong}
 
   @default_limit 48
-
-  @text_key "searches"
-  @text_min_length 3
 
   @check_batch_size 20
   @check_timeout 60_000
@@ -133,6 +132,8 @@ defmodule ProgRadioApi.Streams do
     end)
   end
 
+  # ---------- ERROR ----------
+
   def register_streaming_error(stream_id, reason \\ nil) when is_binary(stream_id) do
     with %Stream{} = stream <- Repo.get(Stream, stream_id),
          true <- stream.enabled do
@@ -168,6 +169,8 @@ defmodule ProgRadioApi.Streams do
 
   def reset_streaming_error(_stream_id), do: {:ok, nil}
 
+  # ---------- UTILS ----------
+
   def get_recently_overload_updated_ids() do
     date_time =
       DateTime.utc_now()
@@ -195,6 +198,8 @@ defmodule ProgRadioApi.Streams do
 
     Repo.all(query)
   end
+
+  # ---------- INTERNAL ----------
 
   defp build_query(params) do
     base_query()
@@ -284,7 +289,7 @@ defmodule ProgRadioApi.Streams do
 
       "popularity" ->
         query
-        |> order_by([s], desc: s.score)
+        |> order_by([s], [desc: s.score, desc: s.clicks_last_24h])
 
       "last" ->
         query
@@ -359,6 +364,61 @@ defmodule ProgRadioApi.Streams do
 
   defp add_text(query, _) do
     query
+  end
+
+  # ---------- STATS ----------
+
+  def update_stats_from_previous_day() do
+    date_string = Date.utc_today() |> Date.add(-1) |> Date.to_iso8601()
+    redis_key = "#{date_string}-listens"
+    has_data = Redix.command!(:redix, ["EXISTS", redis_key]) != nil
+
+    Repo.transaction(fn ->
+    Ecto.Adapters.SQL.query!(
+      Repo,
+      "UPDATE stream SET score = 0 where score > 0",
+      []
+    )
+
+      from(s in Stream,
+        left_join: rs in RadioStream,
+        on: rs.id == s.radio_stream_id,
+        left_join: r in Radio,
+        on: r.id == rs.radio_id,
+        where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
+        select: %{
+          id: s.id,
+          code_name: fragment("COALESCE(?,  ?::text)", rs.code_name, s.id),
+          clicks_last_24h: fragment("COALESCE(?,  0)", s.clicks_last_24h)
+        }
+      )
+      |> Repo.all()
+      |> Enum.each(fn e ->
+        count =
+          unless has_data == false do
+            Redix.command!(:redix, ["ZMSCORE", redis_key, e.code_name])
+            |> hd()
+          else
+            nil
+          end
+
+        score =
+          cond do
+            is_nil(count) == false ->
+              String.to_integer(count)
+            true ->
+              0
+          end
+
+        Ecto.Adapters.SQL.query!(
+          Repo,
+          "UPDATE stream SET score = $1 where id = $2",
+          [score, Ecto.UUID.dump!(e.id)]
+        )
+      end)
+    end, timeout: :infinity)
+
+    :ok
   end
 
   # ---------- CHECK ----------

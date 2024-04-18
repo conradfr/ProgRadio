@@ -32,7 +32,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     reattach_image_of_stream_with_no_image()
     find_redirect_for_disabled_streams()
     StreamMatcher.match()
-    consolidate_stats()
+#    consolidate_stats()
     :ok
   end
 
@@ -548,5 +548,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         [e.clicks_last_24h + Decimal.to_integer(e.clicks), Ecto.UUID.dump!(e.id)]
       )
     end)
+    :ok
   end
 end
