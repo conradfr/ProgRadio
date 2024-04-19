@@ -54,6 +54,7 @@ RUN mkdir -p /var/progradio_api
 # RUN mkdir -p /var/www
 
 COPY  ./progradio_api/mix.* /var/progradio_api/
+COPY  ./progradio_api/config /var/progradio_api/config/
 
 WORKDIR /var/progradio_api/
 
@@ -61,8 +62,6 @@ WORKDIR /var/progradio_api/
 RUN mix local.hex --force
 RUN mix local.rebar --force
 RUN mix deps.get --only prod
-
-COPY  ./progradio_api/config /var/progradio_api/config/
 
 RUN mix deps.compile --skip-local-deps
 

@@ -20,7 +20,7 @@ defmodule ProgRadioApi.Streams do
   @check_timeout 60_000
   @check_task_timeout 90_000
 
-  @redis_ttl 172800
+  @redis_ttl 172_800
   @text_key "searches"
 
   # 1h
@@ -29,6 +29,8 @@ defmodule ProgRadioApi.Streams do
   @cache_ttl_stream_last 15_000
   # 1d
   @cache_ttl_countries 86_400_000
+  # 90s
+  @cache_ttl_stream_error 90_000
 
   @cache_prefix_stream "stream_"
   @cache_prefix_stream_count "stream_count_"
@@ -161,8 +163,22 @@ defmodule ProgRadioApi.Streams do
   end
 
   def reset_streaming_error(stream_id) when is_binary(stream_id) do
-    with %Stream{} = stream <- Repo.get(Stream, stream_id) do
-      stream
+    stream_data =
+      if value = Cache.get(@cache_prefix_stream <> "error_" <> stream_id) do
+        value
+      else
+        stream_db = Repo.get(Stream, stream_id)
+
+        Cache.put(@cache_prefix_stream <> "error_" <> stream_id, stream_db,
+          ttl: @cache_ttl_stream_error
+        )
+
+        stream_db
+      end
+
+    with %Stream{} = stream <- stream_data,
+         true <- stream.playing_error > 0 do
+      stream_data
       |> Stream.changeset_playing_error(%{"playing_error" => 0, "playing_error_reason" => nil})
       |> Repo.update()
     else
@@ -292,7 +308,7 @@ defmodule ProgRadioApi.Streams do
 
       "popularity" ->
         query
-        |> order_by([s], [desc: s.score, desc: s.clicks_last_24h])
+        |> order_by([s], desc: s.score, desc: s.clicks_last_24h)
 
       "last" ->
         query
@@ -397,55 +413,68 @@ defmodule ProgRadioApi.Streams do
     Redix.command!(:redix, ["EXPIRE", redis_key, @redis_ttl, "NX"])
   end
 
-  def update_stats_from_previous_day() do
-    date_string = Date.utc_today() |> Date.add(-1) |> Date.to_iso8601()
-    redis_key = "#{date_string}-listens"
-    has_data = Redix.command!(:redix, ["EXISTS", redis_key]) == 1
+  # Update score of streams by averaging listens from the past three days
+  def update_stats() do
+    days =
+      1..3
+      |> Enum.map(fn x ->
+        date_string = Date.utc_today() |> Date.add(-1 * x) |> Date.to_iso8601()
+        redis_key = "#{date_string}-listens"
 
-    Repo.transaction(fn ->
-    Ecto.Adapters.SQL.query!(
-      Repo,
-      "UPDATE stream SET score = 0 where score > 0",
-      []
-    )
-
-      from(s in Stream,
-        left_join: rs in RadioStream,
-        on: rs.id == s.radio_stream_id,
-        left_join: r in Radio,
-        on: r.id == rs.radio_id,
-        where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
-        select: %{
-          id: s.id,
-          code_name: fragment("COALESCE(?,  ?::text)", rs.code_name, s.id),
-          clicks_last_24h: fragment("COALESCE(?,  0)", s.clicks_last_24h)
+        %{
+          redis_key: redis_key,
+          has_data: Redix.command!(:redix, ["EXISTS", redis_key]) == 1
         }
-      )
-      |> Repo.all()
-      |> Enum.each(fn e ->
-        count =
-          unless has_data == false do
-            Redix.command!(:redix, ["ZMSCORE", redis_key, e.code_name])
-            |> hd()
-          else
-            nil
-          end
+      end)
 
-        score =
-          cond do
-            is_nil(count) == false ->
-              String.to_integer(count)
-            true ->
-              0
-          end
-
+    Repo.transaction(
+      fn ->
         Ecto.Adapters.SQL.query!(
           Repo,
-          "UPDATE stream SET score = $1 where id = $2",
-          [score, Ecto.UUID.dump!(e.id)]
+          "UPDATE stream SET score = 0 where score > 0",
+          []
         )
-      end)
-    end, timeout: :infinity)
+
+        from(s in Stream,
+          left_join: rs in RadioStream,
+          on: rs.id == s.radio_stream_id,
+          left_join: r in Radio,
+          on: r.id == rs.radio_id,
+          where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
+          select: %{
+            id: s.id,
+            code_name: fragment("COALESCE(?,  ?::text)", rs.code_name, s.id)
+#            clicks_last_24h: fragment("COALESCE(?,  0)", s.clicks_last_24h)
+          }
+        )
+        |> Repo.all()
+        |> Enum.each(fn e ->
+          score =
+            days
+            |> Enum.map(fn x ->
+              unless x.has_data == false do
+                count =
+                  Redix.command!(:redix, ["ZMSCORE", x.redis_key, e.code_name])
+                  |> hd()
+
+                unless count == nil, do: String.to_integer(count), else: 0
+              else
+                0
+              end
+            end)
+            |> Enum.sum()
+            |> Kernel./(3)
+            |> round()
+
+          Ecto.Adapters.SQL.query!(
+            Repo,
+            "UPDATE stream SET score = $1 where id = $2",
+            [score, Ecto.UUID.dump!(e.id)]
+          )
+        end)
+      end,
+      timeout: :infinity
+    )
 
     :ok
   end

@@ -57,6 +57,9 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
         ListenersCounter.register_listening_session(updated_listening_session, true)
       end
 
+      if Map.has_key?(listening_session_params, "stream_id"),
+        do: Streams.reset_streaming_error(listening_session_params["stream_id"])
+
       conn
       |> put_status(:ok)
       |> render("one.json", %{

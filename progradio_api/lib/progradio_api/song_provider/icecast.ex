@@ -53,8 +53,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
         song =
           data
           |> Map.get("StreamTitle", "")
-          |> then(fn raw ->
-            case raw do
+          |> then(fn
               text when is_binary(text) ->
                 Enum.join(for <<c::utf8 <- text>>, do: <<c::utf8>>)
 
@@ -63,13 +62,13 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
               text ->
                 text
-            end
-          end)
+            end)
+          |> String.trim()
 
         Logger.debug("Data provider - #{name}: data - #{song}")
 
         # we discard empty or suspicious/incomplete entries
-        unless song === "" or String.trim(song) === "-" or String.contains?(song, " - ") === false do
+        unless is_binary(song) == false or song === "" or song === "-" or String.contains?(song, " - ") === false do
           %{
             artist: song,
             title: nil

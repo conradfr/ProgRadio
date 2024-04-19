@@ -4,12 +4,16 @@ defmodule ProgRadioApi.ListeningSessions do
   """
 
   import Ecto.Query, warn: false
+#  use Nebulex.Caching
+
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.Stream
-  alias ProgRadioApi.RadioStream
-  alias ProgRadioApi.ListeningSession
+#  alias ProgRadioApi.Cache
+  alias ProgRadioApi.{Stream, RadioStream, ListeningSession}
 
   @last_update_max_minutes 15
+
+#  @cache_prefix "listening_session_"
+#  @cache_ttl 90_000
 
   #  @doc """
   #  Returns the list of listening_session.
@@ -24,22 +28,18 @@ defmodule ProgRadioApi.ListeningSessions do
   #    Repo.all(ListeningSession)
   #  end
 
-  #  @doc """
-  #  Gets a single listening_session.
-  #
-  #  Raises `Ecto.NoResultsError` if the Listening session does not exist.
-  #
-  #  ## Examples
-  #
-  #      iex> get_listening_session!(123)
-  #      %ListeningSession{}
-  #
-  #      iex> get_listening_session!(456)
-  #      ** (Ecto.NoResultsError)
-  #
-  #  """
+#  @decorate cacheable(
+#              cache: Cache,
+#              key: [@cache_prefix, id],
+#              opts: [ttl: @cache_ttl]
+#            )
   def get_listening_session!(id), do: Repo.get!(ListeningSession, id)
 
+#  @decorate cacheable(
+#              cache: Cache,
+#              key: [@cache_prefix, radio_stream_code_name],
+#              opts: [ttl: @cache_ttl]
+#            )
   def get_listening_session!(id, %{"radio_stream_code_name" => radio_stream_code_name} = _attrs) do
     radio_stream = Repo.get_by(RadioStream, code_name: radio_stream_code_name)
 
@@ -49,6 +49,11 @@ defmodule ProgRadioApi.ListeningSessions do
     end
   end
 
+#  @decorate cacheable(
+#              cache: Cache,
+#              key: [@cache_prefix, stream_id],
+#              opts: [ttl: @cache_ttl]
+#            )
   def get_listening_session!(id, %{"stream_id" => stream_id} = _attrs) do
     with stream when not is_nil(stream) <- Repo.get(Stream, stream_id) do
       Repo.get_by(ListeningSession, id: id, stream_id: stream.id)
@@ -57,6 +62,11 @@ defmodule ProgRadioApi.ListeningSessions do
     end
   end
 
+#  @decorate cacheable(
+#              cache: Cache,
+#              key: [@cache_prefix, code_name],
+#              opts: [ttl: @cache_ttl]
+#            )
   def get_listening_session!(id, %{"code_name" => code_name} = _attrs) do
     case Ecto.UUID.cast(code_name) do
       # not uuid, must be a radio_stream

@@ -38,7 +38,7 @@ config :progradio_api, ProgRadioApi.Scheduler,
     ],
     stats: [
       schedule: "40 01 */1 * *",
-      task: {ProgRadioApi.Checker.Streams, :import, []}
+      task: {ProgRadioApi.Checker.Streams, :update_stats, []}
     ],
     search_term_switch: [
       schedule: "12 0 */1 * *",
@@ -115,11 +115,11 @@ config :progradio_api, ProgRadioApi.Cache,
   # GC interval for pushing new generation: 12 hrs
   gc_interval: :timer.hours(1),
   # Max 1 million entries in cache
-  max_size: 1_00_000,
+  max_size: 1_000_000,
   # Max 2 GB of memory
-  allocated_memory: 2_000_000_000,
+  allocated_memory: 4_000_000_000,
   # GC min timeout: 10 sec
-  gc_cleanup_min_timeout: :timer.seconds(10),
+  gc_cleanup_min_timeout: :timer.seconds(30),
   # GC min timeout: 10 min
   gc_cleanup_max_timeout: :timer.minutes(10)
 

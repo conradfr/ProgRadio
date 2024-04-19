@@ -1,9 +1,16 @@
 defmodule ProgRadioApiWeb.SongChannel do
   import Ecto.Query, only: [from: 2]
   use Phoenix.Channel
+  use Nebulex.Caching
+
   alias ProgRadioApiWeb.Presence
   alias ProgRadioApi.Repo
+  alias ProgRadioApi.Cache
   alias ProgRadioApi.{RadioStream, StreamSong, Stream, Radio, Collection}
+
+  @cache_prefix_radio_stream "channel_radio_stream_"
+  @cache_prefix_stream_song "channel_stream_song_"
+  @cache_ttl 3_600_000
 
   def join("song:" <> radio_stream_code_name, _params, socket) do
     # check radio first, if null, check stream
@@ -73,6 +80,11 @@ defmodule ProgRadioApiWeb.SongChannel do
   # ----- Internal -----
 
   @spec get_radio_stream(String.t()) :: any()
+  @decorate cacheable(
+              cache: Cache,
+              key: "#{@cache_prefix_radio_stream}#{code_name}",
+              opts: [ttl: @cache_ttl]
+            )
   defp get_radio_stream(code_name) do
     query =
       from(rs in RadioStream,
@@ -95,6 +107,11 @@ defmodule ProgRadioApiWeb.SongChannel do
   end
 
   @spec get_stream_song(String.t()) :: any()
+  @decorate cacheable(
+              cache: Cache,
+              key: "#{@cache_prefix_stream_song}#{code_name}",
+              opts: [ttl: @cache_ttl]
+            )
   defp get_stream_song(code_name) do
     query =
       from(s in Stream,
