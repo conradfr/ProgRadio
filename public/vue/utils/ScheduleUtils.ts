@@ -1,3 +1,5 @@
+import { toRaw } from 'vue';
+import { useWebWorkerFn } from '@vueuse/core';
 import sortBy from 'lodash/sortBy';
 import findIndex from 'lodash/findIndex';
 import find from 'lodash/find';
@@ -88,7 +90,10 @@ const getUpdatedProgramText = (
   schedule: Schedule,
   scheduleDisplay: Record<string, ScheduleDisplay>,
   scrollIndex: number
-) => updatedProgramTextCalc(schedule, scheduleDisplay, scrollIndex);
+) => {
+  const { workerFn } = useWebWorkerFn(updatedProgramTextCalc);
+  return workerFn(schedule, toRaw(scheduleDisplay), scrollIndex);
+};
 
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
