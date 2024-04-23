@@ -2,15 +2,7 @@
 
 {% import _self as self %}
 
-{% macro picture(stream) %}{%- if stream.radioStream.id is defined and stream.radioStream.id is not null %}
-/img/radio/page/{{ stream.radioStream.radio.codeName }}.png
-{%- elseif stream.img_alt is defined and stream.img_alt is not null %}
-/img/radio/page/{{ stream.img_alt }}.png
-{%- elseif stream.img is not null and stream.img != '' %}
-/media/stream/{{ stream.img }}
-{%- else %}
-/img/stream-placeholder.png
-{% endif -%}{% endmacro %}
+{% macro picture(stream) %}{%- if stream.radioStream.id is defined and stream.radioStream.id is not null %}/img/radio/page/{{ stream.radioStream.radio.codeName }}.png{%- elseif stream.img_alt is defined and stream.img_alt is not null %}/img/radio/page/{{ stream.img_alt }}.png{%- elseif stream.img is not null and stream.img != '' %}/media/stream/{{ stream.img }}{%- else %}/img/stream-placeholder.png{% endif -%}{% endmacro %}
 
 {% macro topic(stream) %}
 {% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% elseif stream.radioStream is defined and stream.radioStream.url is defined %}url:{{ stream.radioStream.url }}{% else %}url:{{ stream.streamUrl }}{% endif %}
@@ -257,7 +249,7 @@
                             {% for entry in more_streams %}
                                 <div class="streams-one streams-one-more streams-one-play-hide">
                                     <a href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">
-                                        <div class="streams-one-img" style="background-image: url({{ self.picture(entry) }})"></div>
+                                        <div class="streams-one-img" style="background-image: url('{{ self.picture(entry) }}')"></div>
                                     </a>
 
                                     <div class="streams-one-name" title="{{ entry.name }}">
