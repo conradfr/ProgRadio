@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Tipik do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @id "11"
+  @id "tipik"
 
   @impl true
   defdelegate has_custom_refresh(), to: GenericRtbs

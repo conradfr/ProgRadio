@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Musiq3 do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @id "18"
+  @id "musiq3"
 
   @impl true
   defdelegate has_custom_refresh(), to: GenericRtbs

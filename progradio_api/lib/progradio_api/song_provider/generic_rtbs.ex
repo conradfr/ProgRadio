@@ -2,21 +2,22 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
   require Logger
   alias ProgRadioApi.SongProvider
 
+  @default_length 300_000
+
   def has_custom_refresh(), do: true
 
   def get_refresh(_name, nil, default_refresh), do: default_refresh
 
   def get_refresh(_name, data, default_refresh) do
     now_unix = SongProvider.now_unix()
+    end_unix = get_end_unix(data)
+    next =
+      case end_unix do
+        nil -> nil
+        _ -> end_unix - now_unix
+      end
 
-    end_unix =
-      data
-      |> Map.get("stopTime", "0")
-      |> String.to_integer()
-
-    next = end_unix - now_unix
-
-    unless next < 1 do
+    unless next == nil or next < 1 do
       next * 1000
     else
       default_refresh
@@ -27,20 +28,18 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
     now_unix = SongProvider.now_unix()
 
     try do
+      # &rand= is not part of "official" api but it seems to solve their cache problem...
       data =
-        "https://core-search.radioplayer.cloud/056/qp/v4/events/?rpId=#{id}"
+        "https://www.rtbf.be/radio/liveradio/api/threads.php?key=#{id}&_limit=1&rand=#{:rand.uniform(99)}"
         |> SongProvider.get()
         |> Map.get(:body)
         |> Jason.decode!()
-        |> Map.get("results")
-        |> Map.get("now")
+        |> Map.get("data")
+        |> Kernel.hd()
 
-      end_time =
-        data
-        |> Map.get("stopTime", "0")
-        |> String.to_integer()
+      end_time = get_end_unix(data)
 
-      unless Map.get(data, "song", false) == false or now_unix > end_time do
+      unless end_time == nil or now_unix > end_time do
         data
       else
         nil
@@ -58,9 +57,38 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
 
       _ ->
         %{
-          artist: SongProvider.recase(data["artistName"]),
-          title: SongProvider.recase(data["name"])
+          artist: SongProvider.recase(data["artist"]),
+          title: SongProvider.recase(data["title"])
         }
     end
   end
+
+  defp get_end_unix(data) when is_map(data) do
+    try do
+      timezone =
+        data
+        |> Map.get("startDate")
+        |> Map.get("timezone", "Europe/Brussels")
+
+      duration =
+        data
+        |> Map.get("duration", @default_length)
+        |> Kernel./(1000)
+        |> Kernel.round()
+
+        data
+        |> Map.get("startDate")
+        |> Map.get("date")
+        |> NaiveDateTime.from_iso8601!()
+        |> DateTime.from_naive!(timezone)
+        |> DateTime.to_unix()
+        # arbitrary 30 because duration seems too short
+        |> Kernel.+(duration + 60)
+
+    rescue
+      _ -> nil
+    end
+  end
+
+  defp get_end_unix(_data), do: nil
 end
