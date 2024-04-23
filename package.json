@@ -36,8 +36,7 @@
     "vue-gtag": "^2.0.1",
     "vue-i18n": "^9.11.1",
     "vue-router": "^4.3.0",
-    "vue3-touch-events": "^4.1.8",
-    "webpack-bundle-analyzer": "^4.10.1"
+    "vue3-touch-events": "^4.1.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.1",
@@ -77,6 +76,7 @@
     "url-loader": "^4.1.1",
     "vue-loader": "^17.4.2",
     "webpack": "^5.91.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^4.10.0"
   },
   "engines": {

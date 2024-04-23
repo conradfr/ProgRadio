@@ -4,22 +4,6 @@ const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
-function recursiveIssuer(m, c) {
-  const issuer = c.moduleGraph.getIssuer(m);
-
-  if (issuer) {
-    return recursiveIssuer(issuer, c);
-  }
-
-  const chunks = c.chunkGraph.getModuleChunks(m);
-
-  for (const chunk of chunks) {
-    return chunk.name;
-  }
-
-  return false;
-}
-
 module.exports = {
   mode: 'development',
   target: 'web',
@@ -119,26 +103,5 @@ module.exports = {
     usedExports: true,
     concatenateModules: true,
     checkWasmTypes: false,
-    splitChunks: {
-      // chunks: 'all',
-      cacheGroups: {
-        lightStyles: {
-          name: 'main_light',
-          test: (m, c, entry = 'light') =>
-            m.constructor.name === 'CssModule' &&
-            recursiveIssuer(m, c) === entry,
-          chunks: 'all',
-          enforce: true,
-        },
-        darkStyles: {
-          name: 'main_dark',
-          test: (m, c, entry = 'dark') =>
-            m.constructor.name === 'CssModule' &&
-            recursiveIssuer(m, c) === entry,
-          chunks: 'all',
-          enforce: true,
-        },
-      },
-    },
   }
 }

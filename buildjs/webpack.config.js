@@ -4,22 +4,7 @@ var webpack = require('webpack');
 const { VueLoaderPlugin } = require('vue-loader');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-function recursiveIssuer(m, c) {
-  const issuer = c.moduleGraph.getIssuer(m);
-
-  if (issuer) {
-    return recursiveIssuer(issuer, c);
-  }
-
-  const chunks = c.chunkGraph.getModuleChunks(m);
-
-  for (const chunk of chunks) {
-    return chunk.name;
-  }
-
-  return false;
-}
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   mode: 'production',
@@ -46,6 +31,7 @@ module.exports = {
     },
   },
   plugins: [
+    // new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({
       filename: '../css/[name].css'
     }),
@@ -116,41 +102,15 @@ module.exports = {
     ],
   },
   optimization: {
-    splitChunks: {
-      // chunks: 'all',
-      cacheGroups: {
-        lightStyles: {
-          name: 'main_light',
-          test: (m, c, entry = 'light') =>
-            m.constructor.name === 'CssModule' &&
-            recursiveIssuer(m, c) === entry,
-          chunks: 'all',
-          enforce: true,
-        },
-        darkStyles: {
-          name: 'main_dark',
-          test: (m, c, entry = 'dark') =>
-            m.constructor.name === 'CssModule' &&
-            recursiveIssuer(m, c) === entry,
-          chunks: 'all',
-          enforce: true,
-        },
-        globalStyles: {
-          name: 'main_global',
-          test: (m, c, entry = 'global') =>
-            m.constructor.name === 'CssModule' &&
-            recursiveIssuer(m, c) === entry,
-          chunks: 'all',
-          enforce: true,
-        },
-      },
-    },
     nodeEnv: 'production',
     flagIncludedChunks: true,
     sideEffects: true,
     usedExports: true,
     concatenateModules: true,
+    mergeDuplicateChunks: true,
     checkWasmTypes: true,
+    removeAvailableModules: true,
+    removeEmptyChunks: true,
     minimize: true,
     minimizer: [
       new TerserPlugin({

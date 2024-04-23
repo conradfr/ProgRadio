@@ -8,12 +8,21 @@ import { COOKIE_HOME } from '@/config/config';
 
 import cookies from '../utils/cookies';
 
+/*
 import AppRadio from '../components/AppRadio.vue';
 import AppNow from '../components/AppNow.vue';
 import AppParams from '../components/AppParams.vue';
 import AppSongs from '../components/AppSongs.vue';
 import AppSchedule from '../components/AppSchedule.vue';
 import AppStreams from '../components/AppStreams.vue';
+*/
+
+const AppRadio = () => import('../components/AppRadio.vue');
+const AppNow = () => import('../components/AppNow.vue');
+const AppParams = () => import('../components/AppParams.vue');
+const AppSongs = () => import('../components/AppSongs.vue');
+const AppSchedule = () => import('../components/AppSchedule.vue');
+const AppStreams = () => import('../components/AppStreams.vue');
 
 const routes = [
   {
