@@ -41,6 +41,7 @@
         <div class="pe-3 mb-3 me-1 multiselect-div" style="min-width: 300px;">
           <Multiselect
               @change="countryChange"
+              @open="countryOpen"
               :model-value="selectedCountryInput"
               :options="countriesOptions"
               :canClear="false"
@@ -55,12 +56,12 @@
               <div class="multiselect-single-label">
                 <img v-if="value.code === code_all || value.code === code_favorites"
                      class="gb-flag gb-flag--mini"
-                     style="max-height: 20px; max-width: 25px;"
+                     style="height: 20px; width: 25px;"
                      :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
                 <img v-else-if="value.code === code_last
                   || value.code === code_history"
                      class="gb-flag gb-flag--mini"
-                     style="max-height: 20px; max-width: 24px;"
+                     style="height: 20px; width: 24px;"
                      :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
                 <vue-flag
                     v-else
@@ -73,14 +74,14 @@
             <template v-slot:option="{ option }">
               <img v-if="option.code === code_all || option.code === code_favorites"
                    class="gb-flag gb-flag--mini"
-                   style="max-height: 20px; max-width: 25px;"
+                   style="height: 20px; width: 25px;"
                    :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
               <img v-else-if="option.code === code_last || option.code === code_history"
                    class="gb-flag gb-flag--mini"
-                   style="max-height: 20px; max-width: 24px;"
+                   style="height: 20px; width: 24px;"
                    :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
               <vue-flag
-                  v-else
+                  v-else-if="displayFlags"
                   :code="option.code"
                   size="mini"
               />&nbsp;&nbsp;{{ option.label }}
@@ -136,6 +137,7 @@ export default defineComponent({
   /* eslint-disable indent */
   data(): {
     refs: any,
+    displayFlags: boolean,
     searchTimeout: number|null,
     code_all: string,
     code_last: string,
@@ -144,6 +146,7 @@ export default defineComponent({
   } {
     return {
       refs: {},
+      displayFlags: false,
       searchTimeout: null,
       code_all: STREAMING_CATEGORY_ALL,
       code_last: STREAMING_CATEGORY_LAST,
@@ -262,6 +265,10 @@ export default defineComponent({
           this.getStreamRadios();
         });
       }
+    },
+    countryOpen(): void {
+      // substitute for loading="lazy" that does not seem to work here
+      this.displayFlags = true;
     },
     countryChange(country: string): void {
       if (country === undefined || country === null) {
