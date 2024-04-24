@@ -127,5 +127,5 @@ if config_env() == :prod do
     banned_ips: (System.get_env("BAN_IP") || "") |> String.split(",")
 
   config :request_cache_plug,
-    enabled?: false
+    enabled?: true
 end
