@@ -41,16 +41,21 @@ export default defineComponent({
       25
     );
 
-    // links from the navbar that we want to redirect to spa router
-    /* eslint-disable no-undef */
-    const navLinks = document.getElementsByClassName('spa-link')!;
+    setTimeout(
+      () => {
+        // links from the navbar that we want to redirect to spa router
+        /* eslint-disable no-undef */
+        const navLinks = document.getElementsByClassName('spa-link')!;
 
-    Array.prototype.forEach.call(navLinks, (element) => {
-      element.addEventListener('click', (e: any) => {
-        e.preventDefault();
-        this.$router.push({ path: e.currentTarget.getAttribute('href') });
-      });
-    });
+        Array.prototype.forEach.call(navLinks, (element) => {
+          element.addEventListener('click', (e: any) => {
+            e.preventDefault();
+            this.$router.push({ path: e.currentTarget.getAttribute('href') });
+          });
+        });
+      },
+      50
+    );
 
     const toggleHomeLinks = (homeIsSet: boolean) => {
       const classToShow = homeIsSet ? 'nav-set-home-disable' : 'nav-set-home-enable';

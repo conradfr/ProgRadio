@@ -7,7 +7,7 @@
      'streams-one-play-paused': (radio.code_name === radioPlayingCodeName
         && playing === PlayerStatus.Stopped)
     }">
-    <div class="streams-one-img" :style="styleObject" v-on:click="playStop">
+    <div class="streams-one-img" :style="styleObject" v-on:click="playStop" v-once>
       <div class="streams-one-img-play"></div>
     </div>
     <div class="streams-one-name" :title="$t('message.streaming.more')"
@@ -18,7 +18,7 @@
       </div>
       <div v-else-if="radio.tags" class="streams-one-tags" v-once>
         <span class="badge badge-inverse"
-          v-for="tag in tags()" :key="tag"
+          v-for="tag in tags" :key="tag"
           v-on:click.stop="tagClick(tag)">
           {{ tag }}
         </span>
@@ -27,7 +27,7 @@
     <div class="streams-one-fav cursor-pointer"
       :class="{ 'streams-one-fav-isfavorite': isFavorite() }"
          v-on:click.stop="toggleFavorite">
-      <img class="streams-one-icon" src="/img/favorites_streams.svg">
+      <img class="streams-one-icon" :alt="radio.code_name" src="/img/favorites_streams.svg">
     </div>
     <div
         class="streams-one-flag cursor-pointer"
@@ -145,6 +145,13 @@ export default defineComponent({
 
       return this.listeners[topicName];
     },
+    tags() {
+      if (!this.radio.tags || typeof this.radio.tags !== 'string') {
+        return [];
+      }
+
+      return [...new Set(this.radio.tags.split(','))];
+    }
   },
   // We do not use the getter player.liveSong due to performance as it would be called each time
   // a song update for any radio by each instances of this component
@@ -164,8 +171,8 @@ export default defineComponent({
     ...mapActions(usePlayerStore, [
       'joinChannel',
       'leaveChannel',
-      'joinListenersChannel',
-      'leaveListenersChannel',
+      /* 'joinListenersChannel',
+      'leaveListenersChannel', */
       'stop',
       'playStream'
     ]),
@@ -244,14 +251,6 @@ export default defineComponent({
       });
 
       this.toggleStreamFavorite(this.radio);
-    },
-    tags() {
-      if (this.radio.tags === undefined || this.radio.tags === null
-        || typeof this.radio.tags !== 'string') {
-        return [];
-      }
-
-      return [...new Set(this.radio.tags.split(','))];
     }
   }
 });

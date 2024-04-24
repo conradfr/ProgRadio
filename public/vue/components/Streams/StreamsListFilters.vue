@@ -25,7 +25,7 @@
           <i class="bi bi-search"></i>
         </button>
         <button v-if="!searchActive" class="btn btn-primary btn-sm" type="submit"
-          v-on:click="playOneRandom">
+          v-on:click="playOneRandom" v-once>
           <i class="bi bi-play-circle"></i>
           {{ $t('message.streaming.random') }}
         </button>
@@ -33,7 +33,7 @@
       <div class="me-1 mb-3">
         <button type="submit"
           class="btn btn-primary btn-sm me-1"
-          v-on:click="geoloc">
+          v-on:click="geoloc" v-once>
           <i class="bi bi-geo-alt"></i>
         </button>
       </div>

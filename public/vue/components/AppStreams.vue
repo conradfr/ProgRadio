@@ -45,8 +45,13 @@ export default defineComponent({
     };
   },
   created() {
-    this.getConfig();
-    this.getCountries();
+    setTimeout(
+      () => {
+        this.getConfig();
+        this.getCountries();
+      },
+      75
+    );
   },
   mounted() {
     const body = document.querySelector('body');
@@ -68,8 +73,6 @@ export default defineComponent({
   computed: {
     ...mapState(useGlobalStore, ['isLoading']),
     ...mapState(useStreamsStore, {
-      radios: 'streamRadios',
-      favorites: 'favorites',
       solo: 'soloExtended'
     }),
     ...mapState(usePlayerStore, {
