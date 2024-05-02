@@ -231,7 +231,7 @@
         <div class="offset-1 offset-md-0 col-md-3 col-10 d-none d-sm-block" >
             {% if app.environment == 'prod' %}
                 <div class="sticky-md-top" style="top: 60px">
-                {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2'])}) }}
+                {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2']), class: 'd-none d-sm-block'}) }}
                 </div>
             {% endif %}
 

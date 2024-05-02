@@ -133,7 +133,7 @@
         {% if app.environment == 'prod' %}
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false %}
             <div class="sticky-md-top" style="top: 70px">
-                {{ include('_partials/adblock.html.twig', {style: 'vertical'}) }}
+                {{ include('_partials/adblock.html.twig', {style: 'vertical', class: ''}) }}
             </div>
             {% endif %}
         {% endif %}

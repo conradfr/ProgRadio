@@ -6,7 +6,11 @@
       window.addEventListener('load', () => {
         // ensure this loads as there is conflict w/ the responsive grid
         window.setTimeout(() => {
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          } catch (error) {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          }
         }, 2000);
 
         (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;

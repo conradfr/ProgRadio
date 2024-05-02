@@ -206,7 +206,7 @@
                     {% endif %}
 
                     <div class="pt-2 pb-3 px-3 d-block d-sm-none">
-                        {{ include('_partials/adblock.html.twig', {style: 'horizontal'}) }}
+                        {{ include('_partials/adblock.html.twig', {style: 'horizontal', class: 'd-block d-sm-none'}) }}
                     </div>
 
                     {% if stream.tags is not null and stream.tags != '' %}
@@ -245,9 +245,9 @@
                             </div>
                         {% endif %}
 
-                        <div class="d-flex clearfix streams">
+                        <div class="d-flex clearfix streams mb-4">
                             {% for entry in more_streams %}
-                                <div class="streams-one streams-one-more streams-one-play-hide">
+                                <div class="streams-one streams-one-more streams-one-play-hide {% if loop.last == true %}d-sm-none{% endif %}">
                                     <a href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">
                                         <div class="streams-one-img" style="background-image: url('{{ self.picture(entry) }}')"></div>
                                     </a>
@@ -260,6 +260,7 @@
                         </div>
 
                         <div class="clearfix mt-4 mb-5">
+                            <br>
                             <a class="more-link" href="{{ path('streaming_spa') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>
@@ -271,7 +272,7 @@
 {#                    </div>#}
                 </div>
                 <div class="offset-sm-0 col-sm-3 d-none d-sm-block order-sm-2 pt-4 pt-sm-2 text-center">
-                    {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2'])}) }}
+                    {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2']), class: 'd-none d-sm-block'}) }}
 
 {#                    {% if app.environment == 'prod' %}#}
 {#                        {{ include('_partials/affiliate.twig') }}#}

@@ -4,8 +4,8 @@
 {% if style == 'horizontal' %}{{ adsense_tag_radio_horiz_key }}{% elseif style == 'vertical' %}{{ adsense_tag_radio_vert_key }}{% elseif style == 'vertical2' %}{{  adsense_tag_radio_vert2_key }}{% endif %}
 {% endmacro %}
 
-<ins class="adsbygoogle"
-     style="display:block; margin:auto;"
+<ins class="adsbygoogle {{ class|default('') }}"
+     style="margin:auto;"
      data-ad-client="{{ adsense_key }}"
      data-ad-slot="{{ self.adslot(style) }}"
      data-ad-format="{{ (style == 'vertical2') ? 'autorelaxed' : 'auto' }}"

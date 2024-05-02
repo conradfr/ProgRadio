@@ -1,5 +1,5 @@
 {#{% if app.request.locale != 'fr' or (no_affil is defined and no_affil == true) %}#}
-    {{ include('_partials/adsense_tag.html.twig', {'style': style}) }}
+    {{ include('_partials/adsense_tag.html.twig', {'style': style, 'class': class}) }}
 {#{% else %}#}
 {#    {{ oneAffiliateLink(app.request.locale)|raw }}#}
 {#{% endif %}#}
