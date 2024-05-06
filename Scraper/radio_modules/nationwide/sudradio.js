@@ -74,8 +74,8 @@ const format = dateObj => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'host': curr.host !== undefined ? curr.host.replace(/\s\s+/g, ' ') : null,
-      'title': curr.title ? curr.title.trim() : curr.host.replace(/\s\s+/g, ' '),
-      'description': curr.description !== undefined ? curr.description.replace(/\s\s+/g, ' ').split('\n').join(' ').trim() : null,
+      'title': curr.title ? curr.title.trim() : (curr.title_alt.trim() ? curr.title_alt.trim() : curr.host.replace(/\s\s+/g, ' ')),
+      'description': curr.description !== undefined ? curr.description.replace(/\s\s+/g, ' ').split('\n').join(' ').trim() : (curr.description_alt !== undefined ? curr.description_alt.replace(/\s\s+/g, ' ').split('\n').join(' ').trim() : null),
       'img': curr.img !== undefined ? curr.img.trim() : null
     };
 
@@ -128,9 +128,9 @@ const fetch = (dateObj, url) => {
         'img': 'img.sud_programme_thumbnail_image@data-src',
         'datetime_raw_start': '.sud_planning_program_time .program-start',
         'datetime_raw_end': '.sud_planning_program_time .program-end',
-        'title': 'h3.sud_planning_program_name > a',
+        'title_alt': 'h3.sud_planning_program_name > a',
         'host': '.sud_planning_animateur',
-        'description': '.sud_planning_extrait p',
+        'description_alt': '.sud_planning_description p',
         'sub': [
           osmosis.select('div.panel ul li')
             .set({

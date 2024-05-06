@@ -109,7 +109,6 @@ const fetch = dateObj => {
         'host_title': '.heading-3',
       })
       .data(function (listing) {
-        console.log(listing);
         listing.dateObj = dateObj;
         scrapedData.push(listing);
       })
