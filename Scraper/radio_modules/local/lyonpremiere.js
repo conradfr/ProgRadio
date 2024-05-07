@@ -68,7 +68,7 @@ const fetch = dateObj => {
       .set({
         'days': '@data-filter',
         'datetime_raw': '.programme-thumbnail .programme-time-slots',
-        'img': '.programme-thumbnail img@data-src',
+        'img': '.programme-thumbnail img@src',
         'title': '.programme-infos .programme-name',
         'description_alt': '.programme-infos .programme-content'
       })
