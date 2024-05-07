@@ -196,12 +196,12 @@ export const useScheduleStore = defineStore('schedule', {
     scrollTo(x: number) {
       this.scrollIndex = ScheduleUtils.enforceScrollIndex(this.scrollIndex + x);
     },
-    updateDisplayData() {
+    async updateDisplayData() {
       if (this.scrollClick) {
         return;
       }
 
-      const update = ScheduleUtils.getUpdatedProgramText(
+      const update = await ScheduleUtils.getUpdatedProgramText(
         this.schedule,
         this.scheduleDisplay,
         this.scrollIndex);
