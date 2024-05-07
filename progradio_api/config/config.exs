@@ -38,11 +38,11 @@ config :progradio_api, ProgRadioApi.Scheduler,
     ],
     stats: [
       schedule: "40 01 */1 * *",
-      task: {ProgRadioApi.Checker.Streams, :update_stats, []}
+      task: {ProgRadioApi.Streams, :update_stats, []}
     ],
     search_term_switch: [
       schedule: "12 0 */1 * *",
-      task: {ProgRadioApi.Checker.Streams, :switch_search_terms_day, []}
+      task: {ProgRadioApi.Streams, :switch_search_terms_day, []}
     ],
     import_overload: [
       schedule: "15,45 * * * *",
