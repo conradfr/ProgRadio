@@ -103,7 +103,7 @@ const fetch = dateObj => {
       .find('.post')
       // .select('.item')
       .set({
-        'img': '.item-header > .item-photo > img@src'
+        'img': '.item-header > .item-photo > img@data-src'
       })
       .set({
         'title': '.item-content > h3 > a',
