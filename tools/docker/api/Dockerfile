@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.16.2-erlang-26.2.3-ubuntu-focal-20240216
+FROM hexpm/elixir:1.16.2-erlang-26.2.5-ubuntu-focal-20240427
 
 EXPOSE 80
 
@@ -18,6 +18,7 @@ ARG CORS=${CORS}
 ARG TZ=${TZ}
 ARG PHX_SERVER=${PHX_SERVER}
 ARG IP_BAN=${IP_BAN}
+ARG PUBSUB_POOL_SIZE=${PUBSUB_POOL_SIZE}
 
 ENV DATABASE_URL=${DATABASE_URL} \
     PORT=${PORT} \
@@ -32,7 +33,8 @@ ENV DATABASE_URL=${DATABASE_URL} \
     CORS=${CORS} \
     TZ=${TZ} \
     PHX_SERVER=${PHX_SERVER} \
-    IP_BAN=${IP_BAN}
+    IP_BAN=${IP_BAN} \
+    PUBSUB_POOL_SIZE=${PUBSUB_POOL_SIZE}
 
 #RUN usermod -u 1000 root
 #USER www-data

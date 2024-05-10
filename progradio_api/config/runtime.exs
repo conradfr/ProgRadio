@@ -116,6 +116,11 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  config :progradio_api, ProgRadioApi.PubSub,
+         adapter: Phoenix.PubSub.PG2,
+         pool_size: String.to_integer(System.get_env("PUBSUB_POOL_SIZE") || "6")
+
   # Configure redis
   config :progradio_api,
     redis_host: System.get_env("REDIS_HOST"),
