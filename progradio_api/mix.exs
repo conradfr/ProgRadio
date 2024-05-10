@@ -51,7 +51,7 @@ defmodule ProgRadioApi.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
       {:httpoison, "~> 2.1"},
-      {:hackney, git: "https://github.com/benoitc/hackney.git", tag: "1.18.1", override: true},
+      {:hackney, "~> 1.20"},
       {:tzdata, "~> 1.1.1"},
       {:cors_plug, "~> 2.0"},
       {:remote_ip, "~> 1.1.0"},
@@ -77,7 +77,7 @@ defmodule ProgRadioApi.MixProject do
       {:decorator, "~> 1.3"},
       {:observer_cli, "~> 1.7"},
       {:request_cache_plug, "~> 1.0"},
-      {:ex_cldr, "~> 2.33"},
+      {:ex_cldr, "2.37.5"},
       {:ex_cldr_territories, "~> 2.0"},
       {:ex_cldr_collation, "~> 0.7.0"},
       {:req, "~> 0.4.0"}

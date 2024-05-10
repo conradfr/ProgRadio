@@ -481,6 +481,46 @@ defmodule ProgRadioApi.Streams do
 
   # ---------- CHECK ----------
 
+  # only executed manually, should not be too useful after the first time...
+  def reduce_duplicates() do
+    query =
+      from s in Stream,
+           select: %{
+             name: s.name,
+             country_code: s.country_code,
+             ids: fragment("array_agg(?)", s.id)
+           },
+           where: is_nil(s.redirect_to) and s.enabled == true and s.banned == false,
+           order_by: [desc: fragment("count(?)", s.id)],
+           having: fragment("count(?) > 1", s.id),
+           group_by: [s.name, s.country_code]
+
+    query
+    |> Repo.all()
+    |> Enum.each(fn s ->
+      best_stream_id = find_best_stream_of_duplicates(s)
+
+      unless best_stream_id == nil do
+        Ecto.Adapters.SQL.query!(
+          Repo,
+          "UPDATE stream SET redirect_to = $1 where id = any($2) and id != $3",
+          [Ecto.UUID.dump!(best_stream_id), s.ids, Ecto.UUID.dump!(best_stream_id)]
+        )
+      end
+    end)
+  end
+
+  defp find_best_stream_of_duplicates(stream_data) do
+    query =
+      from s in Stream,
+           select: s.id,
+           where: s.name == ^stream_data.name and s.country_code == ^stream_data.country_code and is_nil(s.redirect_to) and s.enabled == true and s.banned == false,
+           order_by: [desc: s.score, desc: s.clicks_last_24h, desc: s.votes],
+           limit: 1
+
+    Repo.one(query)
+  end
+
   def check(initial_offset \\ 0) do
     total = count_streams_to_check()
 
