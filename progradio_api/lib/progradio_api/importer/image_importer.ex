@@ -140,7 +140,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
     end
   end
 
-  defp list_stream_files(path) do
+  def list_stream_files(path) do
     case Cache.has_key?(@ls_cache_key) do
       true ->
         Cache.get(@ls_cache_key)

@@ -12,6 +12,7 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
+  alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamCheck, StreamSong}
 
   @default_limit 48
@@ -479,7 +480,26 @@ defmodule ProgRadioApi.Streams do
     :ok
   end
 
-  # ---------- CHECK ----------
+  # ---------- CLEAN ----------
+
+  # only executed manually
+  def delete_img_of_duplicates() do
+    query =
+      from s in Stream,
+           select: s.id,
+           where: is_nil(s.redirect_to) != true and is_nil(s.img) != true
+
+    query
+    |> Repo.all()
+    |> Enum.each(fn s ->
+      "#{Application.get_env(:progradio_api, :image_path)}stream/"
+      |> ImageImporter.list_stream_files()
+      |> Enum.filter(fn f -> String.starts_with?(f, s) == true end)
+      |> Enum.each(fn f ->
+        File.rm("#{Application.get_env(:progradio_api, :image_path)}stream/#{f}")
+      end)
+    end)
+  end
 
   # only executed manually, should not be too useful after the first time...
   def reduce_duplicates() do
@@ -520,6 +540,8 @@ defmodule ProgRadioApi.Streams do
 
     Repo.one(query)
   end
+
+  # ---------- CHECK ----------
 
   def check(initial_offset \\ 0) do
     total = count_streams_to_check()
