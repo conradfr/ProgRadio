@@ -507,4 +507,14 @@ class Stream
     {
         $this->updatedAt = $updatedAt;
     }
+
+    public function getStreamsHistory(): ArrayCollection|Collection
+    {
+        return $this->streamsHistory;
+    }
+
+    public function setStreamsHistory(ArrayCollection|Collection $streamsHistory): void
+    {
+        $this->streamsHistory = $streamsHistory;
+    }
 }

@@ -15,6 +15,7 @@ use App\Entity\StreamSong;
 use App\Entity\ScheduleEntry;
 use App\Entity\StreamSuggestion;
 use App\Entity\User;
+use App\Entity\UserStream;
 use App\Form\SharesType;
 use App\Form\StreamOverloadingType;
 use App\Service\DateUtils;
@@ -203,6 +204,23 @@ class AdminController extends AbstractBaseController
                 $streamRedirect = $em->getRepository(Stream::class)->find($form->get('redirect')->getData());
 
                 if ($streamRedirect) {
+                    $userStreams = $em->getRepository(UserStream::class)->findBy(['stream' => $stream]);
+
+                    // transfer the favorite to the correct stream, except if already exists
+                    foreach ($userStreams as $userStream) {
+                        $fav = $em->getRepository(UserStream::class)->findOneBy(['user' => $userStream->getUser(), 'stream' => $streamRedirect]);
+
+                        if (!$fav) {
+                            $user = $userStream->getUser();
+                            $user->addStream($streamRedirect);
+
+                            $em->persist($user);
+                            $em->flush();
+                        }
+
+                        $em->remove($userStream);
+                    }
+
                     $stream->setRedirectToStream($streamRedirect);
                 }
             }
