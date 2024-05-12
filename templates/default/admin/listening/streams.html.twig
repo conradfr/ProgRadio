@@ -17,7 +17,7 @@
     {% for entries in streams_listening|batch(5) %}
         <tr>
             {% for one in entries %}
-                <td class="align-middle position-relative{% if one.enabled != true %} table-warning{% endif %}" v-scope v-cloak>
+                <td class="align-middle position-relative{% if one.redirect_to is defined and one.redirect_to == 1 %} table-danger{% elseif one.enabled != true %} table-warning{% endif %}" v-scope v-cloak>
                     {% if one != 'empty' %}
                     <span v-if="totalOfRadio('stream', '{{ one.id }}') > 0"
                         class="admin-ls-badge position-absolute top-25 translate-middle badge rounded-pill bg-success">
