@@ -21,6 +21,9 @@ class UserStream
     #[ORM\JoinColumn(name: 'stream_id', referencedColumnName: 'id')]
     private Stream $stream;
 
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTime $lastListenedAt = null;
+
     public function __construct() {
 
     }
@@ -44,5 +47,15 @@ class UserStream
     public function setStream(\App\Entity\Stream $stream): void
     {
         $this->stream = $stream;
+    }
+
+    public function getLastListenedAt(): ?\DateTime
+    {
+        return $this->lastListenedAt;
+    }
+
+    public function setLastListenedAt(?\DateTime $lastListenedAt): void
+    {
+        $this->lastListenedAt = $lastListenedAt;
     }
 }
