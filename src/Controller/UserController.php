@@ -224,6 +224,8 @@ class UserController extends AbstractBaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $stream = $form->getData();
+
             if ($edit === false) {
                 $uuid = Uuid::v4();
                 $stream->setId($uuid);

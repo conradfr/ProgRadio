@@ -24,6 +24,9 @@ defmodule ProgRadioApi.Streams do
   @redis_ttl 172_800
   @text_key "searches"
 
+  @source_radio_browser "radio-browser"
+  @source_progradio "progradio"
+
   # 1h
   @cache_ttl_stream 3_600_000
   # 15s
@@ -214,7 +217,7 @@ defmodule ProgRadioApi.Streams do
     query =
       from s in Stream,
         select: s.id,
-        where: s.updated_at > ^date_time and not is_nil(s.original_img)
+        where: s.updated_at > ^date_time and not is_nil(s.original_img) and s.source == @source_progradio
 
     Repo.all(query)
   end

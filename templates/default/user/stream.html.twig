@@ -46,11 +46,19 @@
                         {% for item in app.user.streams %}
                             <option value="{{ item.id }}">{{ item.name }}</option>
                         {% endfor %}
-                    </select
+                    </select>
                 {% endif %}
             </div>
-
         </div>
+        {% if edit == true %}
+            {# Todo improve #}
+            <div class="col-12 col-md-4">
+                <h3 class="mb-4">&nbsp;</h3>
+                <a href="{{ path('user_page_streams') }}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">
+                    {{ 'page.stream.submission.title_new'|trans }}
+                </a>
+            </div>
+        {% endif %}
     </div>
 
     <div class="row">
@@ -63,7 +71,7 @@
                 {% endif %}
             </h3>
 
-{#            <h5>{{ 'page.stream.modification.radio'|trans }}: {{ stream.name }}</h5>#}
+            {% if edit == true %}<h5>{{ 'page.stream.modification.radio'|trans }}: {{ stream.name }}</h5>{% endif %}
 
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
@@ -76,7 +84,7 @@
                 {{ form_row(form.name) }}
                 {{ form_row(form.countryCode) }}
                 {{ form_row(form.language) }}
-                {{ form_row(form.img) }}
+                {{ form_row(form.originalImg) }}
                 {{ form_row(form.streamUrl) }}
                 {{ form_row(form.website) }}
             {{ form_end(form) }}
