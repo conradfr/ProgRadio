@@ -36,6 +36,10 @@ const fetch = (dateObj, name, url) => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
+      // for some reason the website return a 404
+      .config({
+        ignore_http_errors: true
+      })
       .select('.o-layout-list__item')
       .set({
         'datetime_raw': '.m-item-program-grid__timeline__time@datetime',
