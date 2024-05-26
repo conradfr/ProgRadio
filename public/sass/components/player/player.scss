@@ -6,6 +6,11 @@ $icon-size-hover: 1.231rem;
 $icon-play-size: 1.769rem;
 $icon-play-size-hover: 1.846rem;
 
+$icon-size-sm: 1.231rem;
+$icon-size-hover-sm: 1.231rem;
+$icon-play-size-sm: 2.462rem;
+$icon-play-size-hover-sm: 2.462rem;
+
 .navbar-player {
   z-index: 1260; /* to get over navbar */
   position: fixed;
@@ -19,7 +24,7 @@ $icon-play-size-hover: 1.846rem;
 
   margin-top: 5px;
   background-color: var(--progradio-player-background);
-  border-radius: 4px;
+  border-radius: 5px;
 
   color: var(--progradio-player-color);
 
@@ -38,7 +43,7 @@ $icon-play-size-hover: 1.846rem;
     top: auto;
     bottom: 13px;
     width: 322px;
-    height: 47px;
+    height: 57px;
     //left: ~"calc(50% - @{radio-list-width})";
   }
 
@@ -72,8 +77,16 @@ $icon-play-size-hover: 1.846rem;
     text-align: center;
     cursor: pointer;
 
+    //@include media-breakpoint-down(sm) {
+    //  width: 34px;
+    //}
+
     i {
       font-size: $icon-size;
+
+      @include media-breakpoint-down(sm) {
+        font-size: $icon-size-sm;
+      }
     }
 
     .player-muted {
@@ -89,6 +102,12 @@ $icon-play-size-hover: 1.846rem;
     vertical-align: middle;
     cursor: pointer;
 
+    @include media-breakpoint-down(sm) {
+      width: 45px;
+      padding-left: 10px;
+      font-size: $icon-play-size-sm;
+    }
+
     //margin-top: -2px;
     padding-top: 2px;
 
@@ -100,6 +119,10 @@ $icon-play-size-hover: 1.846rem;
     &:hover:not(.player-playpause-disabled) {
       padding-top: 1px;
       font-size: $icon-play-size-hover;
+
+      @include media-breakpoint-down(sm) {
+        font-size: $icon-play-size-hover-sm;
+      }
     }
 
     .spinner-border.spinner-border-sm {
@@ -125,9 +148,8 @@ $icon-play-size-hover: 1.846rem;
 
     $player-info-height: 32px;
 
-    /* on mobile, put player at the bottom */
     @include media-breakpoint-down(sm) {
-      font-size: 0.923rem;
+      font-size: 1rem;
     }
 
     /* rolodex effect */
@@ -135,6 +157,10 @@ $icon-play-size-hover: 1.846rem;
       list-style: none;
       height: 100%;
       max-height: $player-info-height;
+
+      @include media-breakpoint-down(sm) {
+        max-height: calc($player-info-height + 10px);
+      }
 
       margin: 0;
       margin-block-start: 0;
@@ -146,6 +172,14 @@ $icon-play-size-hover: 1.846rem;
       animation-iteration-count: infinite;
       animation-timing-function: linear;
 
+      --progradio-anim-infos-height1: #{calc(-1 * $player-info-height)};
+      --progradio-anim-infos-height2: calc(-2 * $player-info-height);
+
+      @include media-breakpoint-down(sm) {
+        --progradio-anim-infos-height1: #{calc(-1 * $player-info-height - 10px)};
+        --progradio-anim-infos-height2: #{calc(-2 * $player-info-height - 20px)};
+      }
+
       li {
         display: flex;
         flex-direction: row;
@@ -155,19 +189,26 @@ $icon-play-size-hover: 1.846rem;
         height: $player-info-height;
         min-height: $player-info-height;
         max-height: $player-info-height;
+
+        @include media-breakpoint-down(sm) {
+          height: calc($player-info-height + 10px);
+          min-height: calc($player-info-height + 10px);
+          max-height: calc($player-info-height + 10px);
+        }
+
         overflow-y: hidden;
       }
     }
 
     @keyframes roll-up-2 {
       0%, 50%, 100% { transform: translateY(0) }
-      60%, 90% { transform: translateY(-1 * $player-info-height) }
+      60%, 90% { transform: translateY(var(--progradio-anim-infos-height1)) }
     }
 
     @keyframes roll-up-3 {
       0%, 20%, 100% { transform: translateY(0) }
-      30%, 45%, 80%, 90% { transform: translateY(-1 * $player-info-height) }
-      55%, 70% { transform: translateY(-2 * $player-info-height) }
+      30%, 45%, 80%, 90% { transform: translateY(var(--progradio-anim-infos-height1)) }
+      55%, 70% { transform: translateY(var(--progradio-anim-infos-height2)) }
     }
   }
 
@@ -184,8 +225,16 @@ $icon-play-size-hover: 1.846rem;
 
     cursor: pointer !important;
 
+    @include media-breakpoint-down(sm) {
+      width: 28px;
+    }
+
     i {
       font-size: $icon-size;
+
+      @include media-breakpoint-down(sm) {
+        font-size: $icon-size-sm;
+      }
     }
 
     &:hover {
@@ -193,6 +242,10 @@ $icon-play-size-hover: 1.846rem;
 
       i {
         font-size: $icon-size-hover;
+
+        @include media-breakpoint-down(sm) {
+          font-size: $icon-size-hover-sm;
+        }
       }
     }
   }
@@ -243,7 +296,7 @@ $icon-play-size-hover: 1.846rem;
     border-bottom-left-radius: 5px;
 
     @include media-breakpoint-down(sm) {
-      top: 12px;
+      top: 17px;
     }
 
     i {

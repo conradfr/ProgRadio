@@ -107,13 +107,13 @@ export default defineComponent({
   beforeMount() {
     setTimeout(() => {
       this.joinChannel(this.channelName);
-      this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+      // this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
     }, 150);
   },
   beforeUnmount() {
     setTimeout(() => {
       this.leaveChannel(this.channelName);
-      this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+      // this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
     }, 200);
   },
   computed: {
