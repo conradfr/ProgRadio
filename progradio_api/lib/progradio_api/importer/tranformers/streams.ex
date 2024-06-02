@@ -20,6 +20,26 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
   def streamtheworld(stream_url), do: stream_url
 
+  def streamtheworld_url({:continue, stream_url}) do
+    pattern = ~r/(.*).streamtheworld\.com(.*)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        url =
+          stream_url
+          |> URI.parse
+          |> Map.put(:query, nil)
+          |> URI.to_string
+
+        {:ok, url}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def streamtheworld_url(stream_url), do: stream_url
+
   def infomaniak({:continue, stream_url}) do
     pattern = ~r/http:(.+)\.infomaniak\.(.+)/
 

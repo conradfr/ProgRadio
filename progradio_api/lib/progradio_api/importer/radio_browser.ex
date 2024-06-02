@@ -283,6 +283,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     {_, updated_stream_url} =
       {:continue, stream_url}
       |> StreamTransformers.streamtheworld()
+      |> StreamTransformers.streamtheworld_url()
       |> StreamTransformers.infomaniak()
       |> StreamTransformers.ssr()
       |> StreamTransformers.zeno()
