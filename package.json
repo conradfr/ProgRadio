@@ -16,7 +16,7 @@
   "dependencies": {
     "@growthbunker/vueflags": "github:razorness/vueflags#master",
     "@vueform/multiselect": "^2.6.7",
-    "@vueuse/core": "^10.10.0",
+    "@vueuse/core": "~10.9.0",
     "autoprefixer": "^10.4.19",
     "axios": "^0.21.1",
     "bootstrap": "^5.3.3",
