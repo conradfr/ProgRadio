@@ -62,6 +62,28 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
   def zeno(stream_url), do: stream_url
 
+  def zeno_url({:continue, stream_url}) do
+    pattern = ~r/https:\/\/stream\-(.+)\.zeno\.(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        url =
+          stream_url
+          |> URI.parse
+          |> Map.put(:query, nil)
+          |> URI.to_string
+
+        url = Regex.replace(~r/stream\-[0-9]{1,3}/, url, "stream")
+
+        {:ok, url}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def zeno_url(stream_url), do: stream_url
+
   def laut({:continue, stream_url}) do
     pattern = ~r/http:\/\/(.+)\.stream\.laut\.fm(.+)/
 
@@ -75,6 +97,26 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   end
 
   def laut(stream_url), do: stream_url
+
+  def laut_url({:continue, stream_url}) do
+    pattern = ~r/https:\/\/(.+)\.stream\.laut\.fm(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        url =
+          stream_url
+          |> URI.parse
+          |> Map.put(:query, nil)
+          |> URI.to_string
+
+        {:ok, url}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def laut_url(stream_url), do: stream_url
 
   def network181({:continue, stream_url}) do
     pattern = ~r/http:\/\/(.+)\.181fm\.com(.+)/
@@ -188,6 +230,28 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
   def radiojar(stream_url), do: stream_url
 
+  def radiojar_url({:continue, stream_url}) do
+    pattern = ~r/https:\/\/(.+)\.radiojar\.com\/(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        url =
+          stream_url
+          |> URI.parse
+          |> Map.put(:query, nil)
+          |> URI.to_string
+
+        url = Regex.replace(~r/n[0-9a-z]{2}/, url, "stream")
+
+        {:ok, url}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def radiojar_url(stream_url), do: stream_url
+
   def prohifi({:continue, stream_url}) do
     pattern = ~r/http:\/\/(.+)\.pro-fhi\.net\/(.+)/
 
@@ -203,7 +267,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   def prohifi(stream_url), do: stream_url
 
   def revma({:continue, stream_url}) do
-    pattern = ~r/(.+)\.revma\.com\/(.+)/
+    pattern = ~r/(.+)\.revma\./
 
     case Regex.match?(pattern, stream_url) do
       true ->
@@ -215,6 +279,28 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   end
 
   def revma(stream_url), do: stream_url
+
+  def revma_url({:continue, stream_url}) do
+    pattern = ~r/(.+)\.revma\./
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        url =
+          stream_url
+          |> URI.parse
+          |> Map.put(:query, nil)
+          |> URI.to_string
+
+        url = Regex.replace(~r/\/\/[0-9a-z\-]{7}/, url, "stream")
+
+        {:ok, url}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def revma_url(stream_url), do: stream_url
 
   def r80s80s({:continue, stream_url}) do
     pattern = ~r/(.+)\.80s80s\.de\/(.+)/
