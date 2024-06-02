@@ -1,23 +1,25 @@
 <template>
   <div class="streams-filters-container mt-3 mb-0 d-flex flex-row flex-wrap">
-      <div class="mb-3 me-auto streams-filters-search">
-        <div class="input-group" v-if="searchActive">
+      <div class="mb-3 me-auto streams-filters-search d-flex">
+        <div v-if="searchActive" style="display: inline-block" class="me-2">
+          <div class="input-group">
           <span class="input-group-text" id="search-addon1">
             <i class="bi bi-search"></i>
           </span>
-          <input type="text"
-            class="form-control"
-            style="min-width: 275px"
-            :placeholder="$t('message.streaming.search_placeholder')"
-            name="searchText"
-            :ref="addSearchTextRef"
-            aria-describedby="search-addon1"
-            :value="searchText"
-            v-on:input="searchTextChange"
-            v-on:blur="searchDeactivate"
-          />
-          <i class="bi bi-x-lg form-control-feedback"
-             v-on:click="searchDeactivate(true)"></i>
+            <input type="text"
+                   class="form-control"
+                   style="min-width: 275px"
+                   :placeholder="$t('message.streaming.search_placeholder')"
+                   name="searchText"
+                   :ref="addSearchTextRef"
+                   aria-describedby="search-addon1"
+                   :value="searchText"
+                   v-on:input="searchTextChange"
+                   v-on:blur="searchDeactivate"
+            />
+            <i class="bi bi-x-lg form-control-feedback"
+               v-on:click="searchDeactivate(true)"></i>
+          </div>
         </div>
 
         <button v-if="!searchActive" class="btn btn-primary btn-sm me-1" type="submit"
