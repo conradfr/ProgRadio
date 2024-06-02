@@ -506,6 +506,16 @@ export const usePlayerStore = defineStore('player', {
         return false;
       }
 
+      /* TEMP
+        No subscribing for hls/mpd streams as we don't support it
+        This will not catch "forced" hls/mpd streams but there are not a lot so this is acceptable
+
+        TODO Plan is to do it client side in the future w/ hls.js
+      */
+      if (topicName.startsWith('url:') && (topicName.indexOf('.m3u8') !== -1 || topicName.indexOf('.mpd') !== -1)) {
+        return null;
+      }
+
       // Increment refCounter
       // Used because multiple component may want to join and leave the same channel and one would then leave for all
 
