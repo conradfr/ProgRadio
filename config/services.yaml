@@ -36,6 +36,10 @@ services:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
 
+    App\Migrations\Factory\MigrationFactoryDecorator:
+        decorates: 'doctrine.migrations.migrations_factory'
+        arguments: ['@.inner', '@service_container']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 

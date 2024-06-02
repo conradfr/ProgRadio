@@ -17,7 +17,7 @@ class ScheduleEntry
 {
     #[ORM\Column(type: 'bigint')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: 'Radio')]

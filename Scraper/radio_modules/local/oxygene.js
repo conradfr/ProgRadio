@@ -3,8 +3,8 @@ let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 const utils = require('../../lib/utils.js');
 
-let scrapedData = {};
-let  cleanedData = {};
+let scrapedData = [];
+let  cleanedData = [];
 
 const dayFr = {
   'Lundi': 1,
@@ -26,16 +26,14 @@ const dayNameFr = {
   'Dimanche': 7
 };
 
-const format = (dateObj, subRadio) => {
+const format = (dateObj) => {
+
+  console.log(scrapedData);
+
   dateObj.tz('Europe/Paris');
   dateObj.locale('fr');
 
   cleanedData[subRadio] = scrapedData[subRadio].reduce(function (prev, entry) {
-    // this show is more a section that is not correctly listed, remove it for now
-    if (entry.title === 'La Story') {
-      return prev;
-    }
-
     let time = [];
 
     let regexp = new RegExp(/^Du\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)\sau\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
@@ -113,37 +111,46 @@ const format = (dateObj, subRadio) => {
   return Promise.resolve(cleanedData[subRadio]);
 };
 
-const fetch = (dateObj, subRadio) => {
-  const url = 'https://www.radiooxygene.fr/emissions';
+const fetch = (dateObj) => {
+  const url = 'https://www.radiosaintnabor.org/index.php/programmes';
 
   logger.log('info', `fetching ${url}`);
 
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      // for some reason the website return a 500
-      .config({
-        ignore_http_errors: true
-      })
-      .select('.list_element')
-      .set({
-        'img': 'img.list-img-thumb@src',
-        'title': 'h4',
-        'datetime_raw': '.program-date'
-      })
-      .do(
-        osmosis.follow('a.title-link@href')
-          .config({
-            ignore_http_errors: true
-          })
-          .select('.article')
-          .set({
-            'description': ['p'],
-            'host': ['h4']
-          })
+      .select('table.tab_programmes tbody tr')
+      .set(
+        {
+          day: 'td[1]',
+          hour2: 'td[2]',
+          hour2_elems: ['td[2] span'],
+          hour2_host: 'td[2] .animateur',
+          hour2_title: 'td[2] .animation',
+          hour3: 'td[3]',
+          hour3_elems: ['td[3] span'],
+          hour3_host: 'td[3] .animateur',
+          hour3_title: 'td[3] .animation',
+          hour4: 'td[4]',
+          hour4_elems: ['td[4] span'],
+          hour4_host: 'td[4] .animateur',
+          hour4_title: 'td[4] .animation',
+          hour5: 'td[5]',
+          hour5_elems: ['td[5] span'],
+          hour5_host: 'td[5] .animateur',
+          hour5_title: 'td[5] .animation',
+          hour6: 'td[6]',
+          hour6_elems: ['td[6] span'],
+          hour6_host: 'td[6] .animateur',
+          hour6_title: 'td[6] .animation',
+          hour7: 'td[7]',
+          hour7_elems: ['td[7] span'],
+          hour7_host: 'td[7] .animateur',
+          hour7_title: 'td[7] .animation',
+        }
       )
       .data(function (listing) {
-        scrapedData[subRadio].push(listing);
+        scrapedData.push(listing);
       })
       .done(function () {
         resolve(true);
@@ -151,18 +158,14 @@ const fetch = (dateObj, subRadio) => {
   });
 };
 
-const fetchAll = (dateObj, subRadio) => {
-  return fetch(dateObj, subRadio);
+const fetchAll = (dateObj) => {
+  return fetch(dateObj);
 };
 
-const getScrap = (dateObj, subRadio) => {
-  if (!scrapedData[subRadio]) {
-    scrapedData[subRadio] = [];
-  }
-
-  return fetchAll(dateObj, subRadio)
+const getScrap = (dateObj) => {
+  return fetchAll(dateObj)
     .then(() => {
-      return format(dateObj, subRadio);
+      return format(dateObj);
     });
 };
 

@@ -45,7 +45,7 @@ class StreamSuggestionType extends AbstractType implements EventSubscriberInterf
         $builder->addEventSubscriber($this);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             FormEvents::SUBMIT => 'ensureOneFieldIsSubmitted',

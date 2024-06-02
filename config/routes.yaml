@@ -11,10 +11,6 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-kernel:
-    resource: ../src/Kernel.php
-    type: annotation
-
 params_spa:
     path: /{_locale}/params
     controller: App\Controller\DefaultController::index

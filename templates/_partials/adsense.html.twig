@@ -1,4 +1,4 @@
-{#{% if app.environment == 'prod' %}#}
+{% if app.environment == 'prod' %}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_key }}"
             crossorigin="anonymous"></script>
     <script type="text/javascript">(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;</script>
@@ -17,4 +17,4 @@
         (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
       })
     </script>
-{#{% endif %}#}
+{% endif %}

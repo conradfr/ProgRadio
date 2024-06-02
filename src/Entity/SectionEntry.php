@@ -11,7 +11,7 @@ class SectionEntry
 {
     #[ORM\Column(type: 'bigint')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: 'ScheduleEntry', inversedBy: 'sectionEntries')]
