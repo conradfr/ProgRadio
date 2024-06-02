@@ -22,7 +22,7 @@ RUN ls /tmp
 
 # --------------- PHP ---------------
 
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 RUN mkdir -p /scripts
 COPY ./tools/docker/www/docker-entry.sh /scripts
