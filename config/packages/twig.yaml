@@ -14,6 +14,7 @@ twig:
         adsense_tag_radio_horiz_fix_key: "%env(ADSENSE_TAG_RADIO_HORIZ_FIX_KEY)%"
         geocode: "%env(GEOCODE)%"
         amazon_affiliate_id: "%env(AMAZON_AFFILIATE_ID)%"
+    file_name_pattern: '*.twig'
 
 when@test:
     twig:

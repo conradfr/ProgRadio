@@ -26,8 +26,8 @@
 
     <link rel="preload" href="{{ asset('build/css/theme.css') }}?v={{ releaseVersion() }}" as="style">
 
-{#    <link href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" rel="stylesheet">#}
-{#    <link href="{{ asset('build/css/main_dark.css') }}?v={{ releaseVersion() }}" rel="stylesheet">#}
+    {#    <link href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" rel="stylesheet">#}
+    {#    <link href="{{ asset('build/css/main_dark.css') }}?v={{ releaseVersion() }}" rel="stylesheet">#}
 
     <link href="{{ asset('build/css/theme.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
 
@@ -92,22 +92,22 @@
 
 {#
 
-    Due to the data model evolving with subradios the IE compatible js no longer works
-    May try to update it later as there's still IE11 visits
+Due to the data model evolving with subradios the IE compatible js no longer works
+May try to update it later as there's still IE11 visits
 
 <script nomodule>
-    // redirect IE to legacy website (while it's still working ...)
-    function redirectIE() {
-      const internetExplorer = navigator.userAgent.match(/Trident.*rv[ :]*11\./i);
-      if (internetExplorer) {
-        setTimeout(function () {
-          // redirect to Chrome download page
-          window.location.replace('{{ legacy }}');
-        }, 250);
-      }
-    }
+// redirect IE to legacy website (while it's still working ...)
+function redirectIE() {
+  const internetExplorer = navigator.userAgent.match(/Trident.*rv[ :]*11\./i);
+  if (internetExplorer) {
+    setTimeout(function () {
+      // redirect to Chrome download page
+      window.location.replace('{{ legacy }}');
+    }, 250);
+  }
+}
 
-    redirectIE();
+redirectIE();
 </script>
 #}
 
@@ -123,7 +123,7 @@
   };
 
   const setCookie = (name, state) => {
-  {# imported from vue app #}
+      {# imported from vue app #}
     const COOKIE_PARAMS = {
       path: '/',
       'max-age': 31536000,
