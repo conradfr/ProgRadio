@@ -269,10 +269,22 @@ export const useStreamsStore = defineStore('streams', {
       globalStore.setLoading(true);
 
       nextTick(async () => {
-        const stream = await StreamsApi.getRandom(this.selectedCountry);
+        const data = await StreamsApi.searchStreams(
+          this.searchActive && this.searchText !== null && this.searchText !== '' ? this.searchText : null,
+          this.selectedCountry,
+          'random',
+          null,
+          1
+        );
+
+        if (data !== null && data.streams && data.streams.length > 0) {
+          playerStore.playStream(data.streams[0]);
+        }
+
+        /* const stream = await StreamsApi.getRandom(this.selectedCountry);
         if (stream !== null) {
           playerStore.playStream(stream);
-        }
+        } */
 
         globalStore.setLoading(false);
       });

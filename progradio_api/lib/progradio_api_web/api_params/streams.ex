@@ -8,6 +8,7 @@ defmodule ProgRadioApiWeb.ApiParams.Streams do
     field(:country, :string)
     field(:sort, :string)
     field(:offset, :integer)
+    field(:limit, :integer)
   end
 
   def changeset(streams, params \\ %{}) do
@@ -17,7 +18,8 @@ defmodule ProgRadioApiWeb.ApiParams.Streams do
       :text,
       :country,
       :sort,
-      :offset
+      :offset,
+      :limit
     ])
   end
 end

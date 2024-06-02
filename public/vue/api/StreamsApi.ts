@@ -25,7 +25,8 @@ import type {
 const getStreams = async (
   countryOrUuid?: string|null,
   sort?: string |null,
-  offset?: number|null
+  offset?: number|null,
+  limit?: number|null
 ): Promise<GetStreamsResponse|null> => {
   const queryParamsList: Array<string> = [];
   if (countryOrUuid !== undefined && countryOrUuid !== null
@@ -38,15 +39,19 @@ const getStreams = async (
     }
   }
 
-  if (sort !== null && sort !== undefined && countryOrUuid !== STREAMING_CATEGORY_LAST
+  if (sort && countryOrUuid !== STREAMING_CATEGORY_LAST
     && countryOrUuid !== STREAMING_CATEGORY_HISTORY) {
     queryParamsList.push(`sort=${sort}`);
   } else if (countryOrUuid === STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);
   }
 
-  if (offset !== undefined && offset !== null && !Number.isNaN(offset)) {
+  if (offset && !Number.isNaN(offset)) {
     queryParamsList.push(`offset=${offset}`);
+  }
+
+  if (limit && !Number.isNaN(limit)) {
+    queryParamsList.push(`limit=${limit}`);
   }
 
   let baseUrl = '/streams/list';
@@ -65,32 +70,39 @@ const getStreams = async (
   }
 };
 
+// TODO move parameters to objects
 const searchStreams = async (
   text?: string|null,
   country?: string|null,
   sort?: string|null,
-  offset?: number|null
+  offset?: number|null,
+  limit?: number|null
 ): Promise<GetStreamsResponse|null> => {
   const queryParamsList = [];
+
   if (text !== undefined && text !== null && text !== '') {
     queryParamsList.push(`text=${encodeURIComponent(text)}`);
   } else {
-    return getStreams(country, sort, offset);
+    return getStreams(country, sort, offset, limit);
   }
 
-  if (country !== null && country !== STREAMING_CATEGORY_ALL
+  if (country && country !== STREAMING_CATEGORY_ALL
     && country !== STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`country=${country}`);
   }
 
-  if (sort !== null && sort !== undefined && country !== STREAMING_CATEGORY_LAST) {
+  if (sort && country !== STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${sort}`);
   } else if (country === STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);
   }
 
-  if (offset !== null) {
+  if (offset) {
     queryParamsList.push(`offset=${offset}`);
+  }
+
+  if (limit) {
+    queryParamsList.push(`limit=${limit}`);
   }
 
   let baseUrl = '/streams/search';
@@ -107,6 +119,7 @@ const searchStreams = async (
   }
 };
 
+// TODO legacy, to be removed
 const getRandom = async (country?: string|null): Promise<Stream|null> => {
   const queryParamsList: Array<string> = [];
   if (country !== undefined && country !== null && country !== STREAMING_CATEGORY_ALL) {

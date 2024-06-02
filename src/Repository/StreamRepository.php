@@ -282,6 +282,7 @@ class StreamRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    // TODO legacy, to be removed once the stream random action is removed
     public function getOneRandomStream(
         string $countryOrCategory = null,
         string $language = null,

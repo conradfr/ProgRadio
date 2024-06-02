@@ -100,6 +100,7 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
+    // TODO legacy, to be removed once visitors should have the front reloaded.
     #[Route('/random', name: 'streams_random')]
     public function random(EntityManagerInterface $em, Request $request): Response
     {

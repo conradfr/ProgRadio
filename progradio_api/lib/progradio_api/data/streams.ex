@@ -229,6 +229,7 @@ defmodule ProgRadioApi.Streams do
     |> add_country(params)
     |> add_text(params)
     |> add_offset(params)
+    |> add_limit(params)
     |> add_sort(params)
     |> Repo.all()
   end
@@ -301,6 +302,15 @@ defmodule ProgRadioApi.Streams do
   end
 
   defp add_offset(query, _) do
+    query
+  end
+
+  defp add_limit(query, %{:limit => limit}) when is_integer(limit) do
+    query
+    |> limit(^limit)
+  end
+
+  defp add_limit(query, _) do
     query
   end
 
