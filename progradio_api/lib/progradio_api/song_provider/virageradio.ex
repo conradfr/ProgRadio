@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Virageradio do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://www.virageradio.com/winradio/prog.xml"
+  @url "https://virginradio.fr/winradio/prog10.xml"
 
   # 5mn
   @max_length_seconds 300
