@@ -2,7 +2,13 @@
   padding: 0 0 20px !important;
 }
 
+.schedule-container {
+  outline: none !important;
+}
+
 .schedule-radio-grid {
+  outline: none !important;
+
   margin-top: $timeline-height;
   margin-bottom: 20px;
   margin-left: $margin-from-radio-list;
