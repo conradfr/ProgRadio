@@ -261,7 +261,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
           |> Map.put(:query, nil)
           |> URI.to_string
 
-        url = Regex.replace(~r/n[0-9a-z]{2}/, url, "stream")
+        url = Regex.replace(~r/n[0-9a-z]{2}\./, url, "stream.")
 
         {:ok, url}
 
