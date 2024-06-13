@@ -258,7 +258,7 @@ export default defineComponent({
 
         this.searchTimeout = setTimeout(
             () => {
-              this.sendSearchText(value.trim());
+              this.sendSearchText(value?.trim());
             },
             STREAMING_SEARCH_DELAY_BEFORE_SEND
         );

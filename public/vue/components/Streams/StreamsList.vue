@@ -13,7 +13,7 @@
     </div>
   </div>
   <streams-list-pagination v-if="radios.length"></streams-list-pagination>
-  <div class="mt-0 mt-sm-2" v-if="!isProgRadio || !userLogged">
+  <div class="mt-0 mt-sm-2" v-if="locale !== 'fr' || !isProgRadio || !userLogged">
     <adsense mode="horizontal_fix"></adsense>
   </div>
 </template>
@@ -39,9 +39,11 @@ export default defineComponent({
   },
   /* eslint-disable indent */
   data(): {
+    locale: string,
     isProgRadio: boolean
   } {
     return {
+      locale: this.$i18n.locale,
       // @ts-expect-error defined on global scope
       // eslint-disable-next-line no-undef
       isProgRadio

@@ -101,7 +101,7 @@
               </div>
             </div>
 
-            <div class="pt-3 px-3 w-100" v-if="!isProgRadio || !userLogged">
+            <div class="pt-3 px-3 w-100" v-if="locale !== 'fr' || !isProgRadio || !userLogged">
               <adsense mode="horizontal_fix"></adsense>
             </div>
 
@@ -109,7 +109,7 @@
         </div>
       </div>
       <!-- <div class="col-sm-2 col-12 text-center d-none d-sm-block"
-        v-if="!isProgRadio || !userLogged">
+        v-if="locale !== 'fr' || !isProgRadio || !userLogged">
         <adsense></adsense>
       </div> -->
     </div>
