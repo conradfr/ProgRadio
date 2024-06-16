@@ -107,13 +107,17 @@ export default defineComponent({
   beforeMount() {
     setTimeout(() => {
       this.joinChannel(this.channelName);
-      // this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+      this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+
+      if (this.song[this.channelName] && this.song[this.channelName].song) {
+        this.currentSong = PlayerUtils.formatSong(this.song[this.channelName].song);
+      }
     }, 150);
   },
   beforeUnmount() {
     setTimeout(() => {
       this.leaveChannel(this.channelName);
-      // this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+      this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
     }, 200);
   },
   computed: {

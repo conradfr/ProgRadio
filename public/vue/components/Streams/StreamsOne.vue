@@ -176,10 +176,12 @@ export default defineComponent({
     }, 2500);
   },
   beforeUnmount() {
-    if (this.stream && this.channelName) {
-      this.leaveChannel(this.channelName);
-      this.leaveListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
-    }
+    setTimeout(() => {
+      if (this.stream && this.channelName) {
+        this.leaveChannel(this.channelName);
+        this.leaveListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
+      }
+    }, 1500);
   },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged', userIsAdmin: 'isAdmin' }),
