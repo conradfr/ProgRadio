@@ -57,6 +57,7 @@
       const streamsProxy = '{{ streams_proxy }}';
       const streamsProxyKey = '{{ streams_proxy_key }}';
       const apiUrl = '{{ api_url }}';
+      const isProgRadio = {% if isProgRadio(app.request) == true %}true{% else %}false{% endif%};
       {# const isAdProtected = {{ isAdProtected(app.request) == true ? 'true' : 'false' }}; #}
       const amazon_affiliate_id = '{{ amazon_affiliate_id }}';
 

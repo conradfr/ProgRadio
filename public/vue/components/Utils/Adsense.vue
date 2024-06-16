@@ -50,6 +50,11 @@ export default defineComponent({
     };
   },
   mounted() {
+    // @ts-expect-error defined on global scope
+    if (appEnv !== 'prod') {
+      return;
+    }
+
     const adScriptExt = document.createElement('script');
     adScriptExt.setAttribute('async', '');
     adScriptExt.setAttribute('crossorigin', 'anonymous');

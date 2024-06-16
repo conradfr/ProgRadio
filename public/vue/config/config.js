@@ -134,6 +134,9 @@ export const PLAYER_STATE = [
   PLAYER_STATE_ERROR
 ];
 
+export const PROGRADIO_AGENT = 'programmes-radio.com';
+export const RADIOADDICT_AGENT = 'radio-addict.com';
+
 // ----- GTAG -----
 
 // cross

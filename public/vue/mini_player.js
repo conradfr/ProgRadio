@@ -13,7 +13,9 @@ import {
   WEBSOCKET_HEARTBEAT,
   PLAYER_STATE_LOADING,
   PLAYER_STATE_PLAYING,
-  PLAYER_STATE_STOPPED
+  PLAYER_STATE_STOPPED,
+  PROGRADIO_AGENT,
+  RADIOADDICT_AGENT
 } from './config/config';
 
 const LISTENING_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
@@ -158,6 +160,34 @@ const setAudioVolume = (volume) => {
     window.audio.volume = appVolume;
   }
 }
+
+const incrementPlayCount = (stationUuid) => {
+  if (appEnv !== 'dev') {
+    return;
+  }
+
+  // not a stream
+  if (!stationUuid.includes('-')) {
+    return;
+  }
+
+  fetch(`https://${apiUrl}/config`, {
+    headers: {'Content-Type': 'application/json'}
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(config => {
+    if (config && config.radio_browser_url) {
+      fetch(`${config.radio_browser_url}/json/url/${stationUuid}`, {
+        headers: {'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT}
+      });
+    }
+  })
+  .catch(function(error){
+    // nothing
+  });
+};
 
 createApp({
   hls: null,
@@ -339,6 +369,10 @@ createApp({
           }
         });
       }, LISTENING_INTERVAL);
+
+      setTimeout(() => {
+        incrementPlayCount(this.radioId);
+      }, LISTENING_INTERVAL + 500);
     }
 
     window.audio.addEventListener('timeupdate', () => {

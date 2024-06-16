@@ -5,7 +5,9 @@ import {
   STREAMING_CATEGORY_FAVORITES,
   STREAMING_CATEGORY_HISTORY,
   STREAMING_CATEGORY_LAST,
-  STREAMING_SORT_USER_LAST
+  STREAMING_SORT_USER_LAST,
+  PROGRADIO_AGENT,
+  RADIOADDICT_AGENT
 } from '@/config/config';
 
 import type { Stream } from '@/types/stream';
@@ -184,7 +186,12 @@ const getCountries = async (): Promise<Countries|null> => {
 const incrementPlayCount = (stationUuid: string, radioBrowserUrl: string|null): void => {
   // @ts-expect-error appEnv is defined on the global scope
   if (appEnv !== 'dev' && radioBrowserUrl !== null && radioBrowserUrl !== 'https://') {
-    axios.get(`${radioBrowserUrl}/json/url/${stationUuid}`);
+    axios.get(`${radioBrowserUrl}/json/url/${stationUuid}`, {
+      headers: {
+        // @ts-expect-error apiUrl is defined on the global scope
+        'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT
+      }
+    });
   }
 };
 
