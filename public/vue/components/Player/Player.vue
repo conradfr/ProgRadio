@@ -63,8 +63,8 @@
       <timer></timer>
     </div>
     <volume-fader v-if="displayVolume"/>
-    <audio id="videoplayer1" style="display:none"></audio>
-    <audio id="videoplayer2" style="display:none"></audio>
+    <audio id="videoplayer1" playsinline="playsinline" style="display:none"></audio>
+    <audio id="videoplayer2" playsinline="playsinline" style="display:none"></audio>
   </div>
 </template>
 
