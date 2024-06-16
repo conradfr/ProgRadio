@@ -11,21 +11,9 @@ export type GetStreamsResponse = {
   timestamp?: number
 };
 
-export type GetOneStreamResponse = {
-  stream: Stream
-};
-
-export type GetCountriesResponse = {
-  countries: Countries
-};
-
 export type GetGeoResponse = {
   languages: string
   distance: string
   countryCode: string
   countryName: string
-};
-
-export type GetStreamPlayingError = {
-  status: string
 };

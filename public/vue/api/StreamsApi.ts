@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import {
   STREAMING_CATEGORY_ALL,
   STREAMING_CATEGORY_FAVORITES,
@@ -10,14 +8,13 @@ import {
   RADIOADDICT_AGENT
 } from '@/config/config';
 
+import apiUtils from '@/utils/apiUtils';
+
 import type { Stream } from '@/types/stream';
 import type { Countries } from '@/types/countries';
 import type {
   GetConfigResponse,
   GetStreamsResponse,
-  GetOneStreamResponse,
-  GetCountriesResponse,
-  GetStreamPlayingError,
   GetGeoResponse
 } from '@/types/streams_api';
 
@@ -64,12 +61,8 @@ const getStreams = async (
     baseUrl = `https://${apiUrl}/stream`;
   }
 
-  try {
-    const { data } = await axios.get<GetStreamsResponse>(`${baseUrl}?${queryParamsList.join('&')}`);
-    return data;
-  } catch (error) {
-    return null;
-  }
+  const response = await fetch(`${baseUrl}?${queryParamsList.join('&')}`);
+  return await response.json();
 };
 
 // TODO move parameters to objects
@@ -113,12 +106,8 @@ const searchStreams = async (
     baseUrl = `https://${apiUrl}/stream`;
   }
 
-  try {
-    const { data } = await axios.get<GetStreamsResponse>(`${baseUrl}?${queryParamsList.join('&')}`);
-    return data;
-  } catch (error) {
-    return null;
-  }
+  const response = await fetch(`${baseUrl}?${queryParamsList.join('&')}`);
+  return await response.json();
 };
 
 // TODO legacy, to be removed
@@ -128,106 +117,106 @@ const getRandom = async (country?: string|null): Promise<Stream|null> => {
     queryParamsList.push(`country=${country}`);
   }
 
-  try {
-    /* eslint-disable max-len */
-    const { data } = await axios.get<GetOneStreamResponse>(`/streams/random?${queryParamsList.join('&')}`);
-    return data.stream;
-  } catch (error) {
-    return null;
-  }
+  const response = await fetch(`/streams/random?${queryParamsList.join('&')}`);
+  return await response.json();
 };
 
 const getBestFromRadio = async (radioCodeName: string): Promise<Stream|null> => {
-  try {
-    const { data } = await axios.get<GetOneStreamResponse>(`/streams/bestradio/${radioCodeName}`);
-    return data.stream;
-  } catch (error) {
-    return null;
-  }
+  const response = await fetch(`/streams/bestradio/${radioCodeName}`);
+  return await response.json();
 };
 
+// eslint-disable-next-line max-len
 const addStreamPlayingError = async (radioCodeName: string, errorText?: string): Promise<string|null> => {
-  try {
-    const params = {};
+  const params = {};
 
-    if (errorText) {
-      // @ts-ignore
-      params.error = errorText;
-    }
-
-    const { data } = await axios.post<GetStreamPlayingError>(
-      // @ts-expect-error apiUrl is defined on the global scope
-      `https://${apiUrl}/stream_error/${radioCodeName}`,
-      params
-    );
-
-    return data.status;
-  } catch (error) {
-    return null;
+  if (errorText) {
+    // @ts-ignore
+    params.error = errorText;
   }
+
+  // @ts-expect-error apiUrl is defined on the global scope
+  const response = await fetch(`https://${apiUrl}/stream_error/${radioCodeName}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params)
+  });
+
+  const data = await response.json();
+
+  return data.status;
 };
 
 const getConfig = async (): Promise<GetConfigResponse> => {
   // @ts-expect-error apiUrl is defined on the global scope
-  const { data } = await axios.get<GetConfigResponse>(`https://${apiUrl}/config`);
-  return data;
+  const response = await fetch(`https://${apiUrl}/config`);
+  return await response.json();
 };
 
 const getCountries = async (): Promise<Countries|null> => {
-  try {
-    // @ts-expect-error locale is defined on the global scope
-    const { data } = await axios.get<GetCountriesResponse>(`https://${apiUrl}/countries?locale=${locale}`);
+  // @ts-expect-error locale is defined on the global scope
+  const response = await fetch(`https://${apiUrl}/countries?locale=${locale}`);
+  const data = await response.json();
+
+  if (data && data.countries) {
     return data.countries;
-  } catch (error) {
-    return null;
   }
+
+  return null;
 };
 
-const incrementPlayCount = (stationUuid: string, radioBrowserUrl: string|null): void => {
-  // @ts-expect-error appEnv is defined on the global scope
-  if (appEnv !== 'dev' && radioBrowserUrl !== null && radioBrowserUrl !== 'https://') {
-    axios.get(`${radioBrowserUrl}/json/url/${stationUuid}`, {
-      headers: {
-        // @ts-expect-error apiUrl is defined on the global scope
-        'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT
-      }
-    });
-  }
+// eslint-disable-next-line max-len
+const incrementPlayCount = async (stationUuid: string, radioBrowserUrl: string|null): Promise<any> => {
+  const response = await fetch(`${radioBrowserUrl}/json/url/${stationUuid}`, {
+    headers: {
+      // @ts-expect-error apiUrl is defined on the global scope
+      'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT
+    }
+  });
+
+  return await response.json();
 };
 
-const updateLastListened = (stream: Stream): void => {
-  axios.get(`/streams/listened/${stream.code_name}`)
-    .catch((error) => {
-      if (error.response.status === 403) {
-        window.location.href = '/fr/login';
-      }
-    });
+const updateLastListened = async (stream: Stream): Promise<any> => {
+  const response = await fetch(`/streams/listened/${stream.code_name}`);
+
+  apiUtils.checkLogged(response);
+
+  return await response.json();
 };
 
-const sendSearchTerm = (term: string): void => {
-  // @ts-expect-error apiUrl is defined on the global scope
-  axios.post(`https://${apiUrl}/search_term`, { term });
+const sendSearchTerm = async (term: string): Promise<any> => {
+  // @ts-expect-error defined on the global scope
+  const response = await fetch(`https://${apiUrl}/search_term`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ term })
+  });
+
+  apiUtils.checkLogged(response);
+
+  return await response.json();
 };
 
-const toggleFavoriteStream = (streamCodeName: string): Promise<any>|null => {
-  return axios.get(`/streams/favorite/${streamCodeName}`)
-    .catch((error) => {
-      if (error.response.status === 403) {
-        window.location.href = '/fr/login';
-      }
-      return null;
-    });
+const toggleFavoriteStream = async (streamCodeName: string): Promise<any> => {
+  const response = await fetch(`/streams/favorite/${streamCodeName}`);
+
+  apiUtils.checkLogged(response);
+
+  return await response.json();
 };
 
+// eslint-disable-next-line max-len
 const getCountryFromLatLong = async (latitude: number, longitude: number): Promise<GetGeoResponse|null> => {
-  try {
-    /* eslint-disable max-len */
-    // @ts-expect-error geocode is defined on the global scope
-    const { data } = await axios.get<GetGeoResponse>(`https://secure.geonames.org/countryCodeJSON?lat=${latitude.toString()}&lng=${longitude.toString()}&username=${geocode}`);
-    return data;
-  } catch (error) {
-    return null;
-  }
+  /* eslint-disable max-len */
+  // @ts-expect-error geocode is defined on the global scope
+  const response = await fetch(`https://secure.geonames.org/countryCodeJSON?lat=${latitude.toString()}&lng=${longitude.toString()}&username=${geocode}`);
+
+  return await response.json();
 };
 
 export default {

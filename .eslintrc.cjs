@@ -24,6 +24,7 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "vue/multi-word-component-names": "off",
     "function-paren-newline": 0,
+    "no-return-await": "off",
     "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "destructuredArrayIgnorePattern": "^_", "ignoreRestSiblings": true }],
     "import/extensions": [

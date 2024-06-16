@@ -1,11 +1,6 @@
-import type { Schedule } from '@/types/schedule';
 import type { Radio } from '@/types/radio';
 import type { Collection } from '@/types/collection';
 import type { Category } from '@/types/category';
-
-export type GetScheduleResponse = {
-  schedule: Schedule
-};
 
 export type GetRadiosDataResponse = {
   radios?: Record<string, Radio>
@@ -23,9 +18,3 @@ export type listeningSessionPostData = {
   ending?: boolean
 }
 
-export type PutListeningSessionResponse = {
-  status: string
-  id: string
-  date_time_start: string
-  date_time_end: string
-};

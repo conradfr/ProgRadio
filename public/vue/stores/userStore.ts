@@ -61,23 +61,23 @@ export const useUserStore = defineStore('user', {
 
       setTimeout(
         async () => {
-          const user = await UserApi.getUserData();
-          if (user === null) {
+          const response = await UserApi.getUserData();
+          if (response === null || !response.user) {
             return;
           }
 
-          this.logged = user?.logged || false;
-          this.isAdmin = user?.isAdmin || false;
-          this.storeHistory = user?.storeHistory || false;
-          this.songs = user?.songs || {};
-          this.favoritesRadio = user?.favoritesRadio || [];
-          this.favoritesStream = user?.favoritesStream || [];
+          this.logged = response.user?.logged || false;
+          this.isAdmin = response.user?.isAdmin || false;
+          this.storeHistory = response.user?.storeHistory || false;
+          this.songs = response.user?.songs || {};
+          this.favoritesRadio = response.user?.favoritesRadio || [];
+          this.favoritesStream = response.user?.favoritesStream || [];
 
           scheduleStore.setFavoritesCollection(this.favoritesRadio);
           streamsStore.setStreamFavorites(this.favoritesStream);
 
-          cache.setCache(CACHE_KEY_RADIO_FAVORITES, user?.favoritesRadio);
-          cache.setCache(CACHE_KEY_STREAM_FAVORITES, user?.favoritesStream);
+          cache.setCache(CACHE_KEY_RADIO_FAVORITES, response.user?.favoritesRadio);
+          cache.setCache(CACHE_KEY_STREAM_FAVORITES, response.user?.favoritesStream);
         },
         15
       );

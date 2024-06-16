@@ -1,4 +1,3 @@
-import axios from 'axios';
 import type { DateTime } from 'luxon';
 
 import type { Schedule } from '@/types/schedule';
@@ -14,9 +13,7 @@ import cache from '@/utils/cache';
 
 import type {
   GetRadiosDataResponse,
-  GetScheduleResponse,
   listeningSessionPostData,
-  PutListeningSessionResponse
 } from '@/types/schedule_api';
 
 /* eslint-disable arrow-body-style */
@@ -43,58 +40,52 @@ const getSchedule = async (dateStr: string, params?: any): Promise<Schedule|null
     }
   }
 
-  try {
-    const { data } = await axios.get<GetScheduleResponse>(url);
+  const response = await fetch(url);
+  const data = await response.json();
 
-    if (data.schedule !== undefined) {
-      // only cache full data
-      if (params === undefined || params === null) {
-        cache.setSessionCache(dateStr, data.schedule);
-      }
-
-      return data.schedule;
+  if (data && data.schedule) {
+    // only cache full data
+    if (params === undefined || params === null) {
+      cache.setSessionCache(dateStr, data.schedule);
     }
 
-    return null;
-  } catch (error) {
-    return null;
+    return data.schedule;
   }
+
+  return null;
 };
 
 const getRadiosData = async (): Promise<GetRadiosDataResponse|null> => {
-  try {
-    /* eslint-disable no-undef */
-    // @ts-expect-error apiUrl is defined on the global scope
-    const { data } = await axios.get<GetRadiosDataResponse>(`https://${apiUrl}/radios`);
+  /* eslint-disable no-undef */
+  // @ts-expect-error apiUrl is defined on the global scope
+  const response = await fetch(`https://${apiUrl}/radios`);
 
-    if (data.radios !== undefined) {
-      cache.setCache(CACHE_KEY_RADIOS, data.radios);
-    }
+  const data = await response.json();
 
-    if (data.collections !== undefined) {
-      cache.setCache(CACHE_KEY_COLLECTIONS, data.collections);
-    }
-
-    if (data.categories !== undefined) {
-      cache.setCache(CACHE_KEY_CATEGORIES, data.categories);
-    }
-
-    return data;
-  } catch (error) {
-    return null;
+  if (data && data.radios !== undefined) {
+    cache.setCache(CACHE_KEY_RADIOS, data.radios);
   }
+
+  if (data && data.collections !== undefined) {
+    cache.setCache(CACHE_KEY_COLLECTIONS, data.collections);
+  }
+
+  if (data && data.categories !== undefined) {
+    cache.setCache(CACHE_KEY_CATEGORIES, data.categories);
+  }
+
+  return data;
 };
 
-const toggleFavoriteRadio = (radioCodeName: string): Promise<any>|null => {
-  try {
-    return axios.get(`/radios/favorite/${radioCodeName}`);
-  } catch (error: any) {
-    if (axios.isAxiosError(error) && error.response!.status === 403) {
-      /* eslint-disable no-undef */
-      window.location.href = '/fr/login';
-    }
+const toggleFavoriteRadio = async (radioCodeName: string): Promise<any | null> => {
+  const response = await fetch(`/radios/favorite/${radioCodeName}`);
+
+  if (response.status === 403) {
+    window.location.href = '/fr/login';
     return null;
   }
+
+  return true;
 };
 
 const sendListeningSession = async (
@@ -128,9 +119,17 @@ const sendListeningSession = async (
     /* eslint-disable no-underscore-dangle */
     /* eslint-disable max-len */
     // @ts-expect-error apiUrl is defined on the global scope
-    const { data } = await axios.put<PutListeningSessionResponse>(`https://${apiUrl}/listening_session/${id}`, postData);
+    const response = await fetch(`https://${apiUrl}/listening_session/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(postData)
+    });
 
-    if (data.id !== id) {
+    const data = await response.json();
+
+    if (data && data.id !== id) {
       /* eslint-disable object-shorthand */
       document.getElementById('app')!
         // @ts-ignore
@@ -142,12 +141,22 @@ const sendListeningSession = async (
 
   /* eslint-disable no-underscore-dangle */
   // @ts-expect-error apiUrl is defined on the global scope
-  const { data } = await axios.post<PutListeningSessionResponse>(`https://${apiUrl}/listening_session`, postData);
+  const response = await fetch(`https://${apiUrl}/listening_session`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(postData)
+  });
 
-  // @ts-ignore
-  document.getElementById('app')
+  const data = await response.json();
+
+  if (data && data.id !== id) {
     // @ts-ignore
-    .__vue_app__.config.globalProperties.$pinia._s.get('player').setListeningSessionId({ id: data.id, ctrl });
+    document.getElementById('app')
+      // @ts-ignore
+      .__vue_app__.config.globalProperties.$pinia._s.get('player').setListeningSessionId({ id: data.id, ctrl });
+  }
 };
 
 export default {
