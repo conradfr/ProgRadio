@@ -73,8 +73,14 @@ class StreamsController  extends AbstractBaseController
     }
 
     #[Route('/bestradio/{codeName}', name: 'streams_best_radio')]
-    public function bestRadio(Radio $radio, EntityManagerInterface $em): Response
+    public function bestRadio(string $codeName, EntityManagerInterface $em): Response
     {
+        $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName]);
+
+        if (!$radio) {
+            throw new NotFoundHttpException('radio not found');
+        }
+
         $stream =  $em->getRepository(Stream::class)->getBestStreamForRadio($radio);
         $streamToReturn = null;
 

@@ -519,8 +519,14 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/radios/favorite/{codeName}', name: 'favorite_toggle')]
     #[IsGranted('ROLE_USER')]
-    public function toggleFavorite(Radio $radio, EntityManagerInterface $em): Response
+    public function toggleFavorite(string $codeName, EntityManagerInterface $em): Response
     {
+        $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName]);
+        
+        if (!$radio) {
+            throw new NotFoundHttpException('radio not found');
+        }
+
         /** @var User $user */
         $user = $this->getUser();
 
