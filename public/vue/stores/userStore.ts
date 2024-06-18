@@ -190,13 +190,13 @@ export const useUserStore = defineStore('user', {
 
       const savedSong = await UserApi.saveSong(song);
 
-      if (savedSong !== null && savedSong.data.status === 'OK') {
+      if (savedSong !== null && savedSong.status === 'OK') {
         globalStore.displayToast({
           message: i18n.global.tc('message.player.song_saved'),
           type: 'success'
         });
 
-        this.songs[savedSong.data.id] = song;
+        this.songs[savedSong.id] = song;
       } else {
         globalStore.displayToast({
           message: i18n.global.tc('message.generic.error'),
@@ -207,7 +207,7 @@ export const useUserStore = defineStore('user', {
     async deleteSong(songId: number) {
       const deletedSong = await UserApi.removeSong(songId);
 
-      if (deletedSong !== null && deletedSong.data.status === 'OK') {
+      if (deletedSong !== null && deletedSong.status === 'OK') {
         delete this.songs[songId];
       }
     }
