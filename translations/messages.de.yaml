@@ -175,6 +175,8 @@ page:
             img: Logo-URL
             name: Nom
             radio: Radio
+            slogan: Slogan
+            description: Beschreibung
             stream_url: Stream-URL
             success_new: Dein Radio wurde erfolgreich registriert, es wird sehr bald verfügbar sein.
             success_edit: Ihr Radio wurde erfolgreich geändert.

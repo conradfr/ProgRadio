@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,6 +26,8 @@ class StreamSubmissionType extends AbstractType
             ->add('originalImg', TextType::class, ['label' => $this->translator->trans('page.stream.submission.img'), 'required' => false])
             ->add('streamUrl', TextType::class, ['label' => $this->translator->trans('page.stream.submission.stream_url'), 'required' => true])
             ->add('website', TextType::class, ['label' => $this->translator->trans('page.stream.submission.website'), 'required' => false])
+            ->add('slogan', TextType::class, ['label' => $this->translator->trans('page.stream.submission.slogan'), 'required' => false])
+            ->add('description', TextareaType::class, ['label' => $this->translator->trans('page.stream.submission.description'), 'required' => false])
             ->add('countryCode', CountryType::class, ['label' => $this->translator->trans('page.stream.submission.country'), 'required' => true])
             ->add('language', LanguageType::class, ['label' => $this->translator->trans('page.stream.submission.language'), 'required' => false])
             ->add('Save', SubmitType::class, ['label'=> $this->translator->trans('page.stream.submission.submit'), 'attr' => ['class' => 'mt-3 btn btn-primary', 'required' => false]])

@@ -71,7 +71,9 @@
                 {% endif %}
             </h3>
 
-            {% if edit == true %}<h5>{{ 'page.stream.modification.radio'|trans }}: {{ stream.name }}</h5>{% endif %}
+            {% if edit == true %}<h5>
+                {{ 'page.stream.modification.radio'|trans }}: <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ stream.name }} <i class="bi bi-box-arrow-up-right"></i></a></h5>
+            {% endif %}
 
             {% for label, messages in app.flashes %}
                 {% for message in messages %}

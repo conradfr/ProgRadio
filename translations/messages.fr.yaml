@@ -176,6 +176,8 @@ page:
             name: Nom
             radio: Radio
             stream_url: Stream url
+            slogan: Slogan
+            description: Description
             success_new: Votre radio a bien été enregistrée, elle sera disponible très prochainement.
             success_edit: Votre radio a bien été modifiée.
             success_delete: Votre radio a bien été supprimée.

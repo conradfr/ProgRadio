@@ -27,9 +27,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       true ->
         url =
           stream_url
-          |> URI.parse
+          |> URI.parse()
           |> Map.put(:query, nil)
-          |> URI.to_string
+          |> URI.to_string()
 
         {:ok, url}
 
@@ -89,9 +89,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       true ->
         url =
           stream_url
-          |> URI.parse
+          |> URI.parse()
           |> Map.put(:query, nil)
-          |> URI.to_string
+          |> URI.to_string()
 
         url = Regex.replace(~r/stream\-[0-9]{1,3}/, url, "stream")
 
@@ -125,9 +125,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       true ->
         url =
           stream_url
-          |> URI.parse
+          |> URI.parse()
           |> Map.put(:query, nil)
-          |> URI.to_string
+          |> URI.to_string()
 
         {:ok, url}
 
@@ -257,9 +257,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       true ->
         url =
           stream_url
-          |> URI.parse
+          |> URI.parse()
           |> Map.put(:query, nil)
-          |> URI.to_string
+          |> URI.to_string()
 
         url = Regex.replace(~r/n[0-9a-z]{2}\./, url, "stream.")
 
@@ -307,9 +307,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
       true ->
         url =
           stream_url
-          |> URI.parse
+          |> URI.parse()
           |> Map.put(:query, nil)
-          |> URI.to_string
+          |> URI.to_string()
 
         url = Regex.replace(~r/\/\/[0-9a-z\-]{7}/, url, "stream")
 

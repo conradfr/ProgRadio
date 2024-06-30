@@ -173,6 +173,8 @@ page:
             img: URL do logotipo
             name: Nome
             radio: Rádio
+            slogan: Slogan
+            description: Descrição
             stream_url: URL da transmissão
             success_new: Seu rádio foi registrado com sucesso e estará disponível em breve.
             success_edit: Seu rádio foi alterado com sucesso.

@@ -26,6 +26,8 @@ defmodule ProgRadioApi.Stream do
     field(:source, :string, default: "radio-browser")
     field(:enabled, :boolean)
     field(:banned, :boolean)
+    field(:slogan, :string)
+    field(:description, :string)
     field(:redirect_to, :binary_id)
     field(:playing_error, :integer, default: 0)
     field(:playing_error_reason, :string, default: nil)
@@ -57,12 +59,14 @@ defmodule ProgRadioApi.Stream do
       :original_tags,
       :country_code,
       :language,
+      :slogan,
+      :description,
       :votes,
       :clicks_last_24h,
       :score,
       :enabled,
       :redirect_to,
-      :import_updated_at
+      :import_updated_at,
     ])
     |> validate_required([:id, :name, :stream_url])
   end

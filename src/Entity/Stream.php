@@ -12,6 +12,7 @@ use App\Entity\RadioStream;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: '`stream`')]
 #[ORM\Index(name: 'name_idx', columns: ['name'])]
@@ -48,6 +49,14 @@ class Stream
 
     #[ORM\Column(type: 'string', length: 500)]
     private ?string $originalStreamUrl = null;
+
+    #[Assert\Length(max: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $slogan = null;
+
+    #[Assert\Length(max: 1000)]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $description = null;
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $tags = null;
@@ -410,6 +419,26 @@ class Stream
     public function setOriginalStreamUrl(?string $originalStreamUrl): void
     {
         $this->originalStreamUrl = $originalStreamUrl;
+    }
+
+    public function getSlogan(): ?string
+    {
+        return $this->slogan;
+    }
+
+    public function setSlogan(?string $slogan): void
+    {
+        $this->slogan = $slogan;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
     }
 
     public function getLastListeningAt(): ?\DateTime

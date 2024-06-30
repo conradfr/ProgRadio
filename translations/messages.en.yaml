@@ -176,6 +176,8 @@ page:
             img: Logo url
             name: Name
             radio: Radio
+            slogan: Slogan
+            description: Description
             stream_url: Stream url
             success_new: Your radio has been saved. It will be available shortly.
             success_edit: Your radio has been updated.

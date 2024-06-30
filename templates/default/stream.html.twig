@@ -226,7 +226,10 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
+                    {% endif %} | nl2br
+
+                    {% if stream.slogan %}<h5 class="mt-4">{{ stream.slogan }}</h5>{% endif %}
+                    {% if stream.description %}<p>{{ stream.description | nl2br }}</p>{% endif %}
 
                     <div class="d-sm-none mt-4 mb-2 text-center">
                         <div class="mb-4"><a target="_blank" class="link-no-to-bold" href="{{ path('streams_suggestion', {id: stream.id}) }}">{{ 'page.stream.modification.suggest'|trans }}</a></div>

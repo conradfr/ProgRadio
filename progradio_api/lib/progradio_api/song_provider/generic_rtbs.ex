@@ -11,6 +11,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
   def get_refresh(_name, data, default_refresh) do
     now_unix = SongProvider.now_unix()
     end_unix = get_end_unix(data)
+
     next =
       case end_unix do
         nil -> nil
@@ -76,15 +77,14 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
         |> Kernel./(1000)
         |> Kernel.round()
 
-        data
-        |> Map.get("startDate")
-        |> Map.get("date")
-        |> NaiveDateTime.from_iso8601!()
-        |> DateTime.from_naive!(timezone)
-        |> DateTime.to_unix()
-        # arbitrary 30 because duration seems too short
-        |> Kernel.+(duration + 60)
-
+      data
+      |> Map.get("startDate")
+      |> Map.get("date")
+      |> NaiveDateTime.from_iso8601!()
+      |> DateTime.from_naive!(timezone)
+      |> DateTime.to_unix()
+      # arbitrary 30 because duration seems too short
+      |> Kernel.+(duration + 60)
     rescue
       _ -> nil
     end

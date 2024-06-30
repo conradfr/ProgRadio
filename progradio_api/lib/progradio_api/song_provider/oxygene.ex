@@ -10,7 +10,7 @@ defmodule ProgRadioApi.SongProvider.Oxygene do
     "oxygene_sud77" => "1",
     "oxygene_provins" => "2",
     "oxygene_coulommiers" => "3",
-    "oxygene_meaux" => "5",
+    "oxygene_meaux" => "5"
   }
 
   @impl true

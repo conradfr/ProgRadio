@@ -175,6 +175,8 @@ page:
             img: عنوان URL الخاص بالشعار
             name: الاسم
             radio: راديو
+            slogan: شعار
+            description: وصف
             stream_url: رابط البث
             success_new: تم تسجيل الراديو الخاص بك بنجاح، وسيكون متاحًا قريبًا جدًا.
             success_edit: تم تغيير الراديو الخاص بك بنجاح.
