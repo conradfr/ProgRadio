@@ -226,7 +226,7 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %} | nl2br
+                    {% endif %}
 
                     {% if stream.slogan %}<h5 class="mt-4">{{ stream.slogan }}</h5>{% endif %}
                     {% if stream.description %}<p>{{ stream.description | nl2br }}</p>{% endif %}
@@ -262,8 +262,8 @@
                             {% endfor %}
                         </div>
 
-                        <div class="clearfix mt-4 mb-5">
-                            <br>
+                        <div class="clearfix mt-5 mb-5">
+                            <br><br>
                             <a class="more-link" href="{{ path('streaming_spa') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>
