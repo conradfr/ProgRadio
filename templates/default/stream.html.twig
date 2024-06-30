@@ -16,6 +16,14 @@
 {% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
 {% endmacro %}
 
+{% macro extractYouTubeIdAndProvideiFrame(url) %}
+    {% set youtube_id = url | replace({
+        'https://youtu.be/': '',
+        'https://www.youtube.com/watch?v=': ''
+    }) | split('?') | first %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+{% endmacro %}
+
 {% block head_supp %}
     {{ parent() }}
     <meta property="og:title" content="{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}">
@@ -103,6 +111,9 @@
                     <div class="stream-page-stream mt-0 mb-4 py-1" v-scope>
                         {% if stream.banned == true %}
                             <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
+
+                        {% elseif 'youtu.be' in stream.streamUrl or 'youtube.com' in stream.streamUrl %}
+                            {{ self.extractYouTubeIdAndProvideiFrame(stream.streamUrl) }}
                         {% else %}
                             <div class="radio-page-streams-one py-1 d-none d-flex align-items-center justify-content-center justify-content-sm-start"
                                  @vue:mounted="$el.classList.remove('d-none')" v-cloak>
