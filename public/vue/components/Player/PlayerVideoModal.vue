@@ -14,6 +14,7 @@
           <div class="modal-body-row mt-3 mb-2">
             <iframe v-if="videoUrl" width="469" height="264" :src="videoUrl"
               title="YouTube video player" frameborder="0"
+      sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-presentation"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
@@ -42,7 +43,7 @@ export default defineComponent({
       const videoId = PlayerUtils.getVideoId(this.videoModalUrl);
 
       if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}`;
+        return `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
       }
 
       return null;

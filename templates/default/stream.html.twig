@@ -19,9 +19,13 @@
 {% macro extractYouTubeIdAndProvideiFrame(url) %}
     {% set youtube_id = url | replace({
         'https://youtu.be/': '',
+        'https://www.youtube.com/live/': '',
         'https://www.youtube.com/watch?v=': ''
     }) | split('?') | first %}
-    <iframe width="460" height="218" src="https://www.youtube.com/embed/{{ youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe width="325" height="183" src="https://www.youtube.com/embed/{{ youtube_id }}" title="YouTube video player" frameborder="0"
+        sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-presentation"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 {% endmacro %}
 
 {% block head_supp %}
@@ -89,7 +93,7 @@
             {% endif %}
 
         </div>
-        <div class="col-sm-10 col-10 offset-1 offset-sm-0 pb-3">
+        <div class="col-sm-10 col-12 offset-sm-0 pb-3">
             <div class="row">
                 <div class="col-sm-9 col-12 order-2 order-sm-1">
                     <div>
