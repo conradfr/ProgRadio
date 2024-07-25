@@ -130,7 +130,7 @@ import {
   GTAG_ACTION_SEARCH_BUTTON
 } from '@/config/config';
 
-import StreamsApi from '../../api/StreamsApi';
+import StreamsApi from '@/api/StreamsApi';
 
 export default defineComponent({
   components: {

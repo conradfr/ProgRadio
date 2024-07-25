@@ -20,15 +20,15 @@ import { useUserStore } from '@/stores/userStore';
 
 import PlayerStatus from '@/types/player_status';
 
-import typeUtils from '../utils/typeUtils';
-import * as config from '../config/config';
-import cache from '../utils/cache';
-import cookies from '../utils/cookies';
+import typeUtils from '@/utils/typeUtils';
+import * as config from '@/config/config';
+import cache from '@/utils/cache';
+import cookies from '@/utils/cookies';
 
 // import router from '../router/router';
-import ScheduleApi from '../api/ScheduleApi';
-import ScheduleUtils from '../utils/ScheduleUtils';
-import AndroidApi from '../api/AndroidApi';
+import ScheduleApi from '@/api/ScheduleApi';
+import ScheduleUtils from '@/utils/ScheduleUtils';
+import AndroidApi from '@/api/AndroidApi';
 
 interface CategoryFilterFocus {
   icon: boolean

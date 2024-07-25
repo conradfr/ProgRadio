@@ -17,13 +17,13 @@ import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 
 import typeUtils from '@/utils/typeUtils';
-import cache from '../utils/cache';
-import cookies from '../utils/cookies';
-import i18n from '../lang/i18n';
+import cache from '@/utils/cache';
+import cookies from '@/utils/cookies';
+import i18n from '@/lang/i18n';
 
-import UserApi from '../api/UserApi';
-import ScheduleApi from '../api/ScheduleApi';
-import StreamsApi from '../api/StreamsApi';
+import UserApi from '@/api/UserApi';
+import ScheduleApi from '@/api/ScheduleApi';
+import StreamsApi from '@/api/StreamsApi';
 
 interface State {
   logged: boolean

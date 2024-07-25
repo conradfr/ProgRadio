@@ -23,7 +23,7 @@ import PlayerStatus from '@/types/player_status';
 
 import { COLLECTION_FAVORITES } from '@/config/config';
 
-import typeUtils from '../utils/typeUtils';
+import typeUtils from '@/utils/typeUtils';
 
 import CollectionSwitcher from './Schedule/CollectionSwitcher.vue';
 import Timeline from './Schedule/Timeline.vue';

@@ -130,7 +130,8 @@ import PlayerStatus from '@/types/player_status';
 
 import StreamsUtils from '@/utils/StreamsUtils';
 import PlayerUtils from '@/utils/PlayerUtils';
-import * as config from '../../config/config';
+import * as config from '@/config/config';
+
 import Adsense from '../Utils/Adsense.vue';
 import LiveSong from '../Utils/LiveSong.vue';
 import LiveListeners from '../Utils/LiveListeners.vue';

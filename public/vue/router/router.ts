@@ -6,7 +6,7 @@ import {
 
 import { COOKIE_HOME } from '@/config/config';
 
-import cookies from '../utils/cookies';
+import cookies from '@/utils/cookies';
 
 /*
 import AppRadio from '../components/AppRadio.vue';

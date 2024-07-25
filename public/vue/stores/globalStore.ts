@@ -12,7 +12,7 @@ import type { Stream } from '@/types/stream';
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 
-import typeUtils from '../utils/typeUtils';
+import typeUtils from '@/utils/typeUtils';
 
 interface State {
   loading: number

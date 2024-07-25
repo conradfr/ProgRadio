@@ -65,7 +65,7 @@ import type { Stream } from '@/types/stream';
 import PlayerStatus from '@/types/player_status';
 import StreamsUtils from '@/utils/StreamsUtils';
 import PlayerUtils from '@/utils/PlayerUtils';
-import * as config from '../../config/config';
+import * as config from '@/config/config';
 
 export default defineComponent({
   props: {

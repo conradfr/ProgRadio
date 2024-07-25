@@ -11,9 +11,9 @@ import type { ListeningSession } from '@/types/listening_session';
 import type { PlayOptions } from '@/types/play_options';
 import PlayerStatus from '@/types/player_status';
 
-import * as config from '../config/config';
+import * as config from '@/config/config';
+import ScheduleApi from '@/api/ScheduleApi';
 import typeUtils from './typeUtils';
-import ScheduleApi from '../api/ScheduleApi';
 import ScheduleUtils from './ScheduleUtils';
 import cookies from './cookies';
 

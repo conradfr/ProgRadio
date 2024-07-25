@@ -87,11 +87,11 @@ import PlayerSaveSong from './PlayerSaveSong.vue';
 import Timer from '../Timer/Timer.vue';
 import VolumeFader from './VolumeFader.vue';
 
-import * as config from '../../config/config';
-import AndroidApi from '../../api/AndroidApi';
-import PlayerUtils from '../../utils/PlayerUtils';
-import tooltip from '../../utils/tooltip';
-import typeUtils from '../../utils/typeUtils';
+import * as config from '@/config/config';
+import AndroidApi from '@/api/AndroidApi';
+import PlayerUtils from '@/utils/PlayerUtils';
+import tooltip from '@/utils/tooltip';
+import typeUtils from '@/utils/typeUtils';
 // eslint-disable-next-line import/extensions
 import type Hls from '../../../js/hls.js';
 

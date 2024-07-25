@@ -18,15 +18,15 @@ import { useScheduleStore } from '@/stores/scheduleStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 import { useUserStore } from '@/stores/userStore';
 
-import * as config from '../config/config';
-import cookies from '../utils/cookies';
-import cache from '../utils/cache';
-import i18n from '../lang/i18n';
-import typeUtils from '../utils/typeUtils';
-import PlayerUtils from '../utils/PlayerUtils';
-import ScheduleUtils from '../utils/ScheduleUtils';
-import StreamsApi from '../api/StreamsApi';
-import AndroidApi from '../api/AndroidApi';
+import * as config from '@/config/config';
+import cookies from '@/utils/cookies';
+import cache from '@/utils/cache';
+import i18n from '@/lang/i18n';
+import typeUtils from '@/utils/typeUtils';
+import PlayerUtils from '@/utils/PlayerUtils';
+import ScheduleUtils from '@/utils/ScheduleUtils';
+import StreamsApi from '@/api/StreamsApi';
+import AndroidApi from '@/api/AndroidApi';
 
 import { Socket } from '../../js/phoenix/index';
 

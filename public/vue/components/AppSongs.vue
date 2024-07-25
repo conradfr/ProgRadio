@@ -66,7 +66,7 @@ import {
   GTAG_CATEGORY_SONGS
 } from '@/config/config';
 
-import PlayerUtils from '../utils/PlayerUtils';
+import PlayerUtils from '@/utils/PlayerUtils';
 
 export default defineComponent({
   mounted() {

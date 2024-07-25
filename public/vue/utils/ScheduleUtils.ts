@@ -18,7 +18,7 @@ import type { Stream } from '@/types/stream';
 import type { ScheduleDisplay } from '@/types/schedule_display';
 import type { Program } from '@/types/program';
 
-import * as config from '../config/config';
+import * as config from '@/config/config';
 
 /* ---------- GRID---------- */
 

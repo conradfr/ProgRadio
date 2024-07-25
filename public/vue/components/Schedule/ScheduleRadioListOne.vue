@@ -106,7 +106,7 @@ import {
   GTAG_ACTION_REGION_VALUE,
 } from '@/config/config';
 
-import PlayerUtils from '../../utils/PlayerUtils';
+import PlayerUtils from '@/utils/PlayerUtils';
 
 export default defineComponent({
   props: {

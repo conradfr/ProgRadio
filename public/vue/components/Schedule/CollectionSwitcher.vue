@@ -29,8 +29,8 @@ import {
 
 import { useScheduleStore } from '@/stores/scheduleStore';
 
-import ScheduleUtils from '../../utils/ScheduleUtils';
-import tooltip from '../../utils/tooltip';
+import ScheduleUtils from '@/utils/ScheduleUtils';
+import tooltip from '@/utils/tooltip';
 
 export default defineComponent({
   data() {

@@ -11,12 +11,12 @@ import { useGlobalStore } from '@/stores/globalStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
-import * as config from '../config/config';
-import i18n from '../lang/i18n';
-import cookies from '../utils/cookies';
-// import cache from '../utils/cache';
-import StreamsApi from '../api/StreamsApi';
-import AndroidApi from '../api/AndroidApi';
+import * as config from '@/config/config';
+import i18n from '@/lang/i18n';
+import cookies from '@/utils/cookies';
+// import cache from '@/utils/cache';
+import StreamsApi from '@/api/StreamsApi';
+import AndroidApi from '@/api/AndroidApi';
 
 type countryObject = {
   code: string,

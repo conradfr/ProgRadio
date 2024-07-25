@@ -15,9 +15,9 @@ import type { Stream } from '@/types/stream';
 import type { RadioStream } from '@/types/radio_stream';
 import type { Program } from '@/types/program';
 
-import typeUtils from '../utils/typeUtils';
-import PlayerUtils from '../utils/PlayerUtils';
-import ScheduleUtils from '../utils/ScheduleUtils';
+import typeUtils from '@/utils/typeUtils';
+import PlayerUtils from '@/utils/PlayerUtils';
+import ScheduleUtils from '@/utils/ScheduleUtils';
 
 // @ts-expect-error Android is defined by the device
 const hasAndroid = typeof Android !== 'undefined';

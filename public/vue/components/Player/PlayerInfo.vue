@@ -19,7 +19,7 @@ import { TIMEZONE } from '@/config/config';
 /* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
-import typeUtils from '../../utils/typeUtils';
+import typeUtils from '@/utils/typeUtils';
 
 export default defineComponent({
   computed: {

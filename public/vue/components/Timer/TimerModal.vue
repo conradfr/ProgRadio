@@ -92,7 +92,7 @@ import {
 /* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
-import cookies from '../../utils/cookies';
+import cookies from '@/utils/cookies';
 
 import TimerModalSetButton from './TimerModalSetButton.vue';
 import TimerModalAddButton from './TimerModalAddButton.vue';

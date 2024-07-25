@@ -23,7 +23,8 @@ import {
   GTAG_ACTION_HOME_VALUE
 } from '@/config/config';
 
-import cookies from '../utils/cookies';
+import cookies from '@/utils/cookies';
+
 import Player from './Player/Player.vue';
 import TimerModal from './Timer/TimerModal.vue';
 import PlayerVideoModal from './Player/PlayerVideoModal.vue';

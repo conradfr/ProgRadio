@@ -74,7 +74,7 @@ import {
   PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS
 } from '@/config/config';
 
-import cookies from '../utils/cookies';
+import cookies from '@/utils/cookies';
 
 export default defineComponent({
   /* eslint-disable no-undef */

@@ -57,8 +57,9 @@ import type { Stream } from '@/types/stream';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
-import typeUtils from '../../utils/typeUtils';
-import PlayerUtils from '../../utils/PlayerUtils';
+import typeUtils from '@/utils/typeUtils';
+import PlayerUtils from '@/utils/PlayerUtils';
+
 import PlayerSaveSong from '../Player/PlayerSaveSong.vue';
 
 /* eslint-disable no-undef */

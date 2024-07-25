@@ -16,7 +16,7 @@ import type { Stream } from '@/types/stream';
 /* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
-import typeUtils from '../../utils/typeUtils';
+import typeUtils from '@/utils/typeUtils';
 
 /* eslint-disable no-undef */
 /* eslint-disable camelcase */
