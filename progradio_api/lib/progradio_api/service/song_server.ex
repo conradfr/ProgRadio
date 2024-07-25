@@ -80,7 +80,14 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def handle_info(
         {:refresh, :auto},
-        %{module: module, name: name, song: last_song, last_data: last_data, retries: retries, db_data: db_data} =
+        %{
+          module: module,
+          name: name,
+          song: last_song,
+          last_data: last_data,
+          retries: retries,
+          db_data: db_data
+        } =
           state
       ) do
     with {data, song} <- get_data_song(module, name, last_data),
@@ -178,9 +185,7 @@ defmodule ProgRadioApi.SongServer do
   end
 
   defp broadcast_song_if_needed(name, _song, _last_song) do
-    Logger.debug(
-      "Data provider - #{name}: song updated, no broadcast"
-    )
+    Logger.debug("Data provider - #{name}: song updated, no broadcast")
   end
 
   @spec broadcast_song(String.t(), map() | nil) :: none()
