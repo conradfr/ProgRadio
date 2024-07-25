@@ -233,11 +233,15 @@ defmodule ProgRadioApi.ListenersCounter do
     spawn(fn ->
       counters_code_name
       |> Stream.each(fn stream_code_name ->
-        ProgRadioApiWeb.Endpoint.broadcast!(
-          "listeners:" <> stream_code_name,
-          "counter_update",
-          %{name: stream_code_name, listeners: Map.get(counter, stream_code_name, 0)}
-        )
+        count = Map.get(counter, stream_code_name, 0)
+        # only broadcast if changed
+        if Map.get(state.counter, stream_code_name, nil) != count do
+          ProgRadioApiWeb.Endpoint.broadcast!(
+            "listeners:" <> stream_code_name,
+            "counter_update",
+            %{name: stream_code_name, listeners: Map.get(counter, stream_code_name, 0)}
+          )
+        end
       end)
       |> Enum.to_list()
     end)
