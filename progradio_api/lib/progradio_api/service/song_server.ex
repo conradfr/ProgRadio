@@ -24,7 +24,7 @@ defmodule ProgRadioApi.SongServer do
       %{
         module: ProgRadioApi.SongProvider.Icecast,
         name: song_topic,
-        song: nil,
+        song: %{},
         last_data: nil,
         retries: 0,
         db_data: nil
@@ -47,7 +47,7 @@ defmodule ProgRadioApi.SongServer do
       %{
         module: module_name,
         name: song_topic,
-        song: nil,
+        song: %{},
         last_data: nil,
         retries: 0,
         db_data: db_data
@@ -80,17 +80,14 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def handle_info(
         {:refresh, :auto},
-        %{module: module, name: name, last_data: last_data, retries: retries, db_data: db_data} =
+        %{module: module, name: name, song: last_song, last_data: last_data, retries: retries, db_data: db_data} =
           state
       ) do
     with {data, song} <- get_data_song(module, name, last_data),
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error do
-      broadcast_song(name, song)
-
+      broadcast_song_if_needed(name, song, last_song)
       update_status(song, db_data)
-
-      how_many_connected = how_many_connected(name)
 
       refresh_rate =
         cond do
@@ -105,6 +102,8 @@ defmodule ProgRadioApi.SongServer do
         end
         |> Kernel.+(Enum.random(-5000..5000))
         |> increment_interval(updated_retries)
+
+      how_many_connected = how_many_connected(name)
 
       Logger.debug(
         "Data provider - #{name}: song updated (timer, next: #{trunc(refresh_rate / 1000)}s, retries: #{updated_retries}) - #{how_many_connected} clients connected"
@@ -133,7 +132,6 @@ defmodule ProgRadioApi.SongServer do
       ) do
     {data, song} = get_data_song(module, name, last_data)
     broadcast_song(name, song)
-
     update_status(song, db_data)
 
     next_refresh =
@@ -174,6 +172,16 @@ defmodule ProgRadioApi.SongServer do
   end
 
   # ----- Internal -----
+
+  defp broadcast_song_if_needed(name, %{} = song, %{} = last_song) when song !== last_song do
+    broadcast_song(name, song)
+  end
+
+  defp broadcast_song_if_needed(name, _song, _last_song) do
+    Logger.debug(
+      "Data provider - #{name}: song updated, no broadcast"
+    )
+  end
 
   @spec broadcast_song(String.t(), map() | nil) :: none()
   defp broadcast_song(name, song) do

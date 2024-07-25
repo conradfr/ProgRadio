@@ -14,9 +14,9 @@ defmodule ProgRadioApi.SongManager do
           {ProgRadioApi.SongServer, {"url:" <> song_topic, nil, nil}}
         )
 
-      [{_pid, _value}] ->
+      [{pid, _value}] ->
         Logger.debug("server for url #{song_topic} already exists")
-        # GenServer.cast(pid, :broadcast)
+        GenServer.cast(pid, :broadcast)
     end
   end
 
@@ -31,9 +31,9 @@ defmodule ProgRadioApi.SongManager do
            {song_topic, radio_stream_data.radio_code_name, radio_stream_data}}
         )
 
-      [{_pid, _value}] ->
+      [{pid, _value}] ->
         Logger.debug("server for topic #{song_topic} already exists")
-        # GenServer.cast(pid, :broadcast)
+        GenServer.cast(pid, :broadcast)
     end
   end
 end

@@ -66,7 +66,7 @@ defmodule ProgRadioApi.Stream do
       :score,
       :enabled,
       :redirect_to,
-      :import_updated_at,
+      :import_updated_at
     ])
     |> validate_required([:id, :name, :stream_url])
   end

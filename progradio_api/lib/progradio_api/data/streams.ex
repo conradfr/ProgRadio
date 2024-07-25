@@ -504,7 +504,7 @@ defmodule ProgRadioApi.Streams do
         on: so.id == s.id,
         where:
           is_nil(s.redirect_to) == true and is_nil(s.website) == false and
-          s.website != s.stream_url and
+            s.website != s.stream_url and
             fragment(
               "? ilike '%laut.fm%'",
               s.website
@@ -528,7 +528,7 @@ defmodule ProgRadioApi.Streams do
 
   defp improve_laut_fm_radio(%{} = data) do
     try do
-      {:ok, code_name } = extract_laut_fm_codename(data.website)
+      {:ok, code_name} = extract_laut_fm_codename(data.website)
 
       api_data =
         "https://laut.fm/fm-api/station/#{code_name}"
@@ -543,7 +543,7 @@ defmodule ProgRadioApi.Streams do
 
       updated_data = %{
         name: Map.get(api_data, "display_name"),
-#        img: Map.get(api_data, "images") |> Map.get("station_120x120"),
+        #        img: Map.get(api_data, "images") |> Map.get("station_120x120"),
         slogan: Map.get(api_data, "format"),
         description: Map.get(api_data, "description"),
         website: Map.get(api_data, "page_url"),
@@ -563,7 +563,7 @@ defmodule ProgRadioApi.Streams do
         |> Map.put(:img, Map.get(api_data, "images", %{}) |> Map.get("station"))
         |> Map.put(:updated_at, NaiveDateTime.utc_now())
 
-      if (data.so_id != nil) do
+      if data.so_id != nil do
         stream_overloading = Repo.get(StreamOverloading, data.id)
 
         {:ok, _} =
@@ -597,6 +597,7 @@ defmodule ProgRadioApi.Streams do
   # done by claude.ai
   defp extract_laut_fm_codename(url) do
     regex = ~r/https?:\/\/(www\.)?laut\.fm\/([a-zA-Z0-9-]+)/
+
     case Regex.run(regex, url) do
       [_, _, codename] -> {:ok, codename}
       _ -> {:error, "No match found"}
