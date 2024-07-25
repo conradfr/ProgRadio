@@ -27,6 +27,7 @@ type NotificationData = {
 
 const VIDEO_LINKS = [
   'https://youtu.be/',
+  'https://www.youtube.com/live/',
   'https://www.youtube.com/watch?v='
 ];
 
@@ -207,6 +208,7 @@ const getVideoId = (url: string): string|null => {
   const patterns = [
     /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/,
     /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^?]+)/,
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/live\/([^?]+)/,
     /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([^?]+)/,
     /(?:https?:\/\/)?youtu\.be\/([^?]+)/,
     /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^?]+)/
