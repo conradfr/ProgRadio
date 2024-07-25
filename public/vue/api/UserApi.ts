@@ -19,7 +19,7 @@ const saveSong = async (song: string): Promise<any | null> => {
 
   apiUtils.checkLogged(response);
 
-  return response.json()
+  return response.json();
 };
 
 /* eslint-disable arrow-body-style */
@@ -28,7 +28,7 @@ const removeSong = async (id: number): Promise<any | null> => {
 
   apiUtils.checkLogged(response);
 
-  return response.json()
+  return response.json();
 };
 
 /* eslint-disable no-undef */

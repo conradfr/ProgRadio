@@ -169,14 +169,20 @@ const getCountries = async (): Promise<Countries|null> => {
 
 // eslint-disable-next-line max-len
 const incrementPlayCount = async (stationUuid: string, radioBrowserUrl: string|null): Promise<any> => {
-  const response = await fetch(`${radioBrowserUrl}/json/url/${stationUuid}`, {
-    headers: {
-      // @ts-expect-error apiUrl is defined on the global scope
-      'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT
-    }
-  });
+  try {
+    const response = await fetch(`${radioBrowserUrl}/json/url/${stationUuid}`, {
+      headers: {
+        // @ts-expect-error apiUrl is defined on the global scope
+        'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT
+      }
+    });
 
-  return await response.json();
+    return await response.json();
+  } catch (error) {
+    // nothing
+  }
+
+  return null;
 };
 
 const updateLastListened = async (stream: Stream): Promise<any> => {

@@ -2,6 +2,7 @@
   <player></player>
   <toast-container></toast-container>
   <timer-modal></timer-modal>
+  <player-video-modal />
   <router-view></router-view>
 </template>
 
@@ -25,12 +26,14 @@ import {
 import cookies from '../utils/cookies';
 import Player from './Player/Player.vue';
 import TimerModal from './Timer/TimerModal.vue';
+import PlayerVideoModal from './Player/PlayerVideoModal.vue';
 import ToastContainer from './Toast/ToastContainer.vue';
 
 export default defineComponent({
   components: {
     Player,
     TimerModal,
+    PlayerVideoModal,
     ToastContainer
   },
   created() {

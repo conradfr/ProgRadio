@@ -92,7 +92,7 @@ import AndroidApi from '../../api/AndroidApi';
 import PlayerUtils from '../../utils/PlayerUtils';
 import tooltip from '../../utils/tooltip';
 import typeUtils from '../../utils/typeUtils';
-/* eslint-disable import/extensions */
+// eslint-disable-next-line import/extensions
 import type Hls from '../../../js/hls.js';
 
 /* we load the hls script dynamically once, reducing initial app load */
@@ -166,7 +166,9 @@ export default defineComponent({
     hls: Hls|null,
     // dash: Dash|null,
     debounce: boolean,
-    locale: string
+    locale: string,
+    videoModalElem: any,
+    videoModalInstance: any
   } {
     return {
       PlayerStatus,
@@ -202,17 +204,9 @@ export default defineComponent({
       hls: null,
       // dash: null,
       locale: this.$i18n.locale,
+      videoModalElem: null,
+      videoModalInstance: null,
     };
-  },
-  mounted() {
-    // we refresh the state if the app is running
-    if (this.externalPlayer === true) {
-      AndroidApi.getState();
-      // @ts-ignore
-    } else if (window.navigator.connection !== undefined) {
-      // @ts-ignore
-      window.navigator.connection.onchange = this.updateFlux();
-    }
   },
   created() {
     window.addEventListener('beforeunload', this.beforeWindowUnload);
@@ -223,6 +217,16 @@ export default defineComponent({
     Array.prototype.forEach.call(mobileTimerElems, (element) => {
       element.classList.remove('disabled');
     });
+  },
+  mounted() {
+    // we refresh the state if the app is running
+    if (this.externalPlayer === true) {
+      AndroidApi.getState();
+      // @ts-ignore
+    } else if (window.navigator.connection !== undefined) {
+      // @ts-ignore
+      window.navigator.connection.onchange = this.updateFlux();
+    }
   },
   computed: {
     ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite', collection: 'collections' }),
@@ -245,7 +249,8 @@ export default defineComponent({
       'playing',
       'muted',
       'volume',
-      'currentSong'
+      'currentSong',
+      'videoModalUrl'
     ]),
     currentPlayer(): any|null {
       if (this.audio.current === null) {
@@ -295,7 +300,8 @@ export default defineComponent({
       updateFlux: 'updateFlux',
       playError: 'playError',
       setPlayerStatus: 'setPlayerStatus',
-      setStreamPlayingError: 'setStreamPlayingError'
+      setStreamPlayingError: 'setStreamPlayingError',
+      setVideoModalUrl: 'setVideoModalUrl'
     }),
     beforeWindowUnload() {
       if (this.externalPlayer === false && this.playing !== PlayerStatus.Stopped) {
@@ -337,6 +343,8 @@ export default defineComponent({
     },
     /* eslint-disable no-undef */
     play(url: string, options?: PlayOptions) {
+      this.hideVideoModal();
+
       // this.stop();
       // if (this.playerStore.playing === true) {
       //   this.pause();
@@ -657,6 +665,30 @@ export default defineComponent({
       }
 
       this.audio.current = nextPlayerId;
+    },
+    showVideoModal() {
+      if (!this.videoModalElem) {
+        // eslint-disable-next-line no-undef
+        this.videoModalElem = document.getElementById('playerVideoModal');
+      }
+
+      if (!this.videoModalInstance) {
+        // @ts-expect-error bootstrap is defined on global scope
+        this.videoModalInstance = new bootstrap.Modal(this.videoModalElem);
+      }
+
+      if (this.videoModalInstance) {
+        this.videoModalElem.addEventListener('hidden.bs.modal', () => {
+          this.setVideoModalUrl(null);
+        });
+
+        this.videoModalInstance.show();
+      }
+    },
+    hideVideoModal() {
+      if (this.videoModalInstance) {
+        this.videoModalInstance.hide();
+      }
     }
   },
   /* eslint-disable operator-linebreak */
@@ -664,7 +696,7 @@ export default defineComponent({
   /* eslint-disable quote-props */
   /* eslint-disable func-names */
   watch: {
-    'playing': function (val: PlayerStatus) {
+    playing(val: PlayerStatus) {
       if (this.radio === null) {
         return;
       }
@@ -696,7 +728,15 @@ export default defineComponent({
         // this.stop();
       }
     },
-    'muted': function (val) {
+    videoModalUrl(newVal) {
+      if (!newVal) {
+        this.hideVideoModal();
+        return;
+      }
+
+      this.showVideoModal();
+    },
+    muted(val) {
       if (this.externalPlayer === true) { return; }
 
       /* if (window.audio !== undefined && window.audio !== null) {
@@ -707,7 +747,7 @@ export default defineComponent({
         this.currentPlayer.element.muted = val;
       }
     },
-    'volume': function (val) {
+    volume(val) {
       if (this.externalPlayer === true) { return; }
 
       /* if (window.audio !== undefined && window.audio !== null) {
@@ -718,12 +758,12 @@ export default defineComponent({
         this.currentPlayer.element.volume = (val * 0.1);
       }
     },
-    'radioShowWatching': function (newVal, oldVal) {
+    radioShowWatching(newVal, oldVal) {
       if (this.externalPlayer === true || this.playing !== PlayerStatus.Playing) { return; }
 
       let display = false;
       const [oldPlaying, oldRadio, oldShow] = oldVal.split('|');
-      /* eslint-disable @typescript-eslint/no-unused-vars */
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_newPlaying, newRadio, newShow] = newVal.split('|');
 
       if (newRadio === 'null') {

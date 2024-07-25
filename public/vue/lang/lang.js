@@ -97,7 +97,10 @@ export const messages = {
           set: 'Le minuteur est activé pour 0 minute | Le minuteur est activé pour {minutes} minute |Le minuteur est activé pour {minutes} minutes',
           title: 'Minuteur',
           tooltip: 'Cliquer ici pour activer le minuteur'
-        }
+        },
+        video: {
+          title: 'Player vidéo'
+        },
       },
       radio_page: {
         back: '← Retourner à la grille complète des programmes',
@@ -236,7 +239,10 @@ export const messages = {
           set: 'Timer has been set to {minutes} minute(s)',
           title: 'Timer',
           tooltip: 'Click here to set the timer'
-        }
+        },
+        video: {
+          title: 'Video player'
+        },
       },
       radio_page: {
         back: '← Back to radio guide',
@@ -375,7 +381,10 @@ export const messages = {
           set: 'El temporizador se activa durante 0 minutos | El temporizador se activa durante {minutes} minutos | El temporizador se activa durante {minutes} minutos',
           title: 'Minuteur',
           tooltip: 'Haga clic aquí para activar el temporizador'
-        }
+        },
+        video: {
+          title: 'Reproductor de video'
+        },
       },
       radio_page: {
         back: '← Ir a la programación de todas las emisoras de radio.',
@@ -514,7 +523,10 @@ export const messages = {
           set: 'Der Timer wurde auf {minutes} Minute (n) eingestellt',
           title: 'Timer',
           tooltip: 'Klicken Sie hier, um den Timer einzustellen'
-        }
+        },
+        video: {
+          title: 'Videoplayer'
+        },
       },
       radio_page: {
         back: '← Zurück zum Radioguide',
@@ -653,7 +665,10 @@ export const messages = {
           set: 'O cronômetro foi configurado para {minutos} minuto (s)',
           title: 'Timer',
           tooltip: 'Clique aqui para definir o temporizador'
-        }
+        },
+        video: {
+          title: 'Player de vídeo'
+        },
       },
       radio_page: {
         back: '← Voltar ao guia de rádio',
@@ -792,7 +807,10 @@ export const messages = {
           set: 'Il timer è stato impostato su {minutes} minuto/i',
           title: 'Timer',
           tooltip: 'Clicca qui per impostare il timer'
-        }
+        },
+        video: {
+          title: 'Lettore video'
+        },
       },
       radio_page: {
         back: '← Back to radio guide',
@@ -931,7 +949,10 @@ export const messages = {
           set: 'Timer został ustawiony na {minutes} minutę',
           title: 'Timer',
           tooltip: 'Kliknij tutaj, aby ustawić timer'
-        }
+        },
+        video: {
+          title: 'Odtwarzacz wideo'
+        },
       },
       radio_page: {
         back: '← Powrót do przewodnika radiowego',
@@ -1070,7 +1091,10 @@ export const messages = {
           set: 'Ο χρονοδιακόπτης έχει ρυθμιστεί σε {minutes} λεπτών',
           title: 'Χρονοδιακόπτης',
           tooltip: 'Κάντε κλικ εδώ για να ορίσετε το χρονοδιακόπτη'
-        }
+        },
+        video: {
+          title: 'Βίντεο'
+        },
       },
       radio_page: {
         back: '← Επιστροφή στον οδηγό ραδιοφωνίας',
@@ -1209,7 +1233,10 @@ export const messages = {
           set: 'المؤقِّت قيد التشغيل لمدة 0 دقيقة | المؤقِّت قيد التشغيل لمدة {minutes} دقيقة |المؤقِّت قيد التشغيل لمدة {minutes}',
           title: 'جهاز ضبط الوقت',
           tooltip: 'انقر هنا لتنشيط جهاز ضبط الوقت'
-        }
+        },
+        video: {
+          title: 'مشغل فديوهات'
+        },
       },
       radio_page: {
         back: 'ارجع إلى جدول البرنامج الكامل',
@@ -1348,7 +1375,10 @@ export const messages = {
           set: 'Cronometrul este pornit timp de 0 minute | Cronometrul este pornit pentru {minute} minut |Cronometrul este pornit pentru {minute} minute',
           title: 'Cronometru',
           tooltip: 'Faceți clic aici pentru a activa cronometrul'
-        }
+        },
+        video: {
+          title: 'Video player'
+        },
       },
       radio_page: {
         back: '← Reveniți la programul complet al programelor',

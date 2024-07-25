@@ -17,7 +17,7 @@ module.exports = {
   },
   rules: {
     "comma-dangle": ["off"],
-    "max-len": [2, {"code": 100}],
+    "max-len": [2, {"code": 120, "ignoreUrls": true, "ignoreStrings": true}],
     "no-restricted-syntax": 0,
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",

@@ -59,6 +59,9 @@ interface State {
   focus: Focus;
   timer: number
   timerInterval: number|null
+  // hack to avoid complex component interaction
+  // as the modal needs to be at the root
+  videoModalUrl: string|null
 }
 
 const flux = PlayerUtils.calculatedFlux();
@@ -99,7 +102,8 @@ export const usePlayerStore = defineStore('player', {
       fader: false
     },
     timer: 0,
-    timerInterval: null
+    timerInterval: null,
+    videoModalUrl: null
   }),
   getters: {
     radioPlayingCodeName: state => (state.radio !== null ? state.radio.code_name : null),
@@ -220,6 +224,11 @@ export const usePlayerStore = defineStore('player', {
       }
 
       nextTick(() => {
+        if (PlayerUtils.isVideoLink(stream.stream_url)) {
+          this.videoModalUrl = stream.stream_url;
+          return;
+        }
+
         this.play({ radio: stream });
         this.startListeningSession();
       });
@@ -754,6 +763,9 @@ export const usePlayerStore = defineStore('player', {
     /* From Android */
     updateSong(songData: any|null) {
       this.setSong(songData);
+    },
+    setVideoModalUrl(url: string|null) {
+      this.videoModalUrl = url;
     },
     /* From Android */
     /* eslint-disable no-param-reassign */
