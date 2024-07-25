@@ -187,6 +187,8 @@ RUN chmod -R 777 /var/www/var
 
 RUN usermod -u 1000 www-data
 
+HEALTHCHECK CMD wget 127.0.0.1:80 || exit 1
+
 WORKDIR /scripts
 RUN chmod +x ./docker-entry.sh
 CMD ["./docker-entry.sh"]
