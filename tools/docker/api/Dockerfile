@@ -73,6 +73,4 @@ RUN mix deps.compile
 
 RUN mix release prod
 
-HEALTHCHECK CMD wget 127.0.0.1:80 || exit 1
-
 CMD ["_build/prod/rel/prod/bin/prod", "start"]
