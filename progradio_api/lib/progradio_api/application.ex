@@ -23,7 +23,11 @@ defmodule ProgRadioApi.Application do
       {Phoenix.PubSub, name: ProgRadioApi.PubSub},
       ProgRadioApiWeb.Presence,
       {Registry, [keys: :unique, name: SongSongProviderRegistry]},
-      {DynamicSupervisor, strategy: :one_for_one, name: ProgRadioApi.SongDynamicSupervisor},
+      {DynamicSupervisor,
+       strategy: :one_for_one,
+       max_restarts: 20,
+       max_seconds: 1,
+       name: ProgRadioApi.SongDynamicSupervisor},
       ProgRadioApi.ListenersCounter,
       # Start the Finch HTTP client for sending emails
       {Finch, name: ProgRadioApi.Finch},

@@ -64,12 +64,16 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
         %{}
 
       _ ->
-        artist =
-          data["artists"]
-          |> List.first()
-          |> Map.get("name")
+        try do
+          artist =
+            data["artists"]
+            |> List.first()
+            |> Map.get("name")
 
-        %{artist: artist, title: data["info"]["title"]}
+          %{artist: artist, title: data["info"]["title"]}
+        rescue
+          _ -> nil
+        end
     end
   end
 end

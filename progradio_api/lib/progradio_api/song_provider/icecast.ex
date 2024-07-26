@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 15000
+  @refresh_auto_interval 20000
 
   @icecast_api "/status-json.xsl"
 
@@ -54,6 +54,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
             end)
 
           Task.await(task)
+        rescue
+          _ -> :error
         catch
           :exit, _ ->
             :error
@@ -119,7 +121,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
       |> Map.get("icestats")
       |> Map.get("source")
       |> Enum.find(fn s ->
-        String.contains?(s["listenurl"], parsed_url.host) == true and String.contains?(s["listenurl"], parsed_url.path || "") == true
+        String.contains?(s["listenurl"], parsed_url.host) == true and
+          String.contains?(s["listenurl"], parsed_url.path || "") == true
       end)
     rescue
       _ -> nil

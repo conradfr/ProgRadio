@@ -201,10 +201,20 @@ defmodule ProgRadioApi.SongServer do
 
   @spec get_data_song(atom(), String.t(), map() | nil) :: tuple()
   defp get_data_song(module, name, last_data) do
-    data = apply(module, :get_data, [name, last_data])
-    song = apply(module, :get_song, [name, data]) || %{}
+    try do
+      data = apply(module, :get_data, [name, last_data])
 
-    {data, song}
+      song =
+        unless data == :error do
+          apply(module, :get_song, [name, data]) || %{}
+        else
+          %{}
+        end
+
+      {data, song}
+    rescue
+      _ -> {nil, %{}}
+    end
   end
 
   defp get_updated_retries(name, song, retries) do
