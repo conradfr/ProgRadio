@@ -11,7 +11,11 @@ defmodule ProgRadioApi.SongManager do
 
         DynamicSupervisor.start_child(
           ProgRadioApi.SongDynamicSupervisor,
-          {ProgRadioApi.SongServer, {"url:" <> song_topic, nil, nil}}
+          %{
+            id: song_topic,
+            start: {ProgRadioApi.SongServer, :start_link, [{"url:" <> song_topic, nil, nil}]},
+            restart: :temporary
+          }
         )
 
       [{pid, _value}] ->

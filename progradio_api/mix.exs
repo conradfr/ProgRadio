@@ -70,7 +70,7 @@ defmodule ProgRadioApi.MixProject do
       {:recase, "~> 0.7"},
       #      {:shoutcast, "~> 0.1.0"},
       {:shoutcast,
-       git: "https://github.com/conradfr/shoutcast_ex.git", branch: "allow_hackney_options"},
+       git: "https://github.com/conradfr/shoutcast_ex.git", branch: "hackney_close"},
       {:floki, "~> 0.32.0"},
       {:canada, "~> 2.0"},
       {:nebulex, "~> 2.3"},
@@ -80,7 +80,7 @@ defmodule ProgRadioApi.MixProject do
       {:ex_cldr, "2.37.5"},
       {:ex_cldr_territories, "~> 2.0"},
       {:ex_cldr_collation, "~> 0.7.0"},
-      {:req, "~> 0.4.0"}
+      {:req, "~> 0.4.0"},
     ]
   end
 

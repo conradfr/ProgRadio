@@ -4,6 +4,7 @@ defmodule ProgRadioApi.SongServer do
   alias ProgRadioApiWeb.Presence
   alias ProgRadioApi.StreamSong
   alias ProgRadioApi.RadioStream
+  alias ProgRadioApi.TaskSupervisor
 
   @refresh_song_interval 15000
   @refresh_song_interval_long 30000
@@ -13,6 +14,8 @@ defmodule ProgRadioApi.SongServer do
   @refresh_song_retries_max_reset_at 100
   @refresh_song_retries_max_interval 120_000
   @refresh_presence_interval 60000
+
+  @task_timeout 15000
 
   # ----- Client Interface -----
 
@@ -178,6 +181,12 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
+  def handle_info({:DOWN, _ref, _, _, reason}, state) do
+    IO.puts "##################################################"
+    IO.puts "URL failed with reason #{inspect(reason)}"
+    {:noreply, state}
+  end
+
   # ----- Internal -----
 
   defp broadcast_song_if_needed(name, %{} = song, %{} = last_song) when song !== last_song do
@@ -202,18 +211,27 @@ defmodule ProgRadioApi.SongServer do
   @spec get_data_song(atom(), String.t(), map() | nil) :: tuple()
   defp get_data_song(module, name, last_data) do
     try do
-      data = apply(module, :get_data, [name, last_data])
+      task_data = Task.Supervisor.async(TaskSupervisor, module, :get_data, [name, last_data])
+      data = Task.await(task_data, @task_timeout)
+
+#      data = apply(module, :get_data, [name, last_data])
 
       song =
         unless data == :error do
-          apply(module, :get_song, [name, data]) || %{}
+          task_song = Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data])
+          Task.await(task_song)
+#          apply(module, :get_song, [name, data])
         else
           %{}
         end
 
       {data, song}
     rescue
-      _ -> {nil, %{}}
+      _ ->
+        {nil, %{}}
+    catch
+      :exit, _ ->
+        {nil, %{}}
     end
   end
 
