@@ -1,6 +1,7 @@
 defmodule ProgRadioApi.SongProvider.Icecast do
   require Logger
   alias ProgRadioApi.SongProvider
+  alias ProgRadioApi.TaskSupervisor
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -41,23 +42,34 @@ defmodule ProgRadioApi.SongProvider.Icecast do
         try do
           # We put it in a task to try to countering hackney increasing clients (ghost process ?)
           task =
-            Task.async(fn ->
-              try do
+            Task.Supervisor.async_nolink(TaskSupervisor, fn ->
                 {:ok, %Shoutcast.Meta{data: data}} =
-                  Shoutcast.read_meta(url, follow_redirect: true)
+                  Shoutcast.read_meta(url, follow_redirect: true, pool: false)
 
                 data
-              rescue
-                _ ->
-                  :error
-              end
             end)
 
-          Task.await(task)
+          case Task.yield(task) do
+            {:ok, data} ->
+#              IO.puts "#{inspect data}"
+              data
+
+            {:exit, _ } ->
+              Logger.error("Data provider - #{name}: task exit")
+              :error
+
+            {:error, data} ->
+              IO.puts "#{inspect data}"
+              :error
+
+          end
         rescue
-          _ -> :error
+          _ ->
+            Logger.error("Data provider - #{name}: task error rescue")
+            :error
         catch
           :exit, _ ->
+            Logger.error("Data provider - #{name}: task error catch")
             :error
         end
     end

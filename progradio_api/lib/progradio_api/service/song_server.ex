@@ -162,7 +162,7 @@ defmodule ProgRadioApi.SongServer do
     case how_many_connected do
       0 ->
         broadcast_song(name, nil)
-        Logger.debug("Data provider - #{name}: no client connected, exiting")
+        Logger.info("Data provider - #{name}: no client connected, exiting")
         {:stop, :normal, nil}
 
       _ ->
