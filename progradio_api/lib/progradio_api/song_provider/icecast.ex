@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   @refresh_auto_interval 20000
 
-  @task_timeout 10000
+  @task_timeout 7500
 
   @icecast_api "/status-json.xsl"
 

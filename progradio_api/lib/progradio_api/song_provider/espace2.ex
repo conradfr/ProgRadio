@@ -14,13 +14,17 @@ defmodule ProgRadioApi.SongProvider.Espace2 do
 
   @impl true
   def get_data(_name, _last_data) do
-    @url
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> Jason.decode!()
-    |> Map.get("data", %{})
-    |> Map.get("songs", %{})
-    |> Enum.find(fn e -> Map.get(e, "isPlayingNow", 0) == true end)
+    try do
+      @url
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> Jason.decode!()
+      |> Map.get("data", %{})
+      |> Map.get("songs", %{})
+      |> Enum.find(fn e -> Map.get(e, "isPlayingNow", 0) == true end)
+    rescue
+      _ -> nil
+    end
   end
 
   @impl true
