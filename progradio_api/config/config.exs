@@ -84,7 +84,7 @@ config :phoenix, :json_library, Jason
 
 #  System.get_env("CORS", ".*")
 {:ok, origin} =
-  System.get_env("CORS", "https?.*(programmes-radio|radio-addict)\.(com|fr)")
+  System.get_env("CORS", "https?.*(programmes-radio\.com|radio-addict\.com|localhost)")
   |> Regex.compile()
 
 config :cors_plug,
@@ -96,7 +96,7 @@ config :cors_plug,
 config :progradio_api,
   image_path: "/var/www/progradio/public/media/",
   banned_ips: "" |> String.split(","),
-  redis_host: "127.0.0.1",
+  redis_host: System.get_env("REDIS_HOST") || "127.0.0.1",
   redis_db: "0"
 
 config :hackney, use_default_pool: false

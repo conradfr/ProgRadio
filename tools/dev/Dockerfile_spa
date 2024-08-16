@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4
+
+FROM node:lts-alpine
+
+RUN apk add bash
+
+WORKDIR /usr/app
+COPY . /usr/app
+
+RUN npm i caniuse-lite browserslist
+RUN npx update-browserslist-db@latest
+
+RUN npm install
+
+#CMD [ "npm", "run", "dev"]

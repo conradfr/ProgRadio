@@ -7,12 +7,21 @@
 /var/sessions/*
 !var/sessions/.gitkeep
 
-(Symfony4)
+(Symfony)
 /public/bundles/
 /.web-server-pid
 /.env.local
 /.env.local.php
 /.env.*.local
+
+###> symfony/framework-bundle ###
+/config/secrets/prod/prod.decrypt.private.php
+/var/
+###< symfony/framework-bundle ###
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+###< symfony/phpunit-bridge ###
 
 # Parameters
 /Scraper/scraper_parameters.yml
@@ -118,22 +127,12 @@
 /tools/capistrano/config/deploy/*.rb
 /tools/capistrano/ssh/deployer*
 /tools/capistrano/log/capistrano.log
+
+# misc folder
 /work/
 
-###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
-
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
+# Used to mimport sql data in docker pgsql
+/sql/*.sql
 
 .eslintcache
 

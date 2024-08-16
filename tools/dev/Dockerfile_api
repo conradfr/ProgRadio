@@ -1,0 +1,22 @@
+FROM elixir:latest
+
+ENV TZ=Europe/Paris
+
+EXPOSE 4000
+EXPOSE 4001
+
+# Install hex package manager
+RUN mix local.hex --force
+
+RUN mkdir -p /app/progradio_api
+COPY ./progradio_api /app/progradio_api/
+
+WORKDIR /app/progradio_api
+
+# Install dependencies
+RUN mix deps.get
+
+# Compile the project
+RUN mix do compile
+
+# CMD ["mix", "phx.server"]

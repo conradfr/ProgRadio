@@ -4,7 +4,7 @@ import Config
 config :progradio_api, ProgRadioApi.Repo,
   username: "postgres",
   password: "123",
-  hostname: "localhost",
+  hostname: System.get_env("DATABASE_URL") || "localhost",
   database: "progradio",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
@@ -21,12 +21,12 @@ config :progradio_api, ProgRadioApi.Repo,
 config :progradio_api, ProgRadioApiWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "WdsBtDG5oowN5n7S4YNUj3xDLw7dfF2CcSoYeEBUFQDGE53YjRApdtN4QqsfiHdj",
-  watchers: []
+  watchers: [],
 
 # ## SSL Support
 #
@@ -40,12 +40,12 @@ config :progradio_api, ProgRadioApiWeb.Endpoint,
 #
 # The `http:` config above can be replaced with:
 #
-#     https: [
-#       port: 4001,
-#       cipher_suite: :strong,
-#       keyfile: "priv/cert/selfsigned_key.pem",
-#       certfile: "priv/cert/selfsigned.pem"
-#     ],
+     https: [
+       port: 4001,
+       cipher_suite: :strong,
+       keyfile: "priv/cert/selfsigned_key.pem",
+       certfile: "priv/cert/selfsigned.pem"
+     ]
 #
 # If desired, both `http:` and `https:` keys can be
 # configured to run both http and https servers on

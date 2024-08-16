@@ -1,0 +1,17 @@
+FROM node:14-alpine
+
+RUN apk add bash git g++ make py3-pip yarn
+
+# Set working directory
+WORKDIR /usr/app
+
+# Copy package.json and package-lock.json
+COPY ./package*.json ./
+
+# Copy application code
+COPY ./ .
+
+# Install dependencies
+RUN yarn install
+
+# CMD ["npm", "start"]

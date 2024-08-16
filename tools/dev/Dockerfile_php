@@ -1,0 +1,59 @@
+FROM php:8.3-fpm
+
+ENV TZ=Europe/Paris
+
+EXPOSE 9000
+
+RUN apt-get update && apt-get install -y \
+    iputils-ping \
+    netcat-traditional \
+    build-essential \
+    libpng-dev \
+    libpq-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    libgmp-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl \
+    zlib1g-dev \
+    libxml2-dev \
+    libwebp-dev \
+    libcurl4-openssl-dev \
+    jpegoptim \
+    sudo
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY ./tools/docker/www/fpm-supp.conf /usr/local/etc/php-fpm.d/fpm-supp.conf
+
+# Install extensions
+RUN pecl install apcu \
+ && docker-php-ext-install intl pdo_pgsql pgsql \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
+ && docker-php-ext-install -j$(nproc) gd \
+ && docker-php-ext-configure opcache --enable-opcache \
+ && docker-php-ext-install opcache \
+ && docker-php-ext-install gmp \
+ && docker-php-ext-enable apcu \
+ && pecl clear-cache
+
+COPY ./tools/docker/www/local.ini /usr/local/etc/php/conf.d/local.ini
+
+#RUN cat /usr/local/etc/php/conf.d/local.ini
+#RUN cat /usr/local/etc/php-fpm.d/fpm-supp.conf
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN #composer install --prefer-dist --no-scripts --no-interaction
+
+RUN mkdir -p /var/www/var/logs/
+RUN mkdir -p /var/www/var/log/
+
+# Set working directory
+WORKDIR /var/www
