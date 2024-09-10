@@ -8,7 +8,12 @@ defmodule ProgRadioApi.SongProvider.Radionova do
     "radionova_main" => "radio-nova",
     "radionova_nouvo" => "nouvo-nova",
     "radionova_danse" => "nova-danse",
+    "radionova_hiphop" => "nova-hip-hop",
+    "radionova_soul" => "nova-soul",
+    "radionova_nouvo" => "nouvo-nova",
+    "radionova_reggae" => "nova-reggae",
     "radionova_lanuit" => "nova-la-nuit",
+    "radionova_laplage" => "nova-la-plage",
     "radionova_classics" => "nova-classics",
     "radionova_bordeaux" => "nova-bordeaux",
     "radionova_lyon" => "nova-lyon"
@@ -59,7 +64,7 @@ defmodule ProgRadioApi.SongProvider.Radionova do
         |> (&Map.get(@stream_name, &1)).()
 
       radio =
-        "https://www.nova.fr/wp-json/radios/all"
+        "https://www.nova.fr/radios-data/www.nova.fr/all.json"
         |> SongProvider.get()
         |> Map.get(:body)
         |> Jason.decode!()
