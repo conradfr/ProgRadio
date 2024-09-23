@@ -229,12 +229,12 @@ class Stream
         $this->countryCode = $countryCode;
     }
 
-    public function getLanguage(): string
+    public function getLanguage(): ?string
     {
         return $this->language;
     }
 
-    public function setLanguage(string $language): void
+    public function setLanguage(?string $language): void
     {
         $this->language = $language;
     }
