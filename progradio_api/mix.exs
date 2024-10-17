@@ -52,7 +52,7 @@ defmodule ProgRadioApi.MixProject do
       {:bandit, "~> 1.2"},
       {:httpoison, "~> 2.1"},
       {:hackney, "~> 1.20"},
-      {:tzdata, "~> 1.1.1"},
+      {:tzdata, "~> 1.1.2"},
       {:cors_plug, "~> 2.0"},
       {:remote_ip, "~> 1.1.0"},
       {:dns, "~> 2.2.0"},
