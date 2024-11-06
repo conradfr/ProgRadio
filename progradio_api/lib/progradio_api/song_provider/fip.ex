@@ -4,6 +4,19 @@ defmodule ProgRadioApi.SongProvider.Fip do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @stream_ids %{
+    "fip_main" => 7,
+    "fip_rock" => 64,
+    "fip_jazz" => 65,
+    "fip_groove" => 66,
+    "fip_pop" => 78,
+    "fip_electro" => 74,
+    "fip_monde" => 69,
+    "fip_reggae" => 71,
+    "fip_nouveautes" => 70,
+    "fip_metal" => 77
+  }
+
   @refresh_fallback_s 3
   @refresh_fallback_ms 3000
 
@@ -27,14 +40,10 @@ defmodule ProgRadioApi.SongProvider.Fip do
   @impl true
   def get_data(name, _last_data) do
     id =
-      name
-      |> SongProvider.get_stream_code_name_from_channel()
-      |> case do
-        value when value == "fip_main" -> "fip"
-        value -> value
-      end
+      SongProvider.get_stream_code_name_from_channel(name)
+      |> (&Map.get(@stream_ids, &1)).()
 
-    url = "https://www.radiofrance.fr/fip/api/live/webradios/#{id}"
+    url = "https://api.radiofrance.fr/livemeta/live/#{id}/transistor_musical_player"
 
     try do
       url
@@ -57,16 +66,9 @@ defmodule ProgRadioApi.SongProvider.Fip do
         artist =
           data
           |> Map.get("now", %{})
-          |> Map.get("secondLine", %{})
-          |> Map.get("title")
+          |> Map.get("secondLine", nil)
 
-        title =
-          data
-          |> Map.get("now", %{})
-          |> Map.get("firstLine", %{})
-          |> Map.get("title")
-
-        %{artist: artist, title: title}
+        %{artist: artist, title: nil}
     end
   end
 end
