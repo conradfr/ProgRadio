@@ -286,7 +286,7 @@ defmodule ProgRadioApi.Streams do
   end
 
   defp add_country(query, %{:country => country_code}) when is_binary(country_code) do
-    with country_code_upper <- String.upcase(country_code) do
+    with country_code_upper when is_binary(country_code_upper) <- String.upcase(country_code) do
       query
       |> where([s], s.country_code == ^country_code_upper)
     else

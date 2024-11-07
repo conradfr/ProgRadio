@@ -27,15 +27,10 @@ defmodule ProgRadioApi.SongProvider.Radioclassique do
         Logger.error("Data provider - #{name}: error fetching song data")
         %{}
 
-      _ ->
-        case Map.get(data, "duree") do
-          nil ->
-            Logger.debug("Data provider - #{name}: not real current song")
-            nil
+      map when is_map(map) ->
+        %{artist: Map.get(data, "auteur", nil), title: Map.get(data, "titre", nil)}
 
-          _ ->
-            %{artist: data["auteur"], title: data["titre"]}
-        end
+      _ -> %{}
     end
   end
 end

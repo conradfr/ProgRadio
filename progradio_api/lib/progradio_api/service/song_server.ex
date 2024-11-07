@@ -182,8 +182,7 @@ defmodule ProgRadioApi.SongServer do
   end
 
   def handle_info({:DOWN, _ref, _, _, reason}, state) do
-    IO.puts "##################################################"
-    IO.puts "URL failed with reason #{inspect(reason)}"
+    Logger.warning("URL failed with reason #{inspect(reason)}")
     {:noreply, state}
   end
 

@@ -12,7 +12,12 @@ defmodule ProgRadioApi.SongProvider.Nrj do
     "nrj_main" => "158",
     "nrj_hits" => "1",
     "nrj_madeinfrance" => "331",
-    "nrj_nouveautes" => "27"
+    "nrj_nouveautes" => "27",
+    "nrj_hits_remix" => "163",
+    "nrj_hits_80" => "1294",
+    "nrj_dance_hits" => "278",
+    "nrj_french_hits" => "26",
+    "nrj_100%_francais" => "1267"
   }
 
   @impl true

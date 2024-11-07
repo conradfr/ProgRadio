@@ -1,20 +1,17 @@
-defmodule ProgRadioApi.SongProvider.Fip do
+defmodule ProgRadioApi.SongProvider.Francemusique do
   require Logger
   alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "fip_main" => 7,
-    "fip_rock" => 64,
-    "fip_jazz" => 65,
-    "fip_groove" => 66,
-    "fip_pop" => 78,
-    "fip_electro" => 74,
-    "fip_monde" => 69,
-    "fip_reggae" => 71,
-    "fip_nouveautes" => 70,
-    "fip_metal" => 77
+    "francemusique_main" => "",
+    "francemusique_baroque" => "francemusique_baroque",
+    "francemusique_classique_easy" => "francemusique_classique_easy",
+    "francemusique_piano_zen" => "francemusique_piano_zen",
+    "francemusique_opera" => "francemusique_opera",
+    "francemusique_concert_rf" => "francemusique_concert_rf",
+    "francemusique_evenmentielle" => "francemusique_evenmentielle"
   }
 
   @refresh_fallback_s 3
@@ -43,7 +40,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
-    url = "https://api.radiofrance.fr/livemeta/live/#{id}/transistor_musical_player"
+    url = "https://www.radiofrance.fr/francemusique/api/live?webradio=#{id}"
 
     try do
       url
@@ -63,17 +60,19 @@ defmodule ProgRadioApi.SongProvider.Fip do
         %{}
 
       _ ->
-        fallback =
-          data
-          |> Map.get("now", %{})
-          |> Map.get("firstLine", nil)
-
         artist =
           data
           |> Map.get("now", %{})
-          |> Map.get("secondLine", fallback)
+          |> Map.get("secondLine", %{})
+          |> Map.get("title", nil)
 
-        %{artist: artist, title: nil}
+        title =
+          data
+          |> Map.get("now", %{})
+          |> Map.get("firstLine", %{})
+          |> Map.get("title", nil)
+
+        %{artist: artist, title: title}
     end
   end
 end

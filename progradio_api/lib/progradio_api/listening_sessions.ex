@@ -135,7 +135,7 @@ defmodule ProgRadioApi.ListeningSessions do
   # listening session for streams
   def create_listening_session(%{"stream_id" => stream_id} = attrs, remote_ip)
       when is_map_key(attrs, "stream_id") do
-    with stream <- Repo.get(Stream, stream_id) do
+    with %{} = stream <- Repo.get(Stream, stream_id) do
       params = %{
         "last_listening_at" => NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
       }

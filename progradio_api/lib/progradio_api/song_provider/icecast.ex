@@ -21,7 +21,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   def get_auto_refresh(), do: @refresh_auto_interval
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, _last_data) do
     url = SongProvider.get_stream_code_name_from_channel(name)
 
 #    data =

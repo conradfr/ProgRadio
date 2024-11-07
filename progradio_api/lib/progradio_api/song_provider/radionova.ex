@@ -6,7 +6,6 @@ defmodule ProgRadioApi.SongProvider.Radionova do
 
   @stream_name %{
     "radionova_main" => "radio-nova",
-    "radionova_nouvo" => "nouvo-nova",
     "radionova_danse" => "nova-danse",
     "radionova_hiphop" => "nova-hip-hop",
     "radionova_soul" => "nova-soul",
