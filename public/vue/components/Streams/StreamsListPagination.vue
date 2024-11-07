@@ -5,7 +5,7 @@
         <nav aria-label="navigation">
           <ul class="pagination justify-content-center">
             <li class="page-item" :class="{ 'disabled': page === 1 }">
-              <a class="page-link" v-on:click="gotoPage(page - 1)" aria-label="Previous">
+              <a class="page-link" href="#top" v-on:click="gotoPage(page - 1)" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
@@ -18,11 +18,11 @@
                   'ellipsis': pagesList[index] - pagesList[index - 1] > 1
                 }"
             >
-              <a class="page-link"
+              <a class="page-link" href="#top"
                  v-on:click="gotoPage(n)">{{ n }}</a>
             </li>
             <li class="page-item" :class="{ 'disabled': page === pages }">
-              <a class="page-link" v-on:click="gotoPage(page + 1)" aria-label="Next">
+              <a class="page-link" href="#top" v-on:click="gotoPage(page + 1)" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
