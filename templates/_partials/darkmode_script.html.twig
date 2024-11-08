@@ -29,8 +29,6 @@
       return;
     }
 
-    console.debug('isDark: ' + isCurrentlyDarkTime());
-
     setColorSchemeMode(isCurrentlyDarkTime());
     // window.setTimeout(checkColorScheme, 3600000);
   };
@@ -70,7 +68,7 @@
     if (state === true) {
       document.getElementsByTagName('html')[0].dataset[themeDataName] = darkThemeName;
     } else {
-      document.getElementsByTagName('html')[0].classList.remove(themeDataName);
+      delete document.getElementsByTagName('html')[0].dataset[themeDataName];
     }
 
     // ui toggle icon
@@ -110,7 +108,7 @@
   }
 
   // will check for dark mode time starting next hour
-  // window.setTimeout(checkColorScheme, nextHourInMs());
+  window.setTimeout(checkColorScheme, nextHourInMs());
 
   window.addEventListener('focus', checkColorScheme);
   setInterval(checkColorScheme, 60000);
