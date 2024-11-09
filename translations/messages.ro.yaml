@@ -138,6 +138,7 @@ page:
         description: 'Ascultă %radio% live și gratuită'
         disabled: 'Acest radio pare a fi inactiv.'
         discover: Descoperiți mai multe posturi de radio, căutați după stiluri de țară și muzică...
+        errors: Au fost raportate erori de redare pentru acest radio.
         find: Căutare
         find_amazon: Căutați pe Amazon
         find_deezer: Caută pe Deezer

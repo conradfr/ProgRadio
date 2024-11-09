@@ -140,6 +140,7 @@ page:
         description: 'Écoutez %radio% en direct et gratuit'
         disabled: 'Cette radio semble inactive.'
         discover: Découvrez plus de radios, cherchez par pays et styles de musique ...
+        errors: 'Des erreurs de lecture ont été rapportées pour cette radio.'
         find: Rechercher
         find_amazon: Rechercher sur Amazon
         find_deezer: Rechercher sur Deezer

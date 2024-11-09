@@ -139,6 +139,7 @@ page:
         description: 'استمع إلى أجهزة الراديو من جميع أنحاء العالم'
         disabled: 'قد يكون هذا الراديو غير نشط.'
         discover: اكتشف المزيد من محطات الراديو، وابحث حسب البلد وأنماط الموسيقى...
+        errors: تم الإبلاغ عن أخطاء تشغيل لهذا الراديو.
         find: ابحث
         find_amazon: Rechercher sur Amazon
         find_deezer: Rechercher sur Deezer

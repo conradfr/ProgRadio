@@ -137,6 +137,7 @@ page:
         description: 'Słuchaj radia z całego świata'
         disabled: 'To radio może być nieaktywne.'
         discover:  Odkryj więcej radia, szukaj według kraju i stylu...
+        errors: Błędy odtwarzania zostały zgłoszone dla tego radia.
         find: Szukaj
         find_amazon: Znajdź na Amazon
         find_deezer: Znajdź na Deezer

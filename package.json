@@ -20,7 +20,7 @@
     "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
     "browserslist": "^4.24.2",
-    "caniuse-lite": "^1.0.30001678",
+    "caniuse-lite": "^1.0.30001679",
     "cssnano": "^5.1.15",
     "hammerjs": "^2.0.8",
     "hls.js": "^1.5.17",

@@ -139,6 +139,7 @@ page:
         description: 'Escuchar radios de todo el mundo'
         disabled: 'Esta radio puede estar inactiva.'
         discover: Descubra más radios, busque por país y estilos de música ...
+        errors: Se han reportado errores de reproducción en esta radio.
         find: Busque
         find_amazon: Busque en amazon
         find_deezer: Busque en Deezer

@@ -106,10 +106,14 @@
                         <h4 class="mb-4">{{ stream.name }}</h4>
                     </div>
 
-                    {% if stream.enabled== false %}
+                    {% if stream.enabled == false %}
                         <div class="alert alert-warning mb-5" role="alert">
                             <i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.disabled'|trans }}
                         </div>
+                    {% endif %}
+
+                    {% if stream.playingError >= constant('App\\Entity\\Stream::ERROR_DISPLAY_THRESHOLD')  %}
+                        <p class="text-warning"><i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.errors'|trans }}</p>
                     {% endif %}
 
                     <div class="stream-page-stream mt-0 mb-4 py-1" v-scope>

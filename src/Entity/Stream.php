@@ -30,6 +30,8 @@ class Stream
     final public const SOURCE_RADIOBROWSER = 'radio-browser';
     final public const SOURCE_PROGRADIO = 'progradio';
 
+    final public const ERROR_DISPLAY_THRESHOLD = 7;
+
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'NONE')]

@@ -141,6 +141,7 @@ page:
         description: 'Listen to radios from all over the world'
         disabled: 'This radio may be inactive.'
         discover: Discover more radios, search by country and style ...
+        errors: 'Playing errors have been reported for this radio.'
         find: Search
         find_amazon: Find on Amazon
         find_deezer: Find on Deezer
