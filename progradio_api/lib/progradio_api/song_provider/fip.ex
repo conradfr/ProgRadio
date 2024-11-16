@@ -14,7 +14,9 @@ defmodule ProgRadioApi.SongProvider.Fip do
     "fip_monde" => 69,
     "fip_reggae" => 71,
     "fip_nouveautes" => 70,
-    "fip_metal" => 77
+    "fip_metal" => 77,
+    "fip_sacre_francais" => 96,
+    "fip_hiphop" => 95
   }
 
   @refresh_fallback_s 3
