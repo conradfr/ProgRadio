@@ -21,3 +21,10 @@ framework:
 
         app: cache.adapter.null
         system: cache.adapter.null
+
+when@prod:
+    framework:
+        cache:
+            app: cache.adapter.redis
+            system: cache.adapter.apcu
+            default_redis_provider: snc_redis.default

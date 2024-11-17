@@ -9,12 +9,6 @@
             <tr v-for="(song, index) in songs" :key="index">
               <td  class="ps-3" style="width: 60%;">{{ song }}</td>
               <td class="text-center" style="width: 25%;">
-                <a v-if="amazonLink(song)" class="link-no-to-bold" target="_blank"
-                   :title="$t( 'message.songs_page.buy_amazon')"
-                   :href="amazonLink(song)">
-                  <i class="bi bi-amazon"></i>&nbsp;&nbsp;
-                </a>&nbsp;&nbsp;
-
                 <a class="link-no-to-bold" target="_blank"
                    :title="$t( 'message.songs_page.find_youtube')"
                    :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
@@ -38,6 +32,11 @@
                     {{ $t('message.generic.delete') }}
                   </span>
                 </a>
+                <a v-if="amazonLink(song)" class="link-no-to-bold" target="_blank"
+                   :title="$t( 'message.songs_page.buy_amazon')"
+                   :href="amazonLink(song)">
+                  <i class="bi bi-amazon"></i>&nbsp;&nbsp;
+                </a>&nbsp;&nbsp;
               </td>
             </tr>
           </tbody>
