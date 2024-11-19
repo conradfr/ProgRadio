@@ -3,12 +3,16 @@ DOCKER_COMP = docker compose
 
 # Docker containers
 PHP_CONT = $(DOCKER_COMP) exec php-fpm
-NODE_CONT = $(NODE_COMP) exec spa
+SPA_CONT = $(DOCKER_COMP) exec spa
+API_CONT = $(DOCKER_COMP) exec api
+SCRAPER_CONT = $(DOCKER_COMP) exec scraper
 
 # Executables
-PHP      = $(PHP_CONT) php
+PHP = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
-SYMFONY  = $(PHP) bin/console
+SYMFONY = $(PHP) bin/console
+MIX	= $(API_CONT) mix
+NPM	= $(SPA_CONT) npm
 
 # Misc
 .DEFAULT_GOAL = help
@@ -41,16 +45,25 @@ sh: ## Connect to the FrankenPHP container
 bash: ## Connect to the FrankenPHP container via bash so up and down arrows go to previous commands
 	@$(PHP_CONT) bash
 
-n-sh: ## Connect to the node container
-	@$(NODE_CONT) /bin/sh
-
-n-bash: ## Connect to the node container via bash so up and down arrows go to previous commands
-	@$(NODE_CONT) bash
-
 test: ## Start tests with phpunit, pass the parameter "c=" to add options to phpunit, example: make test c="--group e2e --stop-on-failure"
 	@$(eval c ?=)
-	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit $(c)
+	@$(DOCKER_COMP) exec -e APP_ENV=test php-fpm bin/phpunit $(c)
 
+## —— API ———————————————————————————————————————————————————————————————
+
+api-dev:
+	@$(API_CONT) iex -S mix phx.server
+
+## —— JS FRONT ———————————————————————————————————————————————————————————————
+
+spa-dev:
+	@$(SPA_CONT) npm run dev
+
+## —— SCRAPER ———————————————————————————————————————————————————————————————
+
+scrap:
+	@$(eval c ?=)
+	@$(SCRAPER_CONT) node index.js $(c)
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
@@ -68,3 +81,13 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 
 cc: c=c:c ## Clear the cache
 cc: sf
+
+## —— Mix 🧙 ——————————————————————————————————————————————————————————————
+mix: ## Run mix, pass the parameter "c=" to run a given command, example: make mix c='deps.get'
+	@$(eval c ?=)
+	@$(MIX) $(c)
+
+## —— Mix 🧙 ——————————————————————————————————————————————————————————————
+npm: ## Run npm, pass the parameter "c=" to run a given command, example: make npm c='update'
+	@$(eval c ?=)
+	@$(NPM) $(c)

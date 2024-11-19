@@ -132,7 +132,7 @@
 /work/
 
 # Used to mimport sql data in docker pgsql
-/sql/*.sql
+/sql/*
 
 .eslintcache
 

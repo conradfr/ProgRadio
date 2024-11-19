@@ -1,9 +1,23 @@
+#FROM hexpm/elixir:1.17.3-erlang-27.1.2-ubuntu-jammy-20240808
 FROM elixir:latest
 
 ENV TZ=Europe/Paris
 
 EXPOSE 4000
 EXPOSE 4001
+
+RUN apt-get update && apt-get install --no-install-suggests -y \
+    tzdata \
+    build-essential make \
+    imagemagick \
+    pkgconf \
+    libicu-dev \
+    jpegoptim optipng pngquant gifsicle
+
+# For temp forked dep
+RUN apt-get install --no-install-recommends --no-install-suggests -y git ca-certificates
+#
+#RUN pkg-config --libs icu-uc icu-io
 
 # Install hex package manager
 RUN mix local.hex --force
@@ -20,3 +34,5 @@ RUN mix deps.get
 RUN mix do compile
 
 # CMD ["mix", "phx.server"]
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]

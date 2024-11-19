@@ -70,10 +70,12 @@ services:
 #      - api
     volumes:
       - ./Scraper:/usr/app
+    links:
+      - api
 
 ###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-14}-alpine
+    image: postgres:${POSTGRES_VERSION:-17}-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-progradio}
       # You should definitely change the password in production
