@@ -1,88 +1,40 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const axios = require("axios");
 
 let scrapedData = [];
 let referenceIndex = 0;
 
-// gonna be messy
 const format = dateObj => {
 
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
+    const firstStartTimeToday = moment(dateObj).startOf('day');
+    const endStartTimeToday = moment(dateObj).endOf('day');
 
-    // Time
-    let regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s+([0-9]{1,2})[h|H]([0-9]{2})/);
-    let match = curr.datetime_raw.match(regexp);
+    const startDateTime = moment(curr.starts_at, moment.ISO_8601, 'Europe/Paris');
+    const endDateTime = moment(curr.ends_at, moment.ISO_8601, 'Europe/Paris');
 
-    // no time, exit
-    if (match === null) {
+    if (startDateTime.isBefore(firstStartTimeToday)) {
       return prev;
     }
 
-    const startDateTime = moment(curr.dateObj);
-    const endDateTime = moment(curr.dateObj);
-
-    startDateTime.hour(match[1]);
-    startDateTime.minute(match[2]);
-    startDateTime.second(0);
-    endDateTime.hour(match[3]);
-    endDateTime.minute(match[4]);
-    endDateTime.second(0);
-
-    let prevMatch = null;
-    // keep only relevant time from previous day page
-    if (startDateTime.isBefore(dateObj, 'day')) {
-      if (index === 0) {
-        return prev;
-      }
-
-      prevMatch = array[0].datetime_raw.match(regexp);
-      array[0].dateObj.hour(prevMatch[1]);
-
-      if (array[0].dateObj.isBefore(startDateTime)) {
-        return prev;
-      }
-
-      // update day
-      startDateTime.add(1, 'days');
-      endDateTime.add(1, 'days');
+    if (startDateTime.isAfter(endStartTimeToday)) {
+      return prev;
     }
-    // remove next day schedule from day page
-    else {
-      if (curr.dateObj !== array[index - 1].dateObj) {
-        referenceIndex = index;
-      } else {
-        prevMatch = array[referenceIndex].datetime_raw.match(regexp);
-        let prevDate = moment(array[referenceIndex].dateObj);
-        prevDate.hour(prevMatch[1]);
 
-        if (prevDate.isAfter(startDateTime)) {
-          return prev;
-        }
-      }
-
-      if (startDateTime.hour() > endDateTime.hour()) {
-        endDateTime.add(1, 'days');
-      }
-    }
+    const host = curr.radio_hosts.map((h) => h.name).join(', ') || null;
 
     newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'img': `https:${curr.img}`
+      'title': curr.radio_emission_title,
+      'description': curr.radio_emission_description,
+      'img': curr.emission_cover_url,
+      'host': host
+
     };
-
-    // Title - host
-    regexp = new RegExp(/^([\'\w\s\A-zÀ-ÿ\|]+)\s–\s([\w\s\A-zÀ-ÿ\|\']+)/);
-    match = curr.host_title.match(regexp);
-
-    if (match === null) {
-      newEntry.title = curr.host_title;
-    } else {
-      newEntry.host = match[1];
-      newEntry.title = match[2];
-    }
 
     prev.push(newEntry);
     return prev;
@@ -93,29 +45,17 @@ const format = dateObj => {
 
 const fetch = dateObj => {
   dateObj.locale('fr');
-  let day = dateObj.format('dddd').toLowerCase();
-  let url = 'https://skyrock.fm/emissions';
 
-  logger.log('info', `fetching ${url} (${day})`);
+  const day = dateObj.format('YYYY-MM-DD');
+  const url = `https://skyrock.fm/api/2020/radio/skyrock/emissions_grid/${day}`;
 
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .find(`#${day}`)
-      .select('.b-list__item > a')
-      .set({
-        'datetime_raw': '.b-list__item__number__infos',
-        'img': 'img.picture@src',
-        'host_title': '.heading-3',
-      })
-      .data(function (listing) {
-        listing.dateObj = dateObj;
-        scrapedData.push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
-  });
+  logger.log('info', `fetching ${url}`);
+
+  return axios.get(url)
+      .then(function (response) {
+        scrapedData = [...scrapedData, ...response.data.scheduled_emissions];
+        // return resolve(true);
+      })/*.catch((error) => logger.ilog('warn', error))*/;
 };
 
 const fetchAll = dateObj => {

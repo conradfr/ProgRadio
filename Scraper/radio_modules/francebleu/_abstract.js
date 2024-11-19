@@ -140,7 +140,7 @@ const fetch = async (urlName, name, dateObj, prev) => {
   dateObj.locale('fr');
   const format = 'YYYY-MM-DD';
 
-  const url = `https://www.francebleu.fr/api/path?date=${dateObj.format(format)}&value=emissions%2Fgrille-programmes%2F${urlName}`;
+  const url = `https://www.francebleu.fr/api/path?date=${dateObj.format(format)}&value=radio%2Fgrille-programmes%2F${urlName}`;
 
   logger.log('info', `fetching ${url}`);
 
