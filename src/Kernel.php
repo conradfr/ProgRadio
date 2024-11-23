@@ -9,7 +9,7 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    public function getCacheDir(): string
+/*    public function getCacheDir(): string
     {
         if (in_array($this->environment, ['dev', 'test'])) {
             return '/dev/shm/progradio/cache/' .  $this->environment;
@@ -25,5 +25,5 @@ class Kernel extends BaseKernel
         }
 
         return $this->getProjectDir().'/var/log';
-    }
+    }*/
 }

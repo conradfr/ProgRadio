@@ -146,8 +146,10 @@ page:
         find_spotify: Auf Spotify finden
         find_youtube: Auf Youtube finden
         listeners: Zuhörer
+        play: 'Höre'
         playing: Abspielen
         playing_error: Abspielfehler (Radio-Streaming ist möglicherweise nicht verfügbar)
+        stop: 'Stopp'
         suggested: Vorgeschlagene Radios
         tags: Schlagworte
         share: Radio teilen

@@ -148,8 +148,10 @@ page:
         find_spotify: Find on Spotify
         find_youtube: Find on Youtube
         listeners: Listeners
+        play: 'Listen'
         playing: Playing
         playing_error: Playing error (radio streaming may be unavailable)
+        stop: 'Stop'
         suggested: Suggested radios
         tags: Tags
         share: Share this radio

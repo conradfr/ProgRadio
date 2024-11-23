@@ -145,8 +145,10 @@ page:
         find_spotify: Căutați pe Spotify
         find_youtube: Căutați pe YouTube
         listeners: Auditori
+        play: 'Ascultă'
         playing: Titlu
         playing_error: Eroare de citire
+        stop: 'Opriți'
         suggested: Radiouri sugerate
         tags: Etichete
         share: Partajarea radioului

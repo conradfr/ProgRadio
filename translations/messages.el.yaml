@@ -146,8 +146,10 @@ page:
         find_spotify: Βρείτε στο Spotify
         find_youtube: Βρείτε στο Youtube
         listeners: Ακροατές
+        play: 'Ακούστε'
         playing: Παίζοντας
         playing_error: Σφάλμα αναπαραγωγής (η ροή ραδιοφώνου ενδέχεται να μην είναι διαθέσιμη)
+        stop: 'Διακοπή'
         suggested: Προτεινόμενα ραδιόφωνα
         tags: Ετικέτες
         share: Μοιραστείτε αυτό το ραδιόφωνο

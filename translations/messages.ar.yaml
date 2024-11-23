@@ -146,8 +146,10 @@ page:
         find_spotify: Rechercher sur Spotify
         find_youtube: Rechercher sur Youtube
         listeners: مدققو حسابات
+        play: استمع إلى
         playing: العنوان
         playing_error: خطأ في القراءة
+        stop: 'سدادة'
         suggested: أجهزة الراديو المقترحة
         tags: العلامات
         share: شارك الراديو

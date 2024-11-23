@@ -146,8 +146,10 @@ page:
         find_spotify: Busque en Spotify
         find_youtube: Busque en Youtube
         listeners: Oyentes
+        play: 'Escucha'
         playing: Título
         playing_error: Error de transmisión
+        stop: 'Detener'
         suggested: Radios sugeridos
         tags: Tags
         share: Compartir radio

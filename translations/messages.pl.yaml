@@ -144,8 +144,10 @@ page:
         find_spotify: Znajdź na Spotify
         find_youtube: Znajdź na Youtube
         listeners: Słuchacze
+        play: 'Słuchaj'
         playing: Gra
         playing_error: Błąd odtwarzania (strumieniowanie radiowe może być niedostępne)
+        stop: 'Zatrzymaj'
         suggested: Sugerowane radia
         tags: Tagi
         share:  Udostępnij to radio

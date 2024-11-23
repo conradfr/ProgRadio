@@ -146,8 +146,10 @@ page:
         find_spotify: Trova su Spotify
         find_youtube: Cerca su Youtube
         listeners: Ascoltatori
+        play: 'Ascolti  '
         playing: Giocando
         playing_error: Errore di riproduzione (lo streaming radio potrebbe non essere disponibile)
+        stop: 'Ferma'
         suggested: Radio consigliate
         tags: Etichette
         share: Condividi questa radio

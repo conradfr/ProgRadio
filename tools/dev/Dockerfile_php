@@ -43,7 +43,7 @@ RUN pecl install apcu \
  && docker-php-ext-enable apcu \
  && pecl clear-cache
 
-COPY ./tools/docker/www/local.ini /usr/local/etc/php/conf.d/local.ini
+COPY ./tools/dev/local.ini /usr/local/etc/php/conf.d/local.ini
 
 #RUN cat /usr/local/etc/php/conf.d/local.ini
 #RUN cat /usr/local/etc/php-fpm.d/fpm-supp.conf

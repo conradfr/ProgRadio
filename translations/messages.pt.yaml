@@ -144,8 +144,10 @@ page:
         find_spotify: Encontre no Spotify
         find_youtube: Encontre no Youtube
         listeners: Ouvintes
+        play: 'Ouça'
         playing: Jogando
         playing_error: Erro de reprodução (a transmissão de rádio pode estar indisponível)
+        stop: 'Stop'
         suggested: Rádios sugeridos
         tags: Etiquetas
         share: Compartilhar o rádio
