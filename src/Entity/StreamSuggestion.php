@@ -31,6 +31,9 @@ class StreamSuggestion
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $website = null;
 
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    private ?string $tags = null;
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $message = null;
 
@@ -90,6 +93,16 @@ class StreamSuggestion
     public function getWebsite(): ?string
     {
         return $this->website;
+    }
+
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(string $tags=null): void
+    {
+        $this->tags = $tags;
     }
 
     public function setWebsite(?string $website): void

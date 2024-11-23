@@ -188,6 +188,7 @@ page:
             website: Sito Web
             country: Paese
             language: Lingua
+            tags: Tag (minuscolo, separati da una virgola)
             submit: Invia
             delete: Elimina
             delete_confirm: Sei sicuro di voler eliminare questa stazione radio? Questa operazione è irreversibile.

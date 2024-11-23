@@ -189,6 +189,7 @@ page:
             website: Webseite
             country: Land
             language: Sprache
+            tags: Tags (Kleinbuchstaben, durch ein Komma getrennt)
             submit: Abschicken
             delete: Löschen
             delete_confirm: Bist du sicher, dass du diesen Radiosender löschen möchtest? Dieser Vorgang kann nicht rückgängig gemacht werden.

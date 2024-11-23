@@ -40,6 +40,10 @@
                 <div><a target="_blank" href="https://www.google.com/search?q={{ stream.name }}">Search Google</a></div>
             </div>
 
+            {% if stream.source == constant('App\\Entity\\Stream::SOURCE_PROGRADIO') %}
+                <div class="alert alert-info" role="alert">{{ 'Internal source'|trans }}</div>
+            {% endif %}
+
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>

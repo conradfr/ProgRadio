@@ -190,6 +190,7 @@ page:
             website: Site web
             country: Pays
             language: Langue
+            tags: Tags (en minuscule, séparés par une virgule)
             submit: Soumettre
             delete: Supprimer
             delete_confirm: Êtes-vous sûrs de vouloir supprimer cette radio ? Cette opération est irréversible.

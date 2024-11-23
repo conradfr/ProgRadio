@@ -30,6 +30,7 @@ class StreamSubmissionType extends AbstractType
             ->add('description', TextareaType::class, ['label' => $this->translator->trans('page.stream.submission.description'), 'required' => false])
             ->add('countryCode', CountryType::class, ['label' => $this->translator->trans('page.stream.submission.country'), 'required' => true])
             ->add('language', LanguageType::class, ['label' => $this->translator->trans('page.stream.submission.language'), 'required' => false])
+            ->add('tags', TextType::class, ['label' => $this->translator->trans('page.stream.submission.tags'), 'required' => false])
             ->add('Save', SubmitType::class, ['label'=> $this->translator->trans('page.stream.submission.submit'), 'attr' => ['class' => 'mt-3 btn btn-primary', 'required' => false]])
         ;
     }

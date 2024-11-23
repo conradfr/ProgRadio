@@ -187,6 +187,7 @@ page:
             website: Site
             country: País
             language: Idioma
+            tags: Tags (minúsculas, separadas por vírgula)
             submit: Enviar
             delete: Excluir
             delete_confirm: Tem certeza de que deseja excluir esta estação de rádio? Essa operação é irreversível.

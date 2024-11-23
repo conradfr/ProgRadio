@@ -256,7 +256,7 @@ class AdminController extends AbstractBaseController
     #[Route('/{_locale}/admin/stream_suggestions/{id}/{field}',
         name: 'admin_stream_suggestions_commit',
         requirements: [
-            'field' => 'name|img|streamUrl|website'
+            'field' => 'name|img|streamUrl|website|tags'
         ])]
     public function streamSuggestionsAction(StreamSuggestion $streamSuggestion = null, ?string $field, EntityManagerInterface $em): Response
     {

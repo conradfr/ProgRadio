@@ -191,6 +191,7 @@ page:
             website: Website
             country: Country
             language: Language
+            tags: Tags (lowercase, separated by a comma)
             submit: Submit
             delete: Delete
             delete_confirm: Are you sure you want to delete this radio?

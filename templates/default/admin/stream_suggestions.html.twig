@@ -70,6 +70,15 @@
                     </div>
                 {% endif %}
 
+                {% if stream_suggestion.tags %}
+                    <div class="mb-5">
+                        <h5>Tags:</h5>
+                        <p><strong>Current:</strong> {% if stream_suggestion.stream.tags is defined and stream_suggestion.stream.tags is not empty %}{{ stream_suggestion.stream.tags }}{% endif %}</p>
+                        <p><strong>Suggested:</strong> {{ stream_suggestion.tags }}</p>
+                        <a class="btn btn-primary btn-sm" href="{{ path('admin_stream_suggestions_commit', {id: stream_suggestion.id, field: 'tags'}) }}" role="button">Commit</a>
+                    </div>
+                {% endif %}
+
                 {% if stream_suggestion.message %}
                     <div class="mb-5">
                         <h5>Comment:</h5>

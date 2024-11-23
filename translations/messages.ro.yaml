@@ -188,6 +188,7 @@ page:
             website: Site web
             country: Țară
             language: Limba
+            tags: Etichete (minuscule, separate de o virgulă)
             submit: Trimite
             delete: Șterge
             delete_confirm: Sigur doriți să ștergeți acest post de radio? Această operație este ireversibilă.

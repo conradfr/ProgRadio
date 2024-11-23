@@ -189,6 +189,7 @@ page:
             website: Δικτυακός τόπος
             country: Χώρα
             language: Γλώσσα
+            tags: Ετικέτες (πεζά, χωρισμένα από κόμμα)
             submit: Υποβολή
             delete: Διαγραφή
             delete_confirm: Êtes-vous sûrs de vouloir supprimer cette radio ? Cette opération est irréversible.

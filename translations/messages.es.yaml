@@ -189,6 +189,7 @@ page:
             website: Sitio web
             country: País
             language: Idioma
+            tags: Etiquetas (minúsculas, separadas por una coma)
             submit: Enviar
             delete: Eliminar
             delete_confirm: ¿Está seguro de que desea eliminar esta emisora de radio? Esta operación es irreversible.
