@@ -23,7 +23,7 @@
                    :title="$t( 'message.songs_page.find_deezer')"
                    :href="encodeURI(`https://www.deezer.com/search/${song}`)">
                   <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
-                </a>
+                </a>&nbsp;&nbsp;
                 <a v-if="amazonLink(song)" class="link-no-to-bold" target="_blank"
                    :title="$t( 'message.songs_page.buy_amazon')"
                    :href="amazonLink(song)">

@@ -247,19 +247,19 @@
                         </div>
                     {% endif %}
 
-                    {% if stream.language is defined and stream.language is not null %}
+                    {% if stream.language is defined and stream.language is not null and stream.language != '' %}
                         <div class="mt-3">
                             <strong>{{ 'page.stream.languages'|trans }}:</strong> {{ stream.language|replace({',': ', '}) }}
                         </div>
                     {% endif %}
 
-                    {% if stream.slogan is defined and stream.slogan is not null %}
+                    {% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %}
                         <div class="mt-3">
                             <strong>{{ 'page.stream.tagline'|trans }}:</strong> {{ stream.slogan }}
                         </div>
                     {% endif %}
 
-                    {% if stream.description is defined and stream.description is not null %}
+                    {% if stream.description is defined and stream.description is not null and stream.description != '' %}
                         <div class="mt-3">
                             <strong>{{ 'page.stream.desc'|trans }}:</strong> {{ stream.description }}
                         </div>

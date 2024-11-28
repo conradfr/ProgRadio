@@ -146,7 +146,7 @@ class Stream
 
     #[Gedmo\Timestampable(on: 'update')]
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private \DateTime $updatedAt;
+    private ?\DateTime $updatedAt = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'streams', fetch: "EXTRA_LAZY")]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
@@ -529,7 +529,7 @@ class Stream
         $this->createdAt = $createdAt;
     }
 
-    public function getUpdatedAt(): \DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
