@@ -155,6 +155,10 @@ page:
         title_country: 'Słuchaj %radio% - %country% - Live'
         website: Strona
         banned: Questa stazione radio è vietata.
+        desc: 'Opis'
+        tagline: 'slogan'
+        updated: 'Aktualizacja'
+        languages: 'Języki'
 
         modification:
             at_least_one: Wypełnij co najmniej jedno pole.

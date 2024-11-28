@@ -157,6 +157,10 @@ page:
         title_country: '%radio% - %country% - Escucha en directo'
         website: 'Sitio web'
         banned: Esta emisora de radio está prohibida.
+        desc: 'Descripción'
+        slogan: 'eslogan'
+        updated: 'Actualizado'
+        languages: 'Idiomas'
 
         modification:
             at_least_one: rellena al menos un campo.

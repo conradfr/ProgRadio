@@ -157,6 +157,10 @@ page:
         title_country: '%radio% hören - %country% - Live'
         website: Webseite
         banned: Dieser Radiosender ist gesperrt.
+        desc: 'Beschreibung'
+        tagline: 'Slogan'
+        updated: 'Aktualisiert'
+        languages: 'Sprachen'
 
         modification:
             at_least_one: Fülle mindestens ein Feld aus.

@@ -155,6 +155,10 @@ page:
         title_country: '%radio% - %country% - Ao vivo'
         website: Site
         banned: Ta stacja radiowa jest zakazana.
+        desc: 'Descrição'
+        tagline: 'slogan'
+        updated: 'Atualizado'
+        languages: 'Idiomas'
 
         modification:
             at_least_one: Preencha pelo menos um campo.

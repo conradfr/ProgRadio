@@ -158,6 +158,10 @@ page:
         title_country: '%radio% - %country% - Écouter en direct'
         website: Site web
         banned: Cette radio est bannie.
+        desc: 'Description'
+        tagline: 'Slogan'
+        updated: 'Mis à jour'
+        languages: 'Langues'
 
         modification:
             at_least_one: Remplir un champs ou plus.

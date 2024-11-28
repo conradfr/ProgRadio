@@ -24,6 +24,11 @@
                    :href="encodeURI(`https://www.deezer.com/search/${song}`)">
                   <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
                 </a>
+                <a v-if="amazonLink(song)" class="link-no-to-bold" target="_blank"
+                   :title="$t( 'message.songs_page.buy_amazon')"
+                   :href="amazonLink(song)">
+                  <i class="bi bi-amazon"></i>&nbsp;&nbsp;
+                </a>&nbsp;&nbsp;
               </td>
               <td class="text-end pe-3" style="width: 15%;">
                 <a class="link-no-to-bold" v-on:click="removeSong(index)">
@@ -32,11 +37,6 @@
                     {{ $t('message.generic.delete') }}
                   </span>
                 </a>
-                <a v-if="amazonLink(song)" class="link-no-to-bold" target="_blank"
-                   :title="$t( 'message.songs_page.buy_amazon')"
-                   :href="amazonLink(song)">
-                  <i class="bi bi-amazon"></i>&nbsp;&nbsp;
-                </a>&nbsp;&nbsp;
               </td>
             </tr>
           </tbody>

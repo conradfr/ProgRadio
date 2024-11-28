@@ -124,6 +124,11 @@ page:
         summary: 'Riepilogo'
         title: '%radio% - Ascolti il live streaming'
         website: 'Sito web'
+        banned: Questa stazione radio è vietata.
+        desc: 'Descrizione'
+        tagline: 'slogan'
+        updated: 'Aggiornato'
+        languages: 'Lingue'
 
     registered:
         page_title: Registrarsi

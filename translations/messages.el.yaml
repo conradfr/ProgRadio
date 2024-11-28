@@ -157,6 +157,10 @@ page:
         title_country: 'Ακούστε το %radio% - %country% - Ζωντά'
         website: Δικτυακός τόπος
         banned: Αυτός ο ραδιοφωνικός σταθμός απαγορεύεται.
+        desc: 'Περιγραφή'
+        tagline: 'σύνθημα'
+        updated: 'Ενημερώθηκε'
+        languages: 'Γλώσσες'
 
         modification:
             at_least_one: Συμπληρώστε τουλάχιστον ένα πεδίο.

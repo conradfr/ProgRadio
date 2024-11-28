@@ -157,6 +157,10 @@ page:
         title_country: 'استمع إلى %radio% - %country% - بث مباشر'
         website: الموقع الإلكتروني
         banned:  محطة الراديو هذه محظورة
+        desc: وصف
+        tagline: الشعار
+        updated: تم تحديثه
+        languages: اللغات
 
         modification:
             at_least_one: املأ حقلاً واحدًا على الأقل.

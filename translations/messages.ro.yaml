@@ -156,6 +156,10 @@ page:
         title_country: '%radio% - %country% - Ascultă live'
         website: Site
         banned: Acest post de radio este interzis.
+        desc: 'Descriere'
+        tagline: 'slogan'
+        updated: 'Actualizat'
+        languages: 'Limbi'
 
         modification:
             at_least_one: Completați unul sau mai multe câmpuri.
