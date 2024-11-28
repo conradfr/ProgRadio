@@ -59,7 +59,6 @@ const fetch = dateObj => {
           'host': '.anim > span'
         })
         .data(function (listing) {
-          console.log(listing);
           scrapedData.push(listing);
         })
         .done(function () {
