@@ -25,7 +25,7 @@ defmodule ProgRadioApi.MixProject do
   def application do
     [
       mod: {ProgRadioApi.Application, []},
-      extra_applications: [:elixir_xml_to_map, :logger, :runtime_tools]
+      extra_applications: [:elixir_xml_to_map, :logger, :runtime_tools, :os_mon]
     ]
   end
 
@@ -81,6 +81,8 @@ defmodule ProgRadioApi.MixProject do
       {:ex_cldr_territories, "~> 2.0"},
       {:ex_cldr_collation, "~> 0.7.0"},
       {:req, "~> 0.4.0"},
+      {:phoenix_live_dashboard, "~> 0.7"},
+      {:ecto_psql_extras, "~> 0.8"}
     ]
   end
 

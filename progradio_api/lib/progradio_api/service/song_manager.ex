@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongManager do
   def join(song_topic, radio_stream_data)
 
   def join("url:" <> song_topic, _params) do
-    case Registry.lookup(SongSongProviderRegistry, "url:" <> song_topic) do
+    case Registry.lookup(SongProviderRegistry, "url:" <> song_topic) do
       [] ->
         Logger.debug("server for url #{song_topic} created")
 
@@ -25,7 +25,7 @@ defmodule ProgRadioApi.SongManager do
   end
 
   def join(song_topic, radio_stream_data) do
-    case Registry.lookup(SongSongProviderRegistry, song_topic) do
+    case Registry.lookup(SongProviderRegistry, song_topic) do
       [] ->
         Logger.debug("server for topic #{song_topic} created")
 

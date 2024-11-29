@@ -4,10 +4,10 @@ defmodule ProgRadioApiWeb.UserSocket do
   alias ProgRadioApiWeb.{SongChannel, ListenersChannel}
 
   ## Channels
-  # channel "song:*", SongChannel
-  # channel "url:*", SongChannel
+  channel "song:*", SongChannel
+  channel "url:*", SongChannel
 
-  # channel "listeners:*", ListenersChannel
+  channel "listeners:*", ListenersChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

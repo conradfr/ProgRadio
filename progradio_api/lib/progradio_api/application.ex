@@ -22,7 +22,7 @@ defmodule ProgRadioApi.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: ProgRadioApi.PubSub},
       ProgRadioApiWeb.Presence,
-      {Registry, [keys: :unique, name: SongSongProviderRegistry]},
+      {Registry, [keys: :unique, name: SongProviderRegistry]},
       {DynamicSupervisor,
        strategy: :one_for_one,
        max_restarts: 20,

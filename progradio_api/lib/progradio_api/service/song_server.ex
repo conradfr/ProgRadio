@@ -20,7 +20,7 @@ defmodule ProgRadioApi.SongServer do
   # ----- Client Interface -----
 
   def start_link({song_topic, nil, nil} = _arg) do
-    name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
+    name = {:via, Registry, {SongProviderRegistry, song_topic}}
 
     GenServer.start_link(
       __MODULE__,
@@ -37,7 +37,7 @@ defmodule ProgRadioApi.SongServer do
   end
 
   def start_link({song_topic, radio_code_name, db_data} = _arg) do
-    name = {:via, Registry, {SongSongProviderRegistry, song_topic}}
+    name = {:via, Registry, {SongProviderRegistry, song_topic}}
 
     module_name =
       radio_code_name

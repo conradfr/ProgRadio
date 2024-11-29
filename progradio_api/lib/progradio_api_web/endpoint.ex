@@ -11,11 +11,12 @@ defmodule ProgRadioApiWeb.Endpoint do
     same_site: "Lax"
   ]
 
-#  socket "/socket", ProgRadioApiWeb.UserSocket,
-#    websocket: true,
-#    longpoll: false
+  socket "/socket", ProgRadioApiWeb.UserSocket,
+    websocket: true,
+    longpoll: false
 
   # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
+  socket "/live", Phoenix.LiveView.Socket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
