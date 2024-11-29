@@ -4,7 +4,7 @@ defmodule ProgRadioApiWeb.UserSocket do
   alias ProgRadioApiWeb.{SongChannel, ListenersChannel}
 
   ## Channels
-  channel "song:*", SongChannel
+  # channel "song:*", SongChannel
   # channel "url:*", SongChannel
 
   # channel "listeners:*", ListenersChannel

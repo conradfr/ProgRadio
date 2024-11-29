@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
 // import { createApp } from 'https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.es.js';
-import { createApp } from '../../public/vue/utils/petite-vue.es';
+import { createApp } from './utils/petite-vue.es';
 import { Socket } from '../js/phoenix';
 
 // from config
@@ -63,7 +63,6 @@ const loadDash = () => {
 };
 
 const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
-
   if (dateTimeStart === undefined || dateTimeStart === null) {
     return;
   }
@@ -119,7 +118,7 @@ const sendPlayingError = (radioId, errorText) => {
   }
 
   /* eslint-disable no-undef */
-  let url = `https://${apiUrl}/stream_error/${radioId}`;
+  const url = `https://${apiUrl}/stream_error/${radioId}`;
 
   const params = {};
 
@@ -132,9 +131,8 @@ const sendPlayingError = (radioId, errorText) => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(params)
-  })
-  .then(response => response.json());
-}
+  }).then(response => response.json());
+};
 
 const setPlayingAlertVisible = (visible) => {
   const elem = document.getElementById('playing-alert');
@@ -159,7 +157,7 @@ const setAudioVolume = (volume) => {
   if (typeof appVolume !== 'undefined') {
     window.audio.volume = appVolume;
   }
-}
+};
 
 const incrementPlayCount = (stationUuid) => {
   if (appEnv !== 'dev') {
@@ -172,21 +170,21 @@ const incrementPlayCount = (stationUuid) => {
   }
 
   fetch(`https://${apiUrl}/config`, {
-    headers: {'Content-Type': 'application/json'}
+    headers: { 'Content-Type': 'application/json' }
   })
-  .then(response => {
-    return response.json();
-  })
-  .then(config => {
-    if (config && config.radio_browser_url) {
-      fetch(`${config.radio_browser_url}/json/url/${stationUuid}`, {
-        headers: {'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT}
-      });
-    }
-  })
-  .catch(function(error){
-    // nothing
-  });
+    .then((response) => {
+      return response.json();
+    })
+    .then((config) => {
+      if (config && config.radio_browser_url) {
+        fetch(`${config.radio_browser_url}/json/url/${stationUuid}`, {
+          headers: { 'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT }
+        });
+      }
+    })
+    .catch((error) => {
+      // nothing
+    });
 };
 
 createApp({
@@ -211,6 +209,7 @@ createApp({
   },
   play(streamingUrl, codeName, options) {
     if (!options) {
+      // eslint-disable-next-line no-param-reassign
       options = {};
     }
 
@@ -301,7 +300,12 @@ createApp({
         // if stream failed and is http we try to switch to our https proxy
         if (streamingUrl.trim().substring(0, 5) !== 'https') {
           this.stop();
-          this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}`, codeName, options.topic, options.streamCodeName);
+          this.play(
+            `${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}`,
+            codeName,
+            options.topic,
+            options.streamCodeName
+          );
           return;
         }
 
@@ -341,7 +345,7 @@ createApp({
     window.audio = null;
     delete window.audio;
 
-    if (this.playing !== false &&  this.options.sendStatistics) {
+    if (this.playing !== false && this.options.sendStatistics) {
       updateListeningSession(this.radioId, this.playingStart, this.sessionId, true);
 
       /* eslint-disable no-undef */
@@ -386,7 +390,6 @@ createApp({
     if (streamCodeName !== undefined && streamCodeName !== null && streamCodeName !== '') {
       this.joinChannel(`listeners:${streamCodeName}`);
     }
-
   },
   playingError(codeName, errorText) {
     // the delay prevents sending an error when the user just click a link and goes to another page...
@@ -469,7 +472,7 @@ createApp({
     this.channels[topic] = this.socket.channel(topic, {});
 
     this.channels[topic].join()
-      .receive('error', resp => {
+      .receive('error', (resp) => {
         if (topic.startsWith('listeners:')) {
           this.listeners = null;
         } else {
@@ -537,4 +540,3 @@ createApp({
     this.listeners = listenersData.listeners;
   }
 }).mount();
-
