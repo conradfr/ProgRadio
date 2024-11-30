@@ -11,30 +11,34 @@
             :aria-label="$t('message.player.timer.modal.close')"></button>
         </div>
         <div class="modal-body pb-0">
-          <div class="modal-body-row mt-2">
-            <h6>{{ $t('message.player.timer.modal.quick') }}</h6>
-            <div class="btn-group d-flex" role="group" aria-label="Set">
+          <div class="modal-body-row mt-3">
+            <h6 class="mb-3">{{ $t('message.player.timer.modal.quick') }}</h6>
+            <div class="btn-group d-flex mb-3" role="group" aria-label="Set">
+              <timer-modal-set-button minutes="15"></timer-modal-set-button>
+              <timer-modal-set-button minutes="20"></timer-modal-set-button>
               <timer-modal-set-button minutes="30"></timer-modal-set-button>
+              <timer-modal-set-button minutes="45"></timer-modal-set-button>
+            </div>
+
+            <div class="btn-group d-flex mb-3" role="group" aria-label="Set">
               <timer-modal-set-button minutes="60"></timer-modal-set-button>
               <timer-modal-set-button minutes="90"></timer-modal-set-button>
-              <timer-modal-set-button minutes="120" :hide-mobile="true" ></timer-modal-set-button>
+              <timer-modal-set-button minutes="120" :as-hour="true"></timer-modal-set-button>
+              <timer-modal-set-button minutes="180" :as-hour="true"></timer-modal-set-button>
+            </div>
+
+            <div class="btn-group d-flex" role="group" aria-label="Set">
+              <timer-modal-set-button minutes="240" :as-hour="true"></timer-modal-set-button>
+              <timer-modal-set-button minutes="360" :as-hour="true"></timer-modal-set-button>
+              <timer-modal-set-button minutes="480" :as-hour="true"></timer-modal-set-button>
+              <timer-modal-set-button minutes="600" :as-hour="true"></timer-modal-set-button>
             </div>
           </div>
 
-          <div class="modal-body-row mt-2">
-            <h6>{{ $t('message.player.timer.modal.add') }}</h6>
-            <div class="btn-group d-flex" role="group" aria-label="Add">
-              <timer-modal-add-button v-model="minutes" add="15"></timer-modal-add-button>
-              <timer-modal-add-button v-model="minutes" add="30"></timer-modal-add-button>
-              <timer-modal-add-button v-model="minutes" add="60"></timer-modal-add-button>
-              <timer-modal-add-button v-model="minutes" add="120"
-                :hide-mobile="true"></timer-modal-add-button>
-            </div>
-          </div>
-          <div class="modal-body-row mt-2 mb-2">
+          <div class="modal-body-row mt-3 mb-3">
             <h6>{{ $t('message.player.timer.modal.length') }}</h6>
             <div class="row">
-              <div class="col-6 col-md-3">
+              <div class="col-6 col-md-4">
                 <form class="form-inline">
                   <div class="form-group">
                     <div class="input-group">
@@ -49,20 +53,28 @@
                   </div>
                 </form>
               </div>
-              <div class="col-6 col-md-5">
-                <a role="button" class="btn btn-primary"
+              <div class="col-6 col-md-8 text-end">
+                <a role="button" class="btn btn-info"
                    v-on:click="set()" :class="{'disabled': minutes < 1}">
                   {{ $t('message.player.timer.modal.set') }}
                 </a>
               </div>
-              <div class="col-12 col-md-4 mt-4 mt-sm-0 text-center"
-                v-if="timer !== null && timer > 0">
-                <a role="button" class="btn btn-danger"
-                   v-on:click="set(null)">
-                  {{ $t('message.player.timer.modal.cancel') }}
-                </a>
+            </div>
+            <div class="row">
+              <div class="btn-group btn-group-sm mt-3" role="group" aria-label="Add">
+                <timer-modal-add-button v-model="minutes" add="-1"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" add="-5"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" add="1"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" add="5"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" add="10"></timer-modal-add-button>
               </div>
             </div>
+          </div>
+          <div class="modal-body-row text-center mt-4 mb-3" v-if="timer !== null && timer > 0">
+            <a role="button" class="btn btn-danger"
+               v-on:click="set(null)">
+              {{ $t('message.player.timer.modal.cancel') }}
+            </a>
           </div>
         </div>
         <div class="modal-footer justify-content-center pb-1" v-if="timer !== null && timer > 0">

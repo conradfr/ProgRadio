@@ -17,7 +17,7 @@ export const THUMBNAIL_STREAM_PLACEHOLDER = '/img/stream-placeholder.png';
 export const PROGRAM_LONG_ENOUGH = 45; /* minutes */
 
 export const DEFAULT_VOLUME = 8;
-export const DEFAULT_TIMER_MINUTES = 15;
+export const DEFAULT_TIMER_MINUTES = 20;
 
 export const MOBILE_MENU_TIMER_CLASSNAME = 'nav-link-timer';
 

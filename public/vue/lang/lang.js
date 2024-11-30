@@ -84,15 +84,15 @@ export const messages = {
           finish: 'Arrêt de la lecture (minuteur)',
           modal: {
             abrv: 'mn',
-            add: 'Ajouter',
-            cancel: 'Annuler',
+            cancel: 'Annuler le minuteur',
             close: 'Fermer',
             length: 'Durée',
             placeholder: 'Minutes',
             quick: 'Sélection rapide',
             set: 'Lancer le minuteur',
             title: 'Minuteur',
-            x_minutes: '{minutes} minutes'
+            x_minutes: '{minutes} minutes',
+            x_hours: '{hours} heures'
           },
           set: 'Le minuteur est activé pour 0 minute | Le minuteur est activé pour {minutes} minute |Le minuteur est activé pour {minutes} minutes',
           title: 'Minuteur',
@@ -226,15 +226,15 @@ export const messages = {
           finish: 'Playing stopped (timer)',
           modal: {
             abrv: 'mn',
-            add: 'Add',
-            cancel: 'Cancel',
+            cancel: 'Cancel the timer',
             close: 'Close',
             length: 'Time length',
             placeholder: 'Minutes',
             quick: 'Shortcut setting',
             set: 'Set timer',
             title: 'Timer',
-            x_minutes: '{minutes} minutes'
+            x_minutes: '{minutes} minutes',
+            x_hours: '{hours} hours'
           },
           set: 'Timer has been set to {minutes} minute(s)',
           title: 'Timer',
@@ -368,15 +368,15 @@ export const messages = {
           finish: 'Parar la reproducción (temporizador)',
           modal: {
             abrv: 'mn',
-            add: 'Agregar',
-            cancel: 'Anular',
+            cancel: 'Cancela el temporizador',
             close: 'Cerrar',
             length: 'Duración',
             placeholder: 'Minutos',
             quick: 'Selección rápida',
             set: 'Iniciar el temporizador',
             title: 'Temporizador',
-            x_minutes: '{minutes} minutos'
+            x_minutes: '{minutes} minutos',
+            x_hours: '{hours} horas'
           },
           set: 'El temporizador se activa durante 0 minutos | El temporizador se activa durante {minutes} minutos | El temporizador se activa durante {minutes} minutos',
           title: 'Minuteur',
@@ -510,15 +510,15 @@ export const messages = {
           finish: 'Wiedergabe gestoppt (Timer)',
           modal: {
             abrv: 'mn',
-            add: 'Hinzufügen',
-            cancel: 'Stornieren',
+            cancel: 'Stornieren Sie den Timer',
             close: 'Schliessen',
             length: 'Länge der Zeit',
             placeholder: 'Minuten',
             quick: 'Tastenkürzeleinstellung',
             set: 'Timer einstellen',
             title: 'Timer',
-            x_minutes: '{minutes} Minuten'
+            x_minutes: '{minutes} Minuten',
+            x_hours: '{hours} Stunden'
           },
           set: 'Der Timer wurde auf {minutes} Minute (n) eingestellt',
           title: 'Timer',
@@ -652,15 +652,15 @@ export const messages = {
           finish: 'A reprodução foi interrompida (cronômetro)',
           modal: {
             abrv: 'n',
-            add: 'Adicionar',
-            cancel: 'Cancelar',
+            cancel: 'Cancele o cronômetro',
             close: 'Fechar',
             length: 'Duração do tempo',
             placeholder: 'Minutos',
             quick: 'Configuração de atalho',
             set: 'Definir temporizador',
             title: 'Timer',
-            x_minutes: '{minutes} minutos'
+            x_minutes: '{minutes} minutos',
+            x_hours: '{hours} horas'
           },
           set: 'O cronômetro foi configurado para {minutos} minuto (s)',
           title: 'Timer',
@@ -794,15 +794,15 @@ export const messages = {
           finish: 'Gioco interrotto (timer)',
           modal: {
             abrv: 'mn',
-            add: 'Aggiungere',
-            cancel: 'Annulla',
+            cancel: 'Annulla il timer',
             close: 'Chiudi',
             length: 'Durata tempo',
             placeholder: 'Minuti',
             quick: 'Impostazione scorciatoia',
             set: 'Imposta timer',
             title: 'Timer',
-            x_minutes: '{minutes} minuti'
+            x_minutes: '{minutes} minuti',
+            x_hours: '{hours} ore'
           },
           set: 'Il timer è stato impostato su {minutes} minuto/i',
           title: 'Timer',
@@ -936,15 +936,15 @@ export const messages = {
           finish: 'Odtwarzanie zatrzymane (timer)',
           modal: {
             abrv: 'min',
-            add: 'Dodaj',
-            cancel: 'Anuluj',
+            cancel: 'Anuluj timer',
             close: 'Zamknij',
             length: 'Długość czasu',
             placeholder: 'Minuty',
             quick: 'Ustawienie skrótu',
             set: 'Ustaw timer',
             title: 'Timer',
-            x_minutes: '{minutes} minuty'
+            x_minutes: '{minutes} minuty',
+            x_hours: '{hours} godziny'
           },
           set: 'Timer został ustawiony na {minutes} minutę',
           title: 'Timer',
@@ -1078,15 +1078,15 @@ export const messages = {
           finish: 'Η αναπαραγωγή σταμάτησε (χρονοδιακόπτης)',
           modal: {
             abrv: 'λ.',
-            add: 'Προσθήκη',
-            cancel: 'Ακύρωση',
+            cancel: 'Ακυρώστε το χρονόμετρο',
             close: 'Κλείσιμο',
             length: 'Διάρκεια χρονικής',
             placeholder: 'Λεπτά',
             quick: 'Ρύθμιση συντομεύσεων',
             set: 'Ορισμός χρονοδιακόπτης',
             title: 'Χρονοδιακόπτης',
-            x_minutes: '{minutes} λεπτά'
+            x_minutes: '{minutes} λεπτά',
+            x_hours: '{hours} ώρες'
           },
           set: 'Ο χρονοδιακόπτης έχει ρυθμιστεί σε {minutes} λεπτών',
           title: 'Χρονοδιακόπτης',
@@ -1220,15 +1220,15 @@ export const messages = {
           finish: 'توقف عن القراءة (مؤقت)',
           modal: {
             abrv: 'دقائق',
-            add: 'إضافة',
-            cancel: 'إلغاء',
+            cancel: 'إلغاء المؤقت',
             close: 'المدّة',
             length: 'المدّة',
             placeholder: 'الدقائق',
             quick: 'اختيار سريع',
             set: 'ابدأ جهاز ضبط الوقت',
             title: 'جهاز ضبط الوقت',
-            x_minutes: 'الدقائق {minutes}'
+            x_minutes: 'الدقائق {minutes}',
+            x_hours: '{hours} ساعات'
           },
           set: 'المؤقِّت قيد التشغيل لمدة 0 دقيقة | المؤقِّت قيد التشغيل لمدة {minutes} دقيقة |المؤقِّت قيد التشغيل لمدة {minutes}',
           title: 'جهاز ضبط الوقت',
@@ -1362,15 +1362,15 @@ export const messages = {
           finish: 'Opriți redarea (temporizator) ',
           modal: {
             abrv: 'mn',
-            add: 'Adaugă',
-            cancel: 'Anulează',
+            cancel: 'Anulați cronometrul',
             close: 'Închidere',
             length: 'Durată',
             placeholder: 'Minute',
             quick: 'Selectare rapidă',
             set: 'Porniți temporizatorul',
             title: 'Cronometru',
-            x_minutes: '{minutes} minute'
+            x_minutes: '{minutes} minute',
+            x_hours: '{hours} ore'
           },
           set: 'Cronometrul este pornit timp de 0 minute | Cronometrul este pornit pentru {minute} minut |Cronometrul este pornit pentru {minute} minute',
           title: 'Cronometru',

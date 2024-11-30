@@ -1,7 +1,7 @@
 <template>
   <button type="button" class="btn btn-primary" v-on:click="setTo"
     :class="{'d-none d-sm-block': hideMobile}">
-    {{ $t('message.player.timer.modal.x_minutes', { minutes: minutes }) }}
+    {{ text }}
   </button>
 </template>
 
@@ -23,9 +23,25 @@ export default defineComponent({
       type: String,
       required: true
     },
+    asHour: {
+      type: Boolean,
+      default: false
+    },
     hideMobile: {
       type: Boolean,
       default: false
+    },
+  },
+  computed: {
+    text() {
+      if (this.asHour) {
+        return (this.$i18n as any).tc(
+          'message.player.timer.modal.x_hours',
+          { hours: (parseInt(this.minutes, 10) / 60) }
+        );
+      }
+
+      return (this.$i18n as any).tc('message.player.timer.modal.x_minutes', { minutes: this.minutes });
     },
   },
   methods: {

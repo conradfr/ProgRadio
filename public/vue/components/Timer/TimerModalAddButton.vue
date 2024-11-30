@@ -1,24 +1,28 @@
 <template>
-  <button type="button" class="btn btn-info" v-on:click="addTo"
+  <button type="button" class="btn btn-sm btn-light" v-on:click="addTo"
     :class="{'d-none d-sm-block': hideMobile}">
-    +{{ $t('message.player.timer.modal.x_minutes', { minutes: add }) }}
+    {{ text }}
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import typeUtils from '@/utils/typeUtils';
 
 export default defineComponent({
   props: ['modelValue', 'add', 'hideMobile'],
+  computed: {
+    text(): string {
+      return typeUtils.toIntIfString(this.add) < 0 ? this.add : `+${this.add}`;
+    }
+  },
   methods: {
     addTo() {
       let { modelValue } = this;
-      const { add } = this;
-      if (typeof modelValue === 'string') {
-        modelValue = parseInt(modelValue, 10);
-      }
+      modelValue = typeUtils.toIntIfString(modelValue);
+      const toAdd = typeUtils.toIntIfString(this.add);
+      modelValue += toAdd;
 
-      modelValue += (typeof add === 'string' ? parseInt(add, 10) : add);
       this.$emit('update:modelValue', modelValue);
     }
   }

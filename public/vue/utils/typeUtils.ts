@@ -14,7 +14,10 @@ const isStream = function isStream(radioOrStream: Radio|Stream|null): radioOrStr
   return radioOrStream !== null && (radioOrStream as Stream).type === PLAYER_TYPE_STREAM;
 };
 
+const toIntIfString = (value: number|string): number => (typeof value === 'string' ? parseInt(value, 10) : value);
+
 export default {
   isRadio,
-  isStream
+  isStream,
+  toIntIfString
 };
