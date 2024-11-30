@@ -19,13 +19,13 @@ class KernelRequestListener
 
         // radio favorites
         $favoritesRaw = $request->cookies->get(self::COOKIE_PREFIX . Radio::FAVORITES, '');
-        $favorites = empty($favoritesRaw) ? [] : explode(self::COOKIE_DELIMITER, $favoritesRaw);
+        $favorites = empty($favoritesRaw) ? [] : array_filter(explode(self::COOKIE_DELIMITER, $favoritesRaw));
 
         $request->attributes->set('favorites', $favorites);
 
         // stream favorites
         $favoritesRaw = $request->cookies->get(self::COOKIE_PREFIX . Radio::FAVORITES . self::COOKIE_STREAM_SUFFIX, '');
-        $favoritesStream = empty($favoritesRaw) ? [] : explode(self::COOKIE_DELIMITER, $favoritesRaw);
+        $favoritesStream = empty($favoritesRaw) ? [] : array_filter(explode(self::COOKIE_DELIMITER, $favoritesRaw));
 
         $request->attributes->set('favoritesStream', $favoritesStream);
     }

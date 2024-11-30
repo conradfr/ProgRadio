@@ -6,33 +6,33 @@ namespace App\Service;
 
 class DateUtils
 {
-    public function getDatesFromRelativeFormat(string $format): ?array
+    public static function getDatesFromRelativeFormat(string $format): ?array
     {
         if ($format === 'yesterday') {
             return [
                 new \DateTime('yesterday'),
-                null
+                null,
             ];
         }
 
         if ($format === 'today') {
             return [
                 new \DateTime('today'),
-                null
+                null,
             ];
         }
 
         if ($format === 'thisweek') {
             return [
                 new \DateTime('monday this week'),
-                new \DateTime('today')
+                new \DateTime('today'),
             ];
         }
 
         if ($format === 'thismonth') {
             return [
                 new \DateTime('first day of this month'),
-                new \DateTime('today')
+                new \DateTime('today'),
             ];
         }
 
@@ -46,7 +46,7 @@ class DateUtils
         if ($format === 'lastmonth') {
             return [
                 new \DateTime('first day of last month'),
-                new \DateTime('last day of last month')
+                new \DateTime('last day of last month'),
             ];
         }
 
@@ -56,10 +56,19 @@ class DateUtils
 
             return [
                 new \DateTime('first day of ' . $monthYear->format('F Y')),
-                new \DateTime('last day of last month')
+                new \DateTime('last day of last month'),
             ];
         }
 
         return null;
+    }
+
+    // Used to  get a consistent format from the elixir api
+    public static function getMicroTime()
+    {
+        $microtime = microtime();
+        $exploded = explode(' ', $microtime);
+
+        return $exploded[1] . ((int)round($exploded[0] * 1000000));
     }
 }

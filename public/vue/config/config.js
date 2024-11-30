@@ -172,6 +172,7 @@ export const GTAG_STREAMING_ACTION_FILTER_COUNTRY = 'filter_country';
 export const GTAG_STREAMING_ACTION_FILTER_SORT = 'filter_sort';
 export const GTAG_STREAMING_ACTION_TAG = 'tag_click';
 export const GTAG_STREAMING_ACTION_GEOLOC = 'geoloc';
+export const GTAG_STREAMING_ACTION_SWITCH_TO_FAVORITES = 'switch_to_favorites';
 export const GTAG_ACTION_PLAY_RANDOM = 'play_random';
 export const GTAG_ACTION_SEARCH_BUTTON = 'streaming_search';
 export const GTAG_STREAMING_FILTER_VALUE = 1;

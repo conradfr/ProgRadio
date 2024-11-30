@@ -64,9 +64,9 @@ class AdminController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/admin/listening/{dateRange}/{countryCode}', name: 'admin_listening', requirements: ['dateRange' => '\w+'])]
-    public function listeningAction(DateUtils $dateUtils, EntityManagerInterface $em, Request $request, string $dateRange='today', ?string $countryCode=null): Response
+    public function listeningAction(EntityManagerInterface $em, Request $request, string $dateRange='today', ?string $countryCode=null): Response
     {
-        $dates = $dateUtils->getDatesFromRelativeFormat($dateRange);
+        $dates = DateUtils::getDatesFromRelativeFormat($dateRange);
 
         if ($dates === null) {
             throw new BadRequestHttpException('Invalid data');

@@ -3,19 +3,19 @@
       <div class="mb-3 me-auto streams-filters-search d-flex">
         <div v-if="searchActive" style="display: inline-block" class="me-2">
           <div class="input-group">
-          <span class="input-group-text" id="search-addon1">
-            <i class="bi bi-search"></i>
-          </span>
+            <span class="input-group-text" id="search-addon1">
+              <i class="bi bi-search"></i>
+            </span>
             <input type="text"
-                   class="form-control"
-                   style="min-width: 275px"
-                   :placeholder="$t('message.streaming.search_placeholder')"
-                   name="searchText"
-                   :ref="addSearchTextRef"
-                   aria-describedby="search-addon1"
-                   :value="searchText"
-                   v-on:input="searchTextChange"
-                   v-on:blur="searchDeactivate"
+              class="form-control"
+              style="min-width: 275px"
+              :placeholder="$t('message.streaming.search_placeholder')"
+              name="searchText"
+              :ref="addSearchTextRef"
+              aria-describedby="search-addon1"
+              :value="searchText"
+              v-on:input="searchTextChange"
+              v-on:blur="searchDeactivate"
             />
             <i class="bi bi-x-lg form-control-feedback"
                v-on:click="searchDeactivate(true)"></i>
@@ -32,11 +32,19 @@
           {{ $t('message.streaming.random') }}
         </button>
       </div>
+    <div class="me-1 mb-3">
+      <button type="submit"
+              class="btn btn-primary btn-sm me-1"
+              :disabled="favorites.length === 0"
+              v-on:click="switchToFavorites">
+        <i class="bi bi-heart-fill"></i>
+      </button>
+    </div>
       <div class="me-1 mb-3">
         <button type="submit"
           class="btn btn-primary btn-sm me-1"
           v-on:click="geoloc" v-once>
-          <i class="bi bi-geo-alt"></i>
+          <i class="bi bi-geo-alt-fill"></i>
         </button>
       </div>
       <div class="d-flex d-row flex-wrap">
@@ -121,6 +129,7 @@ import {
   STREAMING_CATEGORY_HISTORY,
   STREAMING_CATEGORY_LAST,
   GTAG_CATEGORY_STREAMING,
+  GTAG_STREAMING_ACTION_SWITCH_TO_FAVORITES,
   GTAG_STREAMING_ACTION_FILTER_COUNTRY,
   GTAG_STREAMING_ACTION_FILTER_SORT,
   GTAG_STREAMING_ACTION_GEOLOC,
@@ -273,7 +282,7 @@ export default defineComponent({
       this.displayFlags = true;
     },
     countryChange(country: string): void {
-      if (country === undefined || country === null) {
+      if (!country) {
         return;
       }
 
@@ -315,6 +324,18 @@ export default defineComponent({
       });
 
       this.playRandom();
+    },
+    switchToFavorites() {
+      (this as any).$gtag.event(GTAG_STREAMING_ACTION_SWITCH_TO_FAVORITES, {
+        event_category: GTAG_CATEGORY_STREAMING,
+        event_label: STREAMING_CATEGORY_FAVORITES.toLowerCase(),
+        value: GTAG_STREAMING_FILTER_VALUE
+      });
+
+      this.$router.push({
+        name: 'streaming',
+        params: { countryOrCategoryOrUuid: STREAMING_CATEGORY_FAVORITES.toLowerCase(), page: '1' }
+      });
     },
     geoloc() {
       (this as any).$gtag.event(GTAG_STREAMING_ACTION_GEOLOC, {

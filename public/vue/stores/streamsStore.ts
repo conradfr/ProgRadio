@@ -211,9 +211,7 @@ export const useStreamsStore = defineStore('streams', {
       AndroidApi.list(this.streamRadios);
     },
     setStreamFavorites(favorites: Array<string>) {
-      if (this.favorites.length === 0) {
-        this.favorites = favorites;
-      }
+      this.favorites = favorites;
     },
     /* eslint-disable no-param-reassign */
     countrySelection(country: countryObject|string) {

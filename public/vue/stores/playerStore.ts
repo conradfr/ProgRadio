@@ -444,7 +444,8 @@ export const usePlayerStore = defineStore('player', {
               return null;
             }
 
-            return [10, 50, 100, 150, 200, 250, 500, 1000, 2000, 5000, 10000, 20000][tries - 1] || 30000;
+            // eslint-disable-next-line max-len
+            return [1000, 5000, 10000, 15000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000][tries - 1] || 30000;
           }
         };
 

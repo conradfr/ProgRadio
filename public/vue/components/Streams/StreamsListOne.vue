@@ -172,6 +172,7 @@ export default defineComponent({
     },
   },
   methods: {
+    ...mapActions(useUserStore, ['toggleStreamFavorite']),
     ...mapActions(usePlayerStore, [
       'joinChannel',
       'leaveChannel',
@@ -180,7 +181,6 @@ export default defineComponent({
       'stop',
       'playStream'
     ]),
-    ...mapActions(useUserStore, ['toggleStreamFavorite']),
     ...mapActions(useStreamsStore, [
       'countrySelection',
       'setSearchText',

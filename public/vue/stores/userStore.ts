@@ -70,8 +70,10 @@ export const useUserStore = defineStore('user', {
           this.isAdmin = response.user?.isAdmin || false;
           this.storeHistory = response.user?.storeHistory || false;
           this.songs = response.user?.songs || {};
-          this.favoritesRadio = response.user?.favoritesRadio || [];
-          this.favoritesStream = response.user?.favoritesStream || [];
+          this.favoritesRadio = response.user?.favoritesRadio
+            || cookies.get(COOKIE_RADIO_FAVORITES, '').split('|');
+          this.favoritesStream = response.user?.favoritesStream
+              || cookies.get(COOKIE_STREAM_FAVORITES, '').split('|');
 
           scheduleStore.setFavoritesCollection(this.favoritesRadio);
           streamsStore.setStreamFavorites(this.favoritesStream);
@@ -117,8 +119,7 @@ export const useUserStore = defineStore('user', {
             return;
           }
 
-          const favoritesAsString = this.favoritesRadio.join('|');
-          cookies.set(COOKIE_RADIO_FAVORITES, favoritesAsString);
+          cookies.set(COOKIE_RADIO_FAVORITES, this.favoritesRadio.join('|'));
 
           // check if radio has a corresponding stream and add it to favorites (only non-logged)
           if (cascade) {
@@ -140,7 +141,6 @@ export const useUserStore = defineStore('user', {
       const streamsStore = useStreamsStore();
 
       const streamId = stream.code_name;
-
       const favoriteIndex = this.favoritesStream.indexOf(streamId);
       let add = false;
 

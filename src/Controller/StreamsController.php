@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Radio;
 use App\Entity\Stream;
 use App\Entity\User;
+use App\Service\DateUtils;
 use App\Service\RadioBrowser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +68,7 @@ class StreamsController  extends AbstractBaseController
         return $this->jsonResponse([
                 'streams' => $streams,
                 'total'   => $totalCount,
-                'timestamp' => microtime(true)
+                'timestamp' => DateUtils::getMicroTime()
             ]
         );
     }
