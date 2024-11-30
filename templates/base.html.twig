@@ -74,9 +74,9 @@
     {% endif %}
 
     {% if 'www' in app.request.uri == false %}
-        <link rel="canonical" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})))|replace({'https://': 'https://www.'})|default(app.request.uri) }}" />
+        <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})))|replace({'https://': 'https://www.'})|default(app.request.uri) }}" />
     {%  else %}
-        <link rel="canonical" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale}))) }}" />
+        <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale}))) }}" />
     {% endif %}
 
     {% if canonical_locale is defined %}
