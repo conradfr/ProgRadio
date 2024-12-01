@@ -8,29 +8,31 @@
           <tbody>
             <tr v-for="(song, index) in songs" :key="index">
               <td  class="ps-3" style="width: 60%;">{{ song }}</td>
-              <td class="text-center" style="width: 25%;">
-                <a class="link-no-to-bold" target="_blank"
-                   :title="$t( 'message.songs_page.find_youtube')"
-                   :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
-                  <i class="bi bi-youtube"></i>&nbsp;&nbsp;
-                </a>&nbsp;&nbsp;
-                <a class="link-no-to-bold" target="_blank"
-                   :title="$t( 'message.songs_page.find_spotify')"
-                   :href="encodeURI(`https://open.spotify.com/search/${song}`)">
-                  <i class="bi bi-spotify"></i>&nbsp;&nbsp;
-                </a>&nbsp;&nbsp;
-                <a class="link-no-to-bold" target="_blank"
-                   :title="$t( 'message.songs_page.find_deezer')"
-                   :href="encodeURI(`https://www.deezer.com/search/${song}`)">
-                  <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
-                </a>&nbsp;&nbsp;
-                <a v-if="amazonLink(song)" class="link-no-to-bold" target="_blank"
-                   :title="$t( 'message.songs_page.buy_amazon')"
-                   :href="amazonLink(song)">
-                  <i class="bi bi-amazon"></i>&nbsp;&nbsp;
-                </a>&nbsp;&nbsp;
+              <td style="width: 25%;">
+                <div class="d-flex justify-content-center streaming-services">
+                  <a class="link-no-to-bold" target="_blank"
+                     :title="$t( 'message.songs_page.find_youtube')"
+                     :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                    <i class="bi bi-youtube"></i>&nbsp;&nbsp;
+                  </a>
+                  <a class="link-no-to-bold" target="_blank"
+                     :title="$t( 'message.songs_page.find_spotify')"
+                     :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                    <i class="bi bi-spotify"></i>&nbsp;&nbsp;
+                  </a>
+                  <a class="link-no-to-bold" target="_blank" style="padding-right: 5px;"
+                     :title="$t( 'message.songs_page.find_deezer')"
+                     :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                    <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
+                  </a>
+                  <a v-if="amazonLink(song)" class="link-no-to-bold" target="_blank"
+                     :title="$t( 'message.songs_page.buy_amazon')"
+                     :href="amazonLink(song)">
+                    <i class="bi bi-amazon"></i>&nbsp;&nbsp;
+                  </a>
+                </div>
               </td>
-              <td class="text-end pe-3" style="width: 15%;">
+              <td class="text-end pe-3" style="width: 13%;">
                 <a class="link-no-to-bold" v-on:click="removeSong(index)">
                   <i class="bi bi-trash3-fill"></i>&nbsp;&nbsp;
                   <span class="d-none d-sm-inline">
