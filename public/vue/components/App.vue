@@ -9,11 +9,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapActions } from 'pinia';
-import throttle from 'lodash/throttle';
 
 import { useGlobalStore } from '@/stores/globalStore';
 import { useUserStore } from '@/stores/userStore';
-import { usePlayerStore } from '@/stores/playerStore';
 
 import {
   COOKIE_HOME,
@@ -76,7 +74,7 @@ export default defineComponent({
       });
     };
 
-    // "set as homescreen" link in menu
+    // "set as home screen" link in menu
     const navSetAsHomeLinks = document.getElementsByClassName('nav-set-home')!;
     toggleHomeLinks(cookies.has(COOKIE_HOME));
 
@@ -122,31 +120,10 @@ export default defineComponent({
         });
       });
     });
-
-    // OS hotkeys support
-    if (navigator.mediaSession !== undefined) {
-      setTimeout(
-        () => {
-          /* eslint-disable max-len */
-          navigator.mediaSession.setActionHandler('previoustrack', this.keyPlayPrevious.bind(this));
-          navigator.mediaSession.setActionHandler('nexttrack', this.keyPlayNext.bind(this));
-          navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
-          navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
-        },
-        1000
-      );
-    }
   },
   methods: {
     ...mapActions(useUserStore, ['getUserData']),
     ...mapActions(useGlobalStore, ['displayToast']),
-    ...mapActions(usePlayerStore, ['togglePlay', 'playPrevious', 'playNext']),
-    /* eslint-disable func-names */
-    /* eslint-disable max-len */
-    /* eslint-disable no-unused-vars */
-    keyPlayPause() { throttle(function (this: any) { this.togglePlay(); }, 200, { leading: true, trailing: false }); },
-    keyPlayPrevious() { throttle(function (this: any) { this.playPrevious(); }, 200, { leading: true, trailing: false }); },
-    keyPlayNext() { throttle(function (this: any) { this.playNext(); }, 200, { leading: true, trailing: false }); },
   }
 });
 </script>

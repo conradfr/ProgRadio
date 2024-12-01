@@ -71,6 +71,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
+// import throttle from 'lodash/throttle';
 
 /* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
@@ -227,6 +228,20 @@ export default defineComponent({
       // @ts-ignore
       window.navigator.connection.onchange = this.updateFlux();
     }
+
+    // OS hotkeys support
+    if ('mediaSession' in navigator) {
+      setTimeout(
+          () => {
+            /* eslint-disable max-len */
+            navigator.mediaSession.setActionHandler('previoustrack', this.keyPlayPrevious.bind(this));
+            navigator.mediaSession.setActionHandler('nexttrack', this.keyPlayNext.bind(this));
+            navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
+            navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
+          },
+          1000
+      );
+    }
   },
   computed: {
     ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite', collection: 'collections' }),
@@ -294,6 +309,8 @@ export default defineComponent({
       togglePreviousDispatch: 'togglePrevious',
       toggleMuteDispatch: 'toggleMute',
       togglePlayDispatch: 'togglePlay',
+      playNextDispatch: 'playNext',
+      playPreviousDispatch: 'playPrevious',
       stopDispatch: 'stop',
       volumeFocusDispatch: 'volumeFocus',
       joinChannel: 'joinChannel',
@@ -307,6 +324,18 @@ export default defineComponent({
       if (this.externalPlayer === false && this.playing !== PlayerStatus.Stopped) {
         this.stop();
       }
+    },
+    keyPlayPause() {
+      this.togglePlayDispatch();
+      // throttle(function (this: any) { this.togglePlayDispatch(); }, 200, { leading: true, trailing: false });
+    },
+    keyPlayPrevious() {
+      this.playPreviousDispatch();
+      // throttle(function (this: any) { this.playPreviousDispatch(); }, 200, { leading: true, trailing: false });
+      },
+    keyPlayNext() {
+      this.playNextDispatch();
+      // throttle(function (this: any) { this.playNextDispatch(); }, 200, { leading: true, trailing: false });
     },
     radioLink(): string {
       if (this.radio === null) {
