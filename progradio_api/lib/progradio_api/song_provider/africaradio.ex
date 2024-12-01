@@ -58,7 +58,9 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
   @impl true
   def get_song(name, data) do
     case data do
-      nil -> nil
+      nil ->
+        nil
+
       _ ->
         artist = Map.get(data, "artiste")
         title = Map.get(data, "titre")

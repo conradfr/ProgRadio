@@ -30,7 +30,8 @@ defmodule ProgRadioApi.SongProvider.Radioclassique do
       map when is_map(map) ->
         %{artist: Map.get(data, "auteur", nil), title: Map.get(data, "titre", nil)}
 
-      _ -> %{}
+      _ ->
+        %{}
     end
   end
 end

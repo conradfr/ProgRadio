@@ -524,12 +524,10 @@ export const usePlayerStore = defineStore('player', {
       }
 
       /* TEMP
-        No subscribing for hls/mpd streams as we don't support it
-        This will not catch "forced" hls/mpd streams but there are not a lot so this is acceptable
-
-        TODO Plan is to do it client side in the future w/ hls.js
+        No subscribing for mpd streams as we don't support it
+        This will not catch "forced" mpd streams but there are not a lot so this is acceptable
       */
-      if (topicName.startsWith('url:') && (topicName.indexOf('.m3u8') !== -1 || topicName.indexOf('.mpd') !== -1
+      if (topicName.startsWith('url:') && (topicName.indexOf('.mpd') !== -1
         || topicName.indexOf('youtu') !== -1)) {
         return null;
       }

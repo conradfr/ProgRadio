@@ -59,13 +59,14 @@ defmodule ProgRadioApi.SongProvider.Icecast do
               end
             end)
 
-          Task.await(task, @task_timeout)
-        rescue
-          _ ->
-            Logger.error("Data provider - #{name}: data error rescue")
-            :error
-        end
-#    end
+      Task.await(task, @task_timeout)
+    rescue
+      _ ->
+        Logger.error("Data provider - #{name} (icecast): data error rescue")
+        :error
+    end
+
+    #    end
   end
 
   @impl true

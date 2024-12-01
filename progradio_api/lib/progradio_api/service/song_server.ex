@@ -25,7 +25,7 @@ defmodule ProgRadioApi.SongServer do
     GenServer.start_link(
       __MODULE__,
       %{
-        module: ProgRadioApi.SongProvider.Icecast,
+        module: get_url_module(song_topic),
         name: song_topic,
         song: %{},
         last_data: nil,
@@ -213,13 +213,13 @@ defmodule ProgRadioApi.SongServer do
       task_data = Task.Supervisor.async(TaskSupervisor, module, :get_data, [name, last_data])
       data = Task.await(task_data, @task_timeout)
 
-#      data = apply(module, :get_data, [name, last_data])
+      #      data = apply(module, :get_data, [name, last_data])
 
       song =
         unless data == :error do
           task_song = Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data])
           Task.await(task_song)
-#          apply(module, :get_song, [name, data])
+          #          apply(module, :get_song, [name, data])
         else
           %{}
         end
@@ -288,4 +288,13 @@ defmodule ProgRadioApi.SongServer do
 
   defp increment_interval(base_refresh, retries),
     do: base_refresh + @refresh_song_retries_increment * retries
+
+  # distinguish between icecast and hls urls
+  defp get_url_module(song_topic) do
+    if String.contains?(song_topic, ".m3u8") do
+      ProgRadioApi.SongProvider.Hls
+    else
+      ProgRadioApi.SongProvider.Icecast
+    end
+  end
 end

@@ -69,8 +69,7 @@ defmodule ProgRadioApi.MixProject do
       {:elixir_xml_to_map, "~> 2.0"},
       {:recase, "~> 0.7"},
       #      {:shoutcast, "~> 0.1.0"},
-      {:shoutcast,
-       git: "https://github.com/conradfr/shoutcast_ex.git", branch: "hackney_close"},
+      {:shoutcast, git: "https://github.com/conradfr/shoutcast_ex.git", branch: "hackney_close"},
       {:floki, "~> 0.32.0"},
       {:canada, "~> 2.0"},
       {:nebulex, "~> 2.3"},
@@ -82,7 +81,8 @@ defmodule ProgRadioApi.MixProject do
       {:ex_cldr_collation, "~> 0.7.0"},
       {:req, "~> 0.4.0"},
       {:phoenix_live_dashboard, "~> 0.7"},
-      {:ecto_psql_extras, "~> 0.8"}
+      {:ecto_psql_extras, "~> 0.8"},
+      {:hls, "~> 0.1.0"}
     ]
   end
 
