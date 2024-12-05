@@ -67,6 +67,9 @@ import StreamsUtils from '@/utils/StreamsUtils';
 import PlayerUtils from '@/utils/PlayerUtils';
 import * as config from '@/config/config';
 
+// used to space the channel joins a bit
+const MAX_RANDOM_MS = 100;
+
 export default defineComponent({
   props: {
     radio: {
@@ -105,14 +108,17 @@ export default defineComponent({
     };
   },
   beforeMount() {
+    if (this.song[this.channelName] && this.song[this.channelName].song) {
+      this.currentSong = PlayerUtils.formatSong(this.song[this.channelName].song);
+    }
+
     setTimeout(() => {
       this.joinChannel(this.channelName);
-      this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+    }, 250 + MAX_RANDOM_MS);
 
-      if (this.song[this.channelName] && this.song[this.channelName].song) {
-        this.currentSong = PlayerUtils.formatSong(this.song[this.channelName].song);
-      }
-    }, 150);
+    setTimeout(() => {
+      this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+    }, 1000 + MAX_RANDOM_MS);
   },
   beforeUnmount() {
     setTimeout(() => {
