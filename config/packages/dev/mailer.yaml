@@ -1,4 +1,4 @@
 framework:
     mailer:
         envelope:
-            recipients: ["%env(mail_catchall)%"]
+            recipients: ["%env(MAIL_CATCHALL)%"]

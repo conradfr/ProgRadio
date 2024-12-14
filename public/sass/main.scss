@@ -170,3 +170,13 @@ body {
 .offcanvas, .offcanvas-lg, .offcanvas-md, .offcanvas-sm, .offcanvas-xl, .offcanvas-xxl {
   --bs-offcanvas-width: 300px;
 }
+
+/* global view */
+
+/*.viewfade-leave-active,*/ .viewfade-enter-active {
+  transition: all .17s;
+}
+
+/* .viewfade-leave-to,*/ .viewfade-enter-from {
+  opacity: 0;
+}

@@ -3,7 +3,11 @@
   <toast-container></toast-container>
   <timer-modal></timer-modal>
   <player-video-modal />
-  <router-view></router-view>
+  <router-view v-slot="{ Component }">
+    <Transition name="viewfade">
+      <component :is="Component" />
+    </Transition>
+  </router-view>
 </template>
 
 <script lang="ts">

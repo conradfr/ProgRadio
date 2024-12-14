@@ -1,9 +1,9 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
-        analytics: "%env(analytics)%"
+        analytics: "%env(ANALYTICS)%"
         timezone: "%timezone%"
-        streams_proxy: "%env(streams_proxy)%"
+        streams_proxy: "%env(STREAMS_PROXY)%"
         streams_proxy_key: "%env(STREAMS_PROXY_KEY)%"
         api_url: "%env(API_URL)%"
 #        legacy: "%env(LEGACY)%"

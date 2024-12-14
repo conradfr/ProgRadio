@@ -32,12 +32,16 @@ defmodule ProgRadioApi.SongProvider.Couleur3 do
 
   @impl true
   def get_data(_name, _last_data) do
-    @url
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> Jason.decode!()
-    |> Map.get("songList", %{})
-    |> List.first()
+    try do
+      @url
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> Jason.decode!()
+      |> Map.get("songList", %{})
+      |> List.first()
+    rescue
+      _ -> nil
+    end
   end
 
   @impl true

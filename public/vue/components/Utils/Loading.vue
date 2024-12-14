@@ -1,5 +1,5 @@
 <template>
-  <transition appear>
+  <Transition appear>
     <div class="loading" v-if="isLoading">
       <div class="d-flex align-items-center alert alert-progradio" role="alert">
         <div class="spinner-border" role="status"></div>
@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-  </transition>
+  </Transition>
 </template>
 
 <script lang="ts">

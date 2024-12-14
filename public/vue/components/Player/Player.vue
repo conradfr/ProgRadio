@@ -3,13 +3,13 @@
     <div v-if="radio && !prevRadio" class="player-radio-link">
       <a :href="radioLink()"><i class="bi bi-link-45deg"></i></a>
     </div>
-    <transition name="play-prev-fade" mode="out-in">
+    <Transition name="play-prev-fade" mode="out-in">
       <div v-if="prevRadio" class="player-radio-previous"
            v-on:click="togglePrevious"
            :title="$i18n.t('message.player.previous', { radio: prevRadio.name })">
         <i class="bi-arrow-left-right"></i>
       </div>
-    </transition>
+    </Transition>
     <div class="player-wrap">
       <div class="player-sound player-sound-fader"
            v-if="!externalPlayer"
@@ -41,11 +41,11 @@
         </div>
       </div>
       <player-info v-if="radio"></player-info>
-      <transition name="timer-fade" mode="out-in">
+      <Transition name="timer-fade" mode="out-in">
         <div v-if="userLogged && currentSong" class="player-add-song">
           <player-save-song></player-save-song>
         </div>
-      </transition>
+      </Transition>
       <div v-if="!radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}
       </div>

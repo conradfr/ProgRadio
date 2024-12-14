@@ -1,6 +1,7 @@
 <template>
+<!--  <Transition name="radio-list" appear>-->
   <div class="radio-list-one-wrapper"
-       :class="{'radio-list-one-wrapper-hover': hover}"
+       _class="{'radio-list-one-wrapper-hover': hover}"
        v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
     <div class="radio-list-one-flag"
         v-if="displayFlag">
@@ -59,11 +60,12 @@
     </div>
     <a v-on:click="playStop(radio.code_name, false)" :title="radio.name">
       <div class="radio-logo"
-           :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}"
            :title="getSubRadio(radio.code_name).name"
-           :style="styleObject">
-        <div class="radio-logo-play"
-           :class="{
+           :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}">
+        <div class="radio-logo-bg"
+             :style="styleObject">
+          <div class="radio-logo-play"
+               :class="{
           'radio-logo-play-hide': radio.streaming_enabled === false,
           'radio-logo-play-active': radio.code_name === radioPlayingCodeName,
           'radio-logo-play-paused': radio.code_name === radioPlayingCodeName
@@ -72,10 +74,12 @@
             (radio.code_name === radioPlayingCodeName
               && isWebRadio(radio.code_name, playingStreamCodeName))
           }">
+          </div>
         </div>
       </div>
     </a>
   </div>
+<!--  </Transition>-->
 </template>
 
 <script lang="ts">

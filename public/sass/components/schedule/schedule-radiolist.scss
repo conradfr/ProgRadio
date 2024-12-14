@@ -85,12 +85,26 @@
     justify-content: center;
 
     background-color: var(--progradio-radio-list-background);
-    background-repeat: no-repeat;
-    background-position: center;
 
     border-bottom: 1px solid var(--progradio-radio-logo-border-b);
     //border: 1px solid red;
     box-shadow: 3px 0 8px -3px rgba(0,0,0,0.4);
+
+    .radio-logo-bg {
+      position: relative;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+
+      background-color: var(--progradio-radio-list-background);
+      background-repeat: no-repeat;
+      background-position: center;
+
+      & > .radio-logo-play {
+        @include radio-logo-play-mixin;
+      }
+    }
 
     &.radio-logo-nohover {
       cursor: default;
@@ -98,10 +112,6 @@
 
     &:hover:not(.radio-logo-nohover) {
       //opacity: 0.9;
-    }
-
-    & > .radio-logo-play {
-      @include radio-logo-play-mixin;
     }
   }
 
@@ -274,24 +284,23 @@
 
   /* collection switch */
 
-  .radio-list-leave-active, .radio-list-enter-active {
-    transition: all .05s;
+  // Currently not working properly past the initial render
+  // TODO find why
 
-    .radio-logo {
-      transition: all .05s;
+  .radio-list-move .radio-list-leave-active, .radio-list-enter-active {
+    .radio-logo-bg {
+      transition: all 0.15s;
     }
   }
 
-  .radio-list-leave-to {
-    .radio-logo {
+  .radio-list-leave-to, .radio-list-enter-from {
+    .radio-logo-bg {
       opacity: 0;
     }
   }
 
-  .radio-list-enter-to {
-    .radio-logo {
-      opacity: 1;
-    }
+  .radio-list-leave-active {
+    position: absolute;
   }
 }
 

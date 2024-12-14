@@ -1,10 +1,12 @@
 <template>
   <div class="streams d-flex justify-content-center" v-if="radios.length">
+    <TransitionGroup name="stream-list">
     <streams-list-one
         v-for="entry in radios"
         :key="entry.code_name"
         :radio="entry"
     ></streams-list-one>
+    </TransitionGroup>
   </div>
   <div class="row" v-else-if="isLoading === false">
     <div class="offset-md-3 col-md-6">
