@@ -72,7 +72,7 @@ defmodule ProgRadioApi.MixProject do
       {:shoutcast, git: "https://github.com/conradfr/shoutcast_ex.git", branch: "hackney_close"},
       {:floki, "~> 0.32.0"},
       {:canada, "~> 2.0"},
-      {:nebulex, "~> 2.3"},
+      {:nebulex, "~> 2.6"},
       {:decorator, "~> 1.3"},
       {:observer_cli, "~> 1.7"},
       {:request_cache_plug, "~> 1.0"},
@@ -82,7 +82,8 @@ defmodule ProgRadioApi.MixProject do
       {:req, "~> 0.4.0"},
       {:phoenix_live_dashboard, "~> 0.7"},
       {:ecto_psql_extras, "~> 0.8"},
-      {:hls, "~> 0.1.0"}
+      {:hls, "~> 0.1.0"},
+      {:ex2ms, "~> 1.0"}
     ]
   end
 

@@ -1,4 +1,4 @@
-defmodule ProgRadioApiWeb.Plugs.Auth do
+defmodule ProgRadioApiWeb.Plugs.ApiKeyAuth do
   import Plug.Conn
   import Ecto.Query, warn: false, only: [from: 2]
   alias ProgRadioApi.Repo

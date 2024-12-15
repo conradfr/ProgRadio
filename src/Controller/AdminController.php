@@ -18,6 +18,7 @@ use App\Entity\User;
 use App\Entity\UserStream;
 use App\Form\SharesType;
 use App\Form\StreamOverloadingType;
+use App\Service\ApiClient;
 use App\Service\DateUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,6 +52,32 @@ class AdminController extends AbstractBaseController
             'stream_song_status' => $streamSongStatus,
             'userCount' => $userCount
         ]);
+    }
+
+    #[Route('/{_locale}/admin/api/cache', name: 'admin_cache')]
+    public function apiCacheAction(EntityManagerInterface $em): Response
+    {
+        return $this->render('default/admin/api.html.twig', []);
+    }
+
+    #[Route('/{_locale}/admin/api/cache/streams', name: 'admin_cache_clear')]
+    public function apiCacheClearAction(ApiClient $apiClient): Response
+    {
+        $cleared = $apiClient->clearStreams();
+
+        if ($cleared) {
+            $this->addFlash(
+                'success',
+                'Action has been completed.'
+            );
+        } else {
+            $this->addFlash(
+                'error',
+                'An error occurred.'
+            );
+        }
+
+        return $this->redirectToRoute('admin_cache', [], 301);
     }
 
     #[Route('/admin/listening/webcount', name: 'admin_listening_webcount')]

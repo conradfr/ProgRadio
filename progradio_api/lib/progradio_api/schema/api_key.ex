@@ -22,9 +22,8 @@ defimpl Canada.Can, for: ProgRadioApi.ApiKey do
     check_radio(api_key.api_user, radio) and check_right(api_key, "schedule", "add")
   end
 
-  def can?(api_key, :list, :radio) do
-    check_right(api_key, "radio", "list")
-  end
+  def can?(api_key, :list, :radio), do: check_right(api_key, "schedule", "add")
+  def can?(api_key, :manage, :admin), do: check_right(api_key, "admin", "manage")
 
   # Check if radio is allowed for this user
   defp check_radio(api_key_user, radio) do

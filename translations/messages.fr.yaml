@@ -311,6 +311,15 @@ cookie:
     disclaimer: (%name% ne vend pas les données de ses visiteurs)
 
 admin:
+    api:
+        flash:
+            success: Action complétée.
+            error: Une erreur est survenue.
+        cache:
+            title: Api - Cache
+            menu: Cache
+            clear_streams: Vider le cache streams
+
     dashboard:
         title: Tableau de bord
         menu:

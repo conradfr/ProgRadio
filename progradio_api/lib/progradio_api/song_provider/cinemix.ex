@@ -19,7 +19,7 @@ defmodule ProgRadioApi.SongProvider.Cinemix do
       |> Integer.to_string()
 
     try do
-      @url <> buster
+      (@url <> buster)
       |> SongProvider.get()
       |> Map.get(:body)
     rescue

@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
     "africaradio_naija" => "naija",
     "africaradio_manu-dibango-forever" => "manu-dibango-forever",
     "africaradio_rumba" => "rumba",
-    "africaradio_selecta" => "selecta",
+    "africaradio_selecta" => "selecta"
   }
 
   @refresh_fallback_s 3

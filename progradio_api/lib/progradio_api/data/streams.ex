@@ -72,21 +72,21 @@ defmodule ProgRadioApi.Streams do
 
   @decorate cacheable(
               cache: Cache,
-              key: [@cache_prefix_stream, params],
+              key: {@cache_prefix_stream, params},
               opts: [ttl: @cache_ttl_stream_last]
             )
   def get(%{:sort => "last"} = params), do: build_query(params)
 
   @decorate cacheable(
               cache: Cache,
-              key: [@cache_prefix_stream, params],
+              key: {@cache_prefix_stream, params},
               opts: [ttl: @cache_ttl_stream]
             )
   def get(params), do: build_query(params)
 
   @decorate cacheable(
               cache: Cache,
-              key: [@cache_prefix_stream_count, params],
+              key: {@cache_prefix_stream_count, params},
               opts: [ttl: @cache_ttl_stream]
             )
   def count(params) do

@@ -24,40 +24,41 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   def get_data(name, _last_data) do
     url = SongProvider.get_stream_code_name_from_channel(name)
 
-#    data =
-#      case is_map(last_data) do
-#        true when is_map_key(last_data, :json) == true and last_data.json === true ->
-#          get_json_data(url)
-#
-#        true ->
-#          nil
-#
-#        _ ->
-#          get_json_data(url)
-#      end
-#
-#    case data do
-#      %{} ->
-#        Map.put(data, :json, true)
-#
-#      _ ->
-        try do
-          task =
-            Task.Supervisor.async(TaskSupervisor, fn ->
-              try do
-                {:ok, %Shoutcast.Meta{data: data}} =
-                  Shoutcast.read_meta(url, follow_redirect: true, pool: false)
-                data
-              rescue
-                reason ->
-                  Logger.error("Data provider - #{name}: task error rescue (#{inspect reason})")
-                  :error
-              catch
-                :exit, _ ->
-                  Logger.error("Data provider - #{name}: task error catch")
-                  :error
-              end
-            end)
+    #    data =
+    #      case is_map(last_data) do
+    #        true when is_map_key(last_data, :json) == true and last_data.json === true ->
+    #          get_json_data(url)
+    #
+    #        true ->
+    #          nil
+    #
+    #        _ ->
+    #          get_json_data(url)
+    #      end
+    #
+    #    case data do
+    #      %{} ->
+    #        Map.put(data, :json, true)
+    #
+    #      _ ->
+    try do
+      task =
+        Task.Supervisor.async(TaskSupervisor, fn ->
+          try do
+            {:ok, %Shoutcast.Meta{data: data}} =
+              Shoutcast.read_meta(url, follow_redirect: true, pool: false)
+
+            data
+          rescue
+            reason ->
+              Logger.error("Data provider - #{name}: task error rescue (#{inspect(reason)})")
+              :error
+          catch
+            :exit, _ ->
+              Logger.error("Data provider - #{name}: task error catch")
+              :error
+          end
+        end)
 
       Task.await(task, @task_timeout)
     rescue
@@ -134,5 +135,4 @@ defmodule ProgRadioApi.SongProvider.Icecast do
       _ -> nil
     end
   end
-
 end

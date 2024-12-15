@@ -14,7 +14,7 @@ defmodule ProgRadioApiWeb.Router do
       clients: ~w[10.0.2.2/32]
 
     plug :accepts, ["json"]
-    plug ProgRadioApiWeb.Plugs.Auth
+    plug ProgRadioApiWeb.Plugs.ApiKeyAuth
   end
 
   pipeline :admins_only do
@@ -40,6 +40,8 @@ defmodule ProgRadioApiWeb.Router do
 
     post "/stream_error/:id", StreamController, :playing_error
     post "/search_term", StreamController, :search_term
+
+    delete "/admin/cache/streams", AdminController, :empty_cache_stream
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

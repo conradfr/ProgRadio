@@ -26,7 +26,7 @@ defmodule ProgRadioApi.SongProvider.Rouge do
     "rouge_2010" => 2418,
     "rouge_cine" => 2419,
     "rouge_xmas" => 2420,
-    "rouge_italia" => 2421,
+    "rouge_italia" => 2421
   }
 
   @impl true
@@ -35,13 +35,13 @@ defmodule ProgRadioApi.SongProvider.Rouge do
   def get_refresh(_name, _data, default_refresh), do: default_refresh
 
   # TODO
-#  @impl true
-#  def get_refresh(name, nil, default_refresh), do: default_refresh
-#
-#  @impl true
-#  def get_refresh(name, data, default_refresh) do
-#
-#  end
+  #  @impl true
+  #  def get_refresh(name, nil, default_refresh), do: default_refresh
+  #
+  #  @impl true
+  #  def get_refresh(name, data, default_refresh) do
+  #
+  #  end
 
   @impl true
   def get_data(name, last_data) do

@@ -17,6 +17,10 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+        bind:
+            $apiUrl: '%env(ADMIN_API_URL)%'
+            $apiKey: '%env(ADMIN_API_KEY)%'
+
     Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
         arguments: ['@snc_redis.default']
 

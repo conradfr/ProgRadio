@@ -312,6 +312,15 @@ cookie:
     disclaimer: (This website does not track its visitors or sell data)
 
 admin:
+    api:
+        flash:
+            success: Action has been completed.
+            error: An error occurred.
+        cache:
+            title: Api - Cache
+            menu: Cache
+            clear_streams: Empty streams cache
+
     dashboard:
         title: Dashboard
         menu:
