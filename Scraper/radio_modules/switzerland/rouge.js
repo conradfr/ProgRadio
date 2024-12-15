@@ -103,7 +103,7 @@ const fetch = dateObj => {
   dateObj.tz('Europe/Zurich');
   dateObj.locale('fr');
 
-  const url = 'https://www.rouge.ch/emissions';
+  const url = 'https://rouge.ch/programme/';
 
   const day = dayFr[dateObj.isoWeekday()];
 
