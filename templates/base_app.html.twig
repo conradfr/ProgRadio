@@ -9,7 +9,6 @@
 
 {% block javascript_head %}
 const baseUrl = '/';
-const appEnv = '{{ app.environment }}';
 const gtCode = '{{ analytics }}';
 const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }};
 const locale = '{{ app.request.locale }}';

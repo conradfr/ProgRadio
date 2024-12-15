@@ -113,7 +113,7 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
 
 const sendPlayingError = (radioId, errorText) => {
   // only streams
-  if (!radioId.includes('-')) {
+  if (!radioId || !radioId.includes('-')) {
     return;
   }
 
@@ -157,6 +157,21 @@ const setAudioVolume = (volume) => {
   if (typeof appVolume !== 'undefined') {
     window.audio.volume = appVolume;
   }
+};
+
+const setTitle = (song) => {
+  const elems = document.getElementsByClassName('stream-title');
+  if (!elems || !elems[0] || !elems[0].dataset.title) {
+    return;
+  }
+
+  let title = '';
+
+  if (song) {
+    title += `♫ ${song} - `;
+  }
+
+  document.title = `${title}${elems[0].dataset.title}`;
 };
 
 const incrementPlayCount = (stationUuid) => {
@@ -383,12 +398,12 @@ createApp({
       this.lastUpdated = new Date();
     });
 
-    if (topic !== undefined && topic !== null && topic !== '') {
+    if (topic && topic.trim() !== '') {
       this.joinChannel(topic.trim());
     }
 
-    if (streamCodeName !== undefined && streamCodeName !== null && streamCodeName !== '') {
-      this.joinChannel(`listeners:${streamCodeName}`);
+    if (streamCodeName && streamCodeName.trim() !== '') {
+      this.joinChannel(`listeners:${streamCodeName.trim()}`);
     }
   },
   playingError(codeName, errorText) {
@@ -434,6 +449,7 @@ createApp({
         this.song = null;
         this.listeners = null;
         this.clearSocketTimer();
+        setTitle(null);
       });
     }
 
@@ -478,6 +494,7 @@ createApp({
           this.listeners = null;
         } else {
           this.song = null;
+          setTitle(null);
         }
 
         // this.channels[topic] = null;
@@ -487,6 +504,7 @@ createApp({
           this.listeners = null;
         } else {
           this.song = null;
+          setTitle(null);
         }
 
         // this.channels[topic] = null;
@@ -494,6 +512,7 @@ createApp({
 
     this.channels[topic].on('playing', (songData) => {
       this.formatSong(songData);
+      setTitle(this.song);
     });
 
     this.channels[topic].on('counter_update', (counterData) => {
@@ -505,6 +524,7 @@ createApp({
       this.listeners = null;
       this.channels[topic] = null;
       delete this.channels[topic];
+      setTitle(null);
     });
   },
   formatSong(songData) {

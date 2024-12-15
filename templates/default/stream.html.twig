@@ -16,6 +16,10 @@
 {% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
 {% endmacro %}
 
+{% macro title(stream) %}
+{% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}
+{% endmacro %}
+
 {% macro extractYouTubeIdAndProvideiFrame(url) %}
     {% set youtube_id = url | replace({
         'https://youtu.be/': '',
@@ -66,17 +70,13 @@
 {% endblock %}
 
 {% block title %}
-{% if stream.countryCode is not null and stream.countryCode != '' %}
-   {{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}
-{% else %}
-    {{ 'page.stream.title'|trans({'%radio%': stream.name}) }}
-{% endif %}
+{{ self.title(stream) }}
 {% endblock %}
 
 {% block description %}{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}{% endblock %}
 
 {% block body %}
-<div class="container stream-page">
+<div class="container stream-page stream-title" data-title="{{ self.title(stream) }}">
     <div class="row">
         <div class="col-sm-2 col-12">
             <div class="radio-page-side sticky">
