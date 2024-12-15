@@ -112,6 +112,8 @@ import {
 
 import PlayerUtils from '@/utils/PlayerUtils';
 
+const MAX_RANDOM_MS = 75;
+
 export default defineComponent({
   props: {
     radio: {
@@ -141,16 +143,12 @@ export default defineComponent({
     };
   },
   mounted() {
-    setTimeout(() => {
-      this.joinChannel(this.channelName);
-      this.joinListenersChannel(`${this.radio.code_name}_main`);
-    }, 1000);
+    document.addEventListener('visibilitychange', this.visibilityChange);
+    this.joinChannels();
   },
   beforeUnmount() {
-    setTimeout(() => {
-      this.leaveChannel(this.channelName);
-      this.leaveListenersChannel(`${this.radio.code_name}_main`);
-    }, 250);
+    document.addEventListener('visibilitychange', this.visibilityChange);
+    this.leaveChannels();
   },
   computed: {
     ...mapState(usePlayerStore, [
@@ -224,6 +222,26 @@ export default defineComponent({
       'joinListenersChannel',
       'leaveListenersChannel'
     ]),
+    visibilityChange() {
+      if (document.hidden) {
+        this.leaveChannels();
+        return;
+      }
+
+      this.joinChannels();
+    },
+    joinChannels() {
+      setTimeout(() => {
+        this.joinChannel(this.channelName);
+        this.joinListenersChannel(`${this.radio.code_name}_main`);
+      }, 250 + MAX_RANDOM_MS);
+    },
+    leaveChannels() {
+      setTimeout(() => {
+        this.leaveChannel(this.channelName);
+        this.leaveListenersChannel(`${this.radio.code_name}_main`);
+      }, 1000 + MAX_RANDOM_MS);
+    },
     playStop(radioCodeName: string, isSubStream: boolean) {
       const streamCodeName = isSubStream ? radioCodeName
         : this.getSubRadio(radioCodeName).radio_stream;

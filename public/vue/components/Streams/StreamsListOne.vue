@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="streams-one-fav cursor-pointer"
-      :class="{ 'streams-one-fav-isfavorite': isFavorite() }"
+      :class="{ 'streams-one-fav-isfavorite': isFavorite }"
          v-on:click.stop="toggleFavorite">
       <img class="streams-one-icon" :alt="radio.code_name" src="/img/favorites_streams.svg">
     </div>
@@ -112,19 +112,14 @@ export default defineComponent({
       this.currentSong = PlayerUtils.formatSong(this.song[this.channelName].song);
     }
 
-    setTimeout(() => {
-      this.joinChannel(this.channelName);
-    }, 250 + MAX_RANDOM_MS);
-
-    setTimeout(() => {
-      this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
-    }, 1000 + MAX_RANDOM_MS);
+    this.joinChannels();
+  },
+  mounted() {
+    document.addEventListener('visibilitychange', this.visibilityChange);
   },
   beforeUnmount() {
-    setTimeout(() => {
-      this.leaveChannel(this.channelName);
-      this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
-    }, 200);
+    document.removeEventListener('visibilitychange', this.visibilityChange);
+    this.leaveChannels();
   },
   computed: {
     ...mapState(usePlayerStore, [
@@ -135,6 +130,9 @@ export default defineComponent({
       'radioPlayingCodeName'
     ]),
     ...mapState(useStreamsStore, ['selectedCountry', 'favorites']),
+    isFavorite() {
+      return this.favorites.indexOf(this.radio.code_name!) !== -1;
+    },
     liveSong() {
       if (!Object.prototype.hasOwnProperty.call(this.song, this.channelName)) {
         return null;
@@ -193,8 +191,28 @@ export default defineComponent({
       'setSearchActive',
       'getStreamRadios'
     ]),
-    isFavorite() {
-      return this.favorites.indexOf(this.radio.code_name!) !== -1;
+    visibilityChange() {
+      if (document.hidden) {
+        this.leaveChannels();
+        return;
+      }
+
+      this.joinChannels();
+    },
+    joinChannels() {
+      setTimeout(() => {
+        this.joinChannel(this.channelName);
+      }, 250 + MAX_RANDOM_MS);
+
+      setTimeout(() => {
+        this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+      }, 1000 + MAX_RANDOM_MS);
+    },
+    leaveChannels() {
+      setTimeout(() => {
+        this.leaveChannel(this.channelName);
+        this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+      }, 200);
     },
     playStop() {
       // stop if playing

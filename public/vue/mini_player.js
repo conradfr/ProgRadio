@@ -211,6 +211,7 @@ createApp({
   playing: PLAYER_STATE_STOPPED,
   song: null,
   listeners: null,
+  visibilityListeners: {},
   lastUpdated: null,
   radioId: null,
   playingStart: null,
@@ -477,6 +478,20 @@ createApp({
   joinChannel(topic) {
     if (!this.options.webSocket) {
       return;
+    }
+
+    // optimize listeners channel sub has many people will not have the tab running in the background
+    if (topic.trim().startsWith('listeners:') && !this.visibilityListeners[topic]) {
+      this.visibilityListeners[topic] = true;
+      document.addEventListener('visibilitychange', () => {
+        if (this.channels[topic] && document.hidden) {
+          this.channels[topic].leave();
+          delete this.channels[topic];
+          this.listeners = null;
+        } else {
+          this.joinChannel(topic);
+        }
+      });
     }
 
     this.connectSocket();
