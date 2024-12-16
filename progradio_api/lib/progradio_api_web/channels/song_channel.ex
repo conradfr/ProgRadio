@@ -63,6 +63,13 @@ defmodule ProgRadioApiWeb.SongChannel do
     {:noreply, socket}
   end
 
+  intercept ["presence_diff"]
+
+  # we don't need to send presence_diff as it's only used by internal service
+  def handle_out("presence_diff", _msg, socket) do
+    {:noreply, socket}
+  end
+
   #  def handle_info({:after_join_collection, collection_topic, radios_stream_data}, socket) do
   #    {:ok, _} =
   #      Presence.track(self(), collection_topic, :rand.uniform(), %{
