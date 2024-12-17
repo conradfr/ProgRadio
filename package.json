@@ -27,6 +27,7 @@
     "i18n-iso-countries": "^6.0.0",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
+    "object-hash": "^3.0.0",
     "pinia": "^2.2.6",
     "postcss": "^8.4.41",
     "postcss-cli": "^8.3.1",

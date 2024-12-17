@@ -1,4 +1,6 @@
 import type { DateTime } from 'luxon';
+// @ts-ignore
+import hash from 'object-hash';
 
 import type { Schedule } from '@/types/schedule';
 
@@ -44,10 +46,9 @@ const getSchedule = async (dateStr: string, params?: any): Promise<Schedule|null
   const data = await response.json();
 
   if (data && data.schedule) {
-    // only cache full data
-    if (params === undefined || params === null) {
-      cache.setSessionCache(dateStr, data.schedule);
-    }
+    // TODO better manage collections vs full day cache
+    const cacheHash = `${dateStr}_${hash(params)}`;
+    cache.setSessionCache(cacheHash, data.schedule);
 
     return data.schedule;
   }

@@ -4,6 +4,8 @@ import { DateTime, Interval } from 'luxon';
 import sortBy from 'lodash/sortBy';
 import find from 'lodash/find';
 import without from 'lodash/without';
+// @ts-ignore
+import hash from 'object-hash';
 
 import type { Category } from '@/types/category';
 import type { Collection } from '@/types/collection';
@@ -167,7 +169,6 @@ export const useScheduleStore = defineStore('schedule', {
     }
   },
   actions: {
-
     // ---------- SCROLL ----------
 
     scrollToCursor() {
@@ -380,10 +381,12 @@ export const useScheduleStore = defineStore('schedule', {
     getSchedule(params?: any) {
       const globalStore = useGlobalStore();
       const dateStr: string = this.cursorTime.toISODate();
+      // TODO better manage collections vs full day cache
+      const cacheHash = `${dateStr}_${hash(params)}`;
 
       // if we have cache we display it immediately and then fetch an update silently
-      if (cache.hasSessionCache(dateStr)) {
-        this.updateSchedule(cache.getSessionCache(dateStr));
+      if (cache.hasSessionCache(cacheHash)) {
+        this.updateSchedule(cache.getSessionCache(cacheHash));
       } else {
         globalStore.setLoading(true);
       }
@@ -420,8 +423,8 @@ export const useScheduleStore = defineStore('schedule', {
           75
         );
       } else {
-        if (cache.hasSessionCache(dateStr)) {
-          this.updateSchedule(cache.getSessionCache(dateStr));
+        if (cache.hasSessionCache(cacheHash)) {
+          this.updateSchedule(cache.getSessionCache(cacheHash));
         }
 
         setTimeout(
