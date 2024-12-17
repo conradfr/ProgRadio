@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.Rireetchansons do
   @behaviour ProgRadioApi.SongProvider
 
   @url "https://www.rireetchansons.fr/onair.json"
-  @minutes_delta_max 300
+  @minutes_max_delta 300
   @discarded_artist "RIRE & CHANSONS"
 
   @stream_ids %{
@@ -84,7 +84,7 @@ defmodule ProgRadioApi.SongProvider.Rireetchansons do
         |> Map.get("end_timestamp", 0)
         |> Kernel.trunc()
 
-      if item_end - @minutes_delta_max < now_unix do
+      if item_end - @minutes_max_delta < now_unix do
         item
       else
         nil

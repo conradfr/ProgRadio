@@ -1,11 +1,11 @@
-defmodule ProgRadioApi.SongProvider.Couleur3 do
+defmodule ProgRadioApi.SongProvider.Optionmusique do
   require Logger
   alias ProgRadioApi.SongProvider.GenericRts
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://www.rts.ch/audio-podcast/livepopup/rts-couleur3/"
-  @minutes_max_delta 5
+  @url "https://www.rts.ch/hbv7/ajax/audio-podcast/livepopup/rts-option-musique/"
+  @minutes_max_delta 10
 
   @impl true
   defdelegate has_custom_refresh(), to: GenericRts

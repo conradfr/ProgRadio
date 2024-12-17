@@ -1,10 +1,10 @@
-defmodule ProgRadioApi.SongProvider.Couleur3 do
+defmodule ProgRadioApi.SongProvider.La1ere do
   require Logger
   alias ProgRadioApi.SongProvider.GenericRts
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://www.rts.ch/audio-podcast/livepopup/rts-couleur3/"
+  @url "https://www.rts.ch/hbv7/ajax/audio-podcast/livepopup/rts-premiere/"
   @minutes_max_delta 5
 
   @impl true

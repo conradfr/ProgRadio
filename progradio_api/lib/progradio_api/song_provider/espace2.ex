@@ -1,41 +1,25 @@
 defmodule ProgRadioApi.SongProvider.Espace2 do
   require Logger
-  alias ProgRadioApi.SongProvider
+  alias ProgRadioApi.SongProvider.GenericRts
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://www.rts.ch/play/v3/api/rts/production/radio/song-log?channelId=a83f29dee7a5d0d3f9fccdb9c92161b1afb512db"
+  @url "https://www.rts.ch/hbv7/ajax/audio-podcast/livepopup/rts-espace2/"
+  @minutes_max_delta 7
 
   @impl true
-  def has_custom_refresh(), do: false
+  defdelegate has_custom_refresh(), to: GenericRts
 
   @impl true
-  def get_refresh(_name, _data, _default_refresh), do: nil
+  defdelegate get_refresh(name, data, default_refresh), to: GenericRts
 
   @impl true
-  def get_data(_name, _last_data) do
-    try do
-      @url
-      |> SongProvider.get()
-      |> Map.get(:body)
-      |> Jason.decode!()
-      |> Map.get("data", %{})
-      |> Map.get("songs", %{})
-      |> Enum.find(fn e -> Map.get(e, "isPlayingNow", 0) == true end)
-    rescue
-      _ -> nil
-    end
+  def get_data(name, last_data) do
+    GenericRts.get_data(@url, name, last_data)
   end
 
   @impl true
   def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.error("Data provider - #{name}: error fetching song data")
-        %{}
-
-      _ ->
-        %{artist: data["artist"], title: data["title"]}
-    end
+    GenericRts.get_song(@minutes_max_delta, name, data)
   end
 end

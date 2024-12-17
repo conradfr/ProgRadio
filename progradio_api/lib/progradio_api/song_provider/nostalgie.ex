@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.Nostalgie do
   @behaviour ProgRadioApi.SongProvider
 
   @url "https://www.nostalgie.fr/onair.json"
-  @minutes_delta_max 300
+  @minutes_max_delta 300
   @discarded_artist "NOSTALGIE"
 
   @stream_ids %{
@@ -54,7 +54,7 @@ defmodule ProgRadioApi.SongProvider.Nostalgie do
         |> Map.get(:body)
         |> Jason.decode!()
         |> Enum.find(fn e -> Map.get(e, "id", 0) == id end)
-        |> Map.get("playlist", %{})
+        |> Map.get("playlist", [])
         |> Enum.filter(fn e ->
           end_unix =
             e
@@ -83,7 +83,7 @@ defmodule ProgRadioApi.SongProvider.Nostalgie do
         |> Map.get("end_timestamp", 0)
         |> Kernel.trunc()
 
-      if item_end - @minutes_delta_max < now_unix do
+      if item_end - @minutes_max_delta < now_unix do
         item
       else
         nil

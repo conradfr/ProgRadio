@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.RadioScoop do
   @stream_ids %{
     "radio_scoop_main" => 1,
     "radio_scoop_vienne" => 112,
-    "radio_scoop_tarare" => 0,
+    "radio_scoop_tarare" => 1,
     "radio_scoop_saintetienne" => 2,
     "radio_scoop_roanne" => 7,
     "radio_scoop_lepuyenvelay" => 9,
@@ -18,9 +18,9 @@ defmodule ProgRadioApi.SongProvider.RadioScoop do
     "radio_scoop_macon" => 5,
     "radio_scoop_valserhone" => 6,
     "radio_scoop_aubenas" => 110,
-    "radio_scoop_grenoble" => 0,
-    "radio_scoop_chambery" => 0,
-    "radio_scoop_annecy" => 0
+    "radio_scoop_grenoble" => 203,
+    "radio_scoop_chambery" => 202,
+    "radio_scoop_annecy" => 202
   }
 
   @url "https://api.radioscoop.com/player/getOnAir.php?stream="
