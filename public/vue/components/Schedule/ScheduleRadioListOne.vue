@@ -1,7 +1,7 @@
 <template>
 <!--  <Transition name="radio-list" appear>-->
   <div class="radio-list-one-wrapper"
-       _class="{'radio-list-one-wrapper-hover': hover}"
+       :class="{'radio-list-one-wrapper-hover': hover}"
        v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
     <div class="radio-list-one-flag"
         v-if="displayFlag">
