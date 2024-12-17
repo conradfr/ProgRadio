@@ -1,10 +1,9 @@
 <template>
-<!--  <Transition name="radio-list" appear>-->
   <div class="radio-list-one-wrapper"
        :class="{'radio-list-one-wrapper-hover': hover}"
        v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
     <div class="radio-list-one-flag"
-        v-if="displayFlag">
+         v-if="displayFlag">
       <vue-flag
           :code="radio.country_code"
           size="nano"
@@ -12,16 +11,16 @@
       />
     </div>
     <div class="radio-list-one-listeners" v-if="liveListenersCount && liveListenersCount > 0"
-      :title="$t('message.streaming.listeners', { how_many: liveListenersCount})">
+         :title="$t('message.streaming.listeners', { how_many: liveListenersCount})">
       <span class="badge rounded-pill text-bg-dark">
         {{ liveListenersCount }}
       </span>
     </div>
     <div class="radio-subradio"
-        v-if="hasSubRadios"
-        v-on:click="regionClick"
+         v-if="hasSubRadios"
+         v-on:click="regionClick"
          v-on:mouseover.stop=""
-        :title="$i18n.t('message.schedule.radio_list.pick_region_title')">
+         :title="$i18n.t('message.schedule.radio_list.pick_region_title')">
       <i class="bi bi-geo-alt"></i>
     </div>
     <div class="radio-submenu"
@@ -34,7 +33,7 @@
         <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
       <router-link class="radio-submenu-entry radio-submenu-entry-radiopage"
-         :to="'/' + locale + '/radio/' + radio.code_name">
+                   :to="'/' + locale + '/radio/' + radio.code_name">
         <img src="/img/list.svg" class="filter-page"/>
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
       </router-link>
@@ -79,7 +78,6 @@
       </div>
     </a>
   </div>
-<!--  </Transition>-->
 </template>
 
 <script lang="ts">

@@ -1,13 +1,11 @@
 <template>
-<!--  <TransitionGroup name="radio-list" tag="div" class="schedule-radio-list">-->
-  <div class="schedule-radio-list">
+  <div class="schedule-radio-list" v-if="radios.length > 0">
     <schedule-radio-list-one
         v-for="entry in radios"
         :key="entry.code_name"
         :radio="entry">
     </schedule-radio-list-one>
   </div>
-<!--  </TransitionGroup>-->
 </template>
 
 <script lang="ts">

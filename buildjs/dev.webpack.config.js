@@ -1,5 +1,5 @@
 const path = require('path');
-var webpack = require('webpack');
+const webpack = require('webpack');
 const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -104,4 +104,4 @@ module.exports = {
     concatenateModules: true,
     checkWasmTypes: false,
   }
-}
+};

@@ -1,5 +1,5 @@
 const path = require('path')
-var webpack = require('webpack');
+const webpack = require('webpack');
 // const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const { VueLoaderPlugin } = require('vue-loader');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -123,4 +123,4 @@ module.exports = {
       }),
     ],
   }
-}
+};

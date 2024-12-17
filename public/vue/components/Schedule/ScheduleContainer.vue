@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, nextTick } from 'vue';
 import { mapActions, mapState } from 'pinia';
 
 /* eslint-disable import/no-cycle */
@@ -64,7 +64,9 @@ export default defineComponent({
         const toCollection = to.params.collection === ''
           ? DEFAULT_COLLECTION : to.params.collection;
         this.getSchedule({ collection: toCollection });
-        this.switchCollection(toCollection);
+        nextTick(() => {
+          this.switchCollection(toCollection);
+        });
       }
     }
   },
