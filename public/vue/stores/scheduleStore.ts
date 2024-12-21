@@ -378,7 +378,7 @@ export const useScheduleStore = defineStore('schedule', {
         50
       );
     },
-    getSchedule(params?: any) {
+    getSchedule(params: any = {}) {
       const globalStore = useGlobalStore();
       const dateStr: string = this.cursorTime.toISODate();
       // TODO better manage collections vs full day cache
