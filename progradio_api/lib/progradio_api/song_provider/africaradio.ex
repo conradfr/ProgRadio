@@ -56,7 +56,7 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
   end
 
   @impl true
-  def get_song(name, data) do
+  def get_song(_name, data) do
     case data do
       nil ->
         nil

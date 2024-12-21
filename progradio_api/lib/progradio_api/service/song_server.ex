@@ -289,12 +289,11 @@ defmodule ProgRadioApi.SongServer do
   defp increment_interval(base_refresh, retries),
     do: base_refresh + @refresh_song_retries_increment * retries
 
-  # distinguish between icecast and hls urls
   defp get_url_module(song_topic) do
-    if String.contains?(song_topic, ".m3u8") do
-      ProgRadioApi.SongProvider.Hls
-    else
-      ProgRadioApi.SongProvider.Icecast
+    cond do
+      String.contains?(song_topic, ".m3u8") -> ProgRadioApi.SongProvider.Hls
+      String.contains?(song_topic, ".rcast.net") -> ProgRadioApi.SongProvider.Rcast
+      true -> ProgRadioApi.SongProvider.Icecast
     end
   end
 end

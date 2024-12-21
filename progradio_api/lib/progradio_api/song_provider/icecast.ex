@@ -9,7 +9,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   @task_timeout 7500
 
-  @icecast_api "/status-json.xsl"
+  #  @icecast_api "/status-json.xsl"
 
   @impl true
   def has_custom_refresh(), do: false
@@ -114,25 +114,25 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     end
   end
 
-  defp get_json_data(stream_url) do
-    parsed_url = URI.parse(stream_url)
-
-    base_url =
-      "#{parsed_url.scheme}://#{parsed_url.host}#{if parsed_url.port, do: ":#{parsed_url.port}", else: ""}"
-
-    try do
-      "#{base_url}#{@icecast_api}"
-      |> SongProvider.get()
-      |> Map.get(:body)
-      |> Jason.decode!()
-      |> Map.get("icestats")
-      |> Map.get("source")
-      |> Enum.find(fn s ->
-        String.contains?(s["listenurl"], parsed_url.host) == true and
-          String.contains?(s["listenurl"], parsed_url.path || "") == true
-      end)
-    rescue
-      _ -> nil
-    end
-  end
+  #  defp get_json_data(stream_url) do
+  #    parsed_url = URI.parse(stream_url)
+  #
+  #    base_url =
+  #      "#{parsed_url.scheme}://#{parsed_url.host}#{if parsed_url.port, do: ":#{parsed_url.port}", else: ""}"
+  #
+  #    try do
+  #      "#{base_url}#{@icecast_api}"
+  #      |> SongProvider.get()
+  #      |> Map.get(:body)
+  #      |> Jason.decode!()
+  #      |> Map.get("icestats")
+  #      |> Map.get("source")
+  #      |> Enum.find(fn s ->
+  #        String.contains?(s["listenurl"], parsed_url.host) == true and
+  #          String.contains?(s["listenurl"], parsed_url.path || "") == true
+  #      end)
+  #    rescue
+  #      _ -> nil
+  #    end
+  #  end
 end

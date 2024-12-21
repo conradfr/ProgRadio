@@ -2,8 +2,6 @@ defmodule ProgRadioApi.SongProvider.GenericRts do
   require Logger
   alias ProgRadioApi.SongProvider
 
-  @default_length 300_000
-
   def has_custom_refresh(), do: false
 
   def get_refresh(_name, _data, _default_refresh), do: nil
@@ -35,7 +33,8 @@ defmodule ProgRadioApi.SongProvider.GenericRts do
             |> List.first()
 
           case content do
-            nil -> %{}
+            nil ->
+              %{}
 
             _ ->
               within_time =
@@ -73,10 +72,12 @@ defmodule ProgRadioApi.SongProvider.GenericRts do
     datetime = get_song_datetime(time)
     current_time = DateTime.now!("Europe/Zurich")
     time_with_delta = DateTime.add(datetime, max_delay * 60, :second)
-    DateTime.compare(current_time, datetime) != :lt and DateTime.compare(current_time, time_with_delta) == :lt
+
+    DateTime.compare(current_time, datetime) != :lt and
+      DateTime.compare(current_time, time_with_delta) == :lt
   end
 
-  defp inside_current_timeframe?(_time), do: false
+  defp inside_current_timeframe?(_time, _max_delay), do: false
 
   defp get_song_datetime(time_string) when is_binary(time_string) do
     [hours, minutes] = String.split(time_string, ":")
@@ -84,6 +85,7 @@ defmodule ProgRadioApi.SongProvider.GenericRts do
     {minute, ""} = Integer.parse(minutes)
 
     time = Time.new!(hour, minute, 0)
+
     current_date =
       "Europe/Zurich"
       |> DateTime.now!()

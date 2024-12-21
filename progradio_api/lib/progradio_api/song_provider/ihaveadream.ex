@@ -7,10 +7,11 @@ defmodule ProgRadioApi.SongProvider.Ihaveadream do
   @impl true
   def has_custom_refresh(), do: false
 
+  @impl true
   def get_refresh(_name, _data, default_refresh), do: default_refresh
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(_name, _last_data) do
     try do
       "https://www.radio-ihaveadream.com/info-radio-live"
       |> SongProvider.get()

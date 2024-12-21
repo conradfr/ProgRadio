@@ -32,6 +32,7 @@ defmodule ProgRadioApi.SongProvider.Rouge do
   @impl true
   def has_custom_refresh(), do: true
 
+  @impl true
   def get_refresh(_name, _data, default_refresh), do: default_refresh
 
   # TODO
@@ -44,7 +45,7 @@ defmodule ProgRadioApi.SongProvider.Rouge do
   #  end
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, _last_data) do
     id =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()

@@ -25,7 +25,7 @@ defmodule ProgRadioApi.SongProvider.Franceculture do
   end
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(_name, _last_data) do
     url = "https://www.radiofrance.fr/franceculture/api/live?"
 
     try do
