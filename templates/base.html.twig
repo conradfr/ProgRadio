@@ -16,10 +16,11 @@
 {#    <link rel="preconnect" href="https://fonts.gstatic.com">#}
 {#    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Lobster&text=AdictRadoProgmes&display=swap" as="font" crossorigin>#}
 
-    <link rel="preload" as="font" href="{{ asset('fonts/logo.woff2') }}" crossorigin>
+    <link rel="preload" as="font" href="/fonts/logo.woff2" crossorigin>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="{{ cdn_base_url }}">
 
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap">
@@ -37,12 +38,12 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="icon" id="favicon" type="image/png" href="{{ asset('favicon.png') }}" />
 
-    <link rel="preload" href="{{ asset('build/css/theme.css') }}?v={{ releaseVersion() }}" as="style">
+    <link rel="preload" href="{{ asset('build/css/theme.css', 'dynamic') }}" as="style">
 
-    {#    <link href="{{ asset('build/css/main_light.css') }}?v={{ releaseVersion() }}" rel="stylesheet">#}
-    {#    <link href="{{ asset('build/css/main_dark.css') }}?v={{ releaseVersion() }}" rel="stylesheet">#}
+    {#    <link href="{{ asset('build/css/main_light.css', 'dynamic') }}" rel="stylesheet">#}
+    {#    <link href="{{ asset('build/css/main_dark.css', 'dynamic') }}">#}
 
-    <link href="{{ asset('build/css/theme.css') }}?v={{ releaseVersion() }}" rel="stylesheet">
+    <link href="{{ asset('build/css/theme.css', 'dynamic') }}" rel="stylesheet">
 
     <style>
         {% block stylesheets %}
@@ -94,6 +95,7 @@
       const streamsProxy = '{{ streams_proxy }}';
       const streamsProxyKey = '{{ streams_proxy_key }}';
       const apiUrl = '{{ api_url }}';
+      const cdnBaseUrl = '{{ cdn_base_url }}';
       const appEnv = '{{ app.environment }}';
       const isProgRadio = {% if isProgRadio(app.request) == true %}true{% else %}false{% endif%};
       {# const isAdProtected = {{ isAdProtected(app.request) == true ? 'true' : 'false' }}; #}
@@ -120,7 +122,7 @@
                 {% if app.request.locale != locale %}
                     {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode %}
                     <a title="{{ "footer.#{locale}"|trans }}" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
-                        <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                        <img class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                     </a>
                 {% endif %}
             {% endfor %}
@@ -129,7 +131,7 @@
 </footer>
 
 {#<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin"anonymous"></script>#}
-<script type="module" async src="{{ asset('js/bootstrap.bundle.min.js') }}?v={{ releaseVersion() }}"></script>
+<script type="module" async src="{{ asset('js/bootstrap.bundle.min.js', 'dynamic') }}"></script>
 
 {#
 

@@ -136,7 +136,9 @@ export default defineComponent({
       hoverTimer: null,
       locale: this.$i18n.locale,
       styleObject: {
-        backgroundImage: `url("/img/radio/schedule/${this.radio.code_name}.png")`
+        // @ts-expect-error defined on global scope
+        // eslint-disable-next-line no-undef
+        backgroundImage: `url("${cdnBaseUrl}img/radio/schedule/${this.radio.code_name}.png")`
       }
     };
   },

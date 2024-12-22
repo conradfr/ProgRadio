@@ -100,7 +100,7 @@
                                     <li>
                                         <a class="dropdown-item" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                             <div class="menu-flag-icon">
-                                                <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                                                <img class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                                             </div>
                                             {{ "footer.#{locale}"|trans }}
                                         </a>
@@ -124,7 +124,7 @@
                 {% if isProgRadio(app.request) == false %}
                 <li class="nav-item dropdown ms-1 pe-2 d-none d-sm-block">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img style="margin-top: -2px; margin-right: 2px;" class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[app.request.locale] ~ '.svg') }}" alt="{{ "footer.#{app.request.locale}"|trans }}">
+                        <img style="margin-top: -2px; margin-right: 2px;" class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[app.request.locale] ~ '.svg') }}" alt="{{ "footer.#{app.request.locale}"|trans }}">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarLocaleDropdown">
                         {% for locale in locales %}
@@ -133,7 +133,7 @@
                                 <li>
                                     <a class="dropdown-item" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                         <div class="menu-flag-icon">
-                                            <img class="gb-flag gb-flag--micro" src="{{ asset('/img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                                            <img class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                                         </div>
                                         {{ "footer.#{locale}"|trans }}
                                     </a>

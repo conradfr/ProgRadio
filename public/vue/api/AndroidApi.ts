@@ -31,7 +31,7 @@ const getVersion = () => {
 
 const getPictureUrl = (radio: Radio|Stream, show: Program|null = null): string|null => {
   if (show !== null && show.picture_url !== null) {
-    return `${THUMBNAIL_NOTIFICATION_PROGRAM_PATH}${show.picture_url}`;
+    return `/${THUMBNAIL_NOTIFICATION_PROGRAM_PATH}${show.picture_url}`;
   }
 
   if (typeUtils.isRadio(radio)) {
@@ -39,11 +39,11 @@ const getPictureUrl = (radio: Radio|Stream, show: Program|null = null): string|n
   }
 
   if (radio.img_alt !== null && radio.img_alt !== '') {
-    return `${THUMBNAIL_PAGE_PATH}${radio.img_alt}.png`;
+    return `/${THUMBNAIL_PAGE_PATH}${radio.img_alt}.png`;
   }
 
   if (radio.img !== null && radio.img !== '') {
-    return `${THUMBNAIL_STREAM_PATH}${radio.img}`;
+    return `/${THUMBNAIL_STREAM_PATH}${radio.img}`;
   }
 
   return null;

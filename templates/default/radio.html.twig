@@ -24,9 +24,9 @@
     <meta property="og:title" content="{{ 'page.radio.title'|trans({'%radio%': sub_radio.name}) }}">
     <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
     <meta property="og:type" content="website"><meta property="og:site_name" content="{{ getDomainName(app.request) }}">
-    <meta property="og:image" content="{{ absolute_url(asset('/img/radio/page/' ~ radio.codename ~ '.png')) }}">
+    <meta property="og:image" content="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
     <meta property="og:description" content="{{ 'page.radio.description'|trans({'%radio%': radio.name}) }}">
-    <meta name="thumbnail" content="{{ absolute_url(asset('/img/radio/page/' ~ radio.codename ~ '.png')) }}">
+    <meta name="thumbnail" content="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -46,7 +46,7 @@
         <div class="col-md-2 col-12">
             <div class="radio-page-side sticky-top">
                 <div class="text-center mb-4">
-                    <img class="radio-page-logo" alt="{{ radio.name }}" src="{{ asset('/img/radio/page/' ~ radio.codename ~ '.png') }}">
+                    <img class="radio-page-logo" alt="{{ radio.name }}" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
                 </div>
                 {% if sub_radio.radioStream is not null %}
                 <div class="radio-page-streams" v-scope>
@@ -185,7 +185,7 @@
                     {% if show.picture_url %}
                     <div class="flex-shrink-0">
                         <img alt="" class="img-fluid img-show mb-2"
-                            src="{{ asset('/media/cache/page_thumb/media/program/' ~ show.picture_url) }}">
+                            src="{{ asset('media/cache/page_thumb/media/program/' ~ show.picture_url) }}">
                     </div>
                     {% endif %}
                     <div class="flex-fill ps-3 mb-3">
@@ -204,7 +204,7 @@
                                     {% if section.picture_url %}
                                     <div class="flex-shrink-0">
                                         <img alt="" class="img-fluid" style="max-width: 48px; max-height: 48px"
-                                             src="{{ asset('/media/cache/page_thumb/media/program/' ~ section.picture_url) }}">
+                                             src="{{ asset('media/cache/page_thumb/media/program/' ~ section.picture_url) }}">
                                     </div>
                                     {% endif %}
                                     <div class="flex-fill ps-3 mb-3">
@@ -258,7 +258,7 @@
                 {% for entry in more_radios %}
                     <a class="radio-page-more-one d-flex align-items-center justify-content-center"
                        href="{{ path('radio', {'codeName': entry.codeName}) }}" title="{{ entry.name }}">
-                        <img class="radio-page-more-one-logo align-self-center" alt="{{ entry.name }}" src="{{ asset('/img/radio/page/' ~ entry.codeName ~ '.png') }}">
+                        <img class="radio-page-more-one-logo align-self-center" alt="{{ entry.name }}" src="{{ asset('img/radio/page/' ~ entry.codeName ~ '.png') }}">
                     </a>
                 {% endfor %}
             </div>
@@ -266,7 +266,7 @@
                 {% for entry in more_radios2 %}
                     <a class="radio-page-more-one d-flex align-items-center justify-content-center"
                        href="{{ path('radio', {'codeName': entry.codeName}) }}" title="{{ entry.name }}">
-                        <img class="radio-page-more-one-logo align-self-center" alt="{{ entry.name }}" src="{{ asset('/img/radio/page/' ~ entry.codeName ~ '.png') }}">
+                        <img class="radio-page-more-one-logo align-self-center" alt="{{ entry.name }}" src="{{ asset('img/radio/page/' ~ entry.codeName ~ '.png') }}">
                     </a>
                 {% endfor %}
             </div>

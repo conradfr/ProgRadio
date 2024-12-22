@@ -37,9 +37,9 @@
     <meta property="og:title" content="{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}">
     <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
     <meta property="og:type" content="website"><meta property="og:site_name" content="{{ getDomainName(app.request) }}">
-    <meta property="og:image" content="https://www.{{ getDomainRootDomain(app.request) }}{{- self.picture(stream) -}}">
+    <meta property="og:image" content="{{ asset(self.picture(stream)) }}">
     <meta property="og:description" content="{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}">
-    <meta name="thumbnail" content="https://www.{{ getDomainRootDomain(app.request) }}{{- self.picture(stream) -}}">
+    <meta name="thumbnail" content="{{ asset(self.picture(stream)) }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -81,7 +81,7 @@
         <div class="col-sm-2 col-12">
             <div class="radio-page-side sticky">
                 <div class="text-center mb-3">
-                    <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ self.picture(stream) }}">
+                    <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ asset(self.picture(stream)) }}">
                 </div>
             </div>
             {% if stream.radioStream %}
@@ -292,7 +292,7 @@
                             {% for entry in more_streams %}
                                 <div class="streams-one streams-one-more streams-one-play-hide {% if loop.last == true %}d-sm-none{% endif %}">
                                     <a href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">
-                                        <div class="streams-one-img" style="background-image: url('{{ self.picture(entry) }}')"></div>
+                                        <div class="streams-one-img" style="background-image: url('{{ asset(self.picture(entry)) }}')"></div>
                                     </a>
 
                                     <div class="streams-one-name" title="{{ entry.name }}">

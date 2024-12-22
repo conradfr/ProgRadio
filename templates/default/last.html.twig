@@ -17,13 +17,13 @@
 {% block description %}{{ 'page.last.description'|trans({'%country%': country}) }}{% endblock %}
 
 {% macro picture(stream) %}{%- if stream.radioStream.id is defined and stream.radioStream.id is not null %}
-    /img/radio/page/{{ stream.radioStream.radio.codeName }}.png
+img/radio/page/{{ stream.radioStream.radio.codeName }}.png
 {%- elseif stream.img_alt is defined and stream.img_alt is not null %}
-    /img/radio/page/{{ stream.img_alt }}.png
+img/radio/page/{{ stream.img_alt }}.png
 {%- elseif stream.img is not null and stream.img != '' %}
-    /media/stream/{{ stream.img }}
+media/stream/{{ stream.img }}
 {%- else %}
-    /img/stream-placeholder.png
+img/stream-placeholder.png
 {% endif -%}{% endmacro %}
 
 {% macro topic(stream) %}
@@ -60,14 +60,14 @@
      'streams-one-play-active': '{{- stream.code_name -}}' === radioId,
      'streams-one-play-paused': playing === PLAYER_STATE_STOPPED && '{{- stream.code_name -}}' === radioId
                         }">
-                            <div class="streams-one-img" style="background-image: url({{ self.picture(stream) }})"
+                            <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
                                  v-if="playing === PLAYER_STATE_STOPPED || radioId !== '{{- stream.code_name }}'"
                                  @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}'})"
                             >
                                 <div class="streams-one-img-play"></div>
                             </div>
 
-                            <div class="streams-one-img" style="background-image: url({{ self.picture(stream) }})"
+                            <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
                                  v-if="radioId === '{{- stream.code_name -}}' && playing !== PLAYER_STATE_STOPPED"
                                  @click="stop('{{- stream.stream_url -}}', '{{- stream.code_name -}}')">
                                 <div class="streams-one-img-play"></div>

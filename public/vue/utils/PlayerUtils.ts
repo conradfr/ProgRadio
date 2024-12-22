@@ -35,7 +35,9 @@ const VIDEO_LINKS = [
 
 const getPictureUrl = (radio: Radio|Stream, show: Program|null = null) => {
   if (show !== null && show.picture_url !== null) {
-    return `${config.THUMBNAIL_NOTIFICATION_PROGRAM_PATH}${show.picture_url}`;
+    // @ts-expect-error defined on global scope
+    // eslint-disable-next-line no-undef
+    return `${cdnBaseUrl}${config.THUMBNAIL_NOTIFICATION_PROGRAM_PATH}${show.picture_url}`;
   }
 
   if (typeUtils.isRadio(radio)) {
@@ -43,7 +45,9 @@ const getPictureUrl = (radio: Radio|Stream, show: Program|null = null) => {
   }
 
   if (radio.img !== null && radio.img !== '') {
-    return `${config.THUMBNAIL_STREAM_PATH}${radio.img}`;
+    // @ts-expect-error defined on global scope
+    // eslint-disable-next-line no-undef
+    return `${cdnBaseUrl}${config.THUMBNAIL_STREAM_PATH}${radio.img}`;
   }
 
   return '/img/stream-placeholder.png';

@@ -186,7 +186,9 @@ export default defineComponent({
       // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.nextDayOverflow;
     },
     picturePath(): string {
-      return `${THUMBNAIL_PROGRAM_PATH}${this.program.picture_url}`;
+      // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
+      return `${cdnBaseUrl}${THUMBNAIL_PROGRAM_PATH}${this.program.picture_url}`;
     }
   },
   methods: {

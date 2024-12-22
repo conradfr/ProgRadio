@@ -21,6 +21,15 @@ framework:
     trusted_proxies: '127.0.0.1,REMOTE_ADDR'
     trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
 
+    assets:
+        base_urls:
+            - '%env(CDN_BASE_URL)%'
+        packages:
+            dynamic:
+                version: '%env(RELEASE_ID)%'
+                base_urls:
+                    - '%env(CDN_BASE_URL)%'
+
 when@prod:
     framework:
         http_cache: true

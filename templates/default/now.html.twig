@@ -88,7 +88,7 @@
                                 <div class="d-flex">
                                     {% if entry.show.picture_url %}
                                     <img alt="" class="me-3 img-fluid" style="max-width: 64px; max-height: 64px"
-                                         src="{{ asset('/media/cache/page_thumb/media/program/' ~ entry.show.picture_url) }}">
+                                         src="{{ asset('media/cache/page_thumb/media/program/' ~ entry.show.picture_url) }}">
                                     {% endif %}
                                     <div>
                                         <h6 class="fw-bold">{{ entry.show.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }}-{{ entry.show.end_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ entry.show.title }}</h6>
@@ -105,7 +105,7 @@
                                                     <div class="d-flex mb-2">
                                                         {% if section.picture_url %}
                                                             <img alt="" class="me-3 img-fluid" style="max-width: 64px; max-height: 64px"
-                                                                 src="{{ asset('/media/cache/page_thumb/media/program/' ~ section.picture_url) }}">
+                                                                 src="{{ asset('media/cache/page_thumb/media/program/' ~ section.picture_url) }}">
                                                         {% endif %}
                                                         <div>
                                                             <h6 class="fw-bold">{{ section.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ section.title }}</h6>

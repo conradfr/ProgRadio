@@ -28,7 +28,7 @@
                             <a target="_blank" href="{{ path('admin_overloading', {streamId: one.id}) }}">
                                 <img title="{{ one.name }}" alt="{{ one.name }}"
                                 {% if one.img is null and one.radio_code_name is null %}
-                                    src="{{ asset('/img/stream-placeholder.png') }}"
+                                    src="{{ asset('img/stream-placeholder.png') }}"
                                 {% elseif one.radio_code_name is not null %}
                                     src="{{ asset('img/radio/schedule/' ~ one.radio_code_name ~ '.png') }}"
                                 {% else %}

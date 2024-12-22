@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 const webpack = require('webpack');
 // const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const { VueLoaderPlugin } = require('vue-loader');
@@ -64,7 +64,7 @@ module.exports = {
           // appendTsSuffixTo: [/\.vue$/],
           presets: [
             '@babel/preset-env',
-            "babel-preset-typescript-vue3",
+            'babel-preset-typescript-vue3',
             [
               '@babel/preset-typescript',
               {
