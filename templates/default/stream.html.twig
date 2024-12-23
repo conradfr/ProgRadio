@@ -138,7 +138,7 @@
                                         @click="stop('{{ stream.id }}')"
                                         class="radio-page-play">
                                         <img alt="{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}"
-                                             src="/img/rounded-pause-button.svg">
+                                             src="{{ asset('img/rounded-pause-button.svg') }}">
                                     </div>
                                     <div
                                         v-if="playing === PLAYER_STATE_LOADING"

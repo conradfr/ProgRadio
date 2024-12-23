@@ -6,7 +6,7 @@
         v-on:click="play"
         class="radio-page-play">
       <img :alt="$t('message.radio_page.play', { radio: stream.name })"
-           src="/img/play-button-inside-a-circle.svg">
+        :src="`${cdnBaseUrl}/img/play-button-inside-a-circle.svg`">
       <div class="radio-page-play-text">
        {{ $t('message.radio_page.play', { radio: stream.name }) }}
       </div>
@@ -17,7 +17,7 @@
         v-on:click="stop"
         class="radio-page-play">
       <img :alt="$t('message.radio_page.stop', { radio: stream.name })"
-           src="/img/rounded-pause-button.svg">
+           :src="`${cdnBaseUrl}/img/rounded-pause-button.svg`">
       <div class="radio-page-play-text">
        {{ $t('message.radio_page.stop', { radio: stream.name }) }}
       </div>

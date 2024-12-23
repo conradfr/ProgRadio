@@ -63,7 +63,7 @@
                                                 @click="stop('{{ entry.radio.codeName }}')"
                                                 class="radio-page-play">
                                                 <img alt="{{ 'page.radio.stop'|trans({'%radio%': entry.radio.name}) }}"
-                                                     src="/img/rounded-pause-button.svg">
+                                                     src="{{ asset('img/rounded-pause-button.svg') }}">
                                                 <div class="radio-page-play-text">
                                                     {{ 'page.radio.stop'|trans({'%radio%': entry.radio.name}) }}
                                                 </div>

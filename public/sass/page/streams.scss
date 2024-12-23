@@ -1,12 +1,12 @@
 @mixin img_play {
   background-color: var(--progradio-stream-play-color);
 
-  mask-image: url('../../img/play-button-inside-a-circle.svg');
+  mask-image: url(/img/play-button-inside-a-circle.svg);
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: 75% 75%;
 
-  -webkit-mask-image: url('../../img/play-button-inside-a-circle.svg');
+  -webkit-mask-image: url(/img/play-button-inside-a-circle.svg);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: 70% 70%;
@@ -15,7 +15,7 @@
   @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
     background-color: transparent;
 
-    background-image: url('../../img/play-button-inside-a-circle.svg');
+    background-image: url(/img/play-button-inside-a-circle.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 75% 75%;
@@ -301,12 +301,12 @@
 
       &.streams-one-play-active:not(.streams-one-play-paused) {
         .streams-one-img-play {
-          mask-image: url('../../img/rounded-pause-button.svg') !important;
-          -webkit-mask-image: url('../../img/rounded-pause-button.svg') !important;
+          mask-image: url(/img/rounded-pause-button.svg) !important;
+          -webkit-mask-image: url(/img/rounded-pause-button.svg) !important;
 
           /* IE only, default to black icon */
           @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-            background-image: url('../../img/rounded-pause-button.svg') !important;
+            background-image: url(/img/rounded-pause-button.svg) !important;
           }
         }
       }
