@@ -2,6 +2,7 @@ ProgRadio
 =========
 
 https://www.programmes-radio.com
+
 https://www.radio-addict.com
 
 Dependencies
@@ -10,10 +11,11 @@ Dependencies
 - TypeScript 4.8 / VueJs 3.1+
 - NodeJS v14.x
 - Elixir 1.17.x (Api / Importer)
-- PostgreSQL 14 & Redis
-- Nginx or Apache
+- PostgreSQL 17 & Redis
+- Nginx (Apache before)
 - ImageMagick
 - CapRover & Docker (deployment)
+- Docker compose (dev)
 
 Run
 --------------
@@ -25,13 +27,17 @@ Run
 
 Run (docker compose) (dev)
 --------------
+**SSL certs**: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./certs/nginx.key -out ./certs/nginx.crt
+
+**SETUP**: make build / make up / make down
+
 **PHP deps**: make composer c=install
 
-**Scraper**: docker compose run --service-ports scraper node index.js
+**Scraper**: make scrap c='-r RADIO'
 
-*Api / Importer**: docker compose run --service-ports api iex -S mix phx.server
+*Api / Importer**: make api-dev
 
-**Vue app**: docker exec progradio-spa-1 npm run dev
+**Vue app**: make spa-dev
 
 Architecture
 --------------

@@ -1,5 +1,5 @@
 {% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro'] %}
-{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'dz', 'ro': 'ro'} %}
+{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro'} %}
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}"{% if app.request.locale == "ar"%} dir="rtl"{% endif %} class="h-100{% block htmlsupp %}{% endblock %}" {% if isDarkModeTime(app.request) %}data-bs-theme="dark"{% endif %}>
 <head>
@@ -35,8 +35,8 @@
     {% block head_supp %}
     {% endblock %}
 
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    <link rel="icon" id="favicon" type="image/png" href="{{ asset('favicon.png') }}" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" id="favicon" type="image/png" href="/favicon.png" />
 
     <link rel="preload" href="{{ asset('build/css/theme.css', 'dynamic') }}" as="style">
 

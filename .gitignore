@@ -142,3 +142,7 @@
 ###> liip/imagine-bundle ###
 /public/media/cache/
 ###< liip/imagine-bundle ###
+
+
+/certs/*.key
+/certs/*.crt

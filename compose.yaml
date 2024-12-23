@@ -8,6 +8,7 @@ services:
       - '443:443'
     volumes:
       - ./:/var/www
+      - ./certs:/etc/nginx/certs
       - ./tools/dev/app.conf:/etc/nginx/conf.d/default.conf
     links:
       - php-fpm
