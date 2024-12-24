@@ -43,7 +43,7 @@
                     v-on:click="playStop"
                     class="radio-page-play">
                     <img :alt="$t('message.streaming.play', { radio: stream.name})"
-                      :src="`${cdnBaseUrl}/img/play-button-inside-a-circle.svg`">
+                      :src="`${cdnBaseUrl}img/play-button-inside-a-circle.svg`">
                   </div>
                   <div
                     v-if="stream.code_name === radioPlayingCodeName
@@ -51,7 +51,7 @@
                     v-on:click="playStop"
                     class="radio-page-play">
                     <img :alt="$t('message.streaming.stop')"
-                      :src="`${cdnBaseUrl}/img/rounded-pause-button.svg`">
+                      :src="`${cdnBaseUrl}img/rounded-pause-button.svg`">
                   </div>
                 </div>
 

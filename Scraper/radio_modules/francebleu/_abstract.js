@@ -131,8 +131,6 @@ const format = async (dateObj, name) => {
     }
   }
 
-  // console.log(schedule[name]);
-
   return Promise.resolve(schedule[name])
 };
 

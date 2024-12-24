@@ -2,14 +2,10 @@ const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 const node_fetch = require('node-fetch');
+const axios = require('axios');
 
 const scrapedData = {};
 const cleanedData = {};
-
-const fetchSections = async (id) => {
-  const response = await node_fetch(`https://www.radiofrance.fr/franceinter/api/grid/${id}`);
-  return await response.json();
-};
 
 const format = async (dateObj, name) => {
   if (cleanedData[name] === undefined) {
@@ -19,29 +15,23 @@ const format = async (dateObj, name) => {
   const startDay = moment(dateObj).startOf('day');
   const endDay = moment(dateObj).endOf('day');
 
-  await scrapedData[name].forEach(async curr => {
-    const textStart = curr.json_raw.indexOf('const data = [');
-    const textEnd = curr.json_raw.indexOf('Promise.all([');
-
-    const jsonExtracted = curr.json_raw.substring(textStart + 13, + textEnd).trim();
-    const dataRaw = eval(jsonExtracted.substring(0, jsonExtracted.length - 1));
-
-    let data = [];
-
-    dataRaw.forEach(entry => {
-      if (entry.data
-        && entry.data.grid && entry.data.grid['steps'] !== undefined) {
-        data = entry.data.grid['steps'];
-      }
-    });
-
-    if (!data || data.length === 0) {
+  scrapedData[name].forEach((curr) => {
+    if (!curr) {
       return;
     }
 
-    data.reduce(async (prev, entry) => {
-      const dateTimeStart = moment.unix(entry.startTime);
-      const dateTimeEnd = moment.unix(entry.endTime);
+    let data = null;
+    if (curr && curr.steps) {
+      data = curr.steps;
+    }
+
+    if (!data || (typeof scrapedData[name][data] !== 'object')) {
+      return;
+    }
+
+    scrapedData[name][data].forEach((index) => {
+      const dateTimeStart = moment.unix(scrapedData[name][scrapedData[name][index].startTime]);
+      const dateTimeEnd = moment.unix(scrapedData[name][scrapedData[name][index].endTime]);
 
       if (dateTimeStart.isBefore(startDay)) {
         return;
@@ -52,80 +42,96 @@ const format = async (dateObj, name) => {
       }
 
       const newEntry = {
-        'id': entry.id,
         'date_time_start': dateTimeStart.toISOString(),
         'date_time_end': dateTimeEnd.toISOString(),
-        'title': entry.concept.title,
-        'description': entry.expression && entry.expression.title ? entry.expression.title : null,
-        'host': entry.concept.producers ? entry.concept.producers : null,
-        'img': entry.expression && entry.expression.visual && entry.expression.visual.src ? entry.expression.visual.src : null,
+        'title': scrapedData[name][scrapedData[name][scrapedData[name][index].concept].title],
         'sections': []
       };
 
+      if (scrapedData[name][scrapedData[name][index].expression] !== null) {
+        if (scrapedData[name][scrapedData[name][scrapedData[name][index].expression].title]) {
+          newEntry.description = scrapedData[name][scrapedData[name][scrapedData[name][index].expression].title];
+        }
+
+        if (scrapedData[name][scrapedData[name][scrapedData[name][scrapedData[name][index].expression].visual].src]) {
+          newEntry.img = scrapedData[name][scrapedData[name][scrapedData[name][scrapedData[name][index].expression].visual].src];
+        }
+
+        const host = [];
+        if (scrapedData[name][scrapedData[name][scrapedData[name][index].expression].producers]) {
+          scrapedData[name][scrapedData[name][scrapedData[name][index].expression].producers].forEach((element) => {
+            host.push(scrapedData[name][scrapedData[name][element].name]);
+          });
+        }
+
+        if (host.length > 0) {
+          newEntry.host = host.join(', ');
+        }
+      }
+
+      // sections
+
+      if (scrapedData[name][scrapedData[name][index].children] && scrapedData[name][scrapedData[name][index].children] !== null) {
+        scrapedData[name][scrapedData[name][index].children].forEach((index2) => {
+          const dateTimeStart2 = moment.unix(scrapedData[name][scrapedData[name][index2].startTime]);
+          const newSection = {
+            'date_time_start': dateTimeStart2.toISOString(),
+            'title': scrapedData[name][scrapedData[name][scrapedData[name][index2].expression].title]
+          };
+
+          if (scrapedData[name][scrapedData[name][scrapedData[name][index2].expression].body]) {
+            newSection.descrition = scrapedData[name][scrapedData[name][scrapedData[name][index2].expression].body].replace(/\s\s+/g, ' ').split('\n').join(' ').trim();
+          }
+
+          const host2 = [];
+          if (scrapedData[name][scrapedData[name][scrapedData[name][index2].expression].producers]) {
+            scrapedData[name][scrapedData[name][scrapedData[name][index2].expression].producers].forEach((element) => {
+              host2.push(scrapedData[name][scrapedData[name][element].name]);
+            });
+          }
+
+          if (host2.length > 0) {
+            newSection.presenter = host2.join(', ');
+          }
+
+          newEntry.sections.push(newSection);
+        });
+      }
+
       cleanedData[name].push(newEntry);
-      return prev;
     });
   });
 
-  // sections
-  results = await Promise.all(cleanedData[name].map(async entry => {
-    const sections = await fetchSections(entry.id);
-
-    if (sections && sections.length > 0) {
-      sections.forEach(sectionEntry => {
-        const sectionDateStart = moment.unix(sectionEntry.startTime);
-        const section = {
-          'date_time_start': sectionDateStart.toISOString(),
-          'title': sectionEntry.concept.title,
-          'presenter': sectionEntry.concept.producers ? sectionEntry.concept.producers : null,
-          'img': sectionEntry.expression && sectionEntry.expression.visual && sectionEntry.expression.visual.src ? sectionEntry.expression.visual.src : null,
-        };
-
-        entry.sections.push(section);
-      });
-    }
-
-    delete entry.id;
-    return entry;
-  }));
-
-  return Promise.resolve(results);
-  // return await Promise.resolve(cleanedData[name]);
+  return cleanedData[name];
 };
 
-const fetch = (name, dateObj) => {
+const fetch = (name, dateObj, today) => {
+  if (!today) {
+    return Promise.resolve(false);
+  }
   const dayStr = dateObj.format('DD-MM-YYYY');
-  let url = `https://www.radiofrance.fr/${name}/grille-programmes?date=${dayStr}`;
+  const url = today ? `https://www.radiofrance.fr/${name}/grille-programmes/__data.json?x-sveltekit-invalidated=1111`
+    : `https://www.radiofrance.fr/${name}/grille-programmes/__data.json?date=${dayStr}&x-sveltekit-invalidated=1111`;
 
   logger.log('info', `fetching ${url}`);
 
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .find('body')
-      .set({
-        'json_raw': 'script'
-      })
-      .data(function (listing) {
-        // listing.main = sections !== true;
-        listing.dateObj = dateObj;
-        scrapedData[name].push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
+  return axios.get(url).then((response) => {
+    if (response.data && response.data.nodes && response.data.nodes && response.data.nodes[3].data) {
+      scrapedData[name] = scrapedData[name].concat(response.data.nodes[3].data);
+    }
   });
 };
 
 const fetchAll = (name, dateObj) => {
+  const today = moment();
   scrapedData[name] = [];
 
   const previousDay = moment(dateObj);
   previousDay.subtract(1, 'days');
 
-  return fetch(name, previousDay)
+  return fetch(name, previousDay, today.isSame(previousDay, 'day'))
     .then(() => {
-      return fetch(name, dateObj);
+      return fetch(name, dateObj,today.isSame(dateObj, 'day'));
     });
 };
 
