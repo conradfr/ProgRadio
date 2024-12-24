@@ -6,7 +6,7 @@
         v-on:click="play"
         class="radio-page-play">
       <img :alt="$t('message.radio_page.play', { radio: stream.name })"
-        :src="`${cdnBaseUrl}/img/play-button-inside-a-circle.svg`">
+        :src="playImage">
       <div class="radio-page-play-text">
        {{ $t('message.radio_page.play', { radio: stream.name }) }}
       </div>
@@ -17,7 +17,7 @@
         v-on:click="stop"
         class="radio-page-play">
       <img :alt="$t('message.radio_page.stop', { radio: stream.name })"
-           :src="`${cdnBaseUrl}/img/rounded-pause-button.svg`">
+           :src="pauseImage">
       <div class="radio-page-play-text">
        {{ $t('message.radio_page.stop', { radio: stream.name }) }}
       </div>
@@ -75,7 +75,17 @@ export default defineComponent({
     ...mapStores(usePlayerStore),
     ...mapState(usePlayerStore, {
       playingStreamCodeName: 'radioStreamCodeName'
-    })
+    }),
+    playImage() {
+      // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
+      return `${cdnBaseUrl}img/play-button-inside-a-circle.svg`;
+    },
+    pauseImage() {
+      // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
+      return `${cdnBaseUrl}img/rounded-pause-button.svg`;
+    }
   },
   methods: {
     play() {

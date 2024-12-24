@@ -155,14 +155,14 @@ export default defineComponent({
       useScheduleStore,
       ['radios', 'collections', 'currentCollection', 'hasSchedule', 'getSubRadio']
     ),
-    hasSubRadios() {
+    hasSubRadios(): boolean {
       if (this.radio === null) {
         return false;
       }
 
       return Object.keys(this.radio.sub_radios).length > 1;
     },
-    currentSubRadioCodeName() {
+    currentSubRadioCodeName(): string|null {
       if (this.radio === null) {
         return null;
       }

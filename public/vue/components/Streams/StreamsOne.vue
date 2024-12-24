@@ -43,7 +43,7 @@
                     v-on:click="playStop"
                     class="radio-page-play">
                     <img :alt="$t('message.streaming.play', { radio: stream.name})"
-                      :src="`${cdnBaseUrl}img/play-button-inside-a-circle.svg`">
+                      :src="playImage">
                   </div>
                   <div
                     v-if="stream.code_name === radioPlayingCodeName
@@ -51,7 +51,7 @@
                     v-on:click="playStop"
                     class="radio-page-play">
                     <img :alt="$t('message.streaming.stop')"
-                      :src="`${cdnBaseUrl}img/rounded-pause-button.svg`">
+                      :src="pauseImage">
                   </div>
                 </div>
 
@@ -201,6 +201,16 @@ export default defineComponent({
     country() {
       return this.getCountryName(this.stream!.country_code);
     },
+    playImage() {
+      // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
+      return `${cdnBaseUrl}img/play-button-inside-a-circle.svg`;
+    },
+    pauseImage() {
+      // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
+      return `${cdnBaseUrl}img/rounded-pause-button.svg`;
+    }
   },
   methods: {
     ...mapActions(useGlobalStore, ['displayToast']),
