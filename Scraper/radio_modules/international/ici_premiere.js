@@ -34,7 +34,7 @@ const format = async dateObj => {
         'date_time_end': currEndDateTime.toISOString(),
         'title': curr.title,
         'host': curr.summary,
-        'img': curr.picture.url.replace('{0}', '180').replace('{1}', '1x1')
+        'img': curr.picture && curr.picture.url.replace('{0}', '180').replace('{1}', '1x1')
       };
 
       // seems to have moved to a json based variable in a script, let's ignore for now
