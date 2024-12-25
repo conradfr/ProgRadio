@@ -93,7 +93,7 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-  const url = 'https://www.virageradio.com/radio/grille-programme';
+  const url = 'https://virginradio.fr/radio/grille-programme';
 
   logger.log('info', `fetching ${url}`);
 
@@ -103,7 +103,7 @@ const fetch = dateObj => {
       .find('.post')
       // .select('.item')
       .set({
-        'img': '.item-header > .item-photo > img@data-src'
+        'img': '.item-header img@data-src'
       })
       .set({
         'title': '.item-content > h3 > a',
