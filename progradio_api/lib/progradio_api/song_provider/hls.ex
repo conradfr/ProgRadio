@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.Hls do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 20000
+  @refresh_auto_interval 10000
 
   @task_timeout 7500
 

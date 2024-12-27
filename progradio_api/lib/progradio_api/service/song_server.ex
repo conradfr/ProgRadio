@@ -6,8 +6,8 @@ defmodule ProgRadioApi.SongServer do
   alias ProgRadioApi.RadioStream
   alias ProgRadioApi.TaskSupervisor
 
-  @refresh_song_interval 15000
-  @refresh_song_interval_long 30000
+  @refresh_song_interval 10000
+  @refresh_song_interval_long 20000
   @refresh_song_retries_increment 10000
 
   @refresh_song_retries_max 10
