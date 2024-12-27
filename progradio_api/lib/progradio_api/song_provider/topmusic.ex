@@ -1,12 +1,11 @@
-defmodule ProgRadioApi.SongProvider.Vibration do
+defmodule ProgRadioApi.SongProvider.Topmusic do
   require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes3
 
   @behaviour ProgRadioApi.SongProvider
 
-  #  @url "https://api.vibration.fr/graphqlgraphql"
-  @url "https://www.vibration.fr/api/TitleDiffusions"
-  @radio_id "2174546520932614856"
+  @url "https://www.topmusic.fr/api/TitleDiffusions"
+  @radio_id "2174546520932614807"
 
   @impl true
   defdelegate has_custom_refresh(), to: GenericLesIndes3
