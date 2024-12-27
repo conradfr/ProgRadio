@@ -19,7 +19,6 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes3 do
 
   def get_data(url, _name, radio_id) when is_binary(radio_id) do
     now_unix = SongProvider.now_unix()
-
     full_url = "#{url}?size=6&radioStreamId=#{radio_id}&date=#{now_unix}000"
 
     try do
@@ -56,8 +55,8 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes3 do
 
       _ ->
         %{
-          artist: SongProvider.recase(data["title"]["artist"]),
-          title: SongProvider.recase(data["title"]["title"])
+          artist: SongProvider.recase(data["title"]["artist"] || nil),
+          title: SongProvider.recase(data["title"]["title"] || nil)
         }
     end
   end
