@@ -71,8 +71,13 @@ const format = async (dateObj, name) => {
 
       // sections
 
-      if (scrapedData[name][scrapedData[name][index].children] && scrapedData[name][scrapedData[name][index].children] !== null) {
+      if (scrapedData[name][scrapedData[name][index].children]
+          && scrapedData[name][scrapedData[name][index].children] !== null) {
         scrapedData[name][scrapedData[name][index].children].forEach((index2) => {
+          if (scrapedData[name][scrapedData[name][scrapedData[name][index2].expression]] === undefined) {
+            return;
+          }
+
           const dateTimeStart2 = moment.unix(scrapedData[name][scrapedData[name][index2].startTime]);
           const newSection = {
             'date_time_start': dateTimeStart2.toISOString(),
