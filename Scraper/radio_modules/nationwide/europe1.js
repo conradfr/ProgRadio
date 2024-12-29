@@ -12,7 +12,7 @@ const dayEn = {
   4: 'thursday',
   5: 'friday',
   6: 'saturday',
-  7: 'dimanche'
+  0: 'sunday'
 };
 
 const format = dateObj => {
