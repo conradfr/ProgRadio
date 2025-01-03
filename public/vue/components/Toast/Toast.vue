@@ -38,8 +38,8 @@ export default defineComponent({
     const root = ref(null);
 
     onMounted(() => {
-      /* eslint-disable no-undef */
       // @ts-expect-error boostrap is defined on the global scope
+      // eslint-disable-next-line no-undef
       const toastBs = new bootstrap.Toast(root.value, { delay: props.toast.duration });
       toastBs!.show();
 

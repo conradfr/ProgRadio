@@ -52,7 +52,6 @@
 
             {{ form_start(form) }}
                 {{ form_errors(form) }}
-{#            {{ form_widget(form) }}#}
                 {{ form_row(form.name) }}
                 {{ form_row(form.img) }}
                 {{ form_row(form.streamUrl) }}
@@ -65,6 +64,7 @@
                 <div class="d-flex justify-content-between mt-4">
                     <div class="flex-fill">{{ form_row(form.forceHls) }}</div>
                     <div class="flex-fill">{{ form_row(form.forceMpd) }}</div>
+                    <div class="flex-fill">{{ form_row(form.popup) }}</div>
                 </div>
 
                 {{ form_row(form.countryCode) }}

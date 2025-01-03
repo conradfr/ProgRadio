@@ -397,9 +397,9 @@ const getAmazonSongLink = (song: string): string => {
 
   /* eslint-disable max-len */
   /* eslint-disable camelcase */
-  /* eslint-disable no-undef */
   // _@ts-expect-error amazon_affiliate_id is defined on the global scope
   // return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&tag=${amazon_affiliate_id}&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
+  // eslint-disable-next-line no-undef
   return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
 };
 

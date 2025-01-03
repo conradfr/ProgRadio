@@ -1,31 +1,19 @@
-{% extends 'default/admin/admin_base.html.twig' %}
+{% extends 'default/admin/admin_actions_base.html.twig' %}
 
 {% set active_tab = 'cache' %}
 
 {% block title %}{{ 'admin.api.cache.title'|trans }}{% endblock %}
 
-{% block body %}
-    <div id="admin" class="container-fluid">
-        <div class="row">
-            <div class="col-md-2 admin-listening-side test">
-                <ul class="nav nav-pills flex-column mt-3">
-                    <li class="nav-item"><a class="nav-link active" href="{{ path('admin_cache') }}">{{ 'admin.api.cache.menu'|trans }}</a></li>
-                 </ul>
-            </div>
+{% block action_body %}
+    <h3 class="mb-4">
+        {{ 'admin.api.cache.title'|trans }}
+    </h3>
 
-            <div class="col-md-10">
-                <h3 class="mb-4">
-                    {{ 'admin.api.cache.title'|trans }}
-                </h3>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
 
-                {% for label, messages in app.flashes %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
-                    {% endfor %}
-                {% endfor %}
-
-                <a class="btn btn-danger" href="{{ path('admin_cache_clear') }}">{{ 'admin.api.cache.clear_streams'|trans }}</a>
-            </div>
-        </div>
-    </div>
+    <a class="btn btn-danger" href="{{ path('admin_cache_clear') }}">{{ 'admin.api.cache.clear_streams'|trans }}</a>
 {% endblock %}

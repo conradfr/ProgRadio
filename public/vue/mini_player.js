@@ -14,6 +14,8 @@ import {
   PLAYER_STATE_LOADING,
   PLAYER_STATE_PLAYING,
   PLAYER_STATE_STOPPED,
+  POPUP_SETTINGS,
+  POPUP_URL_WILDCARD,
   PROGRADIO_AGENT,
   RADIOADDICT_AGENT
 } from './config/config';
@@ -73,7 +75,7 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
     return;
   }
 
-  /* eslint-disable no-undef */
+  // eslint-disable-next-line no-undef
   let url = `https://${apiUrl}/listening_session/`;
   if (sessionId !== null) {
     url += sessionId;
@@ -117,7 +119,7 @@ const sendPlayingError = (radioId, errorText) => {
     return;
   }
 
-  /* eslint-disable no-undef */
+  // eslint-disable-next-line no-undef
   const url = `https://${apiUrl}/stream_error/${radioId}`;
 
   const params = {};
@@ -218,9 +220,9 @@ createApp({
   sessionId: null,
   listeningInterval: null,
   options: {
-    /* eslint-disable no-undef */
+    // eslint-disable-next-line no-undef
     webSocket: typeof appWebSocket !== 'undefined' ? appWebSocket : true,
-    /* eslint-disable no-undef */
+    // eslint-disable-next-line no-undef
     sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
   },
   play(streamingUrl, codeName, options) {
@@ -242,8 +244,14 @@ createApp({
     }
 
     if (this.options.sendStatistics) {
-      /* eslint-disable no-undef */
+      // eslint-disable-next-line no-undef
       sendGaEvent('play', 'SSR', codeName, 3);
+    }
+
+    if (options.popup && options.popup === true) {
+      // eslint-disable-next-line no-undef
+      window.open(popupUrl.replace(POPUP_URL_WILDCARD, codeName), '', POPUP_SETTINGS);
+      return;
     }
 
     this.playing = PLAYER_STATE_LOADING;
@@ -364,7 +372,7 @@ createApp({
     if (this.playing !== false && this.options.sendStatistics) {
       updateListeningSession(this.radioId, this.playingStart, this.sessionId, true);
 
-      /* eslint-disable no-undef */
+      // eslint-disable-next-line no-undef
       sendGaEvent('stop', 'SSR', this.radioId, 1);
     }
 

@@ -356,6 +356,19 @@ class DefaultController extends AbstractBaseController
     }
 
     #[
+        Route('/{_locale}/stream-popup/{stream}',
+            name: 'streams_one_popup_short',
+            schemes:['http']
+        )
+    ]
+    public function onePopupShort(Stream $stream, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
+    {
+        return $this->render('default/stream_popup.html.twig', [
+            'stream' => $stream,
+        ]);
+    }
+
+    #[
         Route(
             path: [
                 'en' => '/{_locale}/stream/{id}/listen-{codename}',

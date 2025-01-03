@@ -156,9 +156,17 @@ class Stream
     #[ORM\Cache(usage: 'READ_ONLY')]
     private Collection $streamsHistory;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $popup = null;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
         $this->streamsHistory = new ArrayCollection();
+    }
+
+    public function isIndexable(): bool
+    {
+        return $this->isEnabled() && !$this->isBanned() && $this->getRedirectToStream() === null;
     }
 
     public function getId(): ?Uuid
@@ -509,9 +517,21 @@ class Stream
         $this->user = $user;
     }
 
-    public function getBanned(): ?bool
+    public function isBanned(): ?bool
     {
         return $this->banned;
+    }
+
+    public function isPopup(): ?bool
+    {
+        return $this->popup;
+    }
+
+    public function setPopup(?bool $popup): static
+    {
+        $this->popup = $popup;
+
+        return $this;
     }
 
     public function setBanned(?bool $banned): void

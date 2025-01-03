@@ -49,8 +49,8 @@ export const useStreamsStore = defineStore('streams', {
   state: (): State => ({
     countries: {},
     favorites: [],
-    /* eslint-disable no-undef */
     // @ts-expect-error defaultCountry is defined on the global scope
+    // eslint-disable-next-line no-undef
     selectedCountry: cookies.get(config.COOKIE_STREAM_COUNTRY, defaultCountry),
     streamRadios: [],
     soloExtended: null,

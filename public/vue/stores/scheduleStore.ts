@@ -491,8 +491,8 @@ export const useScheduleStore = defineStore('schedule', {
           this.programForModal = null;
         });
 
-        /* eslint-disable no-undef */
         // @ts-expect-error bootstrap is defined on global scope
+        // eslint-disable-next-line no-undef
         this.programModal = new bootstrap.Modal(modalElem);
         this.programModal?.show();
       });
@@ -510,8 +510,8 @@ export const useScheduleStore = defineStore('schedule', {
           this.radioForRegionModal = null;
         });
 
-        /* eslint-disable no-undef */
         // @ts-expect-error bootstrap is defined on global scope
+        // eslint-disable-next-line no-undef
         this.regionModal = new bootstrap.Modal(modalElem);
         this.regionModal?.show();
       });

@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% import _self as self %}
+
+{% macro picture(stream) %}{%- if stream.radioStream.id is defined and stream.radioStream.id is not null %}/img/radio/page/{{ stream.radioStream.radio.codeName }}.png{%- elseif stream.img_alt is defined and stream.img_alt is not null %}/img/radio/page/{{ stream.img_alt }}.png{%- elseif stream.img is not null and stream.img != '' %}/media/stream/{{ stream.img }}{%- else %}/img/stream-placeholder.png{% endif -%}{% endmacro %}
+
+{% macro topic(stream) %}
+    {% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% elseif stream.radioStream is defined and stream.radioStream.url is defined %}url:{{ stream.radioStream.url }}{% else %}url:{{ stream.streamUrl }}{% endif %}
+{% endmacro %}
+
+{% macro stream_code_name(stream) %}
+    {% if stream.radioStream.radio.codeName is defined %}{{ stream.radioStream.radio.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
+{% endmacro %}
+
+{% macro stream_url(stream) %}
+    {% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
+{% endmacro %}
+
+{% macro title(stream) %}
+    {% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}
+{% endmacro %}
+
+{% block head_supp %}
+    {{ parent() }}
+    <meta name="thumbnail" content="{{ asset(self.picture(stream)) }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include('_partials/mini_player.html.twig') %}
+{% endblock %}
+
+{% block title %}
+    {{ self.title(stream) }}
+{% endblock %}
+
+{% block description %}{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}{% endblock %}
+
+{% block bodyclasssupp %} body-popup{% endblock %}
+
+{% block body_container %}
+    <div class="container-fluid stream-page stream-title" data-title="{{ self.title(stream) }}">
+        <div class="row">
+            <div class="col-sm-4 col-12">
+                <div class="radio-page-side sticky">
+                    <div class="text-center mb-3">
+                        <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ asset(self.picture(stream)) }}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8 col-12 pb-2">
+                <div class="row">
+                    <div class="col-12">
+                        <div>
+                            <h4 class="mb-4">{{ stream.name }}</h4>
+                        </div>
+
+                        {% if stream.enabled == false %}
+                            <div class="alert alert-warning mb-5" role="alert">
+                                <i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.disabled'|trans }}
+                            </div>
+                        {% endif %}
+
+                        {% if stream.playingError >= constant('App\\Entity\\Stream::ERROR_DISPLAY_THRESHOLD')  %}
+                            <p class="text-warning"><i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.errors'|trans }}</p>
+                        {% endif %}
+
+                        <div class="stream-page-stream mt-0 mb-4 py-1" v-scope>
+                            {% if stream.banned == true %}
+                                <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
+                            {% endif %}
+
+                                <div class="radio-page-streams-one py-1 d-none d-flex align-items-center justify-content-center justify-content-sm-start"
+                                     @vue:mounted="$el.classList.remove('d-none')" v-cloak>
+                                    <div>
+                                        <div
+                                                v-if="playing === PLAYER_STATE_STOPPED"
+                                                @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
+                                                class="radio-page-play">
+                                            <img alt="{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}"
+                                                 src="/img/play-button-inside-a-circle.svg">
+                                        </div>
+                                        <div
+                                                v-if="playing === PLAYER_STATE_PLAYING"
+                                                @click="stop('{{ stream.id }}')"
+                                                class="radio-page-play">
+                                            <img alt="{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}"
+                                                 src="{{ asset('img/rounded-pause-button.svg') }}">
+                                        </div>
+                                        <div
+                                                v-if="playing === PLAYER_STATE_LOADING"
+                                                @click="stop('{{ stream.id }}')"
+                                                class="radio-page-play"
+                                                style="margin-right: 7px; margin-bottom: 2px;">
+                                            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"
+                                                 title="{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="ps-2">
+                                        <div
+                                                v-if="playing === PLAYER_STATE_STOPPED"
+                                                @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
+                                                class="radio-page-play">
+                                            <div>&nbsp;{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}</div>
+                                        </div>
+                                        <div
+                                                v-if="playing !== PLAYER_STATE_STOPPED"
+                                                @click="stop('{{ stream.id }}')"
+                                                class="radio-page-play">
+                                            <div>&nbsp;{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <div id="playing-alert" class="alert alert-danger d-none mt-5 mb-5" role="alert">
+                                <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="my-3 py-3 ps-3 stream-page-live" v-if="song !== null || listeners !== null" v-scope v-cloak>
+                    <div class="mb-3" v-if="song !== null">
+                        <div>
+                            <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
+                            {% verbatim %}♫ {{ song }}{% endverbatim %}
+                        </div>
+                        <div class="mt-3" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                            <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;
+                            <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
+                               :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                                <i class="bi bi-youtube"></i> YouTube
+                            </a>&nbsp;&nbsp;
+                            <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
+                               :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                                <i class="bi bi-spotify"></i> Spotify
+                            </a>&nbsp;&nbsp;
+                            <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
+                               :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                                <img src="{{ asset('img/deezericon.png') }}" alt="{{ 'page.stream.find_deezer'|trans }}"> Deezer
+                            </a>&nbsp;&nbsp;
+                            <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_amazon'|trans }}"
+                               :href="encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${song}`)">
+                                <i class="bi bi-amazon"></i> Amazon
+                            </a>&nbsp;&nbsp;
+                        </div>
+                    </div>
+
+                    <div v-if="listeners !== null">
+                        <strong>{{ 'page.stream.listeners'|trans }}:&nbsp;&nbsp;</strong>
+                        {% verbatim %}
+                              <i v-if="listeners === 1" class="bi bi-person-fill"></i>
+                              <i v-if="listeners > 1" class="bi bi-people-fill"></i>
+                              &nbsp;{{ listeners }}
+                            {% endverbatim %}
+                    </div>
+                </div>
+
+                {% if stream.countryCode is not null and stream.countryCode != '' %}
+                    <div class="mb-3">
+                        <strong>{{ 'page.stream.country'|trans }}:</strong>
+                        {{ stream.getCountry(app.request.locale) }}
+                    </div>
+                {% endif %}
+
+                {% if stream.website is defined and stream.website is not null %}
+                    <div class="mb-3">
+                        <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a> ↗
+                    </div>
+                {% endif %}
+
+                {% if stream.updatedAt is defined and stream.updatedAt is not null %}
+                    <div>
+                        <strong>{{ 'page.stream.updated'|trans }}:</strong> {{ stream.updatedAt|format_datetime('short', 'short') }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

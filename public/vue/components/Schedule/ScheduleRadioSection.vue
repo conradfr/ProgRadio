@@ -59,8 +59,8 @@ export default defineComponent({
         return content;
       }
 
-      /* eslint-disable no-undef */
       // @ts-expect-error bootstrap is defined on global scope
+      // eslint-disable-next-line no-undef
       this.popover = new bootstrap.Popover(document.getElementById(`s-${this.section.hash}`), {
         content: popoverContent(this.section.presenter, this.section.description),
         title: popoverTitle(this.section.title, this.section.start_at),

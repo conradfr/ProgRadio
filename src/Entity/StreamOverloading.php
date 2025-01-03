@@ -55,6 +55,9 @@ class StreamOverloading
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private \DateTime $updatedAt;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $popup = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -191,4 +194,15 @@ class StreamOverloading
         $this->updatedAt = $updatedAt;
     }
 
+    public function isPopup(): ?bool
+    {
+        return $this->popup;
+    }
+
+    public function setPopup(?bool $popup): static
+    {
+        $this->popup = $popup;
+
+        return $this;
+    }
 }

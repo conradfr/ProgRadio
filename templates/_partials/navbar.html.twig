@@ -151,21 +151,22 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
                         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                            <li><a class="dropdown-item" href="{{ path('user_page') }}">{{ 'menu.account'|trans }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('_logout_main') }}">{{ 'menu.logout'|trans }}</a></li>
+
                             {% if is_granted('ROLE_ADMIN') %}
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ path('admin') }}">{{ 'menu.admin.dashboard'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('admin_listening') }}">{{ 'menu.admin.listening'|trans }}</a></li>
 {#                            <li><a class="dropdown-item" href="{{ path('admin_overloading') }}">{{ 'menu.admin.overloading'|trans }}</a></li>#}
                             <li><a class="dropdown-item" href="{{ path('admin_playing_errors') }}">{{ 'menu.admin.playing_errors'|trans }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_cache') }}">{{ 'menu.admin.actions'|trans }}</a></li>
 {#                            <li><a class="dropdown-item" href="{{ path('admin_stream_check') }}">{{ 'menu.admin.check'|trans }}</a></li>#}
                             <li><a class="dropdown-item" href="{{ path('admin_stream_suggestions') }}">{{ 'menu.admin.suggestions'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('easy_admin') }}">{{ 'menu.admin.easyadmin'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('admin_shares') }}">{{ 'menu.admin.shares'|trans }}</a></li>
                             <li><a class="dropdown-item" target="_blank" href="/admin/goaccessiframe">GoAccess</a></li>
-                            <li><hr class="dropdown-divider"></li>
                             {% endif %}
-
-                        <li><a class="dropdown-item" href="{{ path('user_page') }}">{{ 'menu.account'|trans }}</a></li>
-                        <li><a class="dropdown-item" href="{{ path('_logout_main') }}">{{ 'menu.logout'|trans }}</a></li>
                         {% else %}
                             <li><a class="dropdown-item" href="{{ path('app_login') }}">{{ 'menu.signon'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_register') }}">{{ 'menu.signup'|trans }}</a></li>

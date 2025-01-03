@@ -258,6 +258,7 @@ defmodule ProgRadioApi.Streams do
         website: s.website,
         clicks_last_24h: s.clicks_last_24h,
         score: s.score,
+        popup: s.popup,
         type: "stream",
         radio_code_name: fragment("COALESCE(?)", r.code_name),
         img_alt: fragment("COALESCE(?)", r.code_name),

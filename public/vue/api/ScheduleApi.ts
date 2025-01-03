@@ -20,8 +20,8 @@ import type {
 
 /* eslint-disable arrow-body-style */
 const getSchedule = async (dateStr: string, params?: any): Promise<Schedule|null> => {
-  /* eslint-disable no-undef */
   // @ts-expect-error apiUrl is defined on the global scope
+  // eslint-disable-next-line no-undef
   let url = `https://${apiUrl}/schedule/${dateStr}`;
 
   if (params !== undefined && params !== null) {
@@ -57,8 +57,8 @@ const getSchedule = async (dateStr: string, params?: any): Promise<Schedule|null
 };
 
 const getRadiosData = async (): Promise<GetRadiosDataResponse|null> => {
-  /* eslint-disable no-undef */
   // @ts-expect-error apiUrl is defined on the global scope
+  // eslint-disable-next-line no-undef
   const response = await fetch(`https://${apiUrl}/radios`);
 
   const data = await response.json();
@@ -120,6 +120,7 @@ const sendListeningSession = async (
     /* eslint-disable no-underscore-dangle */
     /* eslint-disable max-len */
     // @ts-expect-error apiUrl is defined on the global scope
+    // eslint-disable-next-line no-undef
     const response = await fetch(`https://${apiUrl}/listening_session/${id}`, {
       method: 'PUT',
       headers: {
@@ -142,6 +143,7 @@ const sendListeningSession = async (
 
   /* eslint-disable no-underscore-dangle */
   // @ts-expect-error apiUrl is defined on the global scope
+  // eslint-disable-next-line no-undef
   const response = await fetch(`https://${apiUrl}/listening_session`, {
     method: 'POST',
     headers: {

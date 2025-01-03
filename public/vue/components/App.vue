@@ -50,7 +50,7 @@ export default defineComponent({
     setTimeout(
       () => {
         // links from the navbar that we want to redirect to spa router
-        /* eslint-disable no-undef */
+        // eslint-disable-next-line no-undef
         const navLinks = document.getElementsByClassName('spa-link')!;
 
         Array.prototype.forEach.call(navLinks, (element) => {

@@ -54,10 +54,9 @@ export default defineComponent({
         event_label: `${this.minutes} minutes`,
         value: minutes
       });
-
-      /* eslint-disable no-undef */
       const modalElem = document.getElementById('timerModal');
       // @ts-expect-error bootstrap is defined on global scope
+      // eslint-disable-next-line no-undef
       const modalInstance = bootstrap.Modal.getInstance(modalElem);
 
       if (modalInstance !== undefined && modalInstance !== null) {

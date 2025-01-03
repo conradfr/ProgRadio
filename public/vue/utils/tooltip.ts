@@ -8,8 +8,8 @@ const PLACEMENT = 'right';
 const DELAY = 5000;
 
 const set = (className: string, cookieName: string) => {
-  /* eslint-disable no-undef */
   // @ts-expect-error logged is defined on the global scope
+  // eslint-disable-next-line no-undef
   if (cookies.has(cookieName) || logged === true) {
     return;
   }
@@ -18,8 +18,8 @@ const set = (className: string, cookieName: string) => {
 
   setTimeout(
     () => {
-      /* eslint-disable no-undef */
       // @ts-expect-error boostrap is defined on the global scope
+      // eslint-disable-next-line no-undef
       const tooltip = new bootstrap.Tooltip(elem, {
         placement: PLACEMENT,
         boundary: document.body,

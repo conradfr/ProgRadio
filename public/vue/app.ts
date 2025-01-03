@@ -22,8 +22,8 @@ app.use(router);
 app.use(pinia);
 
 app.use(VueGtag, {
-  /* eslint-disable no-undef */
   // @ts-expect-error gtCode is defined on the global scope
+  // eslint-disable-next-line no-undef
   config: { id: gtCode },
   disableScriptLoad: true
 }, router);

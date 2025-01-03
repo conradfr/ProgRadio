@@ -498,7 +498,7 @@ export default defineComponent({
         });
       } else {
         // const streamUrl = (url.substring(0, 5) !== 'https')
-            /* eslint-disable no-undef */
+            // eslint-disable-next-line no-undef
             // _@ts-expect-error apiUrl is defined on the global scope
             // ? `${streamsProxy}?k=${streamsProxyKey}&stream=${url}` : url;
 

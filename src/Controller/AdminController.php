@@ -20,9 +20,13 @@ use App\Form\SharesType;
 use App\Form\StreamOverloadingType;
 use App\Service\ApiClient;
 use App\Service\DateUtils;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -55,7 +59,7 @@ class AdminController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/admin/api/cache', name: 'admin_cache')]
-    public function apiCacheAction(EntityManagerInterface $em): Response
+    public function apiCacheAction(): Response
     {
         return $this->render('default/admin/api.html.twig', []);
     }
@@ -226,6 +230,7 @@ class AdminController extends AbstractBaseController
 
             $stream->setForceHls($streamOverloading->getForceHls());
             $stream->setForceMpd($streamOverloading->getForceMpd());
+            $stream->setPopup($streamOverloading->isPopup());
 
             if (!empty($form->get('redirect')->getData())) {
                 $streamRedirect = $em->getRepository(Stream::class)->find($form->get('redirect')->getData());

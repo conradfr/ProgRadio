@@ -4,7 +4,7 @@ services:
   web:
     image: nginx:latest
     ports:
-      - '8080:80'
+      - '80:80'
       - '443:443'
     volumes:
       - ./:/var/www
@@ -98,7 +98,9 @@ services:
 
 ###> meilisearch/search-bundle ###
   meilisearch:
-    image: getmeili/meilisearch:v1.8
+    image: getmeili/meilisearch:v1.12
+    ports:
+      - 7700:7700
     environment:
       # You should definitely change the master key in production
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-sz2d5xeGLME2fDW53tGnuJsEX3L2Q9Xz}

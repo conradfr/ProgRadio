@@ -80,9 +80,9 @@ export default defineComponent({
         return;
       }
 
-      /* eslint-disable no-undef */
       const modalElem = document.getElementById('scheduleRadioRegionModal');
       // @ts-expect-error bootstrap is defined on global scope
+      // eslint-disable-next-line no-undef
       const modalInstance = bootstrap.Modal.getInstance(modalElem);
 
       if (modalInstance !== undefined && modalInstance !== null) {

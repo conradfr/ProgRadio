@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body_container %}
+    {% include('_partials/navbar.html.twig') %}
+
+    {% block body %}{% endblock %}
+
+    <footer class="footer mt-auto">
+        <div class="container text-center">
+            {% block footer %}
+                ©2017-{{ "now"|date("Y") }} <a href="http://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a> -
+
+                {% for locale in locales %}
+                    {% if app.request.locale != locale %}
+                        {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode %}
+                        <a title="{{ "footer.#{locale}"|trans }}" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
+                            <img class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {% endblock %}
+        </div>
+    </footer>
+{% endblock %}

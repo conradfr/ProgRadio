@@ -26,6 +26,7 @@ defmodule ProgRadioApi.Stream do
     field(:source, :string, default: "radio-browser")
     field(:enabled, :boolean)
     field(:banned, :boolean)
+    field(:popup, :boolean)
     field(:slogan, :string)
     field(:description, :string)
     field(:redirect_to, :binary_id)

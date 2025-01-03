@@ -224,6 +224,13 @@ export const usePlayerStore = defineStore('player', {
       }
 
       nextTick(() => {
+        if (stream.popup) {
+          // @ts-expect-error popupUrl is defined on the global scope
+          // eslint-disable-next-line no-undef
+          window.open(popupUrl.replace(config.POPUP_URL_WILDCARD, stream.code_name), '', config.POPUP_SETTINGS);
+          return;
+        }
+
         if (PlayerUtils.isVideoLink(stream.stream_url)) {
           this.videoModalUrl = stream.stream_url;
           return;
@@ -449,8 +456,8 @@ export const usePlayerStore = defineStore('player', {
           }
         };
 
-        /* eslint-disable no-undef */
         // @ts-expect-error apiUrl is defined on the global scope
+        // eslint-disable-next-line no-undef
         this.socket = new Socket(`wss://${apiUrl}/socket`, opts);
 
         this.socket.onOpen(() => {
