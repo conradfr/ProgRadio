@@ -291,9 +291,18 @@ defmodule ProgRadioApi.SongServer do
 
   defp get_url_module(song_topic) do
     cond do
-      String.contains?(song_topic, ".m3u8") -> ProgRadioApi.SongProvider.Hls
-      String.contains?(song_topic, ".rcast.net") -> ProgRadioApi.SongProvider.Rcast
-      true -> ProgRadioApi.SongProvider.Icecast
+      String.contains?(song_topic, ".m3u8") ->
+        ProgRadioApi.SongProvider.Hls
+
+      String.contains?(song_topic, ".rcast.net") ->
+        ProgRadioApi.SongProvider.Rcast
+
+      String.contains?(song_topic, "play.radioking") or
+          String.contains?(song_topic, "www.radioking") ->
+        ProgRadioApi.SongProvider.Radioking
+
+      true ->
+        ProgRadioApi.SongProvider.Icecast
     end
   end
 end

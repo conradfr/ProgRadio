@@ -14,7 +14,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
       Timex.now()
       |> Timex.format!(@date_format)
 
-    #/songs?hour=19&minute=6
+    # /songs?hour=19&minute=6
     try do
       (url <> date_string)
       |> SongProvider.get()
