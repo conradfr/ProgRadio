@@ -75,7 +75,7 @@ class SecurityController extends AbstractController
             $em->flush();
 
             // email
-            $from = $host->getField('name_host', $request) . ' <noreply@' . $host->getRootDomain($request) . '>';
+            $from = (string) $host->getField('name_host', $request) . ' <noreply@' . $host->getRootDomain($request) . '>';
             $email = (new TemplatedEmail())
                 ->from($from)
                 ->to($user->getEmail())
@@ -107,6 +107,7 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $userEmail = $form->get('email')->getData();
+            /** @var User $user */
             $user = $em->getRepository(User::class)->loadUserByIdentifier($userEmail);
 
             if ($user !== null) {
@@ -117,7 +118,7 @@ class SecurityController extends AbstractController
                 $em->flush();
 
                 // email
-                $from = $host->getField('name_host', $request) . ' <noreply@' . $host->getRootDomain($request) . '>';
+                $from = (string) $host->getField('name_host', $request) . ' <noreply@' . $host->getRootDomain($request) . '>';
                 $email = (new TemplatedEmail())
                     ->from($from)
                     ->to($user->getEmail())
@@ -143,7 +144,7 @@ class SecurityController extends AbstractController
     #[Route('/{_locale}/reset-password/{token}', name: 'reset_password')]
     public function resetPassword(string $token, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
     {
-        /** @var \App\Entity\User $user */
+        /** @var \App\Entity\User|null $user */
         $user = $em->getRepository(User::class)->findFromToken($token);
 
         if ($user === null) {

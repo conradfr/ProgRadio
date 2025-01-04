@@ -193,7 +193,7 @@ class SiteController extends AbstractController
                     }
 
                     // spa radio page
-                    $routeApp = $router->getRouteCollection()->get('radio.'.$locale)->addDefaults(['bangs' => 'radio/' . $radio]);
+                    $routeApp = $router->getRouteCollection()->get('radio.' . $locale)->addDefaults(['bangs' => 'radio/' . $radio]);
                     $xml .= $this->getEntryXml($host, $request,'app', $routeApp, $locale);
                     $router->getRouteCollection()->get('radio.'.$locale)->setDefaults($savedRouteAppDefault);
                 }

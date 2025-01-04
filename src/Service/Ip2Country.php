@@ -10,14 +10,10 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class Ip2Country
 {
-    protected const CACHE_IP_PREFIX = 'cache_ip_data_';
-    protected const CACHE_IP_TTL = 604800; // one week in seconds
+    protected const string CACHE_IP_PREFIX = 'cache_ip_data_';
+    protected const int CACHE_IP_TTL = 604800; // one week in seconds
 
-    protected const API_URL = 'http://www.geoplugin.net/json.gp?ip=%s';
-
-    protected const GDPR_COUNTRIES = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'];
-
-    protected const CCPA_REGIONS = ['CA'];
+    protected const string API_URL = 'http://www.geoplugin.net/json.gp?ip=%s';
 
     public function __construct(protected CacheItemPoolInterface $cache) { }
 
@@ -26,21 +22,6 @@ class Ip2Country
         $ipData = $this->getIpData($request);
 
         return $ipData['timezone'] ?? null;
-    }
-
-    public function isProtected(Request $request): bool
-    {
-        $ipData = $this->getIpData($request);
-
-        if (in_array($ipData['country_code'], self::GDPR_COUNTRIES)) {
-            return true;
-        }
-
-        if (in_array($ipData['region_code'], self::CCPA_REGIONS)) {
-            return true;
-        }
-
-        return false;
     }
 
     protected function getIpData(Request $request): array
@@ -53,7 +34,7 @@ class Ip2Country
         });
     }
 
-    protected function getData($ip): array
+    protected function getData(?string $ip): array
     {
         $url = sprintf(self::API_URL, $ip);
         $result = null;

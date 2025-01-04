@@ -10,7 +10,7 @@
 {% block javascript_head %}
 const baseUrl = '/';
 const gtCode = '{{ analytics }}';
-const logged = {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }};
+const logged = {{ is_logged == true ? 'true' : 'false' }};
 const locale = '{{ app.request.locale }}';
 const geocode = '{{ geocode }}';
 const defaultCountry ='{{ getField('default_country', app.request) }}';

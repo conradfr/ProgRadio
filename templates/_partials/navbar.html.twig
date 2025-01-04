@@ -1,8 +1,8 @@
 {% import "utils/menu.html.twig" as menu %}
 
-{% set collections_menu = scheduleCollections(app.user, app.request.attributes) %}
+{% set collections_menu = scheduleCollections(app.request.attributes) %}
 
-{% include('_partials/mobilemenu.html.twig') %}
+{% include '_partials/mobilemenu.html.twig' with {'collections_menu': collections_menu} %}
 
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" style="direction:ltr/*rtl:ignore*/;">
     <div class="container-fluid">
@@ -56,7 +56,7 @@
                     {{ menu.streaming_menu() }}
                 </li>
 
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                {% if is_logged == true %}
                     <li class="nav-item pe-2 d-none d-sm-block">
                         <a title="{{ 'menu.songs'|trans }}" class="nav-link pr-0 spa-link" href="{{ path('app') }}songs"><i class="bi bi-music-note-list"></i></a>
                     </li>
@@ -79,7 +79,7 @@
                                 <span class="nav-set-home-disable d-none">{{ 'menu.home.disable'|trans }}</span>
                             </a>
                         </li>
-{#                        <li><a class="dropdown-item d-none nav-set-home-disabled">{{ 'menu.home.disabled'|trans }}</a></li>#}
+
                         {% if 'progradio' not in app.request.headers.get('User-Agent') %}
                             <li><a class="dropdown-item spa-link" href="{{ path('params_spa') }}">{{ 'menu.params'|trans }}</a></li>
                         {% endif %}
@@ -147,10 +147,10 @@
                 {# User #}
                 <li class="nav-item dropdown pe-0">
                     <a class="py-2 nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %} progradio-connected{% endif %}" style="font-size: 19px"></i>
+                        <i class="bi bi-person-circle{% if is_logged == true %} progradio-connected{% endif %}" style="font-size: 19px"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
-                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        {% if is_logged == true %}
                             <li><a class="dropdown-item" href="{{ path('user_page') }}">{{ 'menu.account'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('_logout_main') }}">{{ 'menu.logout'|trans }}</a></li>
 
@@ -158,10 +158,10 @@
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ path('admin') }}">{{ 'menu.admin.dashboard'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('admin_listening') }}">{{ 'menu.admin.listening'|trans }}</a></li>
-{#                            <li><a class="dropdown-item" href="{{ path('admin_overloading') }}">{{ 'menu.admin.overloading'|trans }}</a></li>#}
+                            {# <li><a class="dropdown-item" href="{{ path('admin_overloading') }}">{{ 'menu.admin.overloading'|trans }}</a></li> #}
                             <li><a class="dropdown-item" href="{{ path('admin_playing_errors') }}">{{ 'menu.admin.playing_errors'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('admin_cache') }}">{{ 'menu.admin.actions'|trans }}</a></li>
-{#                            <li><a class="dropdown-item" href="{{ path('admin_stream_check') }}">{{ 'menu.admin.check'|trans }}</a></li>#}
+                            {# <li><a class="dropdown-item" href="{{ path('admin_stream_check') }}">{{ 'menu.admin.check'|trans }}</a></li> #}
                             <li><a class="dropdown-item" href="{{ path('admin_stream_suggestions') }}">{{ 'menu.admin.suggestions'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('easy_admin') }}">{{ 'menu.admin.easyadmin'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('admin_shares') }}">{{ 'menu.admin.shares'|trans }}</a></li>

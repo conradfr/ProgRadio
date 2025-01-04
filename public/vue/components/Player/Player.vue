@@ -239,7 +239,7 @@ export default defineComponent({
             navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
             navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
           },
-          1000
+          250
       );
     }
   },

@@ -50,9 +50,9 @@ class StreamsController  extends AbstractBaseController
     #[Route('/search', name: 'streams_radios_search')]
     public function search(EntityManagerInterface $em, Request $request): Response
     {
-        $text = (string) $request->query->get('text');
+        $text = $request->query->get('text');
 
-        if ($text === null) {
+        if ($text === null || !is_string($text)) {
             throw new BadRequestHttpException('no text');
         }
 
@@ -143,7 +143,7 @@ class StreamsController  extends AbstractBaseController
     #[Route('/favorites', name: 'streams_favorites')]
     public function favorites(Request $request): Response
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
 
         if ($user === null) {

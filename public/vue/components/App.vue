@@ -44,7 +44,7 @@ export default defineComponent({
       () => {
         this.getUserData();
       },
-      25
+      5
     );
 
     setTimeout(
@@ -60,7 +60,7 @@ export default defineComponent({
           });
         });
       },
-      50
+      25
     );
 
     const toggleHomeLinks = (homeIsSet: boolean) => {

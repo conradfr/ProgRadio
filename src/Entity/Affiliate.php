@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -47,44 +49,44 @@ class Affiliate
         $this->htmlLink = $htmlLink;
     }
 
-    public function getNameFr(): ?string
+    public function getTextFr(): ?string
     {
-        return $this->name_fr;
+        return $this->text_fr;
     }
 
-    public function setNameFr(?string $text_fr): void
+    public function setTextFr(?string $text_fr): void
     {
-        $this->name_fr = $text_fr;
+        $this->text_fr = $text_fr;
     }
 
-    public function getNameEn(): ?string
+    public function getTextEn(): ?string
     {
-        return $this->name_en;
+        return $this->text_en;
     }
 
-    public function setNameEn(?string $text_en): void
+    public function setTextEn(?string $text_en): void
     {
-        $this->name_en = $text_en;
+        $this->text_en = $text_en;
     }
 
-    public function getNameEs(): ?string
+    public function getTextEs(): ?string
     {
-        return $this->name_es;
+        return $this->text_es;
     }
 
-    public function setNameEs(?string $text_es): void
+    public function setTextEs(?string $text_es): void
     {
-        $this->name_es = $text_es;
+        $this->text_es = $text_es;
     }
 
-    public function getNameDe(): ?string
+    public function getTextDe(): ?string
     {
-        return $this->name_de;
+        return $this->text_de;
     }
 
-    public function setNameDe(?string $text_de): void
+    public function setTextDe(?string $text_de): void
     {
-        $this->name_de = $text_de;
+        $this->text_de = $text_de;
     }
 
     public function getBase64img(): ?string

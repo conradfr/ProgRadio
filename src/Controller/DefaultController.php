@@ -134,13 +134,13 @@ class DefaultController extends AbstractBaseController
             $date = new \DateTime();
         }
 
-        /** @var Radio $radio */
+        /** @var Radio|null $radio */
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName, 'active' => true]);
         if (!$radio) {
             throw new NotFoundHttpException('Radio not found');
         }
 
-        /** @var SubRadio $subRadio */
+        /** @var SubRadio|null $subRadio */
         $subRadio = $em->getRepository(SubRadio::class)->findOneBy(['codeName' => $subRadioCodeName, 'enabled' => true]);
         if (!$subRadio) {
             throw new NotFoundHttpException('Radio not found');
@@ -256,13 +256,13 @@ class DefaultController extends AbstractBaseController
             return $this->redirect($redirectUrl, 301);
         }
 
-        /** @var Radio $radio */
+        /** @var Radio|null $radio */
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName, 'active' => true]);
         if (!$radio) {
             throw new NotFoundHttpException('Radio not found');
         }
 
-        /** @var SubRadio $subRadio */
+        /** @var SubRadio|null $subRadio */
         $subRadio = $em->getRepository(SubRadio::class)->findOneBy(['radio' => $radio, 'main' => true, 'enabled' => true]);
         if (!$subRadio) {
             throw new NotFoundHttpException('Radio not found');
@@ -424,11 +424,11 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/{_locale}/top/{countryCode}',
         name: 'streams_top',
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'weekly'
-        ],
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro']
+        ]
     )
     ]
     #[Cache(public: true, maxage: ScheduleManager::CACHE_SCHEDULE_TTL, mustRevalidate: true)]
@@ -454,18 +454,18 @@ class DefaultController extends AbstractBaseController
         return $this->render('default/top.html.twig', [
             'streams' => $streams,
             'total'   => $totalCount,
-            'country' => $countryCode !== null ? Countries::getName(strtoupper($countryCode), $request->getLocale()) : null,
+            'country' => Countries::getName(strtoupper($countryCode), $request->getLocale()),
             'country_code' => $countryCode
         ]);
     }
 
     #[Route('/{_locale}/last/{countryCode}',
         name: 'streams_last',
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'daily'
-        ],
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro']
+        ]
     )
     ]
     #[Cache(public: true, maxage: 60, mustRevalidate: true)]
@@ -491,7 +491,7 @@ class DefaultController extends AbstractBaseController
         return $this->render('default/last.html.twig', [
             'streams' => $streams,
             'total'   => $totalCount,
-            'country' => $countryCode !== null ? Countries::getName(strtoupper($countryCode), $request->getLocale()) : null,
+            'country' => Countries::getName(strtoupper($countryCode), $request->getLocale()),
             'country_code' => $countryCode
         ]);
     }
@@ -499,7 +499,7 @@ class DefaultController extends AbstractBaseController
     #[Route('/user', name: 'user_config')]
     public function user(Request $request, AuthorizationCheckerInterface $authChecker): Response
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
 
         if ($user !== null) {

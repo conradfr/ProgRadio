@@ -9,7 +9,7 @@ use Twig\TwigFilter;
 
 class ShortIdExtension extends AbstractExtension
 {
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('shortid', [ShortIdRuntime::class, 'shortId']),

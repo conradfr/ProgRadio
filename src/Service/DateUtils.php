@@ -69,6 +69,6 @@ class DateUtils
         $microtime = microtime();
         $exploded = explode(' ', $microtime);
 
-        return $exploded[1] . ((int)round($exploded[0] * 1000000));
+        return (int) ($exploded[1] . ((int) round((int) $exploded[0] * 1000000)));
     }
 }

@@ -15,7 +15,7 @@ class EmailAvailableValidator extends ConstraintValidator
 {
     public function __construct(protected EntityManagerInterface $em) { }
 
-    public function validate($value, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof EmailAvailable) {
             throw new UnexpectedTypeException($constraint, EmailAvailable::class);

@@ -50,7 +50,7 @@ export default defineComponent({
         this.getConfig();
         this.getCountries();
       },
-      75
+      20
     );
   },
   mounted() {

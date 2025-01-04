@@ -1,12 +1,10 @@
 {% import "utils/menu.html.twig" as menu %}
 
-{% set collections_menu = scheduleCollections(app.user, app.request.attributes) %}
-
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-body">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <!-- account -->
-            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {% if is_logged == true %}
                 <li class="nav-item mt-0">
                     <div class="d-flex flex-row align-items-center mb-2">
                         <div class="align-self-center pe-2 offmenu-item-icon">
@@ -95,7 +93,7 @@
                 </div>
             </li>
 
-            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {% if is_logged == true %}
             <li class="nav-item mt-0" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
                 <div class="d-flex flex-row align-items-center mb-1 disabled">
                     <div class="align-self-center pe-3 offmenu-item-icon">

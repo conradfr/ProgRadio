@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,10 +32,6 @@ class SubRadio
 
     #[ORM\OneToOne(targetEntity: RadioStream::class, mappedBy: 'subRadio', fetch: 'EXTRA_LAZY')]
     private ?RadioStream $radioStream = null;
-
-    public function __construct() {
-        $this->listeningSessions = new ArrayCollection();
-    }
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $main = false;

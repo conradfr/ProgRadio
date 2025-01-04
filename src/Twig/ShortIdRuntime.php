@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use PhpParser\Node\Expr\Cast\Object_;
 use Twig\Extension\RuntimeExtensionInterface;
 use Keiko\Uuid\Shortener\Dictionary;
 use Keiko\Uuid\Shortener\Shortener;
@@ -20,7 +21,7 @@ class ShortIdRuntime implements RuntimeExtensionInterface
         );
     }
 
-    public function shortId($id): string
+    public function shortId(string|Object $id): string
     {
         /** @var Uuid $id */
         if (is_object($id)) {
