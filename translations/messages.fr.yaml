@@ -163,6 +163,7 @@ page:
         tagline: 'Slogan'
         updated: 'Mis à jour'
         languages: 'Langues'
+        popup: Une fenêtre popup doit être ouverte pour jouer cette radio.
 
         modification:
             at_least_one: Remplir un champs ou plus.

@@ -161,6 +161,7 @@ page:
         tagline: الشعار
         updated: تم تحديثه
         languages: اللغات
+        popup: يجب فتح نافذة منبثقة لتشغيل هذا الراديو
 
         modification:
             at_least_one: املأ حقلاً واحدًا على الأقل.

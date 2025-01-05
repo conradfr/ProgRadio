@@ -161,6 +161,7 @@ page:
         tagline: 'Slogan'
         updated: 'Aktualisiert'
         languages: 'Sprachen'
+        popup: Ein Popup-Fenster muss geöffnet werden, um dieses Radio abzuspielen
 
         modification:
             at_least_one: Fülle mindestens ein Feld aus.

@@ -159,6 +159,7 @@ page:
         tagline: 'slogan'
         updated: 'Aktualizacja'
         languages: 'Języki'
+        popup: Aby odtwarzać to radio, należy otworzyć wyskakujące okienko
 
         modification:
             at_least_one: Wypełnij co najmniej jedno pole.

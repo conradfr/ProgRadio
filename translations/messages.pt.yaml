@@ -159,6 +159,7 @@ page:
         tagline: 'slogan'
         updated: 'Atualizado'
         languages: 'Idiomas'
+        popup: Uma janela pop-up deve ser aberta para tocar este rádio
 
         modification:
             at_least_one: Preencha pelo menos um campo.

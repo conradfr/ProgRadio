@@ -124,11 +124,6 @@ page:
         summary: 'Riepilogo'
         title: '%radio% - Ascolti il live streaming'
         website: 'Sito web'
-        banned: Questa stazione radio è vietata.
-        desc: 'Descrizione'
-        tagline: 'slogan'
-        updated: 'Aggiornato'
-        languages: 'Lingue'
 
     registered:
         page_title: Registrarsi
@@ -161,6 +156,12 @@ page:
         title: '%radio% - Ascolta live'
         title_country: '%radio% - %country% - Ascolta'
         website: Sito web
+        banned: Questa stazione radio è vietata.
+        desc: 'Descrizione'
+        tagline: 'slogan'
+        updated: 'Aggiornato'
+        languages: 'Lingue'
+        popup: È necessario aprire una finestra popup per riprodurre questa radio
 
         modification:
             at_least_one: Compila almeno un campo.

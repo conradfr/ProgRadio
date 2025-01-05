@@ -163,6 +163,7 @@ page:
         tagline: 'slogan'
         updated: 'Updated'
         languages: 'Languages'
+        popup: A popup window must be opened to play this radio
 
         modification:
             at_least_one: Fill at least one field.
