@@ -211,64 +211,68 @@
                         </div>
                     </div>
 
-                    {% if stream.countryCode is not null and stream.countryCode != '' %}
-                        <div class="mb-3">
-                            <strong>{{ 'page.stream.country'|trans }}:</strong>
-                            {{ stream.getCountry(app.request.locale) }}
-                        </div>
-                    {% endif %}
+                    {% if stream.banned != true %}
+                        {% if stream.countryCode is not null and stream.countryCode != '' %}
+                            <div class="mb-3">
+                                <strong>{{ 'page.stream.country'|trans }}:</strong>
+                                {{ stream.getCountry(app.request.locale) }}
+                            </div>
+                        {% endif %}
 
-                    {% if stream.website is defined and stream.website is not null %}
-                        <div class="mb-3">
-                            <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a> ↗
-                        </div>
+                        {% if stream.website is defined and stream.website is not null %}
+                            <div class="mb-3">
+                                <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a> ↗
+                            </div>
+                        {% endif %}
                     {% endif %}
 
                     <div class="pt-2 pb-3 px-3 d-block d-sm-none">
                         {{ include('_partials/adblock.html.twig', {style: 'horizontal', class: 'd-block d-sm-none'}) }}
                     </div>
 
-                    {% if stream.tags is not null and stream.tags != '' %}
-                        <div class="row">
-                            <div class="col-12 col-sm-9">
-                                <div class="stream-one-tags">
-                                    <div class="d-flex flex-wrap align-items-center">
-{#                                        <div class="me-2"><strong>{{ 'page.stream.tags'|trans }}:</strong></div>#}
-                                        {% for tag in stream.tags|split(',') %}
-                                            <a href="{{ path('streaming_spa') }}/all?s={{ tag }}">
-                                            <span class="badge badge-inverse badge-link">
-                                                {{ tag }}
-                                            </span>
-                                            </a>
-                                        {% endfor %}
+                    {% if stream.banned != true %}
+                        {% if stream.tags is not null and stream.tags != '' %}
+                            <div class="row">
+                                <div class="col-12 col-sm-9">
+                                    <div class="stream-one-tags">
+                                        <div class="d-flex flex-wrap align-items-center">
+    {#                                        <div class="me-2"><strong>{{ 'page.stream.tags'|trans }}:</strong></div>#}
+                                            {% for tag in stream.tags|split(',') %}
+                                                <a href="{{ path('streaming_spa') }}/all?s={{ tag }}">
+                                                <span class="badge badge-inverse badge-link">
+                                                    {{ tag }}
+                                                </span>
+                                                </a>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
 
-                    {% if stream.language is defined and stream.language is not null and stream.language != '' %}
-                        <div class="mt-3">
-                            <strong>{{ 'page.stream.languages'|trans }}:</strong> {{ stream.language|replace({',': ', '}) }}
-                        </div>
-                    {% endif %}
+                        {% if stream.language is defined and stream.language is not null and stream.language != '' %}
+                            <div class="mt-3">
+                                <strong>{{ 'page.stream.languages'|trans }}:</strong> {{ stream.language|replace({',': ', '}) }}
+                            </div>
+                        {% endif %}
 
-                    {% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %}
-                        <div class="mt-3">
-                            <strong>{{ 'page.stream.tagline'|trans }}:</strong> {{ stream.slogan }}
-                        </div>
-                    {% endif %}
+                        {% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %}
+                            <div class="mt-3">
+                                <strong>{{ 'page.stream.tagline'|trans }}:</strong> {{ stream.slogan }}
+                            </div>
+                        {% endif %}
 
-                    {% if stream.description is defined and stream.description is not null and stream.description != '' %}
-                        <div class="mt-3">
-                            <strong>{{ 'page.stream.desc'|trans }}:</strong> {{ stream.description }}
-                        </div>
-                    {% endif %}
+                        {% if stream.description is defined and stream.description is not null and stream.description != '' %}
+                            <div class="mt-3">
+                                <strong>{{ 'page.stream.desc'|trans }}:</strong> {{ stream.description }}
+                            </div>
+                        {% endif %}
 
-                    {% if stream.updatedAt is defined and stream.updatedAt is not null %}
-                        <div class="mt-3">
-                            <strong>{{ 'page.stream.updated'|trans }}:</strong> {{ stream.updatedAt|format_datetime('short', 'short') }}
-                        </div>
+                        {% if stream.updatedAt is defined and stream.updatedAt is not null %}
+                            <div class="mt-3">
+                                <strong>{{ 'page.stream.updated'|trans }}:</strong> {{ stream.updatedAt|format_datetime('short', 'short') }}
+                            </div>
+                        {% endif %}
                     {% endif %}
 
                     <div class="d-sm-none mt-4 mb-2 text-center">

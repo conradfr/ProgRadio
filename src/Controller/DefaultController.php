@@ -703,6 +703,17 @@ class DefaultController extends AbstractBaseController
     public function localSwitch(Request $request, string $locale): Response
     {
         $redirect = $request->query->get('redirect', '/');
+        $toUrl = urldecode($redirect);
+
+        // noticed some weird urls sometimes so we check
+        $whitelist = ['localhost'];
+        foreach (Host::DATA as $host) {
+            $whitelist[] = parse_url($host['url'])['host'];
+        }
+
+        if (!in_array(parse_url($toUrl)['host'], $whitelist)) {
+            return $this->redirectToRoute('index_radio_addict', [], 301);
+        }
 
         $cookie = new Cookie(
             self::COOKIE_LOCALE,
