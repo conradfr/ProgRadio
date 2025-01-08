@@ -1,6 +1,6 @@
 const scrapAbstract = require('./_abstract_lesindes2.js');
 
-// Radio was renamed Radio µontact on 11/2022
+// Radio was renamed Radio contact on 11/2022
 // Keeping old code_name for now
 
 const name = 'sweet_fm';

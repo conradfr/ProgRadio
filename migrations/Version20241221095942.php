@@ -38,7 +38,7 @@ final class Version20241221095942 extends AbstractMigration
 
         $subRadios = [
             [
-                'code_name' => 'breatgne5_main',
+                'code_name' => 'bretagne5_main',
                 'name' => 'Bretagne5',
                 'main' => 'true',
                 'radio_id' => 147

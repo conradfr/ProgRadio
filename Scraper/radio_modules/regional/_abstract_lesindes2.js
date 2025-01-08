@@ -41,7 +41,7 @@ const fetchDescAlt = async (url) => {
   });
 };
 
-const format = async (dateObj, name, description_prefix) => {
+const format = async (dateObj, name, description_prefix, hosts) => {
   if (scrapedData[name] === undefined || scrapedData[name][0] === undefined || scrapedData[name][0].json === 'undefined') {
     return Promise.resolve([]);
   }
@@ -94,7 +94,6 @@ const format = async (dateObj, name, description_prefix) => {
     let description = curr.chapo || '';
     let descriptionSupp = await fetchDesc(`${description_prefix}${curr.slug}`);
 
-
     if (utils.checkNested(descriptionSupp, 'description') === true && descriptionSupp.description.length > 0) {
       const descriptionAdd = descriptionSupp.description.join(' ').trim();
       if (descriptionAdd.length > 0) {
@@ -119,7 +118,7 @@ const format = async (dateObj, name, description_prefix) => {
 
     try {
       img = curr.imagePrincipale.medias.find(element => element.format === '16by9');
-      if (img !== undefined){
+      if (img !== undefined) {
         img = curr.imagePrincipale.medias.find(element => element.format === '16by9').url;
       }
 
@@ -131,10 +130,12 @@ const format = async (dateObj, name, description_prefix) => {
     }
 
     let host = null;
-    if (curr.animatorsNames !== undefined && curr.animatorsNames !== null && curr.animatorsNames.length > 0) {
-      host = curr.animatorsNames.join(', ');
-    } else if (curr.chapo !== undefined && curr.chapo !== null && curr.chapo !== '') {
-      host = curr.chapo.substring(5);
+    if (hosts !== false) {
+      if (curr.animatorsNames !== undefined && curr.animatorsNames !== null && curr.animatorsNames.length > 0) {
+        host = curr.animatorsNames.join(', ');
+      } else if (curr.chapo !== undefined && curr.chapo !== null && curr.chapo !== '' && curr.chapo !== description.substring(0, curr.chapo.length)) {
+        host = curr.chapo.substring(5);
+      }
     }
 
     newEntry = {
@@ -201,13 +202,13 @@ const fetchAll = (url, name, dateObj) => {
   return fetch(url, name, dateObj);
 };
 
-const getScrap = (dateObj, url, name, description_prefix) => {
+const getScrap = (dateObj, url, name, description_prefix, hosts) => {
   dateObj = moment(dateObj);
   dateObj.locale('fr');
   scrapedData[name] = [];
   return fetchAll(url, name, dateObj)
     .then(() => {
-      return format(dateObj, name, description_prefix);
+      return format(dateObj, name, description_prefix, hosts);
     });
 };
 

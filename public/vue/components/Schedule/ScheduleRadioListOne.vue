@@ -59,7 +59,7 @@
     </div>
     <a v-on:click="playStop(radio.code_name, false)" :title="radio.name">
       <div class="radio-logo"
-           :title="getSubRadio(radio.code_name).name"
+           :title="getSubRadio(radio.code_name).name || ''"
            :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}">
         <div class="radio-logo-bg"
              :style="styleObject">
