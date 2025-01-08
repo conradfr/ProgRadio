@@ -302,7 +302,7 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    #[Cache(public: true, maxage: 60, mustRevalidate: true)]
+    #[Cache(maxage: 60, public: true, mustRevalidate: true)]
     public function oneShort(string $shortId, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
     {
         // !!! NOTE !!! could not find in the doc how to do a custom ParamConverter in Symfony 6.3 like with ExtraBundle before
@@ -708,7 +708,8 @@ class DefaultController extends AbstractBaseController
         // noticed some weird urls sometimes so we check
         $whitelist = ['localhost'];
         foreach (Host::DATA as $host) {
-            $whitelist[] = parse_url($host['url'])['host'];
+            $whitelist[] = $host['domain'];
+            $whitelist[] = 'www.'. $host['domain'];
         }
 
         if (!in_array(parse_url($toUrl)['host'], $whitelist)) {

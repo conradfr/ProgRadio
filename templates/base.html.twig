@@ -85,7 +85,11 @@
     {% if canonical_locale is defined %}
         {% for locale in locales %}
             {% if canonical_locale != locale %}
-                <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))) }}" />
+                {% if 'www' in app.request.uri == false %}
+                    <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})))|replace({'https://': 'https://www.'}) }}" />
+                {%  else %}
+                    <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))) }}" />
+                {% endif %}
             {% endif %}
         {% endfor %}
     {% endif %}
