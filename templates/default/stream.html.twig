@@ -34,12 +34,20 @@
 
 {% block head_supp %}
     {{ parent() }}
+    <meta property="al:web:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}" />
     <meta property="og:title" content="{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}">
     <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
-    <meta property="og:type" content="website"><meta property="og:site_name" content="{{ getDomainName(app.request) }}">
+    <meta property="og:type" content="music.radio_station">
+    <meta property="og:site_name" content="{{ getDomainName(app.request) }}">
     <meta property="og:image" content="{{ asset(self.picture(stream)) }}">
     <meta property="og:description" content="{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}">
     <meta name="thumbnail" content="{{ asset(self.picture(stream)) }}">
+{% endblock %}
+
+{% block canonical %}
+    {% if isProgRadio(app.request) == false %}
+        {{ parent() }}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
@@ -312,7 +320,7 @@
 
                         <div class="clearfix mt-5 mb-5">
                             <br><br>
-                            <a class="more-link" href="{{ path('streaming_spa') }}">{{ 'page.stream.discover'|trans }}</a>
+                            <a class="more-link" href="{{ path('streaming_spa') }}/{{ stream.countryCode|default('') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>
 

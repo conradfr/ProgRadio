@@ -12,13 +12,17 @@
     <title>{% block title %}{{ getField('title_key', app.request)|trans }}{% endblock %} - {{ getDomainName(app.request) }}</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
 
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 {#    <link rel="preconnect" href="https://fonts.gstatic.com">#}
 {#    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Lobster&text=AdictRadoProgmes&display=swap" as="font" crossorigin>#}
 
-    <link rel="preload" as="font" href="/fonts/logo.woff2" crossorigin>
+    <link rel="preload" as="font" href="{{ asset('fonts/logo.woff2') }}" crossorigin>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,22 +81,24 @@
     {% endif %}
 
     {% if 'www' in app.request.uri == false %}
-        <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})))|replace({'https://': 'https://www.'})|default(app.request.uri) }}" />
+        <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}" />
     {%  else %}
-        <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale}))) }}" />
+        <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}" />
     {% endif %}
 
-    {% if canonical_locale is defined %}
-        {% for locale in locales %}
-            {% if canonical_locale != locale %}
-                {% if 'www' in app.request.uri == false %}
-                    <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})))|replace({'https://': 'https://www.'}) }}" />
-                {%  else %}
-                    <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))) }}" />
+    {% block canonical %}
+        {% if canonical_locale is defined %}
+            {% for locale in locales %}
+                {% if canonical_locale != locale %}
+                    {% if 'www' in app.request.uri == false %}
+        <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale})))|replace({'https://': 'https://www.'}) }}" />
+                    {%  else %}
+        <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale}))) }}" />
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        {% endfor %}
-    {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
 
     <script type="text/javascript">
       const darkModeStartHour = {{ constant('App\\Twig\\DarkMode::DARK_MODE_START_HOUR') }};

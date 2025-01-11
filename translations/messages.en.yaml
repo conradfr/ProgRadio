@@ -124,7 +124,7 @@ page:
         play: 'Listen to %radio%'
         stop: 'Stop %radio%'
         summary: 'Summary'
-        title: '%radio% - Listen to the live streaming'
+        title: '%radio% - Listen to the live streaming - %date% schedule'
         website: 'Website'
 
     registered:

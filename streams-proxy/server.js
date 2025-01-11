@@ -28,6 +28,11 @@ const corsOptions = {
 
 app.options('/', cors(corsOptions));
 
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.send("User-agent: *\nDisallow: /");
+});
+
 app.get('/', cors(corsOptions), async (req, res) => {
   // redirect https stream requests as those don't need a cors proxy
   if (typeof req.query.stream === 'string' && req.query.stream.trim().startsWith('https://')) {

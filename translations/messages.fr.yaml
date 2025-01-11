@@ -124,7 +124,7 @@ page:
         play: 'Écouter %radio%'
         stop: 'Stopper %radio%'
         summary: 'Description'
-        title: 'Écouter %radio% en direct streaming'
+        title: 'Écouter %radio% en direct - Programmes du %date%'
         website: 'Site web'
 
     registered:

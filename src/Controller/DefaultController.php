@@ -81,16 +81,16 @@ class DefaultController extends AbstractBaseController
     #[
         Route(
             path: [
-                'en' => '/{_locale}/schedule-streaming-{codeName}-{subRadioCodeName}/{date?}',
-                'fr' => '/{_locale}/grille-ecouter-{codeName}-{subRadioCodeName}/{date?}',
-                'es' => '/{_locale}/escuchar-{codeName}-{subRadioCodeName}/{date?}',
-                'de' => '/{_locale}/zuhören-{codeName}-{subRadioCodeName}/{date?}',
-                'pt' => '/{_locale}/ouvir-{codeName}-{subRadioCodeName}/{date?}',
-                'it' => '/{_locale}/ascolti-{codeName}-{subRadioCodeName}/{date?}',
-                'pl' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
-                'el' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
-                'ro' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
-                'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/{date?}',
+                'en' => '/{_locale}/schedule-streaming-{codeName}-{subRadioCodeName}/schedule-of-day/{date?}',
+                'fr' => '/{_locale}/grille-ecouter-{codeName}-{subRadioCodeName}/programmes-du-jour/{date?}',
+                'es' => '/{_locale}/escuchar-{codeName}-{subRadioCodeName}/programas de día/{date?}',
+                'de' => '/{_locale}/zuhören-{codeName}-{subRadioCodeName}/tagesprogramme/{date?}',
+                'pt' => '/{_locale}/ouvir-{codeName}-{subRadioCodeName}/programas-diurnos/{date?}',
+                'it' => '/{_locale}/ascolti-{codeName}-{subRadioCodeName}/programmi-diurni/{date?}',
+                'pl' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/programy-dzienne/{date?}',
+                'el' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/προγράμματα-ημέρας/{date?}',
+                'ro' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/programe-de-zi/{date?}',
+                'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/برامج-اليوم/{date?}',
             ],
             name: 'radio_subradio',
             defaults: [
@@ -210,16 +210,80 @@ class DefaultController extends AbstractBaseController
     #[
         Route(
             path: [
-                'en' => '/{_locale}/schedule-streaming-{codeName}/{date?}',
-                'fr' => '/{_locale}/grille-ecouter-{codeName}/{date?}',
-                'es' => '/{_locale}/escuchar-{codeName}/{date?}',
-                'de' => '/{_locale}/zuhören-{codeName}/{date?}',
-                'pt' => '/{_locale}/ouvir-{codeName}/{date?}',
-                'it' => '/{_locale}/ascolti-{codeName}/{date?}',
-                'pl' => '/{_locale}/streaming-{codeName}/{date?}',
-                'el' => '/{_locale}/streaming-{codeName}/{date?}',
-                'ro' => '/{_locale}/streaming-{codeName}/{date?}',
-                'ar' => '/{_locale}/البث-{codeName}/{date?}'
+                'en' => '/{_locale}/schedule-streaming-{codeName}-{subRadioCodeName}/{date?}',
+                'fr' => '/{_locale}/grille-ecouter-{codeName}-{subRadioCodeName}/{date?}',
+                'es' => '/{_locale}/escuchar-{codeName}-{subRadioCodeName}/{date?}',
+                'de' => '/{_locale}/zuhören-{codeName}-{subRadioCodeName}/{date?}',
+                'pt' => '/{_locale}/ouvir-{codeName}-{subRadioCodeName}/{date?}',
+                'it' => '/{_locale}/ascolti-{codeName}-{subRadioCodeName}/{date?}',
+                'pl' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
+                'el' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
+                'ro' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
+                'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/{date?}',
+            ],
+            name: 'radio_subradio_legacy',
+        )
+    ]
+    public function radioSubRadioLegacy(
+        string $codeName,
+        string $subRadioCodeName,
+        EntityManagerInterface $em,
+        ScheduleManager $scheduleManager,
+        Host $host,
+        RouterInterface $router,
+        Request $request,
+        \DateTime $date=null): Response
+    {
+        // we moved from this to the current url to maybe help Google choose the right canonical url
+
+        // redirect to progradio if not (for seo)
+        if ($host->isProgRadio($request) === false) {
+            $router->getContext()->setHost('www.' . Host::DATA['progradio']['domain']);
+
+            $routeParams = [
+                '_locale' => $request->getLocale(),
+                'codeName' => $codeName,
+                'subRadioCodeName' => $subRadioCodeName
+            ];
+
+            if ($date !== null) {
+                $routeParams['date'] = $date->format('Y-m-d');
+            }
+
+            $redirectUrl = $router->generate('radio_subradio', $routeParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
+        $routeParams = [
+            '_locale' => $request->getLocale(),
+            'codeName' => $codeName,
+            'subRadioCodeName' => $subRadioCodeName
+        ];
+
+        if ($date !== null) {
+            $routeParams['date'] = $date->format('Y-m-d');
+        }
+
+        return $this->redirectToRoute('radio_subradio', $routeParams, 301);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    #[
+        Route(
+            path: [
+                'en' => '/{_locale}/schedule-streaming-{codeName}/schedule-of-day/{date?}',
+                'fr' => '/{_locale}/grille-ecouter-{codeName}/programmes-du-jour/{date?}',
+                'es' => '/{_locale}/escuchar-{codeName}/programas de día/{date?}',
+                'de' => '/{_locale}/zuhören-{codeName}/tagesprogramme/{date?}',
+                'pt' => '/{_locale}/ouvir-{codeName}/programas-diurnos/{date?}',
+                'it' => '/{_locale}/ascolti-{codeName}/programmi-diurni/{date?}',
+                'pl' => '/{_locale}/streaming-{codeName}/programy-dzienne/{date?}',
+                'el' => '/{_locale}/streaming-{codeName}/προγράμματα-ημέρας/{date?}',
+                'ro' => '/{_locale}/streaming-{codeName}/programe-de-zi/{date?}',
+                'ar' => '/{_locale}/البث-{codeName}/برامج-اليوم/{date?}'
             ],
             name: 'radio',
             defaults: [
@@ -279,6 +343,67 @@ class DefaultController extends AbstractBaseController
             $request,
             $date
         );
+    }
+
+    /**
+     * @throws \Exception
+     */
+    #[
+        Route(
+            path: [
+                'en' => '/{_locale}/schedule-streaming-{codeName}/{date?}',
+                'fr' => '/{_locale}/grille-ecouter-{codeName}/{date?}',
+                'es' => '/{_locale}/escuchar-{codeName}/{date?}',
+                'de' => '/{_locale}/zuhören-{codeName}/{date?}',
+                'pt' => '/{_locale}/ouvir-{codeName}/{date?}',
+                'it' => '/{_locale}/ascolti-{codeName}/{date?}',
+                'pl' => '/{_locale}/streaming-{codeName}/{date?}',
+                'el' => '/{_locale}/streaming-{codeName}/{date?}',
+                'ro' => '/{_locale}/streaming-{codeName}/{date?}',
+                'ar' => '/{_locale}/البث-{codeName}/{date?}'
+            ],
+            name: 'radio_legacy',
+        )
+    ]
+    public function radioLegacy(
+        string $codeName,
+        EntityManagerInterface $em,
+        ScheduleManager $scheduleManager,
+        Host $host,
+        RouterInterface $router,
+        Request $request,
+        \DateTime $date=null
+    ): Response
+    {
+        // we moved from this to the current url to maybe help Google choose the right canonical url
+
+        // redirect to progradio if not (for seo)
+        if ($host->isProgRadio($request) === false) {
+            $router->getContext()->setHost('www.' . Host::DATA['progradio']['domain']);
+
+            $routeParams = [
+                '_locale' => $request->getLocale(),
+                'codeName' => $codeName
+            ];
+
+            if ($date !== null) {
+                $routeParams['date'] = $date->format('Y-m-d');
+            }
+
+            $redirectUrl = $router->generate('radio', $routeParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
+        $routeParams = [
+            '_locale' => $request->getLocale(),
+            'codeName' => $codeName
+        ];
+
+        if ($date !== null) {
+            $routeParams['date'] = $date->format('Y-m-d');
+        }
+        return $this->redirectToRoute('radio', $routeParams, 301);
     }
 
     #[
