@@ -151,8 +151,8 @@ class SiteController extends AbstractController
      */
     #[
         Route('/sitemap.{_format}',
-            stateless: true,
-            requirements: ['_format' => "xml"]
+            requirements: ['_format' => "xml"],
+            stateless: true
         )
     ]
     public function sitemap(Host $host, RouterInterface $router, Request $request, EntityManagerInterface $em): Response

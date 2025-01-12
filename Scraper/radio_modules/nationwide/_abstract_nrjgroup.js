@@ -12,11 +12,19 @@ const format = (dateObj, name) => {
     const startDateTime = moment.tz(curr.datetime_raw_start, 'YYYY-MM-DDTHH:mm:ss', 'Europe/Paris');
     const endDateTime = moment.tz(curr.datetime_raw_end, 'YYYY-MM-DDTHH:mm:ss', 'Europe/Paris');
 
-    // if (previous day is sunday we need to sub 7 days)
-    if (dateObj.day() === 1 && startDateTime.day() !== dateObj.day()) {
+    if (startDateTime.isAfter(dateObj, 'day')) {
       startDateTime.subtract(7, 'days');
+    }
+
+    if (endDateTime.isAfter(dateObj, 'day')) {
       endDateTime.subtract(7, 'days');
     }
+
+    // if (previous day is sunday we need to sub 7 days)
+    // if (dateObj.day() === 1 && startDateTime.day() !== dateObj.day()) {
+    //   startDateTime.subtract(7, 'days');
+    //   endDateTime.subtract(7, 'days');
+    // }
     // keep only relevant time from previous day page
 
     // NOTE: there is a bug in the page, all datetimes on it have the day date even if next day,
@@ -120,7 +128,7 @@ const fetchAll = (url, name, dateObj) => {
   const previousDay = moment(dateObj);
   previousDay.subtract(1, 'days');
 
-  return fetch(url, name, dateObj)
+  return fetch(url, name, previousDay)
       .then(() => {
         return fetch(url, name, dateObj);
       });

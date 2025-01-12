@@ -287,7 +287,7 @@ export const messages = {
           all_countries: 'All countries',
           favorites: 'Favorites',
           last: 'People are listening to...',
-          history: 'My hsitory',
+          history: 'My history',
         },
         close: 'Back',
         country: 'Country',
