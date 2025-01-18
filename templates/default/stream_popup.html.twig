@@ -26,6 +26,7 @@
 {% block head_supp %}
     {{ parent() }}
     <meta name="thumbnail" content="{{ asset(self.picture(stream)) }}">
+    <meta name="robots" content="noindex">
 {% endblock %}
 
 {% block javascripts %}

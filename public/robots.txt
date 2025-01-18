@@ -6,6 +6,8 @@ User-agent: *
 Crawl-delay: 10
 
 Disallow: /index.php/
+Disallow: /*/streams/suggestion/*
+Disallow: /*/stream-popup/*
 
 User-agent: Bytespider
 Disallow: /
