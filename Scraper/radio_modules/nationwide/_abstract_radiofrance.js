@@ -53,7 +53,8 @@ const format = async (dateObj, name) => {
           newEntry.description = scrapedData[name][scrapedData[name][scrapedData[name][index].expression].title];
         }
 
-        if (scrapedData[name][scrapedData[name][scrapedData[name][scrapedData[name][index].expression].visual].src]) {
+        if (scrapedData[name][scrapedData[name][scrapedData[name][index].expression].visual]
+          && scrapedData[name][scrapedData[name][scrapedData[name][scrapedData[name][index].expression].visual].src]) {
           newEntry.img = scrapedData[name][scrapedData[name][scrapedData[name][scrapedData[name][index].expression].visual].src];
         }
 
