@@ -32,6 +32,9 @@ export const dateTimeFormats = {
   },
   ro: {
     date_title: { year: 'numeric', month: 'long', day: 'numeric' }
+  },
+  hu: {
+    date_title: { year: 'numeric', month: 'long', day: 'numeric' }
   }
 };
 
@@ -1452,6 +1455,148 @@ export const messages = {
         home: {
           enabled: 'Pagina a fost activată ca pagină de pornire.',
           disabled: 'Pagina a fost eliminată ca pagină de pornire.'
+        }
+      }
+    },
+  },
+  hu: {
+    message: {
+      consent: {
+        accept: 'Igen',
+        allow: 'Személyre szabott hirdetések preferálása?',
+        deny: 'Nem',
+        disclaimer: '(Nem adjuk el felhasználóink adatait)'
+      },
+      loading: 'Betöltés...',
+      generic: {
+        delete: 'Törlés',
+        error: 'Hiba történt.'
+      },
+      now_page: {
+        back: '← Vissza a teljes műsortervhez',
+        title: 'Most a rádióban'
+      },
+      params_page: {
+        automatic: 'Automatikus',
+        automatic_help: 'A kapcsolat típusa alapján (ADSL, optikai, 4G...) és sávszélesség szerint.',
+        deactivated: 'Kikapcsolva',
+        description: 'A stream elején lévő hirdetések és betöltési idő csökkentése érdekében a lejátszó folytathatja az előző adás lejátszását néhány percig, amikor rádiót vált vagy szünetet tart.',
+        duration_10: '10 percig',
+        duration_30: '30 percig',
+        no_support: 'A böngésző nem támogatja az automatikus érzékelést.',
+        save: 'Mentés',
+        sub_title: 'Egyidejű stream lejátszások',
+        title: 'Lejátszó beállítások',
+        two_flux: 'Két egyidejű stream',
+        updated: 'Beállítások frissítve'
+      },
+      player: {
+        autoplay_error: 'A böngésző nem engedélyezi az automatikus lejátszást. Kérjük, kattintson ismét a "Hallgatás" gombra',
+        play_error: 'Lejátszási hiba',
+        placeholder: 'Kattintson egy logóra a lejátszáshoz',
+        previous: '{radio} újrahallgatása',
+        save_song: 'Zeneszám mentése ({song})',
+        song_saved: 'A zeneszám mentésre került.',
+        favorites: {
+          add: 'Hozzáadás a kedvencekhez',
+          remove: 'Eltávolítás a kedvencekből'
+        },
+        timer: {
+          cancelled: 'Időzítő törölve',
+          end_in: 'Időzítő lejár 0 perc múlva | Időzítő lejár {minutes} perc múlva | Időzítő lejár {minutes} perc múlva',
+          finish: 'Lejátszás leállítva (időzítő)',
+          modal: {
+            abrv: 'p',
+            cancel: 'Időzítő törlése',
+            close: 'Bezárás',
+            length: 'Időtartam',
+            placeholder: 'Percek',
+            quick: 'Gyors választás',
+            set: 'Időzítő indítása',
+            title: 'Időzítő',
+            x_minutes: '{minutes} perc',
+            x_hours: '{hours} óra'
+          },
+          set: 'Időzítő 0 percre állítva | Időzítő {minutes} percre állítva | Időzítő {minutes} percre állítva',
+          title: 'Időzítő',
+          tooltip: 'Kattintson ide az időzítő aktiválásához'
+        },
+        video: {
+          title: 'Videó lejátszó'
+        },
+      },
+      radio_page: {
+        back: '← Vissza a teljes műsortervhez',
+        current: '↓ Ugrás a jelenlegi műsorhoz',
+        no_schedule: 'Műsorok nem elérhetőek.',
+        play: '{radio} hallgatása',
+        stop: '{radio} leállítása',
+        title: '{radio} műsorai és streamelése',
+        webradios: 'Webrrádiók'
+      },
+      schedule: {
+        no_schedule: 'Műsorok nem elérhetőek :(',
+        no_radio: 'Nincs rádió ebben a kategóriában',
+        no_radio_favorites: 'Nincsenek kedvenc rádióállomásai',
+        preroll_filter: 'Rádiók indítási hirdetéssel',
+        title: 'Minden rádiócsatorna, minden műsor és online hallgatás',
+        today: 'Ma',
+        tomorrow: 'Holnap',
+        tooltip: 'Több rádió itt',
+        radio_list: {
+          page: 'Műsorok oldala',
+          pick_region_title: 'Régió választása',
+          region: {
+            modal: {
+              close: 'Bezárás',
+            }
+          }
+        }
+      },
+      songs_page: {
+        buy: 'Vásárlás',
+        buy_amazon: 'Amazon',
+        find: 'Keresés',
+        find_deezer: 'Deezer',
+        find_spotify: 'Spotify',
+        find_youtube: 'Youtube',
+        no_songs: 'Nincsenek mentett zeneszámok.',
+        title: 'Mentett zeneszámok',
+      },
+      streaming: {
+        categories: {
+          all_countries: 'Minden ország',
+          favorites: 'Kedvencek',
+          last: 'Emberek hallgatják...',
+          history: 'Saját előzmények'
+        },
+        close: 'Vissza',
+        country: 'Ország',
+        country_search_no_result: 'Nem találhatók országok',
+        listeners_title: 'Hallgatók',
+        listeners: 'Jelenleg nincs hallgató. | Jelenleg egy hallgató. | Jelenleg {how_many} hallgató.',
+        more: 'Több megtekintése',
+        no_results: 'Nincs rádió',
+        play: '{radio} hallgatása',
+        playing: 'Zeneszám',
+        random: 'Véletlenszerű rádió lejátszása',
+        search_placeholder: 'Keresés név, stílus, tartalom alapján...',
+        stop: 'Leállítás',
+        sort: {
+          name: 'ABC sorrendben',
+          popularity: 'Népszerűség alapján',
+          random: 'Véletlenszerű sorrendben',
+          last: 'Utolsó hallgatás alapján (világ)',
+          user_last: 'Utolsó hallgatás alapján (saját)'
+        },
+        suggest: 'Módosítási javaslat',
+        title: 'Világ rádióinak streamelése',
+        website: 'Weboldal'
+      },
+      toast: {
+        home: {
+          enabled: 'Az oldal beállítva kezdőlapként.',
+          disabled: 'Az oldal eltávolítva kezdőlapként.'
         }
       }
     },

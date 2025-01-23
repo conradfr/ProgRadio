@@ -1,0 +1,32 @@
+general:
+    hello: Kedves Felhasználó,
+
+signature:
+    regards: Üdvözlettel,
+
+signup:
+    subject: '%name% - Regisztráció'
+    welcome: Üdvözöljük!
+    text_1: Ön mostantól regisztrálva van a %link% oldalon
+    text2: Ha korábban were rádió- vagy stream kedvencei, azok mostantól a fiókjában mentésre kerültek.
+
+reset:
+    subject: '%name% - Jelszó visszaállítása'
+    header: Jelszó visszaállítása
+    text_1: Jelszó-visszaállítási kérelem érkezett a %url% oldalon
+    text_2: "A jelszó frissítéséhez kattintson az alábbi linkre (24 óráig érvényes): %link%"
+    text_3: Ha nem Ön kezdeményezte a kérést, figyelmen kívül hagyhatja ezt az e-mailt.
+
+email_change:
+    subject: "%name% - E-mail cím módosítása"
+    header: E-mail cím módosítása
+    text_1: E-mail cím módosítási kérelem érkezett %new_email% címre a %url% oldalon.
+    text_2: Ezután nem tud bejelentkezni %old_email% azonosítóval.
+    text_3: "Ha nem Ön kezdeményezte a módosítást, törölheti a változtatást az alábbi hivatkozásra kattintva (24 óráig érvényes): %link%"
+    text_4: Javasoljuk, hogy módosítsa jelszavát is.
+
+password_update:
+    subject: '%name% - Jelszó módosítása'
+    header: Jelszó módosítása
+    text_1: Az ehhez az e-mail címhez tartozó fiók jelszava módosításra került a %url% oldalon
+    text_2: "Ha nem Ön kezdeményezte a módosítást, visszavonhatja a változtatást és új jelszót választhat az alábbi hivatkozásra kattintva (24 óráig érvényes): %link%"

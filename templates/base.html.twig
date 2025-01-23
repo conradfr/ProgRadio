@@ -1,5 +1,5 @@
-{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro'] %}
-{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro'} %}
+{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro','hu'] %}
+{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro', 'hu': 'hu'} %}
 {# as this call his made a numerous place and seems expensive we put it as a global here #}
 {% set is_logged = is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 <!DOCTYPE html>
@@ -77,6 +77,8 @@
             {% set canonical_locale = 'it' %}
         {% elseif 'romanian' in stream.language %}
             {% set canonical_locale = 'ro' %}
+        {% elseif 'hungarian' in stream.language %}
+            {% set canonical_locale = 'hu' %}
         {% endif %}
     {% endif %}
 

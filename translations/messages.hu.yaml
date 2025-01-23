@@ -1,0 +1,385 @@
+general:
+    main_description: Online rádióhallgatás és rádióműsorok Magyarországon.
+    main_title_progradio: Minden rádiócsatorna, minden műsor és online hallgatás
+    main_title_radioaddict: Rádióadások streamelése Magyarországon és világszerte!
+
+menu:
+    account: Fiókom
+    admin:
+        dashboard: Irányítópult
+        listening: Hallgatottság
+        overloading: Stream Túlterhelés
+        playing_errors: Stream Hibák
+        check: Stream Ellenőrzés
+        shares: Piaci részesedés
+        suggestions: Stream Javaslatok
+        easyadmin: Egyszerű Adminisztráció
+        actions: Adminisztrációs Műveletek
+    all: Minden rádió
+    app: Android Alkalmazás
+    contact: Kapcsolat
+    faq: Gyakori kérdések
+
+    favorites: Kedvenceim
+    favorites_menu:
+        all: Minden ország
+        be: Belgium
+        ch: Svájc
+        fr: Franciaország
+        us: Egyesült Államok
+        mx: Mexikó
+        co: Kolumbia
+        ar: Argentína
+        pe: Peru
+        de: Németország
+        at: Ausztria
+        es: Spanyolország
+        pt: Portugália
+        br: Brazília
+        ca: Kanada
+        au: Ausztrália
+        nz: Új-Zéland
+        gb: Nagy-Britannia
+        ie: Írország
+        it: Olaszország
+        lu: Luxemburg
+        mc: Monaco
+        sm: San Marino
+        mt: Málta
+        va: Vatikán
+        pl: Lengyelország
+        gr: Görögország
+        dz: Algéria
+        ma: Marokkó
+        tn: Tunézia
+
+    songs: Mentett Zeneszámok
+
+    home:
+        enable: Beállítás kezdőlapnak
+        disable: Egyéni kezdőlap törlése
+    logout: Kijelentkezés
+    menu: Menü
+    mode:
+        dark: Sötét mód
+        light: Világos mód
+    now: Most
+    params: Beállítások
+    plus: Több
+    schedule: Műsorterv
+    signon: Bejelentkezés
+    signup: Fiók létrehozása
+    streaming: Minden rádió
+    timer: Időzítő
+    title: Menü
+
+page:
+    contact:
+        title: 'Kapcsolat'
+        email: 'E-mail'
+        message: 'Üzenet *'
+        name: 'Név *'
+        send: 'Küldés'
+        sent: 'Az Ön üzenete sikeresen elküldve.'
+        add_radio_1: Szeretném hozzáadni a (web)rádiónkat, hogyan tehető ez meg?
+        add_radio_2: 'Két lehetőség áll rendelkezésre:'
+        add_radio_3: 1/ Hozzon létre egy fiókot és adja hozzá rádióját a felhasználói felületen.
+        add_radio_4: '2/ Használja a Radio-Browser API-t. A rádió hozzáadásához <a target="_blank" href="https://www.radio-browser.info/#/add">kattintson ide</a>.'
+
+    faq:
+        title: 'Gyakran Ismételt Kérdések'
+        page_title: 'GYIK - Rádióműsorok Magyarországon'
+        page_description: 'Kérdések a Programmes-Radio.com oldalról'
+
+    forgotten_password:
+        error: <strong>Hiba történt.</strong><br>Ha a jelszó-helyreállítási link elavult, kérjük, ismételje meg az eljárást
+        click_here: kattintson ide
+        done_title: Jelszó visszaállítása
+        done: '<strong>A jelszó frissítésre került.</strong><br>Bejelentkezhet %link%ide kattintva%link_end%.'
+        page_title: Elfelejtett jelszó
+        success: Ha található fiók a(z) <strong>%email%</strong> email címmel, egy üzenet lett elküldve a jelszó visszaállítási linkkel.
+        submit: Küldés
+
+    login:
+        forgotten_password: Elfelejtette jelszavát?
+        page_title: Bejelentkezés
+
+    now:
+        back: '← Vissza a műsortervre'
+        no_schedule: <strong>Hoppá...</strong> nem áll rendelkezésre műsorterv.
+        page_description: 'Mit hallgasson most?'
+        page_title: 'Jelenlegi rádióműsorok'
+        title: 'Most a rádióban'
+
+    radio:
+        advanced: Használja a fejlett lejátszót<br>(webrádió, aktuális zeneszámok...)'
+        back: '← Vissza az összes rádió műsortervéhez'
+        current: ↓ Ugrás a jelenlegi műsorhoz
+        description: 'A %radio% rádióadó műsorai & online hallgatás'
+        goto_today: Mai műsorok megtekintése
+        goto_schedule: Műsorterv megtekintése
+        more_radios: 'Több rádió'
+        no_schedule: 'Műsorok nem elérhetőek.'
+        not_today: Ön egy másik nap műsorát tekinti meg
+        play: '%radio% hallgatása'
+        stop: '%radio% leállítása'
+        summary: 'Leírás'
+        title: '%radio% hallgatása élőben - Műsorok %date%-n'
+        website: 'Weboldal'
+
+    registered:
+        page_title: Fiók létrehozása
+        alert_1: A fiók sikeresen létrehozva!
+        alert_2: Ha korábban voltak mentett rádió- és stream-kedvencei, azok automatikusan hozzáadásra kerültek a fiókjához.
+        what_now_question: Mit szeretne most tenni?
+        what_now_choice1: Belépés a fiókba
+        what_now_choice2: Rádióműsorok megtekintése
+        what_now_choice3: Rádióadások streamelése
+
+    stream:
+        country: Ország
+        description: 'Hallgassa %radio%-t élőben és ingyen'
+        disabled: 'Ez a rádióadó inaktívnak tűnik.'
+        discover: Fedezzen fel több rádiót, keressen ország és zenei stílus alapján...
+        errors: 'Lejátszási hibák lettek jelentve ehhez a rádióhoz.'
+        find: Keresés
+        find_amazon: Keresés Amazonon
+        find_deezer: Keresés Deezeren
+        find_spotify: Keresés Spotifyn
+        find_youtube: Keresés YouTube-on
+        listeners: Hallgatók
+        play: 'Hallgatás'
+        playing: Zeneszám
+        playing_error: Lejátszási hiba
+        stop: 'Leállítás'
+        suggested: Javasolt rádiók
+        tags: Címkék
+        share: Rádió megosztása
+        title: '%radio% hallgatása élőben'
+        title_country: '%radio% - %country% - Élő hallgatás'
+        website: Weboldal
+        banned: Ez a rádió tiltva van.
+        desc: 'Leírás'
+        tagline: 'Szlogen'
+        updated: 'Frissítve'
+        languages: 'Nyelvek'
+        popup: Egy felugró ablakot kell megnyitni a lejátszáshoz.
+
+        modification:
+            at_least_one: Töltsön ki legalább egy mezőt.
+            comment: Megjegyzés
+            img: Logó URL
+            name: Név
+            radio: Rádió
+            stream_url: Stream URL
+            success: Köszönjük javaslatát. Rögzítésre került és hamarosan felülvizsgálatra kerül.
+            suggest: Módosítás javaslata
+            website: Weboldal
+            submit: Küldés
+
+        submission:
+            my_radios: Saját rádiók
+            no_radios: Nincsenek saját rádiói.
+            title_new: Rádió hozzáadása
+            title_edit: Rádió szerkesztése
+            img: Logó URL
+            name: Név
+            radio: Rádió
+            stream_url: Stream URL
+            slogan: Szlogen
+            description: Leírás
+            success_new: A rádió rögzítésre került, hamarosan elérhető lesz.
+            success_edit: A rádió sikeresen módosítva.
+            success_delete: A rádió sikeresen törölve.
+            add: Rádió hozzáadása
+            edit: Rádió szerkesztése
+            website: Weboldal
+            country: Ország
+            language: Nyelv
+            tags: Címkék (kisbetűvel, vesszővel elválasztva)
+            submit: Küldés
+            delete: Törlés
+            delete_confirm: Biztosan törölni kívánja ezt a rádiót? Ez a művelet nem visszavonható.
+
+    top:
+        page_title: Top rádiók %country%-ban
+        description: 'Hallgassa %country% legjobb rádióit'
+        more: Több top rádió megtekintése %country%-ban
+
+    last:
+        page_title: Legutóbb hallgatott rádiók %country%-ban
+        description: 'Hallgassa %country% legjobb rádióit'
+        more: Több nemrég hallgatott rádió megtekintése %country%-ban
+
+    user:
+        page_title: Fiók létrehozása
+
+    account:
+        prefix: Fiókom
+        menu:
+            email: E-mail
+            password: Jelszó
+            preferences: Beállítások
+            delete: Fiók törlése
+            streams: Saját rádiók
+        email:
+            page_title: E-mail cím módosítása
+            info_1: Ez frissíti a bejelentkezéshez használt e-mail címet.
+            info_2: Megerősítő üzenet kerül elküldésre a régi és az új e-mail címre.
+            success: Az e-mail cím frissítésre került.
+            new_email: 'Új e-mail cím:'
+            new_email_placeholder: pelda@email.com
+            update_btn: Frissítés
+        password:
+            page_title: Jelszó módosítása
+            success: A jelszó frissítésre került.
+            update_btn: Frissítés
+        preferences:
+            page_title: Beállítások
+            update_btn: Frissítés
+            store_history: Lejátszási előzmények megtartása
+            reset_history: Előzmények törlése
+            reset_confirm: Biztosan törölni kívánja az előzményeket?
+            reset_confirmed: Az előzmények törölve lettek.
+        delete:
+            page_title: Fiók törlése
+            warning: Figyelem, ez a művelet nem visszavonható. A kedvencek törlésre kerülnek.
+            confirm: Biztosan törölni kívánja fiókját?
+            delete_btn: Fiók törlése
+        delete_confirm:
+            success: A fiók sikeresen törölve.
+
+boxes:
+    already_account:
+        title: Már van fiókja?
+        content: Kattintson ide a bejelentkezéshez
+
+    no_account:
+        title: Még nincs fiókja?
+        content: Kattintson ide a regisztrációhoz
+
+    why_account:
+        title: Miért regisztráljon?
+        content: "- A fiók lehetővé teszi, hogy hozzáférjen rádió- és stream kedvenceihez bármely böngészőből és alkalmazásból."
+        content2: "- Mentse el a jelenleg hallgatott zeneszámok adatait."
+        content3: "- Tekintse meg előzményeit (opcionális)"
+        content4: "- Kevesebb reklám"
+
+registrationForm:
+    email: 'E-mail'
+    error:
+        captcha: 'Érvénytelen captcha, kérjük próbálja újra.'
+        empty: 'Ez a mező nem lehet üres.'
+        password_min: 'A jelszónak legalább 8 karaktert kell tartalmaznia.'
+        password: 'A jelszavak nem egyeznek.'
+    captcha: 'Írja be az alábbi betűket és számokat'
+    password: 'Jelszó'
+    password_confirm: 'Jelszó megerősítése'
+    submit_create: 'Fiók létrehozása'
+
+connectionForm:
+    already_logged: Ön jelenleg bejelentkezve mint %email%
+    logout: kijelentkezés
+    email: 'E-mail'
+    password: 'Jelszó'
+    remember_me: 'Emlékezzen rám'
+    submit_connect: 'Bejelentkezés'
+
+updatePasswordForm:
+    new: Új jelszó
+    new_confirm: Új jelszó megerősítése
+    error_not_same: A jelszavak nem egyeznek.
+    error_not_empty: Ez a mező nem lehet üres.
+    error_length: A jelszónak legalább 8 karaktert kell tartalmaznia.
+
+footer:
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Portuguesa
+    it: Italiano
+    pl: Polskie
+    el: Ελληνικά
+    ar: عربي
+    ro: Román
+    hu: Magyarok
+
+legal: 'Jogi nyilatkozat'
+
+cookie:
+    accept: Igen
+    allow: Engedélyezi a személyre szabott hirdetéseket?
+    deny: Nem
+    disclaimer: (%name% nem adja el látogatói adatait)
+
+admin:
+    api:
+        flash:
+            success: Művelet befejezve.
+            error: Hiba történt.
+        cache:
+            title: Api - Gyorsítótár
+            menu: Gyorsítótár
+            clear_streams: Stream gyorsítótár ürítése
+
+    dashboard:
+        title: Irányítópult
+        menu:
+            brief: Összefoglaló
+            table: Táblázat
+        table:
+            shows: Műsorok
+            sections: Rovatok
+            stream_abbr: St.
+        accounts:
+            title: Fiókok
+            active: '%number% aktív fiók'
+            email: e-mail
+            created_at: Létrehozva
+            last: (%number% legutóbbi)
+        no_schedule:
+            title: Rádióadók műsor nélkül
+            shows: Műsorok
+            sections: Rovatok
+            all_ok: Minden rádiónak van megjeleníthető műsora.
+        stream_errors:
+            title: Stream hibák
+            error: Hibák a <strong>%number% ellenőrzésnél</strong>
+            link: lien
+            no_errors: Minden adatfolyam működik
+        live_song_errors:
+            title: Jelenlegi címhibák
+            error: Hibák a <strong>%number% ellenőrzésnél</strong>
+            reset_all: Összes visszaállítása
+            link: lien
+            no_errors: Nincs hiba rögzítése
+
+    listening:
+        title: Figyelj
+        today: Ma
+        yesterday: Tegnap
+        this_month: Ebben a hónapban
+        last_month: Múlt hónap
+        ratings: Szavazások
+
+    stream_errors:
+        title: Streams hiba
+        name: Név
+        errors: hibák
+        view: Lásd
+        edit: Szerkesztés
+        reset: Visszaállítás
+        reset_all: Mindent visszaállíthat
+
+    stream_check:
+        title: Ellenőrizze a streameket
+        img: Img
+        stream: Stream
+        website: Weboldal
+        ssl: SSL
+        commit: Commit
+        last_checked: Checked
+        view: Lásd
+        edit: Szerkesztés
+

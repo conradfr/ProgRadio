@@ -103,7 +103,7 @@ config :hackney, use_default_pool: false
 
 config :progradio_api, ProgRadioApiWeb.Gettext,
   default_locale: "en",
-  locales: ~w(fr en es de pt)
+  locales: ~w(fr en es de pt it el pl ar hu)
 
 config :ex_cldr,
   default_locale: "en",

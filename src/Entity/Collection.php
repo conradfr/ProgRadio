@@ -64,6 +64,26 @@ class Collection
     private string $name_ar;
 
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_hu;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_tr;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_dk;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_se;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_ro;
+
+    #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 25)]
     private ?string $shortName = null;
 
@@ -255,4 +275,53 @@ class Collection
         $this->name_ar = $name_ar;
     }
 
+    public function getNameHu(): string
+    {
+        return $this->name_hu;
+    }
+
+    public function setNameHu(string $name_hu): void
+    {
+        $this->name_hu = $name_hu;
+    }
+
+    public function getNameTr(): string
+    {
+        return $this->name_tr;
+    }
+
+    public function setNameTr(string $name_tr): void
+    {
+        $this->name_tr = $name_tr;
+    }
+
+    public function getNameDk(): string
+    {
+        return $this->name_dk;
+    }
+
+    public function setNameDk(string $name_dk): void
+    {
+        $this->name_dk = $name_dk;
+    }
+
+    public function getNameSe(): string
+    {
+        return $this->name_se;
+    }
+
+    public function setNameSe(string $name_se): void
+    {
+        $this->name_se = $name_se;
+    }
+
+    public function getNameRo(): string
+    {
+        return $this->name_ro;
+    }
+
+    public function setNameRo(string $name_ro): void
+    {
+        $this->name_ro = $name_ro;
+    }
 }

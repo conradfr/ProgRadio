@@ -148,6 +148,11 @@ defmodule ProgRadioApi.Radios do
           name_PL: c.name_pl,
           name_EL: c.name_el,
           name_AR: c.name_ar,
+          name_RO: c.name_ar,
+          name_HU: c.name_ar,
+          name_TR: c.name_ar,
+          name_DK: c.name_ar,
+          name_SE: c.name_ar,
           short_name: c.short_name,
           priority: c.priority,
           sort_field: c.sort_field,
@@ -178,7 +183,12 @@ defmodule ProgRadioApi.Radios do
           name_IT: c.name_it,
           name_PL: c.name_pl,
           name_EL: c.name_el,
-          name_AR: c.name_ar
+          name_AR: c.name_ar,
+          name_RO: c.name_ro,
+          name_HU: c.name_hu,
+          name_TR: c.name_tr,
+          name_SE: c.name_se,
+          name_DK: c.name_dk
         },
         order_by: [asc: c.id]
 
