@@ -48,6 +48,8 @@ menu:
         ma: Maroko
         tn: Tunezja
         ro: Rumuński
+        hu: Węgry
+        tr: Türkiye
 
     songs: Zapisane utwory
 
@@ -300,6 +302,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: Informacja prawna
 

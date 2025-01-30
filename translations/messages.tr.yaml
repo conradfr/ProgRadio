@@ -1,0 +1,385 @@
+general:
+    main_description: Fransa'da çevrimiçi radyo dinleme ve radyo programları.
+    main_title_progradio: Tüm radyo programları, yayın akışları ve çevrimiçi dinleme
+    main_title_radioaddict: Fransa'dan ve dünyadan tüm radyoları dinleyin!
+
+menu:
+    account: Hesabım
+    admin:
+        dashboard: Kontrol Paneli
+        listening: Dinlemeler
+        overloading: Yayın Aşırı Yüklemesi
+        playing_errors: Yayın Hataları
+        check: Yayın Kontrolü
+        shares: Pazar Payları
+        suggestions: Yayın Önerileri
+        easyadmin: Kolay Yönetim
+        actions: Yönetici
+    all: Tüm radyolar
+    app: Android Uygulaması
+    contact: İletişim
+    faq: SSS
+
+    favorites: Favorilerim
+    favorites_menu:
+        all: Tüm ülkeler
+        be: Belçika
+        ch: İsviçre
+        fr: Fransa
+        us: Amerika Birleşik Devletleri
+        mx: Meksika
+        co: Kolombiya
+        ar: Arjantin
+        pe: Peru
+        de: Almanya
+        at: Avusturya
+        es: İspanya
+        pt: Portekiz
+        br: Brezilya
+        ca: Kanada
+        au: Avustralya
+        nz: Yeni Zelanda
+        gb: Büyük Britanya
+        ie: İrlanda
+        it: İtalya
+        lu: Lüksemburg
+        mc: Monako
+        sm: San Marino
+        mt: Malta
+        va: Vatikan
+        pl: Polonya
+        gr: Yunanistan
+        dz: Cezayir
+        ma: Fas
+        tn: Tunus
+
+    songs: Kaydedilen Şarkılar
+
+    home:
+        enable: Ana sayfa olarak seç
+        disable: Özelleştirilmiş ana sayfayı kaldır
+    logout: Çıkış Yap
+    menu: Menü
+    mode:
+        dark: Karanlık mod
+        light: Aydınlık mod
+    now: Şu anda
+    params: Ayarlar
+    plus: Daha fazla
+    schedule: Program akışı
+    signon: Giriş yap
+    signup: Hesap oluştur
+    streaming: Tüm radyolar
+    timer: Zamanlayıcı
+    title: Menü
+
+page:
+    contact:
+        title: 'İletişim'
+        email: 'E-posta'
+        message: 'Mesaj *'
+        name: 'İsim *'
+        send: 'Gönder'
+        sent: 'Mesajınız başarıyla gönderildi.'
+        add_radio_1: Radyomu (web radyomu) eklemek istiyorum, nasıl yapabilirim?
+        add_radio_2: 'İki seçeneğiniz var:'
+        add_radio_3: 1/ Bir hesap oluşturun ve radyonuzu kullanıcı alanınıza ekleyin.
+        add_radio_4: 2/ Radio-Browser API'sini kullanın. Radyonuzu eklemek için, <a target="_blank" href="https://www.radio-browser.info/#/add">buraya tıklayın</a>.
+
+    faq:
+        title: 'Sıkça Sorulan Sorular'
+        page_title: SSS - Fransa'daki Radyo Programları
+        page_description: 'Radyo-Programları.com hakkında sorular'
+
+    forgotten_password:
+        error: <strong>Bir hata oluştu.</strong><br>Şifre kurtarma bağlantısı geçersizse lütfen işlemi tekrarlayın
+        click_here: buraya tıklayın
+        done_title: Şifre Sıfırlama
+        done: '<strong>Şifre güncellendi.</strong><br>%link%Buraya tıklayarak%link_end% giriş yapabilirsiniz.'
+        page_title: Şifremi Unuttum
+        success: <strong>%email%</strong> e-posta adresine sahip bir hesap bulunursa, şifre sıfırlama bağlantısı içeren bir mesaj gönderilecektir.
+        submit: Gönder
+
+    login:
+        forgotten_password: Şifremi unuttum?
+        page_title: Giriş
+
+    now:
+        back: '← Program akışına dön'
+        no_schedule: <strong>Üzgünüz...</strong> mevcut program yok.
+        page_description: 'Şu anda ne dinleyebilirim?'
+        page_title: 'Şu anda radyoda'
+        title: 'Şu anda radyoda'
+
+    radio:
+        advanced: Gelişmiş oynatıcıyı kullan<br>(web radyoları, çalan şarkılar...)'
+        back: '← Tüm radyoların program akışına dön'
+        current: ↓ Şu anki programa git
+        description: '%radio% radyosunun programları ve çevrimiçi dinleme'
+        goto_today: Bugünün programlarını gör
+        goto_schedule: Program akışını gör
+        more_radios: 'Daha fazla radyo'
+        no_schedule: 'Program mevcut değil.'
+        not_today: Başka bir günün programlarını görüntülüyorsunuz
+        play: '%radio% dinle'
+        stop: '%radio% durdur'
+        summary: 'Açıklama'
+        title: '%radio% canlı dinle - %date% programları'
+        website: 'Web sitesi'
+
+    registered:
+        page_title: Hesap oluştur
+        alert_1: Hesabınız başarıyla oluşturuldu!
+        alert_2: Favori radyolarınız ve yayınlarınız varsa, bunlar otomatik olarak hesabınıza eklendi.
+        what_now_question: Şimdi ne yapmak istersiniz?
+        what_now_choice1: Hesabıma giriş yap
+        what_now_choice2: Radyo programlarına göz at
+        what_now_choice3: Radyo yayınlarını dinle
+
+    stream:
+        country: Ülke
+        description: '%radio% canlı ve ücretsiz dinle'
+        disabled: 'Bu radyo şu anda aktif değil.'
+        discover: Daha fazla radyo keşfedin, ülkelere ve müzik tarzlarına göre arayın...
+        errors: 'Bu radyo için oynatma hataları bildirildi.'
+        find: Ara
+        find_amazon: Amazon\'da ara
+        find_deezer: Deezer\'da ara
+        find_spotify: Spotify\'da ara
+        find_youtube: Youtube\'da ara
+        listeners: Dinleyiciler
+        play: 'Dinle'
+        playing: Çalan
+        playing_error: Oynatma hatası
+        stop: 'Durdur'
+        suggested: Önerilen radyolar
+        tags: Etiketler
+        share: Radyoyu paylaş
+        title: '%radio% canlı dinle'
+        title_country: '%radio% - %country% - Canlı dinle'
+        website: Web sitesi
+        banned: Bu radyo yasaklanmıştır.
+        desc: 'Açıklama'
+        tagline: 'Slogan'
+        updated: 'Güncellendi'
+        languages: 'Diller'
+        popup: Bu radyoyu çalmak için bir popup penceresi açılmalıdır.
+
+        modification:
+            at_least_one: En az bir alanı doldurun.
+            comment: Yorum
+            img: Logo URL
+            name: İsim
+            radio: Radyo
+            stream_url: Yayın URL
+            success: Önerileriniz için teşekkürler. Kaydedildi ve yakında incelenecek.
+            suggest: Değişiklik öner
+            website: Web sitesi
+            submit: Gönder
+
+        submission:
+            my_radios: Radyolarım
+            no_radios: Radyonuz yok.
+            title_new: Radyo ekle
+            title_edit: Radyo düzenle
+            img: Logo URL
+            name: İsim
+            radio: Radyo
+            stream_url: Yayın URL
+            slogan: Slogan
+            description: Açıklama
+            success_new: Radyonuz başarıyla kaydedildi, yakında kullanıma sunulacak.
+            success_edit: Radyonuz başarıyla güncellendi.
+            success_delete: Radyonuz başarıyla silindi.
+            add: Radyo ekle
+            edit: Radyo düzenle
+            website: Web sitesi
+            country: Ülke
+            language: Dil
+            tags: Etiketler (küçük harfle, virgülle ayrılmış)
+            submit: Gönder
+            delete: Sil
+            delete_confirm: Bu radyoyu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+
+    top:
+        page_title: '%country% en iyi radyoları'
+        description: '%country% en iyi radyolarını dinleyin'
+        more: '%country% daha fazla en iyi radyo gör'
+
+    last:
+        page_title: '%country% son dinlenen radyolar'
+        description: '%country% en iyi radyolarını dinleyin'
+        more: '%country% son dinlenen daha fazla radyo gör'
+
+    user:
+        page_title: Hesap oluştur
+
+    account:
+        prefix: Hesabım
+        menu:
+            email: E-posta
+            password: Şifre
+            preferences: Tercihler
+            delete: Hesap silme
+            streams: Radyolarım
+        email:
+            page_title: E-posta adresimi değiştir
+            info_1: Bu işlem, siteye giriş yapmak için kullanılan e-posta adresini güncelleyecektir.
+            info_2: Eski ve yeni adrese onay gönderilecektir.
+            success: E-posta adresi güncellendi.
+            new_email: 'Yeni e-posta adresi:'
+            new_email_placeholder: ornek@email.com
+            update_btn: Güncelle
+        password:
+            page_title: Şifremi değiştir
+            success: Şifre güncellendi.
+            update_btn: Güncelle
+        preferences:
+            page_title: Tercihler
+            update_btn: Güncelle
+            store_history: Dinleme geçmişini kaydet
+            reset_history: Geçmişimi sil
+            reset_confirm: Geçmişinizi silmek istediğinizden emin misiniz?
+            reset_confirmed: Geçmişiniz silindi.
+        delete:
+            page_title: Hesap silme
+            warning: Dikkat, bu işlem geri alınamaz. Favorileriniz silinecek
+            confirm: Hesabınızı silmek istediğinizden emin misiniz?
+            delete_btn: Hesabımı sil
+        delete_confirm:
+            success: Hesabınız başarıyla silindi.
+
+boxes:
+    already_account:
+        title: Zaten hesabınız var mı?
+        content: Giriş yapmak için buraya tıklayın
+
+    no_account:
+        title: Henüz hesabınız yok mu?
+        content: Kayıt olmak için buraya tıklayın
+
+    why_account:
+        title: Neden kayıt olmalıyım?
+        content: "- Bir hesap, favori radyolarınıza ve yayınlarınıza herhangi bir tarayıcıdan ve uygulamadan erişmenizi sağlar."
+        content2: "- Dinlediğiniz şarkıların başlıklarını kaydedin."
+        content3: "- Geçmişinizi görüntüleyin (isteğe bağlı)"
+        content4: "- Daha az reklam"
+
+registrationForm:
+    email: 'E-posta'
+    error:
+        captcha: 'Geçersiz captcha, lütfen tekrar deneyin.'
+        empty: 'Bu alan boş bırakılamaz.'
+        password_min: 'Şifre en az 8 karakter içermelidir.'
+        password: 'Şifreler eşleşmiyor.'
+    captcha: 'Aşağıdaki harfleri ve rakamları yazın'
+    password: 'Şifre'
+    password_confirm: 'Şifre onayı'
+    submit_create: 'Hesabımı oluştur'
+
+connectionForm:
+    already_logged: Şu anda %email% olarak giriş yaptınız
+    logout: çıkış yap
+    email: 'E-posta'
+    password: 'Şifre'
+    remember_me: 'Beni hatırla'
+    submit_connect: 'Giriş yap'
+
+updatePasswordForm:
+    new: Yeni şifre
+    new_confirm: Yeni şifre onayı
+    error_not_same: Şifreler eşleşmiyor.
+    error_not_empty: Bu alan boş bırakılamaz.
+    error_length: Şifre en az 8 karakter içermelidir.
+
+footer:
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Portuguesa
+    it: Italiano
+    pl: Polskie
+    el: Ελληνικά
+    ar: عربي
+    ro: Român
+    hu: Magyarok
+    tr: Türkçe
+
+legal: 'Yasal bilgiler'
+
+cookie:
+    accept: Evet
+    allow: Kişiselleştirilmiş reklamları kabul ediyor musunuz?
+    deny: Hayır
+    disclaimer: (%name% ziyaretçi verilerini satmaz)
+
+admin:
+    api:
+        flash:
+            success: İşlem tamamlandı.
+            error: Bir hata oluştu.
+        cache:
+            title: Api - Önbellek
+            menu: Önbellek
+            clear_streams: Yayın önbelleğini temizle
+
+    dashboard:
+        title: Kontrol Paneli
+        menu:
+            brief: Özet
+            table: Tablo
+        table:
+            shows: Programlar
+            sections: Bölümler
+            stream_abbr: Yy.
+        accounts:
+            title: Hesaplar
+            active: '%number% aktif hesap'
+            email: e-posta
+            created_at: Oluşturulma
+            last: (son %number%)
+        no_schedule:
+            title: Bugün programı olmayan radyolar
+            shows: Programlar
+            sections: Bölümler
+            all_ok: Tüm radyoların gösterilen programları var.
+        stream_errors:
+            title: Yayın hataları
+            error: <strong>%number%</strong> kontrol için hatalar
+            link: bağlantı
+            no_errors: Tüm yayınlar çalışıyor
+        live_song_errors:
+            title: Çalan şarkı hataları
+            error: <strong>%number%</strong> kontrol için hatalar
+            reset_all: tümünü sıfırla
+            link: bağlantı
+            no_errors: Kaydedilen hata yok
+
+    listening:
+        title: Dinlemeler
+        today: Bugün
+        yesterday: Dün
+        this_month: Bu ay
+        last_month: Geçen ay
+        ratings: Değerlendirmeler
+
+    stream_errors:
+        title: Yayın hataları
+        name: İsim
+        errors: Hatalar
+        view: Görüntüle
+        edit: Düzenle
+        reset: Sıfırla
+        reset_all: Tümünü sıfırla
+
+    stream_check:
+        title: Yayın kontrolü
+        img: Resim
+        stream: Yayın
+        website: Site
+        ssl: SSL
+        commit: Kaydet
+        last_checked: Kontrol edildi
+        view: Görüntüle
+        edit: Düzenle

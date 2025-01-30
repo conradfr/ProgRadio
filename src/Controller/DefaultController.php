@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Intl\Countries;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -92,6 +92,7 @@ class DefaultController extends AbstractBaseController
                 'ro' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/programe-de-zi/{date?}',
                 'hu' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/programok/{date?}',
                 'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/برامج-اليوم/{date?}',
+                'tr' => '/{_locale}/dinlemek-{codeName}-{subRadioCodeName}/programlı/{date?}',
             ],
             name: 'radio_subradio',
             defaults: [
@@ -222,6 +223,7 @@ class DefaultController extends AbstractBaseController
                 'ro' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
                 'hu' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
                 'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/{date?}',
+                'tr' => '/{_locale}/dinlemek-{codeName}-{subRadioCodeName}/{date?}',
             ],
             name: 'radio_subradio_legacy',
         )
@@ -286,7 +288,8 @@ class DefaultController extends AbstractBaseController
                 'el' => '/{_locale}/streaming-{codeName}/προγράμματα-ημέρας/{date?}',
                 'ro' => '/{_locale}/streaming-{codeName}/programe-de-zi/{date?}',
                 'hu' => '/{_locale}/streaming-{codeName}/programok/{date?}',
-                'ar' => '/{_locale}/البث-{codeName}/برامج-اليوم/{date?}'
+                'ar' => '/{_locale}/البث-{codeName}/برامج-اليوم/{date?}',
+                'tr' => '/{_locale}/dinlemek-{codeName}/programlı/{date?}',
             ],
             name: 'radio',
             defaults: [
@@ -364,7 +367,8 @@ class DefaultController extends AbstractBaseController
                 'el' => '/{_locale}/streaming-{codeName}/{date?}',
                 'ro' => '/{_locale}/streaming-{codeName}/{date?}',
                 'hu' => '/{_locale}/streaming-{codeName}/{date?}',
-                'ar' => '/{_locale}/البث-{codeName}/{date?}'
+                'ar' => '/{_locale}/البث-{codeName}/{date?}',
+                'tr' => '/{_locale}/dinlemek-{codeName}/{date?}',
             ],
             name: 'radio_legacy',
         )
@@ -423,7 +427,8 @@ class DefaultController extends AbstractBaseController
                 'el' => '/{_locale}/stream-{shortId}/ακούω-{codename}',
                 'ro' => '/{_locale}/stream-{shortId}/asculta-{codename}',
                 'hu' => '/{_locale}/stream-{shortId}/hallgat-{codename}',
-                'ar' => '/{_locale}/stream-{shortId}/استمع-{codename}'
+                'ar' => '/{_locale}/stream-{shortId}/استمع-{codename}',
+                'tr' => '/{_locale}/stream-{shortId}/dinlemek-{codename}',
             ],
             name: 'streams_one_short',
             defaults: [
@@ -491,7 +496,7 @@ class DefaultController extends AbstractBaseController
             schemes:['http']
         )
     ]
-    public function onePopupShort(Stream $stream, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
+    public function onePopupShort(Stream $stream): Response
     {
         return $this->render('default/stream_popup.html.twig', [
             'stream' => $stream,
@@ -511,7 +516,8 @@ class DefaultController extends AbstractBaseController
                 'el' => '/{_locale}/stream/{id}/ακούω-{codename}',
                 'ro' => '/{_locale}/stream/{id}/asculta-{codename}',
                 'hu' => '/{_locale}/stream/{id}/hallgat-{codename}',
-                'ar' => '/{_locale}/stream/{id}/استمع-{codename}'
+                'ar' => '/{_locale}/stream/{id}/استمع-{codename}',
+                'tr' => '/{_locale}/stream/{id}/dinlemek-{codename}',
             ],
             name: 'streams_one',
             defaults: [
@@ -520,7 +526,7 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    #[Cache(public: true, maxage: 60, mustRevalidate: true)]
+    #[Cache(maxage: 60, public: true, mustRevalidate: true)]
     public function one(Stream $stream, string $codename, RouterInterface $router, Host $host, Request $request): Response
     {
         $shortener = Shortener::make(
@@ -555,14 +561,14 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/{_locale}/top/{countryCode}',
         name: 'streams_top',
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu'],
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'weekly'
         ]
     )
     ]
-    #[Cache(public: true, maxage: ScheduleManager::CACHE_SCHEDULE_TTL, mustRevalidate: true)]
+    #[Cache(maxage: ScheduleManager::CACHE_SCHEDULE_TTL, public: true, mustRevalidate: true)]
     public function top(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
     {
         // redirect non-fr stream seo pages to new host
@@ -592,14 +598,14 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/{_locale}/last/{countryCode}',
         name: 'streams_last',
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu'],
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'daily'
         ]
     )
     ]
-    #[Cache(public: true, maxage: 60, mustRevalidate: true)]
+    #[Cache(maxage: 60, public: true, mustRevalidate: true)]
     public function last(string $countryCode, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
     {
         // redirect non-fr stream seo pages to new host
@@ -827,7 +833,7 @@ class DefaultController extends AbstractBaseController
         Route('/locale-switch/to/{locale}',
             name: 'locale_switch',
             requirements: [
-                'locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu'
+                'locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'
             ]
         )
     ]
@@ -862,10 +868,10 @@ class DefaultController extends AbstractBaseController
     #[
         Route('/',
             name: 'index_radio_addict',
-            priority: 2,
-            host: '{subdomain}.radio-addict.com',
+            requirements: ['subdomain' => 'www|local'],
             defaults: [ 'subdomain' => 'www'],
-            requirements: ['subdomain' => 'www|local']
+            host: '{subdomain}.radio-addict.com',
+            priority: 2
         )
     ]
     public function indexRadioAddict(Host $host, Request $request): Response
@@ -884,13 +890,13 @@ class DefaultController extends AbstractBaseController
     #[
         Route('/{_locale}/',
             name: 'index_radio_addict_locale',
-            priority: 1,
-            host: '{subdomain}.radio-addict.com',
-            defaults: [ 'subdomain' => 'www'],
             requirements: [
                 'subdomain' => 'www|local',
-                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu'
-            ]
+                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'
+            ],
+            defaults: [ 'subdomain' => 'www'],
+            host: '{subdomain}.radio-addict.com',
+            priority: 1
         )
     ]
     public function indexRadioAddictLocale(): Response
@@ -905,12 +911,12 @@ class DefaultController extends AbstractBaseController
     #[
         Route('/{_locale}/',
             name: 'app',
+            requirements: [
+                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'
+            ],
             defaults: [
                 'priority' => '1.0',
                 'changefreq' => 'daily'
-            ],
-            requirements: [
-                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu'
             ]
         )
     ]

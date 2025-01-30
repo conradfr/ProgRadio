@@ -52,6 +52,8 @@ menu:
         dz: Algéria
         ma: Marokkó
         tn: Tunézia
+        hu: Magyarország
+        tr: Türkiye
 
     songs: Mentett Zeneszámok
 
@@ -304,6 +306,7 @@ footer:
     ar: عربي
     ro: Román
     hu: Magyarok
+    tr: Türkçe
 
 legal: 'Jogi nyilatkozat'
 

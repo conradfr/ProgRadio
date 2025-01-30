@@ -50,6 +50,8 @@ menu:
         ma: Marokko
         tn: Tunesien
         ro: Rumänisch
+        hu: Ungarn
+        tr: Türkiye
 
     songs: Gespeicherte Songs
 
@@ -301,6 +303,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: Rechtlicher Hinweis
 

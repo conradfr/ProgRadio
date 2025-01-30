@@ -1,0 +1,32 @@
+general:
+    hello: Merhaba,
+
+signature:
+    regards: Saygılarımızla,
+
+signup:
+    subject: '%name% - Kayıt'
+    welcome: Hoş geldiniz!
+    text_1: Artık %link% sitesine kayıtlısınız
+    text2: Favori radyolarınız veya yayınlarınız varsa, bunlar artık hesabınıza kaydedildi.
+
+reset:
+    subject: '%name% - Şifre Sıfırlama'
+    header: Şifre Sıfırlama
+    text_1: '%url% adresinde bir şifre sıfırlama talebi oluşturuldu'
+    text_2: 'Şifrenizi güncellemek için bu bağlantıya tıklayın (24 saat geçerli): %link%'
+    text_3: Bu talebi siz oluşturmadıysanız, bu e-postayı görmezden gelebilirsiniz.
+
+email_change:
+    subject: "%name% - E-posta Adresi Değişikliği"
+    header: E-posta Adresi Değişikliği
+    text_1: '%url% adresinde %new_email% için bir e-posta değişikliği talebi oluşturuldu.'
+    text_2: Artık %old_email% kimliği ile giriş yapamazsınız.
+    text_3: "Bu değişikliği siz yapmadıysanız, bu bağlantıya tıklayarak değişikliği iptal edebilirsiniz (24 saat geçerli): %link%"
+    text_4: Ayrıca şifrenizi değiştirmenizi de öneririz.
+
+password_update:
+    subject: '%name% - Şifre Değişikliği'
+    header: Şifre Değişikliği
+    text_1: Bu e-posta adresine bağlı hesabın şifresi %url% adresinde değiştirildi
+    text_2: "Bu değişikliği siz yapmadıysanız, bu bağlantıya tıklayarak değişikliği iptal edebilir ve yeni bir şifre belirleyebilirsiniz (24 saat geçerli): %link%"

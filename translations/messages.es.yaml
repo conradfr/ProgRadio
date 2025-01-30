@@ -50,6 +50,8 @@ menu:
         ma: Marrueco
         tn: Túnez
         ro: Rumano
+        hu: Hungría
+        tr: Türkiye
 
     songs: Canciones Guardadas
 
@@ -302,6 +304,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: 'Notas legales'
 

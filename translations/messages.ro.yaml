@@ -49,6 +49,8 @@ menu:
         dz: Algeria
         ma: Morocco
         tn: Tunisia
+        hu: Ungaria
+        tr: Türkiye
 
     songs: Titluri salvate
 
@@ -301,6 +303,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: 'Notificări legale'
 

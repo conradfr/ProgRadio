@@ -52,6 +52,8 @@ menu:
         ma: Morocco
         tn: Tunisia
         ro: Romania
+        hu: Hungary
+        tr: Turkey
 
     songs: Saved Songs
 
@@ -304,6 +306,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: Legal notice
 

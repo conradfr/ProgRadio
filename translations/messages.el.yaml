@@ -50,6 +50,8 @@ menu:
         ma: Μαρόκο
         tn: Τυνησία
         ro: Ρουμάνικα
+        hu: Ουγγαρία
+        tr: Türkiye
 
     songs: Αποθηκευμένα τραγούδια
 
@@ -302,6 +304,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: Νομική ειδοποίηση
 

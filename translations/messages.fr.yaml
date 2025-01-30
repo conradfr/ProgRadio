@@ -52,6 +52,8 @@ menu:
         dz: Algérie
         ma: Maroc
         tn: Tunisie
+        hu: Hongrie
+        tr: Turquie
 
     songs: Titres Sauvegardés
 
@@ -304,6 +306,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: 'Mentions légales'
 

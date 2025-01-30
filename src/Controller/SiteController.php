@@ -9,7 +9,7 @@ use App\Entity\Contact;
 use App\Entity\Radio;
 use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ use App\Form\ContactType;
 
 class SiteController extends AbstractController
 {
-   final public const LANG = ['fr', 'en', 'es', 'de', 'pt', 'it', 'pl', 'el', 'ar', 'ro'];
+   final public const LANG = ['fr', 'en', 'es', 'de', 'pt', 'it', 'pl', 'el', 'ar', 'ro', 'hu', 'tr'];
 
     #[
         Route('/{_locale}/faq',

@@ -35,6 +35,9 @@ export const dateTimeFormats = {
   },
   hu: {
     date_title: { year: 'numeric', month: 'long', day: 'numeric' }
+  },
+  tr: {
+    date_title: { year: 'numeric', month: 'long', day: 'numeric' }
   }
 };
 
@@ -1601,4 +1604,146 @@ export const messages = {
       }
     },
   },
+  tr: {
+    message: {
+      consent: {
+        accept: 'Evet',
+        allow: 'Kişiselleştirilmiş reklamları tercih eder misiniz?',
+        deny: 'Hayır',
+        disclaimer: '(Kullanıcılarımızın verilerini satmıyoruz)'
+      },
+      loading: 'Yükleniyor ...',
+      generic: {
+        delete: 'Sil',
+        error: 'Bir hata oluştu.'
+      },
+      now_page: {
+        back: '← Program akışına geri dön',
+        title: 'Şu anda radyoda'
+      },
+      params_page: {
+        automatic: 'Otomatik',
+        automatic_help: 'İnternet bağlantı türünüze (ADSL, fiber, 4G ...) ve bant genişliğinize göre.',
+        deactivated: 'Devre dışı',
+        description: 'Yayın başlangıcındaki reklamları ve yükleme sürelerini azaltmak için, radyo değiştirdiğinizde veya yayını duraklatttığınızda oynatıcı önceki yayını birkaç dakika boyunca çalmaya devam edebilir.',
+        duration_10: '10 dakika boyunca',
+        duration_30: '30 dakika boyunca',
+        no_support: 'Tarayıcınız otomatik algılamayı desteklemiyor.',
+        save: 'Kaydet',
+        sub_title: 'Eşzamanlı yayın akışları',
+        title: 'Oynatıcı yapılandırması',
+        two_flux: 'İki eşzamanlı yayın',
+        updated: 'Ayarlar güncellendi'
+      },
+      player: {
+        autoplay_error: 'Tarayıcınız medyanın otomatik oynatılmasına izin vermiyor. Lütfen "Dinle" düğmesine bir kez daha tıklayın',
+        play_error: 'Oynatma hatası',
+        placeholder: 'Yayını başlatmak için bir logoya tıklayın',
+        previous: '{radio} tekrar dinle',
+        save_song: 'Bu şarkıyı kaydet ({song})',
+        song_saved: 'Şarkı kaydedildi.',
+        favorites: {
+          add: 'Favorilere ekle',
+          remove: 'Favorilerden çıkar'
+        },
+        timer: {
+          cancelled: 'Zamanlayıcı iptal edildi',
+          end_in: 'Zamanlayıcı 0 dakika içinde bitecek | Zamanlayıcı {minutes} dakika içinde bitecek | Zamanlayıcı {minutes} dakika içinde bitecek',
+          finish: 'Yayın durduruldu (zamanlayıcı)',
+          modal: {
+            abrv: 'dk',
+            cancel: 'Zamanlayıcıyı iptal et',
+            close: 'Kapat',
+            length: 'Süre',
+            placeholder: 'Dakika',
+            quick: 'Hızlı seçim',
+            set: 'Zamanlayıcıyı başlat',
+            title: 'Zamanlayıcı',
+            x_minutes: '{minutes} dakika',
+            x_hours: '{hours} saat'
+          },
+          set: 'Zamanlayıcı 0 dakika için ayarlandı | Zamanlayıcı {minutes} dakika için ayarlandı | Zamanlayıcı {minutes} dakika için ayarlandı',
+          title: 'Zamanlayıcı',
+          tooltip: 'Zamanlayıcıyı etkinleştirmek için buraya tıklayın'
+        },
+        video: {
+          title: 'Video oynatıcı'
+        }
+      },
+      radio_page: {
+        back: '← Tam program akışına geri dön',
+        current: '↓ Mevcut programa git',
+        no_schedule: 'Program mevcut değil.',
+        play: '{radio} dinle',
+        stop: '{radio} durdur',
+        title: '{radio} programları ve yayını',
+        webradios: 'Web radyoları'
+      },
+      schedule: {
+        no_schedule: 'Program mevcut değil :(',
+        no_radio: 'Bu kategoride radyo yok',
+        no_radio_favorites: 'Favori radyonuz yok',
+        preroll_filter: 'Başlangıçta reklam içeren radyolar',
+        title: 'Tüm radyo programları ve çevrimiçi dinleme',
+        today: 'Bugün',
+        tomorrow: 'Yarın',
+        tooltip: 'Daha fazla radyo burada',
+        radio_list: {
+          page: 'Program sayfası',
+          pick_region_title: 'Bölge seçin',
+          region: {
+            modal: {
+              close: 'Kapat'
+            }
+          }
+        }
+      },
+      songs_page: {
+        buy: 'Satın al',
+        buy_amazon: 'Amazon',
+        find: 'Ara',
+        find_deezer: 'Deezer',
+        find_spotify: 'Spotify',
+        find_youtube: 'Youtube',
+        no_songs: 'Kaydedilmiş şarkınız yok.',
+        title: 'Kaydedilen şarkılar'
+      },
+      streaming: {
+        categories: {
+          all_countries: 'Tüm ülkeler',
+          favorites: 'Favoriler',
+          last: 'İnsanlar dinliyor ...',
+          history: 'Geçmişim'
+        },
+        close: 'Geri',
+        country: 'Ülke',
+        country_search_no_result: 'Ülke bulunamadı',
+        listeners_title: 'Dinleyiciler',
+        listeners: 'Şu anda dinleyici yok. | Şu anda bir dinleyici var. | Şu anda {how_many} dinleyici var.',
+        more: 'Daha fazla göster',
+        no_results: 'Radyo bulunamadı',
+        play: '{radio} dinle',
+        playing: 'Çalan',
+        random: 'Rastgele bir radyo çal',
+        search_placeholder: 'İsim, tarz, içerik ile ara ...',
+        stop: 'Durdur',
+        sort: {
+          name: 'Alfabetik sırayla',
+          popularity: 'Popülerliğe göre',
+          random: 'Rastgele sırayla',
+          last: 'Son dinlenme zamanına göre (dünya)',
+          user_last: 'Son dinlenme zamanına göre (ben)'
+        },
+        suggest: 'Değişiklik öner',
+        title: 'Dünyanın her yerinden radyo yayınları',
+        website: 'Web sitesi'
+      },
+      toast: {
+        home: {
+          enabled: 'Sayfa ana sayfa olarak ayarlandı.',
+          disabled: 'Sayfa ana sayfa olmaktan çıkarıldı.'
+        }
+      }
+    }
+  }
 };

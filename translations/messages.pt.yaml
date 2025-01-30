@@ -50,6 +50,8 @@ menu:
         ma: Marrocos
         tn: Tunisia
         ro: Romena
+        hu: Hungria
+        tr: Türkiye
 
     songs: Músicas salvas
 
@@ -300,6 +302,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: Aviso legal
 

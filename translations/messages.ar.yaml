@@ -50,6 +50,8 @@ menu:
         ma: المغرب
         tn: تونس
         ro: رومانيا
+        hu: هنغاريا
+        tr: Türkiye
 
     songs: العناوين المحفوظة
 
@@ -302,6 +304,7 @@ footer:
     ar: عربي
     ro: Român
     hu: Magyarok
+    tr: Türkçe
 
 legal: 'الإشارات القانونية'
 
