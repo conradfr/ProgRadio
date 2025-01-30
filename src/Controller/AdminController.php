@@ -222,7 +222,10 @@ class AdminController extends AbstractBaseController
             }
 
             if ($streamOverloading->getTags() !== null) {
-                $stream->setTags($streamOverloading->getTags());
+                $tags = $streamOverloading->getTags();
+                $tags = strtolower($tags);
+                $tags = str_replace(', ', ',', $tags);
+                $stream->setTags($tags);
             }
 
             $stream->setEnabled($streamOverloading->getEnabled());
