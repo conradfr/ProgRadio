@@ -91,6 +91,25 @@
                 <div class="text-center mb-3">
                     <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ asset(self.picture(stream)) }}">
                 </div>
+
+                {% set prefLanguage = app.request.preferredLanguage|slice(0, 2) %}
+                {% if prefLanguage in locales and app.request.locale != app.request.preferredLanguage|slice(0, 2) %}
+                    {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': prefLanguage}))|url_encode %}
+                    <div class="position-absolute text-center d-sm-none" style="top: 55px; left: 10px; max-width: 45px;">
+                        <a class="nav-link" href="{{ path('locale_switch', {'locale': prefLanguage }) }}?redirect={{ redirect_url }}">
+                            <img style="width: 16px" class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[prefLanguage] ~ '.svg') }}" alt="{{ "footer.#{prefLanguage}"|trans }}">
+                            <span class="small-9">{{ "global.switch.#{prefLanguage}"|trans }}</span>
+                        </a>
+                    </div>
+
+                    <div class="text-center d-none d-sm-block mt-4">
+                        <a class="nav-link" href="{{ path('locale_switch', {'locale': prefLanguage }) }}?redirect={{ redirect_url }}">
+                            <img style="width: 16px" class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[prefLanguage] ~ '.svg') }}" alt="{{ "footer.#{prefLanguage}"|trans }}">
+                            <br><small>{{ "global.switch.#{prefLanguage}"|trans }}</small>
+                        </a>
+                    </div>
+                {% endif %}
+
             </div>
             {% if stream.radioStream %}
                 <div class="mt-5 text-center w-50 d-none d-sm-block" style="margin:auto">

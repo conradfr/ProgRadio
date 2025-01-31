@@ -23,7 +23,7 @@ module.exports = {
     filename: '[name].js',
   },
   resolve: {
-    extensions: [ '.ts', '.js' ],
+    extensions: ['.ts', '.js'],
     alias: {
       '@': path.resolve(__dirname, '../public/vue'),
     },
@@ -68,7 +68,7 @@ module.exports = {
         },
         exclude: /node_modules/,
       },
-      { test: /\.js$/, loader: "source-map-loader" },
+      { test: /\.js$/, loader: 'source-map-loader' },
       {
         test: /\.s[ac]ss$/i,
         use: [

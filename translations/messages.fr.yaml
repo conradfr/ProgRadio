@@ -3,6 +3,21 @@ general:
     main_title_progradio: Toutes les grilles radio, tous les programmes et écoute en ligne
     main_title_radioaddict: Streaming de toutes les radios en France et dans le monde !
 
+global:
+    switch:
+        es: Ver en español
+        en: View in English
+        fr: Voir en français
+        de: Siehe Deutschland
+        pt: Veja em português
+        it: Vedi in italiano
+        pl: Zobacz polski
+        el: Δείτε στα ελληνικά
+        ar: انظر باللغة العربية
+        ro: Vezi în Roll
+        hu: Lásd Magyarországon
+        tr: Türkçe Bakın
+
 menu:
     account: Mon compte
     admin:
