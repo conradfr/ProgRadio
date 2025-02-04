@@ -7,6 +7,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
   @url "https://www.radiorecord.ru/api/stations/now/"
 
   @genre %{
+    "none" => 15016,
     "ambient" => 42650,
     "beachparty" => 44331,
     "bighits" => 501,
@@ -23,14 +24,19 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
     "elect" => 496,
     "eurodance" => 525,
     "fbass" => 549,
+    "jackin" => 541,
     "goa" => 531,
+    "gold" => 493,
     "groovetribal" => 518,
-    "hbasss" => 551,
+    "hbass" => 551,
     "houseclss" => 505,
     "househits" => 500,
     "hypno" => 543,
+    "jungle" => 521,
     "liquidfunk" => 522,
+    "lofi" => 42532,
     "megamix" => 520,
+    "mix" => 520,
     "mini" => 535,
     "neurofunk" => 507,
     "nudance" => 43926,
@@ -69,7 +75,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
   @impl true
   def get_data(name, _last_data) do
     "song:radiorecord_" <> url = name
-    [genre] = Regex.run(~r/record-([a-z]+)\//, url, capture: :all_but_first)
+    [genre] = Regex.run(~r/record-([a-z]+)\//, url, capture: :all_but_first) || ["none"]
     channel = @genre[genre]
 
     try do
