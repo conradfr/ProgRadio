@@ -120,6 +120,14 @@ defmodule ProgRadioApiWeb.SongChannel do
               opts: [ttl: @cache_ttl]
             )
   defp get_stream_song(code_name) do
+    # if there's a stream_song_id but no stream_song_code_name we use the stream url as code_name
+    [song_id, song_code_name] =
+      if String.contains?(code_name, "_") do
+        String.split(code_name, "_")
+      else
+        [code_name, code_name]
+      end
+
     query =
       from(s in Stream,
         join: ss in StreamSong,
@@ -130,7 +138,7 @@ defmodule ProgRadioApiWeb.SongChannel do
           id: ss.id,
           type: "stream_song"
         },
-        where: s.stream_song_code_name == ^code_name and ss.enabled == true,
+        where: (s.stream_song_code_name == ^code_name or (ss.code_name == ^song_id and s.stream_url == ^song_code_name)) and ss.enabled == true,
         order_by: [desc: s.clicks_last_24h],
         limit: 1
       )

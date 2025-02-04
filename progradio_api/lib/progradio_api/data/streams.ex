@@ -271,10 +271,12 @@ defmodule ProgRadioApi.Streams do
           ),
         radio_stream_code_name:
           fragment(
-            "CASE WHEN(? IS NOT NULL and ? = TRUE) THEN ? ELSE ? END",
-            s.stream_song_code_name,
+            "CASE WHEN(? IS NOT NULL and ? = TRUE) THEN COALESCE(?, CONCAT(?, '_', ?)) ELSE ? END",
+            ss.code_name,
             ss.enabled,
             s.stream_song_code_name,
+            ss.code_name,
+            s.stream_url,
             rs.code_name
           )
       }
