@@ -12,6 +12,8 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
     "beachparty" => 44331,
     "bighits" => 501,
     "breaks" => 544,
+    "cadillac" => 513,
+    "chillouse" => 515,
     "chillout" => 534,
     "chil" => 534,
     "christmas" => 42375,
@@ -19,6 +21,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
     "complextro" => 517,
     "darkside" => 503,
     "deep" => 528,
+    "dream" => 502,
     "dreampop" => 42602,
     "discofunk" => 527,
     "elect" => 496,
@@ -43,6 +46,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
     "organic" => 42715,
     "phonk" => 43174,
     "progr" => 498,
+    "rap" => 511,
     "record" => 15016,
     "reggae" => 43338,
     "remix" => 548,
@@ -87,7 +91,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
       |> Enum.find(fn e -> e["id"] == channel end)
     rescue
       _ ->
-        Logger.error("Data provider - #{name} (radiorecord: data error rescue")
+        Logger.error("Data provider - #{name} (radiorecord): data error rescue")
         :error
     end
   end
