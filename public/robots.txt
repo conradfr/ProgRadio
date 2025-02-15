@@ -9,5 +9,17 @@ Disallow: /index.php/
 Disallow: /*/streams/suggestion/*
 Disallow: /*/stream-popup/*
 
+Disallow: /en/schedule-streaming*
+Disallow: /es/escuchar-*programas*
+Disallow: /de/zuhören-*tagesprogramme*
+Disallow: /pt/ouvir-*programas*
+Disallow: /it/ascolti*programmi*
+Disallow: /pl/streaming-*programy*
+Disallow: /el/streaming-*προγράμματα*
+Disallow: /ro/streaming-*programe*
+Disallow: /hu/streaming-*programok*
+Disallow: /ar/البث*برامج-اليوم*
+Disallow: /tr/dinlemek-*programlı*
+
 User-agent: Bytespider
 Disallow: /
