@@ -40,8 +40,6 @@ defmodule ProgRadioApiWeb.Endpoint do
 
   plug CORSPlug
 
-  #  plug RequestCache.Plug
-
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],

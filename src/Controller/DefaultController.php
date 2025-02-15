@@ -109,7 +109,7 @@ class DefaultController extends AbstractBaseController
         Host $host,
         RouterInterface $router,
         Request $request,
-        ?\DateTime $date): Response
+        ?\DateTime $date = null): Response
     {
         // redirect to progradio if not (for seo)
         if ($host->isProgRadio($request) === false) {
@@ -236,7 +236,7 @@ class DefaultController extends AbstractBaseController
         Host $host,
         RouterInterface $router,
         Request $request,
-        ?\DateTime $date): Response
+        ?\DateTime $date = null): Response
     {
         // we moved from this to the current url to maybe help Google choose the right canonical url
 
@@ -305,7 +305,7 @@ class DefaultController extends AbstractBaseController
         Host $host,
         RouterInterface $router,
         Request $request,
-        ?\DateTime $date
+        ?\DateTime $date = null
     ): Response
     {
         // redirect to progradio if not (for seo)
@@ -380,7 +380,7 @@ class DefaultController extends AbstractBaseController
         Host $host,
         RouterInterface $router,
         Request $request,
-        ?\DateTime $date
+        ?\DateTime $date = null
     ): Response
     {
         // we moved from this to the current url to maybe help Google choose the right canonical url
@@ -920,7 +920,7 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    public function index(?string $collection): Response
+    public function index(?string $collection = null): Response
     {
         return $this->render('default/index.html.twig', []);
     }

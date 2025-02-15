@@ -12,10 +12,6 @@
     <title>{% block title %}{{ getField('title_key', app.request)|trans }}{% endblock %} - {{ getDomainName(app.request) }}</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
 
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
@@ -33,14 +29,13 @@
     </noscript>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" media="print" onload="this.onload=null;this.removeAttribute('media');" fetchpriority="high">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     {% block head_supp %}
     {% endblock %}
 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" id="favicon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="icon" id="favicon" type="image/png" href="{{ asset('favicon.png') }}" />
 
     <link rel="preload" href="{{ asset('build/css/theme.css', 'dynamic') }}" as="style">
 

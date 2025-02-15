@@ -97,10 +97,10 @@ class StreamRepository extends ServiceEntityRepository
     }
 
     public function getStreams(
-        ?int $limit,
-        ?int $offset,
-        ?string $countryOrCategory,
-        ?string $sort,
+        ?int $limit = null,
+        ?int $offset = null,
+        ?string $countryOrCategory = null,
+        ?string $sort = null,
         array $favoritesFromCookies = []
     ): array {
         $user = $this->security->getUser();
@@ -374,8 +374,8 @@ class StreamRepository extends ServiceEntityRepository
     }
 
     public function countStreams(
-        ?string $countryOrCategory,
-        ?string $language,
+        ?string $countryOrCategory = null,
+        ?string $language = null,
         array $favoritesFromCookies = []
     ): int {
         $user = $this->security->getUser();
@@ -427,8 +427,8 @@ class StreamRepository extends ServiceEntityRepository
 
     public function countSearchStreams(
         string $text,
-        ?string $countryOrCategory,
-        ?string $language,
+        ?string $countryOrCategory = null,
+        ?string $language = null,
         array $favoritesFromCookies = []
     ): int {
         $user = $this->security->getUser();

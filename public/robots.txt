@@ -5,7 +5,8 @@ User-agent: *
 # Disallow: /img/radio/
 Crawl-delay: 10
 
-Disallow: /index.php/
+Disallow: /index.php
+Disallow: /index.php*
 Disallow: /*/streams/suggestion/*
 Disallow: /*/stream-popup/*
 
@@ -20,6 +21,8 @@ Disallow: /ro/streaming-*programe*
 Disallow: /hu/streaming-*programok*
 Disallow: /ar/البث*برامج-اليوم*
 Disallow: /tr/dinlemek-*programlı*
+
+Disallow: /locale-switch/to/*
 
 User-agent: Bytespider
 Disallow: /

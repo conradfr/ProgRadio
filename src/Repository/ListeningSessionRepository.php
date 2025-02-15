@@ -94,7 +94,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    protected function addDates(QueryBuilder $qb, \DateTime $startDate, ?\DateTime $endDate): void
+    protected function addDates(QueryBuilder $qb, \DateTime $startDate, ?\DateTime $endDate = null): void
     {
         if ($endDate === null) {
             $qb->where('DATE(AT_TIME_ZONE(AT_TIME_ZONE(ls.dateTimeStart, \'UTC\'), \'Europe/Paris\')) = DATE(:startDate)');

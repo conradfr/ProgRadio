@@ -106,7 +106,7 @@ class ListeningSession
         return $this->stream;
     }
 
-    public function setStream(?Stream $stream): void
+    public function setStream(?Stream $stream = null): void
     {
         $this->stream = $stream;
     }
@@ -116,7 +116,7 @@ class ListeningSession
         return $this->dateTimeStart;
     }
 
-    public function setDateTimeStart(?\DateTime $dateTimeStart): void
+    public function setDateTimeStart(?\DateTime $dateTimeStart = null): void
     {
         $this->dateTimeStart = $dateTimeStart;
     }
@@ -126,7 +126,7 @@ class ListeningSession
         return $this->dateTimeEnd;
     }
 
-    public function setDateTimeEnd(?\DateTime $dateTimeEnd): void
+    public function setDateTimeEnd(?\DateTime $dateTimeEnd = null): void
     {
         $this->dateTimeEnd = $dateTimeEnd;
     }
@@ -136,7 +136,7 @@ class ListeningSession
         return $this->source;
     }
 
-    public function setSource(?string $source): void
+    public function setSource(?string $source = null): void
     {
         $this->source = $source;
     }
@@ -146,7 +146,7 @@ class ListeningSession
         return $this->ipAddress;
     }
 
-    public function setIpAddress(?IP $ip)
+    public function setIpAddress(?IP $ip = null)
     {
         $this->ipAddress = $ip;
     }

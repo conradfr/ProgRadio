@@ -117,7 +117,7 @@ class StreamSuggestion
         return $this->message;
     }
 
-    public function setMessage(?string $message): void
+    public function setMessage(?string $message = null): void
     {
         $this->message = $message;
     }

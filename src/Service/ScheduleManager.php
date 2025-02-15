@@ -59,7 +59,7 @@ class ScheduleManager
         return $this->getDaySchedule($scheduleResource);
     }
 
-    public function getDayScheduleOfRadio(\DateTime $dateTime, string $radioCodeName, ?SubRadio $subRadio): array
+    public function getDayScheduleOfRadio(\DateTime $dateTime, string $radioCodeName, ?SubRadio $subRadio = null): array
     {
         $scheduleResource = new ScheduleResource($dateTime, ScheduleResource::TYPE_RADIO, $radioCodeName, $subRadio);
 

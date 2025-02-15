@@ -16,7 +16,6 @@ defmodule ProgRadioApiWeb.CountryController do
       |> Streams.get_countries()
 
     conn
-    |> RequestCache.store(@cache_ttl)
     |> render("list.json", countries: countries)
   end
 end

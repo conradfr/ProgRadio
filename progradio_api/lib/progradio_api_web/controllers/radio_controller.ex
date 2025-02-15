@@ -11,7 +11,6 @@ defmodule ProgRadioApiWeb.RadioController do
     categories = Radios.list_categories()
 
     conn
-    |> RequestCache.store()
     |> render("index.json", radios: radios, collections: collections, categories: categories)
   end
 

@@ -8,7 +8,6 @@ defmodule ProgRadioApiWeb.ConfigController do
       |> then(fn x -> "https://" <> x end)
 
     conn
-    |> RequestCache.store()
     |> render("index.json", radio_browser_url: server)
   end
 end

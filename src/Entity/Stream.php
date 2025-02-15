@@ -216,7 +216,7 @@ class Stream
         return $this->tags;
     }
 
-    public function setTags(?string $tags): void
+    public function setTags(?string $tags = null): void
     {
         $this->tags = $tags;
     }
@@ -514,7 +514,7 @@ class Stream
         return $this->user;
     }
 
-    public function setUser(?User $user): void
+    public function setUser(?User $user = null): void
     {
         $this->user = $user;
     }

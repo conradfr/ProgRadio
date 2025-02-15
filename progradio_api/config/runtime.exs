@@ -130,7 +130,4 @@ if config_env() == :prod do
   config :progradio_api,
     image_path: System.get_env("MEDIA_PATH"),
     banned_ips: (System.get_env("BAN_IP") || "") |> String.split(",")
-
-  config :request_cache_plug,
-    enabled?: true
 end
