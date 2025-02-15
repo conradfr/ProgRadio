@@ -211,7 +211,7 @@ class UserController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/radios/{id?}', name: 'user_page_streams')]
-    public function submission(Request $request, EntityManagerInterface $em, TranslatorInterface $translator, Stream $stream = null): Response
+    public function submission(Request $request, EntityManagerInterface $em, TranslatorInterface $translator, ?Stream $stream): Response
     {
         $edit = true;
 

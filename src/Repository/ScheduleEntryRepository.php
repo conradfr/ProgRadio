@@ -42,7 +42,7 @@ class ScheduleEntryRepository extends EntityRepository
     /*
      * @todo cleaner hydration
      */
-    public function getTimeSpecificSchedule(\DateTime $dateTime, array $radios=null): array
+    public function getTimeSpecificSchedule(\DateTime $dateTime, ?array $radios): array
     {
         $result = $this->getTimeSpecificSchedulesAndSections($dateTime, $radios);
 
@@ -257,7 +257,7 @@ EOT;
         return $query->getResult();
     }
 
-    protected function getTimeSpecificSchedulesAndSections(\DateTime $dateTime, array $radios=null): array {
+    protected function getTimeSpecificSchedulesAndSections(\DateTime $dateTime, ?array $radios): array {
         $dateTimeStart = clone $dateTime;
         $dateTimeStart->setTime(0, 0, 0);
         $dateTimeEnd = clone $dateTime;

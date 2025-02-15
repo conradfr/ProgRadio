@@ -102,7 +102,7 @@ class StreamSuggestion
         return $this->tags;
     }
 
-    public function setTags(string $tags=null): void
+    public function setTags(?string $tags): void
     {
         $this->tags = $tags;
     }

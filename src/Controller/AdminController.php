@@ -293,7 +293,7 @@ class AdminController extends AbstractBaseController
         requirements: [
             'field' => 'name|img|streamUrl|website|tags'
         ])]
-    public function streamSuggestionsAction(StreamSuggestion $streamSuggestion = null, ?string $field, EntityManagerInterface $em): Response
+    public function streamSuggestionsAction(?StreamSuggestion $streamSuggestion, ?string $field, EntityManagerInterface $em): Response
     {
         $suggestions = $em->getRepository(StreamSuggestion::class)->getSuggestions();
 
