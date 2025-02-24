@@ -1,15 +1,18 @@
+{% set isProgRadioRequest = isProgRadio(app.request) %}
+{% set isDarkModeRequest = isDarkModeTime(app.request) %}
+{% set domainNameRequest = getDomainName(app.request) %}
 {% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro','hu','tr'] %}
 {% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro', 'hu': 'hu', 'tr': 'tr'} %}
 {# as this call his made a numerous place and seems expensive we put it as a global here #}
 {% set is_logged = is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}"{% if app.request.locale == "ar"%} dir="rtl"{% endif %} class="h-100{% block htmlsupp %}{% endblock %}" {% if isDarkModeTime(app.request) %}data-bs-theme="dark"{% endif %}>
+<html lang="{{ app.request.locale }}"{% if app.request.locale == "ar"%} dir="rtl"{% endif %} class="h-100{% block htmlsupp %}{% endblock %}" {% if isDarkModeRequest %}data-bs-theme="dark"{% endif %}>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}{{ getField('title_key', app.request)|trans }}{% endblock %} - {{ getDomainName(app.request) }}</title>
+    <title>{% block title %}{{ getField('title_key', app.request)|trans }}{% endblock %} - {{ domainNameRequest }}</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}" />
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -49,7 +52,7 @@
         {% endblock %}
     </style>
 
-    {% set canonical_locale = (isProgRadio(app.request) == true) ? 'fr' : 'en' %}
+    {% set canonical_locale = (isProgRadioRequest == true) ? 'fr' : 'en' %}
 
     {% if stream is defined and stream is not null and stream.language is defined and stream.language is not null %}
         {% if 'french' in stream.language or 'francais' in stream.language or 'français' in stream.language %}
@@ -106,9 +109,8 @@
       const apiUrl = '{{ api_url }}';
       const cdnBaseUrl = '{{ cdn_base_url }}';
       const appEnv = '{{ app.environment }}';
-      const isProgRadio = {% if isProgRadio(app.request) == true %}true{% else %}false{% endif%};
+      const isProgRadio = {% if isProgRadioRequest == true %}true{% else %}false{% endif%};
       const popupUrl = '{{ url('streams_one_popup_short', {'stream': '123'}) }}';
-      {# const isAdProtected = {{ isAdProtected(app.request) == true ? 'true' : 'false' }}; #}
       {# const amazon_affiliate_id = '{{ amazon_affiliate_id }}'; #}
 
       {% block javascript_head %}

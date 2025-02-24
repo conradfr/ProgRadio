@@ -6,8 +6,8 @@
 
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" style="direction:ltr/*rtl:ignore*/;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('app') }}{% if isProgRadio(app.request) == true %}schedule{% else %}streaming{% endif %}" onclick="return scrollToCursor();">
-            <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="{{ getDomainName(app.request) }}" class="d-inline-block align-text-top">{{ getDomainName(app.request) }}</a>
+        <a class="navbar-brand" href="{{ path('app') }}{% if isProgRadioRequest == true %}schedule{% else %}streaming{% endif %}" onclick="return scrollToCursor();">
+            <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="{{ domainNameRequest }}" class="d-inline-block align-text-top">{{ domainNameRequest }}</a>
         {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
             <div>
                 <a href="{{ getField('play_store', app.request) }}"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
@@ -24,8 +24,8 @@
 
         {# Dark mode #}
         <div class="d-block d-sm-none">
-            <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeTime(app.request) == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
-            <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeTime(app.request) %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
+            <a title="{{ 'menu.mode.light'|trans }}" class="nav-top-icon nav-link-lightmode{% if isDarkModeRequest == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
+            <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeRequest %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
         </div>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
@@ -34,7 +34,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {# Schedule #}
-                {% if isProgRadio(app.request) == true %}
+                {% if isProgRadioRequest == true %}
                 <li class="nav-item pe-0">
                     <a class="nav-link spa-link" href="{{ path('app') }}schedule" onclick="scrollToCursor(this)" style="padding-right: 0">{{ 'menu.schedule'|trans }}</a>
                 </li>
@@ -68,7 +68,7 @@
                         {{ 'menu.plus'|trans}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarPlusDropdown">
-                        {% if isProgRadio(app.request) == true %}
+                        {% if isProgRadioRequest == true %}
                             <li><a class="dropdown-item spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
                             <li><hr class="dropdown-divider"></li>
                         {% endif %}
@@ -91,7 +91,7 @@
 
                         <li><a class="dropdown-item" href="{{ getField('play_store', app.request) }}"><div class="menu-appstore-icon"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></div>{{ 'menu.app'|trans }}</a></li>
 
-                        {% if isProgRadio(app.request) == true %}
+                        {% if isProgRadioRequest == true %}
                             <li><hr class="dropdown-divider"></li>
 
                             {% for locale in locales %}
@@ -112,16 +112,16 @@
                 </li>
 
                 <li class="nav-item ps-0 pe-1">
-                    <a title="{{ 'menu.mode.light'|trans }}" class="nav-link nav-link-lightmode{% if isDarkModeTime(app.request) == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i>
+                    <a title="{{ 'menu.mode.light'|trans }}" class="nav-link nav-link-lightmode{% if isDarkModeRequest == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i>
                         <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.light'|trans }}</span>
                     </a>
-                    <a title="{{ 'menu.mode.dark'|trans }}" class="nav-link nav-link-darkmode {% if isDarkModeTime(app.request) %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i>
+                    <a title="{{ 'menu.mode.dark'|trans }}" class="nav-link nav-link-darkmode {% if isDarkModeRequest %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i>
                         <span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.dark'|trans }}</span>
                     </a>
                 </li>
 
                 {# Locale #}
-                {% if isProgRadio(app.request) == false %}
+                {% if isProgRadioRequest == false %}
                 <li class="nav-item dropdown ms-1 pe-2 d-none d-sm-block">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img style="margin-top: -2px; margin-right: 2px;" class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[app.request.locale] ~ '.svg') }}" alt="{{ "footer.#{app.request.locale}"|trans }}">

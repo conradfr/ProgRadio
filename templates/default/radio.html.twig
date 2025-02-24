@@ -25,7 +25,7 @@
     <meta property="og:title" content="{{ 'page.radio.title'|trans({'%radio%': sub_radio.name}) }}">
     <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
     <meta property="og:type" content="music.radio_station">
-    <meta property="og:site_name" content="{{ getDomainName(app.request) }}">
+    <meta property="og:site_name" content="{{ domainNameRequest }}">
     <meta property="og:image" content="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
     <meta property="og:image:secure_url" content="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
     <meta property="og:description" content="{{ 'page.radio.description'|trans({'%radio%': radio.name}) }}">

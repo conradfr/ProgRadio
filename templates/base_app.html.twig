@@ -21,23 +21,19 @@ const adsense_tag_horiz_key = '{{ adsense_tag_radio_horiz_key }}';
 const adsense_tag_horiz_fix_key = '{{ adsense_tag_radio_horiz_fix_key }}';
 
 const scrollToCursor = function() {
-  const homePaths = ['/fr/', '/en/', '/es/', '/de/', '/pt/'];
+  const homePaths = ['/fr/', '/en/', '/es/', '/de/', '/pt/', '/it/', '/pl/', '/el/', '/ar/', '/ro/', '/hu/', '/tr/'];
   if (window.location.href.includes('schedule') || (homePaths.indexOf(window.location.pathname) !== -1)) {
     document.getElementById('app').__vue_app__.config.globalProperties.$pinia._s.get('schedule').scrollToCursor();
   }
   return false;
 };
-    {% block static_javascript_head %}
-    {% endblock %}
 {% endblock %}
 
 {% block body %}
 <div class="container-fluid" id="schedule-app">
     <div class="row" style="margin-right: 0 !important; margin-left: 0 !important">
         <div class="col-md-12" style="padding-right: 0 !important; padding-left: 0 !important">
-            <div id="app">
-{#                <router-view></router-view>#}
-            </div>
+            <div id="app"></div>
         </div>
     </div>
 </div>

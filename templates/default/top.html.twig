@@ -6,7 +6,7 @@
 {% block bodyclasssupp %} body-app{% endblock %}
 
 {% block canonical %}
-    {% if isProgRadio(app.request) == false %}
+    {% if isProgRadioRequest == false %}
         {{ parent() }}
     {% endif %}
 {% endblock %}

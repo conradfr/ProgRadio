@@ -38,14 +38,14 @@
     <meta property="og:title" content="{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}">
     <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
     <meta property="og:type" content="music.radio_station">
-    <meta property="og:site_name" content="{{ getDomainName(app.request) }}">
+    <meta property="og:site_name" content="{{ domainNameRequest }}">
     <meta property="og:image" content="{{ asset(self.picture(stream)) }}">
     <meta property="og:description" content="{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}">
     <meta name="thumbnail" content="{{ asset(self.picture(stream)) }}">
 {% endblock %}
 
 {% block canonical %}
-    {% if isProgRadio(app.request) == false %}
+    {% if isProgRadioRequest == false %}
         {{ parent() }}
     {% endif %}
 {% endblock %}

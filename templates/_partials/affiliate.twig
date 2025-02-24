@@ -1,4 +1,4 @@
-{#{% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false or isProgRadio(app.request) == false  %}#}
+{#{% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false or isProgRadioRequest == false  %}#}
 {#<div class="mt-5 text-center affiliate-frame" style="margin:auto">#}
 {#    {% set affiliate = oneAffiliateLink(app.request.locale) %}#}
 {#    {% if affiliate is defined and affiliate is not empty %}#}

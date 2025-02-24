@@ -51,12 +51,12 @@
             <li class="nav-item">
                 <div class="d-flex flex-row align-items-center mt-3">
                     <div class="align-self-center pe-3 offmenu-item-icon">
-                        <a title="{{ 'menu.mode.light'|trans }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="py-1 nav-link nav-link-lightmode{% if isDarkModeTime(app.request) == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
-                        <a title="{{ 'menu.mode.dark'|trans }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="py-1 nav-link nav-link-darkmode{% if isDarkModeTime(app.request) %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
+                        <a title="{{ 'menu.mode.light'|trans }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="py-1 nav-link nav-link-lightmode{% if isDarkModeRequest == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-brightness-high-fill"></i></a>
+                        <a title="{{ 'menu.mode.dark'|trans }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="py-1 nav-link nav-link-darkmode{% if isDarkModeRequest %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
                     </div>
                     <div class="align-self-center">
-                        <a title="{{ 'menu.mode.light'|trans }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="py-1 nav-link nav-link-lightmode{% if isDarkModeTime(app.request) == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.light'|trans }}</span></a>
-                        <a title="{{ 'menu.mode.dark'|trans }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="py-1 nav-link nav-link-darkmode{% if isDarkModeTime(app.request) %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.dark'|trans }}</span></a>
+                        <a title="{{ 'menu.mode.light'|trans }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="py-1 nav-link nav-link-lightmode{% if isDarkModeRequest == false %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.light'|trans }}</span></a>
+                        <a title="{{ 'menu.mode.dark'|trans }}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="py-1 nav-link nav-link-darkmode{% if isDarkModeRequest %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><span class="d-inline d-sm-none">&nbsp;{{ 'menu.mode.dark'|trans }}</span></a>
                     </div>
                 </div>
             </li>
@@ -111,7 +111,7 @@
             <li class="nav-item offcanvas-divider mb-1"></li>
 
             <!-- schedule -->
-            {% if isProgRadio(app.request) == true %}
+            {% if isProgRadioRequest == true %}
                 <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
                     <div class="d-flex flex-row align-items-center mb-1 disabled">
                         <div class="align-self-center pe-3 offmenu-item-icon">
@@ -148,7 +148,7 @@
             <li class="nav-item offcanvas-divider mt-3 mb-1"></li>
 
             <!-- more -->
-            {% if isProgRadio(app.request) == true %}
+            {% if isProgRadioRequest == true %}
                 <li class="nav-item"><a class="nav-link pb-1 spa-link" href="{{ path('now') }}">{{ 'menu.now'|trans }}</a></li>
             {% endif %}
             <li class="nav-item"><a class="nav-link py-1" href="{{ path('faq') }}">{{ 'menu.faq'|trans }}</a></li>
