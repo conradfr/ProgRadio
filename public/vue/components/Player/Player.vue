@@ -41,7 +41,8 @@
         </div>
       </div>
       <OutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId"
-        v-on:changeOutput="(newDeviceId: string) => changeDevice(newDeviceId)"/>
+        v-on:changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
+      />
       <player-info v-if="radio"></player-info>
       <Transition name="timer-fade" mode="out-in">
         <div v-if="userLogged && currentSong" class="player-add-song">
@@ -742,16 +743,28 @@ export default defineComponent({
         this.videoModalInstance.hide();
       }
     },
-    changeDevice(deviceId: string) {
+    changeDevice(deviceId: string, stopIfPlaying: boolean = false) {
+      if (stopIfPlaying) {
+        this.stopDispatch();
+      }
+
       this.deviceId = deviceId;
       // Browser have inconsistent default behavior for default output.
       deviceId = deviceId && deviceId !== '' && deviceId !== 'default' ? deviceId : '';
       if (this.audio.player1 && this.audio.player1.element) {
+        if (stopIfPlaying) {
+          (this.audio.player1.element as HTMLMediaElement).pause();
+        }
+
         // @ts-ignore
         (this.audio.player1.element as HTMLMediaElement).setSinkId(deviceId);
       }
 
       if (this.audio.player2 && this.audio.player2.element) {
+        if (stopIfPlaying) {
+          (this.audio.player2.element as HTMLMediaElement).pause();
+        }
+
         // @ts-ignore
         (this.audio.player2.element as HTMLMediaElement).setSinkId(deviceId);
       }

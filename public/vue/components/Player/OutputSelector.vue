@@ -5,22 +5,34 @@
         data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false"
         :title="$t('message.player.output.choose')">
       </div>
-      <div class="dropdown-menu p-2" style="min-width: 300px;">
+      <div class="dropdown-menu p-2">
         <div v-if="!displaySelector">
           <a class="dropdown-item cursor-pointer" v-on:click="listDevices()">
             <small>{{ $t('message.player.output.choose') }}</small>
           </a>
         </div>
         <div v-if="displaySelector">
-          <label class="form-check-label mb-2 ps-2" for="output-select">
-            <small>{{ $t('message.player.output.choose_label') }}</small>
-          </label>
-          <select class="form-select form-select-sm select-output" name="output-select" aria-label="Audio output select"
-            v-model="selectedDevice" placeholder="Select device">
-            <option v-for="choice in deviceOptions" :key="choice.deviceId" :value="choice.deviceId">
-              {{ choice.label }}
-            </option>
-          </select>
+          <div class="mb-4">
+            <label class="form-check-label mb-2 ps-2" for="output-select">
+              <small>{{ $t('message.player.output.choose_label') }}</small>
+            </label>
+            <select class="form-select form-select-sm select-output" name="output-select"
+              aria-label="Audio output select" v-model="selectedDevice">
+              <option v-for="choice in deviceOptions" :key="choice.deviceId" :value="choice.deviceId">
+                {{ choice.label }}
+              </option>
+            </select>
+          </div>
+          <div class="px-3">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="stopPlayOutputChange"
+                v-model="stopPlayOutputChange">
+              <label class="form-check-label ps-2" for="stopPlayOutputChange">
+                <small>{{ $t('message.player.output.pause_if_disconnect') }}</small>
+              </label>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
@@ -49,10 +61,12 @@ export default defineComponent({
   /* eslint-disable indent */
   data(): {
     displaySelector: boolean,
+    stopPlayOutputChange: boolean,
     deviceOptions: Array<MediaDeviceInfo>,
   } {
     return {
       displaySelector: false,
+      stopPlayOutputChange: false,
       deviceOptions: [],
     };
   },
@@ -80,7 +94,6 @@ export default defineComponent({
   computed: {
     selectedDevice: {
       get() {
-        console.log(this.selectedDeviceId);
         return this.selectedDeviceId;
       },
       set(value: string) {
@@ -99,32 +112,35 @@ export default defineComponent({
     async deviceChanged() {
       await this.listDevices();
 
-      console.log('heee');
-      console.log(this.selectedDeviceId);
       if (!this.selectedDeviceId || this.selectedDeviceId === '') {
         return;
       }
 
-      console.log('hooo');
-      console.log(this.deviceOptions.map(device => device.deviceId));
-
       // if current device does not exist anymore we fall back to default
       if (!this.deviceOptions.map(device => device.deviceId).includes(this.selectedDeviceId)) {
-        console.log('not here');
-        this.$emit('changeOutput', 'default');
+        this.$emit('changeOutput', 'default', this.stopPlayOutputChange);
       }
     },
-    async listDevices() {
+    async listDevices(forceAsk: boolean = false): Promise<void> {
       const options: Array<any> = [];
       try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-        const devices = await navigator.mediaDevices.enumerateDevices();
+        // @ts-ignore
+        const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+        if (forceAsk || permissionStatus.state !== 'granted') {
+          await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
 
+        const devices = await navigator.mediaDevices.enumerateDevices();
         devices.forEach((device) => {
           if (device.kind === 'audiooutput') {
             options.push(device);
           }
         });
+
+        // Firefox requiring the prompt?
+        if (options.length < 2 && !forceAsk) {
+          return this.listDevices(true);
+        }
 
         this.displaySelector = true;
       } catch (error) {

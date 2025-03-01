@@ -88,7 +88,7 @@ export const messages = {
           choose: 'Sélectionner une sortie audio',
           choose_label: 'Choisir une sortie audio:',
           save: 'Sauvegarder comme sortie par défaut',
-          pause_if_disconnect: 'Arrêter la lecture si la sortie est déconectée',
+          pause_if_disconnect: 'Arrêter la lecture si la sortie est déconnectée',
         },
         timer: {
           cancelled: 'Le minuteur a été annulé',
