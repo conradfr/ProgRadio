@@ -40,6 +40,8 @@
           <span class="visually-hidden">Loading....</span>
         </div>
       </div>
+      <OutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId"
+        v-on:changeOutput="(newDeviceId: string) => changeDevice(newDeviceId)"/>
       <player-info v-if="radio"></player-info>
       <Transition name="timer-fade" mode="out-in">
         <div v-if="userLogged && currentSong" class="player-add-song">
@@ -62,7 +64,7 @@
       </div>
       <timer></timer>
     </div>
-    <volume-fader v-if="displayVolume"/>
+    <VolumeFader v-if="displayVolume"/>
     <audio id="videoplayer1" playsinline="playsinline" style="display:none"></audio>
     <audio id="videoplayer2" playsinline="playsinline" style="display:none"></audio>
   </div>
@@ -95,6 +97,7 @@ import PlayerInfo from './PlayerInfo.vue';
 import PlayerSaveSong from './PlayerSaveSong.vue';
 import Timer from '../Timer/Timer.vue';
 import VolumeFader from './VolumeFader.vue';
+import OutputSelector from './OutputSelector.vue';
 
 /* we load the hls script dynamically once, reducing initial app load */
 /* eslint-disable arrow-body-style */
@@ -158,18 +161,20 @@ export default defineComponent({
     PlayerInfo,
     PlayerSaveSong,
     Timer,
-    VolumeFader
+    VolumeFader,
+    OutputSelector,
   },
   /* eslint-disable indent */
   data(): {
     PlayerStatus: any,
     audio: PlayerAudio,
     hls: Hls|null,
-    // dash: Dash|null,
     debounce: boolean,
     locale: string,
     videoModalElem: any,
-    videoModalInstance: any
+    videoModalInstance: any,
+    isSafari: boolean,
+    deviceId: string,
   } {
     return {
       PlayerStatus,
@@ -203,10 +208,13 @@ export default defineComponent({
       */
       debounce: false,
       hls: null,
-      // dash: null,
       locale: this.$i18n.locale,
       videoModalElem: null,
       videoModalInstance: null,
+      // currently Safari does not list output devices, only input so we have to exclude the feature to do so
+      isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
+      // this is the default value for Chrome. Firefox is empty string but won't assign to the select anyway
+      deviceId: 'default',
     };
   },
   created() {
@@ -289,8 +297,7 @@ export default defineComponent({
       return this.streamFavorites.indexOf(this.radio.code_name) !== -1;
     },
     favoriteTitle(): string {
-      return (this.radio !== null
-      && this.isFavorite === true
+      return (this.radio !== null && this.isFavorite === true
           ? (this.$i18n as any).tc('message.player.favorites.remove')
           : (this.$i18n as any).tc('message.player.favorites.add'));
     },
@@ -413,6 +420,12 @@ export default defineComponent({
           // @ts-ignore
           if (Hls.isSupported()) {
             this.currentPlayer.element = document.getElementById(this.currentPlayer.elementId);
+
+            // specific output
+            if (this.deviceId && this.deviceId !== '' && this.deviceId !== 'default' && this.currentPlayer.element) {
+              this.currentPlayer.element.setSinkId(this.deviceId);
+            }
+
             // @ts-ignore
             this.currentPlayer.hls = new Hls();
             // bind them together
@@ -465,6 +478,12 @@ export default defineComponent({
       } else if (url.indexOf('.mpd') !== -1 || (options && options.force_mpd)) {
         loadDash().then(() => {
           this.currentPlayer.element = document.getElementById(this.currentPlayer.elementId);
+
+          // specific output
+          if (this.deviceId && this.deviceId !== '' && this.deviceId !== 'default' && this.currentPlayer.element) {
+            this.currentPlayer.element.setSinkId(this.deviceId);
+          }
+
           // @ts-ignore
           this.currentPlayer.dash = dashjs.MediaPlayer().create();
           this.currentPlayer.dash.initialize(this.currentPlayer.element, url, false);
@@ -510,6 +529,11 @@ export default defineComponent({
         this.currentPlayer.element.muted = this.muted;
         this.currentPlayer.element.volume = (this.volume * 0.1);
         startPlayPromise = this.currentPlayer.element.play();
+
+        // specific output
+        if (this.deviceId && this.deviceId !== '' && this.deviceId !== 'default' && this.currentPlayer.element) {
+          this.currentPlayer.element.setSinkId(this.deviceId);
+        }
       }
 
       if (startPlayPromise !== undefined) {
@@ -646,7 +670,6 @@ export default defineComponent({
       }
 
       this.setPlayerStatus(PlayerStatus.Playing);
-
       tooltip.set('player-timer', config.COOKIE_TOOLTIP_TIMER);
     },
     favoriteToggle() {
@@ -718,7 +741,21 @@ export default defineComponent({
       if (this.videoModalInstance) {
         this.videoModalInstance.hide();
       }
-    }
+    },
+    changeDevice(deviceId: string) {
+      this.deviceId = deviceId;
+      // Browser have inconsistent default behavior for default output.
+      deviceId = deviceId && deviceId !== '' && deviceId !== 'default' ? deviceId : '';
+      if (this.audio.player1 && this.audio.player1.element) {
+        // @ts-ignore
+        (this.audio.player1.element as HTMLMediaElement).setSinkId(deviceId);
+      }
+
+      if (this.audio.player2 && this.audio.player2.element) {
+        // @ts-ignore
+        (this.audio.player2.element as HTMLMediaElement).setSinkId(deviceId);
+      }
+    },
   },
   /* eslint-disable operator-linebreak */
   /* eslint-disable object-shorthand */

@@ -1,4 +1,5 @@
 @import "volume";
+@import "output";
 @import "player-modal";
 
 $icon-size: 1.154rem;
@@ -91,6 +92,14 @@ $icon-play-size-hover-sm: 2.462rem;
 
     .player-muted {
       color: $danger;
+    }
+  }
+
+  .player-output {
+    width: 12px;
+
+    i {
+      font-size: 0.692rem;
     }
   }
 

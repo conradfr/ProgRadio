@@ -214,6 +214,11 @@ export const GTAG_ACTION_HOME_SET = 'timer_set';
 export const GTAG_ACTION_HOME_REMOVE = 'timer_quick_set';
 export const GTAG_ACTION_HOME_VALUE = 1;
 
+// output
+
+export const GTAG_ACTION_OUTPUT_CHANGE = 'change_output';
+export const GTAG_ACTION_OUTPUT_VALUE = 1;
+
 // Android
 
 export const ANDROID_SONG_MIN_VERSION = 26;

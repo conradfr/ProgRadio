@@ -84,6 +84,12 @@ export const messages = {
           add: 'Ajouter aux favoris',
           remove: 'Retirer des favoris'
         },
+        output: {
+          choose: 'Sélectionner une sortie audio',
+          choose_label: 'Choisir une sortie audio:',
+          save: 'Sauvegarder comme sortie par défaut',
+          pause_if_disconnect: 'Arrêter la lecture si la sortie est déconectée',
+        },
         timer: {
           cancelled: 'Le minuteur a été annulé',
           end_in: 'Fin du minuteur dans 0 minute | Fin du minuteur dans {minutes} minute | Fin du minuteur dans {minutes} minutes',
@@ -225,6 +231,12 @@ export const messages = {
         favorites: {
           add: 'Add to favorites',
           remove: 'Remove from favorites'
+        },
+        output: {
+          choose: 'Select an audio output',
+          choose_label: 'Choose an audio output:',
+          save: 'Save as default output',
+          pause_if_disconnect: 'Stop playback if output is disconnected'
         },
         timer: {
           cancelled: 'The timer has been cancelled',
@@ -368,6 +380,12 @@ export const messages = {
           add: 'Agregar a los favoritos',
           remove: 'eliminar de los favoritos'
         },
+        output: {
+          choose: 'Seleccionar una salida de audio',
+          choose_label: 'Elegir una salida de audio:',
+          save: 'Guardar como salida predeterminada',
+          pause_if_disconnect: 'Detener la reproducción si la salida está desconectada'
+        },
         timer: {
           cancelled: 'El temporizador ha sido cancelado',
           end_in: 'Fin del temporizador en 0 minuto. | Fin del temporizador en {minutes} minuto. | Fin del temporizador en {minutes} minutos.',
@@ -509,6 +527,12 @@ export const messages = {
         favorites: {
           add: 'Zu den Favoriten hinzufügen',
           remove: 'Aus den Favoriten entfernen'
+        },
+        output: {
+          choose: 'Audioausgang auswählen',
+          choose_label: 'Wählen Sie einen Audioausgang:',
+          save: 'Als Standardausgang speichern',
+          pause_if_disconnect: 'Wiedergabe stoppen, wenn der Ausgang getrennt wird'
         },
         timer: {
           cancelled: 'Der Timer wurde storniert',
@@ -652,6 +676,12 @@ export const messages = {
           add: 'Adicionar aos favoritos',
           remove: 'Remover dos favoritos'
         },
+        output: {
+          choose: 'Selecionar uma saída de áudio',
+          choose_label: 'Escolher uma saída de áudio:',
+          save: 'Salvar como saída padrão',
+          pause_if_disconnect: 'Parar a reprodução se a saída estiver desconectada'
+        },
         timer: {
           cancelled: 'O cronômetro foi cancelado',
           end_in: 'O cronômetro termina em 0 minuto | O cronômetro termina em {minutes} minuto | O cronômetro termina em {minutos} minutos',
@@ -793,6 +823,12 @@ export const messages = {
         favorites: {
           add: 'Aggiungi ai preferiti',
           remove: 'Rimuovi dai preferiti'
+        },
+        output: {
+          choose: "Selezionare un'uscita audio",
+          choose_label: "Scegliere un'uscita audio:",
+          save: 'Salvare come uscita predefinita',
+          pause_if_disconnect: "Interrompere la riproduzione se l'uscita è disconnessa"
         },
         timer: {
           cancelled: 'Il timer è stato annullato',
@@ -936,6 +972,12 @@ export const messages = {
           add: 'Dodaj do ulubionych',
           remove: 'Usuń z ulubiony'
         },
+        output: {
+          choose: 'Wybierz wyjście audio',
+          choose_label: 'Wybierz wyjście audio:',
+          save: 'Zapisz jako domyślne wyjście',
+          pause_if_disconnect: 'Zatrzymaj odtwarzanie, jeśli wyjście jest rozłączone'
+        },
         timer: {
           cancelled: 'Timer został anulowany',
           end_in: 'Timer kończy się w ciągu 0 minut | Timer kończy się w {minutes} minucie | Timer kończy się w {minutes} minutach',
@@ -1078,6 +1120,12 @@ export const messages = {
           add: 'Προσθήκη στα αγαπημένα',
           remove: 'Αφαίρεση από τα αγαπημένα'
         },
+        output: {
+          choose: 'Επιλέξτε έξοδο ήχου',
+          choose_label: 'Επιλέξτε έξοδο ήχου:',
+          save: 'Αποθήκευση ως προεπιλεγμένη έξοδο',
+          pause_if_disconnect: 'Διακοπή αναπαραγωγής εάν η έξοδος αποσυνδεθεί'
+        },
         timer: {
           cancelled: 'Ο χρονοδιακόπτης ακυρώθηκε',
           end_in: 'Ο χρονοδιακόπτης τελειώνει σε 0 λεπτά | Ο χρονοδιακόπτης τελειώνει σε {minutes} λεπτά | Ο χρονοδιακόπτης τελειώνει σε {minutes} λεπτά',
@@ -1219,6 +1267,12 @@ export const messages = {
         favorites: {
           add: 'إضافة إلى المفضلة',
           remove: 'إزالة من المفضلة'
+        },
+        output: {
+          choose: 'اختر مخرج صوتي',
+          choose_label: 'اختر مخرج صوتي:',
+          save: 'حفظ كمخرج افتراضي',
+          pause_if_disconnect: 'إيقاف التشغيل إذا تم فصل المخرج'
         },
         timer: {
           cancelled: 'تم إلغاء جهاز ضبط الوقت',
