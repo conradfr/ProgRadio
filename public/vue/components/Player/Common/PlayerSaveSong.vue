@@ -1,9 +1,11 @@
 <template>
-  <span class="player-add-song-inner"
-       v-on:click="saveSong"
-       :title="$t('message.player.save_song', { song: currentSong })">
-    <i class="bi bi-file-earmark-music"></i>
-  </span>
+  <div class="player-add-song">
+    <span class="player-add-song-inner"
+         v-on:click="saveSong"
+         :title="$t('message.player.save_song', { song: currentSong })">
+      <i class="bi bi-file-earmark-music"></i>
+    </span>
+  </div>
 </template>
 
 <script lang="ts">

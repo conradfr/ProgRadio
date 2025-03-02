@@ -281,27 +281,27 @@
       -webkit-transition: none;
     }
   }
+}
 
-  /* collection switch */
+/* collection switch */
 
-  // Currently not working properly past the initial render
-  // TODO find why
+// Currently not working properly past the initial render
+// TODO find why
 
-  .radio-list-move .radio-list-leave-active, .radio-list-enter-active {
-    .radio-logo-bg {
-      transition: all 0.15s;
-    }
+.radio-list-move .radio-list-leave-active, .radio-list-enter-active {
+  .radio-logo-bg {
+    transition: all 0.15s;
   }
+}
 
-  .radio-list-leave-to, .radio-list-enter-from {
-    .radio-logo-bg {
-      opacity: 0;
-    }
+.radio-list-leave-to, .radio-list-enter-from {
+  .radio-logo-bg {
+    opacity: 0;
   }
+}
 
-  .radio-list-leave-active {
-    position: absolute;
-  }
+.radio-list-leave-active {
+  position: absolute;
 }
 
 .radio-submenu-entry-secondary {

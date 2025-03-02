@@ -26,6 +26,7 @@ $link-color: lighten($primary, 20%);
 
 $background-color: $body-bg;
 $player-background: lighten($primary, 4%);
+$player-background-xl: rgba(32.2626865672, 82.9611940299, 122.1373134328, 0.90);
 
 $navbar-shadow: rgb(8, 69, 116);
 $nav-link-disabled-color: darken($link-color, 15%);
@@ -53,6 +54,8 @@ $fader-primary: #337ab7;
 $fader-primary-top: $fader-primary;
 $fader-primary-bottom: darken($fader-primary, 5%);
 $timer-active: #5eff3b;
+
+$player-background-color-xl: rgba(red($primary), green($primary), blue($primary), 0.90);
 
 $timeline-color: mix(#1c2327, $white, 55%); // lighten($background-color, 45%);
 $timeline-line-color: $primary;

@@ -125,6 +125,7 @@
   --progradio-background-color: #{$background-color};
 
   --progradio-player-background: #{$player-background};
+  --progradio-player-background-xl: #{$player-background-xl};
   --progradio-navbar-shadow: #{$navbar-shadow};
 
   --progradio-offcanvas-divider: #{$offcanvas-divider};
@@ -153,8 +154,6 @@
 
   --progradio-fader-primary-top: #{$fader-primary-top};
   --progradio-fader-primary-bottom: #{$fader-primary-bottom};
-
-  --progradio-timer-active: #{$timer-active};
 
   --progradio-timeline-cursor-color: #{$timeline-cursor-color};
   --progradio-timeline-cursor-color-today: #{$timeline-cursor-color-today};

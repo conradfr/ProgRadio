@@ -1,7 +1,41 @@
 <template>
-  <div class="navbar-player">
-    <div v-if="radio && !prevRadio" class="player-radio-link">
-      <a :href="radioLink()"><i class="bi bi-link-45deg"></i></a>
+  <!-- PLAYER XL -->
+  <Transition name="player">
+  <div v-if="xlPlayer" class="navbar-player navbar-player-xl">
+    <div class="player-radio-expand cursor-pointer" v-on:click="toggleXLPLayer()">
+      <i class="bi bi-arrows-angle-contract"></i>
+    </div>
+    <div class="h-100 d-flex justify-content-between align-items-center">
+      <div class="navbar-player-header d-flex align-items-center">
+        <PlayerImageXL />
+        <PlayerPlayPause v-on:togglePlay="() => togglePlay()" :radio="radio" :playing="playing" />
+        <PlayerInfoXL v-if="radio" />
+        <div v-if="!radio" class="player-name player-name-help">
+          {{ $t('message.player.placeholder') }}
+        </div>
+      </div>
+      <PlayerSongXL v-if="radio && currentSong" />
+      <div class="navbar-player-actions d-flex justify-content-end">
+        <PlayerVolumeXL :muted="muted" v-on:toggleMute="() => toggleMute()" />
+        <Transition name="timer-fade" mode="out-in">
+          <PlayerSaveSong v-if="userLogged && currentSong" />
+        </Transition>
+        <PlayerFavorite v-if="radio" v-on:favoriteToggle="() => favoriteToggle()"
+          :isFavorite="isFavorite" :favoriteTitle="favoriteTitle" />
+        <timer></timer>
+        <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId" :asIcon="true"
+          v-on:changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
+        />
+      </div>
+    </div>
+  </div>
+  </Transition>
+
+  <!-- PLAYER NAVBAR -->
+  <Transition name="player">
+  <div v-if="!xlPlayer" class="navbar-player navbar-player-navbar">
+    <div class="d-none d-md-block player-radio-expand cursor-pointer" v-on:click="toggleXLPLayer()">
+      <i class="bi bi-arrows-angle-expand"></i>
     </div>
     <Transition name="play-prev-fade" mode="out-in">
       <div v-if="prevRadio" class="player-radio-previous"
@@ -10,7 +44,7 @@
         <i class="bi-arrow-left-right"></i>
       </div>
     </Transition>
-    <div class="player-wrap">
+    <div class="h-100 d-flex justify-content-center align-items-center">
       <div class="player-sound player-sound-fader"
            v-if="!externalPlayer"
            v-on:mouseover="volumeFocus(true)"
@@ -24,51 +58,26 @@
             'bi-volume-down-fill': !(muted || focus.icon) && volume <= 4
           }"></i>
       </div>
-      <div class="player-playpause" v-on:click="togglePlay"
-           :class="{ 'player-playpause-disabled': radio === null }">
-        <i
-          v-if="playing !== PlayerStatus.Loading"
-          class="bi"
-          :class="{
-            'bi-play-circle': playing === PlayerStatus.Stopped,
-            'bi-pause-circle': playing !== PlayerStatus.Stopped
-          }"></i>
-        <div
-          v-if="playing === PlayerStatus.Loading"
-          class="spinner-border spinner-border-sm" role="status"
-            style="width: 1em; height: 1em;">
-          <span class="visually-hidden">Loading....</span>
-        </div>
-      </div>
-      <OutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId"
+      <PlayerPlayPause v-on:togglePlay="() => togglePlay()" :radio="radio" :playing="playing" />
+      <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId"
         v-on:changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
       />
-      <player-info v-if="radio"></player-info>
+      <PlayerInfoNavbar v-if="radio" />
       <Transition name="timer-fade" mode="out-in">
-        <div v-if="userLogged && currentSong" class="player-add-song">
-          <player-save-song></player-save-song>
-        </div>
+          <PlayerSaveSong v-if="userLogged && currentSong" />
       </Transition>
       <div v-if="!radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}
       </div>
-      <div class="player-favorite"
-           v-if="radio"
-           v-on:click="favoriteToggle"
-           :title="favoriteTitle"
-           :class="{ 'player-favorite-added': isFavorite }">
-        <i class="bi"
-           :class="{
-        'bi-heart-fill': isFavorite,
-        'bi-heart': !isFavorite
-        }"></i>
-      </div>
+      <PlayerFavorite v-if="radio" v-on:favoriteToggle="() => favoriteToggle()"
+        :isFavorite="isFavorite" :favoriteTitle="favoriteTitle" />
       <timer></timer>
     </div>
-    <VolumeFader v-if="displayVolume"/>
-    <audio id="videoplayer1" playsinline="playsinline" style="display:none"></audio>
-    <audio id="videoplayer2" playsinline="playsinline" style="display:none"></audio>
+    <PlayerVolumeNavbar v-if="displayVolume"/>
   </div>
+  </Transition>
+  <audio id="videoplayer1" playsinline="playsinline" style="display:none"></audio>
+  <audio id="videoplayer2" playsinline="playsinline" style="display:none"></audio>
 </template>
 
 <script lang="ts">
@@ -90,15 +99,24 @@ import * as config from '@/config/config';
 import AndroidApi from '@/api/AndroidApi';
 import PlayerUtils from '@/utils/PlayerUtils';
 import tooltip from '@/utils/tooltip';
+import cookies from '@/utils/cookies';
 import typeUtils from '@/utils/typeUtils';
 // eslint-disable-next-line import/extensions
 import type Hls from '../../../js/hls.js';
 
-import PlayerInfo from './PlayerInfo.vue';
-import PlayerSaveSong from './PlayerSaveSong.vue';
+import PlayerFavorite from './Common/PlayerFavorite.vue';
+import PlayerPlayPause from './Common/PlayerPlayPause.vue';
+import PlayerSaveSong from './Common/PlayerSaveSong.vue';
 import Timer from '../Timer/Timer.vue';
-import VolumeFader from './VolumeFader.vue';
-import OutputSelector from './OutputSelector.vue';
+import PlayerOutputSelector from './Common/PlayerOutputSelector.vue';
+
+import PlayerInfoNavbar from './Navbar/PlayerInfoNavbar.vue';
+import PlayerVolumeNavbar from './Navbar/PlayerVolumeNavbar.vue';
+
+import PlayerImageXL from './XL/PlayerImageXL.vue';
+import PlayerInfoXL from './XL/PlayerInfoXL.vue';
+import PlayerSongXL from './XL/PlayerSongXL.vue';
+import PlayerVolumeXL from './XL/PlayerVolumeXL.vue';
 
 /* we load the hls script dynamically once, reducing initial app load */
 /* eslint-disable arrow-body-style */
@@ -159,11 +177,17 @@ interface PlayerAudio {
 
 export default defineComponent({
   components: {
-    PlayerInfo,
+    PlayerPlayPause,
+    PlayerInfoNavbar,
+    PlayerImageXL,
+    PlayerInfoXL,
+    PlayerSongXL,
+    PlayerVolumeXL,
+    PlayerFavorite,
     PlayerSaveSong,
     Timer,
-    VolumeFader,
-    OutputSelector,
+    PlayerVolumeNavbar,
+    PlayerOutputSelector,
   },
   /* eslint-disable indent */
   data(): {
@@ -174,6 +198,7 @@ export default defineComponent({
     locale: string,
     videoModalElem: any,
     videoModalInstance: any,
+    xlPlayer: boolean,
     isSafari: boolean,
     deviceId: string,
   } {
@@ -212,6 +237,7 @@ export default defineComponent({
       locale: this.$i18n.locale,
       videoModalElem: null,
       videoModalInstance: null,
+      xlPlayer: cookies.get(config.COOKIE_EXPAND_PLAYER, false) === 'true',
       // currently Safari does not list output devices, only input so we have to exclude the feature to do so
       isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
       // this is the default value for Chrome. Firefox is empty string but won't assign to the select anyway
@@ -742,6 +768,16 @@ export default defineComponent({
       if (this.videoModalInstance) {
         this.videoModalInstance.hide();
       }
+    },
+    toggleXLPLayer() {
+      (this as any).$gtag.event(config.GTAG_ACTION_PLAYER_EXPAND, {
+        event_category: config.GTAG_CATEGORY_PLAYER,
+        event_label: this.xlPlayer ? 'reduce' : 'expand',
+        value: config.GTAG_ACTION_PLAYER_EXPAND_VALUE
+      });
+
+      cookies.set(config.COOKIE_EXPAND_PLAYER, !this.xlPlayer);
+      this.xlPlayer = !this.xlPlayer;
     },
     changeDevice(deviceId: string, stopIfPlaying: boolean = false) {
       if (stopIfPlaying) {

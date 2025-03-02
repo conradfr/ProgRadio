@@ -122,10 +122,12 @@ defmodule ProgRadioApiWeb.SongChannel do
   defp get_stream_song(code_name) do
     # if there's a stream_song_id but no stream_song_code_name we use the stream url as code_name
     [song_id, song_code_name] =
-      if String.contains?(code_name, "_") do
-        String.split(code_name, "_")
-      else
-        [code_name, code_name]
+      case Regex.run(~r/^([^_]+)_(.*)$/, code_name) do
+        [_, song_id, song_code_name] ->
+          [song_id, song_code_name]
+
+        _ ->
+          [code_name, code_name]
       end
 
     query =

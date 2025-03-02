@@ -23,9 +23,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../public/build/js'),
     filename: '[name].js',
+    chunkFormat: false
   },
   resolve: {
-    extensions: [ '.ts', '.js' ],
+    extensions: ['.ts', '.js'],
     alias: {
       '@': path.resolve(__dirname, '../public/vue'),
     },

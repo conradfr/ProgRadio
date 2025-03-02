@@ -47,6 +47,7 @@
   --progradio-background-color: #{$background-color};
 
   --progradio-player-background: #{$player-background};
+  --progradio-player-background-xl: #{$player-background-xl};
   --progradio-navbar-shadow: #{$navbar-shadow};
 
   --progradio-offcanvas-divider: #{$offcanvas-divider};
@@ -70,11 +71,9 @@
   --progradio-streams-one-border: #{$streams-one-border};
 
   --progradio-player-color: #{$player-color};
+  --progradio-player-color-muted: #{$gray-300};
   --progradio-player-link-color: #{$player-link-color};
   --progradio-fader-primary: #{$fader-primary};
-
-  --progradio-fader-primary-top: #{$fader-primary-top};
-  --progradio-fader-primary-bottom: #{$fader-primary-bottom};
 
   --progradio-timer-active: #{$timer-active};
 

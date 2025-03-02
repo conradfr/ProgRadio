@@ -60,7 +60,7 @@ import { useUserStore } from '@/stores/userStore';
 import typeUtils from '@/utils/typeUtils';
 import PlayerUtils from '@/utils/PlayerUtils';
 
-import PlayerSaveSong from '../Player/PlayerSaveSong.vue';
+import PlayerSaveSong from '../Player/Common/PlayerSaveSong.vue';
 
 /* eslint-disable no-undef */
 /* eslint-disable camelcase */

@@ -89,6 +89,8 @@ export const usePlayerStore = defineStore('player', {
     song: {},
     listeners: {},
     flux,
+    // volume is 1-10 for legacy reason
+    // TODO update to 0-1
     volume: parseInt(cookies.get(config.COOKIE_VOLUME, config.DEFAULT_VOLUME), 10),
     muted: cookies.get(config.COOKIE_MUTED, 'false') === 'true',
     session: {

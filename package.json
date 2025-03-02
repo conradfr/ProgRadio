@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "@growthbunker/vueflags": "github:razorness/vueflags#master",
-    "@vueform/multiselect": "^2.6.9",
+    "@vueform/multiselect": "2.6.8",
     "@vueuse/core": "~10.9.0",
     "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
-    "browserslist": "^4.24.2",
+    "browserslist": "^4.24.3",
     "caniuse-lite": "^1.0.30001679",
     "cssnano": "^5.1.15",
     "hammerjs": "^2.0.8",
@@ -38,6 +38,7 @@
     "vue-gtag": "^2.0.1",
     "vue-i18n": "^9.14.1",
     "vue-router": "^4.4.3",
+    "vue3-slider": "^1.10.1",
     "vue3-touch-events": "^4.1.8"
   },
   "devDependencies": {

@@ -1,7 +1,11 @@
 <template>
   <div class="player-output d-none d-md-block">
     <div class="dropdown">
-      <div class="dropdown-toggle cursor-pointer" style="margin-top: 4px; margin-left: -1px;"
+      <div v-if="asIcon" class="player-output-action cursor-pointer" :title="$t('message.player.output.choose')"
+           data-bs-auto-close="outside" data-bs-toggle="dropdown">
+        <i class="bi bi-speaker"></i>
+      </div>
+      <div v-if="!asIcon" class="dropdown-toggle cursor-pointer" style="margin-top: 4px; margin-left: -1px;"
         data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false"
         :title="$t('message.player.output.choose')">
       </div>
@@ -57,6 +61,11 @@ export default defineComponent({
       type: String,
       required: false
     },
+    asIcon: {
+      type: Boolean,
+      default: false,
+      required: false
+    }
   },
   /* eslint-disable indent */
   data(): {
