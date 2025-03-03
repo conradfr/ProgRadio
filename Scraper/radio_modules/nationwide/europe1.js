@@ -1,9 +1,12 @@
 const osmosis = require('osmosis');
+const axios = require('axios');
 let moment = require('moment-timezone');
 let util = require('util');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
+const cleanedData = [];
+const prevDateTime = [];
 
 const dayEn = {
   1: 'monday',
@@ -15,83 +18,242 @@ const dayEn = {
   0: 'sunday'
 };
 
-const format = dateObj => {
-  dateObj.tz('Europe/Paris');
-  const cleanedData = scrapedData.reduce(function (prev, entry) {
-    if (!entry['time']) {
-      return prev;
-    }
+const extractSchedule = (html, day) => {
+  try {
+    // console.log('Fetched page content, searching for schedule data...');
 
-    let startDateTime = moment(dateObj);
-    const endDateTime = moment(dateObj);
-
-    let regexp = new RegExp(/([0-9]{2}):([0-9]{2}).*([0-9]{2}):([0-9]{2})/);
-    let matched;
+    // Extract all scripts from the HTML
+    const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
     let match;
+    let scriptCount = 0;
 
-    for (let i = 0; i < entry['time'].length; i++) {
-      if (typeof entry['time'][i] === 'object') {
-        match = entry['time'][i].join('').replace(/(\r\n|\n|\r)/gm, '').trim().match(regexp);
-      } else {
-        match = entry['time'][i].replace(/(\r\n|\n|\r)/gm, '').trim().match(regexp);
-      }
+    while ((match = scriptRegex.exec(html)) !== null) {
+      scriptCount++;
+      const scriptContent = match[1];
 
-      if (match !== null) {
-        matched = true;
-        startDateTime.hour(match[1]);
-        startDateTime.minute(match[2]);
-        startDateTime.second(0);
-        endDateTime.hour(match[3]);
-        endDateTime.minute(match[4]);
-        endDateTime.second(0);
+      // Look for schedule data in this script
+      if (scriptContent.includes('window.schedule') ||
+          scriptContent.includes(day) ||
+          scriptContent.includes('startTime')) {
 
-        break;
-      }
-    }
+        // console.log(`Found potential schedule data in script #${scriptCount}`);
 
-    if (!matched) {
-      return prev;
-    }
+        // Try to find the schedule object using various patterns
 
-    if (startDateTime.hour() > endDateTime.hour()) {
-      endDateTime.add(1, 'days');
-    }
+        // Pattern 1: Look for window.schedule assignment
+        const scheduleAssignRegex = /window\.schedule\s*=\s*({[\s\S]*?});/;
+        const scheduleMatch = scriptContent.match(scheduleAssignRegex);
 
-    delete entry.time;
-    entry.date_time_start = startDateTime.toISOString();
-    entry.date_time_end = endDateTime.toISOString();
+        if (scheduleMatch && scheduleMatch[1]) {
+          // console.log('Found window.schedule assignment');
+          return parseScheduleObject(scheduleMatch[1]);
+        }
 
-    entry.sections = [];
+        // Pattern 2: Look for a structure like in the example
+        // const formatRegex = /{\s*monday\s*:\s*{\s*[0-9]+\s*:/;
+        const formatRegex = new RegExp(`\\{\\s*${day}\\s*:\\s*\\{\\s*[0-9]+\\s*:`, 'g');
+        if (formatRegex.test(scriptContent)) {
+          console.log('Found object structure');
 
-    if (entry.sub && typeof entry.sub === 'object' && typeof entry.sub.length === 'number') {
-      regexp = new RegExp(/([0-9]{2})h([0-9]{2}).*/);
+          // Extract the full object - this is tricky with just regex
+          // Try to find a self-contained object with matching braces
+          let startIndex = scriptContent.search(formatRegex);
+          if (startIndex !== -1) {
+            let braceCount = 0;
+            let endIndex = startIndex;
+            let inString = false;
+            let escapeNext = false;
 
-      entry.sub.forEach(function (element) {
-        if (element.time) {
-          match = element.time.match(regexp);
+            for (let i = startIndex; i < scriptContent.length; i++) {
+              const char = scriptContent[i];
 
-          if (match !== null) {
-            startDateTime = moment(dateObj);
-            startDateTime.hour(match[1]);
-            startDateTime.minute(match[2]);
-            startDateTime.second(0);
+              if (escapeNext) {
+                escapeNext = false;
+                continue;
+              }
 
-            entry.sections.push({
-              'title': element.title,
-              'date_time_start': startDateTime.toISOString(),
-              'presenter': element.presenter,
-              'img': element.img
-            });
+              if (char === '\\') {
+                escapeNext = true;
+                continue;
+              }
+
+              if (char === '"' || char === "'") {
+                inString = !inString;
+                continue;
+              }
+
+              if (!inString) {
+                if (char === '{') braceCount++;
+                if (char === '}') {
+                  braceCount--;
+                  if (braceCount === 0) {
+                    endIndex = i + 1;
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (endIndex > startIndex) {
+              const objectStr = scriptContent.substring(startIndex, endIndex);
+              console.log('Extracted object string, attempting to parse');
+              return parseScheduleObject(objectStr);
+            }
           }
         }
-      });
+      }
     }
 
-    delete entry.sub;
+    console.log(`Searched ${scriptCount} script tags, but couldn't find schedule data`);
+    throw new Error('Could not find schedule data in any script tag');
 
-    prev.push(entry);
-    return prev;
-  }, []);
+  } catch (error) {
+    console.error('Error extracting Europe1 schedule:', error);
+    throw error;
+  }
+}
+
+// Helper function to parse the schedule object string
+const parseScheduleObject = (objectStr) => {
+  console.log('Parsing schedule object string');
+
+  try {
+    // First attempt: direct eval in controlled environment
+    // This is the most likely to work with non-standard JS object literals
+    const scheduleObject = eval(`(${objectStr})`);
+    // console.log('Successfully parsed schedule with eval');
+    return scheduleObject;
+  } catch (evalError) {
+    // console.error('Eval parsing failed:', evalError);
+
+    try {
+      // Second attempt: Clean up the string and try JSON.parse
+      let cleanedStr = objectStr
+          // Quote all unquoted property names
+          .replace(/([{,]\s*)([a-zA-Z0-9_]+)(\s*:)/g, '$1"$2"$3')
+          // Remove trailing commas
+          .replace(/,(\s*[}\]])/g, '$1');
+
+      const scheduleObject = JSON.parse(cleanedStr);
+      // console.log('Successfully parsed schedule as JSON');
+      return scheduleObject;
+    } catch (jsonError) {
+      // console.error('JSON parsing failed:', jsonError);
+
+      // Last attempt: Function constructor as fallback
+      try {
+        const scheduleObject = new Function(`return ${objectStr}`)();
+        // console.log('Successfully parsed schedule with Function constructor');
+        return scheduleObject;
+      } catch (funcError) {
+        // console.error('Function constructor parsing failed:', funcError);
+        throw new Error('All parsing methods failed');
+      }
+    }
+  }
+}
+
+const fetchDescription = async (url) => {
+  let description = null;
+
+  // console.log(`fetching description from https://www.europe1.fr${url}...`);
+
+  await osmosis
+    .get(`https://www.europe1.fr${url}`)
+    .select('.hero-description')
+    .set({
+      'description': 'p.description'
+    })
+    .data(function (listing) {
+      description = listing;
+    })
+    .done(function () {
+
+    });
+
+  return description;
+}
+
+const format = async (dateObj, isPrev) => {
+  dateObj.tz('Europe/Paris');
+  const day = dayEn[dateObj.day()];
+
+  console.log(`formatting ${day}, ${Object.keys(scrapedData[day]).length} entries`);
+
+  if (!scrapedData[day]) {
+    return cleanedData;
+  }
+
+  for (const key in scrapedData[day]) {
+    if (scrapedData[day].hasOwnProperty(key)) {
+      scrapedData[day][key]['title']
+      const regexp = new RegExp(/([0-9]{1,2})[:]([0-9]{2})/);
+      let match = scrapedData[day][key]['startTime'].match(regexp);
+      if (match === null) {
+        continue;
+      }
+
+      const startDateTime = moment(dateObj);
+      startDateTime.hour(match[1]);
+      startDateTime.minute(match[2]);
+      startDateTime.second(0);
+
+      // filter if datetime is after previous one (if isPrev) (it means previous day)
+      if (isPrev) {
+        if (prevDateTime.length === 0) {
+          prevDateTime.push(startDateTime);
+          continue;
+        }
+
+        if (startDateTime.isAfter(prevDateTime[prevDateTime.length - 1])) {
+          prevDateTime.push(startDateTime);
+          continue;
+        }
+
+        startDateTime.add(1, 'day');
+      }
+
+      // filter if datetime is before previous one (it means next day).
+      if (!isPrev && cleanedData.length > 0) {
+        const prevDT = moment(cleanedData[cleanedData.length - 1].date_time_start);
+        if (startDateTime.isBefore(prevDT)) {
+          continue;
+        }
+      }
+
+      const newEntry = {
+        date_time_start: startDateTime.toISOString(),
+        title: scrapedData[day][key]['title'] || null,
+        host: scrapedData[day][key]['animator'] || null,
+        img: scrapedData[day][key]['image'] || null,
+      };
+
+      if (scrapedData[day][key]['uri']) {
+        const description = await fetchDescription(scrapedData[day][key]['uri']);
+        if (description && description.description) {
+          newEntry.description = description.description;
+        }
+      }
+
+      match = scrapedData[day][key]['endTime'].match(regexp);
+
+      if (match) {
+        const endDateTime = moment(dateObj);
+        endDateTime.hour(match[1]);
+        endDateTime.minute(match[2]);
+        endDateTime.second(0);
+
+        // it starts one day and finish the next
+        if (endDateTime.isBefore(startDateTime)) {
+          endDateTime.add(1, 'day');
+        }
+
+        newEntry.date_time_end = endDateTime.toISOString();
+      }
+
+      cleanedData.push(newEntry);
+    }
+  }
 
   return Promise.resolve(cleanedData);
 };
@@ -104,38 +266,13 @@ const fetch = dateObj => {
 
   logger.log('info', `fetching ${url} (${day})`);
 
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .find(`div[data-name="${day}"] > .content-switch > section`)
-      .set({
-        'sub': [
-          osmosis.select('.swiper-wrapper .card-media')
-              .set({
-                'img': 'picture img@src',
-                'time': '.time-range',
-                'title': '.card-media__title a',
-                'presenter': '.card-media__presenter'
-              })
-        ]
-      })
-      .do(
-        osmosis.follow('.card-media__live .card-media__title > a@href')
-          .find('.hero-content')
-          .set({
-            'img': 'picture img@src',
-            'title': '.hero-header h1',
-            'host': '.hero-authors a',
-            'time': ['.tags__no-link span'],
-            'description': '.hero-description p',
-          })
-      )
-      .data(function (listing) {
-        scrapedData.push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
+  return axios.get(url).then((response) => {
+    if (response.data) {
+      const scheduleData = extractSchedule(response.data, day);
+      if (scheduleData) {
+        scrapedData = scheduleData;
+      }
+    }
   });
 };
 
@@ -146,7 +283,11 @@ const fetchAll = dateObj => {
 const getScrap = dateObj => {
   return fetchAll(dateObj)
     .then(() => {
-      return format(dateObj);
+      const previousDay = moment(dateObj);
+      previousDay.subtract(1, 'days');
+
+      format(previousDay, true);
+      return format(dateObj, false);
     });
 };
 
