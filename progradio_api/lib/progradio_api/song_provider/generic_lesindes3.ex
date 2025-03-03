@@ -56,7 +56,8 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes3 do
       _ ->
         %{
           artist: SongProvider.recase(data["title"]["artist"] || nil),
-          title: SongProvider.recase(data["title"]["title"] || nil)
+          title: SongProvider.recase(data["title"]["title"] || nil),
+          cover_url: data["title"]["coverUrl"] || nil
         }
     end
   end

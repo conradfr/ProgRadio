@@ -29,10 +29,10 @@ defmodule ProgRadioApiWeb.AdminController do
     end
   end
 
-  def import_stream_image(conn, %{"stream_id" => stream_id} = _params) when is_binary(stream_id) do
+  def import_stream_image(conn, %{"stream_id" => stream_id} = _params)
+      when is_binary(stream_id) do
     with api_key when api_key != nil <- Map.get(conn.private, :api_key),
          true <- can?(api_key, manage(:admin)) do
-
     else
       _ -> send_error(conn)
     end

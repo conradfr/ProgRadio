@@ -101,12 +101,34 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
         Logger.debug("Data provider - #{name}: data - #{song}")
 
+        cover_art =
+          data
+          |> Map.get("StreamUrl", "")
+          |> then(fn
+            text when is_binary(text) ->
+              Enum.join(for <<c::utf8 <- text>>, do: <<c::utf8>>)
+
+            text when is_list(text) ->
+              to_string(text)
+
+            text ->
+              text
+          end)
+          |> String.trim()
+          |> then(fn x ->
+            case String.ends_with?(x, [".jpg", ".png"]) do
+              true -> x
+              _ -> nil
+            end
+          end)
+
         # we discard empty or suspicious/incomplete entries
         unless is_binary(song) == false or song === "" or song === "-" or
                  String.contains?(song, " - ") === false do
           %{
             artist: song,
-            title: nil
+            title: nil,
+            cover_url: cover_art
           }
         else
           %{}

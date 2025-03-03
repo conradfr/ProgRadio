@@ -86,7 +86,11 @@ defmodule ProgRadioApi.SongProvider.Fip do
             _ -> "https://www.radiofrance.fr/pikapi/images/#{picture_id}/50x50"
           end
 
-        %{artist: artist, title: nil, cover_url: picture}
+        %{
+          artist: artist,
+          title: nil,
+          cover_url: picture
+        }
     end
   end
 end

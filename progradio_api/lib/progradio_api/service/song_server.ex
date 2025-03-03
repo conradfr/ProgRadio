@@ -250,21 +250,21 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
-  @spec update_status(map(), map() | nil) :: any()
+  @spec update_status(map() | nil, map() | nil) :: any()
   defp update_status(song, db_data)
 
-  defp update_status(song, %{:type => "radio_stream"} = db_data) do
-    if song == %{} or db_data == nil or
-         ((song.artist == nil or song.artist == "") and (song.title == nil or song.title == "")) do
+  defp update_status(%{} = song, %{:type => "radio_stream"} = db_data) do
+    if map_size(song) == 0 or db_data == nil or
+      ((Map.get(song, :artist) == nil or song.artist == "") and (Map.get(song, :title) == nil or song.title == "")) do
       RadioStream.update_status(db_data.id, true)
     else
       RadioStream.update_status(db_data.id, false)
     end
   end
 
-  defp update_status(song, %{:type => "stream_song"} = db_data) do
-    if song == %{} or db_data == nil or
-         ((song.artist == nil or song.artist == "") and (song.title == nil or song.title == "")) do
+  defp update_status(%{} = song, %{:type => "stream_song"} = db_data) do
+    if map_size(song) == 0 or db_data == nil or
+      ((Map.get(song, :artist) == nil or song.artist == "") and (Map.get(song, :title) == nil or song.title == "")) do
       StreamSong.update_status(db_data.id, true)
     else
       StreamSong.update_status(db_data.id, false)

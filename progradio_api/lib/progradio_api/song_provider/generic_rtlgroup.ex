@@ -62,9 +62,21 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
                   |> Floki.find("div.title")
                   |> Floki.text()
 
+                cover_url =
+                  try do
+                    content
+                    |> Floki.find("div.cover img")
+                    |> List.first()
+                    |> Floki.attribute("src")
+                    |> Floki.text()
+                  catch
+                    _ -> nil
+                  end
+
                 %{
                   artist: SongProvider.recase(artist) || nil,
-                  title: title || nil
+                  title: title || nil,
+                  cover_url: cover_url || nil
                 }
               else
                 %{}

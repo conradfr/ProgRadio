@@ -66,8 +66,8 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
     "trap" => 552,
     "trop" => 530,
     "uplift" => 504,
-    "vip" =>538,
-    "workout" => 43339,
+    "vip" => 538,
+    "workout" => 43339
   }
 
   @impl true
@@ -119,7 +119,10 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
       %{artist: artist, title: title}
     rescue
       reason ->
-        Logger.error("Data provider - #{name} (radiorecord): task error rescue (#{inspect(reason)})")
+        Logger.error(
+          "Data provider - #{name} (radiorecord): task error rescue (#{inspect(reason)})"
+        )
+
         :error
     catch
       :exit, _ ->
@@ -127,5 +130,4 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
         :error
     end
   end
-
 end

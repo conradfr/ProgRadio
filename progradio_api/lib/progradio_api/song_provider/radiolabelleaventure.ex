@@ -49,7 +49,10 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
       %{artist: Map.get(data, "artist"), title: title}
     rescue
       reason ->
-        Logger.error("Data provider - #{name} (radiolabelleaventure): task error rescue (#{inspect(reason)})")
+        Logger.error(
+          "Data provider - #{name} (radiolabelleaventure): task error rescue (#{inspect(reason)})"
+        )
+
         :error
     catch
       :exit, _ ->
@@ -57,5 +60,4 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
         :error
     end
   end
-
 end
