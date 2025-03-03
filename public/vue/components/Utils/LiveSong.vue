@@ -79,10 +79,12 @@ export default defineComponent({
     ...mapState(usePlayerStore, ['liveSong']),
     liveSongTitle() {
       if (typeUtils.isRadio(this.stream)) {
-        return this.liveSong(this.stream, `${this.stream.code_name}_main`);
+        const liveSongData = this.liveSong(this.stream, `${this.stream.code_name}_main`);
+        return liveSongData && liveSongData[0] ? liveSongData[0] : null;
       }
 
-      return this.liveSong(this.stream, this.stream.radio_stream_code_name);
+      const liveSongData = this.liveSong(this.stream, this.stream.radio_stream_code_name);
+      return liveSongData && liveSongData[0] ? liveSongData[0] : null;
     },
     amazonLink() {
       if (!this.liveSongTitle || this.liveSongTitle === '') {

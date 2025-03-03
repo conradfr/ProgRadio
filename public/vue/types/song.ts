@@ -10,4 +10,5 @@ export interface SongContainer {
 export interface Song {
   artist?: string|null
   title?: string|null
+  cover_url?: string|null
 }

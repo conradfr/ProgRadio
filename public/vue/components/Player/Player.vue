@@ -64,7 +64,7 @@
       />
       <PlayerInfoNavbar v-if="radio" />
       <Transition name="timer-fade" mode="out-in">
-          <PlayerSaveSong v-if="userLogged && currentSong" />
+          <PlayerSaveSong v-if="userLogged && currentSong && currentSong[0]" />
       </Transition>
       <div v-if="!radio" class="player-name player-name-help">
         {{ $t('message.player.placeholder') }}

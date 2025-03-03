@@ -25,11 +25,5 @@ export default defineComponent({
       required: true
     }
   },
-  computed: {
-    // ...mapState(usePlayerStore, ['currentSong']),
-  },
-  methods: {
-
-  }
 });
 </script>

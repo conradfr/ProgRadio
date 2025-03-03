@@ -162,12 +162,13 @@ export default defineComponent({
       }
 
       // current song of playing radio
-      if (this.isCurrent && this.radioPlaying && this.currentSong) {
-        return this.currentSong;
+      if (this.isCurrent && this.radioPlaying && this.currentSong && this.currentSong[0]) {
+        return this.currentSong[0];
       }
 
       // else check if live song of this radio main steam
-      return this.liveSong(this.radio, `${this.radio.code_name}_main`);
+      const liveSongData = this.liveSong(this.radio, `${this.radio.code_name}_main`);
+      return liveSongData && liveSongData[0] ? liveSongData[0] : null;
     },
     isCurrent(): boolean {
       return Interval.fromDateTimes(DateTime.fromISO(this.program.start_at).setZone(TIMEZONE),

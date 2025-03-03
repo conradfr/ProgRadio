@@ -75,7 +75,18 @@ defmodule ProgRadioApi.SongProvider.Fip do
           |> Map.get("now", %{})
           |> Map.get("secondLine", fallback)
 
-        %{artist: artist, title: nil}
+        picture_id =
+          data
+          |> Map.get("now", %{})
+          |> Map.get("cover")
+
+        picture =
+          case picture_id do
+            nil -> nil
+            _ -> "https://www.radiofrance.fr/pikapi/images/#{picture_id}/50x50"
+          end
+
+        %{artist: artist, title: nil, cover_url: picture}
     end
   end
 end

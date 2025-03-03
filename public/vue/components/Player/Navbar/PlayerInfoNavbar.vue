@@ -3,7 +3,7 @@
     <ul :style="infosUlStyle">
       <li>{{ radioName }}</li>
       <li v-if="show">{{ show.title }}</li>
-      <li v-if="currentSong" >{{ currentSong }}</li>
+      <li v-if="currentSongTitle" >{{ currentSongTitle }}</li>
     </ul>
   </div>
 </template>
@@ -31,7 +31,7 @@ export default defineComponent({
         animationCount += 1;
       }
 
-      if (this.currentSong) {
+      if (this.currentSongTitle) {
         animationCount += 1;
       }
 
@@ -63,6 +63,13 @@ export default defineComponent({
       const end = DateTime.fromISO(this.show.end_at).setZone(TIMEZONE).toLocaleString(DateTime.TIME_SIMPLE);
 
       return `${this.show.title} - ${start}-${end}`;
+    },
+    currentSongTitle() {
+      if (!this.currentSong || !this.currentSong[0]) {
+        return null;
+      }
+
+      return this.currentSong[0];
     },
   },
   methods: {

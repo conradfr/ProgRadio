@@ -121,8 +121,8 @@ export default defineComponent({
       if (this.playing === PlayerStatus.Playing && this.playingRadio
           && typeUtils.isRadio(this.playingRadio)) {
         let preTitle = '♫ ';
-        if (this.currentSong) {
-          preTitle += `${this.currentSong} - `;
+        if (this.currentSong && this.currentSong[0]) {
+          preTitle += `${this.currentSong[0]} - `;
         }
 
         if (this.playingShow) {

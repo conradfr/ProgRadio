@@ -234,12 +234,12 @@ $icon-play-size-hover-xl: 2.692rem;
       padding-inline-start: 0;
 
       //animation-name: roll-up-3; !* dynamic *!
-      animation-duration: 8s;
+      animation-duration: 10s;
       animation-iteration-count: infinite;
       animation-timing-function: linear;
 
       --progradio-anim-infos-height1: #{calc(-1 * $player-info-height)};
-      --progradio-anim-infos-height2: calc(-2 * $player-info-height);
+      --progradio-anim-infos-height2: #{calc(-2 * $player-info-height)};
 
       @include media-breakpoint-down(sm) {
         --progradio-anim-infos-height1: #{calc(-1 * $player-info-height - 10px)};

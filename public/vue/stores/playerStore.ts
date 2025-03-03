@@ -120,7 +120,10 @@ export const usePlayerStore = defineStore('player', {
 
       return state.radio.streams[state.radioStreamCodeName].url;
     },
-    liveSong: state => (radio: Radio|Stream, radioStreamCodeName: string|null): string|null => {
+    liveSong: state => (
+      radio: Radio|Stream,
+      radioStreamCodeName: string|null
+    ): [string|null, string|null] | null => {
       if (!radio || (typeUtils.isRadio(state.radio) && !(radio as Radio).streaming_enabled)) {
         return null;
       }
@@ -136,9 +139,15 @@ export const usePlayerStore = defineStore('player', {
         return null;
       }
 
-      return PlayerUtils.formatSong(state.song[channelName].song);
+      const formattedSong = PlayerUtils.formatSong(state.song[channelName].song);
+
+      if (!formattedSong) {
+        return null;
+      }
+
+      return [PlayerUtils.formatSong(state.song[channelName].song), state.song[channelName].song.cover_url || null];
     },
-    currentSong(state): string|null {
+    currentSong(state): [string|null, string|null] | null {
       if (state.radio === null || state.radio === undefined) {
         return null;
       }

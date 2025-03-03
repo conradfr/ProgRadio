@@ -143,8 +143,8 @@ export default defineComponent({
           && this.playingRadio.type === PLAYER_TYPE_STREAM) {
         let preTitle = '♫ ';
 
-        if (this.currentSong) {
-          preTitle += `${this.currentSong} - `;
+        if (this.currentSong && this.currentSong[0]) {
+          preTitle += `${this.currentSong[0]} - `;
         }
 
         preTitle += `${this.playingRadio.name} - `;
