@@ -15,6 +15,14 @@
   .stream-page-live {
     background-color: var(--progradio-live-song-background-color);
     border-radius: 5px;
+
+    .stream-page-live-search {
+      span {
+        @include media-breakpoint-down(sm) {
+          display: none !important;
+        }
+      }
+    }
   }
 
   .stream-one-tags {
@@ -56,5 +64,22 @@
 
   .player-add-song {
 
+  }
+}
+
+.live-song-cover {
+  min-width: 5.769rem;
+  max-width: 8.692rem;
+
+  img {
+    max-width: 7.692rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    width: 6.769rem;
+
+    img {
+      max-width: 5.769rem;
+    }
   }
 }

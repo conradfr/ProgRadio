@@ -488,6 +488,10 @@ $icon-play-size-hover-xl: 2.692rem;
 
   .player-volume-xl {
     width: 150px;
+
+    i:hover {
+      font-size: $icon-size-hover-xl;
+    }
   }
 
   .player-sound {

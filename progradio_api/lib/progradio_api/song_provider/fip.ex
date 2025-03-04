@@ -83,7 +83,7 @@ defmodule ProgRadioApi.SongProvider.Fip do
         picture =
           case picture_id do
             nil -> nil
-            _ -> "https://www.radiofrance.fr/pikapi/images/#{picture_id}/50x50"
+            _ -> "https://www.radiofrance.fr/pikapi/images/#{picture_id}/200x200"
           end
 
         %{

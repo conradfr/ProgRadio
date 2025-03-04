@@ -3,9 +3,8 @@
     <div v-if="radio" class="row">
       <div class="col-sm-2 col-12">
         <div class="radio-page-side">
-          <div class="text-center mb-5">
-            <img :alt="radio.name" class="radio-page-logo"
-                 :src="picture" v-once>
+          <div class="text-center mb-4">
+            <img :alt="radio.name" class="radio-page-logo" :src="picture" v-once>
           </div>
           <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
         </div>

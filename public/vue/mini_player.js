@@ -212,6 +212,7 @@ createApp({
   channels: {},
   playing: PLAYER_STATE_STOPPED,
   song: null,
+  cover: null,
   listeners: null,
   visibilityListeners: {},
   lastUpdated: null,
@@ -456,6 +457,7 @@ createApp({
 
       this.socket.onClose(() => {
         this.song = null;
+        this.cover = null;
         this.listeners = null;
         this.clearSocketTimer();
         setTitle(null);
@@ -517,6 +519,7 @@ createApp({
           this.listeners = null;
         } else {
           this.song = null;
+          this.cover = null;
           setTitle(null);
         }
 
@@ -527,6 +530,7 @@ createApp({
           this.listeners = null;
         } else {
           this.song = null;
+          this.cover = null;
           setTitle(null);
         }
 
@@ -544,6 +548,7 @@ createApp({
 
     this.channels[topic].on('quit', () => {
       this.song = null;
+      this.cover = null;
       this.listeners = null;
       this.channels[topic] = null;
       delete this.channels[topic];
@@ -553,6 +558,7 @@ createApp({
   formatSong(songData) {
     if (!songData === null || !songData.song) {
       this.song = null;
+      this.cover = null;
       return;
     }
 
@@ -574,6 +580,7 @@ createApp({
     }
 
     this.song = song === '' ? null : song;
+    this.cover = songData.song.cover_url ? songData.song.cover_url : null;
   },
   formatListeners(listenersData) {
     if (!listenersData || !listenersData.listeners || !listenersData.listeners === 0) {

@@ -9,7 +9,7 @@
 {% endmacro %}
 
 {% macro stream_code_name(stream) %}
-{% if stream.radioStream.radio.codeName is defined %}{{ stream.radioStream.radio.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
+{% if stream.radioStream.codeName is defined %}{{ stream.radioStream.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
 {% endmacro %}
 
 {% macro stream_url(stream) %}
@@ -151,7 +151,7 @@
                             {{ self.extractYouTubeIdAndProvideiFrame(stream.streamUrl) }}
                         {% else %}
                             <div class="radio-page-streams-one py-1 d-none d-flex align-items-center justify-content-center justify-content-sm-start"
-                                 @vue:mounted="$el.classList.remove('d-none')" v-cloak>
+                                @vue:mounted="$el.classList.remove('d-none')" v-cloak>
                                 <div>
                                     <div
                                         v-if="playing === PLAYER_STATE_STOPPED"
@@ -205,29 +205,35 @@
                         </div>
 
                         <div class="mt-4 py-3 py-sm-4 px-sm-3 stream-page-live" v-if="song !== null || listeners !== null" v-cloak>
-                            <div class="mb-3" v-if="song !== null">
-                                <div>
-                                    <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
-                                    {% verbatim %}♫ {{ song }}{% endverbatim %}
+                           <div class="d-flex" :class="{'mb-4': listeners !== null}" v-if="song !== null">
+                                <div v-if="cover" class="px-2 pe-md-0 me-4 live-song-cover text-center">
+                                    <img class="mx-auto" :src="cover">
                                 </div>
-                                <div class="mt-3" v-if="song !== undefined && song !== null && song.trim() !== ''">
-                                    <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;
-                                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
-                                       :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
-                                        <i class="bi bi-youtube"></i> YouTube
-                                    </a>&nbsp;&nbsp;
-                                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
-                                       :href="encodeURI(`https://open.spotify.com/search/${song}`)">
-                                        <i class="bi bi-spotify"></i> Spotify
-                                    </a>&nbsp;&nbsp;
-                                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
-                                       :href="encodeURI(`https://www.deezer.com/search/${song}`)">
-                                        <img src="{{ asset('img/deezericon.png') }}" alt="{{ 'page.stream.find_deezer'|trans }}"> Deezer
-                                    </a>&nbsp;&nbsp;
-                                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_amazon'|trans }}"
-                                       :href="encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${song}`)">
-                                        <i class="bi bi-amazon"></i> Amazon
-                                    </a>&nbsp;&nbsp;
+                                <div class="flex-grow-1">
+                                    <div>
+                                        <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong><br v-if="cover">
+                                        {% verbatim %}♫ {{ song }}{% endverbatim %}
+                                    </div>
+
+                                    <div class="mt-3 stream-page-live-search" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                                        <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;<br v-if="cover">
+                                        <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
+                                           :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                                            <i class="bi bi-youtube"></i><span> YouTube</span>
+                                        </a>&nbsp;&nbsp;
+                                        <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
+                                           :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                                            <i class="bi bi-spotify"></i><span> Spotify</span>
+                                        </a>&nbsp;&nbsp;
+                                        <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
+                                           :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                                            <img src="{{ asset('img/deezericon.png') }}" alt="{{ 'page.stream.find_deezer'|trans }}"><span> Deezer</span>
+                                        </a>&nbsp;&nbsp;
+                                        <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_amazon'|trans }}"
+                                           :href="encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${song}`)">
+                                            <i class="bi bi-amazon"></i><span> Amazon</span>
+                                        </a>&nbsp;&nbsp;
+                                    </div>
                                 </div>
                             </div>
 

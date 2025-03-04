@@ -1,5 +1,5 @@
 <template>
-  <div class="player-add-song">
+  <div class="player-add-song cursor-pointer">
     <span class="player-add-song-inner"
          v-on:click="saveSong"
          :title="$t('message.player.save_song', { song: currentSongTitle })">
