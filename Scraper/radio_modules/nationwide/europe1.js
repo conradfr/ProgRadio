@@ -5,6 +5,7 @@ let util = require('util');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
+let scrapedSections = [];
 const cleanedData = [];
 const prevDateTime = [];
 
@@ -29,19 +30,25 @@ const extractSchedule = (html, day) => {
 
     while ((match = scriptRegex.exec(html)) !== null) {
       scriptCount++;
-      const scriptContent = match[1];
+      let scriptContent = match[1];
 
       // Look for schedule data in this script
       if (scriptContent.includes('window.schedule') ||
           scriptContent.includes(day) ||
           scriptContent.includes('startTime')) {
 
+        scriptContent = scriptContent.replace('window.schedule', 'scrapedData');
+        scriptContent = scriptContent.replace('window.chronicles', 'scrapedSections');
+
+        eval(scriptContent);
+        return;
+
         // console.log(`Found potential schedule data in script #${scriptCount}`);
 
         // Try to find the schedule object using various patterns
 
         // Pattern 1: Look for window.schedule assignment
-        const scheduleAssignRegex = /window\.schedule\s*=\s*({[\s\S]*?});/;
+        const scheduleAssignRegex = /window\.schedule\s*=\s*({[\s\S]*?})\swindow/;
         const scheduleMatch = scriptContent.match(scheduleAssignRegex);
 
         if (scheduleMatch && scheduleMatch[1]) {
@@ -53,7 +60,7 @@ const extractSchedule = (html, day) => {
         // const formatRegex = /{\s*monday\s*:\s*{\s*[0-9]+\s*:/;
         const formatRegex = new RegExp(`\\{\\s*${day}\\s*:\\s*\\{\\s*[0-9]+\\s*:`, 'g');
         if (formatRegex.test(scriptContent)) {
-          console.log('Found object structure');
+          // console.log('Found object structure');
 
           // Extract the full object - this is tricky with just regex
           // Try to find a self-contained object with matching braces
@@ -155,24 +162,20 @@ const parseScheduleObject = (objectStr) => {
 
 const fetchDescription = async (url) => {
   let description = null;
-
   // console.log(`fetching description from https://www.europe1.fr${url}...`);
 
   await osmosis
     .get(`https://www.europe1.fr${url}`)
-    .select('.hero-description')
+    .select('.emission-description')
     .set({
-      'description': 'p.description'
+      'description': '.about__wrapper p'
     })
     .data(function (listing) {
       description = listing;
-    })
-    .done(function () {
-
     });
 
   return description;
-}
+};
 
 const format = async (dateObj, isPrev) => {
   dateObj.tz('Europe/Paris');
@@ -180,9 +183,7 @@ const format = async (dateObj, isPrev) => {
 
   console.log(`formatting ${day}, ${Object.keys(scrapedData[day]).length} entries`);
 
-  if (!scrapedData[day]) {
-    return cleanedData;
-  }
+  // console.log(scrapedData[day]);
 
   for (const key in scrapedData[day]) {
     if (scrapedData[day].hasOwnProperty(key)) {
