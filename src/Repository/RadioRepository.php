@@ -6,7 +6,9 @@ namespace App\Repository;
 
 use App\Entity\Radio;
 use App\Entity\RadioStream;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Parameter;
 
 class RadioRepository extends EntityRepository
 {
@@ -133,10 +135,10 @@ class RadioRepository extends EntityRepository
             ->addOrderBy('r.codeName', $sort2)
             ->setMaxResults($max);
 
-        $qb->setParameters([
-            'radio' => $radio,
-            'collection' => $radio->getCollection(),
-        ]);
+        $qb->setParameters(new ArrayCollection([
+            new Parameter('radio', $radio),
+            new Parameter('collection', $radio->getCollection()),
+        ]));
 
         $query = $qb->getQuery();
         $query->enableResultCache(self::CACHE_MORE_TTL);

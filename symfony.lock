@@ -27,12 +27,12 @@
         "version": "v0.5.3"
     },
     "doctrine/doctrine-bundle": {
-        "version": "2.12",
+        "version": "2.13",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "2.12",
-            "ref": "7266981c201efbbe02ae53c87f8bb378e3f825ae"
+            "version": "2.13",
+            "ref": "8d96c0b51591ffc26794d865ba3ee7d193438a83"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -78,13 +78,16 @@
         "version": "1.1.2"
     },
     "easycorp/easyadmin-bundle": {
-        "version": "4.10",
+        "version": "4.24",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "3.0",
-            "ref": "b131e6cbfe1b898a508987851963fff485986285"
-        }
+            "version": "4.14",
+            "ref": "13b3e524d1038a6861ad6c7fc64e31b644ba0c54"
+        },
+        "files": [
+            "config/routes/easyadmin.yaml"
+        ]
     },
     "egulias/email-validator": {
         "version": "3.1.2"
@@ -176,9 +179,6 @@
     },
     "psr/log": {
         "version": "2.0.0"
-    },
-    "qbbr/pgsql-doctrine-random-function": {
-        "version": "1.0.1"
     },
     "ramsey/collection": {
         "version": "1.2.2"
@@ -298,27 +298,28 @@
         "version": "v5.4.0"
     },
     "symfony/flex": {
-        "version": "2.2",
+        "version": "2.5",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "1.0",
-            "ref": "146251ae39e06a95be0fe3d13c807bcf3938b172"
+            "version": "2.4",
+            "ref": "52e9754527a15e2b79d9a610f98185a1fe46622a"
         },
         "files": [
-            ".env"
+            ".env",
+            ".env.dev"
         ]
     },
     "symfony/form": {
         "version": "v5.4.0"
     },
     "symfony/framework-bundle": {
-        "version": "7.1",
+        "version": "7.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "7.0",
-            "ref": "6356c19b9ae08e7763e4ba2d9ae63043efc75db5"
+            "version": "7.2",
+            "ref": "87bcf6f7c55201f345d8895deda46d2adbdbaa89"
         },
         "files": [
             "config/packages/cache.yaml",
@@ -347,12 +348,12 @@
         "version": "v5.4.0"
     },
     "symfony/mailer": {
-        "version": "7.1",
+        "version": "7.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "4.3",
-            "ref": "df66ee1f226c46f01e85c29c2f7acce0596ba35a"
+            "ref": "09051cfde49476e3c12cd3a0e44289ace1c75a4f"
         },
         "files": [
             "config/packages/mailer.yaml"

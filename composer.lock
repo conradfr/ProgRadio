@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bce92fc0355442c7546b2279741f9ab8",
+    "content-hash": "c4a80d51d8c612485cc3f2b77554136c",
     "packages": [
+        {
+            "name": "aldaflux/pgsql-doctrine-random-function",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AlDaFlux/PgsqlDoctrineRandomFunction.git",
+                "reference": "6b098374728accd0630b0f187ea838b258ade457"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AlDaFlux/PgsqlDoctrineRandomFunction/zipball/6b098374728accd0630b0f187ea838b258ade457",
+                "reference": "6b098374728accd0630b0f187ea838b258ade457",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": ">=2.2.0"
+            },
+            "default-branch": true,
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Qbbr\\PgsqlDoctrineRandomFunction\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sokolov Innokenty",
+                    "homepage": "https://github.com/qbbr"
+                }
+            ],
+            "description": "PostgreSQL RANDOM() function for Doctrine ORM, fork from https://packagist.org/packages/qbbr/pgsql-doctrine-random-function",
+            "homepage": "https://github.com/qbbr/PgsqlDoctrineRandomFunction",
+            "keywords": [
+                "doctrine",
+                "function",
+                "pgsql",
+                "postgresql",
+                "qbbr",
+                "random",
+                "symfony"
+            ],
+            "support": {
+                "source": "https://github.com/AlDaFlux/PgsqlDoctrineRandomFunction/tree/master"
+            },
+            "time": "2024-08-16T16:53:42+00:00"
+        },
         {
             "name": "behat/transliterator",
             "version": "v1.5.0",
@@ -57,16 +107,16 @@
         },
         {
             "name": "brick/math",
-            "version": "0.12.3",
+            "version": "0.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "866551da34e9a618e64a819ee1e01c20d8a588ba"
+                "reference": "efe64d2cd94d410ba85831a6d4c16ac48542751b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/866551da34e9a618e64a819ee1e01c20d8a588ba",
-                "reference": "866551da34e9a618e64a819ee1e01c20d8a588ba",
+                "url": "https://api.github.com/repos/brick/math/zipball/efe64d2cd94d410ba85831a6d4c16ac48542751b",
+                "reference": "efe64d2cd94d410ba85831a6d4c16ac48542751b",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +155,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.12.3"
+                "source": "https://github.com/brick/math/tree/0.13.0"
             },
             "funding": [
                 {
@@ -113,7 +163,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-28T13:11:00+00:00"
+            "time": "2025-03-03T13:19:29+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -425,97 +475,6 @@
                 }
             ],
             "time": "2024-04-18T06:56:21+00:00"
-        },
-        {
-            "name": "doctrine/common",
-            "version": "3.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/common.git",
-                "reference": "d9ea4a54ca2586db781f0265d36bea731ac66ec5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/d9ea4a54ca2586db781f0265d36bea731ac66ec5",
-                "reference": "d9ea4a54ca2586db781f0265d36bea731ac66ec5",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/persistence": "^2.0 || ^3.0 || ^4.0",
-                "php": "^7.1 || ^8.0"
-            },
-            "require-dev": {
-                "doctrine/coding-standard": "^9.0 || ^10.0",
-                "doctrine/collections": "^1",
-                "phpstan/phpstan": "^1.4.1",
-                "phpstan/phpstan-phpunit": "^1",
-                "phpunit/phpunit": "^7.5.20 || ^8.5 || ^9.0",
-                "squizlabs/php_codesniffer": "^3.0",
-                "symfony/phpunit-bridge": "^6.1",
-                "vimeo/psalm": "^4.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                },
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
-                }
-            ],
-            "description": "PHP Doctrine Common project is a library that provides additional functionality that other Doctrine projects depend on such as better reflection support, proxies and much more.",
-            "homepage": "https://www.doctrine-project.org/projects/common.html",
-            "keywords": [
-                "common",
-                "doctrine",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/doctrine/common/issues",
-                "source": "https://github.com/doctrine/common/tree/3.5.0"
-            },
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fcommon",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2025-01-01T22:12:03+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -1313,62 +1272,50 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "2.20.2",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "19912de9270fa6abb3d25a1a37784af6b818d534"
+                "reference": "c9557c588b3a70ed93caff069d0aa75737f25609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/19912de9270fa6abb3d25a1a37784af6b818d534",
-                "reference": "19912de9270fa6abb3d25a1a37784af6b818d534",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/c9557c588b3a70ed93caff069d0aa75737f25609",
+                "reference": "c9557c588b3a70ed93caff069d0aa75737f25609",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2",
-                "doctrine/cache": "^1.12.1 || ^2.1.1",
-                "doctrine/collections": "^1.5 || ^2.1",
-                "doctrine/common": "^3.0.3",
-                "doctrine/dbal": "^2.13.1 || ^3.2",
+                "doctrine/collections": "^2.2",
+                "doctrine/dbal": "^3.8.2 || ^4",
                 "doctrine/deprecations": "^0.5.3 || ^1",
                 "doctrine/event-manager": "^1.2 || ^2",
                 "doctrine/inflector": "^1.4 || ^2.0",
                 "doctrine/instantiator": "^1.3 || ^2",
-                "doctrine/lexer": "^2 || ^3",
-                "doctrine/persistence": "^2.4 || ^3",
+                "doctrine/lexer": "^3",
+                "doctrine/persistence": "^3.3.1 || ^4",
                 "ext-ctype": "*",
-                "php": "^7.1 || ^8.0",
+                "php": "^8.1",
                 "psr/cache": "^1 || ^2 || ^3",
-                "symfony/console": "^4.2 || ^5.0 || ^6.0 || ^7.0",
-                "symfony/polyfill-php72": "^1.23",
-                "symfony/polyfill-php80": "^1.16"
-            },
-            "conflict": {
-                "doctrine/annotations": "<1.13 || >= 3.0"
+                "symfony/console": "^5.4 || ^6.0 || ^7.0",
+                "symfony/var-exporter": "^6.3.9 || ^7.0"
             },
             "require-dev": {
-                "doctrine/annotations": "^1.13 || ^2",
-                "doctrine/coding-standard": "^9.0.2 || ^12.0",
-                "phpbench/phpbench": "^0.16.10 || ^1.0",
-                "phpstan/extension-installer": "~1.1.0 || ^1.4",
-                "phpstan/phpstan": "~1.4.10 || 2.0.3",
-                "phpstan/phpstan-deprecation-rules": "^1 || ^2",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.6",
+                "doctrine/coding-standard": "^12.0",
+                "phpbench/phpbench": "^1.0",
+                "phpdocumentor/guides-cli": "^1.4",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "2.0.3",
+                "phpstan/phpstan-deprecation-rules": "^2",
+                "phpunit/phpunit": "^10.4.0",
                 "psr/log": "^1 || ^2 || ^3",
                 "squizlabs/php_codesniffer": "3.7.2",
-                "symfony/cache": "^4.4 || ^5.4 || ^6.4 || ^7.0",
-                "symfony/var-exporter": "^4.4 || ^5.4 || ^6.2 || ^7.0",
-                "symfony/yaml": "^3.4 || ^4.0 || ^5.0 || ^6.0 || ^7.0"
+                "symfony/cache": "^5.4 || ^6.2 || ^7.0"
             },
             "suggest": {
                 "ext-dom": "Provides support for XSD validation for XML mapping files",
-                "symfony/cache": "Provides cache support for Setup Tool with doctrine/cache 2.0",
-                "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
+                "symfony/cache": "Provides cache support for Setup Tool with doctrine/cache 2.0"
             },
-            "bin": [
-                "bin/doctrine"
-            ],
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1409,9 +1356,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/2.20.2"
+                "source": "https://github.com/doctrine/orm/tree/3.3.2"
             },
-            "time": "2025-02-04T19:17:01+00:00"
+            "time": "2025-02-04T19:43:15+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -2237,20 +2184,20 @@
         },
         {
             "name": "keiko/uuid-shortener",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mgrajcarek/uuid-shortener.git",
-                "reference": "70cc5d451457bed3b9f0d457215b6327cf168608"
+                "reference": "226448fa97f42cfbcf88d5707e5372b2ae4f6ceb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mgrajcarek/uuid-shortener/zipball/70cc5d451457bed3b9f0d457215b6327cf168608",
-                "reference": "70cc5d451457bed3b9f0d457215b6327cf168608",
+                "url": "https://api.github.com/repos/mgrajcarek/uuid-shortener/zipball/226448fa97f42cfbcf88d5707e5372b2ae4f6ceb",
+                "reference": "226448fa97f42cfbcf88d5707e5372b2ae4f6ceb",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.11 || ^0.12",
+                "brick/math": "^0.11 || ^0.12 || ^0.13",
                 "php": "^8.1"
             },
             "require-dev": {
@@ -2298,7 +2245,7 @@
                 "issues": "https://github.com/mgrajcarek/uuid-shortener/issues",
                 "source": "https://github.com/mgrajcarek/uuid-shortener"
             },
-            "time": "2024-12-02T08:06:29+00:00"
+            "time": "2025-03-05T08:46:13+00:00"
         },
         {
             "name": "knplabs/knp-components",
@@ -2672,32 +2619,31 @@
         },
         {
             "name": "oro/doctrine-extensions",
-            "version": "2.0.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oroinc/doctrine-extensions.git",
-                "reference": "98dea7afc2637a6f1434b94a90d3d807155fe34e"
+                "reference": "04948a88843eba15430c0f5ef960f170934b201e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oroinc/doctrine-extensions/zipball/98dea7afc2637a6f1434b94a90d3d807155fe34e",
-                "reference": "98dea7afc2637a6f1434b94a90d3d807155fe34e",
+                "url": "https://api.github.com/repos/oroinc/doctrine-extensions/zipball/04948a88843eba15430c0f5ef960f170934b201e",
+                "reference": "04948a88843eba15430c0f5ef960f170934b201e",
                 "shasum": ""
             },
             "require": {
-                "doctrine/dbal": "^2.6|^3",
-                "doctrine/lexer": "^2|^3",
-                "doctrine/orm": "^2.6",
-                "php": ">=8.0"
+                "doctrine/orm": "^3.0",
+                "php": ">=8.1"
             },
             "require-dev": {
-                "doctrine/annotations": "^1.0|^2.0",
-                "doctrine/data-fixtures": "^1.3",
-                "phpunit/phpunit": "9.*",
-                "squizlabs/php_codesniffer": "3.5.*",
-                "symfony/cache": "5.*",
-                "symfony/yaml": "5.*"
+                "doctrine/annotations": "^2.0",
+                "doctrine/data-fixtures": "^1.8",
+                "phpunit/phpunit": "~10",
+                "squizlabs/php_codesniffer": "3.9.*",
+                "symfony/cache": "^5 || ^6 || ^7",
+                "symfony/yaml": "^5 || ^6 || ^7"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2728,9 +2674,9 @@
             ],
             "support": {
                 "issues": "https://github.com/oroinc/doctrine-extensions/issues",
-                "source": "https://github.com/oroinc/doctrine-extensions/tree/2.0.5"
+                "source": "https://github.com/oroinc/doctrine-extensions/tree/master"
             },
-            "time": "2024-11-20T13:22:34+00:00"
+            "time": "2025-02-14T18:36:42+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -3428,56 +3374,6 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
             "time": "2024-09-11T13:17:53+00:00"
-        },
-        {
-            "name": "qbbr/pgsql-doctrine-random-function",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/qbbr/PgsqlDoctrineRandomFunction.git",
-                "reference": "cf2e10ae9a9c3b7c83d586c6a3de40dfca2c89ec"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/qbbr/PgsqlDoctrineRandomFunction/zipball/cf2e10ae9a9c3b7c83d586c6a3de40dfca2c89ec",
-                "reference": "cf2e10ae9a9c3b7c83d586c6a3de40dfca2c89ec",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/orm": ">=2.2.0"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Qbbr\\PgsqlDoctrineRandomFunction\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sokolov Innokenty",
-                    "homepage": "https://github.com/qbbr"
-                }
-            ],
-            "description": "PostgreSQL RANDOM() function for Doctrine ORM",
-            "homepage": "https://github.com/qbbr/PgsqlDoctrineRandomFunction",
-            "keywords": [
-                "doctrine",
-                "function",
-                "pgsql",
-                "postgresql",
-                "qbbr",
-                "random",
-                "symfony"
-            ],
-            "support": {
-                "issues": "https://github.com/qbbr/PgsqlDoctrineRandomFunction/issues",
-                "source": "https://github.com/qbbr/PgsqlDoctrineRandomFunction/tree/master"
-            },
-            "time": "2016-03-12T11:10:05+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -5127,16 +5023,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v2.4.7",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "92f4fba342161ff36072bd3b8e0b3c6c23160402"
+                "reference": "8ce1acd9842abe0e9b4c4a0bd3f259859516c018"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/92f4fba342161ff36072bd3b8e0b3c6c23160402",
-                "reference": "92f4fba342161ff36072bd3b8e0b3c6c23160402",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/8ce1acd9842abe0e9b4c4a0bd3f259859516c018",
+                "reference": "8ce1acd9842abe0e9b4c4a0bd3f259859516c018",
                 "shasum": ""
             },
             "require": {
@@ -5175,7 +5071,7 @@
             "description": "Composer plugin for Symfony",
             "support": {
                 "issues": "https://github.com/symfony/flex/issues",
-                "source": "https://github.com/symfony/flex/tree/v2.4.7"
+                "source": "https://github.com/symfony/flex/tree/v2.5.0"
             },
             "funding": [
                 {
@@ -5191,7 +5087,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-07T08:51:54+00:00"
+            "time": "2025-03-03T07:50:46+00:00"
         },
         {
             "name": "symfony/form",
@@ -9687,16 +9583,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.19",
+            "version": "1.12.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "c42ba9bab7a940ed00092ecb1c77bad98896d789"
+                "reference": "3240b1972042c7f73cf1045e879ea5bd5f761bb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c42ba9bab7a940ed00092ecb1c77bad98896d789",
-                "reference": "c42ba9bab7a940ed00092ecb1c77bad98896d789",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3240b1972042c7f73cf1045e879ea5bd5f761bb7",
+                "reference": "3240b1972042c7f73cf1045e879ea5bd5f761bb7",
                 "shasum": ""
             },
             "require": {
@@ -9741,7 +9637,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-19T15:42:21+00:00"
+            "time": "2025-03-05T13:37:43+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
@@ -9954,12 +9850,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "80b1c8ff865073edb25e919bf53b779898062760"
+                "reference": "4da22c240293fcf0fe72fc0b1f2f265efeb44e2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/80b1c8ff865073edb25e919bf53b779898062760",
-                "reference": "80b1c8ff865073edb25e919bf53b779898062760",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4da22c240293fcf0fe72fc0b1f2f265efeb44e2e",
+                "reference": "4da22c240293fcf0fe72fc0b1f2f265efeb44e2e",
                 "shasum": ""
             },
             "conflict": {
@@ -10287,7 +10183,7 @@
                 "lara-zeus/artemis": ">=1,<=1.0.6",
                 "lara-zeus/dynamic-dashboard": ">=3,<=3.0.1",
                 "laravel/fortify": "<1.11.1",
-                "laravel/framework": "<6.20.45|>=7,<7.30.7|>=8,<8.83.28|>=9,<9.52.17|>=10,<10.48.23|>=11,<11.31",
+                "laravel/framework": "<11.44.1|>=12,<12.1.1",
                 "laravel/laravel": ">=5.4,<5.4.22",
                 "laravel/pulse": "<1.3.1",
                 "laravel/reverb": "<1.4",
@@ -10307,6 +10203,7 @@
                 "limesurvey/limesurvey": "<6.5.12",
                 "livehelperchat/livehelperchat": "<=3.91",
                 "livewire/livewire": "<2.12.7|>=3.0.0.0-beta1,<3.5.2",
+                "livewire/volt": "<1.7",
                 "lms/routes": "<2.1.1",
                 "localizationteam/l10nmgr": "<7.4|>=8,<8.7|>=9,<9.2",
                 "luyadev/yii-helpers": "<1.2.1",
@@ -10398,7 +10295,7 @@
                 "open-web-analytics/open-web-analytics": "<1.7.4",
                 "opencart/opencart": ">=0",
                 "openid/php-openid": "<2.3",
-                "openmage/magento-lts": "<20.10.1",
+                "openmage/magento-lts": "<20.12.3",
                 "opensolutions/vimbadmin": "<=3.0.15",
                 "opensource-workshop/connect-cms": "<1.8.7|>=2,<2.4.7",
                 "orchid/platform": ">=8,<14.43",
@@ -10440,7 +10337,7 @@
                 "phpmyadmin/phpmyadmin": "<5.2.2",
                 "phpmyfaq/phpmyfaq": "<3.2.5|==3.2.5|>=3.2.10,<=4.0.1",
                 "phpoffice/common": "<0.2.9",
-                "phpoffice/phpexcel": "<1.8.1",
+                "phpoffice/phpexcel": "<=1.8.2",
                 "phpoffice/phpspreadsheet": "<1.29.9|>=2,<2.1.8|>=2.2,<2.3.7|>=3,<3.9",
                 "phpseclib/phpseclib": "<2.0.47|>=3,<3.0.36",
                 "phpservermon/phpservermon": "<3.6",
@@ -10496,7 +10393,7 @@
                 "rap2hpoutre/laravel-log-viewer": "<0.13",
                 "react/http": ">=0.7,<1.9",
                 "really-simple-plugins/complianz-gdpr": "<6.4.2",
-                "redaxo/source": "<=5.18.1",
+                "redaxo/source": "<5.18.3",
                 "remdex/livehelperchat": "<4.29",
                 "reportico-web/reportico": "<=8.1",
                 "rhukster/dom-sanitizer": "<1.0.7",
@@ -10821,7 +10718,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-01T00:21:40+00:00"
+            "time": "2025-03-06T18:06:13+00:00"
         },
         {
             "name": "symfony/browser-kit",
@@ -11357,6 +11254,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "aldaflux/pgsql-doctrine-random-function": 20,
+        "oro/doctrine-extensions": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

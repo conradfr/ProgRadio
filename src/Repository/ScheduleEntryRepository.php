@@ -6,7 +6,9 @@ namespace App\Repository;
 
 use App\Entity\ScheduleEntry;
 use App\ValueObject\ScheduleResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 class ScheduleEntryRepository extends EntityRepository
@@ -153,12 +155,12 @@ EOT;
             ->addScalarResult('sub_diff', 'section_diff', 'integer');
 
         $query = $this->getEntityManager()->createNativeQuery($queryStr, $rsm);
-        $query->setParameters([
-            ':today' => $dateTime->format(self::DAY_FORMAT),
-            ':week' => $dateTimeOneWeek->format(self::DAY_FORMAT),
-            ':todayTime' => $dateTime->format(self::DAY_FORMAT) . ' 23:29:59',
-            ':twoWeeksTime' => $dateTimeTwoWeeks->format(self::DAY_FORMAT) . ' 00:00:00'
-        ]);
+        $query->setParameters(new ArrayCollection([
+            new Parameter(':today', $dateTime->format(self::DAY_FORMAT)),
+            new Parameter(':week', $dateTimeOneWeek->format(self::DAY_FORMAT)),
+            new Parameter(':todayTime', $dateTime->format(self::DAY_FORMAT) . ' 23:29:59'),
+            new Parameter(':twoWeeksTime', $dateTimeTwoWeeks->format(self::DAY_FORMAT) . ' 00:00:00')
+        ]));
 
         $query->disableResultCache();
         $result = $query->getResult();
@@ -225,11 +227,11 @@ EOT;
             ->addOrderBy('sc.dateTimeStart', 'ASC')
         ;
 
-        $qb->setParameters([
-            'datetime_start' => $dateTime,
-            'datetime_end' => $dateTimeEnd,
-            'active' => true
-        ]);
+        $qb->setParameters(new ArrayCollection([
+            new Parameter('datetime_start', $dateTime),
+            new Parameter('datetime_end', $dateTimeEnd),
+            new Parameter('active',true)
+        ]));
 
         if ($scheduleResource->getType() === ScheduleResource::TYPE_RADIO) {
             $qb->andWhere('r.codeName = :radio')
@@ -282,12 +284,12 @@ EOT;
             ->addOrderBy('sc.dateTimeStart', 'ASC')
         ;
 
-        $qb->setParameters([
-            'datetime' => $dateTime,
-            'datetime_start' => $dateTimeStart,
-            'datetime_end' => $dateTimeEnd,
-            'active' => true
-        ]);
+        $qb->setParameters(new ArrayCollection([
+            new Parameter('datetime', $dateTime),
+            new Parameter('datetime_start', $dateTimeStart),
+            new Parameter('datetime_end', $dateTimeEnd),
+            new Parameter('active', true)
+        ]));
 
         if (!empty($radios)) {
             $qb->andWhere('r.codeName IN (:radios)');

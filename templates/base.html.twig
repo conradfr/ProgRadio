@@ -1,6 +1,5 @@
 {% set isProgRadioRequest = isProgRadio(app.request) %}
-{#{% set isDarkModeRequest = isDarkModeTime(app.request) %}#}
-{% set isDarkModeRequest = false %}
+{% set isDarkModeRequest = isDarkModeTime(app.request) %}
 {% set domainNameRequest = getDomainName(app.request) %}
 {% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro','hu','tr'] %}
 {% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro', 'hu': 'hu', 'tr': 'tr'} %}

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\RadioStream;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 class RadioStreamRepository extends EntityRepository
@@ -25,10 +27,10 @@ class RadioStreamRepository extends EntityRepository
             "
         );
 
-        $query->setParameters([
-            'enabled' => true,
-            'radioIds' => $ids
-        ]);
+        $query->setParameters(new ArrayCollection([
+            new Parameter('enabled',true),
+            new Parameter('radioIds', $ids)
+        ]));
 
         $query->enableResultCache(self::CACHE_TTL, self::CACHE_ID);
         return $query->getResult();

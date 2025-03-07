@@ -10,6 +10,8 @@ use App\Entity\Stream;
 use App\Entity\User;
 use App\Service\DateUtils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -103,10 +105,10 @@ class ListeningSessionRepository extends ServiceEntityRepository
             $qb->where('(DATE(AT_TIME_ZONE(AT_TIME_ZONE(ls.dateTimeStart, \'UTC\'), \'Europe/Paris\')) >= DATE(:startDate)'
                 . ' AND DATE(AT_TIME_ZONE(AT_TIME_ZONE(ls.dateTimeStart, \'UTC\'), \'Europe/Paris\')) <= DATE(:endDate))');
 
-            $qb->setParameters([
-                'startDate' => $startDate,
-                'endDate'=> $endDate
-            ]);
+            $qb->setParameters(new ArrayCollection([
+                new Parameter('startDate', $startDate),
+                new Parameter('endDate', $endDate)
+            ]));
         }
     }
 

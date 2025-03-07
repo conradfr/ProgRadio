@@ -13,12 +13,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 
 #[IsGranted('ROLE_ADMIN')]
+#[AdminDashboard(routePath: '/easy-admin', routeName: 'easy_admin')]
 class DashboardController extends AbstractDashboardController
 {
-    #[Route('/easy-admin', name: 'easy_admin')]
     public function index(): Response
     {
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);

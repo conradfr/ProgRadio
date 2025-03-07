@@ -6,6 +6,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -68,10 +70,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ->select('u.id')
         ->leftJoin('u.emailChanges', 'uec')
         ->where('uec.email = :email')
-        ->setParameters([
-            'email' => $email,
-            'now' => new \DateTime()
-        ]);
+        ->setParameters(new ArrayCollection([
+            new Parameter('email', $email),
+            new Parameter('now', new \DateTime())
+        ]));
 
         if ($user !== null) {
              $qb->where('(u.email = :email AND u != :user)')
