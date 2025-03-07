@@ -2,15 +2,13 @@
 
 {% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
 
-{% block title %}
-{% apply spaceless %}
+{%- block title -%}
     {% if edit == true %}
         {{ 'page.stream.submission.title_edit'|trans }}
     {% else %}
         {{ 'page.stream.submission.title_new'|trans }}
     {% endif %}
-{% endapply %}
-{% endblock %}
+{%- endblock -%}
 
 {% block javascripts %}
     {{ parent() }}
@@ -89,6 +87,10 @@
                 {{ form_row(form.originalImg) }}
                 {{ form_row(form.streamUrl) }}
                 {{ form_row(form.website) }}
+                {{ form_row(form.description) }}
+                {{ form_row(form.slogan) }}
+                {{ form_row(form.tags) }}
+
             {{ form_end(form) }}
 
             {% if edit == true %}

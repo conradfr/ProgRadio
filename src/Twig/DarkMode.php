@@ -27,6 +27,7 @@ class DarkMode extends AbstractExtension
 
     public function isDarkModeTime(Request $request) : bool
     {
+        return false;
         $timezone = $this->ip2Country->getTimeZone($request);
 
         $now = $timezone ? new \DateTime('now', new \DateTimeZone($timezone)) : new \DateTime();

@@ -36,6 +36,7 @@ class Ip2Country
 
     protected function getData(?string $ip): array
     {
+        $ip = '197.27.127.47';
         $url = sprintf(self::API_URL, $ip);
         $result = null;
         $defaultResult = [

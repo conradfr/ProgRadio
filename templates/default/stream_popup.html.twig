@@ -8,19 +8,19 @@
 {% macro picture(stream) %}{%- if stream.radioStream.id is defined and stream.radioStream.id is not null %}/img/radio/page/{{ stream.radioStream.radio.codeName }}.png{%- elseif stream.img_alt is defined and stream.img_alt is not null %}/img/radio/page/{{ stream.img_alt }}.png{%- elseif stream.img is not null and stream.img != '' %}/media/stream/{{ stream.img }}{%- else %}/img/stream-placeholder.png{% endif -%}{% endmacro %}
 
 {% macro topic(stream) %}
-    {% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% elseif stream.radioStream is defined and stream.radioStream.url is defined %}url:{{ stream.radioStream.url }}{% else %}url:{{ stream.streamUrl }}{% endif %}
+{% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% elseif stream.radioStream is defined and stream.radioStream.url is defined %}url:{{ stream.radioStream.url }}{% else %}url:{{ stream.streamUrl }}{% endif %}
 {% endmacro %}
 
 {% macro stream_code_name(stream) %}
-    {% if stream.radioStream.radio.codeName is defined %}{{ stream.radioStream.radio.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
+{% if stream.radioStream.radio.codeName is defined %}{{ stream.radioStream.radio.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
 {% endmacro %}
 
 {% macro stream_url(stream) %}
-    {% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
+{% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
 {% endmacro %}
 
 {% macro title(stream) %}
-    {% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}
+{% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}
 {% endmacro %}
 
 {% block head_supp %}
@@ -79,7 +79,7 @@
                                     <div>
                                         <div
                                                 v-if="playing === PLAYER_STATE_STOPPED"
-                                                @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
+                                                @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}'})"
                                                 class="radio-page-play">
                                             <img alt="{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}"
                                                  src="/img/play-button-inside-a-circle.svg">
@@ -106,7 +106,7 @@
                                     <div class="ps-2">
                                         <div
                                                 v-if="playing === PLAYER_STATE_STOPPED"
-                                                @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}', streamCodeName: '{{- self.stream_code_name(stream)|spaceless -}}'})"
+                                                @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}'})"
                                                 class="radio-page-play">
                                             <div>&nbsp;{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}</div>
                                         </div>

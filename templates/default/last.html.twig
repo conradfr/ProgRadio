@@ -33,7 +33,7 @@ img/stream-placeholder.png
 {% endif -%}{% endmacro %}
 
 {% macro topic(stream) %}
-    {% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% elseif stream.radioStream is defined and stream.radioStream.url is defined %}url:{{ stream.radioStream.url }}{% else %}url:{{ stream.stream_url }}{% endif %}
+{% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% elseif stream.radioStream is defined and stream.radioStream.url is defined %}url:{{ stream.radioStream.url }}{% else %}url:{{ stream.stream_url }}{% endif %}
 {% endmacro %}
 
 {% block body %}
@@ -68,7 +68,7 @@ img/stream-placeholder.png
                         }">
                             <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
                                  v-if="playing === PLAYER_STATE_STOPPED || radioId !== '{{- stream.code_name }}'"
-                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream)|spaceless -}}'})"
+                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}'})"
                             >
                                 <div class="streams-one-img-play"></div>
                             </div>
