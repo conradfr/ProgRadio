@@ -48,6 +48,7 @@
         "phpdocumentor/reflection-docblock": "^5.2",
         "predis/predis": "^2.2.0",
         "qbbr/pgsql-doctrine-random-function": "^1.0",
+        "sentry/sentry-symfony": "^5.2",
         "snc/redis-bundle": "^4.7.1",
         "stof/doctrine-extensions-bundle": "^1.8",
         "symfony/asset": "7.2.*",

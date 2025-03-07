@@ -186,6 +186,18 @@
     "roave/security-advisories": {
         "version": "dev-master"
     },
+    "sentry/sentry-symfony": {
+        "version": "5.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "5.0",
+            "ref": "76afa07d23e76f678942f00af5a6a417ba0816d0"
+        },
+        "files": [
+            "config/packages/sentry.yaml"
+        ]
+    },
     "snc/redis-bundle": {
         "version": "4.1",
         "recipe": {

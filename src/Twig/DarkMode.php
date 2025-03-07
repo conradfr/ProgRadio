@@ -27,6 +27,10 @@ class DarkMode extends AbstractExtension
 
     public function isDarkModeTime(Request $request) : bool
     {
+        if (isset($_COOKIE[self::COOKIE_NAME])) {
+            return $_COOKIE[self::COOKIE_NAME] === '1';
+        }
+
         return false;
         $timezone = $this->ip2Country->getTimeZone($request);
 
