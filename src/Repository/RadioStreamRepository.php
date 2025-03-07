@@ -12,8 +12,8 @@ use Doctrine\ORM\Query\ResultSetMapping;
 
 class RadioStreamRepository extends EntityRepository
 {
-    protected const CACHE_TTL = 604800; // week
-    protected const CACHE_ID = 'enabled_radios_streams';
+    protected const int CACHE_TTL = 604800; // week
+    protected const string CACHE_ID = 'enabled_radios_streams';
 
     public function getStreamsOfRadios(array $ids): array
     {

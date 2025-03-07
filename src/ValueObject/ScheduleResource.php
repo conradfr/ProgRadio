@@ -8,11 +8,11 @@ use App\Entity\SubRadio;
 
 class ScheduleResource
 {
-    public const TYPE_RADIO = 'radio';
-    public const TYPE_RADIOS = 'radios';
-    public const TYPE_COLLECTION = 'collection';
+    public const string TYPE_RADIO = 'radio';
+    public const string TYPE_RADIOS = 'radios';
+    public const string TYPE_COLLECTION = 'collection';
 
-    protected const TYPES = [
+    protected const array TYPES = [
         self::TYPE_RADIO,
         self::TYPE_RADIOS,
         self::TYPE_COLLECTION

@@ -12,10 +12,10 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class CollectionRepository extends ServiceEntityRepository
 {
-    protected const CACHE_COLLECTION_TTL = 604800; // week
-    protected const CACHE_COLLECTION_ID = 'collections';
+    protected const int CACHE_COLLECTION_TTL = 604800; // week
+    protected const string CACHE_COLLECTION_ID = 'collections';
 
-    protected const CACHE_FAVORITES_TTL = 3600;
+    protected const int CACHE_FAVORITES_TTL = 3600;
 
     public function __construct(// one hour
     private readonly Security $security, ManagerRegistry $registry)

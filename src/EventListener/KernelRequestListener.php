@@ -9,9 +9,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class KernelRequestListener
 {
-    protected const COOKIE_PREFIX = 'progradio_v4-';
-    protected const COOKIE_STREAM_SUFFIX = '_streams';
-    protected const COOKIE_DELIMITER = '|';
+    protected const string COOKIE_PREFIX = 'progradio_v4-';
+    protected const string COOKIE_STREAM_SUFFIX = '_streams';
+    protected const string COOKIE_DELIMITER = '|';
 
     public function __invoke(RequestEvent $event): void
     {

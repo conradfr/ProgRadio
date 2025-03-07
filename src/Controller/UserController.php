@@ -28,7 +28,7 @@ use Symfony\Component\Uid\Uuid;
 #[IsGranted('ROLE_USER')]
 class UserController extends AbstractBaseController
 {
-    protected const SESSION_DELETE_ATTR = 'delete-id';
+    protected const string SESSION_DELETE_ATTR = 'delete-id';
 
     public function __construct(private RequestStack $requestStack) { }
 

@@ -8,9 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Host
 {
-    protected const DEFAULT_DOMAIN = 'progradio';
+    protected const string DEFAULT_DOMAIN = 'progradio';
 
-    public const DATA = [
+    public const array DATA = [
         'progradio' => [
             'domain' => 'programmes-radio.com',
             'name' => 'Programmes Radio',

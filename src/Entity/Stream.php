@@ -25,14 +25,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamRepository')]
 class Stream
 {
-    final public const FAVORITES = 'FAVORITES';
-    final public const HISTORY = 'HISTORY';
-    final public const USER_LISTENED = 'USER_LAST';
+    final public const string FAVORITES = 'FAVORITES';
+    final public const string HISTORY = 'HISTORY';
+    final public const string USER_LISTENED = 'USER_LAST';
 
-    final public const SOURCE_RADIOBROWSER = 'radio-browser';
-    final public const SOURCE_PROGRADIO = 'progradio';
+    final public const string SOURCE_RADIOBROWSER = 'radio-browser';
+    final public const string SOURCE_PROGRADIO = 'progradio';
 
-    final public const ERROR_DISPLAY_THRESHOLD = 7;
+    final public const int ERROR_DISPLAY_THRESHOLD = 7;
 
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\Id]

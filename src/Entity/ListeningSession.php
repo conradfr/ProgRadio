@@ -19,8 +19,8 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: ListeningSessionRepository::class)]
 class ListeningSession
 {
-    public const TYPE_RADIO = 'radio';
-    public const TYPE_STREAM = 'stream';
+    public const string TYPE_RADIO = 'radio';
+    public const string TYPE_STREAM = 'stream';
 
 /*
     public const SOURCE_WEB = 'web';

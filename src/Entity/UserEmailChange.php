@@ -14,8 +14,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: UserEmailChangeRepository::class)]
 class UserEmailChange
 {
-    protected const TOKEN_LENGTH = 25;
-    protected const TOKEN_EXPIRATION = 24; // hours
+    protected const int TOKEN_LENGTH = 25;
+    protected const int TOKEN_EXPIRATION = 24; // hours
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

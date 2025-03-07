@@ -34,7 +34,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractBaseController
 {
-    protected const STREAM_CHECK_PER_PAGE = 25;
+    protected const int STREAM_CHECK_PER_PAGE = 25;
 
     #[Route('/{_locale}/admin', name: 'admin')]
     public function indexAction(EntityManagerInterface $em): Response

@@ -12,11 +12,11 @@ use Doctrine\ORM\Query\Parameter;
 
 class RadioRepository extends EntityRepository
 {
-    protected const CACHE_RADIO_TTL = 604800; // week
-    protected const CACHE_MORE_TTL = 60;
-    protected const CACHE_RADIO_ACTIVE_ID = 'active_radios';
+    protected const int CACHE_RADIO_TTL = 604800; // week
+    protected const int CACHE_MORE_TTL = 60;
+    protected const string CACHE_RADIO_ACTIVE_ID = 'active_radios';
 
-    protected const DEFAULT_MORE_MAX = 6;
+    protected const int DEFAULT_MORE_MAX = 6;
 
     public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(

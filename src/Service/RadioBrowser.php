@@ -10,7 +10,7 @@ use Symfony\Component\Intl\Countries;
 
 class RadioBrowser
 {
-    protected const SERVERS_DNS = 'all.api.radio-browser.info';
+    protected const string SERVERS_DNS = 'all.api.radio-browser.info';
 
     public function __construct(protected EntityManagerInterface $em) { }
 

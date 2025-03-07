@@ -11,10 +11,10 @@ use App\Service\Ip2Country;
 
 class DarkMode extends AbstractExtension
 {
-    public const DARK_MODE_START_HOUR = 22;
-    public const DARK_MODE_END_HOUR = 6;
+    public const int DARK_MODE_START_HOUR = 22;
+    public const int DARK_MODE_END_HOUR = 6;
 
-    protected const COOKIE_NAME = 'progradio-darkmode';
+    protected const string COOKIE_NAME = 'progradio-darkmode';
 
     public function __construct(protected Ip2Country $ip2Country) { }
 

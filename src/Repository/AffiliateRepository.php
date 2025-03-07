@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 
 class AffiliateRepository extends EntityRepository
 {
-   private const locales = ['fr', 'en', 'es', 'de'];
+   private const array locales = ['fr', 'en', 'es', 'de'];
 
    public function getOneAffiliate(string $locale)
    {

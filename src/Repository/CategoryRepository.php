@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 
 class CategoryRepository extends EntityRepository
 {
-    protected const CACHE_CATEGORY_TTL = 604800; // week
+    protected const int CACHE_CATEGORY_TTL = 604800; // week
 
     public function getCategories(): array {
         $query = $this->getEntityManager()->createQuery(

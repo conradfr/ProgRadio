@@ -16,7 +16,7 @@ use App\Entity\Category;
 #[ORM\Entity(repositoryClass: RadioRepository::class)]
 class Radio
 {
-    public const FAVORITES = 'favorites';
+    public const string FAVORITES = 'favorites';
 
     #[ORM\Column(type: 'integer')]
     #[ORM\Id]

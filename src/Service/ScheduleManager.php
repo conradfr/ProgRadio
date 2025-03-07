@@ -15,10 +15,10 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class ScheduleManager
 {
-    protected const CACHE_SCHEDULE_PREFIX = 'cache_schedule_';
-    public const CACHE_SCHEDULE_TTL = 604800; // in seconds = one week
+    protected const string CACHE_SCHEDULE_PREFIX = 'cache_schedule_';
+    public const int CACHE_SCHEDULE_TTL = 604800; // in seconds = one week
 
-    protected const CACHE_KEY_DAY_FORMAT = 'Y-m-d';
+    protected const string CACHE_KEY_DAY_FORMAT = 'Y-m-d';
 
     public function __construct(protected EntityManagerInterface $em, protected CacheItemPoolInterface $cache)
     {

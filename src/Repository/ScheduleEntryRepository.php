@@ -13,7 +13,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 
 class ScheduleEntryRepository extends EntityRepository
 {
-    protected const DAY_FORMAT = 'Y-m-d';
+    protected const string DAY_FORMAT = 'Y-m-d';
 
     public function getDaySchedule(ScheduleResource $scheduleResource): array
     {

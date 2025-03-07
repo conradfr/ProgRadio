@@ -37,8 +37,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DefaultController extends AbstractBaseController
 {
-    protected const MIN_DATE = '2017-08-19';
-    protected const COOKIE_LOCALE = 'locale';
+    protected const string MIN_DATE = '2017-08-19';
+    protected const string COOKIE_LOCALE = 'locale';
 
     // LEGACY
     #[Route('/schedule/{date}', name: 'schedule')]

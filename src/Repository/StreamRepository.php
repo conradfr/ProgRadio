@@ -21,10 +21,10 @@ use Symfony\Component\Uid\Uuid;
  */
 class StreamRepository extends ServiceEntityRepository
 {
-    protected const CACHE_TTL = 21600; // six hours
-    protected const CACHE_QUICK_TTL = 30;
+    protected const int CACHE_TTL = 21600; // six hours
+    protected const int CACHE_QUICK_TTL = 30;
 
-    protected const DEFAULT_MORE_LIMIT = 15;
+    protected const int DEFAULT_MORE_LIMIT = 15;
 
     public function __construct(private readonly Security $security, protected PaginatorInterface $paginator, ManagerRegistry $registry, )
     {
