@@ -14,7 +14,7 @@ class StreamSuggestion
 {
     #[ORM\Column(type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     private ?int $id;
 
     #[ORM\ManyToOne(targetEntity: Stream::class)]

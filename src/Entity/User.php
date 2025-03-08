@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected const int TOKEN_EXPIRATION = 24; // hours
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\Column(type: 'integer')]
     private ?int $id;
 

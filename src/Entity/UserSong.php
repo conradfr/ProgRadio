@@ -15,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class UserSong
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\Column(type: 'integer')]
     private ?int $id;
 
