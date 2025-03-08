@@ -588,10 +588,17 @@ class DefaultController extends AbstractBaseController
         $streams = $em->getRepository(Stream::class)->getStreams($howMany, $offset, $countryCode, 'popularity');
         $totalCount = $em->getRepository(Stream::class)->countStreams($countryCode);
 
+        try {
+            // protection against bots/spiders finding weird url
+            $country = Countries::getName(strtoupper($countryCode), $request->getLocale());
+        } catch (\Exception) {
+            throw new NotFoundHttpException('Invalid country code');
+        }
+
         return $this->render('default/top.html.twig', [
             'streams' => $streams,
             'total'   => $totalCount,
-            'country' => Countries::getName(strtoupper($countryCode), $request->getLocale()),
+            'country' => $country,
             'country_code' => $countryCode
         ]);
     }
@@ -625,10 +632,17 @@ class DefaultController extends AbstractBaseController
         $streams = $em->getRepository(Stream::class)->getStreams($howMany, $offset, $countryCode, 'last');
         $totalCount = $em->getRepository(Stream::class)->countStreams($countryCode);
 
+        try {
+            // protection against bots/spiders finding weird url
+            $country = Countries::getName(strtoupper($countryCode), $request->getLocale());
+        } catch (\Exception) {
+            throw new NotFoundHttpException('Invalid country code');
+        }
+
         return $this->render('default/last.html.twig', [
             'streams' => $streams,
             'total'   => $totalCount,
-            'country' => Countries::getName(strtoupper($countryCode), $request->getLocale()),
+            'country' => $country,
             'country_code' => $countryCode
         ]);
     }
