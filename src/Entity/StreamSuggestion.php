@@ -14,7 +14,7 @@ class StreamSuggestion
 {
     #[ORM\Column(type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     private ?int $id;
 
     #[ORM\ManyToOne(targetEntity: Stream::class)]
@@ -36,7 +36,7 @@ class StreamSuggestion
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $tags = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $message = null;
 
     #[Gedmo\Timestampable(on: 'create')]

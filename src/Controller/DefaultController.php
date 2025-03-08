@@ -863,7 +863,7 @@ class DefaultController extends AbstractBaseController
             $whitelist[] = 'www.'. $host['domain'];
         }
 
-        if (!in_array(parse_url($toUrl)['host'], $whitelist)) {
+        if (!in_array(parse_url($toUrl)['host'] ?? '', $whitelist)) {
             return $this->redirectToRoute('index_radio_addict', [], 301);
         }
 
