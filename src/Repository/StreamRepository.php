@@ -553,9 +553,9 @@ class StreamRepository extends ServiceEntityRepository
     public function insertNewStream(Stream $stream)
     {
         $sql = <<<EOD
-            INSERT INTO stream (id, name, original_img, country_code, language, website, stream_url, user_id, source, created_at, updated_at)
+            INSERT INTO stream (id, name, original_img, country_code, language, website, stream_url, user_id, source, created_at, updated_at,description,slogan,tags)
             VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?);
         EOD;
 
         $rsm = new ResultSetMapping();
@@ -571,7 +571,10 @@ class StreamRepository extends ServiceEntityRepository
             $stream->getUser()->getId(),
             $stream->getSource(),
             new \DateTime(),
-            new \DateTime()
+            new \DateTime(),
+            $stream->getDescription(),
+            $stream->getSlogan(),
+            $stream->getTags()
         ]);
 
         return $query->getResult();

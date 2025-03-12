@@ -218,6 +218,8 @@ class Stream
 
     public function setTags(?string $tags = null): void
     {
+        $tags = str_replace(', ', ',', $tags);
+        $tags = mb_strtolower($tags);
         $this->tags = $tags;
     }
 
