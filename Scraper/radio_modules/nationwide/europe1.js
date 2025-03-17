@@ -40,8 +40,13 @@ const extractSchedule = (html, day) => {
         scriptContent = scriptContent.replace('window.schedule', 'scrapedData');
         scriptContent = scriptContent.replace('window.chronicles', 'scrapedSections');
 
-        eval(scriptContent);
-        return;
+        try {
+          eval(scriptContent);
+          return;
+        } catch (e) {
+          // console.log('ho no');
+        }
+
 
         // console.log(`Found potential schedule data in script #${scriptCount}`);
 
