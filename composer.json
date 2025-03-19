@@ -48,6 +48,7 @@
         "oro/doctrine-extensions": "dev-master",
         "phpdocumentor/reflection-docblock": "^5.2",
         "predis/predis": "^2.2.0",
+        "runtime/frankenphp-symfony": "^0.2.0",
         "sentry/sentry-symfony": "^5.2",
         "snc/redis-bundle": "^4.7.1",
         "stof/doctrine-extensions-bundle": "^1.8",

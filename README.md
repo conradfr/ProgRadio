@@ -12,7 +12,8 @@ Dependencies
 - NodeJS v14.x
 - Elixir 1.17.x (Api / Importer)
 - PostgreSQL 17 & Redis
-- Nginx (Apache before)
+- Nginx (Apache before) (dev)
+- Caddy & FrankenPHP (prod)
 - ImageMagick
 - CapRover & Docker (deployment)
 - Docker compose (dev)

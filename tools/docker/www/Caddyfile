@@ -1,0 +1,102 @@
+{
+	{$CADDY_GLOBAL_OPTIONS}
+
+	frankenphp {
+		#worker /path/to/your/worker.php
+		{$FRANKENPHP_CONFIG}
+	}
+
+  log stdoutlogger {
+    output stdout
+  }
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+{$SERVER_NAME:localhost} {
+	log {
+		{$CADDY_SERVER_LOG_OPTIONS}
+    output file /var/log/caddy/access.log
+	}
+
+	root * public/
+	encode zstd br gzip
+
+  log_skip /media/*
+  log_skip /.well-known/traffic-advice
+  @skip path_regexp \.(js|css|png|jpe?g|gif|ico|woff|otf|ttf|eot|svg|txt|pdf|docx?|xlsx?)$
+  log_skip @skip
+
+  {$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+  @media_cache_thumbs path_regexp mediaCache ^/media/cache/(page|program|notification|stream)_thumb/media/(program|stream)/(.+)$
+  handle @media_cache_thumbs {
+    header Cache-Control "public, max-age=604800"
+    header Pragma "public"
+
+    @exists file {path}
+    handle @exists {
+      file_server
+    }
+    handle {
+        header Cache-Control "no-cache"
+        header Expires "0"
+        redir https://{host}/media/cache/resolve/{re.mediaCache.1}_thumb/media/{re.mediaCache.2}/{re.mediaCache.3}
+    }
+  }
+
+  @stream_media path_regexp streamMedia ^/media/stream/(.+)$
+  handle @stream_media {
+    header Cache-Control "public, max-age=1209600"
+    header Pragma "public"
+    file_server
+  }
+
+  @img_paths path_regexp imgPaths ^/img/([0-9a-z]+/)(.+\.(ico|css|gif|jpg|jpeg|png|webp))$
+  handle @img_paths {
+    header Cache-Control "public, max-age=1209600"
+    header Pragma "public"
+    file_server
+  }
+
+  @web_assets path /\.svg$ /\.eot$ /\.otf$ /\.ttf$ /\.woff$ /\.woff2$ /\.js$
+  handle @web_assets {
+    header Cache-Control "public, max-age=1209600"
+    header Pragma "public"
+    header Access-Control-Allow-Origin "*"
+    file_server
+  }
+
+ @css_ico_files path_regexp cssIcoFiles (.+\.(ico|css))$
+  handle @css_ico_files {
+    header Cache-Control "public, max-age=1209600"
+    header Pragma "public"
+    file_server
+  }
+
+  @img_assets path_regexp imgAssets ^/img/(.+\.(ico|css|js|gif|jpg|jpeg|webp|png|svg|woff2))$
+  handle @img_assets {
+    header Cache-Control "public, max-age=1209600"
+    header Pragma "public"
+    file_server
+  }
+
+  @traffic_advice path /.well-known/traffic-advice
+  handle @traffic_advice {
+    header Content-Type "application/trafficadvice+json; charset=utf-8"
+    file_server
+  }
+
+    @build_assets path_regexp ^/(fonts|js|build/*)/(.+\.(css|js|gif|svg|eot|ttf|woff|woff2))$
+    handle @build_assets {
+      header Access-Control-Allow-Origin "*"
+      header Cache-Control "public, max-age=1209600"
+      header Pragma "public"
+      file_server
+    }
+
+	php_server {
+	  file_server off
+    resolve_root_symlink false
+  }
+}

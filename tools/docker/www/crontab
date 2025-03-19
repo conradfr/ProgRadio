@@ -1,1 +1,1 @@
-*/30 * * * * goaccess /var/log/nginx/access.log -o /var/www/templates/report.html --log-format=COMBINED --ignore-crawlers 2>&1
+*/30 * * * * goaccess /var/log/caddy/access.log -o /app/templates/report.html --log-format=CADDY --ignore-crawlers 2>&1

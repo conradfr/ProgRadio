@@ -1,7 +1,9 @@
 {% extends 'base_site.html.twig' %}
 
-{% block header_supp %}
-    <link rel="preload" href="{{ asset('build/js/app.bundle.js', 'dynamic') }}" as="script">
+{% set app_js = asset('build/js/app.js', 'dynamic') %}
+
+{% block head_supp %}
+    <link rel="preload" href="{{ preload(app_js, {as: 'script'}) }}" as="script">
 {% endblock %}
 
 {# now done in vue based on route #}
@@ -41,5 +43,5 @@ const scrollToCursor = function() {
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('build/js/app.js', 'dynamic') }}"></script>
+    <script src="{{ asset(app_js, 'dynamic') }}"></script>
 {% endblock %}

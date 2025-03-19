@@ -22,12 +22,14 @@ RUN ls /tmp
 
 # --------------- PHP ---------------
 
-FROM php:8.4-fpm
+FROM dunglas/frankenphp:1-php8.4
 
 RUN mkdir -p /scripts
 COPY ./tools/docker/www/docker-entry.sh /scripts
 
+ARG USER=www-data
 ENV TZ=Europe/Paris
+ENV FRANKENPHP_CONFIG="worker ./public/index.php"
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -76,16 +78,10 @@ RUN crontab /etc/cron.d/goaccess-cron
 
 RUN touch /var/log/cron.log
 
+RUN mkdir -p /var/log/caddy/
+RUN touch /var/log/caddy/access.log
+
 RUN printenv | sed 's/^\(.*\)$/export \1/g' > /root/project_env.sh
-
-# nginx
-
-COPY ./tools/docker/www/app.conf /etc/nginx/conf.d/app.conf
-# RUN ls /etc/nginx/conf.d
-COPY ./tools/docker/www/fpm-supp.conf /usr/local/etc/php-fpm.d/fpm-supp.conf
-
-RUN rm -rf /etc/nginx/sites-enabled
-RUN mkdir -p /etc/nginx/sites-enabled
 
 # Install extensions
 RUN pecl install apcu \
@@ -98,11 +94,12 @@ RUN pecl install apcu \
  && docker-php-ext-enable apcu \
  && pecl clear-cache
 
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY ./tools/docker/www/local.ini /usr/local/etc/php/conf.d/local.ini
 
 RUN ls /usr/local/etc/php/conf.d
 RUN cat /usr/local/etc/php/conf.d/local.ini
-RUN cat /usr/local/etc/php-fpm.d/fpm-supp.conf
+# RUN cat /usr/local/etc/php-fpm.d/fpm-supp.conf
 
 # Expose port 80
 EXPOSE 80
@@ -155,47 +152,61 @@ ENV APP_ENV=${APP_ENV} \
   ADMIN_API_URL=${ADMIN_API_URL} \
   ADMIN_API_KEY=${ADMIN_API_KEY} \
   SENTRY_DSN=${SENTRY_DSN} \
-  CDN_BASE_URL=${CDN_BASE_URL}
+  CDN_BASE_URL=${CDN_BASE_URL} \
+  SERVER_NAME=:80 \
+  FRANKENPHP_CONFIG="worker /app/public/index.php" \
+  APP_RUNTIME=Runtime\\FrankenPhpSymfony\\Runtime
+
+# Caddy
+COPY ./tools/docker/www/Caddyfile /etc/caddy/Caddyfile
+COPY ./tools/docker/www/worker.Caddyfile /etc/caddy/worker.Caddyfile
 
 # Copy vendors
-COPY --chown=www-data:www-data ./composer.json /var/www/composer.json
-COPY --chown=www-data:www-data ./composer.lock /var/www/composer.lock
-COPY --chown=www-data:www-data ./symfony.lock /var/www/symfony.lock
+COPY --chown=www-data:www-data ./composer.json /app/composer.json
+COPY --chown=www-data:www-data ./composer.lock /app/composer.lock
+COPY --chown=www-data:www-data ./symfony.lock /app/symfony.lock
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /app
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --prefer-dist --no-scripts --no-dev --no-interaction --no-autoloader && rm -rf /root/.composer
 
 # Copy existing application directory
-COPY --chown=www-data:www-data ./ /var/www/
+COPY --chown=www-data:www-data ./ /app/
 
 COPY --from=buildjs /tmp/public/build/ ./public/build/
 
 RUN composer dump-autoload --no-scripts --no-dev --optimize --classmap-authoritative
 
-# RUN mkdir -p /var/www/var/
-# RUN mkdir -p /var/www/var/cache/
-# RUN mkdir -p /var/www/var/cache/prod/
-RUN mkdir -p /var/www/var/logs/
-RUN mkdir -p /var/www/var/log/
+# RUN mkdir -p /app/var/
+# RUN mkdir -p /app/var/cache/
+# RUN mkdir -p /app/var/cache/prod/
+RUN mkdir -p /app/var/logs/
+RUN mkdir -p /app/var/log/
 
-RUN rm -rf /var/www/public/media
-RUN rm -rf /var/www/public/vue
-RUN rm -rf /var/www/public/sass
-RUN ln -s /var/shared/media /var/www/public/
+RUN rm -rf /app/public/media
+RUN rm -rf /app/public/vue
+RUN rm -rf /app/public/sass
+RUN ln -s /var/shared/media /app/public/
 
 #RUN chown -R www-data:www-data /var/shared/media
-#RUN chown -R www-data:www-data /var/www/var/
-# RUN chmod -R 777 /var/www/vendor
-RUN chmod -R 777 /var/www/var
+#RUN chown -R www-data:www-data /app/var/
+# RUN chmod -R 777 /app/vendor
+RUN chmod -R 777 /app/var
 # RUN chmod -R 777 /var/shared/
 
+RUN \
+	# Add additional capability to bind to port 80 and 443
+	setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp; \
+	# Give write access to /data/caddy and /config/caddy
+	chown -R ${USER}:${USER} /data/caddy && chown -R ${USER}:${USER} /config/caddy
+
+#USER ${USER}
 RUN usermod -u 1000 www-data
 
-HEALTHCHECK CMD wget 127.0.0.1:80 || exit 1
+HEALTHCHECK CMD wget localhost:80 || exit 1
 
 WORKDIR /scripts
 RUN chmod +x ./docker-entry.sh
