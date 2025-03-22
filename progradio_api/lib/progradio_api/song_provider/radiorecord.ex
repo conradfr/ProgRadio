@@ -116,7 +116,16 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
         |> Map.get("track", %{})
         |> Map.get("song")
 
-      %{artist: artist, title: title}
+      cover =
+        data
+        |> Map.get("track", %{})
+        |> Map.get("image100")
+
+      %{
+        artist: artist,
+        title: title,
+        cover_url: cover
+      }
     rescue
       reason ->
         Logger.error(

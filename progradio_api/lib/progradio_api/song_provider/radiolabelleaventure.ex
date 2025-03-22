@@ -46,7 +46,11 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
           value -> String.replace(value, " by <br>", "")
         end
 
-      %{artist: Map.get(data, "artist"), title: title}
+      %{
+        artist: Map.get(data, "artist"),
+        title: title,
+        cover_url: Map.get(data, "artwork")
+      }
     rescue
       reason ->
         Logger.error(

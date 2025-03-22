@@ -68,10 +68,24 @@ defmodule ProgRadioApi.SongProvider.Cinemix do
             _ -> nil
           end
 
+        cover =
+          try do
+            html
+            |> Floki.find("#cpPictureMainSong")
+            |> Floki.text()
+            |> String.trim()
+            |> tap(fn e ->
+              if e === "", do: nil, else: e
+            end)
+          rescue
+            _ -> nil
+          end
+
         unless artist === nil and title === nil do
           %{
             artist: artist,
-            title: title
+            title: title,
+            cover_url: cover
           }
         else
           %{}

@@ -77,7 +77,8 @@ defmodule ProgRadioApi.SongProvider.Radioking do
 
         %{
           artist: SongProvider.recase(data["artist"] || nil),
-          title: SongProvider.recase(data["title"] || nil)
+          title: SongProvider.recase(data["title"] || nil),
+          cover_url: data["cover"] || nil
         }
     end
   end

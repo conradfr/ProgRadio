@@ -74,8 +74,13 @@ defmodule ProgRadioApi.SongProvider.Rouge do
       _ ->
         artist = Map.get(data, "interpret")
         title = Map.get(data, "title")
+        cover = Map.get(data, "imageURL")
 
-        %{artist: artist, title: title}
+        %{
+          artist: artist,
+          title: title,
+          cover_url: cover
+        }
     end
   end
 end

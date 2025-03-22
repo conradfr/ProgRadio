@@ -104,9 +104,25 @@ defmodule ProgRadioApi.SongProvider.Nrj do
 
       _ ->
         unless data["song"]["artist"] === @discarded_artist do
+          artist =
+            data
+            |> Map.get("song", %{})
+            |> Map.get("artist")
+
+          title =
+            data
+            |> Map.get("song", %{})
+            |> Map.get("title")
+
+          cover =
+            data
+            |> Map.get("song", %{})
+            |> Map.get("img_url")
+
           %{
-            artist: SongProvider.recase(data["song"]["artist"]),
-            title: SongProvider.recase(data["song"]["title"])
+            artist: SongProvider.recase(artist),
+            title: SongProvider.recase(title),
+            cover_url: cover
           }
         else
           %{}

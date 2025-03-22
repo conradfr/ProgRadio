@@ -59,7 +59,8 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
       _ ->
         %{
           artist: SongProvider.recase(data["artist"]),
-          title: SongProvider.recase(data["title"])
+          title: SongProvider.recase(data["title"]),
+          cover_url: data["image"] || nil
         }
     end
   end

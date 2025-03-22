@@ -61,7 +61,8 @@ defmodule ProgRadioApi.SongProvider.Virageradio do
       _ ->
         %{
           artist: SongProvider.recase(data["#content"]["chanteur"]),
-          title: SongProvider.recase(data["#content"]["chanson"])
+          title: SongProvider.recase(data["#content"]["chanson"]),
+          cover_url: data["#content"]["pochette"] || nil
         }
     end
   end

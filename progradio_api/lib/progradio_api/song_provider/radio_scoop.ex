@@ -103,7 +103,8 @@ defmodule ProgRadioApi.SongProvider.RadioScoop do
       _ ->
         %{
           artist: SongProvider.recase(data["artist"] || nil),
-          title: SongProvider.recase(data["title"] || nil)
+          title: SongProvider.recase(data["title"] || nil),
+          cover_url: Map.get(data, "artwork")
         }
     end
   end

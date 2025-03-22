@@ -255,7 +255,8 @@ defmodule ProgRadioApi.SongServer do
 
   defp update_status(%{} = song, %{:type => "radio_stream"} = db_data) do
     if map_size(song) == 0 or db_data == nil or
-      ((Map.get(song, :artist) == nil or song.artist == "") and (Map.get(song, :title) == nil or song.title == "")) do
+         ((Map.get(song, :artist) == nil or song.artist == "") and
+            (Map.get(song, :title) == nil or song.title == "")) do
       RadioStream.update_status(db_data.id, true)
     else
       RadioStream.update_status(db_data.id, false)
@@ -264,7 +265,8 @@ defmodule ProgRadioApi.SongServer do
 
   defp update_status(%{} = song, %{:type => "stream_song"} = db_data) do
     if map_size(song) == 0 or db_data == nil or
-      ((Map.get(song, :artist) == nil or song.artist == "") and (Map.get(song, :title) == nil or song.title == "")) do
+         ((Map.get(song, :artist) == nil or song.artist == "") and
+            (Map.get(song, :title) == nil or song.title == "")) do
       StreamSong.update_status(db_data.id, true)
     else
       StreamSong.update_status(db_data.id, false)
