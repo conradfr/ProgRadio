@@ -339,151 +339,149 @@ export const messages = {
     },
   },
   es: {
-    message: {
-      consent: {
-        accept: 'Aceptar',
-        allow: '¿Prefiere los anuncios personalizados?',
-        deny: 'Denegar',
-        disclaimer: '(Este sitio web no rastrea a sus visitantes ni vende datos)'
+    consent: {
+      accept: 'Sí',
+      allow: '¿Preferir anuncios personalizados?',
+      deny: 'No',
+      disclaimer: '(No vendemos los datos de nuestros usuarios)'
+    },
+    loading: 'Cargando...',
+    generic: {
+      delete: 'Eliminar',
+      error: 'Ha ocurrido un error.'
+    },
+    now_page: {
+      back: '← Volver a la parrilla completa de programas',
+      title: 'En este momento en la radio'
+    },
+    params_page: {
+      automatic: 'utomático',
+      automatic_help: 'Basado en tu tipo de conexión (ADSL, fibra, 4G...) y tu ancho de banda.',
+      deactivated: 'Desactivado',
+      description: 'Para reducir los anuncios presentes al inicio del streaming y los tiempos de carga, el reproductor puede continuar reproduciendo el flujo anterior durante varios minutos cuando cambias de radio o pones la reproducción en pausa.',
+      duration_10: 'Durante 10 minutos',
+      duration_30: 'Durante 30 minutos',
+      no_support: 'Tu navegador no soporta la detección automática.',
+      save: 'Guardar',
+      sub_title: 'Reproducciones de flujos simultáneos',
+      title: 'Configuración del reproductor',
+      two_flux: 'Dos flujos simultáneos',
+      updated: 'Configuración actualizada'
+    },
+    player: {
+      autoplay_error: 'Tu navegador no permite la reproducción automática de medios. Por favor, haz clic en Escuchar" una vez más.',
+      play_error: 'Error de reproducción',
+      placeholder: 'Haz clic en un logo para iniciar la reproducción',
+      previous: 'Escuchar {radio} de nuevo',
+      save_song: 'Guardar este título ({song})',
+      song_saved: 'El título ha sido guardad.',
+      favorites: {
+        add: 'Añadir a favoritos',
+        remove: 'Eliminar de favoritos'
       },
-      loading: 'Cargando ...',
-      generic: {
-        delete: 'Suprimir',
-        error: 'Se ha producido un error'
+      output: {
+        choose: 'Seleccionar una salida de audio',
+        choose_label: 'Elegir una salida de audio:',
+        save: 'Guardar como salida predeterminada',
+        pause_if_disconnect: 'Detener la reproducción si la salida se desconecta',
       },
-      now_page: {
-        back: '← Ir al programa Grid de todas las radios.',
-        title: 'En este momento en la radio'
-      },
-      params_page: {
-        automatic: 'Automático (',
-        automatic_help: 'Basado en su conexión y ancho de banda.',
-        deactivated: 'Desactivado',
-        description: 'Para reducir los anuncios al inicio de un flujo de radio y los tiempos de carga, el reproductor puede leer dos flujos simultáneos cuando cambia la radio o la pausa.',
-        duration_10: 'Durante 10mn',
-        duration_30: 'Durante 30mn',
-        no_support: 'Su navegador no admite la detección automática.',
-        save: 'Actualizar',
-        sub_title: 'Stream multiplex',
-        title: 'Parámetros del reproductor',
-        two_flux: 'Dos streams simultáneos.',
-        updated: 'Los parámetros se han actualizado.'
-      },
-      player: {
-        autoplay_error: 'Su navegador no permite la reproducción automática de medios. Gracias por hacer clic en "Escuchar" una vez más',
-        play_error: 'error de reproducción',
-        placeholder: 'Haga clic en un logotipo para reproducir',
-        previous: 'Escucha {radio} de nuevo',
-        save_song: 'La canción fue salvada ({song})',
-        song_saved: 'La canción fue salvada.',
-        favorites: {
-          add: 'Agregar a los favoritos',
-          remove: 'eliminar de los favoritos'
+      timer: {
+        cancelled: 'El temporizador ha sido cancelado',
+        end_in: 'Fin del temporizador en 0 minuto | Fin del temporizador en {minutes} minuto | Fin del temporizador en {minutes} minutos',
+        finish: 'Detener la reproducción (temporizador)',
+        modal: {
+          abrv: 'min',
+          cancel: 'Cancelar el temporizador',
+          close: 'Cerrar',
+          length: 'Duración',
+          placeholder: 'Minutos',
+          quick: 'Selección rápida',
+          set: 'Iniciar el temporizador',
+          title: 'Temporizador',
+          x_minutes: '{minutes} minutos',
+          x_hours: '{hours} horas'
         },
-        output: {
-          choose: 'Seleccionar una salida de audio',
-          choose_label: 'Elegir una salida de audio:',
-          save: 'Guardar como salida predeterminada',
-          pause_if_disconnect: 'Detener la reproducción si la salida está desconectada'
-        },
-        timer: {
-          cancelled: 'El temporizador ha sido cancelado',
-          end_in: 'Fin del temporizador en 0 minuto. | Fin del temporizador en {minutes} minuto. | Fin del temporizador en {minutes} minutos.',
-          finish: 'Parar la reproducción (temporizador)',
+        set: 'El temporizador está activado para 0 minuto | El temporizador está activado para {minutes} minuto | El temporizador está activado para {minutes} minutos',
+        title: 'Temporizador',
+        tooltip: 'Haz clic aquí para activar el temporizador'
+      },
+      video: {
+        title: 'Reproductor de video'
+      }
+    },
+    radio_page: {
+      back: '← Volver a la parrilla completa de programas',
+      current: '↓ Ir al programa en curso',
+      no_schedule: 'Programas no disponibles.',
+      play: 'Escuchar {radio}',
+      stop: 'Detener {radio}',
+      title: 'Los programas y streaming de {radio}',
+      webradios: 'Radios web'
+    },
+    schedule: {
+      no_schedule: 'Programas no disponibles :(',
+      no_radio: 'No hay radios en esta categoría',
+      no_radio_favorites: 'No tienes radios favoritas',
+      preroll_filter: 'Radios con publicidad al inicio',
+      title: 'Todas las parrillas de radio, todos los programas y escucha en línea',
+      today: 'Hoy',
+      tomorrow: 'Mañana',
+      tooltip: 'Más radios aquí',
+      radio_list: {
+        page: 'Página de programas',
+        pick_region_title: 'Elegir una región',
+        region: {
           modal: {
-            abrv: 'mn',
-            cancel: 'Cancela el temporizador',
-            close: 'Cerrar',
-            length: 'Duración',
-            placeholder: 'Minutos',
-            quick: 'Selección rápida',
-            set: 'Iniciar el temporizador',
-            title: 'Temporizador',
-            x_minutes: '{minutes} minutos',
-            x_hours: '{hours} horas'
-          },
-          set: 'El temporizador se activa durante 0 minutos | El temporizador se activa durante {minutes} minutos | El temporizador se activa durante {minutes} minutos',
-          title: 'Minuteur',
-          tooltip: 'Haga clic aquí para activar el temporizador'
-        },
-        video: {
-          title: 'Reproductor de video'
-        },
-      },
-      radio_page: {
-        back: '← Ir a la programación de todas las emisoras de radio.',
-        current: '↓ Ir al programa actual',
-        no_schedule: 'Programas no disponibles.',
-        play: 'Escuchar {radio}',
-        stop: 'Detener {radio}',
-        title: 'Programas de {radio} y streaming',
-        webradios: 'Radios web'
-      },
-      schedule: {
-        no_schedule: 'Programas no disponibles :(',
-        no_radio: 'No hay radio en esta categoría',
-        no_radio_favorites: 'No tienes emisoras de radio favoritas',
-        preroll_filter: 'Radios con publicidad de lanzamiento',
-        title: 'Todos los horarios de la radio, todos los programas y la escucha en línea',
-        today: 'Hoy en día',
-        tomorrow: 'Mañana',
-        tooltip: 'Más radios aquí',
-        radio_list: {
-          page: 'Página de programas',
-          pick_region_title: 'Elija una región',
-          region: {
-            modal: {
-              close: 'Cerrar',
-            }
+            close: 'Cerrar'
           }
         }
+      }
+    },
+    songs_page: {
+      buy: 'Comprar',
+      buy_amazon: 'Amazon',
+      find: 'Buscar',
+      find_deezer: 'Deezer',
+      find_spotify: 'Spotify',
+      find_youtube: 'Youtube',
+      no_songs: 'No tienes títulos guardados.',
+      title: 'Títulos guardados'
+    },
+    streaming: {
+      categories: {
+        all_countries: 'Todos los países',
+        favorites: 'Favoritos',
+        last: 'La gente está escuchando...',
+        history: 'Mi historial'
       },
-      songs_page: {
-        buy: 'Comprar',
-        buy_amazon: 'Amazon',
-        find: 'Busque',
-        find_deezer: 'Deezer',
-        find_spotify: 'Spotify',
-        find_youtube: 'YouTube',
-        no_songs: 'Todavía no tienes canciones guardadas.',
-        title: 'Canciones guardadas',
+      close: 'Volver',
+      country: 'País',
+      country_search_no_result: 'No se encontró ningún país',
+      listeners_title: 'Oyentes',
+      listeners: 'No hay oyentes actualmente. | Un oyente actualmente. | {how_many} oyentes actualmente.',
+      more: 'Ver más',
+      no_results: 'No hay radios',
+      play: 'Escuchar {radio}',
+      playing: 'Título',
+      random: 'Reproducir una radio al azar',
+      search_placeholder: 'Buscar por nombre, estilo, contenido...',
+      stop: 'Detener',
+      sort: {
+        name: 'Por orden alfabético',
+        popularity: 'Por popularidad',
+        random: 'Por orden aleatorio',
+        last: 'Por última escucha (mundo)',
+        user_last: 'Por última escucha (yo)'
       },
-      streaming: {
-        categories: {
-          all_countries: 'Todos los países',
-          favorites: 'Favoritos',
-          last: 'La gente escucha...',
-          history: 'Mi historia',
-        },
-        close: 'Atrás',
-        country: 'País',
-        country_search_no_result: 'No se ha encontrado ningún país',
-        listeners_title: 'Oyentes',
-        listeners: 'No gente actualmente. | Uno gente actualmente. | {how_many} gentes actualmente.',
-        more: 'Ver más',
-        no_results: 'No hay radio',
-        play: 'Escuchar {radio}',
-        playing: 'Título',
-        random: 'Reproducción de una radio aleatoria',
-        search_placeholder: 'Búsqueda por nombre, estilo y contenido ...',
-        stop: 'Detener',
-        sort: {
-          name: 'Por orden alfabético',
-          popularity: 'Por popularidad',
-          random: 'Orden aleatorio',
-          last: 'Por última vez jugado (mundo)',
-          user_last: 'Por última vez jugado (yo)'
-        },
-        suggest: 'Sugerir una modificación',
-        title: 'Emisoras de radio de todo el mundo en streaming',
-        website: 'Sitio web'
-      },
-      toast: {
-        home: {
-          enabled: 'Esta página se ha establecido como pantalla de inicio.',
-          disabled: 'Esta página ha sido eliminada como pantalla de inicio.'
-        }
-      },
+      suggest: 'Sugerir una modificación',
+      title: 'Las radios de todo el mundo en streaming',
+      website: 'Sitio web'
+    },
+    toast: {
+      home: {
+        enabled: 'La página ha sido activada como página de inicio.',
+        disabled: 'La página ha sido retirada como página de inicio.'
+      }
     }
   },
   de: {
