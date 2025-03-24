@@ -16,6 +16,8 @@ $icon-play-size-hover-sm: 2.462rem;
 // XL
 
 $player-xl-height: 4.462rem;
+$player-xl-width-xl-breakpoint: 1750px;
+$player-xl-width-xl: 70vw;
 $player-xl-width: 90vw;
 $player-xl-actions-width: 38.462rem;
 $player-xl-padding: 0.769rem;
@@ -61,6 +63,46 @@ $icon-play-size-hover-xl: 2.692rem;
 
       &:hover {
         color: var(--progradio-player-color);
+      }
+    }
+  }
+
+  .player-radio-previous {
+    position: absolute;
+    left: -21px;
+    width: 23px;
+
+    text-align: right;
+    line-height: 1em;
+    cursor: pointer;
+
+    padding: 5px 20px 6px 5px;
+    background-color: var(--progradio-player-background);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    @include media-breakpoint-down(sm) {
+      top: 17px;
+    }
+
+    i {
+      color: var(--progradio-player-link-color);
+      font-size: 1rem;
+
+      &:hover {
+        color: var(--progradio-player-color);
+      }
+    }
+
+    a {
+      color: var(--progradio-player-link-color);
+
+      &:hover {
+        color: var(--progradio-player-color);
+      }
+
+      i {
+        font-size: 1rem;
       }
     }
   }
@@ -312,44 +354,7 @@ $icon-play-size-hover-xl: 2.692rem;
   }
 
   .player-radio-previous {
-    position: absolute;
     top: 8px;
-    left: -21px;
-    width: 23px;
-
-    text-align: right;
-    line-height: 1em;
-    cursor: pointer;
-
-    padding: 5px 20px 6px 5px;
-    background-color: var(--progradio-player-background);
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-
-    @include media-breakpoint-down(sm) {
-      top: 17px;
-    }
-
-    i {
-      color: var(--progradio-player-link-color);
-      font-size: 1rem;
-
-      &:hover {
-        color: var(--progradio-player-color);
-      }
-    }
-
-    a {
-      color: var(--progradio-player-link-color);
-
-      &:hover {
-        color: var(--progradio-player-color);
-      }
-
-      i {
-        font-size: 1rem;
-      }
-    }
   }
 
 /*
@@ -397,15 +402,19 @@ $icon-play-size-hover-xl: 2.692rem;
 
 .navbar-player-xl {
   z-index: 99;
-  bottom: 0.385rem;
+  bottom: 0.769rem;
   margin: auto;
   left: 0;
   right: 0;
 
   color: var(--progradio-player-color);
 
-  width: $player-xl-width;
   height: $player-xl-height;
+  width: $player-xl-width;
+
+  @media only screen and (min-width: $player-xl-width-xl-breakpoint) and (orientation: landscape) {
+    width: $player-xl-width-xl;
+  }
 
   backdrop-filter: blur(4px);
   background-color: var(--progradio-player-background-xl);
@@ -416,11 +425,25 @@ $icon-play-size-hover-xl: 2.692rem;
 
   padding-left: 5px;
 
-  .navbar-player-header, .navbar-player-actions {
+  .navbar-player-header {
+    min-width: $player-xl-actions-width;
+
+    // fix width only if live song
+    &:has(+ .navbar-player-song) {
+      width: $player-xl-actions-width;
+    }
+  }
+
+  .navbar-player-actions {
     width: $player-xl-actions-width;
   }
 
   .player-radio-expand {
+    top: 20px;
+    background-color: var(--progradio-player-background-xl);
+  }
+
+  .player-radio-previous {
     top: 20px;
     background-color: var(--progradio-player-background-xl);
   }

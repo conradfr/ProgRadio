@@ -5,6 +5,13 @@
     <div class="player-radio-expand cursor-pointer" v-on:click="toggleXLPLayer()">
       <i class="bi bi-arrows-angle-contract"></i>
     </div>
+    <Transition name="play-prev-fade" mode="out-in">
+      <div v-if="prevRadio" class="player-radio-previous"
+           v-on:click="togglePrevious"
+           :title="$i18n.t('message.player.previous', { radio: prevRadio.name })">
+        <i class="bi-arrow-left-right"></i>
+      </div>
+    </Transition>
     <div class="h-100 d-flex justify-content-between align-items-center">
       <div class="navbar-player-header d-flex align-items-center">
         <PlayerImageXL />

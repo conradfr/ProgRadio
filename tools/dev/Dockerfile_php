@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -y \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY ./tools/docker/www/fpm-supp.conf /usr/local/etc/php-fpm.d/fpm-supp.conf
+COPY ./tools/dev/fpm-supp.conf /usr/local/etc/php-fpm.d/fpm-supp.conf
 
 # Install extensions
 RUN pecl install apcu \
