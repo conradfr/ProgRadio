@@ -16,7 +16,9 @@
 {$SERVER_NAME:localhost} {
 	log {
 		{$CADDY_SERVER_LOG_OPTIONS}
-    output file /var/log/caddy/access.log
+    output file /var/log/caddy/access.log {
+      roll_keep_for: 168h
+    }
 	}
 
 	root * public/
