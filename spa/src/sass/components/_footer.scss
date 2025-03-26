@@ -1,0 +1,33 @@
+footer {
+  font-size: 0.8125rem;
+  color: var(--progradio-timeline-color);
+
+  padding: 100px 0 5px;
+
+  a {
+    color: var(--progradio-footer-a);
+
+    &:hover,
+    &:focus {
+      color: var(--progradio-timeline-color);
+    }
+  }
+
+  /* taken from vue plugin */
+
+  .gb-flag--micro {
+    height: 13px;
+  }
+
+  .gb-flag {
+    filter: grayscale(50%);
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    user-select: none;
+
+    &:hover {
+      filter: grayscale(0);
+    }
+  }
+}

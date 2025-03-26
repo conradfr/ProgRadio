@@ -61,6 +61,7 @@
 
 # Compiled assets
 /public/build/js/*
+/public/build/assets/*
 /public/build/css/*.map
 /public/build/css/main.css
 /public/build/css/main_light.css
@@ -78,10 +79,12 @@
 
 # Node components
 /node_modules/
+/spa/node_modules/
 /Scraper/node_modules/
 /streams-proxy/node_modules/
 
-/public/vue/utils/petite-vue.es.js
+/spa/sr/utils/petite-vue.es.js
+/spa/public/build/*
 /public/phpinfo.php
 
 /public/js/bootstrap.bundle.min.js.map

@@ -1,13 +1,10 @@
 {% extends 'base_site.html.twig' %}
 
-{% set app_js = asset('build/js/app.js', 'dynamic') %}
+{#{% set app_js = asset('build/js/app.js', 'dynamic') %}#}
 
-{% block head_supp %}
-    <link rel="preload" href="{{ preload(app_js, {as: 'script'}) }}" as="script">
-{% endblock %}
-
-{# now done in vue based on route #}
-{#{% block bodysupp %} class="body-app"{% endblock %}#}
+{#{% block head_supp %}#}
+{#    <link rel="preload" href="{{ preload(app_js, {as: 'script'}) }}" as="script">#}
+{#{% endblock %}#}
 
 {% block javascript_head %}
 const baseUrl = '/';
@@ -43,5 +40,14 @@ const scrollToCursor = function() {
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset(app_js, 'dynamic') }}"></script>
+{#    <script src="{{ asset(app_js, 'dynamic') }}"></script>#}
+
+    {% if app.environment == 'dev' %}
+        <script type="module" src="http://localhost:8000/build/@vite/client"></script>
+        <script type="module" src="http://localhost:8000/build/src/app.ts"></script>
+    {% endif %}
+
+    {% if app.environment == 'prod' %}
+        {{ vite_entry_script_tags('app') }}
+    {% endif %}
 {% endblock %}

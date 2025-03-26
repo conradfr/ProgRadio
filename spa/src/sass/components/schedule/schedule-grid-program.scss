@@ -1,0 +1,287 @@
+$program-height: 60px;
+
+.schedule-radio-grid {
+  .schedule-radio-grid-row {
+    .program-container {
+      &.prevday::after, &.nextday::after {
+        content: "...";
+        font-weight: bold;
+        font-size: 2rem;
+        letter-spacing: -2px;
+        color: var(--progradio-program-container-color);
+        cursor: e-resize;
+
+        position: absolute;
+        top: 60%;
+        width: 32px;
+        height: 20px;
+        display:flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &.prevday::after {
+        left: -15px;
+      }
+
+      &.nextday::after {
+        right: -10px;
+      }
+
+      position: absolute;
+
+      margin-top: 1px;
+      height: $program-height;
+      box-sizing: border-box;
+
+      user-select: none;
+
+      &.none {
+        //position: fixed; seems to work only on FF
+        position: relative;
+
+        @include width(350px);
+
+        background-color: var(--progradio-program-container-none-bg);
+
+        transition: left 200ms ease-in-out 300ms;
+
+        .program {
+          margin-right: 0 !important;
+
+          .program-inner {
+            user-select: none;
+          }
+        }
+      }
+
+      .program {
+        height: 100%;
+        box-sizing: border-box;
+
+        margin-right: 5px;
+        background-color: var(--progradio-program-bg-color);
+        border: none;
+        border-left: 3px solid var(--progradio-program-border-color);
+
+        transition: box-shadow 20ms ease-in-out;
+        user-select: none;
+
+        &.program-current {
+          background-color: var(--progradio-program-hover-color);
+          border-left: 3px solid var(--progradio-program-current-border-l);
+        }
+
+        &.program-full {
+          visibility: hidden;
+          position: absolute;
+          //overflow-y: scroll;
+
+          transition: height 300ms ease-in-out 400ms, width 500ms ease-in-out, min-width 500ms ease-in-out;
+        }
+
+        &.long-enough {
+          @include media-breakpoint-down(sm) {
+            .schedule-display {
+              visibility: visible !important;
+              opacity: 1 !important;
+            }
+          }
+        }
+
+        &:hover {
+          z-index: 3 !important;
+          box-shadow: 0 0 9px -4px rgba(0,0,0,.25);
+
+          .schedule-display {
+            visibility: visible !important;
+            opacity: 1 !important;
+          }
+
+/*          .program-description-short-inner-song {
+            font-weight: bold;
+          }*/
+
+          .program-description-short-inner-text {
+            visibility: visible !important;
+            opacity: 1 !important;
+          }
+        }
+
+        &.program-current, &:hover {
+          .program-img {
+            opacity: 1 !important;
+            width: auto !important;
+          }
+
+          .program-description-short-inner {
+            &:before {
+              background: linear-gradient(to right, var(--progradio-program-inner-fade-1-hover) 90%, var(--progradio-program-inner-fade-2-hover) 95%, var(--progradio-program-inner-fade-3-hover) 99%) !important;
+            }
+          }
+
+          .schedule-display {
+            background-color: var(--progradio-program-hover-color) !important;
+          }
+        }
+
+        .program-inner {
+          $img-height: 58px;
+
+          height: 100%;
+          width: 100%;
+
+          padding: 7px 10px 0 10px;
+          border: 1px solid var(--progradio-program-border-color);
+          border-left: 0;
+
+          user-select: none;
+          -moz-user-select: none;
+
+          .program-img {
+            float: left;
+            height: $img-height;
+
+            opacity: 0;
+            width: 0;
+            transition: opacity 300ms ease-in-out;
+
+            margin: -7px 10px 0 -10px;
+
+            //background-repeat: no-repeat;
+            //background-position: left;
+            //background-size: contain;
+
+            img {
+              height: $img-height;
+
+              -webkit-user-select: none; /* Safari 3.1+ */
+              -moz-user-select: none; /* Firefox 2+ */
+              -ms-user-select: none; /* IE 10+ */
+              user-select: none; /* Standard syntax */
+              user-drag: none;
+              -webkit-user-drag: none;
+            }
+          }
+
+          .program-infos {
+            // transition: margin-left 200ms cubic-bezier(.21, 1.12, .67, .99) 200ms;
+          }
+
+          .program-title {
+            z-index: 1;
+            font-weight: bold;
+            color: var(--progradio-program-text-color);
+            line-height: 1;
+
+            user-select: none;
+            -moz-user-select: none;
+
+            margin-bottom: 1px;
+            overflow: hidden;
+            //overflow-y: visible;
+            white-space: nowrap;
+
+            .schedule-display {
+              float: right;
+
+              z-index: 2;
+              visibility: hidden;
+              opacity: 0;
+              transition: opacity 300ms ease-out;
+              background-color: var(--progradio-program-bg-color);
+
+              color: var(--progradio-schedule-display-color);
+              font-weight: normal;
+              font-size: $font-size-sm;
+            }
+          }
+
+          .program-host {
+            color: var(--progradio-program-text-color);
+            font-size: 0.846rem;
+
+            user-select: none;
+            -moz-user-select: none;
+
+            overflow: hidden;
+            white-space: nowrap;
+
+            margin-bottom: 3px;
+          }
+
+          .program-description-short {
+            margin-top: -3px;
+
+            &.program-description-nohost {
+              margin-top: 10px;
+            }
+
+            .program-description-short-inner {
+              position: relative;
+
+              &:before {
+                content: '';
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background: linear-gradient(to right, var(--progradio-program-inner-fade-1) 90%, var(--progradio-program-inner-fade-2) 95%, var(--progradio-program-inner-fade-3) 99%);
+              }
+
+              .program-description-short-inner-text {
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 300ms ease-out;
+
+                color: var(--progradio-program-text-color);
+                font-weight: normal;
+
+                &.program-description-short-inner-text-current {
+                  @include media-breakpoint-down(sm) {
+                    visibility: visible;
+                    opacity: 0.85;
+                  }
+                }
+              }
+
+              .program-description-short-inner-song {
+                color: var(--progradio-program-song-color);
+
+                padding-right: 4px;
+                margin-right: 7px;
+              }
+
+              font-size: 0.846rem;
+
+              user-select: none;
+              -moz-user-select: none;
+
+              overflow: hidden;
+              white-space: nowrap;
+            }
+          }
+
+          .program-section {
+            position: absolute;
+            top: calc(#{$program-height} - 4px);
+
+            height: 6px;
+            width: 6px;
+            background-color: var(--progradio-program-section);
+            border-radius: 50%;
+            display: inline-block;
+
+            cursor: pointer;
+
+            &:hover {
+             background-color: var(--progradio-program-section-hover);
+            }
+          }
+        }
+      }
+    }
+  }
+}

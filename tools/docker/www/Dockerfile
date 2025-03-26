@@ -3,18 +3,16 @@
 FROM node:lts-alpine as buildjs
 
 WORKDIR /tmp
-COPY ./package.json /tmp
-COPY ./package-lock.json /tmp
-COPY ./tsconfig.json /tmp
-COPY ./env.d.ts /tmp
+COPY ./spa/package.json /tmp
+COPY ./spa/package-lock.json /tmp
 
-RUN npm i caniuse-lite browserslist
-RUN npx update-browserslist-db@latest
 RUN npm install
 
 RUN mkdir /tmp/public/
-COPY ./public /tmp/public
-COPY ./buildjs /tmp/buildjs
+RUN mkdir /tmp/public/assets/
+RUN mkdir /tmp/public/.vite/
+
+COPY ./spa /tmp
 
 RUN npm run build
 
@@ -176,7 +174,9 @@ RUN composer install --prefer-dist --no-scripts --no-dev --no-interaction --no-a
 # Copy existing application directory
 COPY --chown=www-data:www-data ./ /app/
 
-COPY --from=buildjs /tmp/public/build/ ./public/build/
+RUN mkdir -p ./public/build/assets/
+COPY --from=buildjs /tmp/public/build/assets/ ./public/build/assets/
+COPY --from=buildjs /tmp/public/build/.vite/ ./public/build/.vite/
 
 RUN composer dump-autoload --no-scripts --no-dev --optimize --classmap-authoritative
 
@@ -187,8 +187,6 @@ RUN mkdir -p /app/var/logs/
 RUN mkdir -p /app/var/log/
 
 RUN rm -rf /app/public/media
-RUN rm -rf /app/public/vue
-RUN rm -rf /app/public/sass
 RUN ln -s /var/shared/media /app/public/
 
 #RUN chown -R www-data:www-data /var/shared/media

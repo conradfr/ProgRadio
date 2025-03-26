@@ -1,0 +1,50 @@
+{
+  "name": "progradio",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "license": "NPOSL-3.0",
+  "scripts": {
+    "dev": "eslint & vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --build --force",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "player": "vite build -c vite.player.config.ts"
+  },
+  "dependencies": {
+    "@growthbunker/vueflags": "github:razorness/vueflags#master",
+    "@vueform/multiselect": "^2.6.11",
+    "@vueuse/core": "^13.0.0",
+    "hammerjs": "^2.0.8",
+    "lodash": "^4.17.21",
+    "luxon": "^3.6.0",
+    "object-hash": "^3.0.0",
+    "pinia": "^3.0.1",
+    "vue": "^3.5.13",
+    "vue-gtag": "^2.1.2",
+    "vue-i18n": "^11.1.2",
+    "vue-router": "^4.5.0",
+    "vue3-slider": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.16",
+    "@types/luxon": "^3.4.2",
+    "@types/node": "^22.13.13",
+    "@types/wicg-mediasession": "^1.1.8",
+    "@typescript/lib-dom": "npm:@types/web@0.0.63",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.5.0",
+    "@vue/tsconfig": "^0.7.0",
+    "bootstrap": "^5.3.3",
+    "eslint-plugin-import": "^2.31.0",
+    "phoenix-types": "^0.1.0",
+    "sass-embedded": "^1.86.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vite-plugin-symfony": "^8.0.2",
+    "vue-tsc": "^2.2.4"
+  }
+}

@@ -1,0 +1,57 @@
+#schedule-app {
+  padding: 0 0 20px !important;
+}
+
+.schedule-container {
+  outline: none !important;
+}
+
+.schedule-radio-grid {
+  outline: none !important;
+
+  margin-top: $timeline-height;
+  margin-bottom: 20px;
+  margin-left: $margin-from-radio-list;
+  padding-bottom: 1px; /* prevents vertical scroll bar due to sections */
+
+  position: relative;
+  //overflow: hidden;
+  white-space: nowrap;
+  cursor: ew-resize;
+  z-index: 1;
+
+  min-height: 350px;
+  width: $viewport-width;
+  // background-color: $background-color;
+
+  backface-visibility: hidden;
+  transition: transform 850ms cubic-bezier(.21,1.12,.67,.99);
+
+  .schedule-radio-grid-row {
+    display: flex;
+    align-items: stretch;
+
+    overflow: hidden;
+    white-space: nowrap;
+
+    box-sizing: border-box;
+    height: $grid-row-height;
+    padding: 2px 0;
+  }
+
+  .schedule-radio-grid-no-radio {
+    position: fixed;
+    top: 10px;
+    transition: left 200ms ease-in-out 300ms;
+    width: 500px;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+
+    @include media-breakpoint-down(sm) {
+      width: 270px;
+    }
+
+  }
+}
+
+

@@ -1,0 +1,22 @@
+.loading {
+  position: fixed; /* or absolute */
+  top: 50%;
+  // left: 49%;
+  left: calc(49% - (11.154rem / 2));
+
+  z-index: 6;
+  opacity: 0.77;
+
+  .alert-progradio {
+    background-color: var(--progradio-loader-background);
+    color: var(--progradio-loader-text);
+    padding: 0.923rem;
+    width: 11.154rem;
+
+    .spinner-border {
+      width: 1.231rem;
+      height: 1.231rem;
+      border-width: .2em;
+    }
+  }
+}

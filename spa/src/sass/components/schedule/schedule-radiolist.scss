@@ -1,0 +1,340 @@
+
+@mixin radio-logo-play-mixin {
+  width: 100%;
+  height: 100%;
+
+  &.radio-logo-play-hide {
+    display: none;
+  }
+
+  &:hover:not(.radio-logo-play-hide), &.radio-logo-play-active:not(.radio-logo-play-hide) {
+    //opacity: 0.9;
+
+    background-color: var(--progradio-radio-logo-play);
+
+    &.radio-logo-play-secondary {
+      background-color: $success;
+    }
+
+    mask-image: url(/img/play-button-inside-a-circle.svg);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: 75% 75%;
+
+    -webkit-mask-image: url(/img/play-button-inside-a-circle.svg);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: 70% 70%;
+
+    /* IE only, default to black icon */
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+      background-color: transparent;
+
+      background-image: url(/img/play-button-inside-a-circle.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 75% 75%;
+    }
+  }
+
+  &.radio-logo-play-paused:not(:hover) {
+    opacity: 0.5;
+  }
+
+  &.radio-logo-play-active {
+    opacity: 0.9;
+  }
+
+  &.radio-logo-play-active:not(.radio-logo-play-paused) {
+    mask-image: url(/img/rounded-pause-button.svg) !important;
+    -webkit-mask-image: url(/img/rounded-pause-button.svg) !important;
+
+    /* IE only, default to black icon */
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+      background-image: url(/img/rounded-pause-button.svg) !important;
+    }
+  }
+}
+
+.schedule-radio-list {
+  position: absolute;
+  z-index: 2;
+  //top: 41px;
+  top: 91px;
+  left: 0;
+
+
+  width: $radio-list-width;
+  //background-color: #343434;
+
+  opacity: 0.95;
+
+  a {
+    position: relative;
+    z-index: 3;
+  }
+
+  .radio-logo {
+    display: block;
+    box-sizing: border-box;
+    height: $grid-row-height;
+
+    cursor: pointer;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--progradio-radio-list-background);
+
+    border-bottom: 1px solid var(--progradio-radio-logo-border-b);
+    //border: 1px solid red;
+    box-shadow: 3px 0 8px -3px rgba(0,0,0,0.4);
+
+    .radio-logo-bg {
+      position: relative;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+
+      background-color: var(--progradio-radio-list-background);
+      background-repeat: no-repeat;
+      background-position: center;
+
+      & > .radio-logo-play {
+        @include radio-logo-play-mixin;
+      }
+    }
+
+    &.radio-logo-nohover {
+      cursor: default;
+    }
+
+    &:hover:not(.radio-logo-nohover) {
+      //opacity: 0.9;
+    }
+  }
+
+  .radio-list-one-flag {
+    z-index: 5;
+    position: absolute;
+    top: -7px;
+    right: -2px;
+    opacity: 0.7;
+
+  }    transition: opacity 150ms;
+
+  .radio-list-one-listeners {
+    z-index: 5;
+    position: absolute;
+    bottom: calc(1.231rem - 8px);
+    right: -5px;
+    opacity: 0.7;
+    transition: opacity 150ms;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .radio-list-one-wrapper {
+    position: relative;
+    //z-index: 2;
+
+    &:hover {
+      .radio-list-one-flag {
+        opacity: 1;
+      }
+    }
+  }
+
+  .radio-subradio {
+    //z-index: 4;
+    position: absolute;
+    top: 5px;
+    left: 64px;
+
+    height: 1.231rem;
+    width: 1.154rem;
+    line-height: 0.692rem;
+    font-size: 0.692rem;
+
+    padding: 4px 1px 0 4px;
+    background-color: var(--progradio-radio-list-background);
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+
+    opacity: 0.95;
+    cursor: pointer;
+
+    transition: left 75ms ease-in-out 50ms, opacity 75ms;
+
+    i {
+      color: $white;
+      font-size: 0.692rem;
+    }
+
+    &:hover {
+      left: 68px;
+      opacity: 1;
+    }
+  }
+
+  .radio-list-one-wrapper-hover {
+    .radio-submenu {
+      //display: block;
+      left: $radio-list-width;
+
+      .radio-submenu-entry {
+        opacity: 1;
+      }
+    }
+  }
+
+  .radio-submenu {
+    /* on mobile, hide substreams (too large, cause overflow) */
+    @include media-breakpoint-down(sm) {
+      &.radio-submenu-streams {
+        display: none;
+      }
+    }
+
+    //display: none;
+    z-index: 0;
+    position: absolute;
+    top: -1px;
+    transition: left 200ms ease-in-out 350ms;
+
+    height: calc(#{$grid-row-height} + 1px);
+
+    //width: calc(@radio-list-width * 2);
+    left: -$radio-list-width;
+
+    opacity: 0.95;
+    background-color: var(--progradio-radio-list-submenu-bg-color);
+
+    border: 1px solid black;
+    border-left: none;
+
+    &:not(.radio-submenu-streams) {
+      border-right: none;
+    }
+
+    cursor: pointer;
+
+    .radio-submenu-entry {
+      //width: 100%;
+      display: table-cell;
+      height: 100%;
+      width: $radio-list-width;
+
+      font-size: 0.692rem;
+      text-align: center;
+      line-height: 1.0;
+      color: var(--progradio-radio-list-submenu-color);
+
+      padding-top: 5px;
+
+      opacity: 0;
+      transition: opacity 200ms ease-in-out 500ms;
+
+      img {
+        height: 28px;
+        width: 28px;
+
+        //transition: width 50ms ease-in-out 0ms, height 50ms ease-in-out 0ms;
+      }
+
+      p {
+        margin-top: 5px;
+      }
+
+      .filter-fav {
+        // red heart
+        filter: invert(13%) sepia(84%) saturate(4375%) hue-rotate(349deg) brightness(108%) contrast(95%);
+        // yellow star
+        // filter: invert(78%) sepia(68%) saturate(1134%) hue-rotate(358deg) brightness(101%) contrast(104%);
+      }
+
+      .filter-page {
+        filter: invert(100%);
+      }
+
+      &:hover {
+        padding-top: 4px;
+
+        img {
+          height: 30px;
+          width: 30px;
+        }
+
+        p {
+          margin-top: 4px;
+        }
+      }
+    }
+
+    a {
+      text-decoration: none;
+      // avoid inherited glitch
+      transition: none;
+      -webkit-transition: none;
+    }
+  }
+}
+
+/* collection switch */
+
+// Currently not working properly past the initial render
+// TODO find why
+
+.radio-list-move .radio-list-leave-active, .radio-list-enter-active {
+  .radio-logo-bg {
+    transition: all 0.15s;
+  }
+}
+
+.radio-list-leave-to, .radio-list-enter-from {
+  .radio-logo-bg {
+    opacity: 0;
+  }
+}
+
+.radio-list-leave-active {
+  position: absolute;
+}
+
+.radio-submenu-entry-secondary {
+  /* disable on mobile for now */
+  //@media (max-width: @screen-sm-max) {
+  //  display: none;
+  //}
+
+  vertical-align: top;
+
+  /* overload from other submenu-entry */
+  &:hover {
+    padding-top: 5px !important;
+    p { margin-top: 5px !important; }
+  }
+
+  .radio-submenu-entry-secondary-logo {
+    margin: 0 auto 7px;
+    width: 50%;
+    height: 26px;
+
+    background-color: #343434;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+    .radio-logo-play {
+      @include radio-logo-play-mixin;
+    }
+  }
+}
+
+.pick-sub-radio-one {
+  border: 1px solid var(--progradio-program-border-color);
+}
+

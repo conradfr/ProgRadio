@@ -1,0 +1,118 @@
+$gray-300: #dee2e6;
+$gray-500: #bbb !default;
+$gray-600: #666 !default;
+$gray-800: #222 !default;
+
+// ---
+
+$white: #ffffff;
+$black: #000;
+
+// ---
+
+$white-darken-10: darken($white, 10%);
+$white-darken-15: darken($white, 15%);
+
+$primary: #2196F3;
+
+$body-color: #4d4d4d;
+
+$background-color: #f9f9f9;
+$player-background: lighten($primary, 5%);
+$player-background-xl: rgba(57.1923076923, 161.4423076923, 244.3076923077, 0.90);
+
+$navbar-shadow: rgb(7, 99, 172);
+
+$offcanvas-divider: $gray-300;
+
+$alert-light-bg: $background-color;
+$alert-light-color: $body-color;
+
+$loader-text: darken($background-color, 55%);
+$loader-background: darken($background-color, 15%);
+
+$timeline-color: #969696;
+$timeline-line-color: darken($background-color, 25%);
+$timeline-line-current-color: $primary;
+
+$radio-stream: $primary;
+$radio-stream-hover: #4d6a82;
+$radio-stream-filter: invert(41%) sepia(98%) saturate(1173%) hue-rotate(185deg) brightness(99%) contrast(92%);
+$radio-stream-filter-hover: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
+
+$player-color: $white;
+$player-link-color: mix($player-color, $player-background, 70%);
+$fader-primary: #337ab7;
+$fader-primary-top: $fader-primary;
+$fader-primary-bottom: darken($fader-primary, 5%);
+$timer-active: #5eff3b;
+
+$player-background-color-xl: rgba(red($primary), green($primary), blue($primary), 0.90);
+
+$timeline-cursor-color: darken($background-color, 55%);
+$timeline-cursor-color-today: #2196f3;
+$timeline-controls-bg-color: darken($background-color, 30%);
+$timeline-calendar-bg-color: darken($background-color, 15%);
+
+$collection-background: darken($primary, 10%);
+$filter-background: darken($primary, 13%);
+$filter-background-hover: darken($primary, 5%);
+
+$collection-control-hover-bg: darken($collection-background, 3%);
+
+$radio-list-background: #343434;
+$radio-list-submenu-color: darken($white, 25%);
+$radio-list-submenu-bg-color: #343434;
+$radio-logo-play: $primary;
+$radio-logo-border-b: lighten($black, 3.6%);
+
+$program-text-color: #262b2f;
+$program-song-color: darken($background-color, 65%);
+
+$program-bg-color: $white;
+$program-border-color: darken($background-color, 10%);
+$program-hover-color: mix($white, $primary, 96.5%);
+$program-inner-fade-1: rgba(255,255,255,0);
+$program-inner-fade-2: rgba(255,255,255,0.88);
+$program-inner-fade-3: rgba(255,255,255,1);
+$program-inner-fade-1-hover: rgba(255,255,255,0);
+$program-inner-fade-2-hover: rgba(247,251,255,0.88);
+$program-inner-fade-3-hover: rgba(247,251,255,1);
+$program-current-border-l: mix($program-border-color, $timeline-cursor-color, 85%);
+
+$program-section: darken($background-color, 20%);
+$program-section-hover: lighten($primary, 10%);
+
+$program-container-color: darken($background-color, 35%);
+$program-container-none-bg: lighten($background-color, 3%);
+$schedule-display-color: darken($program-text-color, 25%);
+
+$streams-filter-search-close: $gray-600;
+
+$stream-text-color: $gray-800;
+$stream-play-color: $primary;
+
+$stream-select-selected-text: lighten($stream-text-color, 10%);
+$stream-select-option-text: lighten($stream-text-color, 10%);
+$stream-select-border: rgba(60, 60, 60, 0.27);
+$stream-select-background-hover: $primary;
+$stream-select-search: $stream-text-color;
+$stream-select-pointed: darken($stream-select-background-hover, 5%);
+
+$streams-one-border: darken($background-color, 20%);
+
+$badge-color: $gray-600;
+$badge-color-hover: $gray-800;
+
+$stream-badge-color: $gray-500;
+$stream-badge-color-hover: $gray-600;
+
+$now-border-color: $gray-300;
+
+$live-song-background-color: #f0f0f0;
+
+$radio-page-more-one-hover-background: $gray-300;
+
+$more-stream-text-color: $body-color;
+
+$footer-a: lighten($timeline-color, 5%);

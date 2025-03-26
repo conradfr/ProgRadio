@@ -46,6 +46,7 @@
         "knplabs/knp-paginator-bundle": "^6.3",
         "liip/imagine-bundle": "^2.7",
         "oro/doctrine-extensions": "dev-master",
+        "pentatrion/vite-bundle": "^8.0",
         "phpdocumentor/reflection-docblock": "^5.2",
         "predis/predis": "^2.2.0",
         "runtime/frankenphp-symfony": "^0.2.0",

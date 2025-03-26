@@ -1,0 +1,132 @@
+// @import "bootswatch_materia/_variables";
+
+$gray-300: #dee2e6 !default;
+$gray-500: #adb5bd !default;
+$gray-800: #303030 !default;
+
+// ---
+
+$white: #f8f8f8;
+$black: #000;
+
+// ---
+
+$white-darken-10: darken($white, 10%);
+$white-darken-15: darken($white, 15%);
+
+$primary-source: #2196F3;
+$primary: #1c486a;
+
+$body-bg: #10161c;
+$body-bg-alt: #33383c;
+
+$body-color: $white;
+
+$link-color: lighten($primary, 20%);
+
+$background-color: $body-bg;
+$player-background: lighten($primary, 4%);
+$player-background-xl: rgba(32.2626865672, 82.9611940299, 122.1373134328, 0.90);
+
+$navbar-shadow: rgb(8, 69, 116);
+$nav-link-disabled-color: darken($link-color, 15%);
+
+$offcanvas-divider: $body-bg-alt;
+
+$alert-light-bg: $body-bg-alt;
+$alert-light-color: $white;
+
+$loader-text: $white;
+$loader-background: $body-bg-alt;
+
+$pagination-bg:                     $primary !default;
+$pagination-hover-bg:               lighten($primary, 10%) !default;
+$pagination-disabled-bg:            darken($primary, 15%) !default;
+
+$radio-stream: #4d6a82;
+$radio-stream-hover: $primary-source;
+$radio-stream-filter: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
+$radio-stream-filter-hover: invert(41%) sepia(98%) saturate(1173%) hue-rotate(185deg) brightness(99%) contrast(92%);
+
+$player-color: $white;
+$player-link-color: mix($player-color, $player-background, 70%);
+$fader-primary: #337ab7;
+$fader-primary-top: $fader-primary;
+$fader-primary-bottom: darken($fader-primary, 5%);
+$timer-active: #5eff3b;
+
+$player-background-color-xl: rgba(red($primary), green($primary), blue($primary), 0.90);
+
+$timeline-color: mix(#1c2327, $white, 55%); // lighten($background-color, 45%);
+$timeline-line-color: $primary;
+$timeline-line-current-color: $primary-source;
+
+$timeline-cursor-color: darken($timeline-color, 5%);
+$timeline-cursor-color-today: #2196f3;
+$timeline-controls-bg-color: mix($body-bg, $primary-source, 95%);
+$timeline-calendar-bg-color: mix($body-bg, $primary-source, 97%);
+
+$collection-background: darken($primary, 5%);
+$filter-background: darken($primary, 5%);
+$filter-background-hover: $primary;
+
+$collection-control-hover-bg: darken($collection-background, 3%);
+
+$radio-list-submenu-color: $white;
+$radio-list-background: $body-bg-alt;
+$radio-list-submenu-bg-color: $body-bg-alt;
+//$radio-logo-play: mix($primary-source, $body-bg-alt, 90%);
+$radio-logo-play: darken($primary-source, 10%);
+$radio-logo-border-b: lighten($black, 3.6%);
+
+$program-text-color: mix($body-bg, $white, 10%);
+$program-song-color: mix($body-bg, $white, 50%);
+
+$program-bg-color: #1c2327;
+$program-hover-color: mix($program-bg-color, $primary, 96.5%);
+$program-border-color: lighten($program-bg-color, 3%);
+$program-inner-fade-1: rgba(28, 35, 39, 0);
+$program-inner-fade-2: rgba(28, 35, 39, 0.8);
+$program-inner-fade-3: rgba(28, 35, 39, 1);
+$program-inner-fade-1-hover: rgba(28, 35, 39, 0);
+$program-inner-fade-2-hover: rgba(28, 35, 39, 0.8);
+$program-inner-fade-3-hover: rgba(28, 35, 39, 1);
+$program-current-border-l: mix($program-border-color, $timeline-cursor-color, 85%);
+
+$program-section: lighten($program-bg-color, 7%);
+$program-section-hover: $primary;
+
+$program-container-color: darken($background-color, 35%);
+$program-container-none-bg: lighten($background-color, 3%);
+$schedule-display-color: darken($program-text-color, 25%);
+
+$streams-filter-search-close: $gray-800;
+
+$stream-text-color: $white;
+$stream-play-color: darken($primary-source, 10%);
+
+// select
+$stream-select-selected-text: darken($white, 20%);
+$stream-select-option-text: $body-bg-alt;
+$stream-select-border: $body-bg-alt;
+$stream-select-background-hover: $radio-stream;
+$stream-select-search: $white;
+$stream-select-pointed: darken($stream-select-background-hover, 5%);
+
+$streams-one-border: darken($background-color, 20%);
+
+$badge-color: $gray-500;
+$badge-color-hover: $white;
+
+$stream-badge-color: $gray-500;
+$stream-badge-color-hover: $white;
+
+$now-border-color: darken($primary, 10%);
+
+$live-song-background-color: #2e3133;;
+
+$radio-page-more-one-hover-background: $body-bg-alt;
+
+$more-stream-text-color: $body-color;
+
+$footer-a: lighten($timeline-color, 5%);

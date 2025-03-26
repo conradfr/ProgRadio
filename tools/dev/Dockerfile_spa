@@ -5,11 +5,13 @@ FROM node:lts-alpine
 RUN apk add bash
 RUN apk add git
 
-WORKDIR /usr/app
-COPY . /usr/app
+RUN mkdir -p /app/spa
+COPY ./spa/ /app/spa/
 
-RUN npm i caniuse-lite browserslist
-RUN npx update-browserslist-db@latest
+WORKDIR /app/spa
+
+#RUN npm i caniuse-lite browserslist
+#RUN npx update-browserslist-db@latest
 
 RUN npm install
 

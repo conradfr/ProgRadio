@@ -27,14 +27,16 @@ services:
   spa:
     image: node:lts-alpine
     build:
-      context: ./
+      context: .
       dockerfile: ./tools/dev/Dockerfile_spa
     tty: true
     stdin_open: true
     entrypoint: /bin/sh
-    working_dir: /app
+    working_dir: /app/spa
     #    depends_on:
     #      - php
+    ports:
+      - 8000:8000
     volumes:
       - ./:/app
     restart: unless-stopped

@@ -144,6 +144,15 @@
     "oro/doctrine-extensions": {
         "version": "2.0.1"
     },
+    "pentatrion/vite-bundle": {
+        "version": "8.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "6.5",
+            "ref": "3a6673f248f8fc1dd364dadfef4c5b381d1efab6"
+        }
+    },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
     },

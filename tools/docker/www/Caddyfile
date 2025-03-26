@@ -16,7 +16,15 @@
 {$SERVER_NAME:localhost} {
 	log {
 		{$CADDY_SERVER_LOG_OPTIONS}
+
+    format filter {
+      resp_headers delete
+      request>headers>Cookie delete
+    }
+
     output file /var/log/caddy/access.log {
+      roll_size: 500MiB
+      roll_keep: 20
       roll_keep_for: 168h
     }
 	}

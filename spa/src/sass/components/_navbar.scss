@@ -1,0 +1,123 @@
+/* bootstrap overloading */
+
+.navbar {
+  background-image: none;
+
+  .navbar-brand {
+    font-family: 'Lobster', Arial, sans-serif, cursive;
+    text-shadow: -2px 2px 3px var(--progradio-navbar-shadow);
+    font-size: 2rem;
+
+    &:hover {
+      img {
+        animation: Rotate 2s linear 50ms 5;
+
+        /* from https://codepen.io/justcode/pen/AFLqr */
+        @keyframes Rotate {
+          0% { transform: rotate(0deg); }
+          4% { transform: rotate(-30deg); }
+          8% { transform: rotate(0deg); }
+          12% { transform: rotate(-30deg); }
+          16% { transform: rotate(0deg); }
+          20% { transform: rotate(-30deg); }
+          24% { transform: rotate(0deg); }
+          100% { transform: rotate(0deg); }
+        }
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      font-size: 1.538rem;
+
+      // compensate smaller font-size to keep same height as desktop
+      padding-top: $navbar-brand-padding-y + 0.250rem;
+      padding-bottom: $navbar-brand-padding-y + 0.250rem;
+    }
+  }
+
+  .navbar-brand > img {
+    margin: 4px 10px 0;
+
+    width: 30px;
+    height: 24px;
+  }
+
+  & .navbar-nav > li.nav-item {
+    padding-right: 15px;
+  }
+
+  #navbarUserDropdown {
+    i {
+      //font-size: 1.231rem;
+    }
+  }
+
+  a.nav-top-icon {
+    color: $player-color !important;
+    font-size: 1.188rem;
+  }
+
+  span.menu-connected {
+
+  }
+
+  &-nav .nav-link {
+    padding-top: .9rem;
+    padding-bottom: .9rem;
+  }
+
+  .menu-appstore-icon, .menu-flag-icon {
+    width: 32px;
+    position: absolute;
+    right: 0;
+    margin-top: -2px;
+
+    @include media-breakpoint-down(sm) {
+      right: 15px;
+    }
+  }
+
+  .menu-appstore-icon-main {
+    float: right;
+    padding-right: 5px;
+  }
+
+  /* taken from vue plugin */
+  .gb-flag {
+    height: 20px;
+
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    user-select: none;
+
+    &:hover {
+      filter: contrast(1.2);
+    }
+  }
+
+  .progradio-connected {
+    text-shadow: 0 0 9px rgba(8,0,110,0.60);
+  }
+}
+
+.body-app-schedule {
+  .navbar-brand {
+    margin-left: 65px;
+
+    // schedule on mobile, no logo and smaller font-size to allow appstore link
+    @include media-breakpoint-down(sm) {
+      font-size: 1.615rem;
+
+      // compensate smaller font-size to keep same height as desktop
+      padding-top: $navbar-brand-padding-y + 0.250rem;
+      padding-bottom: $navbar-brand-padding-y + 0.250rem;
+
+      margin-left: 73px;
+      img {
+        display: none !important;
+      }
+    }
+  }
+}
+

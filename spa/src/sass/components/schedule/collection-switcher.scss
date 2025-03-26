@@ -1,0 +1,64 @@
+.collection-switcher {
+  &:hover {
+    .collection-switcher-next {
+      top: 0;
+    }
+  }
+
+  .collection-switcher-next {
+    z-index: 1043;
+    display: block;
+    box-sizing: border-box;
+    position: fixed;
+    top: 20px;
+    left: 0;
+    width: 71px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+
+    color: var(--progradio-collection-switcher-next-color);
+    font-size: 0.769rem;
+    text-align: center;
+
+    background-color: var(--progradio-collection-background);
+
+    transition: top 150ms ease-in-out 25ms;
+  }
+
+  .collection-control {
+    z-index: 1044;
+    display: block;
+    box-sizing: border-box;
+    position: fixed;
+    top: $navbar-height - 34px;
+
+    @include media-breakpoint-down(sm) {
+      top: calc(#{$navbar-height} - 35px);
+    }
+
+    @include width(35px);
+
+    text-align: center;
+    color: var(--progradio-collection-control-color);
+    font-size: 1.385rem;
+    cursor: pointer;
+
+    background-color: var(--progradio-collection-background);
+    padding-top: 5px;
+    padding-bottom: 3px;
+
+    &:hover {
+      color: var(--progradio-collection-control-hover-color);
+      background-color: var(--progradio-collection-control-hover-bg);
+    }
+
+    &.collection-backward {
+      left: 0;
+    }
+
+    &.collection-forward {
+      left: 35px;
+      @include width(36px);
+    }
+  }
+}

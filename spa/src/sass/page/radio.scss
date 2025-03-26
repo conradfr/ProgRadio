@@ -1,0 +1,163 @@
+.radio-page-side {
+  top: $padding-top;
+
+  .radio-page-logo {
+    min-width: 75px;
+    max-width: 140px;
+
+    @include media-breakpoint-down(sm) {
+      max-width: 110px;
+    }
+  }
+}
+
+.radio-page-infos-description {
+  font-size: 0.923rem;
+}
+
+.radio-page-more-one {
+  margin: auto;
+  min-height: 85px;
+  min-width: 85px;
+
+  &:hover {
+    background-color: var(--progradio-radio-page-more-one-hover-background);
+  }
+
+  .radio-page-more-one-logo {
+    max-width: 75px;
+    max-height: 75px;
+  }
+}
+
+.radio-page-shows {
+  padding-top: 5px;
+
+  a.anchor {
+    display: block;
+    position: relative;
+    top: -100px;
+    visibility: hidden;
+  }
+
+  .media-timeline {
+    margin: 0 auto;
+    padding: 0;
+    width: 50px;
+    position: relative;
+
+    text-align: center;
+    color: $timeline-line-color;
+    font-size: 79px;
+    line-height: 5px;
+    vertical-align: top;
+    padding-left: 2px;
+
+    &:after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      border-left: 2px solid $timeline-line-color;
+      transform: translate(-50%);
+    }
+  }
+
+  .img-show {
+    max-width: 64px;
+    max-height: 64px
+  }
+
+  .media-current {
+    .media-timeline {
+      color: $timeline-line-current-color;
+
+      &:after {
+        border-color: $timeline-line-current-color;
+      }
+    }
+  }
+}
+
+.radio-page-streams, .now-page-streams, .stream-page-stream {
+  .webradios-header {
+    width: 65%;
+
+    color: #4d6a82;
+    text-align: center;
+    font-weight: bold;
+
+    margin: 17px auto 20px;
+
+    &:before, &:after {
+      content: "";
+      display: inline-block;
+      width: 50%;
+      opacity: 0.3;
+      margin: 0 .5em 0 -55%;
+      vertical-align: middle;
+      border-bottom: 1px solid;
+    }
+
+    &:after {
+      margin: 0 -55% 0 .5em;
+    }
+  }
+
+  .radio-page-play {
+    img {
+      height: 46px;
+      width: 46px;
+      filter: var(--progradio-radio-stream-filter);
+    }
+
+    div {
+      color: var(--progradio-radio-stream);
+
+      &.radio-page-play-text {
+        margin-top: 5px;
+      }
+    }
+
+    .spinner-border {
+      width: 40px;
+      height: 40px;
+
+      margin-top: 3px;
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      img {
+        filter: var(--progradio-radio-stream-filter-hover);
+      }
+
+      div {
+        color: var(--progradio-radio-stream-hover);
+      }
+    }
+  }
+}
+
+.now-page-streams {
+  .radio-page-play {
+    img {
+      height: 26px !important;
+      width: 26px !important;
+    }
+
+    div {
+      font-size: 0.846rem !important;
+    }
+
+    .spinner-border {
+      width: 20px;
+      height: 20px;
+
+      margin-top: 2px;
+    }
+  }
+}
