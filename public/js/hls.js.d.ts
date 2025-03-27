@@ -200,7 +200,7 @@ export declare class BasePlaylistController implements NetworkComponentAPI {
     protected clearTimer(): void;
     startLoad(): void;
     stopLoad(): void;
-    protected switchParams(playlistUri: string, previous: LevelDetails | undefined): HlsUrlParameters | undefined;
+    protected switchParams(playlistUri: string, previous: LevelDetails | undefined, current: LevelDetails | undefined): HlsUrlParameters | undefined;
     protected loadPlaylist(hlsUrlParameters?: HlsUrlParameters): void;
     protected shouldLoadPlaylist(playlist: Level | MediaPlaylist | null | undefined): boolean;
     protected shouldReloadPlaylist(playlist: Level | MediaPlaylist | null | undefined): boolean;
@@ -249,6 +249,7 @@ export declare class BaseStreamController extends TaskLoop implements NetworkCom
     protected startFragRequested: boolean;
     protected decrypter: Decrypter;
     protected initPTS: RationalTimestamp[];
+    protected buffering: boolean;
     protected onvseeking: EventListener | null;
     protected onvended: EventListener | null;
     private readonly logPrefix;
@@ -259,6 +260,8 @@ export declare class BaseStreamController extends TaskLoop implements NetworkCom
     protected onTickEnd(): void;
     startLoad(startPosition: number): void;
     stopLoad(): void;
+    pauseBuffering(): void;
+    resumeBuffering(): void;
     protected _streamEnded(bufferInfo: BufferInfo, levelDetails: LevelDetails): boolean;
     protected getLevelDetails(): LevelDetails | undefined;
     protected onMediaAttached(event: Events.MEDIA_ATTACHED, data: MediaAttachedData): void;
@@ -294,7 +297,7 @@ export declare class BaseStreamController extends TaskLoop implements NetworkCom
     protected getFwdBufferInfo(bufferable: Bufferable | null, type: PlaylistLevelType): BufferInfo | null;
     protected getFwdBufferInfoAtPos(bufferable: Bufferable | null, pos: number, type: PlaylistLevelType): BufferInfo | null;
     protected getMaxBufferLength(levelBitrate?: number): number;
-    protected reduceMaxBufferLength(threshold: number): boolean;
+    protected reduceMaxBufferLength(threshold: number, fragDuration: number): boolean;
     protected getAppendedFrag(position: number, playlistType?: PlaylistLevelType): Fragment | null;
     protected getNextFragment(pos: number, levelDetails: LevelDetails): Fragment | null;
     protected isLoopLoading(frag: Fragment, targetBufferTime: number): boolean;
@@ -798,8 +801,6 @@ export declare class EMEController implements ComponentAPI {
     private mediaKeySessions;
     private keyIdToKeySessionPromise;
     private setMediaKeysQueue;
-    private onMediaEncrypted;
-    private onWaitingForKey;
     private debug;
     private log;
     private warn;
@@ -809,6 +810,7 @@ export declare class EMEController implements ComponentAPI {
     private registerListeners;
     private unregisterListeners;
     private getLicenseServerUrl;
+    private getLicenseServerUrlOrThrow;
     private getServerCertificateUrl;
     private attemptKeySystemAccess;
     private requestMediaKeySystemAccess;
@@ -824,8 +826,8 @@ export declare class EMEController implements ComponentAPI {
     private handleError;
     private getKeySystemForKeyPromise;
     private getKeySystemSelectionPromise;
-    private _onMediaEncrypted;
-    private _onWaitingForKey;
+    private onMediaEncrypted;
+    private onWaitingForKey;
     private attemptSetMediaKeys;
     private generateRequestWithPreferredKeySession;
     private onKeyStatusChange;
@@ -1410,11 +1412,11 @@ declare class Hls implements HlsEventEmitter {
      */
     stopLoad(): void;
     /**
-     * Resumes stream controller segment loading if previously started.
+     * Resumes stream controller segment loading after `pauseBuffering` has been called.
      */
     resumeBuffering(): void;
     /**
-     * Stops stream controller segment loading without changing 'started' state like stopLoad().
+     * Prevents stream controller from loading new segments until `resumeBuffering` is called.
      * This allows for media buffering to be paused without interupting playlist loading.
      */
     pauseBuffering(): void;
@@ -2401,6 +2403,8 @@ export declare type MP4RemuxerConfig = {
 export declare interface NetworkComponentAPI extends ComponentAPI {
     startLoad(startPosition: number): void;
     stopLoad(): void;
+    pauseBuffering?(): void;
+    resumeBuffering?(): void;
 }
 
 export declare const enum NetworkErrorAction {
