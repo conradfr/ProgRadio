@@ -8,7 +8,6 @@ import type { Toast } from '@/types/toast';
 import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 
@@ -19,7 +18,6 @@ interface State {
   toasts: Toast[]
 }
 
-/* eslint-disable import/prefer-default-export */
 export const useGlobalStore = defineStore('global', {
   state: (): State => (
     {

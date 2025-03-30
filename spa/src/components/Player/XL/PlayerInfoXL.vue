@@ -1,5 +1,5 @@
 <template>
-  <div class="player-infos d-flex flex-column" :title="showTitle" v-on:click="gotoRadio">
+  <div class="player-infos-xl d-flex flex-column" :title="showTitle" @click="gotoRadio">
     <div class="player-infos-name">{{ radioName }}</div>
     <div v-if="show && show.title" class="player-infos-show-moto">{{ show.title }}</div>
   </div>
@@ -13,7 +13,6 @@ import { DateTime } from 'luxon';
 
 import { TIMEZONE } from '@/config/config';
 
-/* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
 import typeUtils from '@/utils/typeUtils';
@@ -27,8 +26,8 @@ export default defineComponent({
       }
 
       if (typeUtils.isRadio(this.radio) && this.radioStreamCodeName !== null
-          && Object.keys(this.radio.streams!).length > 0
-          && Object.prototype.hasOwnProperty.call(this.radio.streams!, this.radioStreamCodeName)) {
+          && Object.keys(this.radio.streams).length > 0
+          && Object.prototype.hasOwnProperty.call(this.radio.streams, this.radioStreamCodeName)) {
         return this.radio.streams[this.radioStreamCodeName!].name;
       }
 

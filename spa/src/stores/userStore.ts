@@ -8,7 +8,6 @@ import {
   CACHE_KEY_STREAM_FAVORITES
 } from '@/config/config';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useStreamsStore } from '@/stores/streamsStore';
@@ -35,7 +34,6 @@ interface State {
   favoritesStream: Array<string>
 }
 
-/* eslint-disable import/prefer-default-export */
 export const useUserStore = defineStore('user', {
   state: (): State => (
     {
@@ -50,7 +48,6 @@ export const useUserStore = defineStore('user', {
         ? cache.getCache(CACHE_KEY_STREAM_FAVORITES) : [],
     }
   ),
-  /* eslint-disable max-len */
   getters: {
     getSubRadioCodeName: state => (radioCodeName: string): string | null => state.subRadios[radioCodeName] || null,
   },

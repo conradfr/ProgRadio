@@ -18,7 +18,6 @@ import type {
   listeningSessionPostData,
 } from '@/types/schedule_api';
 
-/* eslint-disable arrow-body-style */
 const getSchedule = async (dateStr: string, params?: any): Promise<Schedule|null> => {
   // @ts-expect-error apiUrl is defined on the global scope
   // eslint-disable-next-line no-undef
@@ -99,8 +98,8 @@ const sendListeningSession = async (
   ending?: boolean
 ) => {
   const postData: listeningSessionPostData = {
-    date_time_start: dateTimeStart.toISO(),
-    date_time_end: dateTimeEnd.toISO(),
+    date_time_start: dateTimeStart.toISO()!,
+    date_time_end: dateTimeEnd.toISO()!,
     source: LISTENING_SESSION_SOURCE,
     ctrl: Math.random()
   };
@@ -117,8 +116,6 @@ const sendListeningSession = async (
   }
 
   if (id !== undefined && id !== null) {
-    /* eslint-disable no-underscore-dangle */
-    /* eslint-disable max-len */
     // @ts-expect-error apiUrl is defined on the global scope
     // eslint-disable-next-line no-undef
     const response = await fetch(`https://${apiUrl}/listening_session/${id}`, {
@@ -141,7 +138,6 @@ const sendListeningSession = async (
     return;
   }
 
-  /* eslint-disable no-underscore-dangle */
   // @ts-expect-error apiUrl is defined on the global scope
   // eslint-disable-next-line no-undef
   const response = await fetch(`https://${apiUrl}/listening_session`, {

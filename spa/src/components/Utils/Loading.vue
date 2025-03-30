@@ -1,9 +1,9 @@
 <template>
   <Transition appear>
-    <div class="loading" v-if="isLoading">
+    <div v-if="isLoading" class="loading">
       <div class="d-flex align-items-center alert alert-progradio" role="alert">
         <div class="spinner-border" role="status"></div>
-        <div class="flex-grow-1 alert-progradio-text text-center" v-once>
+        <div v-once class="flex-grow-1 alert-progradio-text text-center">
           {{ $t('message.loading') }}
         </div>
       </div>
@@ -15,7 +15,6 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 
 export default defineComponent({

@@ -117,9 +117,9 @@ const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string|null) => 
     return radio.stream_url;
   }
 
-  if (Object.keys(radio.streams!).length > 0
-    && Object.prototype.hasOwnProperty.call(radio.streams!, radioStreamCodeName)) {
-    return radio.streams![radioStreamCodeName].url;
+  if (Object.keys(radio.streams).length > 0
+    && Object.prototype.hasOwnProperty.call(radio.streams, radioStreamCodeName)) {
+    return radio.streams[radioStreamCodeName].url;
   }
 
   return null;
@@ -133,8 +133,8 @@ const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string|null): 
   // @ts-ignore
   if ((radioStreamCodeName && typeUtils.isRadio(radio)
       && Object.keys(radio.streams).length > 0
-      && Object.prototype.hasOwnProperty.call(radio.streams!, radioStreamCodeName)
-      && radio.streams![radioStreamCodeName].current_song)
+      && Object.prototype.hasOwnProperty.call(radio.streams, radioStreamCodeName)
+      && radio.streams[radioStreamCodeName].current_song)
     || (typeUtils.isStream(radio) && radio.current_song)) {
     const channelNameEnd = typeUtils.isRadio(radio)
       ? radioStreamCodeName : radio.radio_stream_code_name;
@@ -276,7 +276,6 @@ const buildMediaSessionMetadata = (data: NotificationData) => {
       title += data.times;
     }
 
-    /* eslint-disable no-undef */
     navigator.mediaSession.metadata = new MediaMetadata({
       title,
       artist: data.name,
@@ -395,11 +394,9 @@ const calculatedFlux = () => {
 const getAmazonSongLink = (song: string): string => {
   const songCleaned = song.replace(' - ', ' ');
 
-  /* eslint-disable max-len */
-  /* eslint-disable camelcase */
-  // _@ts-expect-error amazon_affiliate_id is defined on the global scope
-  // return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&tag=${amazon_affiliate_id}&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
-  // eslint-disable-next-line no-undef
+  // _eslint-disable-next-line camelcase */
+  // return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&tag=
+  // ${amazon_affiliate_id}&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
   return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
 };
 

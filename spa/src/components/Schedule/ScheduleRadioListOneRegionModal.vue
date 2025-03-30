@@ -1,10 +1,10 @@
 <template>
-  <div style="z-index:1300" class="modal fade" id="scheduleRadioRegionModal" v-if="radio"
-       tabindex="-1" aria-labelledby="regionModalLabel" aria-hidden="true">
+  <div v-if="radio" id="scheduleRadioRegionModal" style="z-index:1300" class="modal fade"
+    tabindex="-1" aria-labelledby="regionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="modal-title" id="regionModalLabel">
+          <h3 id="regionModalLabel" class="modal-title">
             {{ $t('message.schedule.radio_list.pick_region_title') }}
           </h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -12,13 +12,13 @@
         </div>
         <div class="modal-body pb-0">
           <div class="d-flex flex-row flex-wrap justify-content-evenly">
-            <button v-for="sub_radio in subRadiosSorted" :key="sub_radio.code_name"
-              v-once
-              v-on:click="regionClick(sub_radio.code_name)"
+            <button v-for="sub_radio in subRadiosSorted" v-once :key="sub_radio.code_name"
               type="button" class="btn m-2"
               :class="{ 'btn-primary': currentSubRadioCodeName === sub_radio.code_name,
                 'btn-seconday': currentSubRadioCodeName === sub_radio.code_name }"
-            >{{ sub_radio.name }}</button>
+              @click="regionClick(sub_radio.code_name)">
+              {{ sub_radio.name }}
+            </button>
           </div>
         </div>
         <div class="modal-footer">
@@ -41,7 +41,6 @@ import {
   GTAG_CATEGORY_SCHEDULE
 } from '@/config/config';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useUserStore } from '@/stores/userStore';
 
@@ -54,7 +53,6 @@ export default defineComponent({
         return [];
       }
 
-      /* eslint-disable no-param-reassign */
       return Object.keys(this.radio.sub_radios).sort().reduce(
         (obj, key) => {
           /* eslint-disable no-param-reassign */
@@ -89,7 +87,7 @@ export default defineComponent({
         modalInstance.hide();
       }
 
-      (this as any).$gtag.event(GTAG_ACTION_REGION_SELECT, {
+      this.$gtag.event(GTAG_ACTION_REGION_SELECT, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         event_label: this.radio?.code_name,
         value: GTAG_ACTION_REGION_VALUE

@@ -1,5 +1,5 @@
 <template>
-  <div class="schedule-radio-list" v-if="radios.length > 0">
+  <div v-if="radios.length > 0" class="schedule-radio-list">
     <schedule-radio-list-one
         v-for="entry in radios"
         :key="entry.code_name"
@@ -12,7 +12,6 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 
 import ScheduleRadioListOne from './ScheduleRadioListOne.vue';

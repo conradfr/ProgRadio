@@ -9,7 +9,6 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 
 import { COLLECTION_FAVORITES } from '@/config/config';

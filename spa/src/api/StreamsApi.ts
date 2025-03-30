@@ -18,7 +18,6 @@ import type {
   GetGeoResponse
 } from '@/types/streams_api';
 
-/* eslint-disable arrow-body-style */
 /* eslint-disable no-undef */
 
 const getStreams = async (
@@ -126,7 +125,6 @@ const getBestFromRadio = async (radioCodeName: string): Promise<Stream|null> => 
   return await response.json();
 };
 
-// eslint-disable-next-line max-len
 const addStreamPlayingError = async (radioCodeName: string, errorText?: string): Promise<string|null> => {
   const params = {};
 
@@ -167,7 +165,6 @@ const getCountries = async (): Promise<Countries|null> => {
   return null;
 };
 
-// eslint-disable-next-line max-len
 const incrementPlayCount = async (stationUuid: string, radioBrowserUrl: string|null): Promise<any> => {
   try {
     const response = await fetch(`${radioBrowserUrl}/json/url/${stationUuid}`, {
@@ -178,7 +175,7 @@ const incrementPlayCount = async (stationUuid: string, radioBrowserUrl: string|n
     });
 
     return await response.json();
-  } catch (error) {
+  } catch (_e) {
     // nothing
   }
 
@@ -216,9 +213,7 @@ const toggleFavoriteStream = async (streamCodeName: string): Promise<any> => {
   return await response.json();
 };
 
-// eslint-disable-next-line max-len
 const getCountryFromLatLong = async (latitude: number, longitude: number): Promise<GetGeoResponse|null> => {
-  /* eslint-disable max-len */
   // @ts-expect-error geocode is defined on the global scope
   const response = await fetch(`https://secure.geonames.org/countryCodeJSON?lat=${latitude.toString()}&lng=${longitude.toString()}&username=${geocode}`);
 

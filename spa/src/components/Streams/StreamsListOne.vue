@@ -1,49 +1,47 @@
 <template>
   <div class="streams-one"
-    @mouseover="hover = true"
-    @mouseleave="hover = false"
     :class="{
      'streams-one-play-active': (radio.code_name === radioPlayingCodeName),
-     'streams-one-play-paused': (radio.code_name === radioPlayingCodeName
-        && playing === PlayerStatus.Stopped)
-    }">
-    <div class="streams-one-img" :style="styleObject" v-on:click="playStop" v-once>
+     'streams-one-play-paused': (radio.code_name === radioPlayingCodeName && playing === PlayerStatus.Stopped)
+    }"
+    @mouseover="hover = true"
+    @mouseleave="hover = false">
+    <div v-once class="streams-one-img" :style="styleObject" @click="playStop">
       <div class="streams-one-img-play"></div>
     </div>
     <div class="streams-one-name" :title="$t('message.streaming.more')"
-      v-on:click="nameClick(radio.code_name)">
-      <span class="streams-one-name-detail" v-once>{{ radio.name }}</span>
+      @click="nameClick(radio.code_name)">
+      <span v-once class="streams-one-name-detail">{{ radio.name }}</span>
       <div v-if="hover === false && currentSong" class="streams-one-song">
         ♫ {{ currentSong }}
       </div>
-      <div v-else-if="radio.tags" class="streams-one-tags" v-once>
-        <span class="badge badge-inverse"
-          v-for="tag in tags" :key="tag"
-          v-on:click.stop="tagClick(tag)">
+      <div v-else-if="radio.tags" v-once class="streams-one-tags">
+        <span v-for="tag in tags" :key="tag"
+          class="badge badge-inverse"
+          @click.stop="tagClick(tag)">
           {{ tag }}
         </span>
       </div>
     </div>
     <div class="streams-one-fav cursor-pointer"
       :class="{ 'streams-one-fav-isfavorite': isFavorite }"
-         v-on:click.stop="toggleFavorite">
+      @click.stop="toggleFavorite">
       <img class="streams-one-icon" :alt="radio.code_name" src="/img/favorites_streams.svg">
     </div>
     <div
-        class="streams-one-flag cursor-pointer"
-        v-on:click.stop="flagClick"
-        v-if="(selectedCountry === code_all
-          || selectedCountry === code_favorites || selectedCountry === code_last)
-            && radio.country_code !== null">
+      v-if="(selectedCountry === code_all
+        || selectedCountry === code_favorites || selectedCountry === code_last)
+          && radio.country_code !== null"
+      class="streams-one-flag cursor-pointer"
+      @click.stop="flagClick">
       <vue-flag
-          :code="radio.country_code"
-          size="micro"
-          v-once
+        v-once
+        :code="radio.country_code"
+        size="micro"
       />
     </div>
     <div v-if="liveListenersCount && liveListenersCount > 0" class="streams-one-listeners"
-      :title="$t('message.streaming.listeners',
-        liveListenersCount, { how_many: liveListenersCount})">
+      :title="$t('message.streaming.listeners', liveListenersCount, { how_many: liveListenersCount})">
       <span class="badge rounded-pill text-bg-secondary">
         {{ liveListenersCount }}
       </span>
@@ -56,7 +54,6 @@ import { defineComponent, nextTick, toRaw } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import type { PropType } from 'vue';
 
-/* eslint-disable import/no-cycle */
 import { useStreamsStore } from '@/stores/streamsStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
@@ -77,7 +74,6 @@ export default defineComponent({
       required: true
     }
   },
-  /* eslint-disable indent */
   data(): {
     PlayerStatus: any,
     channelName: string,
@@ -121,6 +117,20 @@ export default defineComponent({
     document.removeEventListener('visibilitychange', this.visibilityChange);
     this.leaveChannels();
   },
+  // We do not use the getter player.liveSong due to performance as it would be called each time
+  // a song update for any radio by each instances of this component
+  watch: {
+    liveSong(newVal) {
+      const newValObject = toRaw(newVal);
+
+      if (newValObject === null) {
+        this.currentSong = null;
+        return;
+      }
+
+      this.currentSong = PlayerUtils.formatSong(newValObject.song);
+    },
+  },
   computed: {
     ...mapState(usePlayerStore, [
       'playing',
@@ -131,7 +141,7 @@ export default defineComponent({
     ]),
     ...mapState(useStreamsStore, ['selectedCountry', 'favorites']),
     isFavorite() {
-      return this.favorites.indexOf(this.radio.code_name!) !== -1;
+      return this.favorites.indexOf(this.radio.code_name) !== -1;
     },
     liveSong() {
       if (!Object.prototype.hasOwnProperty.call(this.song, this.channelName)) {
@@ -160,20 +170,6 @@ export default defineComponent({
 
       return [...new Set(this.radio.tags.split(','))];
     }
-  },
-  // We do not use the getter player.liveSong due to performance as it would be called each time
-  // a song update for any radio by each instances of this component
-  watch: {
-    liveSong(newVal) {
-      const newValObject = toRaw(newVal);
-
-      if (newValObject === null) {
-        this.currentSong = null;
-        return;
-      }
-
-      this.currentSong = PlayerUtils.formatSong(newValObject.song);
-    },
   },
   methods: {
     ...mapActions(useUserStore, ['toggleStreamFavorite']),
@@ -219,7 +215,7 @@ export default defineComponent({
       if (this.radioPlayingCodeName === this.radio.code_name
         && this.playing !== PlayerStatus.Stopped) {
         if (this.externalPlayer === false) {
-          (this as any).$gtag.event(config.GTAG_ACTION_STOP, {
+          this.$gtag.event(config.GTAG_ACTION_STOP, {
             event_category: config.GTAG_CATEGORY_STREAMING,
             event_label: this.radio.code_name,
             value: config.GTAG_ACTION_STOP_VALUE
@@ -231,7 +227,7 @@ export default defineComponent({
       }
 
       if (this.externalPlayer === false) {
-        (this as any).$gtag.event(config.GTAG_ACTION_PLAY, {
+        this.$gtag.event(config.GTAG_ACTION_PLAY, {
           event_category: config.GTAG_CATEGORY_STREAMING,
           event_label: this.radio.code_name,
           value: config.GTAG_ACTION_PLAY_VALUE
@@ -241,7 +237,7 @@ export default defineComponent({
       this.playStream(this.radio);
     },
     flagClick() {
-      (this as any).$gtag.event(config.GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
+      this.$gtag.event(config.GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
         event_category: config.GTAG_CATEGORY_STREAMING,
         event_label: this.radio.country_code.toLowerCase(),
         value: config.GTAG_STREAMING_FILTER_VALUE
@@ -250,7 +246,7 @@ export default defineComponent({
       this.countrySelection(this.radio.country_code);
     },
     tagClick(tag: string) {
-      (this as any).$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
+      this.$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
         event_category: config.GTAG_CATEGORY_STREAMING,
         event_label: tag.toLowerCase(),
         value: config.GTAG_STREAMING_FILTER_VALUE
@@ -272,7 +268,7 @@ export default defineComponent({
       });
     },
     toggleFavorite() {
-      (this as any).$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
+      this.$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
         event_category: config.GTAG_CATEGORY_SCHEDULE,
         event_label: this.radio.code_name,
         value: config.GTAG_ACTION_FAVORITE_TOGGLE_VALUE

@@ -12,7 +12,6 @@ import type { ListeningSession } from '@/types/listening_session';
 import type { ChannelsRefCount } from '@/types/channels_ref_count';
 import PlayerStatus from '@/types/player_status';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useStreamsStore } from '@/stores/streamsStore';
@@ -66,7 +65,6 @@ interface State {
 
 const flux = PlayerUtils.calculatedFlux();
 
-/* eslint-disable import/prefer-default-export */
 export const usePlayerStore = defineStore('player', {
   state: (): State => ({
     socket: null,
@@ -128,7 +126,7 @@ export const usePlayerStore = defineStore('player', {
         return null;
       }
 
-      const channelName = PlayerUtils.getChannelName(toRaw(radio), radioStreamCodeName!);
+      const channelName = PlayerUtils.getChannelName(toRaw(radio), radioStreamCodeName);
       // @todo find bug from app
       if (channelName === '') {
         return null;
@@ -155,8 +153,6 @@ export const usePlayerStore = defineStore('player', {
       return this.liveSong(state.radio, state.radioStreamCodeName);
     },
   },
-  /* eslint-disable object-curly-newline */
-  /* eslint-disable no-prototype-builtins */
   actions: {
     playRadio(params: any) {
       const global = useGlobalStore();
@@ -197,7 +193,6 @@ export const usePlayerStore = defineStore('player', {
         });
       }
     },
-    /* eslint-disable no-param-reassign */
     playStream(stream: Stream) {
       const streamsStore = useStreamsStore();
       const userStore = useUserStore();
@@ -300,7 +295,7 @@ export const usePlayerStore = defineStore('player', {
       if (this.playing === PlayerStatus.Playing) {
         PlayerUtils.sendListeningSession(
           this.playing,
-          this.radio!,
+          this.radio,
           this.radioStreamCodeName,
           this.session,
           true);
@@ -404,7 +399,6 @@ export const usePlayerStore = defineStore('player', {
 
       this.setPrevious({ radio: currentRadio!, streamCodeName: currentStreamCodeName });
     },
-    /* eslint-disable max-len */
     setPrevious({ radio, streamCodeName = null }: { radio: Radio|Stream, streamCodeName?: string|null }) {
       if (this.radio !== null && (this.radio.code_name !== radio.code_name
         || this.radioStreamCodeName !== (streamCodeName || null))) {
@@ -416,10 +410,13 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     startListeningSession() {
-      /* eslint-disable function-call-argument-newline */
       this.sessionInterval = setInterval(() => {
-        PlayerUtils.sendListeningSession(this.playing,
-          this.radio!, this.radioStreamCodeName, this.session);
+        PlayerUtils.sendListeningSession(
+          this.playing,
+          this.radio,
+          this.radioStreamCodeName,
+          this.session
+        );
       }, config.LISTENING_SESSION_MIN_SECONDS * 1000);
     },
     setListeningSessionId({ id, ctrl }: { id: string, ctrl: number }) {
@@ -462,7 +459,7 @@ export const usePlayerStore = defineStore('player', {
               return null;
             }
 
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/js/max-len
             return [1000, 5000, 10000, 15000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000][tries - 1] || 30000;
           }
         };
@@ -650,7 +647,6 @@ export const usePlayerStore = defineStore('player', {
         );
       } else {
         Object.entries(this.listeners).forEach(
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           ([key, _value]) => {
             if (key === innerName) {
               delete this.listeners[key];
@@ -786,7 +782,6 @@ export const usePlayerStore = defineStore('player', {
       this.videoModalUrl = url;
     },
     /* From Android */
-    /* eslint-disable no-param-reassign */
     updateStatusFromExternalPlayer(params: any) {
       const scheduleStore = useScheduleStore();
       const streamsStore = useStreamsStore();

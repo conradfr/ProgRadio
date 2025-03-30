@@ -1,32 +1,22 @@
 <template>
   <div class="radio-page-streams-one text-center mb-4">
-    <div
-        v-if="stream.code_name !== playingStreamCodeName
-          || playerStore.playing === PlayerStatus.Stopped"
-        v-on:click="play"
-        class="radio-page-play">
+    <div v-if="stream.code_name !== playingStreamCodeName || playerStore.playing === PlayerStatus.Stopped"
+      class="radio-page-play" @click="play">
       <img :alt="$t('message.radio_page.play', { radio: stream.name })"
         :src="playImage">
       <div class="radio-page-play-text">
        {{ $t('message.radio_page.play', { radio: stream.name }) }}
       </div>
     </div>
-    <div
-        v-if="stream.code_name === playingStreamCodeName
-          && playerStore.playing === PlayerStatus.Playing"
-        v-on:click="stop"
-        class="radio-page-play">
-      <img :alt="$t('message.radio_page.stop', { radio: stream.name })"
-           :src="pauseImage">
+    <div v-if="stream.code_name === playingStreamCodeName && playerStore.playing === PlayerStatus.Playing"
+        class="radio-page-play" @click="stop">
+      <img :alt="$t('message.radio_page.stop', { radio: stream.name })" :src="pauseImage">
       <div class="radio-page-play-text">
        {{ $t('message.radio_page.stop', { radio: stream.name }) }}
       </div>
     </div>
-    <div
-        v-if="stream.code_name === playingStreamCodeName
-          && playerStore.playing === PlayerStatus.Loading"
-        v-on:click="stop"
-        class="radio-page-play">
+    <div v-if="stream.code_name === playingStreamCodeName && playerStore.playing === PlayerStatus.Loading"
+      class="radio-page-play" @click="stop">
       <div class="spinner-border" role="status"
          :title="$t('message.radio_page.stop', { radio: stream.name })">
         <span class="visually-hidden">Loading...</span>
@@ -90,7 +80,7 @@ export default defineComponent({
   methods: {
     play() {
       if (this.playerStore.externalPlayer === false) {
-        (this as any).$gtag.event(GTAG_ACTION_PLAY, {
+        this.$gtag.event(GTAG_ACTION_PLAY, {
           event_category: GTAG_CATEGORY_RADIOPAGE,
           event_label: this.radio.code_name,
           value: GTAG_ACTION_PLAY_VALUE
@@ -104,7 +94,7 @@ export default defineComponent({
     },
     stop() {
       if (this.playerStore.externalPlayer === false) {
-        (this as any).$gtag.event(GTAG_ACTION_STOP, {
+        this.$gtag.event(GTAG_ACTION_STOP, {
           event_category: GTAG_CATEGORY_RADIOPAGE,
           event_label: this.radio.code_name,
           value: GTAG_ACTION_STOP_VALUE

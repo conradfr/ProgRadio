@@ -1,18 +1,15 @@
 <template>
-  <div id="category-filter" v-on:mouseover="filterFocus(true)" v-on:mouseleave="filterFocus(false)">
+  <div id="category-filter" @mouseover="filterFocus(true)" @mouseleave="filterFocus(false)">
     <div class="category-one"
          :class="{ 'category-one-excluded': preRollExcluded }"
-         v-on:click="togglePreRoll()"
-    >
+         @click="togglePreRoll()">
       <span class="bi"
         :class="{ 'bi-check-lg': !preRollExcluded, 'bi-dash-lg': preRollExcluded }">
       </span>{{ $t('message.schedule.preroll_filter') }}
     </div>
-    <div class="category-one"
+    <div v-for="entry in categories" :key="entry.code_name" class="category-one"
       :class="{ 'category-one-excluded': isCategoryExcluded(entry.code_name) }"
-      v-for="entry in categories" :key="entry.code_name"
-      v-on:click="toggleExclude(entry.code_name)"
-    >
+      @click="toggleExclude(entry.code_name)">
       <span class="bi"
         :class="{ 'bi-check-lg': !isCategoryExcluded(entry.code_name),
                   'bi-dash-lg': isCategoryExcluded(entry.code_name) }">
@@ -61,7 +58,7 @@ export default defineComponent({
       return this.categoriesExcluded.indexOf(category) !== -1;
     },
     toggleExclude(category: string) {
-      (this as any).$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         event_label: category,
         value: GTAG_SCHEDULE_FILTER_VALUE
@@ -70,7 +67,7 @@ export default defineComponent({
       this.toggleExcludeCategory(category);
     },
     togglePreRoll() {
-      (this as any).$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_FILTER, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         event_label: 'preroll',
         value: GTAG_SCHEDULE_FILTER_VALUE

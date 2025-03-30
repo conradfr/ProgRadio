@@ -17,12 +17,13 @@ import {
   RADIOADDICT_AGENT
 } from './config/config.js';
 
+/* eslint-disable no-undef */
+
 const LISTENING_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
 
 // todo now that we removed the dynamic video tag, refactor the window.audio = elem.
 
 /* we load the hls script dynamically once, reducing initial app load */
-/* eslint-disable arrow-body-style */
 const loadHls = () => {
   return new Promise((resolve, reject) => {
     const hlsElem = document.getElementById('hls-script');
@@ -42,7 +43,6 @@ const loadHls = () => {
 };
 
 /* we load the dash script dynamically once, reducing initial app load */
-/* eslint-disable arrow-body-style */
 const loadDash = () => {
   return new Promise((resolve, reject) => {
     const dashElem = document.getElementById('dash-script');
@@ -72,7 +72,6 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
     return;
   }
 
-  // eslint-disable-next-line no-undef
   let url = `https://${apiUrl}/listening_session/`;
   if (sessionId !== null) {
     url += sessionId;
@@ -95,7 +94,6 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
     data.radio_stream_code_name = `${radioId}_main`;
   }
 
-  /* eslint-disable consistent-return */
   return fetch(url, {
     method: sessionId !== null ? 'PUT' : 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -116,7 +114,6 @@ const sendPlayingError = (radioId, errorText) => {
     return;
   }
 
-  // eslint-disable-next-line no-undef
   const url = `https://${apiUrl}/stream_error/${radioId}`;
 
   const params = {};
@@ -125,7 +122,6 @@ const sendPlayingError = (radioId, errorText) => {
     params.error = errorText;
   }
 
-  /* eslint-disable consistent-return */
   return fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -196,7 +192,7 @@ const incrementPlayCount = (stationUuid) => {
         });
       }
     })
-    .catch((error) => {
+    .catch ((_e) => {
       // nothing
     });
 };
@@ -218,9 +214,7 @@ createApp({
   sessionId: null,
   listeningInterval: null,
   options: {
-    // eslint-disable-next-line no-undef
     webSocket: typeof appWebSocket !== 'undefined' ? appWebSocket : true,
-    // eslint-disable-next-line no-undef
     sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
   },
   play(streamingUrl, codeName, options) {
@@ -242,12 +236,10 @@ createApp({
     }
 
     if (this.options.sendStatistics) {
-      // eslint-disable-next-line no-undef
       sendGaEvent('play', 'SSR', codeName, 3);
     }
 
     if (options.popup && options.popup === true) {
-      // eslint-disable-next-line no-undef
       window.open(popupUrl.replace(POPUP_URL_WILDCARD, codeName), '', POPUP_SETTINGS);
       return;
     }
@@ -265,7 +257,7 @@ createApp({
           // bind them together
           this.hls.attachMedia(window.audio);
 
-          this.hls.on(Hls.Events.ERROR, (event, data) => {
+          this.hls.on(Hls.Events.ERROR, (_event, data) => {
             if (data.fatal) {
               this.playingError(codeName, data.details);
             }
@@ -370,7 +362,6 @@ createApp({
     if (this.playing !== false && this.options.sendStatistics) {
       updateListeningSession(this.radioId, this.playingStart, this.sessionId, true);
 
-      // eslint-disable-next-line no-undef
       sendGaEvent('stop', 'SSR', this.radioId, 1);
     }
 
@@ -441,7 +432,7 @@ createApp({
             return null;
           }
 
-          // eslint-disable-next-line max-len
+          // eslint-disable-next-line @stylistic/js/max-len
           return [1000, 5000, 10000, 15000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000][tries - 1] || 30000;
         }
       };
@@ -511,7 +502,7 @@ createApp({
     this.channels[topic] = this.socket.channel(topic, {});
 
     this.channels[topic].join()
-      .receive('error', (resp) => {
+      .receive('error', (_resp) => {
         if (topic.startsWith('listeners:')) {
           this.listeners = null;
         } else {
@@ -553,7 +544,7 @@ createApp({
     });
   },
   formatSong(songData) {
-    if (!songData === null || !songData.song) {
+    if (!songData || !songData.song) {
       this.song = null;
       this.cover = null;
       return;

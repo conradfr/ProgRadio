@@ -1,8 +1,7 @@
 <template>
-  <div class="player-playpause" v-on:click="$emit('togglePlay');"
-       :class="{ 'player-playpause-disabled': radio === null }">
-    <i
-        v-if="playing !== PlayerStatus.Loading"
+  <div class="player-playpause" :class="{ 'player-playpause-disabled': radio === null }"
+    @click="$emit('togglePlay');">
+    <i v-if="playing !== PlayerStatus.Loading"
         class="bi"
         :class="{
             'bi-play-circle': playing === PlayerStatus.Stopped,
@@ -29,14 +28,14 @@ export default defineComponent({
   props: {
     radio: {
       type: Object as PropType<Radio|Stream>,
-      required: false
+      required: false,
+      default: null
     },
     playing: {
       type: String,
       required: true
     }
   },
-  /* eslint-disable indent */
   data(): {
     PlayerStatus: any,
   } {
@@ -44,11 +43,6 @@ export default defineComponent({
       PlayerStatus,
     };
   },
-  computed: {
-
-  },
-  methods: {
-
-  }
+  emits: ['togglePlay'],
 });
 </script>

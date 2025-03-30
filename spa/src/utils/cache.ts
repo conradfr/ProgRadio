@@ -29,7 +29,7 @@ const isLocalStorageFull = (e: any) => {
 const isLocalStorageEnabled = (): boolean => {
   try {
     return localStorage !== undefined;
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 };
@@ -43,7 +43,7 @@ const hasCache = (key: string): boolean => {
       if (Array.isArray(cached) || typeof cached === 'object' || typeof cached === 'string') {
         return true;
       }
-    } catch (e) {
+    } catch (_e) {
       return false;
     }
   }
@@ -77,7 +77,7 @@ const setCache = (key: string, data: any, retry = true) => {
 const isSessionStorageEnabled = (): boolean => {
   try {
     return sessionStorage !== undefined;
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 };
@@ -91,7 +91,7 @@ const hasSessionCache = (key: string): boolean => {
       if (Array.isArray(cached) || typeof cached === 'object' || typeof cached === 'string') {
         return true;
       }
-    } catch (e) {
+    } catch (_e) {
       return false;
     }
   }
@@ -110,7 +110,7 @@ const setSessionCache = (key: string, data: any) => {
 
   try {
     sessionStorage.setItem(key, JSON.stringify(data));
-  } catch (e) {
+  } catch (_e) {
     // return;
   }
 };

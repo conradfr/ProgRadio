@@ -50,8 +50,7 @@ export default defineComponent({
     setTimeout(
       () => {
         // links from the navbar that we want to redirect to spa router
-        // eslint-disable-next-line no-undef
-        const navLinks = document.getElementsByClassName('spa-link')!;
+        const navLinks = document.getElementsByClassName('spa-link');
 
         Array.prototype.forEach.call(navLinks, (element) => {
           element.addEventListener('click', (e: any) => {
@@ -67,19 +66,19 @@ export default defineComponent({
       const classToShow = homeIsSet ? 'nav-set-home-disable' : 'nav-set-home-enable';
       const classToHide = homeIsSet ? 'nav-set-home-enable' : 'nav-set-home-disable';
 
-      const toShow = document.getElementsByClassName(classToShow)!;
+      const toShow = document.getElementsByClassName(classToShow);
       Array.prototype.forEach.call(toShow, (element) => {
         element.classList.remove('d-none');
       });
 
-      const toHide = document.getElementsByClassName(classToHide)!;
+      const toHide = document.getElementsByClassName(classToHide);
       Array.prototype.forEach.call(toHide, (element) => {
         element.classList.add('d-none');
       });
     };
 
     // "set as home screen" link in menu
-    const navSetAsHomeLinks = document.getElementsByClassName('nav-set-home')!;
+    const navSetAsHomeLinks = document.getElementsByClassName('nav-set-home');
     toggleHomeLinks(cookies.has(COOKIE_HOME));
 
     Array.prototype.forEach.call(navSetAsHomeLinks, (element) => {
@@ -94,10 +93,10 @@ export default defineComponent({
           this.displayToast(
             {
               type: 'success',
-              message: (this.$i18n as any).t('message.toast.home.disabled')
+              message: this.$i18n.t('message.toast.home.disabled')
             });
 
-          (this as any).$gtag.event(GTAG_ACTION_HOME_REMOVE, {
+          this.$gtag.event(GTAG_ACTION_HOME_REMOVE, {
             event_category: GTAG_CATEGORY_MENU,
             value: GTAG_ACTION_HOME_VALUE
           });
@@ -114,10 +113,10 @@ export default defineComponent({
         this.displayToast(
           {
             type: 'success',
-            message: (this.$i18n as any).t('message.toast.home.enabled')
+            message: this.$i18n.t('message.toast.home.enabled')
           });
 
-        (this as any).$gtag.event(GTAG_ACTION_HOME_SET, {
+        this.$gtag.event(GTAG_ACTION_HOME_SET, {
           event_category: GTAG_CATEGORY_MENU,
           event_label: `${window.location.pathname}${window.location.search}`,
           value: GTAG_ACTION_HOME_VALUE

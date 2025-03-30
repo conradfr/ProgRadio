@@ -4,7 +4,7 @@
       <div class="col-sm-2 col-12">
         <div class="radio-page-side">
           <div class="text-center mb-4">
-            <img :alt="radio.name" class="radio-page-logo" :src="picture" v-once>
+            <img v-once :alt="radio.name" class="radio-page-logo" :src="picture">
           </div>
           <radio-streams v-if="radio.streaming_enabled" :radio="radio"></radio-streams>
         </div>
@@ -29,12 +29,13 @@
           <div class="col-md-12 mt-sm-0 text-center text-sm-start">
             <ul class="nav nav-tabs">
               <li v-for="sub_radio in radio.sub_radios" :key="sub_radio.code_name"
-                class="nav-item" >
+                class="nav-item">
                 <a class="nav-link" href="#"
                   :class="{ 'active': currentSubRadioCodeName === sub_radio.code_name}"
                   :ariaSelected="currentSubRadioCodeName === sub_radio.code_name ? 'true' : 'false'"
-                   v-on:click="regionClick(sub_radio.code_name)"
-                >{{ sub_radio.name }}</a>
+                   @click="regionClick(sub_radio.code_name)">
+                  {{ sub_radio.name }}
+                </a>
               </li>
             </ul>
           </div>
@@ -50,16 +51,13 @@
         <live-listeners v-if="radio" :stream="radio"></live-listeners>
 
         <div class="radio-page-shows mt-2">
-          <radio-show
-              v-for="entry in schedule" :key="entry.hash"
-              :show="entry">
-          </radio-show>
+          <radio-show v-for="entry in schedule" :key="entry.hash" :show="entry"></radio-show>
           <div v-if="schedule.length === 0" class="alert alert-warning" role="alert">
             {{ $t('message.radio_page.no_schedule') }}
           </div>
         </div>
       </div>
-      <div class="col-sm-3 col-12 text-center" v-if="!userLogged">
+      <div v-if="!userLogged" class="col-sm-3 col-12 text-center">
         <adsense></adsense>
       </div>
     </div>
@@ -74,7 +72,6 @@ import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import { DateTime } from 'luxon';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { useUserStore } from '@/stores/userStore';
@@ -107,10 +104,10 @@ export default defineComponent({
     Adsense
   },
   data() {
-    /* eslint-disable no-undef */
     return {
       locale: this.$i18n.locale,
       // @ts-expect-error locale is defined on global scope
+      // eslint-disable-next-line no-undef
       date: DateTime.local().setZone(TIMEZONE).setLocale(locale)
         .toLocaleString(
           {
@@ -132,7 +129,7 @@ export default defineComponent({
     app?.classList.add('no-background');
 
     if (this.radio !== null) {
-      document.title = (this.$i18n as any).t(
+      document.title = this.$i18n.t(
         'message.radio_page.title',
         { radio: this.radio.name }
       );
@@ -238,7 +235,7 @@ export default defineComponent({
         return;
       }
 
-      (this as any).$gtag.event(GTAG_ACTION_REGION_SELECT, {
+      this.$gtag.event(GTAG_ACTION_REGION_SELECT, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         event_label: this.radio?.code_name,
         value: GTAG_ACTION_REGION_VALUE

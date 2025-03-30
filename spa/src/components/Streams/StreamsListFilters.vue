@@ -1,112 +1,104 @@
 <template>
   <div class="streams-filters-container mt-3 mb-0 d-flex flex-row flex-wrap">
-      <div class="mb-3 me-auto streams-filters-search d-flex">
-        <div v-if="searchActive" style="display: inline-block" class="me-2">
-          <div class="input-group">
-            <span class="input-group-text" id="search-addon1">
-              <i class="bi bi-search"></i>
-            </span>
-            <input type="text"
-              class="form-control"
-              style="min-width: 275px"
-              :placeholder="$t('message.streaming.search_placeholder')"
-              name="searchText"
-              :ref="addSearchTextRef"
-              aria-describedby="search-addon1"
-              :value="searchText"
-              v-on:input="searchTextChange"
-              v-on:blur="searchDeactivate"
-            />
-            <i class="bi bi-x-lg form-control-feedback"
-               v-on:click="searchDeactivate(true)"></i>
-          </div>
+    <div class="mb-3 me-auto streams-filters-search d-flex">
+      <div v-if="searchActive" style="display: inline-block" class="me-2">
+        <div class="input-group">
+          <span id="search-addon1" class="input-group-text">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            :ref="addSearchTextRef"
+            class="form-control"
+            style="min-width: 275px"
+            :placeholder="$t('message.streaming.search_placeholder')"
+            :value="searchText"
+            name="searchText"
+            aria-describedby="search-addon1"
+            type="text"
+            @input="searchTextChange"
+            @blur="searchDeactivate"
+          />
+          <i class="bi bi-x-lg form-control-feedback" @click="searchDeactivate(true)"></i>
         </div>
-
-        <button v-if="!searchActive" class="btn btn-primary btn-sm me-1" type="submit"
-                v-on:click="searchActivate">
-          <i class="bi bi-search"></i>
-        </button>
-        <button v-if="!searchActive" class="btn btn-primary btn-sm" type="submit"
-          v-on:click="playOneRandom" v-once>
-          <i class="bi bi-play-circle"></i>
-          {{ $t('message.streaming.random') }}
-        </button>
       </div>
+
+      <button v-if="!searchActive" class="btn btn-primary btn-sm me-1" type="submit" @click="searchActivate">
+        <i class="bi bi-search"></i>
+      </button>
+      <button v-if="!searchActive" v-once class="btn btn-primary btn-sm" type="submit" @click="playOneRandom">
+        <i class="bi bi-play-circle"></i>
+        {{ $t('message.streaming.random') }}
+      </button>
+    </div>
     <div class="me-1 mb-3">
       <button type="submit"
-              class="btn btn-primary btn-sm me-1"
-              :disabled="favorites.length === 0"
-              v-on:click="switchToFavorites">
+        :disabled="favorites.length === 0"
+        class="btn btn-primary btn-sm me-1"
+        @click="switchToFavorites">
         <i class="bi bi-heart-fill"></i>
       </button>
     </div>
       <div class="me-1 mb-3">
-        <button type="submit"
-          class="btn btn-primary btn-sm me-1"
-          v-on:click="geoloc" v-once>
+        <button v-once class="btn btn-primary btn-sm me-1" type="submit" @click="geoloc">
           <i class="bi bi-geo-alt-fill"></i>
         </button>
       </div>
       <div class="d-flex d-row flex-wrap">
         <div class="pe-3 mb-3 me-1 multiselect-div" style="min-width: 300px;">
           <Multiselect
-              @change="countryChange"
-              @open="countryOpen"
-              :model-value="selectedCountryInput"
-              :options="countriesOptions"
-              :canClear="false"
-              :valueProp="'code'"
-              :label="'label'"
-              :searchable="true"
-              :strict="false"
-              :noResultsText="$t('message.streaming.country_search_no_result')"
-              id="multicountry"
-          >
-            <template v-slot:singlelabel="{ value }">
+            id="multicountry"
+            :model-value="selectedCountryInput"
+            :options="countriesOptions"
+            :canClear="false"
+            :valueProp="'code'"
+            :label="'label'"
+            :searchable="true"
+            :strict="false"
+            :noResultsText="$t('message.streaming.country_search_no_result')"
+            @change="countryChange"
+            @open="countryOpen">
+            <template #singlelabel="{ value }">
               <div class="multiselect-single-label">
                 <img v-if="value.code === code_all || value.code === code_favorites"
-                     class="gb-flag gb-flag--mini"
-                     style="height: 20px; width: 25px;"
-                     :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
-                <img v-else-if="value.code === code_last
-                  || value.code === code_history"
-                     class="gb-flag gb-flag--mini"
-                     style="height: 20px; width: 24px;"
-                     :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
+                 class="gb-flag gb-flag--mini"
+                 style="height: 20px; width: 25px;"
+                 :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
+                <img v-else-if="value.code === code_last || value.code === code_history"
+                  class="gb-flag gb-flag--mini"
+                  style="height: 20px; width: 24px;"
+                  :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
                 <vue-flag
-                    v-else
-                    :code="value.code"
-                    size="mini"
+                  v-else
+                  :code="value.code"
+                  size="mini"
                 />&nbsp;&nbsp;{{ value.label }}
               </div>
             </template>
 
-            <template v-slot:option="{ option }">
+            <template #option="{ option }">
               <img v-if="option.code === code_all || option.code === code_favorites"
-                   class="gb-flag gb-flag--mini"
-                   style="height: 20px; width: 25px;"
-                   :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
+                class="gb-flag gb-flag--mini"
+                style="height: 20px; width: 25px;"
+                :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
               <img v-else-if="option.code === code_last || option.code === code_history"
-                   class="gb-flag gb-flag--mini"
-                   style="height: 20px; width: 24px;"
-                   :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
-              <vue-flag
-                  v-else-if="displayFlags"
-                  :code="option.code"
-                  size="mini"
+                class="gb-flag gb-flag--mini"
+                style="height: 20px; width: 24px;"
+                :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
+              <vue-flag v-else-if="displayFlags"
+                :code="option.code"
+                size="mini"
               />&nbsp;&nbsp;{{ option.label }}
             </template>
           </Multiselect>
         </div>
         <div class="pe-3 mb-3 multiselect-div" style="min-width: 250px">
           <Multiselect
-              @change="sortByChange"
-              :model-value="selectedSortByInput"
-              :options="sortByOptions"
-              :canClear="false"
-              :disabled="selectedCountryInput === code_last
-                || selectedCountryInput === code_history"
-              id="multisort"
+            id="multisort"
+            :model-value="selectedSortByInput"
+            :options="sortByOptions"
+            :canClear="false"
+            :disabled="selectedCountryInput === code_last || selectedCountryInput === code_history"
+            @change="sortByChange"
           />
         </div>
       </div>
@@ -118,7 +110,6 @@ import { defineComponent, nextTick } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import Multiselect from '@vueform/multiselect';
 
-/* eslint-disable import/no-cycle */
 import { useStreamsStore } from '@/stores/streamsStore';
 import { useUserStore } from '@/stores/userStore';
 
@@ -145,7 +136,6 @@ export default defineComponent({
   components: {
     Multiselect,
   },
-  /* eslint-disable indent */
   data(): {
     refs: any,
     displayFlags: boolean,
@@ -185,28 +175,28 @@ export default defineComponent({
       const options = [
         {
           value: 'name',
-          label: (this.$i18n as any).t('message.streaming.sort.name')
+          label: this.$i18n.t('message.streaming.sort.name')
         },
         {
           value: 'popularity',
-          label: (this.$i18n as any).t('message.streaming.sort.popularity')
+          label: this.$i18n.t('message.streaming.sort.popularity')
         },
         {
           value: 'last',
-          label: (this.$i18n as any).t('message.streaming.sort.last')
+          label: this.$i18n.t('message.streaming.sort.last')
         }
       ];
 
       if (this.userLogged) {
         options.push({
           value: 'user_last',
-          label: (this.$i18n as any).t('message.streaming.sort.user_last')
+          label: this.$i18n.t('message.streaming.sort.user_last')
         });
       }
 
       options.push({
         value: 'random',
-        label: (this.$i18n as any).t('message.streaming.sort.random')
+        label: this.$i18n.t('message.streaming.sort.random')
       });
 
       return options;
@@ -246,7 +236,7 @@ export default defineComponent({
         }
       });
 
-      (this as any).$gtag.event(GTAG_ACTION_SEARCH_BUTTON, {
+      this.$gtag.event(GTAG_ACTION_SEARCH_BUTTON, {
         event_category: GTAG_CATEGORY_STREAMING,
         value: GTAG_STREAMING_FILTER_VALUE
       });
@@ -288,7 +278,7 @@ export default defineComponent({
 
       // otherwise it's just the setup
       if (country !== this.selectedCountryInput) {
-        (this as any).$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
+        this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
           event_category: GTAG_CATEGORY_STREAMING,
           event_label: country.toLowerCase(),
           value: GTAG_STREAMING_FILTER_VALUE
@@ -307,7 +297,7 @@ export default defineComponent({
 
       // otherwise it's just the setup
       if (sortBy !== this.selectedSortByInput) {
-        (this as any).$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {
+        this.$gtag.event(GTAG_STREAMING_ACTION_FILTER_SORT, {
           event_category: GTAG_CATEGORY_STREAMING,
           event_label: sortBy,
           value: GTAG_STREAMING_FILTER_VALUE
@@ -317,7 +307,7 @@ export default defineComponent({
       }
     },
     playOneRandom() {
-      (this as any).$gtag.event(GTAG_ACTION_PLAY_RANDOM, {
+      this.$gtag.event(GTAG_ACTION_PLAY_RANDOM, {
         event_category: GTAG_CATEGORY_STREAMING,
         event_label: 'random',
         value: GTAG_ACTION_PLAY_VALUE
@@ -326,7 +316,7 @@ export default defineComponent({
       this.playRandom();
     },
     switchToFavorites() {
-      (this as any).$gtag.event(GTAG_STREAMING_ACTION_SWITCH_TO_FAVORITES, {
+      this.$gtag.event(GTAG_STREAMING_ACTION_SWITCH_TO_FAVORITES, {
         event_category: GTAG_CATEGORY_STREAMING,
         event_label: STREAMING_CATEGORY_FAVORITES.toLowerCase(),
         value: GTAG_STREAMING_FILTER_VALUE
@@ -338,7 +328,7 @@ export default defineComponent({
       });
     },
     geoloc() {
-      (this as any).$gtag.event(GTAG_STREAMING_ACTION_GEOLOC, {
+      this.$gtag.event(GTAG_STREAMING_ACTION_GEOLOC, {
         event_category: GTAG_CATEGORY_STREAMING,
         event_label: null,
         value: GTAG_STREAMING_FILTER_VALUE

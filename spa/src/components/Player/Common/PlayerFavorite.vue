@@ -1,8 +1,8 @@
 <template>
   <div class="player-favorite"
-       v-on:click="$emit('favoriteToggle');"
        :title="favoriteTitle"
-       :class="{ 'player-favorite-added': isFavorite }">
+       :class="{ 'player-favorite-added': isFavorite }"
+       @click="$emit('favoriteToggle');">
     <i class="bi"
        :class="{
         'bi-heart-fill': isFavorite,
@@ -25,5 +25,6 @@ export default defineComponent({
       required: true
     }
   },
+  emits: ['favoriteToggle'],
 });
 </script>

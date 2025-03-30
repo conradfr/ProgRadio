@@ -3,47 +3,45 @@
     <div class="row">
       <div class="col-12 col-sm-6">
         <h4 class="mt-2 mb-3">{{ $t('message.params_page.title') }}</h4>
-
         <h5>{{ $t('message.params_page.sub_title') }}</h5>
 
         <div class="alert alert-info">{{ $t('message.params_page.description') }}</div>
         <div class="form-check mb-3">
-          <input class="form-check-input" type="radio" id="stream-deenabled"
-            value="disabled" v-model="streamFlux">
+          <input id="stream-deenabled" v-model="streamFlux" class="form-check-input" type="radio" value="disabled">
           <label class="form-check-label" for="stream-default">
             {{ $t('message.params_page.deactivated') }}
           </label>
         </div>
         <div class="form-check mb-3">
-          <input class="form-check-input" type="radio" id="stream-default"
-            value="automatic" v-model="streamFlux" :disabled="flux.supported === false">
+          <input id="stream-default" v-model="streamFlux" class="form-check-input" type="radio"
+            value="automatic" :disabled="flux.supported === false">
           <label class="form-check-label" for="stream-default">
             {{ $t('message.params_page.automatic') }}
           </label>
           <div class="form-text">{{ $t('message.params_page.automatic_help') }}</div>
           <div v-if="!flux.supported" class="mt-1 alert alert-warning">
-            {{ $t('message.params_page.no_support') }}</div>
+            {{ $t('message.params_page.no_support') }}
+          </div>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" id="stream-two"
-            value="enabled" v-model="streamFlux">
+          <input id="stream-two" v-model="streamFlux" class="form-check-input" type="radio" value="enabled">
           <label class="form-check-label" for="stream-default">
             {{ $t('message.params_page.two_flux') }}
           </label>
 
           <div class="mt-2 ms-3">
             <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" id="stream-enabled-10"
+              <input id="stream-enabled-10" v-model="streamFluxDuration" class="form-check-input" type="radio"
                 :value="PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS"
-                v-model="streamFluxDuration" :disabled="streamFlux !== 'enabled'">
+                :disabled="streamFlux !== 'enabled'">
               <label class="form-check-label" for="stream-default">
                 {{ $t('message.params_page.duration_10') }}
               </label>
             </div>
             <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" id="stream-enabled-30"
+              <input id="stream-enabled-30" v-model="streamFluxDuration" class="form-check-input" type="radio"
                 :value="PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS"
-                v-model="streamFluxDuration" :disabled="streamFlux !== 'enabled'">
+                :disabled="streamFlux !== 'enabled'">
               <label class="form-check-label" for="stream-default">
                 {{ $t('message.params_page.duration_30') }}
               </label>
@@ -51,10 +49,9 @@
           </div>
         </div>
 
-        <button class="mt-2 btn btn-primary" v-on:click="save">
+        <button class="mt-2 btn btn-primary" @click="save">
           {{ $t('message.params_page.save') }}
         </button>
-
       </div>
     </div>
   </div>
@@ -77,8 +74,6 @@ import {
 import cookies from '@/utils/cookies';
 
 export default defineComponent({
-  /* eslint-disable no-undef */
-  /* eslint-disable indent */
   data(): {
     locale: string,
     streamFlux: string|null,
@@ -87,7 +82,7 @@ export default defineComponent({
     PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS: number
   } {
     return {
-      locale: (this as any).$i18n.locale,
+      locale: this.$i18n.locale,
       streamFlux: null,
       streamFluxDuration: null,
       PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS,
@@ -95,7 +90,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    document.title = (this.$i18n as any).t('message.params_page.title');
+    document.title = this.$i18n.t('message.params_page.title');
 
     this.streamFlux = this.flux.selected;
     this.streamFluxDuration = this.flux.delayBeforeStop;
@@ -116,7 +111,7 @@ export default defineComponent({
       this.displayToast(
         {
           type: 'success',
-          message: (this.$i18n as any).t('message.params_page.updated')
+          message: this.$i18n.t('message.params_page.updated')
         });
     }
   }

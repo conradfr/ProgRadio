@@ -1,6 +1,6 @@
 <template>
-  <button type="button" class="btn btn-sm btn-light" v-on:click="addTo"
-    :class="{'d-none d-sm-block': hideMobile}">
+  <button :class="{'d-none d-sm-block': hideMobile}"
+    type="button" class="btn btn-sm btn-light" @click="addTo">
     {{ text }}
   </button>
 </template>
@@ -10,7 +10,22 @@ import { defineComponent } from 'vue';
 import typeUtils from '@/utils/typeUtils';
 
 export default defineComponent({
-  props: ['modelValue', 'add', 'hideMobile'],
+  props: {
+    modelValue: {
+      type: [Number, String],
+      required: true
+    },
+    add: {
+      type: Number,
+      required: true
+    },
+    hideMobile: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+  },
+  emits: ['update:modelValue'],
   computed: {
     text(): string {
       return typeUtils.toIntIfString(this.add) < 0 ? this.add : `+${this.add}`;

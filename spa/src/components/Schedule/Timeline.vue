@@ -1,38 +1,39 @@
 <template>
   <div class="timeline" :style="styleObject">
     <div class="timeline-control timeline-control-left"
-         v-on:click="clickBackward"
-         :class="{ 'filter-icon-active': displayFilter }">
+      :class="{ 'filter-icon-active': displayFilter }"
+      @click="clickBackward">
       <div class="filter-icon"
-           :class="{ 'filter-icon-active': displayFilter,
-                     'filter-icon-enabled': (filterEnabled && !displayFilter) }"
-           v-on:click.stop="filterClick"
-           v-on:mouseover="filterFocus(true)"
-           v-on:mouseleave="filterFocus(false)"
-      >
+        :class="{ 'filter-icon-active': displayFilter, 'filter-icon-enabled': (filterEnabled && !displayFilter) }"
+        @click.stop="filterClick"
+        @mouseover="filterFocus(true)"
+        @mouseleave="filterFocus(false)">
         <i class="bi bi-funnel"></i>
       </div>
       <i class="bi bi-chevron-left"></i>
     </div>
     <div class="timeline-control timeline-calendar d-none d-md-flex">
       <div class="timeline-calendar-action timeline-calendar-backward align-self-start ps-2">
-        <i class="bi bi-caret-left-fill" v-on:click="clickCalendarBackward"></i>
+        <i class="bi bi-caret-left-fill" @click="clickCalendarBackward"></i>
       </div>
       <div class="timeline-calendar-date align-self-center flex-grow-1">
           <span
-              v-bind:class="{ 'timeline-calendar-no-click': isToday }"
-              v-on:click="clickCalendarToday">{{ scheduleDate }}</span>
+            :class="{ 'timeline-calendar-no-click': isToday }"
+            @click="clickCalendarToday">
+            {{ scheduleDate }}
+          </span>
       </div>
       <div class="timeline-calendar-action timeline-calendar-forward align-self-end pe-2">
         <i class="bi bi-caret-right-fill"
-           v-bind:class="{ 'timeline-calendar-disabled': isTomorrow }"
-           v-on:click="clickCalendarForward"></i>
+          :class="{ 'timeline-calendar-disabled': isTomorrow }"
+          @click="clickCalendarForward">
+        </i>
       </div>
     </div>
-    <div class="timeline-control timeline-control-right" v-on:click="clickForward">
+    <div class="timeline-control timeline-control-right" @click="clickForward">
       <i class="bi bi-chevron-right"></i>
     </div>
-    <div v-for="hour in 24" :key="hour" class="time" v-once>
+    <div v-for="hour in 24" v-once :key="hour" class="time">
       {{ toTime(hour) }}
     </div>
   </div>
@@ -59,8 +60,8 @@ export default defineComponent({
       displayFilter: 'displayCategoryFilter',
     }),
     scheduleDate(): string {
-      if (this.isToday === true) { return (this.$i18n as any).t('message.schedule.today'); }
-      if (this.isTomorrow === true) { return (this.$i18n as any).t('message.schedule.tomorrow'); }
+      if (this.isToday === true) { return this.$i18n.t('message.schedule.today'); }
+      if (this.isTomorrow === true) { return this.$i18n.t('message.schedule.tomorrow'); }
       return this.cursorTime.toLocaleString(DateTime.DATE_SHORT);
     }
   },

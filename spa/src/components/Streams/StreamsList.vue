@@ -1,21 +1,22 @@
 <template>
-  <div class="streams d-flex justify-content-center" v-if="radios.length">
+  <div v-if="radios.length" class="streams d-flex justify-content-center">
     <TransitionGroup name="stream-list">
-    <streams-list-one
+      <streams-list-one
         v-for="entry in radios"
         :key="entry.code_name"
-        :radio="entry"
-    ></streams-list-one>
+        :radio="entry">
+      </streams-list-one>
     </TransitionGroup>
   </div>
-  <div class="row" v-else-if="isLoading === false">
+  <div v-else-if="isLoading === false" class="row">
     <div class="offset-md-3 col-md-6">
       <div class="alert alert-warning space-up-20 text-center" role="alert">
-        {{ $t('message.streaming.no_results') }}</div>
+        {{ $t('message.streaming.no_results') }}
+      </div>
     </div>
   </div>
   <streams-list-pagination v-if="radios.length"></streams-list-pagination>
-  <div class="mt-0 mt-sm-2" v-if="locale !== 'fr' || !isProgRadio || !userLogged">
+  <div v-if="locale !== 'fr' || !isProgRadio || !userLogged" class="mt-0 mt-sm-2">
     <adsense mode="horizontal_fix"></adsense>
   </div>
 </template>
@@ -24,7 +25,6 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 import { useUserStore } from '@/stores/userStore';
@@ -39,7 +39,6 @@ export default defineComponent({
     StreamsListOne,
     Adsense
   },
-  /* eslint-disable indent */
   data(): {
     locale: string,
     isProgRadio: boolean

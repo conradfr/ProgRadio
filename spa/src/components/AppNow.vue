@@ -4,15 +4,15 @@
       <div class="col-md-12">
         <h4 class="mb-3">{{ $t('message.now_page.title') }}</h4>
         <ul class="nav nav-tabs" role="tablist">
-          <li class="nav-item" role="presentation"
-              v-for="entry in rankedCollections" :key="entry.code_name">
-            <button class="nav-link" role="tab" type="button"
+          <li v-for="entry in rankedCollections" :key="entry.code_name" class="nav-item" role="presentation">
+            <button
               :id="entry.code_name + '-tab'"
+              class="nav-link"
               :class="{ 'active': currentCollection === entry.code_name}"
               :ariaSelected="currentCollection === entry.code_name ? 'true' : 'false'"
               :aria-controls="entry.code_name"
-              v-on:click="setActiveCollection(entry.code_name)"
-            >
+              role="tab" type="button"
+              @click="setActiveCollection(entry.code_name)">
               {{ entry[`name_${locale.toUpperCase()}`] }}
             </button>
           </li>
@@ -31,11 +31,11 @@
           <now-radio
               v-for="radio in rankedRadios"
               :key="radio.code_name"
-              :radio="radio"
-          ></now-radio>
+              :radio="radio">
+          </now-radio>
         </div>
       </div>
-      <div class="col-12 col-sm-3 text-center" v-if="!userLogged">
+      <div v-if="!userLogged" class="col-12 col-sm-3 text-center">
         <adsense></adsense>
       </div>
     </div>
@@ -57,16 +57,13 @@ export default defineComponent({
     NowRadio,
     Adsense
   },
-  /* eslint-disable no-undef */
   data() {
     return {
-      // @ts-ignore
       locale: this.$i18n.locale
     };
   },
   created() {
     this.getRadiosData();
-
     this.getSchedule(
       {
         collection: this.$route.params.collection
@@ -84,12 +81,6 @@ export default defineComponent({
       3500
     );
   },
-  beforeRouteEnter(to, from, next) {
-    next(() => {
-      const schedule = useScheduleStore();
-      schedule.setCalendarToday();
-    });
-  },
   // TODO fix this hack
   mounted() {
     const body = document.querySelector('body');
@@ -106,6 +97,12 @@ export default defineComponent({
 
     const app = document.getElementById('app');
     app.classList.remove('no-background');
+  },
+  beforeRouteEnter(_to, _from, next) {
+    next(() => {
+      const schedule = useScheduleStore();
+      schedule.setCalendarToday();
+    });
   },
   computed: {
     ...mapState(useScheduleStore,

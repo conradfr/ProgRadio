@@ -5,23 +5,22 @@
         <nav aria-label="navigation">
           <ul class="pagination justify-content-center">
             <li class="page-item" :class="{ 'disabled': page === 1 }">
-              <a class="page-link" v-on:click="gotoPage(page - 1)" aria-label="Previous">
+              <a class="page-link" aria-label="Previous" @click="gotoPage(page - 1)">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
             <li
-                class="page-item"
                 v-for="(n, index) in pagesList"
                 :key="n"
                 :class="{
                   'active': page === n,
                   'ellipsis': pagesList[index] - pagesList[index - 1] > 1
                 }"
-            >
-              <a class="page-link" v-on:click="gotoPage(n)">{{ n }}</a>
+                class="page-item">
+              <a class="page-link" @click="gotoPage(n)">{{ n }}</a>
             </li>
             <li class="page-item" :class="{ 'disabled': page === pages }">
-              <a class="page-link" v-on:click="gotoPage(page + 1)" aria-label="Next">
+              <a class="page-link" aria-label="Next" @click="gotoPage(page + 1)">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
@@ -36,7 +35,6 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useStreamsStore } from '@/stores/streamsStore';
 
 import { STREAMS_DEFAULT_PER_PAGE } from '@/config/config';

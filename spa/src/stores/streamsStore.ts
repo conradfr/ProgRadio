@@ -6,7 +6,6 @@ import type { Countries } from '@/types/countries';
 import type { Stream } from '@/types/stream';
 import type { GetStreamsResponse } from '@/types/streams_api';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
@@ -44,7 +43,6 @@ interface State {
   page: number
 }
 
-/* eslint-disable import/prefer-default-export */
 export const useStreamsStore = defineStore('streams', {
   state: (): State => ({
     countries: {},
@@ -109,13 +107,11 @@ export const useStreamsStore = defineStore('streams', {
 
       return countriesOptions;
     },
-    /* eslint-disable max-len */
     getOneStream: state => (id: string): Stream|null => find(state.streamRadios, ['code_name', id]) || null,
     getCountryName: state => (key: string): string|null => state.countries[key] || null
   },
   actions: {
     async getConfig() {
-      /* eslint-disable camelcase */
       const { radio_browser_url } = await StreamsApi.getConfig();
       cookies.set(config.COOKIE_STREAM_RADIOBROWSER_API, radio_browser_url);
       this.radioBrowserApi = radio_browser_url;
@@ -295,7 +291,7 @@ export const useStreamsStore = defineStore('streams', {
         this.searchText = null;
 
         if (oldText !== null && oldText !== '') {
-          nextTick(async () => {
+          nextTick(() => {
             this.getStreamRadios();
           });
         }
@@ -312,13 +308,12 @@ export const useStreamsStore = defineStore('streams', {
 
       this.searchText = text;
 
-      /* eslint-disable no-underscore-dangle */
-      if ((this as any).$router.currentRoute._rawValue.params.page !== undefined
-        && (this as any).$router.currentRoute._rawValue.params.page !== null
-        && (this as any).$router.currentRoute._rawValue.params.page !== ''
-        && (this as any).$router.currentRoute._rawValue.params.page !== '1') {
-        const params = { ...(this as any).$router.currentRoute._rawValue.params, page: '1' };
-        (this as any).$router.push({ name: 'streaming', params, replace: true });
+      if (this.$router.currentRoute._rawValue.params.page !== undefined
+        && this.$router.currentRoute._rawValue.params.page !== null
+        && this.$router.currentRoute._rawValue.params.page !== ''
+        && this.$router.currentRoute._rawValue.params.page !== '1') {
+        const params = { ...this.$router.currentRoute._rawValue.params, page: '1' };
+        this.$router.push({ name: 'streaming', params, replace: true });
         return false;
       }
 

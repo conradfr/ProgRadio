@@ -8,7 +8,6 @@ export const GRID_INDEX_BREAK = 768;
 export const NAV_MOVE_BY = 60 * MINUTE_PIXEL;
 export const TICK_INTERVAL = 30000; /* ms */
 
-// eslint-disable-next-line max-len
 export const POPUP_SETTINGS = 'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=600,height=250,left=150,top=150';
 export const POPUP_URL_WILDCARD = '123';
 

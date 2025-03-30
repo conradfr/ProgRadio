@@ -1,6 +1,6 @@
 <template>
-  <div class="navbar-player-xl-logo">
-    <img :src="imgSrc" :alt="radio.name" />
+  <div class="player-logo-xl d-none d-md-block">
+    <img :src="imgSrc" />
   </div>
 </template>
 
@@ -10,7 +10,6 @@ import { mapState } from 'pinia';
 
 import StreamsUtils from '@/utils/StreamsUtils';
 
-/* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
 export default defineComponent({

@@ -13,7 +13,6 @@ const getUserData = async (): Promise<GetUserResponse | null> => {
   return null;
 };
 
-/* eslint-disable arrow-body-style */
 const saveSong = async (song: string): Promise<any | null> => {
   const response = await fetch(`/user/song/add/${song}`);
 
@@ -22,7 +21,6 @@ const saveSong = async (song: string): Promise<any | null> => {
   return response.json();
 };
 
-/* eslint-disable arrow-body-style */
 const removeSong = async (id: number): Promise<any | null> => {
   const response = await fetch(`/user/song/remove/${id}`);
 
@@ -31,7 +29,6 @@ const removeSong = async (id: number): Promise<any | null> => {
   return response.json();
 };
 
-/* eslint-disable no-undef */
 export default {
   getUserData,
   saveSong,

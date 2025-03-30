@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import symfonyPlugin from 'vite-plugin-symfony'
+import * as path from "node:path";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -42,6 +43,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      _: path.resolve(__dirname, "src")
     },
   },
 })

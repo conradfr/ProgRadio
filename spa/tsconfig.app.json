@@ -7,7 +7,7 @@
     "strict": true,
     "allowJs": true,
     "noImplicitThis": false,
-    "composite": true,
+    "composite": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,

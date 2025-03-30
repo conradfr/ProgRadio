@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4" v-if="count && count > 0">
+  <div v-if="count && count > 0" class="mt-4">
     <strong>{{ $t('message.streaming.listeners_title') }}:</strong>&nbsp;
     {{ $t('message.streaming.listeners', { how_many: count}) }}
   </div>
@@ -13,13 +13,10 @@ import { mapState } from 'pinia';
 import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 
-/* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
 import typeUtils from '@/utils/typeUtils';
 
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 export default defineComponent({
   props: {
     stream: {

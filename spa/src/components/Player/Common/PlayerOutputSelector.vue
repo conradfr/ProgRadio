@@ -11,7 +11,7 @@
       </div>
       <div class="dropdown-menu p-2">
         <div v-if="!displaySelector">
-          <a class="dropdown-item cursor-pointer" v-on:click="listDevices()">
+          <a class="dropdown-item cursor-pointer" @click="listDevices()">
             <small>{{ $t('message.player.output.choose') }}</small>
           </a>
         </div>
@@ -20,8 +20,8 @@
             <label class="form-check-label mb-2 ps-2" for="output-select">
               <small>{{ $t('message.player.output.choose_label') }}</small>
             </label>
-            <select class="form-select form-select-sm select-output" name="output-select"
-              aria-label="Audio output select" v-model="selectedDevice">
+            <select v-model="selectedDevice" class="form-select form-select-sm select-output"
+              name="output-select" aria-label="Audio output select">
               <option v-for="choice in deviceOptions" :key="choice.deviceId" :value="choice.deviceId">
                 {{ choice.label }}
               </option>
@@ -29,13 +29,12 @@
           </div>
           <div class="px-3">
             <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" role="switch" id="stopPlayOutputChange"
-                v-model="stopPlayOutputChange">
+              <input id="stopPlayOutputChange" v-model="stopPlayOutputChange" class="form-check-input"
+                type="checkbox" role="switch">
               <label class="form-check-label ps-2" for="stopPlayOutputChange">
                 <small>{{ $t('message.player.output.pause_if_disconnect') }}</small>
               </label>
             </div>
-
           </div>
         </div>
       </div>
@@ -59,7 +58,8 @@ export default defineComponent({
   props: {
     selectedDeviceId: {
       type: String,
-      required: false
+      required: false,
+      default: null
     },
     asIcon: {
       type: Boolean,
@@ -67,7 +67,6 @@ export default defineComponent({
       required: false
     }
   },
-  /* eslint-disable indent */
   data(): {
     displaySelector: boolean,
     stopPlayOutputChange: boolean,
@@ -79,6 +78,7 @@ export default defineComponent({
       deviceOptions: [],
     };
   },
+  emits: ['changeOutput'],
   mounted() {
     if (this.selectedDeviceId && this.selectedDeviceId !== '' && this.selectedDeviceId !== 'default') {
       this.displaySelector = true;
@@ -93,7 +93,7 @@ export default defineComponent({
       if (permissionStatus.state === 'granted') {
         this.listDevices();
       }
-    } catch (error) {
+    } catch (_e) {
       this.displaySelector = false;
     } */
   },
@@ -106,7 +106,7 @@ export default defineComponent({
         return this.selectedDeviceId;
       },
       set(value: string) {
-        (this as any).$gtag.event(GTAG_ACTION_OUTPUT_CHANGE, {
+        this.$gtag.event(GTAG_ACTION_OUTPUT_CHANGE, {
           event_category: GTAG_CATEGORY_PLAYER,
           event_label: null,
           value: GTAG_ACTION_OUTPUT_VALUE
@@ -152,11 +152,11 @@ export default defineComponent({
         }
 
         this.displaySelector = true;
-      } catch (error) {
+      } catch (_e) {
         this.displaySelector = false;
 
         this.displayToast({
-          message: (this.$i18n as any).t('message.generic.error'),
+          message: this.$i18n.t('message.generic.error'),
           type: 'error'
         });
       }

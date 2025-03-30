@@ -17,7 +17,6 @@
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 import { usePlayerStore } from '@/stores/playerStore';
@@ -31,7 +30,6 @@ import StreamsList from './Streams/StreamsList.vue';
 import StreamsOne from './Streams/StreamsOne.vue';
 import Loading from './Utils/Loading.vue';
 
-/* eslint-disable no-prototype-builtins */
 export default defineComponent({
   components: {
     StreamsListFilters,
@@ -56,7 +54,7 @@ export default defineComponent({
   mounted() {
     const body = document.querySelector('body');
     body?.classList.add('body-app');
-    document.title = (this.$i18n as any).t('message.streaming.title');
+    document.title = this.$i18n.t('message.streaming.title');
 
     // favorites shortcut
     const mobileFavoritesShortcut = document.getElementById('mobile-streaming-favorites-shortcut');
@@ -70,18 +68,7 @@ export default defineComponent({
     const mobileFavoritesShortcut = document.getElementById('mobile-streaming-favorites-shortcut');
     mobileFavoritesShortcut?.classList.add('d-none');
   },
-  computed: {
-    ...mapState(useGlobalStore, ['isLoading']),
-    ...mapState(useStreamsStore, {
-      solo: 'soloExtended'
-    }),
-    ...mapState(usePlayerStore, {
-      playing: 'playing',
-      playingRadio: 'radio',
-      currentSong: 'currentSong'
-    })
-  },
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter(to, _from, next) {
     next(() => {
       const streamsStore = useStreamsStore();
 
@@ -106,7 +93,7 @@ export default defineComponent({
       }
     });
   },
-  beforeRouteUpdate(to, from, next) {
+  beforeRouteUpdate(to, _from, next) {
     const streamsStore = useStreamsStore();
 
     if (to.params.hasOwnProperty('countryOrCategoryOrUuid')) {
@@ -124,7 +111,6 @@ export default defineComponent({
     }
     next();
   },
-  /* eslint-disable func-names */
   watch: {
     playing() {
       this.updateTitle();
@@ -135,6 +121,17 @@ export default defineComponent({
     currentSong() {
       this.updateTitle();
     },
+  },
+  computed: {
+    ...mapState(useGlobalStore, ['isLoading']),
+    ...mapState(useStreamsStore, {
+      solo: 'soloExtended'
+    }),
+    ...mapState(usePlayerStore, {
+      playing: 'playing',
+      playingRadio: 'radio',
+      currentSong: 'currentSong'
+    })
   },
   methods: {
     ...mapActions(useStreamsStore, ['getConfig', 'getCountries']),
@@ -149,9 +146,9 @@ export default defineComponent({
 
         preTitle += `${this.playingRadio.name} - `;
 
-        document.title = `${preTitle}${(this.$i18n as any).t('message.streaming.title')}`;
+        document.title = `${preTitle}${this.$i18n.t('message.streaming.title')}`;
       } else {
-        document.title = (this.$i18n as any).t('message.streaming.title');
+        document.title = this.$i18n.t('message.streaming.title');
       }
     }
   }

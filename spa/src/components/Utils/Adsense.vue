@@ -5,14 +5,16 @@
       :data-ad-client="adsense_key"
       :data-ad-slot="adsense_tag_vert_key"
       data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
+      data-full-width-responsive="true">
+    </ins>
 
     <ins v-if="mode === 'horizontal_fix'" class="adsbygoogle mt-2"
       style="display:block;min-width:360px;max-width:728px;height:100px;margin:auto;"
       :data-ad-client="adsense_key"
       :data-ad-slot="adsense_tag_horiz_fix_key"
       data-ad-format="auto"
-      data-full-width-responsive="false"></ins>
+      data-full-width-responsive="false">
+    </ins>
   </div>
 </template>
 
@@ -22,8 +24,6 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 export default defineComponent({
   props: {
     mode: {
@@ -32,7 +32,6 @@ export default defineComponent({
       required: false
     },
   },
-  /* eslint-disable indent */
   data(): {
     adsense_key: string,
     adsense_tag_vert_key: string,
@@ -41,16 +40,20 @@ export default defineComponent({
   } {
     return {
       // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
       adsense_key,
       // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
       adsense_tag_vert_key,
       // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
       adsense_tag_horiz_fix_key,
       tagRef: null,
     };
   },
   mounted() {
     // @ts-expect-error defined on global scope
+    // eslint-disable-next-line no-undef
     if (appEnv !== 'prod') {
       return;
     }
@@ -58,8 +61,8 @@ export default defineComponent({
     const adScriptExt = document.createElement('script');
     adScriptExt.setAttribute('async', '');
     adScriptExt.setAttribute('crossorigin', 'anonymous');
-    /* eslint-disable max-len */
     // @ts-expect-error defined on global scope
+    // eslint-disable-next-line no-undef
     adScriptExt.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsense_key}`;
 
     if (this.tagRef !== null) {

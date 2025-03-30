@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 import forEach from 'lodash/forEach';
 
 import {
@@ -18,6 +16,8 @@ import type { Program } from '@/types/program';
 import typeUtils from '@/utils/typeUtils';
 import PlayerUtils from '@/utils/PlayerUtils';
 import ScheduleUtils from '@/utils/ScheduleUtils';
+
+/* eslint-disable no-undef */
 
 // @ts-expect-error Android is defined by the device
 const hasAndroid = typeof Android !== 'undefined';

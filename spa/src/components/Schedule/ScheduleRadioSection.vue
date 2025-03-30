@@ -1,6 +1,6 @@
 <template>
-  <div class="program-section" :style="styleObject" :id="`s-${section.hash}`"
-    v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()" v-once>
+  <div v-once :id="`s-${section.hash}`" :style="styleObject" class="program-section"
+    @mouseover.stop="hoverOn()" @mouseleave="hoverOff()">
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import { TIMEZONE, MINUTE_PIXEL } from '@/config/config';
 
 export default defineComponent({
   props: {
-    program_start: {
+    programStart: {
       type: String,
       required: true
     },
@@ -26,7 +26,7 @@ export default defineComponent({
   },
   data() {
     const left = DateTime.fromISO(this.section.start_at)
-      .diff(DateTime.fromISO(this.program_start)).as('minutes') * MINUTE_PIXEL;
+      .diff(DateTime.fromISO(this.programStart)).as('minutes') * MINUTE_PIXEL;
 
     return {
       popover: null,

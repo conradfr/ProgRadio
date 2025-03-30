@@ -1,39 +1,39 @@
 <template>
-  <div class="program-container" :data-hash="program.hash"
+  <div :ref="setRootRef"
+     class="program-container"
+     :data-hash="program.hash"
      :class="{ 'prevday': startsPrevDay, 'nextday': endsNextDay }"
-     :style="containerStyle" :ref="setRootRef"
-       v-on:click.stop="detailClick"
-  >
-    <div class="program" @mouseover.once="hover = !hover"
-         v-if="isIntersecting === true"
-         v-bind:class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }">
-      <div class="program-inner" v-bind:title="title">
-        <div class="program-img" v-if="program.picture_url && (hover || isCurrent)">
-          <img v-bind:src="picturePath" alt="" @mousedown.prevent="" v-once>
+     :style="containerStyle"
+     @click.stop="detailClick">
+    <div v-if="isIntersecting === true" class="program"
+      :class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }"
+      @mouseover.once="hover = !hover">
+      <div class="program-inner" :title="title">
+        <div v-if="program.picture_url && (hover || isCurrent)" class="program-img">
+          <img v-once :src="picturePath" alt="" @mousedown.prevent="">
         </div>
         <div class="program-infos" :style="infosStyle">
-          <div class="program-title" v-once>
-            <span class="schedule-display" >{{ timeDisplay }}</span>{{ program.title }}
+          <div v-once class="program-title">
+            <span class="schedule-display">{{ timeDisplay }}</span>{{ program.title }}
           </div>
-          <div class="program-host" v-if="program.host" v-once>{{ program.host }}</div>
+          <div v-if="program.host" v-once class="program-host">{{ program.host }}</div>
           <div class="program-description-short"
-               v-bind:class="{ 'program-description-nohost': !program.host }">
+            :class="{ 'program-description-nohost': !program.host }">
             <div class="program-description-short-inner">
-              <span class="program-description-short-inner-song"
-                  v-if="radio.streaming_enabled === true && isCurrent && liveSongText">
+              <span v-if="radio.streaming_enabled === true && isCurrent && liveSongText"
+                class="program-description-short-inner-song">
                 <i class="bi bi-music-note-beamed"></i>
                 {{ liveSongText }}
               </span>
-              <span class="program-description-short-inner-text"
-                    v-bind:class="{ 'program-description-short-inner-text-current': isCurrent }"
-                    v-if="program.description" v-once>
+              <span v-if="program.description" v-once class="program-description-short-inner-text"
+                :class="{ 'program-description-short-inner-text-current': isCurrent }">
                 {{ shorten(program.description, program.duration) }}
               </span>
             </div>
           </div>
         </div>
-        <schedule-radio-section v-for="entry in program.sections" :key="entry.hash"
-          :program_start="program.start_at" :section="entry" v-once>
+        <schedule-radio-section v-for="entry in program.sections" v-once :key="entry.hash"
+          :programStart="program.start_at" :section="entry">
         </schedule-radio-section>
       </div>
     </div>
@@ -55,7 +55,6 @@ import {
   GTAG_CATEGORY_SCHEDULE
 } from '@/config/config';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { usePlayerStore } from '@/stores/playerStore';
 
@@ -82,7 +81,6 @@ export default defineComponent({
     },
     isIntersecting: Boolean
   },
-  /* eslint-disable indent */
   data(): {
     hover: boolean,
     rootRef: HTMLElement|null,
@@ -177,7 +175,6 @@ export default defineComponent({
     isLongEnough(): boolean {
       return this.program.duration >= PROGRAM_LONG_ENOUGH;
     },
-    /* eslint-disable max-len */
     startsPrevDay(): boolean {
       return this.program.start_overflow > 0;
       // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.prevDayOverflow;
@@ -216,7 +213,7 @@ export default defineComponent({
         return;
       }
 
-      (this as any).$gtag.event(GTAG_ACTION_PROGRAM_DETAIL, {
+      this.$gtag.event(GTAG_ACTION_PROGRAM_DETAIL, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         event_label: this.program.title,
         value: GTAG_ACTION_PROGRAM_DETAIL_VALUE

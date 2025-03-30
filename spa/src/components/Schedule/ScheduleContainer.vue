@@ -16,7 +16,6 @@
 import { defineComponent, nextTick } from 'vue';
 import { mapActions, mapState } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 
 import { DEFAULT_COLLECTION } from '@/config/config';

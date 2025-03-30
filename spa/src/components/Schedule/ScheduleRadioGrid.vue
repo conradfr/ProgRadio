@@ -5,17 +5,16 @@
         :enabled="{ pan: true, swipe: true }"
         :panOptions="{ direction: 'horizontal' }"
         :swipeOptions="{ direction: 'horizontal' }"
-        v-on:swipe="onSwipe"
-        v-on:panleft="onPan" v-on:panright="onPan"
-        v-on:panstart="onPanStart" v-on:panend="onPanEnd">
+        @swipe="onSwipe"
+        @panleft="onPan" @panright="onPan"
+        @panstart="onPanStart" @panend="onPanEnd">
       <schedule-radio-grid-row
         v-for="entry in radios"
         :key="entry.code_name"
         :radio="entry"
         :displayNoSchedule="displayNoSchedule"
         :schedule="getSchedule(entry.code_name)"
-        :hasSchedule="hasSchedule(entry.code_name)"
-      >
+        :hasSchedule="hasSchedule(entry.code_name)">
       </schedule-radio-grid-row>
     </vue3-hammer>
     <schedule-radio-grid-no-radio
@@ -31,7 +30,6 @@ import { mapState, mapActions } from 'pinia';
 
 import { NAV_MOVE_BY } from '@/config/config';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { useUserStore } from '@/stores/userStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
@@ -50,7 +48,6 @@ export default defineComponent({
     ScheduleRadioGridRow,
     ScheduleRadioGridNoRadio
   },
-  /* eslint-disable indent */
   data(): {
     clickX: number|null
   } {
@@ -110,6 +107,7 @@ export default defineComponent({
     },
     onSwipe(event: Event) {
       this.setSwipeClick(true);
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
       setTimeout(this.swipeEnd, 1000);
 
       // avoid ghost click

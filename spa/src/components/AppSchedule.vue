@@ -1,11 +1,10 @@
 <template>
-  <div v-on:keyup.f="keyupFav"
-    style="overflow: hidden; padding: 0 0 !important; direction:ltr/*rtl:ignore*/;">
+  <div style="overflow: hidden; padding: 0 0 !important; direction:ltr/*rtl:ignore*/;" @keyup.f="keyupFav">
     <collection-switcher></collection-switcher>
     <timeline></timeline>
     <timeline-cursor-head v-if="rankedRadios.length > 0"></timeline-cursor-head>
     <schedule-container :ref="setContainerRef"></schedule-container>
-    <category-filter v-if="displayCategoryFilter"/>
+    <category-filter v-if="displayCategoryFilter" />
     <adsense v-if="!userLogged" mode="horizontal_fix"></adsense>
   </div>
 </template>
@@ -14,7 +13,6 @@
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
@@ -41,7 +39,6 @@ export default defineComponent({
     CategoryFilter,
     Adsense
   },
-  /* eslint-disable indent */
   data(): {
     PlayerStatus: any,
     containerRef: HTMLElement|null
@@ -57,7 +54,7 @@ export default defineComponent({
   mounted() {
     // set focus on the schedule container to allow key nav.
     if (this.containerRef !== null) {
-      (this.containerRef as any).$el.focus();
+      this.containerRef.$el.focus();
     }
 
     const body = document.querySelector('body')!;
@@ -68,7 +65,7 @@ export default defineComponent({
     const mobileFavoritesShortcut = document.getElementById('mobile-schedule-favorites-shortcut');
     mobileFavoritesShortcut?.classList.remove('d-none');
 
-    document.title = (this.$i18n as any).t('message.schedule.title');
+    document.title = this.$i18n.t('message.schedule.title');
   },
   beforeUnmount() {
     const body = document.querySelector('body')!;
@@ -79,17 +76,6 @@ export default defineComponent({
     const mobileFavoritesShortcut = document.getElementById('mobile-schedule-favorites-shortcut');
     mobileFavoritesShortcut?.classList.add('d-none');
   },
-  computed: {
-    ...mapState(useUserStore, { userLogged: 'logged' }),
-    ...mapState(useScheduleStore, ['displayCategoryFilter', 'rankedRadios']),
-    ...mapState(usePlayerStore, {
-      playingRadio: 'radio',
-      playingShow: 'show',
-      playing: 'playing',
-      currentSong: 'currentSong'
-    }),
-  },
-  /* eslint-disable func-names */
   watch: {
     playing() {
       this.updateTitle();
@@ -100,6 +86,16 @@ export default defineComponent({
     currentSong() {
       this.updateTitle();
     }
+  },
+  computed: {
+    ...mapState(useUserStore, { userLogged: 'logged' }),
+    ...mapState(useScheduleStore, ['displayCategoryFilter', 'rankedRadios']),
+    ...mapState(usePlayerStore, {
+      playingRadio: 'radio',
+      playingShow: 'show',
+      playing: 'playing',
+      currentSong: 'currentSong'
+    }),
   },
   methods: {
     ...mapActions(useScheduleStore, ['scrollBackward', 'scrollForward', 'switchCollection']),
@@ -131,9 +127,9 @@ export default defineComponent({
 
         preTitle += `${this.playingRadio.name} - `;
 
-        document.title = `${preTitle}${(this.$i18n as any).t('message.schedule.title')}`;
+        document.title = `${preTitle}${this.$i18n.t('message.schedule.title')}`;
       } else {
-        document.title = (this.$i18n as any).t('message.schedule.title');
+        document.title = this.$i18n.t('message.schedule.title');
       }
     }
   }

@@ -1,9 +1,9 @@
 <template>
-  <div class="player-infos" :title="showTitle" v-on:click="gotoRadio">
+  <div class="player-infos" :class="className" :title="showTitle" @click="gotoRadio">
     <ul :style="infosUlStyle">
       <li>{{ radioName }}</li>
       <li v-if="show">{{ show.title }}</li>
-      <li v-if="currentSongTitle" >{{ currentSongTitle }}</li>
+      <li v-if="currentSongTitle">{{ currentSongTitle }}</li>
     </ul>
   </div>
 </template>
@@ -16,12 +16,18 @@ import { DateTime } from 'luxon';
 
 import { TIMEZONE } from '@/config/config';
 
-/* eslint-disable import/no-cycle */
-import { usePlayerStore } from '@/stores/playerStore';
+import { usePlayerStore } from '@/stores/playerStore.ts';
 
-import typeUtils from '@/utils/typeUtils';
+import typeUtils from '@/utils/typeUtils.ts';
 
 export default defineComponent({
+  props: {
+    className: {
+      type: String,
+      required: false,
+      default: null
+    }
+  },
   computed: {
     ...mapState(usePlayerStore, ['radio', 'radioStreamCodeName', 'show', 'currentSong']),
     infosUlStyle(): object {
@@ -47,8 +53,8 @@ export default defineComponent({
       }
 
       if (typeUtils.isRadio(this.radio) && this.radioStreamCodeName !== null
-        && Object.keys(this.radio.streams!).length > 0
-          && Object.prototype.hasOwnProperty.call(this.radio.streams!, this.radioStreamCodeName)) {
+          && Object.keys(this.radio.streams).length > 0
+          && Object.prototype.hasOwnProperty.call(this.radio.streams, this.radioStreamCodeName)) {
         return this.radio.streams[this.radioStreamCodeName!].name;
       }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex  mt-4 mb-4" v-if="liveSongTitle">
+  <div v-if="liveSongTitle" class="d-flex  mt-4 mb-4">
     <div v-if="liveSongCover" class="me-3 live-song-cover">
       <img :src="liveSongCover">
     </div>
@@ -13,36 +13,28 @@
            :title="$t( 'message.songs_page.find_youtube')"
            :href="encodeURI(`https://www.youtube.com/results?search_query=${liveSongTitle}`)">
           <i class="bi bi-youtube"></i>&nbsp;
-          <span class="d-none d-sm-inline">
-          {{ $t('message.songs_page.find_youtube') }}
-        </span>
+          <span class="d-none d-sm-inline">{{ $t('message.songs_page.find_youtube') }}</span>
         </a>&nbsp;&nbsp;
 
         <a class="link-no-to-bold" target="_blank"
            :title="$t( 'message.songs_page.find_spotify')"
            :href="encodeURI(`https://open.spotify.com/search/${liveSongTitle}`)">
           <i class="bi bi-spotify"></i>&nbsp;
-          <span class="d-none d-sm-inline">
-          {{ $t('message.songs_page.find_spotify') }}
-        </span>
+          <span class="d-none d-sm-inline">{{ $t('message.songs_page.find_spotify') }}</span>
         </a>&nbsp;&nbsp;
 
         <a class="link-no-to-bold" target="_blank"
            :title="$t( 'message.songs_page.find_deezer')"
            :href="encodeURI(`https://www.deezer.com/search/${liveSongTitle}`)">
           <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
-          &nbsp;<span class="d-none d-sm-inline">
-          {{ $t('message.songs_page.find_deezer') }}
-        </span>
+          &nbsp;<span class="d-none d-sm-inline">{{ $t('message.songs_page.find_deezer') }}</span>
         </a>&nbsp;&nbsp;
 
         <a v-if="amazonLink" class="link-no-to-bold" target="_blank"
            :title="$t( 'message.songs_page.buy_amazon')"
            :href="amazonLink">
           <i class="bi bi-amazon"></i>&nbsp;
-          <span class="d-none d-sm-inline">
-          {{ $t('message.songs_page.buy_amazon') }}
-        </span>
+          <span class="d-none d-sm-inline">{{ $t('message.songs_page.buy_amazon') }}</span>
         </a>
       </div>
     </div>
@@ -57,7 +49,6 @@ import { mapState } from 'pinia';
 import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 
-/* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
@@ -66,17 +57,15 @@ import PlayerUtils from '@/utils/PlayerUtils';
 
 import PlayerSaveSong from '../Player/Common/PlayerSaveSong.vue';
 
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 export default defineComponent({
+  components: {
+    PlayerSaveSong
+  },
   props: {
     stream: {
       type: Object as PropType<Radio|Stream>,
       required: true
     }
-  },
-  components: {
-    PlayerSaveSong
   },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged' }),

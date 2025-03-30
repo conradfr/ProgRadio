@@ -1,6 +1,6 @@
 <template>
-  <button type="button" class="btn btn-primary" v-on:click="setTo"
-    :class="{'d-none d-sm-block': hideMobile}">
+  <button :class="{'d-none d-sm-block': hideMobile}"
+    type="button" class="btn btn-primary" @click="setTo">
     {{ text }}
   </button>
 </template>
@@ -9,7 +9,6 @@
 import { defineComponent } from 'vue';
 import { mapActions } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
 import {
@@ -35,13 +34,13 @@ export default defineComponent({
   computed: {
     text() {
       if (this.asHour) {
-        return (this.$i18n as any).t(
+        return this.$i18n.t(
           'message.player.timer.modal.x_hours',
           { hours: (parseInt(this.minutes, 10) / 60) }
         );
       }
 
-      return (this.$i18n as any).t('message.player.timer.modal.x_minutes', { minutes: this.minutes });
+      return this.$i18n.t('message.player.timer.modal.x_minutes', { minutes: this.minutes });
     },
   },
   methods: {
@@ -49,7 +48,7 @@ export default defineComponent({
     setTo() {
       const minutes = parseInt(this.minutes, 10);
 
-      (this as any).$gtag.event(GTAG_ACTION_TIMER_QUICK_SET, {
+      this.$gtag.event(GTAG_ACTION_TIMER_QUICK_SET, {
         event_category: GTAG_CATEGORY_TIMER,
         event_label: `${this.minutes} minutes`,
         value: minutes

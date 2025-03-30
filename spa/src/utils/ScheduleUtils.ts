@@ -62,7 +62,6 @@ const updatedProgramTextCalc = (
 ) => {
   const update: { [key: string]: number } = {};
 
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   for (const [_key, subRadios] of Object.entries(schedule)) {
     for (const [_key2, programs] of Object.entries(subRadios)) {
       if (programs) {
@@ -95,8 +94,6 @@ const getUpdatedProgramText = (
   return workerFn(schedule, toRaw(scheduleDisplay), scrollIndex);
 };
 
-/* eslint-disable no-undef */
-/* eslint-disable max-len */
 const getScheduleDisplay = (schedule: Schedule, currentTime: DateTime, initialScrollIndex: number) => {
   const startDay = currentTime.startOf('day');
   /* we use midnight next day as "end of current day",
@@ -104,7 +101,6 @@ const getScheduleDisplay = (schedule: Schedule, currentTime: DateTime, initialSc
   const endDay = currentTime.plus({ days: 1 }).startOf('day');
   const result: { [key: string]: ScheduleDisplay } = {};
 
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   for (const [_key, subRadios] of Object.entries(schedule)) {
     for (const [_key2, programs] of Object.entries(subRadios)) {
       if (programs) {
@@ -163,6 +159,7 @@ const rankCollection = (
 
   // special case, we loop each collection to get all radios
   if (collectionCodeName === config.COLLECTION_ALL) {
+    // eslint-disable-next-line @stylistic/js/max-len
     const collectionNotExcluded = (entry: Collection) => config.COLLECTION_EXCLUDED_FROM_ALL.indexOf(entry.code_name) === -1;
     const collectionsOrdered = compose(
       filter(collectionNotExcluded),
@@ -170,6 +167,7 @@ const rankCollection = (
     )(collections);
 
     return collectionsOrdered.reduce((acc: Radio[], entry: Collection) => {
+      // eslint-disable-next-line @stylistic/js/max-len
       const radiosOfCollection = rankCollection(entry.code_name, collections, radios, categoriesExcluded, preRollExcluded);
       return [...acc, ...radiosOfCollection];
     }, []);
@@ -192,12 +190,18 @@ const rankCollection = (
   )(radios);
 };
 
-/* eslint-disable max-len */
 /* eslint-disable arrow-parens */
-const getCollectionIndex = (codeName: string, collections: Collection[]) => findIndex(collections, (c) => c.code_name === codeName);
+const getCollectionIndex = (codeName: string, collections: Collection[]) => findIndex(
+  collections,
+  (c) => c.code_name === codeName
+);
 
-/* eslint-disable max-len */
-const getNextCollection = (currentCodeName: string, collections: Record<string, Collection>, radios: Record<string, Radio>, way: 'backward'|'forward'): string => {
+const getNextCollection = (
+  currentCodeName: string,
+  collections: Record<string, Collection>,
+  radios: Record<string, Radio>,
+  way: 'backward'|'forward'
+): string => {
   const collectionsOrdered = sortBy(collections, 'priority');
   const indexOfCurrentCollection = getCollectionIndex(currentCodeName, collectionsOrdered);
 
@@ -235,7 +239,6 @@ const getStreamFromCodeName = (streamCodeName: string|null, radio: Radio|Stream)
   return null;
 };
 
-/* eslint-disable arrow-body-style */
 const getMainSubRadio = (radioCodeName: string, radios: Record<string, Radio>): SubRadio => {
   // @ts-ignore
   return find(radios[radioCodeName].sub_radios, (v, _k) => {

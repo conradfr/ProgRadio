@@ -53,6 +53,7 @@ const gestures = {
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
 export default {
+  /* eslint-disable vue/require-default-prop */
   props: {
     enabled: Object,
     // can't make it to work dynamically with toRef, so we declare it instead

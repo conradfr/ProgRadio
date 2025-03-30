@@ -15,7 +15,6 @@ import type { Schedule } from '@/types/schedule';
 import type { ScheduleDisplay } from '@/types/schedule_display';
 import type { Program } from '@/types/program';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
@@ -63,7 +62,6 @@ const cursorTime: DateTime = DateTime.local().setZone(config.TIMEZONE);
 
 const initialScrollIndex: number = ScheduleUtils.initialScrollIndexFunction(cursorTime);
 
-/* eslint-disable import/prefer-default-export */
 export const useScheduleStore = defineStore('schedule', {
   state: (): State => ({
     radios: {},
@@ -127,13 +125,11 @@ export const useScheduleStore = defineStore('schedule', {
         state.preRollExcluded
       );
     },
-    /* eslint-disable max-len */
     isFavorite: state => (radioCodeName: string) => state.collections[config.COLLECTION_FAVORITES] !== undefined
       && state.collections[config.COLLECTION_FAVORITES].radios.indexOf(radioCodeName) !== -1,
     /* eslint-disable arrow-parens */
     displayCategoryFilter: state => state.categoryFilterFocus.icon
       || state.categoryFilterFocus.list || false,
-    /* eslint-disable arrow-parens */
     currentShowOnRadio(state: any) {
       return (radioCodeName: string) => {
         const subRadio = this.getSubRadio(radioCodeName);
@@ -148,7 +144,6 @@ export const useScheduleStore = defineStore('schedule', {
         return typeof currentShow === 'undefined' || currentShow === null ? null : currentShow;
       };
     },
-    /* eslint-disable arrow-body-style */
     isWebRadio: state => (radioCodeName: string, radioStreamCodeName: string): boolean => {
       if (state.radios[radioCodeName] === undefined
         || state.radios[radioCodeName].streams[radioStreamCodeName] === undefined) {
@@ -222,7 +217,7 @@ export const useScheduleStore = defineStore('schedule', {
         'backward'
       );
 
-      (this as any).$router.push({ name: 'schedule', params: { collection: nextCollection } });
+      this.$router.push({ name: 'schedule', params: { collection: nextCollection } });
     },
     collectionForward() {
       const nextCollection = ScheduleUtils.getNextCollection(
@@ -232,7 +227,7 @@ export const useScheduleStore = defineStore('schedule', {
         'forward'
       );
 
-      (this as any).$router.push({ name: 'schedule', params: { collection: nextCollection } });
+      this.$router.push({ name: 'schedule', params: { collection: nextCollection } });
     },
     switchCollection(collection: string) {
       this.currentCollection = collection;
@@ -312,7 +307,6 @@ export const useScheduleStore = defineStore('schedule', {
         this.getSchedule();
       });
     },
-    /* eslint-disable object-curly-newline */
     tick() {
       const player = usePlayerStore();
       const now = DateTime.local().setZone(config.TIMEZONE);
@@ -455,7 +449,6 @@ export const useScheduleStore = defineStore('schedule', {
       }, {});
 
       const updatedSchedule: any = { ...{ ...this.schedule }, ...filteredSchedule };
-      /* eslint-disable function-paren-newline */
       const scheduleDisplay = ScheduleUtils.getScheduleDisplay(
         updatedSchedule, this.cursorTime, initialScrollIndex
       );

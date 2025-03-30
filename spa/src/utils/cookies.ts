@@ -10,7 +10,7 @@ const has = (key: string) => {
 };
 
 const remove = (key: string) => {
-  /* eslint-disable max-len */
+  // eslint-disable-next-line @stylistic/js/max-len
   document.cookie = `${key}=;path=${COOKIE_PARAMS.path};SameSite=${COOKIE_PARAMS.SameSite};secure=true;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
 };
 
@@ -34,7 +34,7 @@ const getJson = (key: string, defaultValue: any = null): any => {
     let value = null;
     try {
       value = JSON.parse(cookie);
-    } catch (error) {
+    } catch (_e) {
       // console.warn(error);
     }
 
@@ -54,6 +54,8 @@ const set = (key: string, data: any, options?: object) => {
   opts = Object.keys(opts).map(k => `;${k}=${opts[k]}`).join('');
   const dataString = typeof data === 'object' ? JSON.stringify(data) : data;
 
+  /* eslint-disable @typescript-eslint/restrict-template-expressions */
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string
   document.cookie = `${key}=${dataString}${opts}`;
 };
 

@@ -1,15 +1,15 @@
 <template>
-  <div style="z-index:1300" class="modal fade" id="playerVideoModal"
+  <div id="playerVideoModal" style="z-index:1300" class="modal fade"
        tabindex="-1" aria-labelledby="playerVideoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-body pb-0">
           <div class="modal-header p-0 pb-2">
-            <h5 class="modal-title" id="timerModalLabel">
+            <h5 id="timerModalLabel" class="modal-title">
               {{ $t('message.player.video.title') }}
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    :aria-label="$t('message.player.timer.modal.close')"></button>
+              :aria-label="$t('message.player.timer.modal.close')"></button>
           </div>
           <div class="modal-body-row mt-3 mb-2">
             <iframe v-if="videoUrl" width="469" height="264" :src="videoUrl"

@@ -28,7 +28,6 @@ import { mapState } from 'pinia';
 import type { Radio } from '@/types/radio';
 import type { ScheduleOfSubRadio } from '@/types/schedule';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { usePlayerStore } from '@/stores/playerStore';
@@ -42,11 +41,13 @@ export default defineComponent({
       type: Object as PropType<Radio>,
       required: true
     },
-    schedule: Object as PropType<ScheduleOfSubRadio>,
+    schedule: {
+      type: Object as PropType<ScheduleOfSubRadio>,
+      required: true
+    },
     displayNoSchedule: Boolean,
     hasSchedule: Boolean
   },
-  /* eslint-disable indent */
   data(): {
     intersected: string[],
     intersectionObserver: IntersectionObserver|null

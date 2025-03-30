@@ -1,6 +1,6 @@
 <template>
   <div class="player-volume-xl me-4 d-flex align-items-center">
-    <div class="player-sound me-3" v-on:click.stop="$emit('toggleMute')">
+    <div class="player-sound me-3" @click.stop="$emit('toggleMute')">
       <i class="bi"
          :class="{
             'bi-volume-mute-fill': muted,
@@ -19,7 +19,6 @@ import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import slider from 'vue3-slider';
 
-/* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
 export default defineComponent({
@@ -32,6 +31,7 @@ export default defineComponent({
       required: true
     },
   },
+  emits: ['toggleMute'],
   computed: {
     ...mapState(usePlayerStore, ['volume']),
     volumeSlider: {

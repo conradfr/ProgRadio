@@ -1,87 +1,88 @@
 <template>
   <!-- PLAYER XL -->
   <Transition name="player">
-  <div v-if="xlPlayer" class="navbar-player navbar-player-xl">
-    <div class="player-radio-expand cursor-pointer" v-on:click="toggleXLPLayer()">
-      <i class="bi bi-arrows-angle-contract"></i>
-    </div>
-    <Transition name="play-prev-fade" mode="out-in">
-      <div v-if="prevRadio" class="player-radio-previous"
-           v-on:click="togglePrevious"
-           :title="$i18n.t('message.player.previous', { radio: prevRadio.name })">
-        <i class="bi-arrow-left-right"></i>
+    <div v-if="xlPlayer" class="progradio-player player-xl">
+      <div class="player-expand d-none d-md-block cursor-pointer" @click="toggleXLPLayer()">
+        <i class="bi bi-arrows-angle-contract"></i>
       </div>
-    </Transition>
-    <div class="h-100 d-flex justify-content-between align-items-center">
-      <div class="navbar-player-header d-flex align-items-center">
-        <PlayerImageXL />
-        <PlayerPlayPause v-on:togglePlay="() => togglePlay()" :radio="radio" :playing="playing" />
-        <PlayerInfoXL v-if="radio" />
-        <div v-if="!radio" class="player-name player-name-help">
-          {{ $t('message.player.placeholder') }}
+      <Transition name="play-prev-fade" mode="out-in">
+        <div v-if="prevRadio" class="player-radio-previous"
+          :title="$t('message.player.previous', { radio: prevRadio.name })"
+          @click="togglePrevious">
+          <i class="bi-arrow-left-right"></i>
+        </div>
+      </Transition>
+      <div class="h-100 d-flex justify-content-between align-items-center">
+        <div class="player-header-xl d-flex align-items-center">
+          <PlayerImageXL />
+          <PlayerPlayPause :radio="radio" :playing="playing" @togglePlay="() => togglePlay()" />
+          <PlayerInfoXL v-if="radio" />
+          <PlayerInfoRolling v-if="radio" />
+          <div v-if="!radio" class="player-name player-name-help">
+            {{ $t('message.player.placeholder') }}
+          </div>
+        </div>
+        <PlayerSongXL v-if="radio && currentSong" />
+        <div class="player-actions-xl d-flex justify-content-end">
+          <PlayerVolumeXL v-if="!externalPlayer" :muted="muted" @toggleMute="() => toggleMute()" />
+          <Transition name="timer-fade" mode="out-in">
+            <PlayerSaveSong v-if="userLogged && currentSong" />
+          </Transition>
+          <PlayerFavorite v-if="radio" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
+            @favoriteToggle="() => favoriteToggle()" />
+          <timer></timer>
+          <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId" :asIcon="true"
+          @changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
+          />
         </div>
       </div>
-      <PlayerSongXL v-if="radio && currentSong" />
-      <div class="navbar-player-actions d-flex justify-content-end">
-        <PlayerVolumeXL :muted="muted" v-on:toggleMute="() => toggleMute()" />
-        <Transition name="timer-fade" mode="out-in">
-          <PlayerSaveSong v-if="userLogged && currentSong" />
-        </Transition>
-        <PlayerFavorite v-if="radio" v-on:favoriteToggle="() => favoriteToggle()"
-          :isFavorite="isFavorite" :favoriteTitle="favoriteTitle" />
-        <timer></timer>
-        <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId" :asIcon="true"
-          v-on:changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
-        />
-      </div>
     </div>
-  </div>
   </Transition>
 
   <!-- PLAYER NAVBAR -->
   <Transition name="player">
-  <div v-if="!xlPlayer" class="navbar-player navbar-player-navbar">
-    <div class="d-none d-md-block player-radio-expand cursor-pointer" v-on:click="toggleXLPLayer()">
-      <i class="bi bi-arrows-angle-expand"></i>
-    </div>
-    <Transition name="play-prev-fade" mode="out-in">
-      <div v-if="prevRadio" class="player-radio-previous"
-           v-on:click="togglePrevious"
-           :title="$i18n.t('message.player.previous', { radio: prevRadio.name })">
-        <i class="bi-arrow-left-right"></i>
+    <div v-if="!xlPlayer" class="progradio-player player-navbar">
+      <div class="d-none d-md-block player-expand cursor-pointer" @click="toggleXLPLayer()">
+        <i class="bi bi-arrows-angle-expand"></i>
       </div>
-    </Transition>
-    <div class="h-100 d-flex justify-content-center align-items-center">
-      <div class="player-sound player-sound-fader"
-           v-if="!externalPlayer"
-           v-on:mouseover="volumeFocus(true)"
-           v-on:mouseleave="volumeFocus(false)"
-           v-on:click.stop="toggleMute">
-        <i class="bi"
-           :class="{
+      <Transition name="play-prev-fade" mode="out-in">
+        <div v-if="prevRadio" class="player-radio-previous"
+         :title="$t('message.player.previous', { radio: prevRadio.name })"
+         @click="togglePrevious">
+          <i class="bi-arrow-left-right"></i>
+        </div>
+      </Transition>
+      <div class="h-100 d-flex justify-content-center align-items-center">
+        <div v-if="!externalPlayer"
+          class="player-sound player-sound-fader"
+          @mouseover="volumeFocus(true)"
+          @mouseleave="volumeFocus(false)"
+          @click.stop="toggleMute">
+          <i class="bi"
+             :class="{
             'bi-volume-mute-fill': muted || focus.icon,
             'player-muted': muted,
             'bi-volume-up-fill': !(muted || focus.icon) && volume > 4,
             'bi-volume-down-fill': !(muted || focus.icon) && volume <= 4
           }"></i>
-      </div>
-      <PlayerPlayPause v-on:togglePlay="() => togglePlay()" :radio="radio" :playing="playing" />
-      <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId"
-        v-on:changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
-      />
-      <PlayerInfoNavbar v-if="radio" />
-      <Transition name="timer-fade" mode="out-in">
+        </div>
+        <PlayerPlayPause :radio="radio" :playing="playing" @togglePlay="() => togglePlay()" />
+        <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId"
+          @changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
+        />
+        <PlayerInfoRolling v-if="radio" />
+        <Transition name="timer-fade" mode="out-in">
           <PlayerSaveSong v-if="userLogged && currentSong && currentSong[0]" />
-      </Transition>
-      <div v-if="!radio" class="player-name player-name-help">
-        {{ $t('message.player.placeholder') }}
+        </Transition>
+        <div v-if="!radio" class="player-name player-name-help">
+          {{ $t('message.player.placeholder') }}
+        </div>
+        <PlayerFavorite v-if="radio" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
+          @favoriteToggle="() => favoriteToggle()" />
+        <timer></timer>
       </div>
-      <PlayerFavorite v-if="radio" v-on:favoriteToggle="() => favoriteToggle()"
-        :isFavorite="isFavorite" :favoriteTitle="favoriteTitle" />
-      <timer></timer>
+      <PlayerVolumeNavbar v-if="displayVolume" />
     </div>
-    <PlayerVolumeNavbar v-if="displayVolume"/>
-  </div>
   </Transition>
   <audio id="videoplayer1" playsinline="playsinline" style="display:none"></audio>
   <audio id="videoplayer2" playsinline="playsinline" style="display:none"></audio>
@@ -92,7 +93,6 @@ import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 // import throttle from 'lodash/throttle';
 
-/* eslint-disable import/no-cycle */
 import { useGlobalStore } from '@/stores/globalStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
@@ -108,8 +108,7 @@ import PlayerUtils from '@/utils/PlayerUtils';
 import tooltip from '@/utils/tooltip';
 import cookies from '@/utils/cookies';
 import typeUtils from '@/utils/typeUtils';
-// eslint-disable-next-line import/extensions
-import type Hls from '../../../js/hls.js';
+import type Hls from '../../../../public/js/hls.js';
 
 import PlayerFavorite from './Common/PlayerFavorite.vue';
 import PlayerPlayPause from './Common/PlayerPlayPause.vue';
@@ -117,7 +116,7 @@ import PlayerSaveSong from './Common/PlayerSaveSong.vue';
 import Timer from '../Timer/Timer.vue';
 import PlayerOutputSelector from './Common/PlayerOutputSelector.vue';
 
-import PlayerInfoNavbar from './Navbar/PlayerInfoNavbar.vue';
+import PlayerInfoRolling from './Common/PlayerInfoRolling.vue';
 import PlayerVolumeNavbar from './Navbar/PlayerVolumeNavbar.vue';
 
 import PlayerImageXL from './XL/PlayerImageXL.vue';
@@ -126,7 +125,6 @@ import PlayerSongXL from './XL/PlayerSongXL.vue';
 import PlayerVolumeXL from './XL/PlayerVolumeXL.vue';
 
 /* we load the hls script dynamically once, reducing initial app load */
-/* eslint-disable arrow-body-style */
 const loadHls = () => {
   return new Promise((resolve, reject) => {
     const hlsElem = document.getElementById('hls-script');
@@ -146,7 +144,6 @@ const loadHls = () => {
 };
 
 /* we load the dash script dynamically once, reducing initial app load */
-/* eslint-disable arrow-body-style */
 const loadDash = () => {
   return new Promise((resolve, reject) => {
     const dashElem = document.getElementById('dash-script');
@@ -183,9 +180,10 @@ interface PlayerAudio {
 }
 
 export default defineComponent({
+  name: 'Player',
   components: {
     PlayerPlayPause,
-    PlayerInfoNavbar,
+    PlayerInfoRolling,
     PlayerImageXL,
     PlayerInfoXL,
     PlayerSongXL,
@@ -196,7 +194,6 @@ export default defineComponent({
     PlayerVolumeNavbar,
     PlayerOutputSelector,
   },
-  /* eslint-disable indent */
   data(): {
     PlayerStatus: any,
     audio: PlayerAudio,
@@ -275,7 +272,6 @@ export default defineComponent({
     if ('mediaSession' in navigator) {
       setTimeout(
           () => {
-            /* eslint-disable max-len */
             navigator.mediaSession.setActionHandler('previoustrack', this.keyPlayPrevious.bind(this));
             navigator.mediaSession.setActionHandler('nexttrack', this.keyPlayNext.bind(this));
             navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
@@ -283,6 +279,97 @@ export default defineComponent({
           },
           250
       );
+    }
+  },
+  watch: {
+    playing(val: PlayerStatus) {
+      if (this.radio === null) {
+        return;
+      }
+
+      if (val === PlayerStatus.Playing) {
+        let channelName;
+
+        if ((this.radio.type === config.PLAYER_TYPE_RADIO
+                && this.radio.streams[this.radioStreamCodeName!].current_song === true)
+            || (this.radio.type === config.PLAYER_TYPE_STREAM
+                && this.radio.current_song === true)) {
+          const channelNameEnd = this.radio.type === config.PLAYER_TYPE_RADIO
+              ? this.radioStreamCodeName : this.radio.radio_stream_code_name;
+          channelName = `song:${channelNameEnd}`;
+        } else {
+          channelName = `url:${this.streamUrl}`;
+        }
+
+        this.joinChannel(channelName);
+      }
+
+      if (this.externalPlayer === true) { return; }
+
+      if (val === PlayerStatus.Loading && this.streamUrl !== null) {
+        const options = PlayerUtils.buildPlayOptions(this.radio);
+        this.play(this.streamUrl, options);
+      } else if (val === PlayerStatus.Stopped) {
+        this.pause();
+        // this.stop();
+      }
+    },
+    videoModalUrl(newVal) {
+      if (!newVal) {
+        this.hideVideoModal();
+        return;
+      }
+
+      this.showVideoModal();
+    },
+    muted(val) {
+      if (this.externalPlayer === true) { return; }
+
+      /* if (window.audio !== undefined && window.audio !== null) {
+        window.audio.muted = val;
+      } */
+
+      if (this.currentPlayer !== null && this.currentPlayer.element !== null) {
+        this.currentPlayer.element.muted = val;
+      }
+    },
+    volume(val) {
+      if (this.externalPlayer === true) { return; }
+
+      /* if (window.audio !== undefined && window.audio !== null) {
+        window.audio.volume = (val * 0.1);
+      } */
+
+      if (this.currentPlayer !== null) {
+        this.currentPlayer.element.volume = (val * 0.1);
+      }
+    },
+    radioShowWatching(newVal, oldVal) {
+      if (this.externalPlayer === true || this.playing !== PlayerStatus.Playing) { return; }
+
+      let display = false;
+      const [oldPlaying, oldRadio, oldShow] = oldVal.split('|');
+      const [_newPlaying, newRadio, newShow] = newVal.split('|');
+
+      if (newRadio === 'null') {
+        return;
+      }
+
+      if (oldRadio === newRadio && oldPlaying === 'false') {
+        display = true;
+      } else if (oldRadio !== newRadio) {
+        display = true;
+      } else if (oldRadio === newRadio && oldShow !== newShow && newShow !== 'null') {
+        display = true;
+      }
+
+      if (display) {
+        PlayerUtils.showNotification(
+            this.radio,
+            this.radioStreamCodeName,
+            this.show
+        );
+      }
     }
   },
   computed: {
@@ -332,8 +419,8 @@ export default defineComponent({
     },
     favoriteTitle(): string {
       return (this.radio !== null && this.isFavorite === true
-          ? (this.$i18n as any).t('message.player.favorites.remove')
-          : (this.$i18n as any).t('message.player.favorites.add'));
+          ? this.$i18n.t('message.player.favorites.remove')
+          : this.$i18n.t('message.player.favorites.add'));
     },
     /* used to watch multiple properties at once (will not be necessary in Vue3) */
     /* todo revisit now that we use Vue 3 */
@@ -373,7 +460,7 @@ export default defineComponent({
     keyPlayPrevious() {
       this.playPreviousDispatch();
       // throttle(function (this: any) { this.playPreviousDispatch(); }, 200, { leading: true, trailing: false });
-      },
+    },
     keyPlayNext() {
       this.playNextDispatch();
       // throttle(function (this: any) { this.playNextDispatch(); }, 200, { leading: true, trailing: false });
@@ -402,7 +489,7 @@ export default defineComponent({
     },
     togglePlay() {
       if (this.externalPlayer === false) {
-        (this as any).$gtag.event(config.GTAG_ACTION_TOGGLE_PLAY, {
+        this.$gtag.event(config.GTAG_ACTION_TOGGLE_PLAY, {
           event_category: config.GTAG_CATEGORY_PLAYER,
           event_label: this.radio !== null ? this.radio!.code_name : null,
           value: config.GTAG_ACTION_TOGGLE_PLAY_VALUE
@@ -411,7 +498,6 @@ export default defineComponent({
 
       this.togglePlayDispatch();
     },
-    /* eslint-disable no-undef */
     play(url: string, options?: PlayOptions) {
       this.hideVideoModal();
 
@@ -466,14 +552,14 @@ export default defineComponent({
             this.currentPlayer.hls.attachMedia(this.currentPlayer.element);
 
             // @ts-ignore
-            this.currentPlayer.hls.on(Hls.Events.ERROR, (event, data) => {
+            this.currentPlayer.hls.on(Hls.Events.ERROR, (_event, data) => {
               if (this.currentPlayer.id !== this.audio.current) {
                 return;
               }
 
               if (data.fatal) {
                 this.displayToast({
-                  message: (this.$i18n as any).t('message.player.play_error'),
+                  message: this.$i18n.t('message.player.play_error'),
                   type: 'error'
                 });
 
@@ -519,6 +605,7 @@ export default defineComponent({
           }
 
           // @ts-ignore
+          // eslint-disable-next-line no-undef
           this.currentPlayer.dash = dashjs.MediaPlayer().create();
           this.currentPlayer.dash.initialize(this.currentPlayer.element, url, false);
 
@@ -528,7 +615,7 @@ export default defineComponent({
             }
 
             this.displayToast({
-              message: (this.$i18n as any).t('message.player.play_error'),
+              message: this.$i18n.t('message.player.play_error'),
               type: 'error'
             });
 
@@ -551,9 +638,9 @@ export default defineComponent({
         });
       } else {
         // const streamUrl = (url.substring(0, 5) !== 'https')
-            // eslint-disable-next-line no-undef
-            // _@ts-expect-error apiUrl is defined on the global scope
-            // ? `${streamsProxy}?k=${streamsProxyKey}&stream=${url}` : url;
+        // _eslint-disable-next-line no-undef
+        // _@ts-expect-error apiUrl is defined on the global scope
+        // ? `${streamsProxy}?k=${streamsProxyKey}&stream=${url}` : url;
 
         const streamUrl = url;
         this.currentPlayer.element = document.getElementById(this.currentPlayer.elementId);
@@ -581,6 +668,7 @@ export default defineComponent({
           // if stream failed and is http we try to switch to our https proxy
           if (url.trim().substring(0, 5) !== 'https') {
             // @ts-expect-error apiUrl is defined on the global scope
+            // eslint-disable-next-line no-undef
             this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${url}`, options);
             return;
           }
@@ -590,12 +678,12 @@ export default defineComponent({
 
           if (error.name === 'NotAllowedError') {
             this.displayToast({
-              message: (this.$i18n as any).t('message.player.autoplay_error'),
+              message: this.$i18n.t('message.player.autoplay_error'),
               type: 'error'
             });
           } else {
             this.displayToast({
-              message: (this.$i18n as any).t('message.player.play_error'),
+              message: this.$i18n.t('message.player.play_error'),
               type: 'error'
             });
 
@@ -613,10 +701,10 @@ export default defineComponent({
         return;
       }
 
-     if (this.flux.allowTwoFeeds === false) {
+      if (this.flux.allowTwoFeeds === false) {
         this.stop();
         return;
-     }
+      }
 
       // allow quick real stop at stream' start
       if ((Date.now() - this.currentPlayer.startedAt) / 1000 <= config.PLAYER_MAX_SECONDS_TO_STOP) {
@@ -627,6 +715,7 @@ export default defineComponent({
         this.currentPlayer.element.volume = 0;
 
         this.currentPlayer.timer = setTimeout(
+            // eslint-disable-next-line @typescript-eslint/no-implied-eval
             this.resetPlayer,
             this.flux.delayBeforeStop,
             this.audio.current
@@ -708,7 +797,7 @@ export default defineComponent({
     },
     favoriteToggle() {
       if (this.radio !== null) {
-        (this as any).$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
+        this.$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
           event_category: config.GTAG_CATEGORY_SCHEDULE,
           event_label: this.radio.code_name,
           value: config.GTAG_ACTION_FAVORITE_TOGGLE_VALUE
@@ -732,7 +821,7 @@ export default defineComponent({
         return;
       }
 
-      (this as any).$gtag.event(config.GTAG_ACTION_TOGGLE_PREVIOUS, {
+      this.$gtag.event(config.GTAG_ACTION_TOGGLE_PREVIOUS, {
         event_category: config.GTAG_CATEGORY_PLAYER,
         event_label: this.prevRadio.code_name,
         value: config.GTAG_ACTION_TOGGLE_PREVIOUS_VALUE
@@ -754,12 +843,12 @@ export default defineComponent({
     },
     showVideoModal() {
       if (!this.videoModalElem) {
-        // eslint-disable-next-line no-undef
         this.videoModalElem = document.getElementById('playerVideoModal');
       }
 
       if (!this.videoModalInstance) {
         // @ts-expect-error bootstrap is defined on global scope
+        // eslint-disable-next-line no-undef
         this.videoModalInstance = new bootstrap.Modal(this.videoModalElem);
       }
 
@@ -777,7 +866,7 @@ export default defineComponent({
       }
     },
     toggleXLPLayer() {
-      (this as any).$gtag.event(config.GTAG_ACTION_PLAYER_EXPAND, {
+      this.$gtag.event(config.GTAG_ACTION_PLAYER_EXPAND, {
         event_category: config.GTAG_CATEGORY_PLAYER,
         event_label: this.xlPlayer ? 'reduce' : 'expand',
         value: config.GTAG_ACTION_PLAYER_EXPAND_VALUE
@@ -812,102 +901,6 @@ export default defineComponent({
         (this.audio.player2.element as HTMLMediaElement).setSinkId(deviceId);
       }
     },
-  },
-  /* eslint-disable operator-linebreak */
-  /* eslint-disable object-shorthand */
-  /* eslint-disable quote-props */
-  /* eslint-disable func-names */
-  watch: {
-    playing(val: PlayerStatus) {
-      if (this.radio === null) {
-        return;
-      }
-
-      if (val === PlayerStatus.Playing) {
-        let channelName;
-
-        if ((this.radio.type === config.PLAYER_TYPE_RADIO
-            && this.radio.streams[this.radioStreamCodeName!].current_song === true)
-            || (this.radio.type === config.PLAYER_TYPE_STREAM
-                && this.radio.current_song === true)) {
-          const channelNameEnd = this.radio.type === config.PLAYER_TYPE_RADIO
-              ? this.radioStreamCodeName : this.radio.radio_stream_code_name;
-          channelName = `song:${channelNameEnd}`;
-        } else {
-          channelName = `url:${this.streamUrl}`;
-        }
-
-        this.joinChannel(channelName);
-      }
-
-      if (this.externalPlayer === true) { return; }
-
-      if (val === PlayerStatus.Loading && this.streamUrl !== null) {
-        const options = PlayerUtils.buildPlayOptions(this.radio);
-        this.play(this.streamUrl, options);
-      } else if (val === PlayerStatus.Stopped) {
-        this.pause();
-        // this.stop();
-      }
-    },
-    videoModalUrl(newVal) {
-      if (!newVal) {
-        this.hideVideoModal();
-        return;
-      }
-
-      this.showVideoModal();
-    },
-    muted(val) {
-      if (this.externalPlayer === true) { return; }
-
-      /* if (window.audio !== undefined && window.audio !== null) {
-        window.audio.muted = val;
-      } */
-
-      if (this.currentPlayer !== null && this.currentPlayer.element !== null) {
-        this.currentPlayer.element.muted = val;
-      }
-    },
-    volume(val) {
-      if (this.externalPlayer === true) { return; }
-
-      /* if (window.audio !== undefined && window.audio !== null) {
-        window.audio.volume = (val * 0.1);
-      } */
-
-      if (this.currentPlayer !== null) {
-        this.currentPlayer.element.volume = (val * 0.1);
-      }
-    },
-    radioShowWatching(newVal, oldVal) {
-      if (this.externalPlayer === true || this.playing !== PlayerStatus.Playing) { return; }
-
-      let display = false;
-      const [oldPlaying, oldRadio, oldShow] = oldVal.split('|');
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_newPlaying, newRadio, newShow] = newVal.split('|');
-
-      if (newRadio === 'null') {
-        return;
-      }
-
-      if (oldRadio === newRadio && oldPlaying === 'false') {
-        display = true;
-      } else if (oldRadio !== newRadio) {
-        display = true;
-      } else if (oldRadio === newRadio && oldShow !== newShow && newShow !== 'null') {
-        display = true;
-      }
-
-      if (display) {
-        PlayerUtils.showNotification(
-            this.radio!,
-            this.radioStreamCodeName!,
-            this.show
-        );
-      }
-    }
   },
 });
 </script>

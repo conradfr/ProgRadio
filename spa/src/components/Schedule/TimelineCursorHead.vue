@@ -1,7 +1,8 @@
 <template>
   <div class="timeline-cursor-head"
-       v-bind:class="{ 'timeline-cursor-head-today': isToday }"
-       :style="styleObject"></div>
+    :class="{ 'timeline-cursor-head-today': isToday }"
+    :style="styleObject">
+  </div>
 </template>
 
 <script lang="ts">
@@ -9,7 +10,6 @@ import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 import { GRID_VIEW_EXTRA_LEFT } from '@/config/config';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 
 export default defineComponent({

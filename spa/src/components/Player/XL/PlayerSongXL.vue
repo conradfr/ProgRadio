@@ -1,6 +1,6 @@
 <template>
-  <div class="navbar-player-song flex-grow-1 d-flex justify-content-center align-items-center">
-    <div v-if="currentSongCover" class="navbar-player-xl-logo me-3">
+  <div class="player-song-xl flex-grow-1 d-flex justify-content-center align-items-center">
+    <div v-if="currentSongCover" class="player-logo-xl me-3">
       <img :src="currentSongCover" />
     </div>
     <div>♫  {{ currentSongTitle }}</div>
@@ -11,7 +11,6 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { usePlayerStore } from '@/stores/playerStore';
 
 export default defineComponent({

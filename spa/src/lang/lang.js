@@ -1,7 +1,5 @@
 // todo modularize
 
-/* eslint-disable max-len */
-
 export const dateTimeFormats = {
   fr: {
     date_title: { year: 'numeric', month: 'long', day: 'numeric' }

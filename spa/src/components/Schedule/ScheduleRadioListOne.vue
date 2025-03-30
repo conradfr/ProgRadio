@@ -1,78 +1,72 @@
 <template>
   <div class="radio-list-one-wrapper"
        :class="{'radio-list-one-wrapper-hover': hover}"
-       v-on:mouseover.stop="hoverOn()" v-on:mouseleave="hoverOff()">
-    <div class="radio-list-one-flag"
-         v-if="displayFlag">
-      <vue-flag
-          :code="radio.country_code"
-          size="nano"
-          v-once
-      />
+       @mouseover.stop="hoverOn()" @mouseleave="hoverOff()">
+    <div v-if="displayFlag" class="radio-list-one-flag">
+      <vue-flag v-once :code="radio.country_code" size="nano" />
     </div>
-    <div class="radio-list-one-listeners" v-if="liveListenersCount && liveListenersCount > 0"
+    <div v-if="liveListenersCount && liveListenersCount > 0" class="radio-list-one-listeners"
          :title="$t('message.streaming.listeners', { how_many: liveListenersCount})">
       <span class="badge rounded-pill text-bg-dark">
         {{ liveListenersCount }}
       </span>
     </div>
-    <div class="radio-subradio"
-         v-if="hasSubRadios"
-         v-on:click="regionClick"
-         v-on:mouseover.stop=""
-         :title="$i18n.t('message.schedule.radio_list.pick_region_title')">
+    <div v-if="hasSubRadios"
+      class="radio-subradio"
+      :title="$t('message.schedule.radio_list.pick_region_title')"
+      @click="regionClick"
+      @mouseover.stop="">
       <i class="bi bi-geo-alt"></i>
     </div>
     <div class="radio-submenu"
-         :style="subMenuStyleObject"
-         :class="{ 'radio-submenu': hover }">
-      <div v-on:click="toggleFavorite" class="radio-submenu-entry radio-submenu-entry-favorites">
-        <img v-if="isFavorite" src="/img/favorite_heart.svg" class="filter-fav"/>
+      :class="{ 'radio-submenu': hover }"
+      :style="subMenuStyleObject">
+      <div class="radio-submenu-entry radio-submenu-entry-favorites" @click="toggleFavorite">
+        <img v-if="isFavorite" src="/img/favorite_heart.svg" class="filter-fav" />
         <p v-if="isFavorite">{{ $t('message.player.favorites.remove') }}</p>
-        <img v-if="!isFavorite" src="/img/favorite-empty_heart.svg" class="filter-fav"/>
+        <img v-if="!isFavorite" src="/img/favorite-empty_heart.svg" class="filter-fav" />
         <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
       <router-link class="radio-submenu-entry radio-submenu-entry-radiopage"
-                   :to="'/' + locale + '/radio/' + radio.code_name">
-        <img src="/img/list.svg" class="filter-page"/>
+        :to="'/' + locale + '/radio/' + radio.code_name">
+        <img src="/img/list.svg" class="filter-page" />
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
       </router-link>
     </div>
-    <div class="radio-submenu radio-submenu-streams"
-         :style="subMenuStyleObjectStreams"
-         :class="{ 'radio-submenu': hover }">
+    <div class="radio-submenu radio-submenu-streams" :style="subMenuStyleObjectStreams"
+      :class="{ 'radio-submenu': hover }">
       <div v-for="entry in secondaryStreams" :key="entry.code_name"
-           v-on:click="playStop(entry.code_name, true)" :title="entry.name"
-           class="radio-submenu-entry radio-submenu-entry-secondary">
+        class="radio-submenu-entry radio-submenu-entry-secondary"
+        :title="entry.name"
+        @click="playStop(entry.code_name, true)">
         <div class="radio-submenu-entry-secondary-logo" :style="styleObject">
           <div class="radio-logo-play"
-               :class="{
-        'radio-logo-play-active': (entry.code_name === playingStreamCodeName),
-        'radio-logo-play-paused': (entry.code_name === playingStreamCodeName
-          && playing === PlayerStatus.Stopped),
-        'radio-logo-play-hide': (radio.streaming_enabled === false)
-      }">
+            :class="{
+              'radio-logo-play-active': (entry.code_name === playingStreamCodeName),
+              'radio-logo-play-paused': (entry.code_name === playingStreamCodeName
+                && playing === PlayerStatus.Stopped),
+              'radio-logo-play-hide': (radio.streaming_enabled === false)
+            }">
           </div>
         </div>
         <p>{{ entry.name }}</p>
       </div>
     </div>
-    <a v-on:click="playStop(radio.code_name, false)" :title="radio.name">
+    <a :title="radio.name" @click="playStop(radio.code_name, false)">
       <div class="radio-logo"
-           :title="getSubRadio(radio.code_name).name || ''"
-           :class="{'radio-logo-nohover':  (radio.streaming_enabled === false)}">
-        <div class="radio-logo-bg"
-             :style="styleObject">
+        :title="getSubRadio(radio.code_name).name || ''"
+        :class="{'radio-logo-nohover': radio.streaming_enabled === false}">
+        <div class="radio-logo-bg" :style="styleObject">
           <div class="radio-logo-play"
-               :class="{
-          'radio-logo-play-hide': radio.streaming_enabled === false,
-          'radio-logo-play-active': radio.code_name === radioPlayingCodeName,
-          'radio-logo-play-paused': radio.code_name === radioPlayingCodeName
-            && playing === PlayerStatus.Stopped,
-          'radio-logo-play-secondary':
-            (radio.code_name === radioPlayingCodeName
-              && isWebRadio(radio.code_name, playingStreamCodeName))
-          }">
+            :class="{
+              'radio-logo-play-hide': radio.streaming_enabled === false,
+              'radio-logo-play-active': radio.code_name === radioPlayingCodeName,
+              'radio-logo-play-paused': radio.code_name === radioPlayingCodeName
+                && playing === PlayerStatus.Stopped,
+              'radio-logo-play-secondary':
+                (radio.code_name === radioPlayingCodeName
+                  && isWebRadio(radio.code_name, playingStreamCodeName))
+            }">
           </div>
         </div>
       </div>
@@ -89,7 +83,6 @@ import filter from 'lodash/filter';
 import type { Radio } from '@/types/radio';
 import PlayerStatus from '@/types/player_status';
 
-/* eslint-disable import/no-cycle */
 import { useScheduleStore } from '@/stores/scheduleStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
@@ -119,7 +112,6 @@ export default defineComponent({
       required: true
     },
   },
-  /* eslint-disable indent */
   data(): {
     PlayerStatus: any,
     channelName: string,
@@ -252,7 +244,7 @@ export default defineComponent({
         && ((isSubStream && this.playingStreamCodeName === streamCodeName)
           || !isSubStream)) {
         if (this.externalPlayer === false) {
-          (this as any).$gtag.event(GTAG_ACTION_STOP, {
+          this.$gtag.event(GTAG_ACTION_STOP, {
             event_category: GTAG_CATEGORY_SCHEDULE,
             event_label: this.radio.code_name,
             value: GTAG_ACTION_STOP_VALUE
@@ -265,7 +257,7 @@ export default defineComponent({
 
       if (this.radio.streaming_enabled) {
         if (this.externalPlayer === false) {
-          (this as any).$gtag.event(GTAG_ACTION_PLAY, {
+          this.$gtag.event(GTAG_ACTION_PLAY, {
             event_category: GTAG_CATEGORY_SCHEDULE,
             event_label: this.radio.code_name,
             value: GTAG_ACTION_PLAY_VALUE
@@ -276,7 +268,7 @@ export default defineComponent({
       }
     },
     toggleFavorite() {
-      (this as any).$gtag.event(GTAG_ACTION_FAVORITE_TOGGLE, {
+      this.$gtag.event(GTAG_ACTION_FAVORITE_TOGGLE, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         value: GTAG_ACTION_FAVORITE_TOGGLE_VALUE
       });
@@ -305,7 +297,7 @@ export default defineComponent({
       this.hover = false;
     },
     regionClick() {
-      (this as any).$gtag.event(GTAG_ACTION_REGION_CLICK, {
+      this.$gtag.event(GTAG_ACTION_REGION_CLICK, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         event_label: this.radio.code_name,
         value: GTAG_ACTION_REGION_VALUE

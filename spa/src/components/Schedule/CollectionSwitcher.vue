@@ -2,14 +2,14 @@
   <div class="collection-switcher">
     <div class="collection-switcher-next">{{ nextCollection }}</div>
     <div class="collection-control collection-backward"
-         v-on:click="clickCollectionBackward"
-         v-on:mouseover="hover('backward')">
+         @click="clickCollectionBackward"
+         @mouseover="hover('backward')">
       <i class="bi bi-chevron-left"></i>
     </div>
     <div class="collection-control collection-forward"
          :title="$t('message.schedule.tooltip')"
-         v-on:click="clickCollectionForward"
-         v-on:mouseover="hover('forward')">
+         @click="clickCollectionForward"
+         @mouseover="hover('forward')">
       <i class="bi bi-chevron-right"></i>
     </div>
   </div>
@@ -48,7 +48,7 @@ export default defineComponent({
   methods: {
     ...mapActions(useScheduleStore, ['collectionBackward', 'collectionForward']),
     clickCollectionBackward() {
-      (this as any).$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         value: GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
       });
@@ -56,7 +56,7 @@ export default defineComponent({
       this.collectionBackward();
     },
     clickCollectionForward() {
-      (this as any).$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
+      this.$gtag.event(GTAG_SCHEDULE_ACTION_COLLECTION_NAVIGATION, {
         event_category: GTAG_CATEGORY_SCHEDULE,
         value: GTAG_SCHEDULE_COLLECTION_NAVIGATION_VALUE
       });

@@ -7,7 +7,7 @@
         <table v-if="Object.keys(songs).length > 0" class="table table-striped table-songs">
           <tbody>
             <tr v-for="(song, index) in songs" :key="index">
-              <td  class="ps-3" style="width: 60%;">{{ song }}</td>
+              <td class="ps-3" style="width: 60%;">{{ song }}</td>
               <td style="width: 25%;">
                 <div class="d-flex justify-content-center streaming-services">
                   <a class="link-no-to-bold" target="_blank"
@@ -33,7 +33,7 @@
                 </div>
               </td>
               <td class="text-end pe-3" style="width: 13%;">
-                <a class="link-no-to-bold" v-on:click="removeSong(index)">
+                <a class="link-no-to-bold" @click="removeSong(index)">
                   <i class="bi bi-trash3-fill"></i>&nbsp;&nbsp;
                   <span class="d-none d-sm-inline">
                     {{ $t('message.generic.delete') }}
@@ -45,10 +45,13 @@
         </table>
 
         <div v-if="Object.keys(songs).length === 0" class="mt-5">
-          <p class="text-center mb-5">{{ $t('message.songs_page.no_songs') }}</p>
-          <div class="text-center"><img class="img-fluid" src="/img/songsave.png" alt=""></div>
+          <p class="text-center mb-5">
+            {{ $t('message.songs_page.no_songs') }}
+          </p>
+          <div class="text-center">
+            <img class="img-fluid" src="/img/songsave.png" alt="">
+          </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -58,7 +61,6 @@
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
-/* eslint-disable import/no-cycle */
 import { useUserStore } from '@/stores/userStore';
 
 import {
@@ -71,7 +73,7 @@ import PlayerUtils from '@/utils/PlayerUtils';
 
 export default defineComponent({
   mounted() {
-    document.title = (this.$i18n as any).t('message.songs_page.title');
+    document.title = this.$i18n.t('message.songs_page.title');
   },
   computed: {
     ...mapState(useUserStore, ['songs'])
@@ -88,7 +90,7 @@ export default defineComponent({
     removeSong(songId: number) {
       this.deleteSong(songId);
 
-      (this as any).$gtag.event(GTAG_ACTION_REMOVE_SONG, {
+      this.$gtag.event(GTAG_ACTION_REMOVE_SONG, {
         event_category: GTAG_CATEGORY_SONGS,
         event_label: null,
         value: GTAG_ACTION_REMOVE_SONG_VALUE

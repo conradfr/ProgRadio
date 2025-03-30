@@ -6,11 +6,13 @@
     }"
     role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex justify-content-center align-items-center p-3">
-      <div class="toast-icon"><i class="bi"
-        :class="{
-          'bi-x-circle-fill': toast.type === 'error',
-          'bi-check-circle-fill': toast.type === 'success'
-        }"></i>
+      <div class="toast-icon">
+        <i class="bi"
+          :class="{
+            'bi-x-circle-fill': toast.type === 'error',
+            'bi-check-circle-fill': toast.type === 'success'
+          }">
+        </i>
       </div>
       <div class="toast-body flex-fill py-0 text-center align-middle">
         {{ toast.message }}
