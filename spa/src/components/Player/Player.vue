@@ -1,8 +1,8 @@
 <template>
   <!-- PLAYER XL -->
   <Transition name="player">
-    <div v-if="xlPlayer" class="progradio-player player-xl">
-      <div class="player-expand d-none d-md-block cursor-pointer" @click="toggleXLPLayer()">
+    <div v-if="!reducedPlayer" class="progradio-player player-xl">
+      <div class="player-expand d-none d-md-block cursor-pointer" @click="toggleReducedPLayer()">
         <i class="bi bi-arrows-angle-contract"></i>
       </div>
       <Transition name="play-prev-fade" mode="out-in">
@@ -41,8 +41,8 @@
 
   <!-- PLAYER NAVBAR -->
   <Transition name="player">
-    <div v-if="!xlPlayer" class="progradio-player player-navbar">
-      <div class="d-none d-md-block player-expand cursor-pointer" @click="toggleXLPLayer()">
+    <div v-if="reducedPlayer" class="progradio-player player-navbar">
+      <div class="d-none d-md-block player-expand cursor-pointer" @click="toggleReducedPLayer()">
         <i class="bi bi-arrows-angle-expand"></i>
       </div>
       <Transition name="play-prev-fade" mode="out-in">
@@ -202,7 +202,7 @@ export default defineComponent({
     locale: string,
     videoModalElem: any,
     videoModalInstance: any,
-    xlPlayer: boolean,
+    reducedPlayer: boolean,
     isSafari: boolean,
     deviceId: string,
   } {
@@ -241,7 +241,7 @@ export default defineComponent({
       locale: this.$i18n.locale,
       videoModalElem: null,
       videoModalInstance: null,
-      xlPlayer: cookies.get(config.COOKIE_EXPAND_PLAYER, false) === 'true',
+      reducedPlayer: cookies.get(config.COOKIE_REDUCED_PLAYER, false) === 'true',
       // currently Safari does not list output devices, only input so we have to exclude the feature to do so
       isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
       // this is the default value for Chrome. Firefox is empty string but won't assign to the select anyway
@@ -865,15 +865,15 @@ export default defineComponent({
         this.videoModalInstance.hide();
       }
     },
-    toggleXLPLayer() {
+    toggleReducedPLayer() {
       this.$gtag.event(config.GTAG_ACTION_PLAYER_EXPAND, {
         event_category: config.GTAG_CATEGORY_PLAYER,
-        event_label: this.xlPlayer ? 'reduce' : 'expand',
+        event_label: this.reducedPlayer ? 'expand' : 'reduce',
         value: config.GTAG_ACTION_PLAYER_EXPAND_VALUE
       });
 
-      cookies.set(config.COOKIE_EXPAND_PLAYER, !this.xlPlayer);
-      this.xlPlayer = !this.xlPlayer;
+      cookies.set(config.COOKIE_REDUCED_PLAYER, !this.reducedPlayer);
+      this.reducedPlayer = !this.reducedPlayer;
     },
     changeDevice(deviceId: string, stopIfPlaying: boolean = false) {
       if (stopIfPlaying) {

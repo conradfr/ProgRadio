@@ -1,0 +1,25 @@
+.progradio-player {
+  .player-expand {
+    position: absolute;
+    right: -20px;
+    width: 21px;
+
+    text-align: right;
+    line-height: 1em;
+
+    padding: 4px 3px 3px 2px;
+    background-color: var(--progradio-player-background);
+
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    i {
+      color: var(--progradio-player-link-color);
+      font-size: 1rem;
+
+      &:hover {
+        color: var(--progradio-player-color);
+      }
+    }
+  }
+}

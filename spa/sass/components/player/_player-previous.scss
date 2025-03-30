@@ -1,0 +1,39 @@
+.player-radio-previous {
+  position: absolute;
+  left: -21px;
+  width: 23px;
+
+  text-align: right;
+  line-height: 1em;
+  cursor: pointer;
+
+  padding: 5px 20px 6px 5px;
+  background-color: var(--progradio-player-background);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+
+  @include media-breakpoint-down(sm) {
+    top: 17px;
+  }
+
+  i {
+    color: var(--progradio-player-link-color);
+    font-size: 1rem;
+
+    &:hover {
+      color: var(--progradio-player-color);
+    }
+  }
+
+  a {
+    color: var(--progradio-player-link-color);
+
+    &:hover {
+      color: var(--progradio-player-color);
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.player-playpause {
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+
+  &.player-playpause-disabled {
+    opacity: 0.7;
+    cursor: auto;
+  }
+
+  .spinner-border.spinner-border-sm {
+    --bs-spinner-border-width: 0.13em !important;
+  }
+}

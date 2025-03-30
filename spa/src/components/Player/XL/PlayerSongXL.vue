@@ -1,5 +1,5 @@
 <template>
-  <div class="player-song-xl flex-grow-1 d-flex justify-content-center align-items-center">
+  <div class="player-song-xl flex-grow-1 d-flex justify-content-start align-items-center">
     <div v-if="currentSongCover" class="player-logo-xl me-3">
       <img :src="currentSongCover" />
     </div>

@@ -1,0 +1,83 @@
+.progradio-player {
+  .player-infos {
+    flex: 1;
+
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    padding-left: 0;
+    padding-right: 5px;
+
+    color: white;
+    text-align: center;
+    line-height: 1.3em;
+
+    cursor: pointer;
+
+    $player-info-height: 32px;
+
+    @include media-breakpoint-down(sm) {
+      font-size: 1rem;
+    }
+
+    /* rolodex effect */
+    ul {
+      list-style: none;
+      height: 100%;
+      max-height: $player-info-height;
+
+      @include media-breakpoint-down(sm) {
+        max-height: calc($player-info-height + 10px);
+      }
+
+      margin: 0;
+      margin-block-start: 0;
+      margin-block-end: 0;
+      padding-inline-start: 0;
+
+      //animation-name: roll-up-3; !* dynamic *!
+      animation-duration: 10s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+
+      --progradio-anim-infos-height1: #{calc(-1 * $player-info-height)};
+      --progradio-anim-infos-height2: #{calc(-2 * $player-info-height)};
+
+      @include media-breakpoint-down(sm) {
+        --progradio-anim-infos-height1: #{calc(-1 * $player-info-height - 10px)};
+        --progradio-anim-infos-height2: #{calc(-2 * $player-info-height - 20px)};
+      }
+
+      li {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        height: $player-info-height;
+        min-height: $player-info-height;
+        max-height: $player-info-height;
+
+        @include media-breakpoint-down(sm) {
+          height: calc($player-info-height + 10px);
+          min-height: calc($player-info-height + 10px);
+          max-height: calc($player-info-height + 10px);
+        }
+
+        overflow-y: hidden;
+      }
+    }
+
+    @keyframes roll-up-2 {
+      0%, 50%, 100% { transform: translateY(0) }
+      60%, 90% { transform: translateY(var(--progradio-anim-infos-height1)) }
+    }
+
+    @keyframes roll-up-3 {
+      0%, 20%, 100% { transform: translateY(0) }
+      30%, 45%, 80%, 90% { transform: translateY(var(--progradio-anim-infos-height1)) }
+      55%, 70% { transform: translateY(var(--progradio-anim-infos-height2)) }
+    }
+  }
+}

@@ -1,0 +1,129 @@
+@import "variables";
+
+.player-navbar {
+  z-index: 1260; /* to get over navbar */
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  height: 41px;
+  width: 30vw;
+  //width: 302px;
+  //width: 505px;
+
+  margin-top: 5px;
+  background-color: var(--progradio-player-background);
+  border-radius: 5px;
+
+  color: var(--progradio-player-color);
+
+  /* on mobile, put player at the bottom */
+  @include media-breakpoint-down(sm) {
+    top: auto;
+    bottom: 13px;
+    width: 85vw;
+    height: 57px;
+    //left: ~"calc(50% - @{radio-list-width})";
+  }
+
+  //@include media-breakpoint-up(sm) {
+  //  width: 362px;
+  //}
+
+  //@include media-breakpoint-up(xxl) {
+  //  width: 30vw;
+  //}
+
+  @media (min-width: 1920px) {
+    //width: 505px;
+    width: 35vw;
+  }
+
+  .player-sound {
+    width: 30px;
+
+    padding-top: 2px;
+    padding-left: 10px;
+    padding-right: 2px;
+
+    text-align: center;
+
+    i {
+      font-size: $icon-size;
+
+      @include media-breakpoint-down(sm) {
+        font-size: $icon-size-sm;
+      }
+    }
+  }
+
+  .player-volume {
+    width: 34px;
+    height: 124px;
+    margin-top: -2px;
+
+    background-color: var(--progradio-player-background);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .player-playpause {
+    width: 36px;
+
+    font-size: $icon-play-size;
+
+    @include media-breakpoint-down(sm) {
+      width: 45px;
+      padding-left: 10px;
+      font-size: $icon-play-size-sm;
+    }
+
+    padding-top: 2px;
+
+    &:hover:not(.player-playpause-disabled) {
+      padding-top: 1px;
+      font-size: $icon-play-size-hover;
+
+      @include media-breakpoint-down(sm) {
+        font-size: $icon-play-size-hover-sm;
+      }
+    }
+  }
+
+  .player-favorite, .player-add-song, .player-timer {
+    width: 25px;
+    padding-top: 2px;
+
+    @include media-breakpoint-down(sm) {
+      width: 28px;
+    }
+
+    i {
+      font-size: $icon-size;
+
+      @include media-breakpoint-down(sm) {
+        font-size: $icon-size-sm;
+      }
+    }
+
+    &:hover {
+      padding-top: 1px;
+
+      i {
+        font-size: $icon-size-hover;
+
+        @include media-breakpoint-down(sm) {
+          font-size: $icon-size-hover-sm;
+        }
+      }
+    }
+  }
+
+  .player-expand {
+    top: 11px;
+  }
+
+  .player-radio-previous {
+    top: 8px;
+  }
+}

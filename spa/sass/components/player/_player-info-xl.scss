@@ -1,0 +1,18 @@
+.player-xl {
+  .player-infos-xl {
+    min-width: 10vw;
+
+    @include media-breakpoint-down(sm) {
+      display: none !important;
+    }
+
+    .player-infos-name {
+
+    }
+
+    .player-infos-show-moto {
+      //color: var(--progradio-player-color-muted);
+      opacity: 0.85;
+    }
+  }
+}

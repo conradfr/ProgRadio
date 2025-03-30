@@ -1,0 +1,150 @@
+@import "variables";
+
+@import "player-logo-xl";
+@import "player-info-xl";
+
+.player-xl {
+  z-index: 99;
+  bottom: 0.769rem;
+  margin: auto;
+  left: 0;
+  right: 0;
+
+  color: var(--progradio-player-color);
+
+  height: $player-xl-height;
+  width: $player-xl-width;
+
+  @media only screen and (min-width: $player-xl-width-xl-breakpoint) and (orientation: landscape) {
+    width: $player-xl-width-xl;
+  }
+
+  @include media-breakpoint-down(sm) {
+    width: 85vw;
+  }
+
+  backdrop-filter: blur(4px);
+  background-color: var(--progradio-player-background-xl);
+  border-radius: 5px;
+
+  box-shadow: 0.2px -1px 5px 0.2px rgba(0,0,0,.25);
+  transition: all 150ms;
+
+  padding-left: 5px;
+
+  .player-header-xl {
+    flex: 1 1 70%;
+
+    // if live song takes less max space
+    &:has(+ .player-song-xl) {
+      flex: 1 1 33.33%;
+    }
+  }
+
+  .player-actions-xl {
+    // width: $player-xl-actions-width;
+    padding-left: 5px;
+  }
+
+  .player-expand {
+    top: 20px;
+    background-color: var(--progradio-player-background-xl);
+  }
+
+  .player-radio-previous {
+    top: 20px;
+    background-color: var(--progradio-player-background-xl);
+  }
+
+  .player-playpause {
+    height: calc($player-xl-height - $player-xl-padding);
+    width: calc($player-xl-height - $player-xl-padding);
+
+    font-size: $icon-play-size-xl;
+
+    margin: 0 0.769rem;
+    padding-top: 1px;
+
+    @include media-breakpoint-down(sm) {
+      margin: 0 0.231rem 0 0;
+    }
+
+    &:hover:not(.player-playpause-disabled) {
+      margin-top: -3px;
+      font-size: $icon-play-size-hover-xl;
+    }
+  }
+
+  .player-infos {
+    display: none;
+
+    @include media-breakpoint-down(sm) {
+      display: block !important;
+    }
+  }
+
+  .player-name-help {
+    @include media-breakpoint-up(md) {
+      text-align: start;
+    }
+
+    font-size: 1rem;
+  }
+
+  .player-favorite, .player-add-song, .player-timer, .player-output-action {
+    width: 31px;
+    padding-top: 2px;
+
+    i {
+      font-size: $icon-size-xl;
+    }
+
+    @include media-breakpoint-down(sm) {
+      width: 27px;
+
+      i {
+        font-size: $icon-size-sm;
+      }
+    }
+
+    &:hover {
+      padding-top: 0;
+
+      i {
+        font-size: $icon-size-hover-xl;
+      }
+    }
+  }
+
+  .player-song-xl {
+    flex: 1 1 33.33%;
+
+    @include media-breakpoint-down(sm) {
+      display: none !important;
+    }
+  }
+
+  .player-volume-xl {
+    width: 150px;
+
+    @include media-breakpoint-down(sm) {
+      display: none !important;
+    }
+
+    i:hover {
+      font-size: $icon-size-hover-xl;
+    }
+  }
+
+  .player-sound {
+    width: 30px;
+
+    i {
+      font-size: $icon-size-xl;
+    }
+
+    .player-muted {
+      color: $danger;
+    }
+  }
+}
