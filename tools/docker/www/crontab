@@ -1,1 +1,1 @@
-*/30 * * * * goaccess /var/log/caddy/access.log -o /app/templates/report.html --log-format=CADDY --ignore-crawlers 2>&1
+*/30 * * * * zcat /var/log/caddy/access*.log.gz | goaccess /var/log/caddy/access.log - -o /app/templates/report.html --log-format=CADDY --ignore-crawlers 2>&1
