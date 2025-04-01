@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+RUN apk add bash git
+
+# Set working directory
+WORKDIR /usr/app
+
+# Copy package.json and package-lock.json
+COPY ./package*.json ./
+
+# Copy application code
+COPY ./ .
+
+# Install dependencies
+RUN npm install
+
+# CMD ["npm", "start"]
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]

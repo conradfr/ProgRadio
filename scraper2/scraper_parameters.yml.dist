@@ -8,6 +8,9 @@ logmail:
     password: ''
     host: ''
     port:
+    ssl: true
+    tls: false
+    authentication: ['LOGIN']
     to: ''
     from: ''
     level: 'info'

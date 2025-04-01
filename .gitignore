@@ -14,6 +14,7 @@
 /.env.local.php
 /.env.*.local
 
+
 ###> symfony/framework-bundle ###
 /config/secrets/prod/prod.decrypt.private.php
 /var/
@@ -25,6 +26,7 @@
 
 # Parameters
 /Scraper/scraper_parameters.yml
+/scraper2/scraper_parameters.yml
 
 # Managed by Composer
 /var/bootstrap.php.cache
@@ -81,6 +83,7 @@
 /node_modules/
 /spa/node_modules/
 /Scraper/node_modules/
+/scraper2/node_modules/
 /streams-proxy/node_modules/
 
 /spa/sr/utils/petite-vue.es.js

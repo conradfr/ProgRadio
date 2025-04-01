@@ -1,0 +1,5 @@
+01 00 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -n >> /var/log/cron.log 2>&1
+10 00 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -o >> /var/log/cron.log 2>&1
+50 11 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js >> /var/log/cron.log 2>&1
+40 06 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -t >> /var/log/cron.log 2>&1
+06 17 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -t >> /var/log/cron.log 2>&1

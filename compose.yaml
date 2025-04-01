@@ -76,6 +76,19 @@ services:
     links:
       - api
 
+  scraper2:
+    build:
+      context: ./scraper2
+      dockerfile: ../tools/dev/Dockerfile_scraper2
+    container_name: scraper2
+    working_dir: /usr/app
+    #    depends_on:
+    #      - api
+    volumes:
+      - ./scraper2:/usr/app
+    links:
+      - api
+
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-17}-alpine

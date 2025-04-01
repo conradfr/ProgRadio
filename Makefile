@@ -6,6 +6,7 @@ PHP_CONT = $(DOCKER_COMP) exec php-fpm
 SPA_CONT = $(DOCKER_COMP) exec spa
 API_CONT = $(DOCKER_COMP) exec api
 SCRAPER_CONT = $(DOCKER_COMP) exec scraper
+SCRAPER2_CONT = $(DOCKER_COMP) exec scraper2
 
 # Executables
 PHP = $(PHP_CONT) php
@@ -64,6 +65,10 @@ spa-dev:
 scrap:
 	@$(eval c ?=)
 	@$(SCRAPER_CONT) node index.js $(c)
+
+scrap2:
+	@$(eval c ?=)
+	@$(SCRAPER2_CONT) node index.js $(c)
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
