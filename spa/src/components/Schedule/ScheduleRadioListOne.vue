@@ -39,7 +39,7 @@
         class="radio-submenu-entry radio-submenu-entry-secondary"
         :title="entry.name"
         @click="playStop(entry.code_name, true)">
-        <div class="radio-submenu-entry-secondary-logo" :style="styleObject">
+        <div class="radio-submenu-entry-secondary-logo" :style="styleObjectRadioStream(entry.code_name)">
           <div class="radio-logo-play"
             :class="{
               'radio-logo-play-active': (entry.code_name === playingStreamCodeName),
@@ -131,7 +131,7 @@ export default defineComponent({
         // @ts-expect-error defined on global scope
         // eslint-disable-next-line no-undef
         backgroundImage: `url("${cdnBaseUrl}img/radio/schedule/${this.radio.code_name}.png")`
-      }
+      },
     };
   },
   mounted() {
@@ -214,6 +214,17 @@ export default defineComponent({
       'joinListenersChannel',
       'leaveListenersChannel'
     ]),
+    styleObjectRadioStream(radioStreamCodeName: string) {
+      const logo = this.radio.streams[radioStreamCodeName]
+        && this.radio.streams[radioStreamCodeName].has_logo === true ? `page/${radioStreamCodeName}.png`
+        : `schedule/${this.radio.code_name}.png`;
+
+      return {
+        // @ts-expect-error defined on global scope
+        // eslint-disable-next-line no-undef
+        backgroundImage: `url("${cdnBaseUrl}img/radio/${logo}")`
+      }
+    },
     visibilityChange() {
       if (document.hidden) {
         this.leaveChannels();
