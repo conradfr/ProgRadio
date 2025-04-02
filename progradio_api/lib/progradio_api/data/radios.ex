@@ -47,7 +47,8 @@ defmodule ProgRadioApi.Radios do
           stream_current_song: rs.current_song,
           stream_status: rs.status,
           stream_retries: rs.retries,
-          stream_sub_radio_id: rs.sub_radio_id
+          stream_sub_radio_id: rs.sub_radio_id,
+          stream_has_logo: rs.own_logo
         },
         select_merge: %{
           sub_radio_code_name: sr.code_name,
@@ -97,7 +98,8 @@ defmodule ProgRadioApi.Radios do
               url: e.stream_url,
               main: e.stream_main,
               sub_radio: e.stream_sub_radio_id !== nil,
-              current_song: e.stream_current_song
+              current_song: e.stream_current_song,
+              has_logo: e.stream_has_logo
             }
 
             put_in(radio, [:streams, stream.code_name], stream)

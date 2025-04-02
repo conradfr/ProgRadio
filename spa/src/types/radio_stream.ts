@@ -4,5 +4,6 @@ export interface RadioStream{
   main: boolean
   sub_radio: boolean
   name: string
-  url: string
+  url: string,
+  has_logo: boolean | null
 }

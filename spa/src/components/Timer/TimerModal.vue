@@ -68,11 +68,11 @@
             </div>
             <div class="row">
               <div class="btn-group btn-group-sm mt-3" role="group" aria-label="Add">
-                <timer-modal-add-button v-model="minutes" add="-1"></timer-modal-add-button>
-                <timer-modal-add-button v-model="minutes" add="-5"></timer-modal-add-button>
-                <timer-modal-add-button v-model="minutes" add="1"></timer-modal-add-button>
-                <timer-modal-add-button v-model="minutes" add="5"></timer-modal-add-button>
-                <timer-modal-add-button v-model="minutes" add="10"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" :add="-1"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" :add="-5"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" :add="1"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" :add="5"></timer-modal-add-button>
+                <timer-modal-add-button v-model="minutes" :add="10"></timer-modal-add-button>
               </div>
             </div>
           </div>

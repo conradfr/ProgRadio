@@ -70,6 +70,9 @@ class RadioStream
     #[ORM\JoinColumn(name: 'sub_radio_id', referencedColumnName: 'id')]
     private ?SubRadio $subRadio = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $ownLogo = null;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
         $this->streams = new ArrayCollection();
@@ -208,6 +211,18 @@ class RadioStream
     public function setCurrentSongRetries(int $currentSongRetries): void
     {
         $this->currentSongRetries = $currentSongRetries;
+    }
+
+    public function isOwnLogo(): ?bool
+    {
+        return $this->ownLogo;
+    }
+
+    public function setOwnLogo(?bool $ownLogo): static
+    {
+        $this->ownLogo = $ownLogo;
+
+        return $this;
     }
 
 }

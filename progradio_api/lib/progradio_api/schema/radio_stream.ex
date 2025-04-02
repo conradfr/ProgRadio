@@ -11,6 +11,7 @@ defmodule ProgRadioApi.RadioStream do
     field(:enabled, :boolean)
     field(:main, :boolean)
     field(:current_song, :boolean)
+    field(:own_logo, :boolean)
     field(:status, :boolean)
     field(:retries, :integer)
     belongs_to(:radio, Radio)

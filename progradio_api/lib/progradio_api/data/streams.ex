@@ -261,7 +261,7 @@ defmodule ProgRadioApi.Streams do
         popup: s.popup,
         type: "stream",
         radio_code_name: fragment("COALESCE(?)", r.code_name),
-        img_alt: fragment("COALESCE(?)", r.code_name),
+        img_alt: fragment("COALESCE(CASE WHEN BOOL_AND(?) is TRUE THEN ? ELSE null END, ?)", rs.own_logo, rs.code_name, r.code_name),
         current_song:
           fragment(
             "CASE WHEN(? IS NOT NULL and ? = TRUE) THEN TRUE ELSE ? END",
@@ -324,10 +324,28 @@ defmodule ProgRadioApi.Streams do
       "name" ->
         query
         |> order_by([s], asc: s.name)
+        |> group_by([s, rs, r, ss], [
+          s.id,
+          r.code_name,
+          ss.code_name,
+          ss.enabled,
+          rs.current_song,
+          rs.code_name,
+          rs.url
+        ])
 
       "popularity" ->
         query
         |> order_by([s], desc: s.score, desc: s.clicks_last_24h)
+        |> group_by([s, rs, r, ss], [
+          s.id,
+          r.code_name,
+          ss.code_name,
+          ss.enabled,
+          rs.current_song,
+          rs.code_name,
+          rs.url
+        ])
 
       "last" ->
         query
@@ -349,6 +367,15 @@ defmodule ProgRadioApi.Streams do
       "random" ->
         query
         |> order_by(fragment("RANDOM()"))
+        |> group_by([s, rs, r, ss], [
+          s.id,
+          r.code_name,
+          ss.code_name,
+          ss.enabled,
+          rs.current_song,
+          rs.code_name,
+          rs.url
+        ])
 
       _ ->
         query
