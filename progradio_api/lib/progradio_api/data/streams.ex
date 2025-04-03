@@ -50,6 +50,15 @@ defmodule ProgRadioApi.Streams do
   def get_one(id) do
     base_query()
     |> where([s], s.id == ^id)
+    |> group_by([s, rs, r, ss], [
+      s.id,
+      r.code_name,
+      ss.code_name,
+      ss.enabled,
+      rs.current_song,
+      rs.code_name,
+      rs.url
+    ])
     |> Repo.one()
   end
 
@@ -379,6 +388,15 @@ defmodule ProgRadioApi.Streams do
 
       _ ->
         query
+        |> group_by([s, rs, r, ss], [
+          s.id,
+          r.code_name,
+          ss.code_name,
+          ss.enabled,
+          rs.current_song,
+          rs.code_name,
+          rs.url
+        ])
     end
   end
 
