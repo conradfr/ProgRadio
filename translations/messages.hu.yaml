@@ -166,6 +166,7 @@ page:
         updated: 'Frissítve'
         languages: 'Nyelvek'
         popup: Egy felugró ablakot kell megnyitni a lejátszáshoz.
+        advanced: Használja a fejlett lejátszót<br>(kötet, kedvencek ...)
 
         modification:
             at_least_one: Töltsön ki legalább egy mezőt.

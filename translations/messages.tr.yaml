@@ -164,6 +164,7 @@ page:
         updated: 'Güncellendi'
         languages: 'Diller'
         popup: Bu radyoyu çalmak için bir popup penceresi açılmalıdır.
+        advanced: Gelişmiş Player'ı kullanın<br>(hacim, favoriler ...)
 
         modification:
             at_least_one: En az bir alanı doldurun.

@@ -163,6 +163,7 @@ page:
         updated: 'Actualizat'
         languages: 'Limbi'
         popup: Trebuie deschisă o fereastră pop-up pentru a reda acest radio
+        advanced: Folosiți jucătorul avansat<br>(volum, favorite ...)
 
         modification:
             at_least_one: Completați unul sau mai multe câmpuri.

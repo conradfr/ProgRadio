@@ -181,6 +181,7 @@ page:
         updated: 'Mis à jour'
         languages: 'Langues'
         popup: Une fenêtre popup doit être ouverte pour jouer cette radio.
+        advanced: Utiliser le lecteur avancé<br>(volume, favoris, historique ...)
 
         modification:
             at_least_one: Remplir un champs ou plus.

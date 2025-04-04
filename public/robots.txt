@@ -8,6 +8,9 @@ Crawl-delay: 10
 Disallow: /index.php
 Disallow: /index.php*
 Disallow: /index.php/*
+Disallow: */index.php
+Disallow: */index.php*
+Disallow: */index.php/*
 Disallow: /*/streams/suggestion/*
 Disallow: /*/stream-popup/*
 
@@ -35,6 +38,9 @@ Crawl-delay: 10
 Disallow: /index.php
 Disallow: /index.php*
 Disallow: /index.php/*
+Disallow: */index.php
+Disallow: */index.php*
+Disallow: */index.php/*
 Disallow: /*/streams/suggestion/*
 Disallow: /*/stream-popup/*
 

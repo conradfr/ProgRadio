@@ -164,6 +164,7 @@ page:
         updated: 'Aggiornato'
         languages: 'Lingue'
         popup: È necessario aprire una finestra popup per riprodurre questa radio
+        advanced: Usa il giocatore avanzato<br>(volume, favoriti ...)
 
         modification:
             at_least_one: Compila almeno un campo.

@@ -181,6 +181,7 @@ page:
         updated: 'Actualizado'
         languages: 'Idiomas'
         popup: Se debe abrir una ventana emergente para reproducir esta radio.
+        advanced: Use el jugador avanzado<br>(volumen, favoritos ...)
 
         modification:
             at_least_one: Rellenar uno o más campos.
