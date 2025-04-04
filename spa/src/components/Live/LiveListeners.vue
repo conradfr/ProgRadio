@@ -1,5 +1,5 @@
 <template>
-  <div v-if="count && count > 0" class="mt-4">
+  <div v-if="count && count > 0" class="mb-4">
     <strong>{{ $t('message.streaming.listeners_title') }}:</strong>&nbsp;
     {{ $t('message.streaming.listeners', { how_many: count}) }}
   </div>
@@ -10,12 +10,12 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import { mapState } from 'pinia';
 
-import type { Radio } from '@/types/radio';
-import type { Stream } from '@/types/stream';
+import type { Radio } from '@/types/radio.ts';
+import type { Stream } from '@/types/stream.ts';
 
-import { usePlayerStore } from '@/stores/playerStore';
+import { usePlayerStore } from '@/stores/playerStore.ts';
 
-import typeUtils from '@/utils/typeUtils';
+import typeUtils from '@/utils/typeUtils.ts';
 
 export default defineComponent({
   props: {

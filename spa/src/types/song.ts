@@ -2,6 +2,10 @@ export interface Songs {
   [key: string]: SongContainer
 }
 
+export interface SongHistory {
+  [key: string]: Song
+}
+
 export interface SongContainer {
   topic: string
   song: Song

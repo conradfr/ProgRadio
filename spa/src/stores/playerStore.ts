@@ -6,7 +6,7 @@ import find from 'lodash/find';
 import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 import type { Program } from '@/types/program';
-import type {SongContainer, Songs} from '@/types/song';
+import type { SongContainer, SongHistory, Songs } from '@/types/song';
 import type { Listeners } from '@/types/listeners';
 import type { ListeningSession } from '@/types/listening_session';
 import type { ChannelsRefCount } from '@/types/channels_ref_count';
@@ -49,6 +49,7 @@ interface State {
   prevRadioStreamCodeName: string|null
   show: Program|null
   song: Songs
+  songHistory: SongHistory
   listeners: Listeners
   flux: any
   volume: number
@@ -85,6 +86,7 @@ export const usePlayerStore = defineStore('player', {
       ? cache.getCache(config.PREV_RADIO_STREAM_PLAYED) : null,
     show: null,
     song: {},
+    songHistory: {},
     listeners: {},
     flux,
     // volume is 1-10 for legacy reason
@@ -581,13 +583,17 @@ export const usePlayerStore = defineStore('player', {
               this.setSong(songData);
             });
 
-            this.channels[topicName].on('quit', () => {
-              this.setSong({ name: topicName, song: null });
-              this.leaveChannel(topicName);
+            this.channels[topicName].on('song_history', (songHistoryData: any) => {
+              this.setSongHistory(songHistoryData);
             });
 
             this.channels[topicName].on('counter_update', (counterData: any) => {
               this.setListeners(counterData);
+            });
+
+            this.channels[topicName].on('quit', () => {
+              this.setSong({ name: topicName, song: null });
+              this.leaveChannel(topicName);
             });
 
             this.channels[topicName].join()
@@ -656,23 +662,43 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     setSong(songData?: any|null) {
-      if (songData === null || songData === undefined) {
+      if (!songData) {
         // this.song = {};
         return;
       }
 
-      const { topic, name, song } = songData;
+      const { topic, song } = songData;
 
       if (song === null) {
-        if (name) {
-          delete this.song[name];
+        if (topic) {
+          delete this.song[topic];
         }
         return;
       }
 
       this.song = {
         ...this.song,
-        [name]: markRaw({ topic, song })
+        [topic]: markRaw({ topic, song })
+      };
+    },
+    setSongHistory(songHistoryData?: any|null) {
+      if (!songHistoryData) {
+        // this.songHistory = {};
+        return;
+      }
+
+      const { topic, history } = songHistoryData;
+
+      if (!history) {
+        if (topic) {
+          delete this.song[topic];
+        }
+        return;
+      }
+
+      this.songHistory = {
+        ...this.songHistory,
+        [topic]: markRaw({ topic, history })
       };
     },
     setListeners(songData: any|null) {

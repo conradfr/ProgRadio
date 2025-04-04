@@ -69,6 +69,7 @@
 
               <live-song v-if="stream" :stream="stream"></live-song>
               <live-listeners v-if="stream" :stream="stream"></live-listeners>
+              <live-song-history v-if="stream" :stream="stream"></live-song-history>
             </div>
 
             <div v-if="country" class="mb-3">
@@ -125,13 +126,15 @@ import PlayerUtils from '@/utils/PlayerUtils';
 import * as config from '@/config/config';
 
 import Adsense from '../Utils/Adsense.vue';
-import LiveSong from '../Utils/LiveSong.vue';
-import LiveListeners from '../Utils/LiveListeners.vue';
+import LiveSong from '../Live/LiveSong.vue';
+import LiveSongHistory from '../Live/LiveSongHistory.vue';
+import LiveListeners from '../Live/LiveListeners.vue';
 
 export default defineComponent({
   components: {
     Adsense,
     LiveSong,
+    LiveSongHistory,
     LiveListeners
   },
   props: {

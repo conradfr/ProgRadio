@@ -47,8 +47,9 @@
           </div>
         </div>
 
-        <live-song v-if="radio" :stream="radio"></live-song>
-        <live-listeners v-if="radio" :stream="radio"></live-listeners>
+        <live-song v-if="radio" :stream="radio" />
+        <live-song-history v-if="radio" :stream="radio" :radioStreamCodeName="`${radio.code_name}_main`" />
+        <live-listeners v-if="radio" :stream="radio" />
 
         <div class="radio-page-shows mt-2">
           <radio-show v-for="entry in schedule" :key="entry.hash" :show="entry"></radio-show>
@@ -92,14 +93,16 @@ import type { Collection } from '@/types/collection';
 import RadioShow from './Radio/RadioShow.vue';
 import RadioStreams from './Radio/RadioStreams.vue';
 import Adsense from './Utils/Adsense.vue';
-import LiveSong from './Utils/LiveSong.vue';
-import LiveListeners from './Utils/LiveListeners.vue';
+import LiveSong from './Live/LiveSong.vue';
+import LiveSongHistory from "./Live/LiveSongHistory.vue";
+import LiveListeners from './Live/LiveListeners.vue';
 
 export default defineComponent({
   components: {
     RadioShow,
     RadioStreams,
     LiveSong,
+    LiveSongHistory,
     LiveListeners,
     Adsense
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="player-infos-xl d-flex flex-column" :title="showTitle" @click="gotoRadio">
+  <div class="player-infos-xl d-flex flex-column cursor-pointer" :title="showTitle" @click="gotoRadio">
     <div class="player-infos-name">{{ radioName }}</div>
     <div v-if="show && show.title" class="player-infos-show-moto">{{ show.title }}</div>
   </div>

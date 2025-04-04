@@ -6,6 +6,9 @@ defmodule ProgRadioApi.SongServer do
   alias ProgRadioApi.RadioStream
   alias ProgRadioApi.TaskSupervisor
 
+  @max_song_history 10
+  @history_ttl 60
+
   @refresh_song_interval 10000
   @refresh_song_interval_long 20000
   @refresh_song_retries_increment 10000
@@ -13,7 +16,7 @@ defmodule ProgRadioApi.SongServer do
   @refresh_song_retries_max 10
   @refresh_song_retries_max_reset_at 100
   @refresh_song_retries_max_interval 120_000
-  @refresh_presence_interval 60000
+  @refresh_presence_interval 120000
 
   @task_timeout 15000
 
@@ -28,6 +31,7 @@ defmodule ProgRadioApi.SongServer do
         module: get_url_module(song_topic),
         name: song_topic,
         song: %{},
+        song_history: restore_history(song_topic),
         last_data: nil,
         retries: 0,
         db_data: nil
@@ -51,6 +55,7 @@ defmodule ProgRadioApi.SongServer do
         module: module_name,
         name: song_topic,
         song: %{},
+        song_history: restore_history(song_topic),
         last_data: nil,
         retries: 0,
         db_data: db_data
@@ -87,6 +92,7 @@ defmodule ProgRadioApi.SongServer do
           module: module,
           name: name,
           song: last_song,
+          song_history: song_history,
           last_data: last_data,
           retries: retries,
           db_data: db_data
@@ -97,6 +103,8 @@ defmodule ProgRadioApi.SongServer do
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error do
       broadcast_song_if_needed(name, song, last_song)
+      updated_song_history = update_song_history(last_song, song_history, song)
+      broadcast_song_history_if_needed(name, updated_song_history, song_history)
       update_status(song, db_data)
 
       refresh_rate =
@@ -121,7 +129,7 @@ defmodule ProgRadioApi.SongServer do
 
       Process.send_after(self(), {:refresh, :auto}, refresh_rate)
 
-      {:noreply, %{state | song: song, last_data: data, retries: updated_retries}, :hibernate}
+      {:noreply, %{state | song: song, last_data: data, song_history: updated_song_history, retries: updated_retries}, :hibernate}
     else
       _ ->
         broadcast_song(name, nil)
@@ -138,10 +146,19 @@ defmodule ProgRadioApi.SongServer do
   @impl true
   def handle_info(
         {:refresh, _},
-        %{module: module, name: name, last_data: last_data, db_data: db_data} = state
+        %{
+          module: module,
+          name: name,
+          last_data: last_data,
+          song: last_song,
+          song_history: song_history,
+          db_data: db_data
+        } = state
       ) do
     {data, song} = get_data_song(module, name, last_data)
     broadcast_song(name, song)
+    updated_song_history = update_song_history(last_song, song_history, song)
+    broadcast_song_history_if_needed(name, updated_song_history, song_history)
     update_status(song, db_data)
 
     next_refresh =
@@ -155,7 +172,7 @@ defmodule ProgRadioApi.SongServer do
 
     Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 
-    {:noreply, %{state | song: song, last_data: data}}
+    {:noreply, %{state | song: song, song_history: updated_song_history, last_data: data}}
   end
 
   @impl true
@@ -198,12 +215,36 @@ defmodule ProgRadioApi.SongServer do
 
   @spec broadcast_song(String.t(), map() | nil) :: none()
   defp broadcast_song(name, song) do
-    data = %{name: name, song: song}
+    data = %{topic: name, name: name, song: song}
 
     ProgRadioApiWeb.Endpoint.broadcast!(
       name,
       "playing",
-      Map.put(data, :topic, name)
+      data
+    )
+  end
+
+  defp broadcast_song_history_if_needed(name, song_history, _last_song_history) when length(song_history) < @max_song_history do
+    broadcast_song_history(name, song_history)
+  end
+
+  defp broadcast_song_history_if_needed(name, song_history, last_song_history) do
+    case song_history -- last_song_history do
+      [] -> Logger.debug("Data provider - #{name}: song history updated, no broadcast")
+      _ ->
+        broadcast_song_history(name, song_history)
+    end
+  end
+
+  @spec broadcast_song_history(String.t(), list) :: none()
+  defp broadcast_song_history(name, song_history) do
+    Redix.command!(:redix, ["SET", "history_" <> name, Jason.encode!(song_history), "EX", @history_ttl])
+    data = %{name: name, history: song_history}
+
+    ProgRadioApiWeb.Endpoint.broadcast!(
+      name,
+      "song_history",
+       Map.put(data, :topic, name)
     )
   end
 
@@ -250,11 +291,13 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
+  # ---------- UPDATE STATUS ----------
+
   @spec update_status(map() | nil, map() | nil) :: any()
   defp update_status(song, db_data)
 
   defp update_status(%{} = song, %{:type => "radio_stream"} = db_data) do
-    if map_size(song) == 0 or db_data == nil or
+    if map_size(song) == 0 or
          ((Map.get(song, :artist) == nil or song.artist == "") and
             (Map.get(song, :title) == nil or song.title == "")) do
       RadioStream.update_status(db_data.id, true)
@@ -264,7 +307,7 @@ defmodule ProgRadioApi.SongServer do
   end
 
   defp update_status(%{} = song, %{:type => "stream_song"} = db_data) do
-    if map_size(song) == 0 or db_data == nil or
+    if map_size(song) == 0 or
          ((Map.get(song, :artist) == nil or song.artist == "") and
             (Map.get(song, :title) == nil or song.title == "")) do
       StreamSong.update_status(db_data.id, true)
@@ -277,6 +320,41 @@ defmodule ProgRadioApi.SongServer do
     # nothing
     Logger.debug("Updating status, no match: #{inspect(song)} - #{inspect(db_data)}")
   end
+
+  # ---------- SONG HISTORY ----------
+
+  @spec update_song_history(map() | nil, list, map() | nil) :: list
+  defp update_song_history(song, song_history, new_song)
+
+  # no song to add
+  defp update_song_history(nil, song_history, _new_song), do: song_history
+
+  # no song to add
+  defp update_song_history(%{} = song, song_history, _new_song) when song == %{}, do: song_history
+
+  # this is the current song
+  defp update_song_history(%{} = song, song_history, new_song) when song == new_song, do: song_history
+
+  # same song as the last entry
+  defp update_song_history(%{} = song, song_history, _new_song) when hd(song_history) == song, do: song_history
+
+  defp update_song_history(%{} = song, song_history, new_song) when song != new_song and  length(song_history) < @max_song_history, do: [song | song_history]
+
+  defp update_song_history(%{} = song, song_history, _new_song) do
+    song_history
+    |> List.delete_at(-1)
+    |> (&[song | &1]).()
+  end
+
+  defp restore_history(name) do
+    case Redix.command(:redix, ["GET", "history_" <> name]) do
+      {:ok, nil} -> []
+      {:ok, history} -> Jason.decode!(history)
+      _ -> []
+    end
+  end
+
+  # ---------- CONNECTED ----------
 
   defp how_many_connected(topic), do: how_many_connected_stream(topic)
 
