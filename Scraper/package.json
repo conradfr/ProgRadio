@@ -8,7 +8,7 @@
     "postinstall": "rm -rf node_modules/osmosis/node_modules/libxmljs-dom"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.30.0",
     "command-line-args": "^4.0.7",
     "fix-utf8": "^1.1.1",
     "html-to-text": "^8.0.0",
