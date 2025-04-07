@@ -442,14 +442,20 @@ class DefaultController extends AbstractBaseController
     {
         // !!! NOTE !!! could not find in the doc how to do a custom ParamConverter in Symfony 6.3 like with ExtraBundle before
         // So we do it manually here, oh well...
+        $stream = null;
 
-        $shortener = Shortener::make(
-            Dictionary::createUnmistakable()
-        );
+        try {
+            $shortener = Shortener::make(
+                Dictionary::createUnmistakable()
+            );
 
-        $uuid = $shortener->expand($shortId);
-
-        $stream = $em->getRepository(Stream::class)->find($uuid);
+            $uuid = $shortener->expand($shortId);
+            $stream = $em->getRepository(Stream::class)->find($uuid);
+        } catch (\Exception $e) {
+            // noticed that sometimes the short if gets lowercased and it will failed
+            // so we try to use the slug instead
+            $stream = $em->getRepository(Stream::class)->findOneBySlug($codename);
+        }
 
         if (!$stream) {
             throw new NotFoundHttpException('Radio not found');

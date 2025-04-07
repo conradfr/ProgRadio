@@ -594,4 +594,21 @@ class StreamRepository extends ServiceEntityRepository
             $perPage
         );
     }
+
+    public function findOneBySlug(string $slug): ?Stream
+    {
+        $slugCleanedUp = '%' . str_replace('-', '%', $slug) . '%';
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('s')
+            ->from(Stream::class, 's')
+            ->where('s.enabled = true AND ILIKE(s.name, :name) = true')
+            ->setParameter('name', $slugCleanedUp);
+
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_TTL);
+
+        return $query->getOneOrNullResult();
+    }
 }
