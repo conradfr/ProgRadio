@@ -270,7 +270,13 @@ defmodule ProgRadioApi.Streams do
         popup: s.popup,
         type: "stream",
         radio_code_name: fragment("COALESCE(?)", r.code_name),
-        img_alt: fragment("COALESCE(CASE WHEN BOOL_AND(?) is TRUE THEN ? ELSE null END, ?)", rs.own_logo, rs.code_name, r.code_name),
+        img_alt:
+          fragment(
+            "COALESCE(CASE WHEN BOOL_AND(?) is TRUE THEN ? ELSE null END, ?)",
+            rs.own_logo,
+            rs.code_name,
+            r.code_name
+          ),
         current_song:
           fragment(
             "CASE WHEN(? IS NOT NULL and ? = TRUE) THEN TRUE ELSE ? END",

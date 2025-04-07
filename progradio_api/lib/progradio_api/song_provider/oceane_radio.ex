@@ -29,7 +29,7 @@ defmodule ProgRadioApi.SongProvider.OceaneRadio do
     "oceane_radio_80" => "1016896050327779448",
     "oceane_radio_francais" => "1016896072341387635",
     "oceane_radio_classic_rock" => "1016956473760324734",
-    "oceane_radio_clazz" => "4179277137246699829",
+    "oceane_radio_clazz" => "4179277137246699829"
   }
 
   @impl true

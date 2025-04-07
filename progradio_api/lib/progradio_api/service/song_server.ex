@@ -16,7 +16,7 @@ defmodule ProgRadioApi.SongServer do
   @refresh_song_retries_max 10
   @refresh_song_retries_max_reset_at 100
   @refresh_song_retries_max_interval 120_000
-  @refresh_presence_interval 120000
+  @refresh_presence_interval 120_000
 
   @task_timeout 15000
 
@@ -129,7 +129,14 @@ defmodule ProgRadioApi.SongServer do
 
       Process.send_after(self(), {:refresh, :auto}, refresh_rate)
 
-      {:noreply, %{state | song: song, last_data: data, song_history: updated_song_history, retries: updated_retries}, :hibernate}
+      {:noreply,
+       %{
+         state
+         | song: song,
+           last_data: data,
+           song_history: updated_song_history,
+           retries: updated_retries
+       }, :hibernate}
     else
       _ ->
         broadcast_song(name, nil)
@@ -224,13 +231,16 @@ defmodule ProgRadioApi.SongServer do
     )
   end
 
-  defp broadcast_song_history_if_needed(name, song_history, _last_song_history) when length(song_history) < @max_song_history do
+  defp broadcast_song_history_if_needed(name, song_history, _last_song_history)
+       when length(song_history) < @max_song_history do
     broadcast_song_history(name, song_history)
   end
 
   defp broadcast_song_history_if_needed(name, song_history, last_song_history) do
     case song_history -- last_song_history do
-      [] -> Logger.debug("Data provider - #{name}: song history updated, no broadcast")
+      [] ->
+        Logger.debug("Data provider - #{name}: song history updated, no broadcast")
+
       _ ->
         broadcast_song_history(name, song_history)
     end
@@ -238,13 +248,20 @@ defmodule ProgRadioApi.SongServer do
 
   @spec broadcast_song_history(String.t(), list) :: none()
   defp broadcast_song_history(name, song_history) do
-    Redix.command!(:redix, ["SET", "history_" <> name, Jason.encode!(song_history), "EX", @history_ttl])
+    Redix.command!(:redix, [
+      "SET",
+      "history_" <> name,
+      Jason.encode!(song_history),
+      "EX",
+      @history_ttl
+    ])
+
     data = %{name: name, history: song_history}
 
     ProgRadioApiWeb.Endpoint.broadcast!(
       name,
       "song_history",
-       Map.put(data, :topic, name)
+      Map.put(data, :topic, name)
     )
   end
 
@@ -333,12 +350,16 @@ defmodule ProgRadioApi.SongServer do
   defp update_song_history(%{} = song, song_history, _new_song) when song == %{}, do: song_history
 
   # this is the current song
-  defp update_song_history(%{} = song, song_history, new_song) when song == new_song, do: song_history
+  defp update_song_history(%{} = song, song_history, new_song) when song == new_song,
+    do: song_history
 
   # same song as the last entry
-  defp update_song_history(%{} = song, song_history, _new_song) when hd(song_history) == song, do: song_history
+  defp update_song_history(%{} = song, song_history, _new_song) when hd(song_history) == song,
+    do: song_history
 
-  defp update_song_history(%{} = song, song_history, new_song) when song != new_song and  length(song_history) < @max_song_history, do: [song | song_history]
+  defp update_song_history(%{} = song, song_history, new_song)
+       when song != new_song and length(song_history) < @max_song_history,
+       do: [song | song_history]
 
   defp update_song_history(%{} = song, song_history, _new_song) do
     song_history

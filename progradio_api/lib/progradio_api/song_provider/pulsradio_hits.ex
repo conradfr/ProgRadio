@@ -11,7 +11,7 @@ defmodule ProgRadioApi.SongProvider.PulsradioHits do
     "pulsradio_lounge" => "lounge",
     "pulsradio_80" => "80s",
     "pulsradio_90" => "90s",
-    "pulsradio_2000" => "2000",
+    "pulsradio_2000" => "2000"
   }
 
   @impl true
