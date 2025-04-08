@@ -89,7 +89,7 @@
         <div class="col-sm-2 col-12">
             <div class="radio-page-side sticky">
                 <div class="text-center mb-3">
-                    <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ asset(self.picture(stream)) }}">
+                    <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ preload(asset(self.picture(stream)), {as: 'image'}) }}">
                 </div>
 
                 {% set prefLanguage = app.request.preferredLanguage|slice(0, 2) %}

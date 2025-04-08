@@ -49,7 +49,7 @@
         <div class="col-md-2 col-12">
             <div class="radio-page-side sticky-top">
                 <div class="text-center mb-4">
-                    <img class="radio-page-logo" alt="{{ radio.name }}" src="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">
+                    <img class="radio-page-logo" alt="{{ radio.name }}" src="{{ preload(asset('img/radio/page/' ~ radio.codename ~ '.png'), {as: 'image'}) }}">
                 </div>
                 {% if sub_radio.radioStream is not null %}
                 <div class="radio-page-streams" v-scope>
