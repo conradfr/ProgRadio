@@ -5,12 +5,9 @@ defmodule ProgRadioApi.SongProvider.Kizrock do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "metal" => "https://www.kaleidoscopiccreation.mobi/kizrock/song_history_metal.json",
-    "rock" => "https://www.kaleidoscopiccreation.mobi/kizrock/song_history_kizrock.json"
+    "kizrock_metal" => "https://www.kaleidoscopiccreation.mobi/kizrock/song_history_metal.json",
+    "kizrock_rock" => "https://www.kaleidoscopiccreation.mobi/kizrock/song_history_kizrock.json"
   }
-
-  @refresh_fallback_s 3
-  @refresh_fallback_ms 3000
 
   @impl true
   def has_custom_refresh(), do: false

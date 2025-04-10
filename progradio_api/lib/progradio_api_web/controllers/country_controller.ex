@@ -4,9 +4,6 @@ defmodule ProgRadioApiWeb.CountryController do
   alias ProgRadioApi.Cldr
   alias ProgRadioApi.Streams
 
-  # one day
-  @cache_ttl :timer.seconds(86400)
-
   def list(conn, params) do
     %{language: default_locale} = Cldr.default_locale()
 
