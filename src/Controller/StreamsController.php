@@ -107,26 +107,6 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
-    // TODO legacy, to be removed once visitors should have the front reloaded.
-    #[Route('/random', name: 'streams_random')]
-    public function random(EntityManagerInterface $em, Request $request): Response
-    {
-        $favorites = $request->attributes->get('favoritesStream', []);
-        $country = $request->query->get('country', null);
-        $language = $request->query->get('language', null);
-
-        $stream = $em->getRepository(Stream::class)->getOneRandomStream($country, $language, $favorites);
-
-        if ($stream === null) {
-            throw new NotFoundHttpException('No stream');
-        }
-
-        return $this->jsonResponse([
-                'stream' => $stream,
-            ]
-        );
-    }
-
     // LEGACY
     #[Route('/countries', name: 'streams_countries')]
     public function countries(RadioBrowser $radioBrowser, Request $request): Response

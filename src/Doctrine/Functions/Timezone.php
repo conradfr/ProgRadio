@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Doctrine\Functions;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Parser;
-use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\TokenType;
 
 class Timezone extends FunctionNode
 {
-    public $dateExpression;
-    public $timezoneExpression;
+    public Node|string $dateExpression;
+    public Node|string $timezoneExpression;
 
     public function __construct()
     {

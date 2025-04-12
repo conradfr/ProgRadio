@@ -82,7 +82,7 @@ class StreamRepository extends ServiceEntityRepository
     protected function getMoreStreamQuery(Uuid $id, int $limit) {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id as code_name, s.name as name, s.img, COALESCE(r.codeName) as img_alt, s.website')
+        $qb->select('s.id as code_name, s.name as name, s.img, COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt, s.website')
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('rs.radio', 'r')
@@ -90,7 +90,9 @@ class StreamRepository extends ServiceEntityRepository
             ->andWhere("RANDOM() < 0.01")
             ->andWhere('s.id != :id')
             ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
-            ->setMaxResults($limit);
+            ->groupBy('s.id, r.codeName, rs.codeName')
+            ->setMaxResults($limit)
+            ->setParameter('null', null);
 
         $qb->setParameter('id', $id);
 
@@ -109,7 +111,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"
-            . 'COALESCE(r.codeName) as img_alt,'
+            . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
             ->from(Stream::class, 's')
@@ -117,7 +119,10 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('rs.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
-            ->setMaxResults($limit);
+            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong')
+            ->setMaxResults($limit)
+            // needed as using NULL directly was not working, neither were hacks like NULLIF(1,1) or omitting the ELSE
+            ->setParameter('null', null);
 
         if ($offset !== null) {
             $qb->setFirstResult($offset);
@@ -205,8 +210,8 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"
-            . 'COALESCE(r.codeName) as img_alt,'
+        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"
+            . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
             ->from(Stream::class, 's')
@@ -215,9 +220,11 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
+            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, rs.currentSong')
             //->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
-            ->setParameter('text', '%' . $text . '%');
+            ->setParameter('text', '%' . $text . '%')
+            ->setParameter('null', null);
 
         if ($offset !== null) {
             $qb->setFirstResult($offset);
@@ -265,7 +272,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
                         //->distinct()
                         ->leftJoin('s.listeningSessions', 'ls')
-                        ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName')
+                        ->groupBy('s.id, rs.url, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName')
                         ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
                     break;
             }
@@ -283,79 +290,13 @@ class StreamRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    // TODO legacy, to be removed once the stream random action is removed
-    public function getOneRandomStream(
-        ?string $countryOrCategory,
-        ?string $language,
-        array $favoritesFromCookies = []
-    ): ?array {
-        $user = $this->security->getUser();
-
-        $total = $this->countStreams($countryOrCategory, $language);
-
-        if ($total === 0) {
-            return $this->getOneRandomStream();
-        }
-
-        $offset = random_int(0, $total - 1);
-
-        $qb = $this->getEntityManager()->createQueryBuilder();
-
-        $qb->select("s.id as code_name, s.name as name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"
-            . 'COALESCE(r.codeName) as img_alt,'
-            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
-            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
-            ->from(Stream::class, 's')
-            ->leftJoin('s.radioStream', 'rs')
-            ->leftJoin('rs.radio', 'r')
-            ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL and s.playingError < 4')
-            ->addOrderBy('s.name', 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults(1);
-
-        if ($countryOrCategory !== null) {
-            if (strtoupper($countryOrCategory) === Stream::FAVORITES) {
-                if ($user !== null) {
-                    $favorites = $user->getFavoriteStreams()->map(
-                        fn($stream) => $stream->getId()
-                    )->toArray();
-                } else {
-                    $favorites = $favoritesFromCookies;
-                }
-
-                $qb->andWhere('s.id IN (:favorites)')
-                    ->setParameter('favorites', $favorites);
-            }
-            elseif (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
-                $qb->innerJoin('s.streamsHistory', 'sh')
-                    ->andWhere('sh.user = :user')
-                    ->setParameter('user', $user);
-            }
-            else {
-                $qb->andWhere('s.countryCode = :country')
-                    ->setParameter('country', strtoupper($countryOrCategory));
-            }
-        }
-
-        if ($language !== null) {
-            $qb->andWhere('s.language = :language')
-                ->setParameter('language', $language);
-        }
-
-        $query = $qb->getQuery();
-        $query->disableResultCache();
-
-        return $query->getOneOrNullResult();
-    }
-
     public function getOneSpecificStream(
         string $id
     ): ?array {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"
-            . 'COALESCE(r.codeName) as img_alt,'
+        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"
+            . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
             ->from(Stream::class, 's')
@@ -364,7 +305,9 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.id = :id')
             ->andWhere('s.enabled = true and s.banned = false')
-            ->setMaxResults(1);
+            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, rs.currentSong')
+            ->setMaxResults(1)
+            ->setParameter('null', null);
 
         $qb->setParameter('id', $id);
 

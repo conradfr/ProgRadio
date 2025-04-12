@@ -213,7 +213,7 @@ class RadioStream
         $this->currentSongRetries = $currentSongRetries;
     }
 
-    public function isOwnLogo(): ?bool
+    public function hasOwnLogo(): ?bool
     {
         return $this->ownLogo;
     }

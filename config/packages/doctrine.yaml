@@ -54,6 +54,7 @@ doctrine:
                 year:           Oro\ORM\Query\AST\Functions\SimpleFunction
                 sign:           Oro\ORM\Query\AST\Functions\Numeric\Sign
                 pow:            Oro\ORM\Query\AST\Functions\Numeric\Pow
+                bool_and:       App\Doctrine\Functions\BoolAnd
             string_functions:
                 md5:            Oro\ORM\Query\AST\Functions\SimpleFunction
                 group_concat:   Oro\ORM\Query\AST\Functions\String\GroupConcat
