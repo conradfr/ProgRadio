@@ -1,4 +1,4 @@
-// Darkly 5.3.3
+// Darkly 5.3.5
 // Bootswatch
 
 
@@ -15,6 +15,10 @@
   &-footer {
     color: $gray-600;
   }
+}
+
+.text-secondary {
+  color: var(--bs-secondary-color) !important;
 }
 
 // Forms

@@ -160,7 +160,8 @@ class StreamRepository extends ServiceEntityRepository
                     ->setParameter('user', $user);
             }
 
-            $qb->addOrderBy('sh.lastListenedAt', 'DESC');
+            $qb->addOrderBy('sh.lastListenedAt', 'DESC')
+               ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong, sh.lastListenedAt');
         }
         else if ($sort !== null) {
             switch ($sort) {
@@ -177,7 +178,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addSelect('MAX(s.lastListeningAt) as last_listen')
                        //->distinct()
                        ->andWhere('s.lastListeningAt IS NOT NULL')
-                       ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName, rs.url')
+                       ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName, rs.url, s.lastListeningAt')
                        ->addOrderBy('MAX(s.lastListeningAt)', 'DESC');
                     break;
             }
@@ -220,7 +221,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
-            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, rs.currentSong')
+            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong')
             //->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
             ->setParameter('text', '%' . $text . '%')
@@ -255,7 +256,8 @@ class StreamRepository extends ServiceEntityRepository
         }
 
         if (strtoupper($countryOrCategory) === Stream::HISTORY && $user !== null) {
-            $qb->addOrderBy('sh.lastListenedAt', 'DESC');
+            $qb->addOrderBy('sh.lastListenedAt', 'DESC')
+               ->addGroupBy('sh.lastListenedAt');
         }
         elseif ($sort !== null) {
             switch ($sort) {
@@ -272,7 +274,6 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
                         //->distinct()
                         ->leftJoin('s.listeningSessions', 'ls')
-                        ->groupBy('s.id, rs.url, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName')
                         ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
                     break;
             }
@@ -305,7 +306,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.id = :id')
             ->andWhere('s.enabled = true and s.banned = false')
-            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, rs.currentSong')
+            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong')
             ->setMaxResults(1)
             ->setParameter('null', null);
 

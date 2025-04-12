@@ -27,10 +27,6 @@
       height: 100%;
       max-height: $player-info-height;
 
-      @include media-breakpoint-down(sm) {
-        max-height: calc($player-info-height + 10px);
-      }
-
       margin: 0;
       margin-block-start: 0;
       margin-block-end: 0;
@@ -45,6 +41,8 @@
       --progradio-anim-infos-height2: #{calc(-2 * $player-info-height)};
 
       @include media-breakpoint-down(sm) {
+        max-height: calc($player-info-height + 10px);
+
         --progradio-anim-infos-height1: #{calc(-1 * $player-info-height - 10px)};
         --progradio-anim-infos-height2: #{calc(-2 * $player-info-height - 20px)};
       }
@@ -59,13 +57,13 @@
         min-height: $player-info-height;
         max-height: $player-info-height;
 
+        overflow-y: hidden;
+
         @include media-breakpoint-down(sm) {
           height: calc($player-info-height + 10px);
           min-height: calc($player-info-height + 10px);
           max-height: calc($player-info-height + 10px);
         }
-
-        overflow-y: hidden;
       }
     }
 
