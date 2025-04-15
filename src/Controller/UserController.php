@@ -13,6 +13,7 @@ use App\Form\UpdatePasswordType;
 use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Meilisearch\Bundle\SearchService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -211,7 +212,13 @@ class UserController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/radios/{id?}', name: 'user_page_streams')]
-    public function submission(Request $request, EntityManagerInterface $em, TranslatorInterface $translator, ?Stream $stream = null): Response
+    public function submission(
+        Request $request,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        SearchService $searchService,
+        ?Stream $stream = null,
+    ): Response
     {
         $edit = true;
 
@@ -249,6 +256,13 @@ class UserController extends AbstractBaseController
                 $em->getRepository(Stream::class)->insertNewStream($stream);
             }
 
+            // update search
+            if ($stream->isIndexable()) {
+                $searchService->index($em, $stream);
+            } else {
+                $searchService->remove($em, $stream);
+            }
+
             $this->addFlash(
                 'success',
                 $edit ? $translator->trans('page.stream.submission.success_edit') : $translator->trans('page.stream.submission.success_new')
@@ -267,12 +281,17 @@ class UserController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/radios_delete/{id}', name: 'user_page_streams_delete')]
-    public function submissionDelete(Request $request, EntityManagerInterface $em, TranslatorInterface $translator, Stream $stream): Response
+    public function submissionDelete(
+       EntityManagerInterface $em,
+       TranslatorInterface $translator,
+       SearchService $searchService,
+       Stream $stream): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $user->removeStream($stream);
+        $searchService->remove($em, $stream);
 
         $em->remove($stream);
         $em->persist($user);
@@ -299,7 +318,11 @@ class UserController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/delete/confirm/{token}', name: 'user_page_delete_confirm')]
-    public function deleteConfirm(string $token, EntityManagerInterface $em): Response
+    public function deleteConfirm(
+        string $token,
+        EntityManagerInterface $em,
+        SearchService $searchService
+    ): Response
     {
         $session = $this->requestStack->getSession();
         if ($token !== $session->get(self::SESSION_DELETE_ATTR)) {
@@ -310,6 +333,11 @@ class UserController extends AbstractBaseController
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+
+        // un-index user streams
+        foreach ($user->getStreams() as $stream) {
+            $searchService->remove($em, $stream);
+        }
 
         $em->remove($user);
         $em->flush();

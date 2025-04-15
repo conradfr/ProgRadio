@@ -26,7 +26,24 @@ class ApiClient
                 return true;
             }
 
-            return $response->toArray()['Organization'];
+            return false;
+        } catch (\Exception $e) {
+            $this->logger->warning('Api client error', ['error' => $e->getMessage()]);
+        }
+
+        return false;
+    }
+
+    public function searchIndex(): bool
+    {
+        try {
+            $response = $this->request('/search/index', 'GET');
+
+            if ($response->getStatusCode() === 200) {
+                return true;
+            }
+
+            return false;
         } catch (\Exception $e) {
             $this->logger->warning('Api client error', ['error' => $e->getMessage()]);
         }

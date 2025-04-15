@@ -42,6 +42,7 @@ defmodule ProgRadioApiWeb.Router do
     post "/search_term", StreamController, :search_term
 
     delete "/admin/cache/streams", AdminController, :empty_cache_stream
+    get "/admin/search/index", AdminController, :search_index
     get "/admin/image/stream/import", AdminController, :import_stream_image
   end
 

@@ -99,6 +99,12 @@ config :progradio_api,
   redis_host: System.get_env("REDIS_HOST") || "127.0.0.1",
   redis_db: "0"
 
+# Configure meilsearch
+config :progradio_api,
+  meilisearch_url: System.get_env("MEILISEARCH_URL") || "http://meilisearch:7700",
+  meilisearch_api_key: System.get_env("MEILISEARCH_API_KEY") || "sz2d5xeGLME2fDW53tGnuJsEX3L2Q9Xz",
+  meilisearch_prefix: System.get_env("MEILISEARCH_PREFIX") || "dev_"
+
 config :hackney, use_default_pool: false
 
 config :progradio_api, ProgRadioApiWeb.Gettext,

@@ -1,0 +1,7 @@
+
+services:
+###> meilisearch/search-bundle ###
+  meilisearch:
+    ports:
+      - "7700"
+###< meilisearch/search-bundle ###

@@ -11,8 +11,8 @@
         <div class="row">
             <div class="col-md-2 admin-listening-side test">
                 <ul class="nav nav-pills flex-column mt-3">
-                    <li class="nav-item"><a {{ _self.active('admin_cache', current_path) }} href="{{ path('admin_cache') }}">{{ 'admin.api.cache.menu'|trans }}</a></li>
-                    {# <li class="nav-item"><a {{ _self.active('admin_search', current_path) }} href="{{ path('admin_search') }}">{{ 'admin.search.menu'|trans }}</a></li> #}
+                    <li class="nav-item mb-1"><a {{ _self.active('admin_api', current_path) }} href="{{ path('admin_api') }}">{{ 'admin.api.cache.menu'|trans }}</a></li>
+                    <li class="nav-item"><a {{ _self.active('admin_search', current_path) }} href="{{ path('admin_search') }}">{{ 'admin.api.search.menu'|trans }}</a></li>
                  </ul>
             </div>
 

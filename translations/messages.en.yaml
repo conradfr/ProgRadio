@@ -341,6 +341,10 @@ admin:
             title: Api - Cache
             menu: Cache
             clear_streams: Empty streams cache
+        search:
+            title: Search
+            menu: Search
+            import: Import
 
     dashboard:
         title: Dashboard

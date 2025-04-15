@@ -20,6 +20,7 @@ use App\Form\SharesType;
 use App\Form\StreamOverloadingType;
 use App\Service\ApiClient;
 use App\Service\DateUtils;
+use Meilisearch\Bundle\SearchService;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -58,10 +59,10 @@ class AdminController extends AbstractBaseController
         ]);
     }
 
-    #[Route('/{_locale}/admin/api/cache', name: 'admin_cache')]
-    public function apiCacheAction(): Response
+    #[Route('/{_locale}/admin/api', name: 'admin_api')]
+    public function apiCache(): Response
     {
-        return $this->render('default/admin/api.html.twig', []);
+        return $this->render('default/admin/admin_api.html.twig', []);
     }
 
     #[Route('/{_locale}/admin/api/cache/streams', name: 'admin_cache_clear')]
@@ -76,12 +77,12 @@ class AdminController extends AbstractBaseController
             );
         } else {
             $this->addFlash(
-                'error',
+                'warning',
                 'An error occurred.'
             );
         }
 
-        return $this->redirectToRoute('admin_cache', [], 301);
+        return $this->redirectToRoute('admin_api', [], 301);
     }
 
     #[Route('/admin/listening/webcount', name: 'admin_listening_webcount')]
@@ -181,7 +182,12 @@ class AdminController extends AbstractBaseController
     }
 
     #[Route('/{_locale}/admin/overloading/{streamId}', name: 'admin_overloading')]
-    public function streamOverloading(string $streamId, EntityManagerInterface $em, Request $request): Response
+    public function streamOverloading(
+        string $streamId,
+        EntityManagerInterface $em,
+        Request $request,
+        SearchService $searchService,
+    ): Response
     {
         $streamOverloading = $em->getRepository(StreamOverloading::class)->find($streamId);
         $stream = $em->getRepository(Stream::class)->find($streamId);
@@ -266,6 +272,13 @@ class AdminController extends AbstractBaseController
                 'success',
                 "Stream overload has been updated."
             );
+
+            // update search
+            if ($stream->isIndexable()) {
+                $searchService->index($em, $stream);
+            } else {
+                $searchService->remove($em, $stream);
+            }
         }
 
         return $this->render('default/admin/stream_overloading.html.twig',
@@ -425,10 +438,10 @@ class AdminController extends AbstractBaseController
             $batchSize = 20;
             $i = 0;
             $q = $em->createQuery('select r from ' . Radio::class .' r');
-            $iterableResult = $q->iterate();
+            $iterableResult = $q->getResult();
             foreach ($iterableResult as $row) {
                 /** @var Radio $radio */
-                $radio = $row[0];
+                $radio = $row;
                 $radio->setShare($data[$radio->getCodeName()]);
                 if (($i % $batchSize) === 0) {
                     $em->flush(); // Executes all updates.
@@ -562,5 +575,25 @@ class AdminController extends AbstractBaseController
         }
 
         return $this->redirectToRoute('admin_overloading', ['streamId' => $stream->getId()], 301);
+    }
+
+    #[Route('/{_locale}/admin/search', name: 'admin_search')]
+    public function search(): Response
+    {
+        return $this->render('default/admin/admin_search.html.twig', []);
+    }
+
+    #[Route('/{_locale}/search/import', name: 'admin_search_import')]
+    public function searchImport(ApiClient $apiClient): Response
+    {
+        $indexed = $apiClient->searchIndex();
+
+        if ($indexed) {
+            $this->addFlash('success', 'Search indexing done.');
+        } else {
+            $this->addFlash('danger', 'Search indexing error.');
+        }
+
+        return $this->redirectToRoute('admin_search', [], 301);
     }
 }

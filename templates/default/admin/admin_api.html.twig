@@ -1,0 +1,21 @@
+{% extends 'default/admin/admin_actions_base.html.twig' %}
+
+{% set active_tab = 'cache' %}
+
+{% block title %}{{ 'admin.api.cache.title'|trans }}{% endblock %}
+
+{% block action_body %}
+    <div class="mb-4">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        <h3 class="mb-4">
+            {{ 'admin.api.cache.title'|trans }}
+        </h3>
+
+        <a class="btn btn-danger" href="{{ path('admin_cache_clear') }}">{{ 'admin.api.cache.clear_streams'|trans }}</a>
+    </div>
+{% endblock %}

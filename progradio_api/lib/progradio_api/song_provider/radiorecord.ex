@@ -78,8 +78,6 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
 
   @impl true
   def get_data(name, _last_data) do
-    IO.puts("----------------------------------------")
-    IO.puts("#{inspect name}")
     channel =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@genre, &1)).()

@@ -12,6 +12,7 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
+  alias ProgRadioApi.Search
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamCheck, StreamSong}
 
@@ -27,8 +28,8 @@ defmodule ProgRadioApi.Streams do
   @source_radio_browser "radio-browser"
   @source_progradio "progradio"
 
-  # 1h
-  @cache_ttl_stream 3_600_000
+  # 5mn
+  @cache_ttl_stream 300_000
   # 15s
   @cache_ttl_stream_last 15_000
   # 1d
@@ -547,6 +548,7 @@ defmodule ProgRadioApi.Streams do
       timeout: :infinity
     )
 
+    Search.index_all()
     :ok
   end
 

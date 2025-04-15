@@ -54,36 +54,40 @@ defmodule ProgRadioApi.SongProvider.Mradio do
   def get_data(_name, _last_data) do
     now_unix = SongProvider.now_unix()
 
-    @url
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> XmlToMap.naive_map()
-    |> Map.get("prog", %{})
-    |> Map.get("morceau", [])
-    |> Enum.find(nil, fn e ->
-      try do
-        time_start =
-          e
-          |> Map.get("#content", %{})
-          |> Map.get("date_prog")
-          |> NaiveDateTime.from_iso8601!()
-          |> DateTime.from_naive!("Europe/Paris")
-          |> DateTime.to_unix()
+    try do
+      @url
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> XmlToMap.naive_map()
+      |> Map.get("prog", %{})
+      |> Map.get("morceau", [])
+      |> Enum.find(nil, fn e ->
+        try do
+          time_start =
+            e
+            |> Map.get("#content", %{})
+            |> Map.get("date_prog")
+            |> NaiveDateTime.from_iso8601!()
+            |> DateTime.from_naive!("Europe/Paris")
+            |> DateTime.to_unix()
 
-        #        {duration, _} =
-        #          e
-        #          |> Map.get("#content", %{})
-        #          |> Map.get("duration")
-        #          |> Time.from_iso8601!()
-        #          |> Time.to_seconds_after_midnight()
-        #
-        #        time_end = time_start + duration
-        time_end = time_start + @max_length_seconds
-        now_unix >= time_start and now_unix <= time_end
-      rescue
-        _ -> nil
-      end
-    end)
+          #        {duration, _} =
+          #          e
+          #          |> Map.get("#content", %{})
+          #          |> Map.get("duration")
+          #          |> Time.from_iso8601!()
+          #          |> Time.to_seconds_after_midnight()
+          #
+          #        time_end = time_start + duration
+          time_end = time_start + @max_length_seconds
+          now_unix >= time_start and now_unix <= time_end
+        rescue
+          _ -> nil
+        end
+      end)
+    rescue
+      _ -> nil
+    end
   end
 
   @impl true

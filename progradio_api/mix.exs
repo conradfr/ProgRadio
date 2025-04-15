@@ -82,7 +82,8 @@ defmodule ProgRadioApi.MixProject do
       {:phoenix_live_dashboard, "~> 0.8"},
       {:ecto_psql_extras, "~> 0.8"},
       {:hls, "~> 0.1.0"},
-      {:ex2ms, "~> 1.0"}
+      {:ex2ms, "~> 1.0"},
+      {:meilisearch_ex, "~> 1.2.1"}
     ]
   end
 
