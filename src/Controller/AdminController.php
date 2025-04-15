@@ -425,10 +425,10 @@ class AdminController extends AbstractBaseController
             $batchSize = 20;
             $i = 0;
             $q = $em->createQuery('select r from ' . Radio::class .' r');
-            $iterableResult = $q->iterate();
+            $iterableResult = $q->getResult();
             foreach ($iterableResult as $row) {
                 /** @var Radio $radio */
-                $radio = $row[0];
+                $radio = $row;
                 $radio->setShare($data[$radio->getCodeName()]);
                 if (($i % $batchSize) === 0) {
                     $em->flush(); // Executes all updates.
