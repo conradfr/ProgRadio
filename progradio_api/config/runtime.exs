@@ -128,6 +128,11 @@ if config_env() == :prod do
     redis_password: System.get_env("REDIS_PASSWORD")
 
   config :progradio_api,
+    meilisearch_url: System.get_env("MEILISEARCH_URL"),
+    meilisearch_api_key: System.get_env("MEILISEARCH_API_KEY"),
+    meilisearch_prefix: System.get_env("MEILISEARCH_PREFIX")
+
+  config :progradio_api,
     image_path: System.get_env("MEDIA_PATH"),
     banned_ips: (System.get_env("BAN_IP") || "") |> String.split(",")
 end
