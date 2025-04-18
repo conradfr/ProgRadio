@@ -27,8 +27,8 @@ defmodule ProgRadioApi.Search do
 
     # should return 400 but used as a security
     Meilisearch.Index.delete(client, new_index)
-    Meilisearch.Index.create(client, index)
-    Meilisearch.Index.create(client, new_index)
+    Meilisearch.Index.create(client, %{uid: index, primaryKey: "id"})
+    Meilisearch.Index.create(client, %{uid: new_index, primaryKey: "id"})
     Meilisearch.Document.create_or_replace(client, new_index, streams)
     Meilisearch.Index.swap(client, [%{indexes: [ new_index, index]}])
     Meilisearch.Index.delete(client, new_index)
