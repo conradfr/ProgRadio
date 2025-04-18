@@ -579,7 +579,8 @@ class Stream implements NormalizableInterface
     {
         if (\Meilisearch\Bundle\Searchable::NORMALIZATION_FORMAT === $format) {
             return [
-                'id' => $this->getId(),
+                'id' => $this->getId()->toString(),
+                'objectID' => $this->getId()->toString(),
                 'name' => $this->getName(),
                 'tags' => $this->getTags(),
                 'score' => $this->getScore(),
@@ -589,6 +590,7 @@ class Stream implements NormalizableInterface
             ];
         }
 
+        dd('oh no');
         return [];
     }
 }

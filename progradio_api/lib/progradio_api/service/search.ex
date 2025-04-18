@@ -12,6 +12,7 @@ defmodule ProgRadioApi.Search do
       select:
         %{
           id: s.id,
+          objectID: s.id,
           name: s.name,
           tags: s.tags,
           language: s.language,
@@ -27,8 +28,9 @@ defmodule ProgRadioApi.Search do
 
     # should return 400 but used as a security
     Meilisearch.Index.delete(client, new_index)
-    Meilisearch.Index.create(client, %{uid: index, primaryKey: "id"})
-    Meilisearch.Index.create(client, %{uid: new_index, primaryKey: "id"})
+    # we use objectID because that seems hardcoded in the PHP lib
+    Meilisearch.Index.create(client, %{uid: index, primaryKey: "objectID"})
+    Meilisearch.Index.create(client, %{uid: new_index, primaryKey: "objectID"})
     Meilisearch.Document.create_or_replace(client, new_index, streams)
     Meilisearch.Index.swap(client, [%{indexes: [ new_index, index]}])
     Meilisearch.Index.delete(client, new_index)
@@ -38,6 +40,7 @@ defmodule ProgRadioApi.Search do
     data =
       %{
         id: stream.id,
+        objectID: stream.id,
         name: stream.name,
         tags: stream.tags,
         language: stream.language,

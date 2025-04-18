@@ -81,7 +81,6 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
     channel =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@genre, &1)).()
-      |> IO.inspect()
 
     try do
       @url
@@ -90,7 +89,6 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
       |> Jason.decode!()
       |> Map.get("result")
       |> Enum.find(fn e -> e["id"] == channel end)
-      |> IO.inspect()
     rescue
       _ ->
         Logger.error("Data provider - #{name} (radiorecord): data error rescue")
