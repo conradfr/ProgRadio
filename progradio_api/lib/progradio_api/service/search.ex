@@ -31,6 +31,14 @@ defmodule ProgRadioApi.Search do
     Meilisearch.Index.create(client, %{uid: index, primaryKey: "objectID"})
     Meilisearch.Index.create(client, %{uid: new_index, primaryKey: "objectID"})
 
+    # new index config
+
+    Meilisearch.Settings.SearchableAttributes.update(client, new_index, [
+      "name",
+      "tags",
+      "language"
+    ])
+
     Meilisearch.Settings.SortableAttributes.update(client, new_index, [
       "name",
       "score",
@@ -38,6 +46,24 @@ defmodule ProgRadioApi.Search do
     ])
 
     Meilisearch.Settings.FilterableAttributes.update(client, new_index, ["country_code"])
+
+    Meilisearch.Settings.RankingRules.update(client, new_index, [
+      "words",
+      "typo",
+      "proximity",
+      "attribute",
+      "sort",
+      "exactness"
+    ])
+
+    Meilisearch.Settings.TypeTolerance.update(client, new_index, %{
+      enabled: true,
+      minWordSizeForTypos: %{
+        oneTypo: 3,
+        twoTypos: 7
+      }
+    })
+
     Meilisearch.Document.create_or_replace(client, new_index, streams)
     Meilisearch.Index.swap(client, [%{indexes: [new_index, index]}])
     Meilisearch.Index.delete(client, new_index)

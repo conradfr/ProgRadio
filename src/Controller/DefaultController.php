@@ -461,21 +461,21 @@ class DefaultController extends AbstractBaseController
             throw new NotFoundHttpException('Radio not found');
         }
 
+        $slugger = new AsciiSlugger();
+
         // redirect non-fr stream seo pages to new host
         if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
             $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
                 'shortId' => $shortener->reduce($stream->getId()->toRfc4122()),
-                'codename' => $codename
+                'codename' => $slugger->slug($codename)
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
             return $this->redirect($redirectUrl, 301);
         }
 
         if ($stream->getRedirectToStream() !== null) {
-            $slugger = new AsciiSlugger();
-
             $shortId = $shortener->reduce($stream->getRedirectToStream()->getId()->toRfc4122());
 
             $redirectUrl = $router->generate('streams_one_short', [
@@ -535,6 +535,7 @@ class DefaultController extends AbstractBaseController
     #[Cache(maxage: 60, public: true, mustRevalidate: true)]
     public function one(Stream $stream, string $codename, RouterInterface $router, Host $host, Request $request): Response
     {
+        $slugger = new AsciiSlugger();
         $shortener = Shortener::make(
             Dictionary::createUnmistakable() // or pass your own characters set
         );
@@ -545,13 +546,11 @@ class DefaultController extends AbstractBaseController
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
                 'shortId' => $shortener->reduce($stream->getId()->toRfc4122()),
-                'codename' => $codename
+                'codename' => $slugger->slug($codename)
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
             return $this->redirect($redirectUrl, 301);
         }
-
-        $slugger = new AsciiSlugger();
 
         $name = $stream->getRedirectToStream() !== null ? $stream->getRedirectToStream()->getName() : $stream->getName();
         $shortId = $stream->getRedirectToStream() !== null ? $stream->getRedirectToStream()->getId() : $stream->getId();

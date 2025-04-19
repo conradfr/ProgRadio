@@ -8,13 +8,13 @@ defmodule ProgRadioApiWeb.StreamController do
   # ---------- GET ----------
 
   defparams :get do
-    optional :radio, :string, format: :uuid
-    optional :text, :string
-    optional :country, :string, rules: [trim: true, min: 2, max: 2]
-#    optional :sort, :enum, values: ["name", "popularity", "last", "random"]
-    optional :sort, :string
-    optional :offset, :integer
-    optional :limit, :integer
+    optional(:radio, :string, format: :uuid)
+    optional(:text, :string)
+    optional(:country, :string, rules: [trim: true, min: 2, max: 2])
+    #    optional :sort, :enum, values: ["name", "popularity", "last", "random"]
+    optional(:sort, :string)
+    optional(:offset, :integer)
+    optional(:limit, :integer)
   end
 
   def index(%{params: conn_params} = conn, _params)
