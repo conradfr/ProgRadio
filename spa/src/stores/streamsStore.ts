@@ -168,8 +168,7 @@ export const useStreamsStore = defineStore('streams', {
             this.selectedSortBy,
             offset);
 
-          if (data !== null && data.timestamp !== undefined
-            && data?.timestamp > this.searchLastTimestamp) {
+          if (data !== null && data.timestamp && data.timestamp > this.searchLastTimestamp) {
             this.searchLastTimestamp = data.timestamp;
             this.updateStreamRadios(data);
           }

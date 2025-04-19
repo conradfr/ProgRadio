@@ -1,16 +1,25 @@
 defmodule ProgRadioApiWeb.StreamController do
   import ProgRadioApiWeb.Utils.Controller, only: [send_error: 1]
   use ProgRadioApiWeb, :controller
+  use Goal
 
   alias ProgRadioApi.Streams
-  alias ProgRadioApiWeb.ApiParams.Streams, as: StreamsApiParams
 
   # ---------- GET ----------
 
+  defparams :get do
+    optional :radio, :string, format: :uuid
+    optional :text, :string
+    optional :country, :string, rules: [trim: true, min: 2, max: 2]
+#    optional :sort, :enum, values: ["name", "popularity", "last", "random"]
+    optional :sort, :string
+    optional :offset, :integer
+    optional :limit, :integer
+  end
+
   def index(%{params: conn_params} = conn, _params)
       when is_map_key(conn_params, "radio") do
-    with changeset <- StreamsApiParams.changeset(%StreamsApiParams{}, conn_params),
-         {:ok, api_params} <- Ecto.Changeset.apply_action(changeset, :insert) do
+    with {:ok, api_params} <- validate(:get, conn_params) do
       streams =
         api_params
         |> Map.get(:radio)
@@ -23,15 +32,11 @@ defmodule ProgRadioApiWeb.StreamController do
   end
 
   def index(%{params: conn_params} = conn, _params) do
-    with changeset <- StreamsApiParams.changeset(%StreamsApiParams{}, conn_params),
-         {:ok, api_params} <- Ecto.Changeset.apply_action(changeset, :insert) do
-      total = Streams.count(api_params)
-
-      streams =
-        unless total == 0 do
-          Streams.get(api_params)
-        else
-          []
+    with {:ok, api_params} <- validate(:get, conn_params) do
+      [streams, total] =
+        case Streams.get(api_params) do
+          [results, count] -> [results, count]
+          results -> [results, Streams.count(api_params)]
         end
 
       render(conn, "index.json",

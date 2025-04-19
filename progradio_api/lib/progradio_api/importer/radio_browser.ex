@@ -5,6 +5,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Streams
+  alias ProgRadioApi.Search
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Importer.StreamsImporter.StreamMatcher
   alias ProgRadioApi.Importer.StreamsImporter.Transformers.Streams, as: StreamTransformers
@@ -33,6 +34,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     #    find_redirect_for_disabled_streams()
     StreamMatcher.match()
     #    consolidate_stats()
+    Search.index_all()
     :ok
   end
 

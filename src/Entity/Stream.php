@@ -13,6 +13,8 @@ use App\Entity\StreamOverloading;
 use App\Entity\RadioStream;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -23,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(name: 'stream_tags_idx', columns: ['tags'])]
 #[ORM\Index(name: 'stream_playing_error_index', columns: ['playing_error'])]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamRepository')]
-class Stream
+class Stream implements NormalizableInterface
 {
     final public const string FAVORITES = 'FAVORITES';
     final public const string HISTORY = 'HISTORY';
@@ -571,5 +573,24 @@ class Stream
     public function setStreamsHistory(ArrayCollection|Collection $streamsHistory): void
     {
         $this->streamsHistory = $streamsHistory;
+    }
+
+    public function normalize(NormalizerInterface $serializer, ?string $format = null, array $context = []): array
+    {
+        if (\Meilisearch\Bundle\Searchable::NORMALIZATION_FORMAT === $format) {
+            return [
+                'id' => $this->getId()->toString(),
+                'objectID' => $this->getId()->toString(),
+                'name' => $this->getName(),
+                'tags' => $this->getTags(),
+                'score' => $this->getScore(),
+                'country_code' => $this->getCountryCode(),
+                'language' => $this->getLanguage(),
+                'clicks_last_24h' => $this->getClicksLast24h(),
+            ];
+        }
+
+        dd('oh no');
+        return [];
     }
 }

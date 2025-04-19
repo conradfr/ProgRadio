@@ -1,0 +1,23 @@
+{% extends 'default/admin/admin_actions_base.html.twig' %}
+
+{% set active_tab = 'cache' %}
+
+{% block title %}{{ 'admin.api.cache.title'|trans }}{% endblock %}
+
+{% block action_body %}
+    <div class="mb-4">
+        <h3 class="mb-4">
+            {{ 'admin.api.search.title'|trans }}
+        </h3>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="mb-2">
+            <a class="btn btn-warning" href="{{ path('admin_search_import') }}">{{ 'admin.api.search.import'|trans }}</a>
+        </div>
+    </div>
+{% endblock %}

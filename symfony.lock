@@ -135,6 +135,18 @@
             "config/routes/liip_imagine.yaml"
         ]
     },
+    "meilisearch/search-bundle": {
+        "version": "0.15",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "0.10",
+            "ref": "f0730f97441a5391832fb176305f69abe86b70a3"
+        },
+        "files": [
+            "config/packages/meilisearch.yaml"
+        ]
+    },
     "monolog/monolog": {
         "version": "2.3.5"
     },
@@ -152,6 +164,18 @@
             "version": "6.5",
             "ref": "3a6673f248f8fc1dd364dadfef4c5b381d1efab6"
         }
+    },
+    "php-http/discovery": {
+        "version": "1.20",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.18",
+            "ref": "f45b5dd173a27873ab19f5e3180b2f661c21de02"
+        },
+        "files": [
+            "config/packages/http_discovery.yaml"
+        ]
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"

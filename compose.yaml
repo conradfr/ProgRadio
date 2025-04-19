@@ -119,6 +119,7 @@ services:
     environment:
       # You should definitely change the master key in production
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-sz2d5xeGLME2fDW53tGnuJsEX3L2Q9Xz}
+      MEILI_LOG_LEVEL: 'DEBUG'
     volumes:
       - meilisearch_data:/meili_data
 ###< meilisearch/search-bundle ###

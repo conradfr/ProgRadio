@@ -4,7 +4,7 @@ defmodule ProgRadioApiWeb.AdminController do
   import Canada, only: [can?: 2]
   import Ex2ms
 
-  alias ProgRadioApi.Cache
+  alias ProgRadioApi.{Cache, Search}
 
   def empty_cache_stream(conn, _params) do
     with api_key when api_key != nil <- Map.get(conn.private, :api_key),
@@ -24,6 +24,16 @@ defmodule ProgRadioApiWeb.AdminController do
       Cache.delete_all(spec_count)
 
       render(conn, "clear.json")
+    else
+      _ -> send_error(conn)
+    end
+  end
+
+  def search_index(conn, _params) do
+    with api_key when api_key != nil <- Map.get(conn.private, :api_key),
+         true <- can?(api_key, manage(:admin)) do
+      Search.index_all()
+      render(conn, "search_index.json")
     else
       _ -> send_error(conn)
     end

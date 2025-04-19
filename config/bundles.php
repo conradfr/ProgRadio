@@ -20,4 +20,5 @@ return [
     Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
     Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
     Pentatrion\ViteBundle\PentatrionViteBundle::class => ['all' => true],
+    Meilisearch\Bundle\MeilisearchBundle::class => ['all' => true],
 ];

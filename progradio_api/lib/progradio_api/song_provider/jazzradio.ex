@@ -41,29 +41,33 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
       |> SongProvider.get_stream_code_name_from_channel()
       |> (&Map.get(@stream_ids, &1)).()
 
-    "https://www.jazzradio.fr/winradio/prog#{id}.xml?=#{now_unix}"
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> XmlToMap.naive_map()
-    |> Map.get("prog", %{})
-    |> Map.get("morceau", [])
-    |> Enum.find(nil, fn e ->
-      try do
-        time_start =
-          e
-          |> Map.get("#content", %{})
-          |> Map.get("date_prog")
-          |> NaiveDateTime.from_iso8601!()
-          |> DateTime.from_naive!("Europe/Paris")
-          |> DateTime.to_unix()
+    try do
+      "https://www.jazzradio.fr/winradio/prog#{id}.xml?=#{now_unix}"
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> XmlToMap.naive_map()
+      |> Map.get("prog", %{})
+      |> Map.get("morceau", [])
+      |> Enum.find(nil, fn e ->
+        try do
+          time_start =
+            e
+            |> Map.get("#content", %{})
+            |> Map.get("date_prog")
+            |> NaiveDateTime.from_iso8601!()
+            |> DateTime.from_naive!("Europe/Paris")
+            |> DateTime.to_unix()
 
-        # we don't know the duration ...
-        time_end = time_start + @max_duration_minutes * 60
-        now_unix >= time_start and now_unix <= time_end
-      rescue
-        _ -> nil
-      end
-    end)
+          # we don't know the duration ...
+          time_end = time_start + @max_duration_minutes * 60
+          now_unix >= time_start and now_unix <= time_end
+        rescue
+          _ -> nil
+        end
+      end)
+    rescue
+      _ -> nil
+    end
   end
 
   @impl true
