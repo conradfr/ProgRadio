@@ -143,7 +143,7 @@ defmodule ProgRadioApiWeb.SongChannel do
         where:
           (s.stream_song_code_name == ^code_name or
              (ss.code_name == ^song_id and s.stream_url == ^song_code_name) or
-              (ss.code_name == ^song_id and s.stream_song_code_name == ^song_code_name)) and
+             (ss.code_name == ^song_id and s.stream_song_code_name == ^song_code_name)) and
             ss.enabled == true,
         order_by: [desc: s.clicks_last_24h],
         limit: 1

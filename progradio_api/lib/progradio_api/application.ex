@@ -31,7 +31,11 @@ defmodule ProgRadioApi.Application do
       ProgRadioApi.ListenersCounter,
       # Start the Finch HTTP client for sending emails
       {Finch, name: ProgRadioApi.Finch},
-      {Meilisearch, name: :search, endpoint: Application.get_env(:progradio_api, :meilisearch_url), key: Application.get_env(:progradio_api, :meilisearch_api_key), finch: ProgRadioApi.Finch},
+      {Meilisearch,
+       name: :search,
+       endpoint: Application.get_env(:progradio_api, :meilisearch_url),
+       key: Application.get_env(:progradio_api, :meilisearch_api_key),
+       finch: ProgRadioApi.Finch},
       # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
       # {ProgRadioApi.Worker, arg}
       # Start to serve requests, typically the last entry

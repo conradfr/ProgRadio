@@ -84,11 +84,17 @@ defmodule ProgRadioApi.Streams do
       # as there is no random function we do first pass to get the nb of hits
       # and then a second one with a random pick
       {:ok, %Meilisearch.Search{} = results} = Search.search(%{text: text, sort: "popularity"})
+
       case results.estimatedTotalHits do
-        0 -> []
+        0 ->
+          []
+
         total ->
           pick = :rand.uniform(total - 1)
-          {:ok, %Meilisearch.Search{} = random_results} = Search.search(%{text: text, sort: "popularity", offset: pick, limit: 1})
+
+          {:ok, %Meilisearch.Search{} = random_results} =
+            Search.search(%{text: text, sort: "popularity", offset: pick, limit: 1})
+
           stream =
             random_results.hits
             |> List.first()
@@ -114,14 +120,15 @@ defmodule ProgRadioApi.Streams do
   def get(%{:sort => "last"} = params), do: build_query(params)
 
   # when there is a search text and supported sort we use meilisearch
-#  @decorate cacheable(
-#              cache: Cache,
-#              key: {@cache_prefix_stream, params},
-#              opts: [ttl: @cache_ttl_stream]
-#            )
+  #  @decorate cacheable(
+  #              cache: Cache,
+  #              key: {@cache_prefix_stream, params},
+  #              opts: [ttl: @cache_ttl_stream]
+  #            )
   def get(%{:text => text} = params) when is_binary(text) do
     try do
-      {:ok, %Meilisearch.Search{} = results} = Search.search(Map.put_new(params, :limit, @default_limit))
+      {:ok, %Meilisearch.Search{} = results} =
+        Search.search(Map.put_new(params, :limit, @default_limit))
 
       ids =
         results.hits
@@ -345,7 +352,6 @@ defmodule ProgRadioApi.Streams do
             s.stream_song_code_name,
             ss.code_name,
             s.stream_song_code_name,
-
             rs.code_name
           )
       }

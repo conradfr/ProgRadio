@@ -40,7 +40,7 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
     "radiobob_festival" => 105,
     "radiobob_gothic" => 235,
     "radiobob_rockabilly" => 104,
-    "radiobob_christmas" => 76,
+    "radiobob_christmas" => 76
   }
 
   @impl true
@@ -49,7 +49,8 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
   @impl true
   def get_refresh(_name, data, default_refresh) do
     case data do
-      nil -> default_refresh
+      nil ->
+        default_refresh
 
       _ ->
         try do
@@ -110,9 +111,16 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
 
       object ->
         case Map.get(object, "song", %{}) |> Map.get("entry", []) |> List.first() do
-          nil -> %{}
+          nil ->
+            %{}
+
           song_data ->
-            artist = Map.get(song_data, "artist", %{}) |> Map.get("entry", []) |> List.first(%{}) |> Map.get("name")
+            artist =
+              Map.get(song_data, "artist", %{})
+              |> Map.get("entry", [])
+              |> List.first(%{})
+              |> Map.get("name")
+
             picture = Map.get(song_data, "cover_art_url_s")
             title = Map.get(song_data, "title")
 

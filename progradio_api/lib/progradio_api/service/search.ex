@@ -5,12 +5,11 @@ defmodule ProgRadioApi.Search do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream
 
-  def index_all()  do
+  def index_all() do
     query =
       from s in Stream,
-      where: is_nil(s.redirect_to) == true and s.enabled == true and s.banned == false,
-      select:
-        %{
+        where: is_nil(s.redirect_to) == true and s.enabled == true and s.banned == false,
+        select: %{
           id: s.id,
           objectID: s.id,
           name: s.name,
@@ -19,7 +18,7 @@ defmodule ProgRadioApi.Search do
           country_code: s.country_code,
           clicks_last_24h: s.clicks_last_24h,
           score: s.score
-      }
+        }
 
     streams = Repo.all(query)
     client = Meilisearch.client(:search)
@@ -31,10 +30,16 @@ defmodule ProgRadioApi.Search do
     # we use objectID because that seems hardcoded in the PHP lib
     Meilisearch.Index.create(client, %{uid: index, primaryKey: "objectID"})
     Meilisearch.Index.create(client, %{uid: new_index, primaryKey: "objectID"})
-    Meilisearch.Settings.SortableAttributes.update(client, new_index, ["name", "score", "clicks_last_24h"])
+
+    Meilisearch.Settings.SortableAttributes.update(client, new_index, [
+      "name",
+      "score",
+      "clicks_last_24h"
+    ])
+
     Meilisearch.Settings.FilterableAttributes.update(client, new_index, ["country_code"])
     Meilisearch.Document.create_or_replace(client, new_index, streams)
-    Meilisearch.Index.swap(client, [%{indexes: [ new_index, index]}])
+    Meilisearch.Index.swap(client, [%{indexes: [new_index, index]}])
     Meilisearch.Index.delete(client, new_index)
   end
 
@@ -63,24 +68,29 @@ defmodule ProgRadioApi.Search do
   end
 
   def search(%{:text => text} = params) when is_binary(text) do
-    q_params = %{
-      q: text,
-      attributesToRetrieve: ["id"]
-    }
-    |> add_offset(params)
-    |> add_limit(params)
-    |> add_sort(params)
-    |> add_country(params)
+    q_params =
+      %{
+        q: text,
+        attributesToRetrieve: ["id"]
+      }
+      |> add_offset(params)
+      |> add_limit(params)
+      |> add_sort(params)
+      |> add_country(params)
 
     :search
     |> Meilisearch.client()
     |> Meilisearch.Search.search(get_index_name(), q_params)
   end
 
-  defp add_offset(params, %{:offset => offset}) when is_integer(offset), do: Map.put(params, :offset, offset)
+  defp add_offset(params, %{:offset => offset}) when is_integer(offset),
+    do: Map.put(params, :offset, offset)
+
   defp add_offset(params, _), do: params
 
-  defp add_limit(params, %{:limit => limit}) when is_integer(limit), do: Map.put(params, :limit, limit)
+  defp add_limit(params, %{:limit => limit}) when is_integer(limit),
+    do: Map.put(params, :limit, limit)
+
   defp add_limit(params, _), do: params
 
   defp add_country(params, %{:country => country_code}) when is_binary(country_code) do
