@@ -160,8 +160,15 @@ class StreamRepository extends ServiceEntityRepository
                     ->setParameter('user', $user);
             }
 
-            $qb->addOrderBy('sh.lastListenedAt', 'DESC')
-               ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong, sh.lastListenedAt');
+            $qb->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong, sh.lastListenedAt');
+
+            switch ($sort) {
+                case 'random':
+                    $qb->addOrderBy('RANDOM()');
+                    break;
+                default:
+                    $qb->addOrderBy('sh.lastListenedAt', 'DESC');
+            }
         }
         else if ($sort !== null) {
             switch ($sort) {
@@ -257,8 +264,15 @@ class StreamRepository extends ServiceEntityRepository
 
         if ((strtoupper($countryOrCategory) === Stream::HISTORY || strtoupper($countryOrCategory) === Stream::USER_LISTENED)
             && $user !== null) {
-            $qb->addOrderBy('sh.lastListenedAt', 'DESC')
-               ->addGroupBy('sh.lastListenedAt');
+            $qb->addGroupBy('sh.lastListenedAt');
+
+            switch ($sort) {
+                case 'random':
+                    $qb->addOrderBy('RANDOM()');
+                    break;
+                default:
+                    $qb->addOrderBy('sh.lastListenedAt', 'DESC');
+            }
         }
         elseif ($sort !== null) {
             switch ($sort) {

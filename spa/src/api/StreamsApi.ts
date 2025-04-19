@@ -4,6 +4,7 @@ import {
   STREAMING_CATEGORY_HISTORY,
   STREAMING_CATEGORY_LAST,
   STREAMING_SORT_USER_LAST,
+  STREAMING_SORT_RANDOM,
   PROGRADIO_AGENT,
   RADIOADDICT_AGENT
 } from '@/config/config';
@@ -37,8 +38,8 @@ const getStreams = async (
     }
   }
 
-  if (sort && countryOrUuid !== STREAMING_CATEGORY_LAST
-    && countryOrUuid !== STREAMING_CATEGORY_HISTORY) {
+  if (sort && ((countryOrUuid !== STREAMING_CATEGORY_LAST
+    && countryOrUuid !== STREAMING_CATEGORY_HISTORY) || sort ===STREAMING_SORT_RANDOM)) {
     queryParamsList.push(`sort=${sort}`);
   } else if (countryOrUuid === STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);
@@ -86,7 +87,7 @@ const searchStreams = async (
     queryParamsList.push(`country=${country}`);
   }
 
-  if (sort && country !== STREAMING_CATEGORY_LAST) {
+  if (sort && ((country !== STREAMING_CATEGORY_LAST && country !== STREAMING_CATEGORY_HISTORY) || sort === STREAMING_SORT_RANDOM)) {
     queryParamsList.push(`sort=${sort}`);
   } else if (country === STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);

@@ -102,6 +102,7 @@ export const STREAMING_CATEGORY_HISTORY = 'HISTORY';
 export const STREAMING_CATEGORY_LAST = 'LAST';
 
 export const STREAMING_SORT_USER_LAST = 'user_last';
+export const STREAMING_SORT_RANDOM = 'random';
 export const STREAMING_DEFAULT_SORT = 'popularity';
 
 export const STREAMING_SEARCH_DELAY_BEFORE_SEND = 2500;
