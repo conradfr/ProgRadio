@@ -64,11 +64,11 @@ class DateUtils
     }
 
     // Used to  get a consistent format from the elixir api
-    public static function getMicroTime()
+    public static function getMicroTime(): int
     {
         $microtime = microtime();
         $exploded = explode(' ', $microtime);
 
-        return (int) ($exploded[1] . ((int) round((int) $exploded[0] * 1000000)));
+        return (int) ($exploded[1] . ((int) round(floatval($exploded[0]) * 1000000)));
     }
 }

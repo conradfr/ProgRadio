@@ -77,6 +77,32 @@ defmodule ProgRadioApi.Streams do
     Repo.one(query)
   end
 
+  # special case : search + random button
+  # as we need to use meilisearch but it has no random pick
+  def get(%{:sort => "random", :text => text, :limit => 1} = params) when is_binary(text) do
+    try do
+      # as there is no random function we do first pass to get the nb of hits
+      # and then a second one with a random pick
+      {:ok, %Meilisearch.Search{} = results} = Search.search(%{text: text, sort: "popularity"})
+      case results.estimatedTotalHits do
+        0 -> []
+        total ->
+          pick = :rand.uniform(total - 1)
+          {:ok, %Meilisearch.Search{} = random_results} = Search.search(%{text: text, sort: "popularity", offset: pick, limit: 1})
+          stream =
+            random_results.hits
+            |> List.first()
+            |> Map.get("id")
+            |> get_one()
+            |> List.wrap()
+
+          [stream, total]
+      end
+    rescue
+      _ -> build_query(params)
+    end
+  end
+
   # avoid caching random sort
   def get(%{:sort => "random"} = params), do: build_query(params)
 
@@ -86,6 +112,32 @@ defmodule ProgRadioApi.Streams do
               opts: [ttl: @cache_ttl_stream_last]
             )
   def get(%{:sort => "last"} = params), do: build_query(params)
+
+  # when there is a search text and supported sort we use meilisearch
+#  @decorate cacheable(
+#              cache: Cache,
+#              key: {@cache_prefix_stream, params},
+#              opts: [ttl: @cache_ttl_stream]
+#            )
+  def get(%{:text => text} = params) when is_binary(text) do
+    try do
+      {:ok, %Meilisearch.Search{} = results} = Search.search(Map.put_new(params, :limit, @default_limit))
+
+      ids =
+        results.hits
+        |> Enum.map(fn e -> e["id"] end)
+
+      streams =
+        base_query()
+        |> add_ids(ids)
+        |> add_sort(params)
+        |> Repo.all()
+
+      [streams, results.estimatedTotalHits]
+    rescue
+      _ -> build_query(params)
+    end
+  end
 
   @decorate cacheable(
               cache: Cache,
@@ -454,6 +506,15 @@ defmodule ProgRadioApi.Streams do
   end
 
   defp add_text(query, _) do
+    query
+  end
+
+  defp add_ids(query, ids) when is_list(ids) do
+    query
+    |> where([s], s.id in ^ids)
+  end
+
+  defp add_ids(query, _) do
     query
   end
 

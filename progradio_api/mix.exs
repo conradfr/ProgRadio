@@ -83,7 +83,8 @@ defmodule ProgRadioApi.MixProject do
       {:ecto_psql_extras, "~> 0.8"},
       {:hls, "~> 0.1.0"},
       {:ex2ms, "~> 1.0"},
-      {:meilisearch_ex, "~> 1.2.1"}
+      {:meilisearch_ex, "~> 1.2.1"},
+      {:goal, "~> 1.2"}
     ]
   end
 

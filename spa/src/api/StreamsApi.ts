@@ -53,6 +53,7 @@ const getStreams = async (
   }
 
   let baseUrl = '/streams/list';
+  // logged user is handled by the php side for now
   if (countryOrUuid !== STREAMING_CATEGORY_FAVORITES
     && countryOrUuid !== STREAMING_CATEGORY_HISTORY
     && sort !== STREAMING_SORT_USER_LAST) {
@@ -100,7 +101,9 @@ const searchStreams = async (
   }
 
   let baseUrl = '/streams/search';
-  if (country !== STREAMING_CATEGORY_FAVORITES && country !== STREAMING_CATEGORY_HISTORY) {
+  // logged user is handled by the php side for now
+  if (country !== STREAMING_CATEGORY_FAVORITES && country !== STREAMING_CATEGORY_HISTORY
+    && sort !== STREAMING_SORT_USER_LAST) {
     // @ts-expect-error apiUrl is defined on the global scope
     baseUrl = `https://${apiUrl}/stream`;
   }
