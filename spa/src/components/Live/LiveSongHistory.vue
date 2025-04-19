@@ -5,18 +5,16 @@
       <i class="bi" :class="{ 'bi-caret-right-fill': !show, 'bi-caret-down-fill': show }"></i>
     </div>
     <Transition name="stream-list">
-    <div v-if="show">
-      <TransitionGroup name="stream-list">
-        <div v-for="entry in liveSongHistory" :key="entry" class="d-flex mb-3">
-          <div v-if="entry[1]" class="me-3 history-song-cover">
-            <img :src="entry[1]">
-          </div>
-          <div class="d-flex flex-column justify-content-center">
-            <div class="mb-1">{{ entry[0] }}</div>
-            <song-links :title="entry[0]" />
-          </div>
+    <div v-if="show" class="mt-3">
+      <div v-for="entry in liveSongHistory" :key="entry" class="d-flex mb-3">
+        <div v-if="entry[1]" class="me-3 history-song-cover">
+          <img :src="entry[1]">
         </div>
-      </TransitionGroup>
+        <div class="d-flex flex-column justify-content-center">
+          <div class="mb-1">{{ entry[0] }}</div>
+          <song-links :title="entry[0]" />
+        </div>
+      </div>
     </div>
     </Transition>
   </div>

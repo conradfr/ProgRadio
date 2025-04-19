@@ -216,7 +216,10 @@ defmodule ProgRadioApi.SongServer do
     broadcast_song(name, song)
   end
 
-  defp broadcast_song_if_needed(name, _song, _last_song) do
+  defp broadcast_song_if_needed(name, song, _last_song) do
+    # as safety, still broadcast % of the time
+    if :rand.uniform(10) > 7, do: broadcast_song(name, song)
+
     Logger.debug("Data provider - #{name}: song updated, no broadcast")
   end
 
