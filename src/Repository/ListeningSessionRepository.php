@@ -27,13 +27,13 @@ class ListeningSessionRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('r.id, r.codeName, r.name, c.id as c_id, c.codeName as c_codeName,'
+        $qb->select('rs.id, rs.codeName, rs.name, r.codeName as codeNameRadio, c.id as c_id, c.codeName as c_codeName,'
                 . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
             ->from(Radio::class, 'r')
             ->innerJoin('r.collection', 'c')
             ->leftJoin('r.streams', 'rs')
             ->leftJoin('rs.listeningSessions', 'ls')
-            ->groupBy('r.id, c.id')
+            ->groupBy('rs.id, r.codeName, c.id')
             ->addOrderBy('total_seconds', 'DESC');
 
         $this->addDates($qb, $startDate, $endDate);
@@ -154,14 +154,14 @@ class ListeningSessionRepository extends ServiceEntityRepository
                     COALESCE(json_agg(json_build_object('stream', ls.stream_id, 'total', ls.total_streams))
                         FILTER (WHERE ls.stream_id IS NOT NULL), '[]') as list_streams
             FROM (
-                    select ls.source, r.code_name, count(r.id) as total_radios, s.id as stream_id, count(s.id) as total_streams
+                    select ls.source, rs.code_name, count(r.id) as total_radios, s.id as stream_id, count(s.id) as total_streams
                     from listening_session ls
                     left join radio_stream rs on ls.radio_stream_id = rs.id
                     left join radio r on rs.radio_id = r.id
                     left join stream s on ls.stream_id = s.id
                      WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second')
                        AND ls.date_time_end < (now() at time zone 'utc' + interval '32 second')
-                     GROUP BY ls.source, r.code_name, s.id
+                     GROUP BY ls.source, rs.code_name, s.id
             ) ls
             GROUP BY ls.source
         ";
