@@ -20,6 +20,12 @@ if System.get_env("PHX_SERVER") do
   config :progradio_api, ProgRadioApiWeb.Endpoint, server: true
 end
 
+config :sentry,
+  dsn: System.get_env("SENTRY_DSN"),
+  environment_name: System.get_env("MIX_ENV"),
+  enable_source_code_context: true,
+  root_source_code_paths: [File.cwd!()]
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

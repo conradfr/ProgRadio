@@ -10,12 +10,12 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   def get_data(url) do
+    try do
     date_string =
       Timex.now()
       |> Timex.format!(@date_format)
 
     # /songs?hour=19&minute=6
-    try do
       (url <> date_string)
       |> SongProvider.get()
       |> Map.get(:body)
