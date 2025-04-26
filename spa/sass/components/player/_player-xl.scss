@@ -107,7 +107,7 @@
       }
     }
 
-    &:hover {
+    &:not(.text-muted):hover {
       padding-top: 0;
 
       i {

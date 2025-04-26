@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 
 import type { Radio } from '@/types/radio.ts';
 import type { Stream } from '@/types/stream.ts';
@@ -23,6 +23,20 @@ export default defineComponent({
       type: Object as PropType<Radio|Stream>,
       required: true
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      if (this.stream) {
+        this.joinListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
+      }
+    }, 250);
+  },
+  beforeUnmount() {
+    setTimeout(() => {
+      if (this.stream) {
+        this.leaveListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
+      }
+    }, 1000);
   },
   computed: {
     ...mapState(usePlayerStore, ['listeners']),
@@ -44,6 +58,12 @@ export default defineComponent({
 
       return this.listeners[topicName];
     },
+  },
+  methods: {
+    ...mapActions(usePlayerStore, [
+      'joinListenersChannel',
+      'leaveListenersChannel',
+    ]),
   }
 });
 </script>

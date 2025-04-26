@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions, mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import find from 'lodash/find';
 
 import {

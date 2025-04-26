@@ -12,7 +12,7 @@
     <div class="streams-one-name" :title="$t('message.streaming.more')"
       @click="nameClick(radio.code_name)">
       <span v-once class="streams-one-name-detail">{{ radio.name }}</span>
-      <div v-if="hover === false && currentSong" class="streams-one-song">
+      <div v-if="!hover && currentSong" class="streams-one-song">
         ♫ {{ currentSong }}
       </div>
       <div v-else-if="radio.tags" v-once class="streams-one-tags">
@@ -208,7 +208,7 @@ export default defineComponent({
       setTimeout(() => {
         this.leaveChannel(this.channelName);
         this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
-      }, 200);
+      }, 1000);
     },
     playStop() {
       // stop if playing

@@ -25,9 +25,7 @@
         <PlayerSongXL v-if="radio && currentSong" />
         <div class="player-actions-xl d-flex justify-content-end">
           <PlayerVolumeXL v-if="!externalPlayer" :muted="muted" @toggleMute="() => toggleMute()" />
-          <Transition name="timer-fade" mode="out-in">
-            <PlayerSaveSong v-if="userLogged && currentSong" />
-          </Transition>
+          <PlayerSaveSong />
           <PlayerFavorite v-if="radio" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
             @favoriteToggle="() => favoriteToggle()" />
           <timer></timer>
@@ -375,9 +373,7 @@ export default defineComponent({
   computed: {
     ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite', collection: 'collections' }),
     ...mapState(useStreamsStore, { streamFavorites: 'favorites' }),
-    ...mapState(useUserStore, {
-      userLogged: 'logged'
-    }),
+    ...mapState(useUserStore, { userLogged: 'logged' }),
     ...mapState(usePlayerStore, [
       'flux',
       'focus',

@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, nextTick } from 'vue';
-import { mapActions, mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 
 import { useScheduleStore } from '@/stores/scheduleStore';
 

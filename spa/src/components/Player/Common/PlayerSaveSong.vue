@@ -1,7 +1,9 @@
 <template>
-  <div class="player-add-song cursor-pointer">
+  <div class="player-add-song"
+    :class="{ 'text-muted': !userLogged || !currentSongTitle , 'cursor-pointer': userLogged }">
     <span class="player-add-song-inner"
-      :title="$t('message.player.save_song', { song: currentSongTitle })"
+      :title="$t(!userLogged ? 'message.player.save_song_not_logged' : (userLogged && !currentSongTitle
+        ? 'message.player.save_song_no_title' : 'message.player.save_song'), { song: currentSongTitle })"
       @click="saveSong">
       <i class="bi bi-file-earmark-music"></i>
     </span>
@@ -24,6 +26,7 @@ import {
 export default defineComponent({
   computed: {
     ...mapState(usePlayerStore, ['currentSong']),
+    ...mapState(useUserStore, { userLogged: 'logged' }),
     currentSongTitle() {
       if (!this.currentSong || !this.currentSong[0]) {
         return null;
@@ -37,7 +40,7 @@ export default defineComponent({
     saveSong() {
       setTimeout(
         () => {
-          if (this.currentSongTitle === null || this.currentSongTitle.trim() === '') {
+          if (!this.userLogged || this.currentSongTitle === null || this.currentSongTitle.trim() === '') {
             return;
           }
 

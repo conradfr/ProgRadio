@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions, mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import { DateTime } from 'luxon';
 
 import { useScheduleStore } from '@/stores/scheduleStore';

@@ -16,7 +16,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 
 import type { Radio } from '@/types/radio.ts';
 import type { Stream } from '@/types/stream.ts';
@@ -30,6 +30,7 @@ import PlayerUtils from '@/utils/PlayerUtils.ts';
 import PlayerSaveSong from '../Player/Common/PlayerSaveSong.vue';
 import SongLinks from '../Utils/SongLinks.vue';
 
+
 export default defineComponent({
   components: {
     PlayerSaveSong,
@@ -41,10 +42,36 @@ export default defineComponent({
       required: true
     }
   },
+  data(): {
+    channelName: null|string
+  } {
+    return {
+      channelName: null,
+    };
+  },
+  mounted() {
+    setTimeout(() => {
+      if (this.stream) {
+        this.channelName = PlayerUtils.getChannelName(
+            this.stream,
+            this.stream.radio_stream_code_name
+        ) || '';
+        this.joinChannel(this.channelName);
+      }
+    }, 250);
+  },
+  beforeUnmount() {
+    setTimeout(() => {
+      if (this.channelName) {
+        this.leaveChannel(this.channelName);
+      }
+    }, 1000);
+  },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged' }),
     ...mapState(usePlayerStore, ['liveSong']),
     liveSongTitle() {
+      console.log('test');
       if (typeUtils.isRadio(this.stream)) {
         const liveSongData = this.liveSong(this.stream, `${this.stream.code_name}_main`);
         return liveSongData && liveSongData[0] ? liveSongData[0] : null;
@@ -69,6 +96,12 @@ export default defineComponent({
 
       return PlayerUtils.getAmazonSongLink(this.liveSongTitle);
     }
+  },
+  methods: {
+    ...mapActions(usePlayerStore, [
+      'joinChannel',
+      'leaveChannel',
+    ]),
   }
 });
 </script>

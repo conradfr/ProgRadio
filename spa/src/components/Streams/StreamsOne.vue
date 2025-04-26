@@ -13,9 +13,9 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-8 col-10 offset-1 offset-sm-0 pb-3">
+      <div class="col-sm-8 col-12 offset-1 offset-sm-0 pb-3">
         <div class="row">
-          <div class="col-sm-9 col-12">
+          <div class="col-12">
             <div class="d-none d-md-block float-end cursor-pointer"
               :title="$t('message.streaming.close')"
               @click="quit">
@@ -34,7 +34,7 @@
             <h4 class="mb-4">{{ stream.name }}</h4>
 
             <div class="stream-page-stream mt-3 mb-5">
-              <div class="radio-page-streams-one d-flex
+              <div class="radio-page-streams-one d-flex mb-4
                 align-items-center justify-content-center justify-content-sm-start">
                 <div>
                   <div
@@ -96,7 +96,7 @@
               </div>
             </div>
 
-            <div v-if="locale !== 'fr' || !isProgRadio || !userLogged" class="pt-3 px-3 w-100">
+            <div v-if="locale !== 'fr' || (!isProgRadio || !userLogged)" class="pt-3 px-3 w-100">
               <adsense mode="horizontal_fix"></adsense>
             </div>
           </div>
@@ -122,7 +122,6 @@ import { useGlobalStore } from '@/stores/globalStore';
 import PlayerStatus from '@/types/player_status';
 
 import StreamsUtils from '@/utils/StreamsUtils';
-import PlayerUtils from '@/utils/PlayerUtils';
 import * as config from '@/config/config';
 
 import Adsense from '../Utils/Adsense.vue';
@@ -145,38 +144,16 @@ export default defineComponent({
   },
   data(): {
     PlayerStatus: any
-    channelName: null|string
     locale: any
     isProgRadio: boolean
   } {
     return {
       PlayerStatus,
-      channelName: null,
       locale: this.$i18n.locale,
       // @ts-expect-error defined on global scope
       // eslint-disable-next-line no-undef
       isProgRadio
     };
-  },
-  mounted() {
-    setTimeout(() => {
-      if (this.stream) {
-        this.channelName = PlayerUtils.getChannelName(
-          this.stream,
-          this.stream.radio_stream_code_name
-        ) || '';
-        this.joinChannel(this.channelName);
-        this.joinListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
-      }
-    }, 2500);
-  },
-  beforeUnmount() {
-    setTimeout(() => {
-      if (this.stream && this.channelName) {
-        this.leaveChannel(this.channelName);
-        this.leaveListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
-      }
-    }, 1500);
   },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged', userIsAdmin: 'isAdmin' }),
@@ -208,14 +185,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(useGlobalStore, ['displayToast']),
-    ...mapActions(usePlayerStore, [
-      'joinChannel',
-      'leaveChannel',
-      'joinListenersChannel',
-      'leaveListenersChannel',
-      'playStream',
-      'stop'
-    ]),
+    ...mapActions(usePlayerStore, [ 'playStream', 'stop']),
     ...mapActions(useStreamsStore, [
       'setSearchText',
       'setSearchActive',
