@@ -9,7 +9,7 @@ let scrapedData = {};
 const format = (dateObj, name) => {
   const mains = [];
   dateObj.locale('fr');
-  const dayOfWeek = dateObj.day();
+  const dayOfWeek = dateObj.isoWeekday();
 
   const parser = new XMLParser();
   let jObj = parser.parse(scrapedData[name]);
