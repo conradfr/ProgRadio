@@ -73,6 +73,9 @@ class RadioStream
     #[ORM\Column(nullable: true)]
     private ?bool $ownLogo = null;
 
+    #[ORM\OneToOne(mappedBy: 'RadioStream', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+    private ?RadioStreamUpdate $RadioStreamUpdate = null;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
         $this->streams = new ArrayCollection();
@@ -221,6 +224,23 @@ class RadioStream
     public function setOwnLogo(?bool $ownLogo): static
     {
         $this->ownLogo = $ownLogo;
+
+        return $this;
+    }
+
+    public function getRadioStreamUpdate(): ?RadioStreamUpdate
+    {
+        return $this->RadioStreamUpdate;
+    }
+
+    public function setRadioStreamUpdate(RadioStreamUpdate $RadioStreamUpdate): static
+    {
+        // set the owning side of the relation if necessary
+        if ($RadioStreamUpdate->getRadioStream() !== $this) {
+            $RadioStreamUpdate->setRadioStream($this);
+        }
+
+        $this->RadioStreamUpdate = $RadioStreamUpdate;
 
         return $this;
     }

@@ -9,16 +9,30 @@ defmodule ProgRadioApi.Application do
   def start(_type, _args) do
     children = [
       ProgRadioApiWeb.Telemetry,
+      {DNSCluster, query: Application.get_env(:progradio_api, :dns_cluster_query) || :ignore},
+
+      {Redix,
+        host: Application.get_env(:progradio_api, :redis_host),
+        database: Application.get_env(:progradio_api, :redis_db),
+        password: Application.get_env(:progradio_api, :redis_password),
+        name: :redix},
+
+      # Start the Finch HTTP client for sending emails
+      {Finch, name: ProgRadioApi.Finch},
+
       ProgRadioApi.Cache,
       ProgRadioApi.Repo,
-      {DNSCluster, query: Application.get_env(:progradio_api, :dns_cluster_query) || :ignore},
-      {Redix,
-       host: Application.get_env(:progradio_api, :redis_host),
-       database: Application.get_env(:progradio_api, :redis_db),
-       password: Application.get_env(:progradio_api, :redis_password),
-       name: :redix},
+
       {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
+
+      # cron tasks
+      ProgRadioApi.Scheduler,
+      ProgRadioApi.Checker.CheckerSupervisor,
+      ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor,
+
+      # Broadway
       {ProgRadioApi.Importer.ScheduleImporter, []},
+
       # Start the PubSub system
       {Phoenix.PubSub, name: ProgRadioApi.PubSub},
       ProgRadioApiWeb.Presence,
@@ -29,8 +43,7 @@ defmodule ProgRadioApi.Application do
        max_seconds: 1,
        name: ProgRadioApi.SongDynamicSupervisor},
       ProgRadioApi.ListenersCounter,
-      # Start the Finch HTTP client for sending emails
-      {Finch, name: ProgRadioApi.Finch},
+
       {Meilisearch,
        name: :search,
        endpoint: Application.get_env(:progradio_api, :meilisearch_url),
@@ -39,9 +52,8 @@ defmodule ProgRadioApi.Application do
       # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
       # {ProgRadioApi.Worker, arg}
       # Start to serve requests, typically the last entry
-      ProgRadioApiWeb.Endpoint,
-      ProgRadioApi.Scheduler,
-      ProgRadioApi.Checker.StreamsSupervisor
+
+      ProgRadioApiWeb.Endpoint
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

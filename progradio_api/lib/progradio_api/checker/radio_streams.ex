@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.Checker.Streams do
+defmodule ProgRadioApi.Checker.RadioStreams do
   require Logger
   import Ecto.Query, only: [from: 2]
   alias ProgRadioApi.Repo
@@ -7,7 +7,7 @@ defmodule ProgRadioApi.Checker.Streams do
   def check() do
     get_radio_streams()
     |> Enum.each(fn radio_stream ->
-      ProgRadioApi.Checker.Streams.Producer.sync_notify(radio_stream)
+      ProgRadioApi.Checker.RadioStreams.Producer.sync_notify(radio_stream)
     end)
 
     :ok

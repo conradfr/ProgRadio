@@ -60,7 +60,7 @@ defmodule ProgRadioApi.MixProject do
       {:redix, ">= 0.0.0"},
       {:mogrify, "~> 0.8.0"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
-      {:broadway, "~> 1.1.0"},
+      {:broadway, "~> 1.2.0"},
       # {:off_broadway_redis, "~> 0.4.3"},
       #      # Until off_broadway_redis 1.0.0 is fixed and tagged
       {:off_broadway_redis,

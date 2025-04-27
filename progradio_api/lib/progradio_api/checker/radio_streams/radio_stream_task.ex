@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.Checker.Streams.StreamTask do
+defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
   require Logger
   alias ProgRadioApi.Repo
 

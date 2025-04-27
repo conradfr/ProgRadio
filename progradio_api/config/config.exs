@@ -28,9 +28,13 @@ config :progradio_api, ProgRadioApiWeb.Endpoint,
 config :progradio_api, ProgRadioApi.Scheduler,
   timezone: "Europe/Paris",
   jobs: [
-    check: [
+    radio_streams_check: [
       schedule: "25 */2 * * *",
-      task: {ProgRadioApi.Checker.Streams, :check, []}
+      task: {ProgRadioApi.Checker.RadioStreams, :check, []}
+    ],
+    radio_streams_auto_update: [
+      schedule: "32 */2 * * *",
+      task: {ProgRadioApi.AutoUpdater.RadioStreams, :auto_update, []}
     ],
     import: [
       schedule: "10 02 */2 * *",

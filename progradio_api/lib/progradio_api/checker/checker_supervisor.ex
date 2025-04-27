@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.Checker.StreamsSupervisor do
+defmodule ProgRadioApi.Checker.CheckerSupervisor do
   # Automatically defines child_spec/1
   use Supervisor
 
@@ -9,8 +9,8 @@ defmodule ProgRadioApi.Checker.StreamsSupervisor do
   @impl true
   def init(_init_arg) do
     children = [
-      ProgRadioApi.Checker.Streams.Producer,
-      ProgRadioApi.Checker.Streams.Consumer
+      ProgRadioApi.Checker.RadioStreams.Producer,
+      ProgRadioApi.Checker.RadioStreams.Consumer
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

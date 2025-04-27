@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.Checker.Streams.Producer do
+defmodule ProgRadioApi.Checker.RadioStreams.Producer do
   use GenStage
 
   @doc "Starts the broadcaster."

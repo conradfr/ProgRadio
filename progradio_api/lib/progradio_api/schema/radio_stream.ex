@@ -2,7 +2,7 @@ defmodule ProgRadioApi.RadioStream do
   use Ecto.Schema
   import Ecto.Changeset
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.{Radio, SubRadio, Stream, ListeningSession}
+  alias ProgRadioApi.{Radio, SubRadio, Stream, ListeningSession, RadioStreamUpdate}
 
   schema "radio_stream" do
     field(:code_name, :string)
@@ -16,6 +16,7 @@ defmodule ProgRadioApi.RadioStream do
     field(:retries, :integer)
     belongs_to(:radio, Radio)
     belongs_to(:sub_radio, SubRadio)
+    has_one(:radio_stream_update, RadioStreamUpdate)
     has_many(:stream, Stream)
     has_many(:listening_session, ListeningSession)
   end
@@ -24,6 +25,12 @@ defmodule ProgRadioApi.RadioStream do
     radio_stream
     |> cast(params, [:status, :retries])
     |> validate_required([:status, :retries])
+  end
+
+  def update_url(radio_stream, params \\ %{}) do
+    radio_stream
+    |> cast(params, [:url])
+    |> validate_required([:url])
   end
 
   @spec update_status(integer, boolean) :: any
