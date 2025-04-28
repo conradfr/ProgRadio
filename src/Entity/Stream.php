@@ -265,7 +265,7 @@ class Stream implements NormalizableInterface
         $this->votes = $votes;
     }
 
-    public function getClicksLast24h(): int
+    public function getClicksLast24h(): ?int
     {
         return $this->clicksLast24h;
     }
@@ -275,7 +275,7 @@ class Stream implements NormalizableInterface
         $this->clicksLast24h = $clicksLast24h;
     }
 
-    public function getScore(): int
+    public function getScore(): ?int
     {
         return $this->score;
     }

@@ -56,9 +56,12 @@ export default defineComponent({
             this.stream,
             this.stream.radio_stream_code_name
         ) || '';
-        this.joinChannel(this.channelName);
+
+        if (this.channelName && this.channelName !== '') {
+          this.joinChannel(this.channelName);
+        }
       }
-    }, 250);
+    }, 150);
   },
   beforeUnmount() {
     setTimeout(() => {
@@ -71,7 +74,6 @@ export default defineComponent({
     ...mapState(useUserStore, { userLogged: 'logged' }),
     ...mapState(usePlayerStore, ['liveSong']),
     liveSongTitle() {
-      console.log('test');
       if (typeUtils.isRadio(this.stream)) {
         const liveSongData = this.liveSong(this.stream, `${this.stream.code_name}_main`);
         return liveSongData && liveSongData[0] ? liveSongData[0] : null;

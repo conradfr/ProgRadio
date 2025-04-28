@@ -130,7 +130,7 @@ export const usePlayerStore = defineStore('player', {
 
       const channelName = PlayerUtils.getChannelName(toRaw(radio), radioStreamCodeName);
       // @todo find bug from app
-      if (channelName === '') {
+      if (!channelName || channelName === '') {
         return null;
       }
 
