@@ -1,6 +1,6 @@
 <template>
   <div v-if="liveSongHistory && liveSongHistory.length > 0" class="mb-4">
-    <div class="mb-3 d-flex align-items-center cursor-pointer" @click="show = !show">
+    <div class="mt-3 mb-3 d-flex align-items-center cursor-pointer" @click="show = !show">
       <h6 class="me-2 mb-0">{{ $t('message.streaming.history') }}</h6>
       <i class="bi" :class="{ 'bi-caret-right-fill': !show, 'bi-caret-down-fill': show }"></i>
     </div>

@@ -126,8 +126,12 @@ const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string|null) => 
 };
 
 const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string|null): string => {
-  if (typeUtils.isRadio(radio) && (!radioStreamCodeName || !radio.streaming_enabled)) {
+  if (typeUtils.isRadio(radio) && !radio.streaming_enabled) {
     return '';
+  }
+
+  if (typeUtils.isRadio(radio) && !radioStreamCodeName) {
+    return `${radio.code_name}_main`;
   }
 
   // @ts-ignore
