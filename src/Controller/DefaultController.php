@@ -414,6 +414,39 @@ class DefaultController extends AbstractBaseController
         return $this->redirectToRoute('radio', $routeParams, 301);
     }
 
+    // So in the logs there is a couple of 404 that fit this url pattern,
+    // not sure why but we try to fix it here.
+    // Could be wrongly generated url by the app, buggy bots, or user error?
+    #[
+        Route(
+            path: [
+                'en' => '/{_locale}/stream-{shortId}/null',
+                'fr' => '/{_locale}/stream-{shortId}/null',
+                'es' => '/{_locale}/stream-{shortId}/null',
+                'de' => '/{_locale}/stream-{shortId}/null',
+                'pt' => '/{_locale}/stream-{shortId}/null',
+                'it' => '/{_locale}/stream-{shortId}/null',
+                'pl' => '/{_locale}/stream-{shortId}/null',
+                'el' => '/{_locale}/stream-{shortId}/null',
+                'ro' => '/{_locale}/stream-{shortId}/null',
+                'hu' => '/{_locale}/stream-{shortId}/null',
+                'ar' => '/{_locale}/stream-{shortId}/null',
+                'tr' => '/{_locale}/stream-{shortId}/null',
+            ],
+            name: 'streams_one_short_weird_404',
+        )
+    ]
+    public function oneShortWeird404(string $shortId, Request $request): Response
+    {
+        $routeParams = [
+            '_locale' => $request->getLocale(),
+            'shortId' => $shortId,
+            'codename' => 'radio'
+        ];
+
+        return $this->redirectToRoute('streams_one_short', $routeParams, 301);
+    }
+
     #[
         Route(
             path: [
