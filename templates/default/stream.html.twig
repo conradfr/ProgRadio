@@ -5,7 +5,7 @@
 {% macro picture(stream) %}{%- if stream.radioStream.id is defined and stream.radioStream.id is not null %}/img/radio/page/{{ stream.radioStream.radio.codeName }}.png{%- elseif stream.img_alt is defined and stream.img_alt is not null %}/img/radio/page/{{ stream.img_alt }}.png{%- elseif stream.img is not null and stream.img != '' %}/media/stream/{{ stream.img }}{%- else %}/img/stream-placeholder.png{% endif -%}{% endmacro %}
 
 {% macro topic(stream) %}
-{% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% elseif stream.radioStream is defined and stream.radioStream.url is defined %}url:{{ stream.radioStream.url }}{% else %}url:{{ stream.streamUrl }}{% endif %}
+{% if stream.radioStream is defined and stream.radioStream.currentSong is defined and stream.radioStream.currentSong == true %}song:{{ stream.radioStream.codeName }}{% elseif stream.streamSong is defined and stream.streamSongCodeName is defined %}song:{{ stream.streamSong.codeName }}_{{ stream.streamSongCodeName }}{% elseif stream.radioStream is defined and stream.radioStream.url is defined %}url:{{ stream.radioStream.url }}{% else %}url:{{ stream.streamUrl }}{% endif %}
 {% endmacro %}
 
 {% macro stream_code_name(stream) %}

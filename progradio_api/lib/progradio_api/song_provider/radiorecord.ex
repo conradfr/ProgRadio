@@ -121,6 +121,13 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
         |> Map.get("track", %{})
         |> Map.get("image100")
 
+      cover =
+        case cover do
+          nil -> nil
+          "http" <> cover_url -> cover
+          _ -> "https://www.radiorecord.ru/" <> cover
+        end
+
       %{
         artist: artist,
         title: title,

@@ -32,7 +32,7 @@ class StreamSong
      * @var Stream[]
      */
     #[ORM\OneToMany(targetEntity: Stream::class, mappedBy: 'streamSong', fetch: 'EXTRA_LAZY')]
-    private ArrayCollection $streams;
+    private Collection $streams;
 
     public function __construct() {
         $this->streams = new ArrayCollection();
