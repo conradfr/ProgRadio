@@ -218,6 +218,9 @@ page:
             submit: Submit
             delete: Delete
             delete_confirm: Are you sure you want to delete this radio?
+            stats_title: Statistics
+            stats_this_month: "%sessions% listening sessions for a total of %time% this month."
+            stats_last_month: "%sessions% listening sessions for a total of %time% last month."
 
     top:
         page_title: Top radios in %country%

@@ -188,4 +188,34 @@ class ListeningSessionRepository extends ServiceEntityRepository
 
         return $resultIndexed;
     }
+
+    public function getStatsOfStream(Stream $stream)
+    {
+        $thisMonth = DateUtils::getDatesFromRelativeFormat('thismonth');
+        $lastMonth = DateUtils::getDatesFromRelativeFormat('lastmonth');
+
+        return [
+            'this_month' => $this->getStreamListeningSession($thisMonth[0], $thisMonth[1], $stream),
+            'last_month' => $this->getStreamListeningSession($lastMonth[0], $lastMonth[1], $stream),
+        ];
+    }
+
+    protected function getStreamListeningSession($startDate, $endDate, Stream $stream): ?array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('s.id, COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
+            ->from(Stream::class, 's')
+            ->leftJoin('s.listeningSessions', 'ls')
+            ->groupBy('s.id');
+
+        $this->addDates($qb, $startDate, $endDate);
+        $qb->andWhere('s.id = :streamId')
+           ->setParameter('streamId', $stream->getId()->toRfc4122());
+
+        $query = $qb->getQuery();
+        $query->disableResultCache();
+
+        return $query->getOneOrNullResult();
+    }
 }

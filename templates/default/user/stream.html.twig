@@ -1,5 +1,7 @@
 {% extends 'base_site.html.twig' %}
 
+{% import "default/admin/macro/format.html.twig" as format %}
+
 {% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
 
 {%- block title -%}
@@ -69,8 +71,29 @@
                 {% endif %}
             </h3>
 
-            {% if edit == true %}<h5>
-                {{ 'page.stream.modification.radio'|trans }}: <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ stream.name }} <i class="bi bi-box-arrow-up-right"></i></a></h5>
+            {% if edit == true %}
+                <h5>
+                    {{ 'page.stream.modification.radio'|trans }}:
+                    <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ stream.name }} <i class="bi bi-box-arrow-up-right"></i></a>
+                </h5>
+
+                <div class="my-4 alert alert-light">
+                    <p><strong>{{ 'page.stream.submission.stats_title'|trans }}</strong></p>
+
+                    {% if stats is defined and stats is not null %}
+                        {% if stats.this_month is defined and stats.this_month is not null %}
+                            <p>{{ 'page.stream.submission.stats_this_month'|trans({'%sessions%': stats.this_month.total_sessions, '%time%': format.secondsToMinutes(stats.this_month.total_seconds)}) }}</p>
+                        {% endif %}
+
+                        {% if stats.last_month is defined and stats.last_month is not null %}
+                            <p>{{ 'page.stream.submission.stats_last_month'|trans({'%sessions%': stats.last_month.total_sessions, '%time%': format.secondsToMinutes(stats.last_month.total_seconds)}) }}</p>
+                        {% endif %}
+
+                        {% if stats.this_month is null and stats.last_month is null %}
+                            n/a
+                        {% endif %}
+                    {% endif %}
+                </div>
             {% endif %}
 
             {% for label, messages in app.flashes %}

@@ -1,5 +1,5 @@
 general:
-    main_description: Escucha en línea y programas de radio en Francia.
+    main_description: Escucha en línea y los programas de radio en Francia.
     main_title_progradio: Todas las parrillas de radio, todos los programas y escucha en línea
     main_title_radioaddict: ¡Transmisión de todas las radios en Francia y en el mundo!
 
@@ -24,16 +24,16 @@ menu:
         dashboard: Tablero
         listening: Escuchas
         overloading: Sobrecarga de Stream
-        playing_errors: Errores de Streams
+        playing_errors: Errores de Stream
         check: Verificación de Stream
         shares: Cuotas de mercado
-        suggestions: Sugerencias de Streams
+        suggestions: Sugerencias de Stream
         easyadmin: Easy Admin
         actions: Admin
     all: Todas las radios
     app: App Android
     contact: Contacto
-    faq: Preguntas frecuentes
+    faq: Faq
 
     favorites: Mis Favoritos
     favorites_menu:
@@ -75,16 +75,16 @@ menu:
     home:
         enable: Seleccionar como página de inicio
         disable: Eliminar la página de inicio personalizada
-    logout: Desconectarse
+    logout: Cerrar sesión
     menu: Menú
     mode:
         dark: Modo oscuro
         light: Modo claro
     now: En este momento
-    params: Configuración
+    params: Configuraciones
     plus: Más
     schedule: Parrilla de programas
-    signon: Conectarse
+    signon: Iniciar sesión
     signup: Crear una cuenta
     streaming: Todas las radios
     timer: Temporizador
@@ -93,32 +93,32 @@ menu:
 page:
     contact:
         title: 'Contacto'
-        email: 'Correo electrónico'
+        email: 'Email'
         message: 'Mensaje *'
         name: 'Nombre *'
         send: 'Enviar'
-        sent: 'Su mensaje ha sido enviado correctamente.'
-        add_radio_1: Quiero agregar mi (web)radio, ¿cómo puedo hacerlo?
+        sent: 'Tu mensaje ha sido enviado correctamente.'
+        add_radio_1: Deseo agregar mi (web)radio, ¿cómo hacerlo?
         add_radio_2: 'Tienes dos opciones:'
         add_radio_3: 1/ Crea una cuenta y agrega tu radio en tu espacio de usuario.
-        add_radio_4: 2/ Utiliza la API Radio-Browser. Para enviar tu radio, <a target="_blank" href="https://www.radio-browser.info/#/add">haz clic aquí</a>.
+        add_radio_4: 2/ Usar la API de Radio-Browser. Para enviar tu radio, <a target="_blank" href="https://www.radio-browser.info/#/add">haz clic aquí</a>.
 
     faq:
         title: 'Preguntas frecuentes'
-        page_title: 'Preguntas frecuentes - Los programas de radio en Francia'
-        page_description: 'Preguntas sobre Programmmes-Radio.com'
+        page_title: 'FAQ - Los programas de radio en Francia'
+        page_description: 'Preguntas sobre Programas-Radio.com'
 
     forgotten_password:
-        error: <strong>Ha ocurrido un error.</strong><br>Si el enlace de recuperación de contraseña está obsoleto, por favor repita el procedimiento
-        click_here: haga clic aquí
+        error: <strong>Ha ocurrido un error.</strong><br>Si el enlace de recuperación de contraseña está obsoleto, por favor repite el procedimiento
+        click_here: haz clic aquí
         done_title: Restablecimiento de contraseña
-        done: '<strong>La contraseña ha sido actualizada.</strong><br>Puedes conectarte %link%haciendo clic aquí%link_end%.'
+        done: '<strong>La contraseña ha sido actualizada.</strong><br>Puedes iniciar sesión %link%haciendo clic aquí%link_end%.'
         page_title: Contraseña olvidada
-        success: Si se encuentra una cuenta que use el correo electrónico <strong>%email%</strong>, se le ha enviado un mensaje con un enlace para restablecer la contraseña.
+        success: Si se encontró una cuenta usando el correo electrónico <strong>%email%</strong>, se ha enviado un mensaje con un enlace para restablecer la contraseña.
         submit: Enviar
 
     login:
-        forgotten_password: ¿Olvidaste tu contraseña?
+        forgotten_password: ¿Contraseña olvidada?
         page_title: Iniciar sesión
 
     now:
@@ -132,7 +132,7 @@ page:
         advanced: Usar el reproductor avanzado<br>(webradios, títulos en curso ...)
         back: '← Ir a la parrilla de programas de todas las radios'
         current: ↓ Ir al programa en curso
-        description: 'Los programas de la radio %radio% & escucha en línea'
+        description: 'Los programas de la radio %radio% y escucha en línea'
         goto_today: Ver los programas de hoy
         goto_schedule: Ver la parrilla de programas
         more_radios: 'Más radios'
@@ -141,21 +141,21 @@ page:
         play: 'Escuchar %radio%'
         stop: 'Detener %radio%'
         summary: 'Descripción'
-        title: 'Escuchar %radio% en directo - Programas del %date%'
+        title: 'Escuchar %radio% en vivo - Programas del %date%'
         website: 'Sitio web'
 
     registered:
         page_title: Crear una cuenta
         alert_1: ¡Tu cuenta ha sido creada correctamente!
-        alert_2: Si tenías radios y streams favoritos, estos han sido añadidos automáticamente a tu cuenta.
-        what_now_question: ¿Qué te gustaría hacer ahora?
-        what_now_choice1: Conectarme a mi cuenta
+        alert_2: Si tenías radios y streams en favoritos, estos han sido automáticamente añadidos a tu cuenta.
+        what_now_question: ¿Qué deseas hacer ahora?
+        what_now_choice1: Iniciar sesión en mi cuenta
         what_now_choice2: Consultar los programas de radio
         what_now_choice3: Escuchar radios en streaming
 
     stream:
         country: País
-        description: 'Escucha %radio% en directo y gratis'
+        description: 'Escucha %radio% en vivo y gratis'
         disabled: 'Esta radio parece inactiva.'
         discover: Descubre más radios, busca por país y estilos de música ...
         errors: 'Se han reportado errores de reproducción para esta radio.'
@@ -172,8 +172,8 @@ page:
         suggested: Radios sugeridas
         tags: Etiquetas
         share: Compartir la radio
-        title: 'Escuchar %radio% en directo'
-        title_country: '%radio% - %country% - Escuchar en directo'
+        title: 'Escuchar %radio% en vivo'
+        title_country: '%radio% - %country% - Escuchar en vivo'
         website: Sitio web
         banned: Esta radio está prohibida.
         desc: 'Descripción'
@@ -181,16 +181,16 @@ page:
         updated: 'Actualizado'
         languages: 'Idiomas'
         popup: Se debe abrir una ventana emergente para reproducir esta radio.
-        advanced: Use el jugador avanzado<br>(volumen, favoritos ...)
+        advanced: Usar el reproductor avanzado<br>(volumen, favoritos, historial ...)
 
         modification:
-            at_least_one: Rellenar uno o más campos.
+            at_least_one: Llenar uno o más campos.
             comment: Comentario
             img: URL del logo
             name: Nombre
             radio: Radio
             stream_url: URL del stream
-            success: Gracias por tus sugerencias. Han sido guardadas y serán revisadas muy pronto.
+            success: Gracias por tus sugerencias. Han sido registradas y serán estudiadas muy pronto.
             suggest: Sugerir una modificación
             website: Sitio web
             submit: Enviar
@@ -206,7 +206,7 @@ page:
             stream_url: URL del stream
             slogan: Eslogan
             description: Descripción
-            success_new: Tu radio ha sido guardada correctamente, estará disponible muy pronto.
+            success_new: Tu radio ha sido registrada correctamente, estará disponible muy pronto.
             success_edit: Tu radio ha sido modificada correctamente.
             success_delete: Tu radio ha sido eliminada correctamente.
             add: Añadir una radio
@@ -214,20 +214,23 @@ page:
             website: Sitio web
             country: País
             language: Idioma
-            tags: Etiquetas (en minúsculas, separadas por comas)
+            tags: Etiquetas (en minúscula, separadas por una coma)
             submit: Enviar
             delete: Eliminar
-            delete_confirm: ¿Estás seguro de que quieres eliminar esta radio? Esta acción es irreversible.
+            delete_confirm: ¿Estás seguro de que deseas eliminar esta radio? Esta operación es irreversible.
+            stats_title: Estadísticas
+            stats_this_month: "%sessions% sesiones de escucha para un total de %time% este mes."
+            stats_last_month: "%sessions% sesiones de escucha para un total de %time% el mes pasado."
 
     top:
-        page_title: Top de radios en %country%
+        page_title: Top de las radios en %country%
         description: 'Escucha las mejores radios de %country%'
         more: Ver más radios top en %country%
 
     last:
         page_title: Últimas radios escuchadas en %country%
         description: 'Escucha las mejores radios de %country%'
-        more: Ver más radios recientemente escuchadas en %country%
+        more: Ver más radios escuchadas recientemente en %country%
 
     user:
         page_title: Crear una cuenta
@@ -235,17 +238,17 @@ page:
     account:
         prefix: Mi cuenta
         menu:
-            email: Correo electrónico
+            email: Email
             password: Contraseña
             preferences: Preferencias
             delete: Eliminación
             streams: Mis radios
         email:
-            page_title: Cambiar mi correo electrónico
-            info_1: Esto actualizará el correo electrónico utilizado para iniciar sesión en el sitio.
-            info_2: Se enviará una confirmación a la dirección antigua y a la nueva.
-            success: La dirección de correo electrónico ha sido actualizada.
-            new_email: 'Nueva dirección de correo electrónico:'
+            page_title: Cambiar mi email
+            info_1: Esto actualizará el email utilizado para iniciar sesión en el sitio.
+            info_2: Se enviará una confirmación a la antigua y a la nueva dirección.
+            success: La dirección de email ha sido actualizada.
+            new_email: 'Nueva dirección de email:'
             new_email_placeholder: ejemplo@email.com
             update_btn: Actualizar
         password:
@@ -257,12 +260,12 @@ page:
             update_btn: Actualizar
             store_history: Conservar el historial de radios reproducidas
             reset_history: Borrar mi historial
-            reset_confirm: ¿Estás seguro de que quieres eliminar tu historial?
+            reset_confirm: ¿Estás seguro de que deseas eliminar tu historial?
             reset_confirmed: Tu historial ha sido borrado.
         delete:
             page_title: Eliminación de la cuenta
             warning: Atención, esta operación es irreversible. Tus favoritos serán eliminados
-            confirm: ¿Estás seguro de que quieres eliminar tu cuenta?
+            confirm: ¿Estás seguro de que deseas eliminar tu cuenta?
             delete_btn: Eliminar mi cuenta
         delete_confirm:
             success: Tu cuenta ha sido eliminada correctamente.
@@ -279,9 +282,9 @@ boxes:
     why_account:
         title: ¿Por qué registrarse?
         content: "- Una cuenta te permite acceder a tus radios y streams favoritos desde cualquier navegador y desde la aplicación."
-        content2: "- Guardar el título de las canciones que estás escuchando."
+        content2: "- Guardar el título de las canciones que se están reproduciendo."
         content3: "- Consultar tu historial (opcional)"
-        content4: "- Menos anuncios"
+        content4: "- Menos publicidad"
 
 registrationForm:
     email: 'Correo electrónico'
@@ -290,14 +293,14 @@ registrationForm:
         empty: 'Este campo no puede estar vacío.'
         password_min: 'La contraseña debe contener al menos 8 caracteres.'
         password: 'Las contraseñas no son idénticas.'
-    captcha: 'Escribe las letras y números que aparecen a continuación'
+    captcha: 'Escribe las letras y números inscritos a continuación'
     password: 'Contraseña'
     password_confirm: 'Confirmación de la contraseña'
     submit_create: 'Crear mi cuenta'
 
 connectionForm:
     already_logged: Actualmente estás conectado como %email%
-    logout: desconectarse
+    logout: cerrar sesión
     email: 'Correo electrónico'
     password: 'Contraseña'
     remember_me: 'Recordarme'
@@ -338,9 +341,13 @@ admin:
             success: Acción completada.
             error: Ha ocurrido un error.
         cache:
-            title: Api - Caché
-            menu: Caché
-            clear_streams: Vaciar caché de streams
+            title: Api - Cache
+            menu: Cache
+            clear_streams: Vaciar el cache de streams
+        search:
+            title: Búsqueda
+            menu: Búsqueda
+            import: Importar
 
     dashboard:
         title: Tablero
@@ -354,7 +361,7 @@ admin:
         accounts:
             title: Cuentas
             active: '%number% cuentas activas'
-            email: correo electrónico
+            email: email
             created_at: Creación
             last: (%number% últimos)
         no_schedule:
@@ -364,22 +371,22 @@ admin:
             all_ok: Todas las radios tienen programas mostrados.
         stream_errors:
             title: Errores de streams
-            error: Errores para <strong>%number%</strong> verificación
+            error: Errores para <strong>%number%</strong> check
             link: enlace
             no_errors: Todos los streams funcionan
         live_song_errors:
             title: Errores de título en curso
-            error: Errores para <strong>%number%</strong> verificación
-            reset_all: reiniciar todo
+            error: Errores para <strong>%number%</strong> check
+            reset_all: reset all
             link: enlace
-            no_errors: No se han registrado errores
+            no_errors: No hay errores registrados
 
     listening:
         title: Escuchas
         today: Hoy
         yesterday: Ayer
         this_month: Este mes
-        last_month: El mes pasado
+        last_month: Mes pasado
         ratings: Encuestas
 
     stream_errors:
@@ -388,16 +395,16 @@ admin:
         errors: Errores
         view: Ver
         edit: Editar
-        reset: Reiniciar
-        reset_all: Reiniciar todo
+        reset: Resetear
+        reset_all: Resetear todo
 
     stream_check:
-        title: Verificación de streams
+        title: Verificar streams
         img: Img
         stream: Stream
         website: Sitio
         ssl: SSL
-        commit: Confirmar
+        commit: Commit
         last_checked: Verificado
         view: Ver
         edit: Editar

@@ -153,6 +153,7 @@
                         {% if is_logged == true %}
                             <li><a class="dropdown-item" href="{{ path('user_page') }}">{{ 'menu.account'|trans }}</a></li>
                             <li><a class="dropdown-item" href="{{ path('_logout_main') }}">{{ 'menu.logout'|trans }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('user_page_streams') }}">{{ 'page.account.menu.streams'|trans }}</a></li>
 
                             {% if is_granted('ROLE_ADMIN') %}
                             <li><hr class="dropdown-divider"></li>

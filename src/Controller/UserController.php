@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\ListeningSession;
 use App\Entity\Stream;
 use App\Entity\UserEmailChange;
 use App\Form\StoreHistoryType;
@@ -271,11 +272,17 @@ class UserController extends AbstractBaseController
             return $this->redirectToRoute('user_page_streams', ['id' => $stream->getId()]);
         }
 
+        $stats = null;
+        if ($stream && $em->contains($stream)) {
+            $stats = $em->getRepository(ListeningSession::class)->getStatsOfStream($stream);
+        }
+
         return $this->render('default/user/stream.html.twig',
             [
                 'edit' => $edit,
                 'stream' => $stream,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'stats' => $stats
             ]
         );
     }

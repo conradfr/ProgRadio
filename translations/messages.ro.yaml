@@ -1,28 +1,46 @@
 general:
-    main_description: Ascultați programe de radio și radio online în Franța.
-    main_title_progadio: Toate programele radio, toate programele și ascultați online
-    main_title_radioaddict: Transmiterea tuturor posturilor de radio din Franța și din întreaga lume!
+    main_description: Ascultă online și programele radio din Franța.
+    main_title_progradio: Toate grilele radio, toate programele și ascultare online
+    main_title_radioaddict: Streaming pentru toate radiourile din Franța și din întreaga lume!
+
+global:
+    switch:
+        es: Ver en español
+        en: View in English
+        fr: Voir en français
+        de: Siehe Deutschland
+        pt: Veja em português
+        it: Vedi in italiano
+        pl: Zobacz polski
+        el: Δείτε στα ελληνικά
+        ar: انظر باللغة العربية
+        ro: Vezi în română
+        hu: Lásd Magyarországon
+        tr: Türkçe Bakın
 
 menu:
     account: Contul meu
     admin:
-        dashboard: Tablou de bord
-        listening: Ascultă
-        overloading: Supraîncărcarea fluxului
-        playing_errors: Erori în flux
-        shares: Cote de piață
-        suggestions: Fluxuri de sugestii
+        dashboard: Panou de control
+        listening: Ascultări
+        overloading: Supraîncărcare Stream
+        playing_errors: Erori Stream
+        check: Verificare Stream
+        shares: Pondere de piață
+        suggestions: Sugestii Stream
+        easyadmin: Easy Admin
+        actions: Admin
     all: Toate radiourile
     app: Aplicație Android
     contact: Contact
-    faq: ÎNTREBĂRI FRECVENTE
+    faq: Întrebări frecvente
 
     favorites: Favoritele mele
     favorites_menu:
-        all: Toate ţările
-        fi: Belgia
+        all: Toate țările
+        be: Belgia
         ch: Elveția
-        fr: Franta
+        fr: Franța
         us: Statele Unite
         mx: Mexic
         co: Columbia
@@ -47,248 +65,251 @@ menu:
         pl: Polonia
         gr: Grecia
         dz: Algeria
-        ma: Morocco
+        ma: Maroc
         tn: Tunisia
         hu: Ungaria
-        tr: Türkiye
+        tr: Turcia
 
     songs: Titluri salvate
 
     home:
-        enable: Selectați ca pagină de pornire
-        disable: Ștergeți pagina de pornire personalizată
-    logout: Deconectați-vă
+        enable: Setează ca pagină de start
+        disable: Elimină pagina de start personalizată
+    logout: Deconectare
     menu: Meniu
     mode:
         dark: Mod întunecat
-        light: Mod de lumină
-    now: Chiar acum
-    params: Parametri
-    plus: Plus
-    schedule: Grila de program
-    signon: Autentificare
-    signup: Creați un cont
+        light: Mod luminos
+    now: În acest moment
+    params: Setări
+    plus: Mai mult
+    schedule: Grila programelor
+    signon: Conectare
+    signup: Creează un cont
     streaming: Toate radiourile
-    timer: Cronometru
+    timer: Timer
     title: Meniu
 
 page:
     contact:
         title: 'Contact'
-        email: 'E-mail'
-        message: 'Mesaj*'
-        name: 'Nume*'
+        email: 'Email'
+        message: 'Mesaj *'
+        name: 'Nume *'
         send: 'Trimite'
-        sent: 'Mesajul dvs. a fost trimis cu succes.'
-        add_radio_1: 'Vreau să adaug radioul meu (web)'
+        sent: 'Mesajul tău a fost trimis cu succes.'
+        add_radio_1: Doresc să adaug radioul meu (web), cum pot face acest lucru?
         add_radio_2: 'Ai două opțiuni:'
-        add_radio_3: '1/ Creează un cont și trimite radioul în pagina ta de utilizator.'
-        add_radio_4: '2/ Utilizați API-ul Radio-Browser. Pentru a trimite radioul, <a target="_blank" href="https://www.radio-browser.info/#/add">faceți clic aici</a>.'
+        add_radio_3: 1/ Creează un cont și adaugă radioul tău în spațiul tău de utilizator.
+        add_radio_4: 2/ Folosește API-ul Radio-Browser. Pentru a trimite radioul tău, <a target="_blank" href="https://www.radio-browser.info/#/add">apasă aici</a>.
 
     faq:
         title: 'Întrebări frecvente'
-        page_title: 'Întrebări frecvente - Programe radio în Franța'
-        page_description: 'Întrebări despre programe-Radio.com'
+        page_title: 'FAQ - Programele radio din Franța'
+        page_description: 'Întrebări despre Programe-Radio.com'
 
     forgotten_password:
-        error: A <strong>apărut o eroare.</strong> <br>Dacă linkul de recuperare a parolei este depășit, repetați procedura din nou.
-        click_here: click aici
-        done_title: Resetare parolă
-        done: '<strong>Parola a fost actualizată.</strong> <br>Vă puteți conecta la %link%făcând clic aici%link_end% .'
+        error: <strong>A apărut o eroare.</strong><br>Dacă linkul de recuperare a parolei este învechit, te rugăm să repeți procedura
+        click_here: apasă aici
+        done_title: Resetează parola
+        done: '<strong>Parola a fost actualizată.</strong><br>Te poți conecta %link%apăsând aici%link_end%.'
         page_title: Parolă uitată
-        success: Dacă a fost găsit un cont care utilizează e-mailul <strong>%email%</strong>, i s-a trimis un mesaj cu un link pentru resetarea parolei.
-        submit: Trimiteți
+        success: Dacă un cont care folosește adresa de email <strong>%email%</strong> a fost găsit, un mesaj cu un link pentru resetarea parolei a fost trimis.
+        submit: Trimite
 
     login:
-        forgotten_password: Ai uitat parola?
-        page_title: Autentificare
+        forgotten_password: Parolă uitată?
+        page_title: Conectare
 
     now:
-        back: '← Accesați programul programului'
-        no_schedule: '<strong>no_calendar: Ups...</strong> nu există programe disponibile.'
-        page_description: 'Ce să asculți acum? '
-        page_title: 'Programe pe radio'
-        title: 'En ce moment à la radio'
+        back: '← Du-te la grila programelor'
+        no_schedule: <strong>Oops ...</strong> niciun program disponibil.
+        page_description: 'Ce să asculți acum?'
+        page_title: 'Programe în acest moment la radio'
+        title: 'În acest moment la radio'
 
     radio:
-        advanced: Utilizați playerul avansat <br>(webradios, titluri actuale...)
-        back: '← Mergeți la programul programului pentru toate radiourile'
+        advanced: Folosește playerul avansat<br>(webradio, titluri curente ...)
+        back: '← Du-te la grila programelor tuturor radiourilor'
         current: ↓ Du-te la emisiunea curentă
-        description: 'Programe radio %radio% și ascultă online'
+        description: 'Programele radioului %radio% și ascultare online'
         goto_today: Vezi programele de astăzi
-        goto_schedule: Vezi programul programului
-        more_radios: 'Mai multe radio'
-        no_schedule: 'Programele nu sunt disponibile. '
-        not_today: Vizualizați programe dintr-o altă zi decât astăzi
+        goto_schedule: Vezi grila programelor
+        more_radios: 'Mai multe radiouri'
+        no_schedule: 'Programe indisponibile.'
+        not_today: Consulți programele pentru o altă zi decât cea de astăzi
         play: 'Ascultă %radio%'
-        stop: 'Opriți %radio%'
+        stop: 'Oprește %radio%'
         summary: 'Descriere'
-        title: 'Ascultă %radio% transmisiune live'
-        website: 'Site'
+        title: 'Ascultă %radio% în direct - Programe din %date%'
+        website: 'Site web'
 
     registered:
-        page_title: Creați un cont
-        alert_1: Contul dvs. a fost creat cu succes!
-        alert_2: Dacă ai avut radiouri și fluxuri preferate, acestea au fost adăugate automat în contul tău.
-        what_now_query: Ce vrei să faci acum?
-        what_now_choice1: Conectați-vă la contul meu
-        what_now_choice2: Consultați programele radio
-        what_now_choice3: Ascultați streaming radio
+        page_title: Creează un cont
+        alert_1: Contul tău a fost creat cu succes!
+        alert_2: Dacă aveai radiouri și stream-uri favorite, acestea au fost adăugate automat în contul tău.
+        what_now_question: Ce dorești să faci acum?
+        what_now_choice1: Conectează-te la contul meu
+        what_now_choice2: Consultă programele radio
+        what_now_choice3: Ascultă radiouri în streaming
 
     stream:
         country: Țară
-        description: 'Ascultă %radio% live și gratuită'
-        disabled: 'Acest radio pare a fi inactiv.'
-        discover: Descoperiți mai multe posturi de radio, căutați după stiluri de țară și muzică...
-        errors: Au fost raportate erori de redare pentru acest radio.
-        find: Căutare
-        find_amazon: Căutați pe Amazon
+        description: 'Ascultă %radio% în direct și gratuit'
+        disabled: 'Acest radio pare inactiv.'
+        discover: Descoperă mai multe radiouri, caută după țară și stiluri muzicale ...
+        errors: 'Au fost raportate erori de redare pentru acest radio.'
+        find: Caută
+        find_amazon: Caută pe Amazon
         find_deezer: Caută pe Deezer
-        find_spotify: Căutați pe Spotify
-        find_youtube: Căutați pe YouTube
-        listeners: Auditori
+        find_spotify: Caută pe Spotify
+        find_youtube: Caută pe Youtube
+        listeners: Ascultători
         play: 'Ascultă'
         playing: Titlu
-        playing_error: Eroare de citire
-        stop: 'Opriți'
+        playing_error: Eroare de redare
+        stop: 'Oprește'
         suggested: Radiouri sugerate
         tags: Etichete
-        share: Partajarea radioului
-        title: '%radio% - Ascultă live'
-        title_country: '%radio% - %country% - Ascultă live'
-        website: Site
-        banned: Acest post de radio este interzis.
+        share: Partajează radioul
+        title: 'Ascultă %radio% în direct'
+        title_country: '%radio% - %country% - Ascultă în direct'
+        website: Site web
+        banned: Acest radio este interzis.
         desc: 'Descriere'
-        tagline: 'slogan'
+        tagline: 'Slogan'
         updated: 'Actualizat'
         languages: 'Limbi'
-        popup: Trebuie deschisă o fereastră pop-up pentru a reda acest radio
-        advanced: Folosiți jucătorul avansat<br>(volum, favorite ...)
+        popup: O fereastră popup trebuie deschisă pentru a reda acest radio.
+        advanced: Folosește playerul avansat<br>(volum, favorite, istoric ...)
 
         modification:
-            at_least_one: Completați unul sau mai multe câmpuri.
-            comment: Cometariu
-            img: Adresa URL a logo-ului
+            at_least_one: Completează unul sau mai multe câmpuri.
+            comment: Comentariu
+            img: URL logo
             name: Nume
             radio: Radio
-            stream_url: Adresa URL a fluxului
-            success: Sugestiile dvs. au fost înregistrate și vor fi studiate foarte curând.
-            suggest: Sugerați o schimbare
-            website: Site
+            stream_url: URL stream
+            success: Mulțumim pentru sugestii. Acestea au fost înregistrate și vor fi analizate în curând.
+            suggest: Sugerează o modificare
+            website: Site web
             submit: Trimite
 
         submission:
             my_radios: Radiourile mele
-            no_radios: Nu aveți radiouri.
-            title_new: Adaugă radio
-            title_edit: Editează un radio
-            img: Adresa URL a logo-ului
+            no_radios: Nu ai niciun radio.
+            title_new: Adaugă un radio
+            title_edit: Modifică un radio
+            img: URL logo
             name: Nume
             radio: Radio
+            stream_url: URL stream
             slogan: Slogan
             description: Descriere
-            stream_url: Adresa URL a fluxului
-            success_new: Radioul dvs. a fost înregistrat cu succes, va fi disponibil foarte curând.
-            success_edit: Radioul dvs. a fost schimbat cu succes.
-            success_delete: Radioul dvs. a fost șters cu succes.
-            add: Adăugați un radio
-            edit: Editați un radio
+            success_new: Radioul tău a fost înregistrat cu succes, va fi disponibil în curând.
+            success_edit: Radioul tău a fost modificat cu succes.
+            success_delete: Radioul tău a fost șters cu succes.
+            add: Adaugă un radio
+            edit: Modifică un radio
             website: Site web
             country: Țară
-            language: Limba
-            tags: Etichete (minuscule, separate de o virgulă)
+            language: Limbă
+            tags: Etichete (cu litere mici, separate prin virgulă)
             submit: Trimite
             delete: Șterge
-            delete_confirm: Sigur doriți să ștergeți acest post de radio? Această operație este ireversibilă.
+            delete_confirm: Ești sigur că dorești să ștergi acest radio? Această operațiune este ireversibilă.
+            stats_title: Statistică
+            stats_this_month: "%sessions% sesiuni de ascultare pentru un total de %time% în această lună."
+            stats_last_month: "%sessions% sesiuni de ascultare pentru un total de %time% în luna trecută."
 
     top:
-        page_title: Cele mai bune posturi de radio din %country%
-        description: 'Ascultă cele mai bune posturi de radio din %country%'
-        more: Vedeți mai multe radiouri de top în %country%
+        page_title: Top radiouri în %country%
+        description: 'Ascultă cele mai bune radiouri din %country%'
+        more: Vezi mai multe radiouri top în %country%
 
     last:
-        page_title: Ultimele posturi de radio ascultate în %country%
-        description: 'Ascultă cele mai bune posturi de radio din %country%'
-        more: Vedeți mai multe posturi de radio ascultate recent în %country%
+        page_title: Ultimele radiouri ascultate în %country%
+        description: 'Ascultă cele mai bune radiouri din %country%'
+        more: Vezi mai multe radiouri ascultate recent în %country%
 
     user:
-        page_title: Creați un cont
+        page_title: Creează un cont
 
     account:
         prefix: Contul meu
         menu:
-            email: E-mail
-            password: Parola
+            email: Email
+            password: Parolă
             preferences: Preferințe
             delete: Ștergere
             streams: Radiourile mele
         email:
-            page_title: Schimbă adresa mea de e-mail
-            info_1: Aceasta va actualiza e-mailul folosit pentru conectarea la site.
-            info_2: O confirmare va fi trimisă la adresele vechi și noi.
-            success: Adresa de e-mail a fost actualizată.
-            new_email: 'Adresă de e-mail nouă: '
-            new_email_substituent: exemple@email.com
-            update_btn: Actualizare
+            page_title: Schimbă-mi emailul
+            info_1: Acest lucru va actualiza emailul folosit pentru conectarea la site.
+            info_2: O confirmare va fi trimisă la vechea și noua adresă.
+            success: Adresa de email a fost actualizată.
+            new_email: 'Noua adresă de email:'
+            new_email_placeholder: exemplu@email.com
+            update_btn: Actualizează
         password:
-            page_title: Schimbă parola
+            page_title: Schimbă-mi parola
             success: Parola a fost actualizată.
-            update_btn: Actualizare
+            update_btn: Actualizează
         preferences:
             page_title: Preferințe
-            update_btn: Actualizare
-            store_history: Păstrați istoricul posturilor de radio redate
-            reset_history: Ștergeți-mi istoricul
-            reset_confirm: Sigur doriți să ștergeți istoricul?
-            reset_confirmed: Istoricul dvs. a fost șters.
+            update_btn: Actualizează
+            store_history: Păstrează istoricul radiourilor redate
+            reset_history: Șterge-mi istoricul
+            reset_confirm: Ești sigur că dorești să ștergi istoricul tău?
+            reset_confirmed: Istoricul tău a fost șters.
         delete:
-            page_title: Ștergerea contului
-            warning: Atenție această operație este ireversibilă. Favoritele tale vor fi eliminate
-            confirm: Sunteți sigur că doriți să vă ștergeți contul?
-            delete_btn: Șterge contul meu
+            page_title: Ștergere cont
+            warning: Atenție, această operațiune este ireversibilă. Favoritele tale vor fi șterse
+            confirm: Ești sigur că dorești să ștergi contul tău?
+            delete_btn: Șterge-mi contul
         delete_confirm:
-            success: Contul dvs. a fost șters cu succes.
+            success: Contul tău a fost șters cu succes.
 
 boxes:
     already_account:
-        title: Aveți deja un cont?
-        content: Faceți clic aici pentru a vă conecta
+        title: Ai deja un cont?
+        content: Apasă aici pentru a te conecta
 
     no_account:
-        title: Niciun cont încă?
-        content: Faceți clic aici pentru a vă înregistra
+        title: Nu ai încă un cont?
+        content: Apasă aici pentru a te înregistra
 
     why_account:
         title: De ce să te înregistrezi?
-        content: "- Un cont vă permite să accesați radiourile și fluxurile preferate din orice browser și din aplicație."
-        content2: "- Salvați titlul melodiilor pe care le ascultați."
-        content3: "- Consultați istoricul dvs. (opțional)"
-        content4: "- Mai puține anunțuri"
+        content: "- Un cont îți permite să accesezi radiourile și stream-urile favorite de pe orice browser și din aplicație."
+        content2: "- Salvează titlurile cântecelor care sunt redate."
+        content3: "- Consultă istoricul tău (opțional)"
+        content4: "- Mai puține reclame"
 
 registrationForm:
-    email: 'E-mail'
+    email: 'Email'
     error:
-        captcha: 'Captcha nevalidă, încercați din nou.'
-        empty: 'Acest câmp nu poate fi gol. '
-        password_min: 'Parola trebuie să conțină cel puțin 8 caractere. '
-        password: 'Parolele nu sunt la fel. '
-    captcha: "Scrieți literele și numerele enumerate mai jos"
-    password: 'Parola'
-    password_confirm: 'Confirmați parola'
-    submit_create: 'Creează contul'
+        captcha: 'Captcha invalid, te rugăm să încerci din nou.'
+        empty: 'Acest câmp nu poate fi gol.'
+        password_min: 'Parola trebuie să conțină cel puțin 8 caractere.'
+        password: 'Parolele nu sunt identice.'
+    captcha: 'Scrie literele și numerele de mai jos'
+    password: 'Parolă'
+    password_confirm: 'Confirmare parolă'
+    submit_create: 'Creează-mi contul'
 
 connectionForm:
-    already_logged: Sunteți conectat în prezent ca %email%
+    already_logged: Ești conectat în prezent ca %email%
     logout: deconectare
-    email:  'E-mail'
-    password: 'Parola'
-    remember_me: 'Adu-ți aminte de mine'
-    submit_connect: 'Conectați-vă în'
+    email: 'Email'
+    password: 'Parolă'
+    remember_me: 'Ține-mă minte'
+    submit_connect: 'Conectare'
 
 updatePasswordForm:
     new: Parolă nouă
     new_confirm: Confirmare parolă nouă
-    error_not_same: Parolele nu sunt aceleași.
+    error_not_same: Parolele nu sunt identice.
     error_not_empty: Acest câmp nu poate fi gol.
     error_length: Parola trebuie să conțină cel puțin 8 caractere.
 
@@ -306,54 +327,84 @@ footer:
     hu: Magyarok
     tr: Türkçe
 
-legal: 'Notificări legale'
+legal: 'Informații legale'
+
+cookie:
+    accept: Da
+    allow: Acceptă reclame personalizate?
+    deny: Nu
+    disclaimer: (%name% nu vinde datele vizitatorilor săi)
 
 admin:
+    api:
+        flash:
+            success: Acțiune finalizată.
+            error: A apărut o eroare.
+        cache:
+            title: Api - Cache
+            menu: Cache
+            clear_streams: Golește cache-ul stream-urilor
+        search:
+            title: Căutare
+            menu: Căutare
+            import: Importă
+
     dashboard:
-        title: Dashboard
+        title: Panou de control
         menu:
-            brief: Brief
-            table: Table
+            brief: Rezumat
+            table: Tabel
         table:
-            shows: Shows
-            sections: Sections
+            shows: Programe
+            sections: Cronici
             stream_abbr: St.
         accounts:
-            title: Accounts
-            active: '%number% active accounts'
+            title: Conturi
+            active: '%number% conturi active'
             email: email
-            created_at: Created
-            last: (last %number%)
+            created_at: Creare
+            last: (%number% ultimele)
         no_schedule:
-            title: Radios with no schedule today
-            shows: Sections
-            sections: Sections
-            all_ok: All radios have schedule today.
+            title: Radiouri fără programe astăzi
+            shows: Programe
+            sections: Cronici
+            all_ok: Toate radiourile au programe afișate.
         stream_errors:
-            title: Stream errors
-            error: Errors for <strong>%number%</strong> checks
+            title: Erori stream
+            error: Erori pentru <strong>%number%</strong> verificare
             link: link
-            no_errors: All streams working.
+            no_errors: Toate stream-urile funcționează
         live_song_errors:
-            title: Live song errors
-            error: Errors for <strong>%number%</strong> checks
-            reset_all: reset all
+            title: Erori titlu curent
+            error: Erori pentru <strong>%number%</strong> verificare
+            reset_all: resetează tot
             link: link
-            no_errors: No errors recorded.
+            no_errors: Nici o eroare înregistrată
 
     listening:
-        title: currently listening
-        today: Today
-        yesterday: Yesterday
-        this_month: This month
-        last_month: Last month
-        ratings: Ratings
+        title: Ascultări
+        today: Astăzi
+        yesterday: Ieri
+        this_month: Această lună
+        last_month: Luna trecută
+        ratings: Sondaje
 
     stream_errors:
-        title: Streaming errors
-        name: Name
-        errors: Errors
-        view: See
-        edit: Edit
-        reset: Reset
-        reset_all: Reset all
+        title: Eroare stream
+        name: Nume
+        errors: Erori
+        view: Vezi
+        edit: Editează
+        reset: Resetează
+        reset_all: Resetează tot
+
+    stream_check:
+        title: Verificare stream
+        img: Imagine
+        stream: Stream
+        website: Site
+        ssl: SSL
+        commit: Confirmă
+        last_checked: Verificat
+        view: Vezi
+        edit: Editează
