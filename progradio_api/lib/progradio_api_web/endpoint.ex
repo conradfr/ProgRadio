@@ -1,4 +1,5 @@
 defmodule ProgRadioApiWeb.Endpoint do
+  use Sentry.PlugCapture
   use Phoenix.Endpoint, otp_app: :progradio_api
 
   # The session will be stored in the cookie and signed,
@@ -49,4 +50,6 @@ defmodule ProgRadioApiWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug ProgRadioApiWeb.Router
+
+  plug Sentry.PlugContext
 end

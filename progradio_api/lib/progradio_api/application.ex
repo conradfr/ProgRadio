@@ -7,6 +7,10 @@ defmodule ProgRadioApi.Application do
 
   @impl true
   def start(_type, _args) do
+    :logger.add_handler(:my_sentry_handler, Sentry.LoggerHandler, %{
+      config: %{metadata: [:file, :line]}
+    })
+
     children = [
       ProgRadioApiWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:progradio_api, :dns_cluster_query) || :ignore},
