@@ -124,7 +124,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
       cover =
         case cover do
           nil -> nil
-          "http" <> cover_url -> cover
+          "http" <> _cover_url -> cover
           _ -> "https://www.radiorecord.ru/" <> cover
         end
 

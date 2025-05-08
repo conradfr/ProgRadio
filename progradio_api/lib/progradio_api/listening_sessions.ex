@@ -15,19 +15,6 @@ defmodule ProgRadioApi.ListeningSessions do
   #  @cache_prefix "listening_session_"
   #  @cache_ttl 90_000
 
-  #  @doc """
-  #  Returns the list of listening_session.
-  #
-  #  ## Examples
-  #
-  #      iex> list_listening_session()
-  #      [%ListeningSession{}, ...]
-  #
-  #  """
-  #  def list_listening_session do
-  #    Repo.all(ListeningSession)
-  #  end
-
   #  @decorate cacheable(
   #              cache: Cache,
   #              key: [@cache_prefix, id],
@@ -83,18 +70,6 @@ defmodule ProgRadioApi.ListeningSessions do
     end
   end
 
-  @doc """
-  Creates a listening_session.
-
-  ## Examples
-
-      iex> create_listening_session(%{field: value})
-      {:ok, %ListeningSession{}}
-
-      iex> create_listening_session(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_listening_session(attrs \\ %{}, remote_ip \\ nil)
 
   # listening session for radios or streams
@@ -172,7 +147,7 @@ defmodule ProgRadioApi.ListeningSessions do
 
         attrs
         |> Map.put("date_time_start", date_time_start)
-        |> Map.delete("id")
+#        |> Map.delete("id")
         |> create_listening_session(remote_ip)
 
       _ ->

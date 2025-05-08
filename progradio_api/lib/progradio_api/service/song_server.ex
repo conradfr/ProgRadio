@@ -162,24 +162,38 @@ defmodule ProgRadioApi.SongServer do
           db_data: db_data
         } = state
       ) do
-    {data, song} = get_data_song(module, name, last_data)
-    broadcast_song(name, song)
-    updated_song_history = update_song_history(last_song, song_history, song)
-    broadcast_song_history_if_needed(name, updated_song_history, song_history)
-    update_status(song, db_data)
+    with {data, song} <- get_data_song(module, name, last_data),
+         false <- data == :error do
+      broadcast_song(name, song)
+      updated_song_history = update_song_history(last_song, song_history, song)
+      broadcast_song_history_if_needed(name, updated_song_history, song_history)
+      update_status(song, db_data)
 
-    next_refresh =
-      apply(module, :get_refresh, [name, data, @refresh_song_interval]) ||
-        @refresh_song_interval
-        |> Kernel.+(Enum.random(-5..5))
+      next_refresh =
+        apply(module, :get_refresh, [name, data, @refresh_song_interval]) ||
+          @refresh_song_interval
+          |> Kernel.+(Enum.random(-5..5))
 
-    Logger.debug(
-      "Data provider - #{name}: song updated, next update in #{trunc(next_refresh / 1000)} seconds"
-    )
+      Logger.debug(
+        "Data provider - #{name}: song updated, next update in #{trunc(next_refresh / 1000)} seconds"
+      )
 
-    Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
+      Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 
-    {:noreply, %{state | song: song, song_history: updated_song_history, last_data: data}}
+      {:noreply, %{state | song: song, song_history: updated_song_history, last_data: data}}
+    else
+      _ ->
+        next_refresh =
+          apply(module, :get_refresh, [name, nil, @refresh_song_interval]) ||
+            @refresh_song_interval
+            |> Kernel.+(Enum.random(-5..5))
+
+        Logger.error("Data provider - #{state.name}: fetching error")
+
+        Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
+
+        {:noreply, state}
+    end
   end
 
   @impl true
