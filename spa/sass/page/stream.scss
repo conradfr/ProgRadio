@@ -45,13 +45,13 @@
       @include media-breakpoint-down(sm) {
         width: 75px !important;
 
-        img {
+        div.streams-one-img {
           max-width: 73px;
           max-height: 73px;
         }
       }
 
-      img {
+      div.streams-one-img {
         max-width: 75px;
         max-height: 75px;
       }

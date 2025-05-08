@@ -88,7 +88,7 @@
     <div class="row">
         <div class="col-sm-2 col-12">
             <div class="radio-page-side sticky">
-                <div class="text-center mb-3">
+                <div class="text-center mb-4">
                     <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ preload(asset(self.picture(stream)), {as: 'image'}) }}">
                 </div>
 
@@ -139,25 +139,24 @@
                     </div>
 
                     {% if stream.enabled == false %}
-                        <div class="alert alert-warning mb-5" role="alert">
+                        <div class="alert alert-warning mb-4" role="alert">
                             <i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.disabled'|trans }}
                         </div>
                     {% endif %}
 
                     {% if stream.playingError >= constant('App\\Entity\\Stream::ERROR_DISPLAY_THRESHOLD')  %}
-                        <p class="text-warning"><i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.errors'|trans }}</p>
+                        <p class="text-warning text-center text-md-start"><i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.errors'|trans }}</p>
                     {% endif %}
 
-                    <div class="stream-page-stream mt-0 mb-4 py-1" v-scope>
+                    <div class="stream-page-stream" v-scope>
                         {% if stream.banned == true %}
                             <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
-
                         {% elseif 'youtu.be' in stream.streamUrl or 'youtube.com' in stream.streamUrl %}
                             {{ self.extractYouTubeIdAndProvideiFrame(stream.streamUrl) }}
                         {% else %}
-                            <div class="radio-page-streams-one py-1 d-none d-flex align-items-center justify-content-center justify-content-sm-start"
-                                @vue:mounted="$el.classList.remove('d-none')" v-cloak>
-                                <div>
+                            <div class="radio-page-streams-one mb-4 d-flex align-items-center justify-content-center justify-content-sm-start"
+                                style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none')">
+                                <div v-cloak>
                                     <div
                                         v-if="playing === PLAYER_STATE_STOPPED"
                                         @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}'})"
@@ -183,45 +182,41 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="ps-2">
+                                <div class="ps-2" v-cloak>
                                     <div
                                         v-if="playing === PLAYER_STATE_STOPPED"
                                         @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}'})"
                                         class="radio-page-play">
-                                        <div>&nbsp;{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}</div>
+                                        <div class="fs-4">&nbsp;{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}</div>
                                     </div>
                                     <div
                                         v-if="playing !== PLAYER_STATE_STOPPED"
                                         @click="stop('{{ stream.id }}')"
                                         class="radio-page-play">
-                                        <div>&nbsp;{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}</div>
+                                        <div class="fs-4">&nbsp;{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}</div>
                                     </div>
                                 </div>
                             </div>
                         {% endif %}
 
                         {% if stream.popup == true %}
-                        <div class="mt-2"><small><i class="bi bi-info-circle"></i>&nbsp;&nbsp;{{ 'page.stream.popup'|trans }}</small></div>
+                            <div class="mb-4"><small><i class="bi bi-info-circle"></i>&nbsp;&nbsp;{{ 'page.stream.popup'|trans }}</small></div>
                         {% endif %}
 
-                        <div id="playing-alert" class="alert alert-danger d-none mt-5 mb-5" role="alert">
+                        <div id="playing-alert" class="alert alert-danger d-none mb-4" role="alert">
                             <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
                         </div>
 
-                        <div class="mt-4 py-3 py-sm-4 px-sm-3 stream-page-live" v-if="song !== null || listeners !== null" v-cloak>
-                           <div class="d-flex" :class="{'mb-4': listeners !== null}" v-if="song !== null">
-                                <div v-if="cover" class="px-2 pe-md-0 me-4 live-song-cover text-center">
+                        <div class="p-3 mb-4 stream-page-live" v-if="song !== null" v-cloak>
+                            <div class="d-flex">
+                                <div v-if="cover" class="me-3 live-song-cover text-start">
                                     <img class="mx-auto" :src="cover">
                                 </div>
-                                <div class="flex-grow-1">
-                                    <div>
-                                        <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong><br v-if="cover">
+                                <div class="flex-grow-1 align-self-center">
+                                    <div class="mb-3">
                                         {% verbatim %}♫ {{ song }}{% endverbatim %}
                                     </div>
-
-                                    <div class="mt-3 stream-page-live-search" v-if="song !== undefined && song !== null && song.trim() !== ''">
-                                        <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;<br v-if="cover">
+                                    <div class="stream-page-live-search" v-if="song !== undefined && song !== null && song.trim() !== ''">
                                         <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
                                            :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
                                             <i class="bi bi-youtube"></i><span> YouTube</span>
@@ -241,15 +236,15 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div v-if="listeners !== null">
-                              <strong>{{ 'page.stream.listeners'|trans }}:&nbsp;&nbsp;</strong>
-                                {% verbatim %}
+                        <div class="mb-3 text-start" v-if="listeners !== null" v-cloak>
+                            <strong>{{ 'page.stream.listeners'|trans }}:</strong>
+                            {% verbatim %}
                               <i v-if="listeners === 1" class="bi bi-person-fill"></i>
                               <i v-if="listeners > 1" class="bi bi-people-fill"></i>
                               &nbsp;{{ listeners }}
                             {% endverbatim %}
-                            </div>
                         </div>
                     </div>
 
@@ -268,13 +263,13 @@
                         {% endif %}
                     {% endif %}
 
-                    <div class="pt-2 pb-3 px-3 d-block d-sm-none">
+                    <div class="pt-2 pb-4 px-3 d-block d-sm-none">
                         {{ include('_partials/adblock.html.twig', {style: 'horizontal', class: 'd-block d-sm-none'}) }}
                     </div>
 
                     {% if stream.banned != true %}
                         {% if stream.tags is not null and stream.tags != '' %}
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-12 col-sm-9">
                                     <div class="stream-one-tags">
                                         <div class="d-flex flex-wrap align-items-center">
@@ -293,52 +288,52 @@
                         {% endif %}
 
                         {% if stream.language is defined and stream.language is not null and stream.language != '' %}
-                            <div class="mt-3">
+                            <div class="mb-3">
                                 <strong>{{ 'page.stream.languages'|trans }}:</strong> {{ stream.language|replace({',': ', '}) }}
                             </div>
                         {% endif %}
 
                         {% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %}
-                            <div class="mt-3">
+                            <div class="mb-3">
                                 <strong>{{ 'page.stream.tagline'|trans }}:</strong> {{ stream.slogan }}
                             </div>
                         {% endif %}
 
                         {% if stream.description is defined and stream.description is not null and stream.description != '' %}
-                            <div class="mt-3">
+                            <div class="mb-3">
                                 <strong>{{ 'page.stream.desc'|trans }}:</strong> {{ stream.description }}
                             </div>
                         {% endif %}
 
                         {% if stream.updatedAt is defined and stream.updatedAt is not null %}
-                            <div class="mt-3">
+                            <div class="mb-3">
                                 <strong>{{ 'page.stream.updated'|trans }}:</strong> {{ stream.updatedAt|format_datetime('short', 'short') }}
                             </div>
                         {% endif %}
                     {% endif %}
 
-                    <div class="d-sm-none mt-4 mb-2 text-center">
-                        <div class="mb-4"><a target="_blank" class="link-no-to-bold" href="{{ path('streams_suggestion', {id: stream.id}) }}">{{ 'page.stream.modification.suggest'|trans }}</a></div>
+                    <div class="d-sm-none text-center">
+                        <div class="mt-4 mb-3"><a target="_blank" class="link-no-to-bold" href="{{ path('streams_suggestion', {id: stream.id}) }}">{{ 'page.stream.modification.suggest'|trans }}</a></div>
 
-                        <button type="button" class="btn btn-sm share-button">
+                        <button type="button" class="btn btn-sm share-button mb-5">
                             <i class="bi bi-share-fill"></i>&nbsp;&nbsp;{{ 'page.stream.share'|trans }}
                         </button>
                     </div>
 
                     <div class="more-streams">
-                        <div class="mt-5 mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
+                        <div class="mb-1"><strong>{{ 'page.stream.suggested'|trans }}</strong></div>
 
                         {% if stream.countryCode is not null and stream.countryCode != '' %}
-                            <div class="mt-3 mb-3">
+                            <div class="my-3">
                                 <a href="{{ path('streaming_spa') }}/{{ stream.countryCode }}">{{ 'page.top.more'|trans({'%country%': stream.getCountry(app.request.locale)}) }}</a>
                             </div>
                         {% endif %}
 
-                        <div class="d-flex clearfix streams mb-4">
+                        <div class="d-flex flex-wrap streams mb-4">
                             {% for entry in more_streams %}
-                                <div class="streams-one streams-one-more streams-one-play-hide {% if loop.last == true %}d-sm-none{% endif %}">
+                                <div class="streams-one streams-one-more streams-one-play-hide {% if loop.last == true %}d-none{% endif %} d-sm-block">
                                     <a href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">
-                                        <div class="streams-one-img" style="background-image: url('{{ asset(self.picture(entry)) }}')"></div>
+                                        <div class="streams-one-img m-auto" style="background-image: url('{{ asset(self.picture(entry)) }}')"></div>
                                     </a>
 
                                     <div class="streams-one-name" title="{{ entry.name }}">
@@ -348,8 +343,7 @@
                             {% endfor %}
                         </div>
 
-                        <div class="clearfix mt-5 mb-5">
-                            <br><br>
+                        <div class="mb-5">
                             <a class="more-link" href="{{ path('streaming_spa') }}/{{ stream.countryCode|default('') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>
