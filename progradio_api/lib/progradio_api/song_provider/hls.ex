@@ -23,28 +23,14 @@ defmodule ProgRadioApi.SongProvider.Hls do
     url = SongProvider.get_stream_code_name_from_channel(name)
 
     try do
-      task =
-        Task.Supervisor.async(TaskSupervisor, fn ->
-          try do
-            get_hls_data(url)
-          rescue
-            reason ->
-              Logger.error(
-                "Data provider - #{name} (hls): task error rescue (#{inspect(reason)})"
-              )
-
-              :error
-          catch
-            :exit, _ ->
-              Logger.error("Data provider - #{name} (hls): task error catch")
-              :error
-          end
-        end)
-
-      Task.await(task, @task_timeout)
+      get_hls_data(url)
     rescue
       _ ->
-        Logger.error("Data provider - #{name} (hls: data error rescue")
+        Logger.debug("Data provider - #{name} (hls): data error rescue")
+        :error
+    catch
+      :exit, _ ->
+        Logger.debug("Data provider - #{name} (hls): data error catch")
         :error
     end
   end
@@ -73,12 +59,8 @@ defmodule ProgRadioApi.SongProvider.Hls do
         end
       end)
     rescue
-      reason ->
-        Logger.error("Data provider - #{name} (hls): task error rescue (#{inspect(reason)})")
-        :error
-    catch
-      :exit, _ ->
-        Logger.error("Data provider - #{name} (hls): task error catch")
+      _ ->
+        Logger.debug("Data provider - #{name} (hls): error fetching song data or empty")
         :error
     end
   end

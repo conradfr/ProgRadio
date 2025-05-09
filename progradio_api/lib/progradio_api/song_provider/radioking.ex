@@ -57,7 +57,7 @@ defmodule ProgRadioApi.SongProvider.Radioking do
       end
     rescue
       _ ->
-        Logger.error("Data provider - #{name} (radioking): data error rescue")
+        Logger.debug("Data provider - #{name} (radioking): data error rescue")
         :error
     end
   end
@@ -67,19 +67,25 @@ defmodule ProgRadioApi.SongProvider.Radioking do
 
   @impl true
   def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+    try do
+      case data do
+        nil ->
+          Logger.info("Data provider - #{name}: error fetching song data or empty")
+          %{}
 
+        _ ->
+          Logger.debug("Data provider - #{name} - data")
+
+          %{
+            artist: SongProvider.recase(data["artist"] || nil),
+            title: SongProvider.recase(data["title"] || nil),
+            cover_url: data["cover"] || nil
+          }
+      end
+    rescue
       _ ->
-        Logger.debug("Data provider - #{name} - data")
-
-        %{
-          artist: SongProvider.recase(data["artist"] || nil),
-          title: SongProvider.recase(data["title"] || nil),
-          cover_url: data["cover"] || nil
-        }
+        Logger.debug("Data provider - #{name} (radioking): song error rescue")
+        :error
     end
   end
 end

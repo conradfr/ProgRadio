@@ -12,7 +12,7 @@ defmodule ProgRadioApi.SongProvider.BelRtl do
     "bel_rtl_musique" => 1141,
     "bel_rtl_60" => 1144,
     "bel_rtl_90" => 1145,
-    "bel_rtl_happy" => 1142,
+    "bel_rtl_happy" => 1142
   }
 
   @impl true
@@ -25,6 +25,7 @@ defmodule ProgRadioApi.SongProvider.BelRtl do
   def get_refresh(_name, data, default_refresh) do
     try do
       now_unix = SongProvider.now_unix()
+
       end_unix =
         data
         |> Map.get("now", %{})

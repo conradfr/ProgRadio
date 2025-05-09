@@ -73,19 +73,19 @@ defmodule ProgRadioApi.Schedule do
             |> format()
 
           result
-          |> Enum.each(
-              fn {k, e} when is_nil(e) == false and is_map(e) and map_size(e) > 0 ->
-                if (now == false) do
-                  Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
-                end
-               fn {k, e} ->
-                  # don't cache
-              end
+          |> Enum.each(fn {k, e} when is_nil(e) == false and is_map(e) and map_size(e) > 0 ->
+            if now == false do
+              Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
+            end
+
+            fn {k, e} ->
+              nil
+              # don't cache
+            end
           end)
 
           result
       end
-
 
     cached =
       radio_code_names_cached

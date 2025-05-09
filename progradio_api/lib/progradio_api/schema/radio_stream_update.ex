@@ -9,7 +9,7 @@ defmodule ProgRadioApi.RadioStreamUpdate do
     field(:path, :string)
     field(:last_successful_run, :utc_datetime)
     field(:last_failed_run, :utc_datetime)
-#    field(:enabled, :boolean)
+    #    field(:enabled, :boolean)
     belongs_to(:radio_stream, RadioStream)
   end
 

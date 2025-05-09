@@ -33,7 +33,7 @@ defmodule ProgRadioApi.SongProvider.Rcast do
       end
     rescue
       _ ->
-        Logger.error("Data provider - #{name} (icecast): data error rescue")
+        Logger.debug("Data provider - #{name} (icecast): data error rescue")
         :error
     end
   end

@@ -147,7 +147,7 @@ defmodule ProgRadioApi.ListeningSessions do
 
         attrs
         |> Map.put("date_time_start", date_time_start)
-#        |> Map.delete("id")
+        #        |> Map.delete("id")
         |> create_listening_session(remote_ip)
 
       _ ->

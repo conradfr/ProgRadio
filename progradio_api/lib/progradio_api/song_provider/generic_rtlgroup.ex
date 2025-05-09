@@ -11,11 +11,11 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
 
   def get_data(url) do
     try do
-    date_string =
-      Timex.now()
-      |> Timex.format!(@date_format)
+      date_string =
+        Timex.now()
+        |> Timex.format!(@date_format)
 
-    # /songs?hour=19&minute=6
+      # /songs?hour=19&minute=6
       (url <> date_string)
       |> SongProvider.get()
       |> Map.get(:body)

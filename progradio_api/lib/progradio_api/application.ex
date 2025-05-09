@@ -14,19 +14,16 @@ defmodule ProgRadioApi.Application do
     children = [
       ProgRadioApiWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:progradio_api, :dns_cluster_query) || :ignore},
-
       {Redix,
-        host: Application.get_env(:progradio_api, :redis_host),
-        database: Application.get_env(:progradio_api, :redis_db),
-        password: Application.get_env(:progradio_api, :redis_password),
-        name: :redix},
+       host: Application.get_env(:progradio_api, :redis_host),
+       database: Application.get_env(:progradio_api, :redis_db),
+       password: Application.get_env(:progradio_api, :redis_password),
+       name: :redix},
 
       # Start the Finch HTTP client for sending emails
       {Finch, name: ProgRadioApi.Finch},
-
       ProgRadioApi.Cache,
       ProgRadioApi.Repo,
-
       {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
 
       # cron tasks
@@ -47,7 +44,6 @@ defmodule ProgRadioApi.Application do
        max_seconds: 1,
        name: ProgRadioApi.SongDynamicSupervisor},
       ProgRadioApi.ListenersCounter,
-
       {Meilisearch,
        name: :search,
        endpoint: Application.get_env(:progradio_api, :meilisearch_url),

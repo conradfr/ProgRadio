@@ -26,7 +26,7 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
       |> List.first()
     rescue
       _ ->
-        Logger.error("Data provider - #{name} (radiolabelleaventure): data error rescue")
+        Logger.debug("Data provider - #{name} (radiolabelleaventure): data error rescue")
         :error
     end
   end
@@ -52,15 +52,11 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
         cover_url: Map.get(data, "artwork")
       }
     rescue
-      reason ->
-        Logger.error(
-          "Data provider - #{name} (radiolabelleaventure): task error rescue (#{inspect(reason)})"
+      _ ->
+        Logger.debug(
+          "Data provider - #{name} (radiolabelleaventure): error fetching song data or empty"
         )
 
-        :error
-    catch
-      :exit, _ ->
-        Logger.error("Data provider - #{name} (radiolabelleaventure): task error catch")
         :error
     end
   end

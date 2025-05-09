@@ -3,6 +3,7 @@ defmodule ProgRadioApi.SongServer do
   require Logger
   alias ProgRadioApiWeb.Presence
   alias ProgRadioApi.StreamSong
+  alias ProgRadioApi.SongProvider
   alias ProgRadioApi.RadioStream
   alias ProgRadioApi.TaskSupervisor
 
@@ -18,6 +19,7 @@ defmodule ProgRadioApi.SongServer do
   @refresh_song_retries_max_interval 120_000
   @refresh_presence_interval 120_000
 
+  @max_seconds_errors_before_quitting 600
   @task_timeout 15000
 
   # ----- Client Interface -----
@@ -34,7 +36,9 @@ defmodule ProgRadioApi.SongServer do
         song_history: restore_history(song_topic),
         last_data: nil,
         retries: 0,
-        db_data: nil
+        db_data: nil,
+        last_timestamp: SongProvider.now_unix(),
+        tasks: %{}
       },
       name: name
     )
@@ -58,7 +62,9 @@ defmodule ProgRadioApi.SongServer do
         song_history: restore_history(song_topic),
         last_data: nil,
         retries: 0,
-        db_data: db_data
+        db_data: db_data,
+        last_timestamp: SongProvider.now_unix(),
+        tasks: %{}
       },
       name: name
     )
@@ -85,9 +91,45 @@ defmodule ProgRadioApi.SongServer do
     {:noreply, state}
   end
 
+  # auto refresh
   @impl true
   def handle_info(
         {:refresh, :auto},
+        %{
+          module: module,
+          name: name,
+          last_data: last_data
+        } =
+          state
+      ) do
+    timestamp = SongProvider.now_unix()
+    task_ref = get_data_song_task(module, name, :auto, last_data)
+    state = put_in(state.tasks[task_ref], timestamp)
+    {:noreply, state}
+  end
+
+  # refresh based on song ending data
+  @impl true
+  def handle_info(
+        {:refresh, _},
+        %{
+          module: module,
+          name: name,
+          last_data: last_data,
+          song: last_song,
+          song_history: song_history,
+          db_data: db_data
+        } = state
+      ) do
+    timestamp = SongProvider.now_unix()
+    task_ref = get_data_song_task(module, name, :custom, last_data)
+    state = put_in(state.tasks[task_ref], timestamp)
+    {:noreply, state}
+  end
+
+  # get_song_data task return for :auto
+  def handle_info(
+        {ref, {data, song, :auto}},
         %{
           module: module,
           name: name,
@@ -95,11 +137,14 @@ defmodule ProgRadioApi.SongServer do
           song_history: song_history,
           last_data: last_data,
           retries: retries,
-          db_data: db_data
-        } =
-          state
+          db_data: db_data,
+          last_timestamp: last_timestamp,
+          tasks: tasks
+        } = state
       ) do
-    with {data, song} <- get_data_song(module, name, last_data),
+    Process.demonitor(ref, [:flush])
+
+    with true <- is_nil(last_timestamp) or tasks[ref] >= last_timestamp,
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error do
       broadcast_song_if_needed(name, song, last_song)
@@ -107,7 +152,7 @@ defmodule ProgRadioApi.SongServer do
       broadcast_song_history_if_needed(name, updated_song_history, song_history)
       update_status(song, db_data)
 
-      refresh_rate =
+      next_refresh =
         cond do
           Kernel.function_exported?(state.module, :get_auto_refresh, 0) == true ->
             apply(state.module, :get_auto_refresh, [])
@@ -124,10 +169,10 @@ defmodule ProgRadioApi.SongServer do
       how_many_connected = how_many_connected(name)
 
       Logger.debug(
-        "Data provider - #{name}: song updated (timer, next: #{trunc(refresh_rate / 1000)}s, retries: #{updated_retries}) - #{how_many_connected} clients connected"
+        "Data provider - #{name}: song updated (timer, next: #{trunc(next_refresh / 1000)}s, retries: #{updated_retries}) - #{how_many_connected} clients connected"
       )
 
-      Process.send_after(self(), {:refresh, :auto}, refresh_rate)
+      Process.send_after(self(), {:refresh, :auto}, next_refresh)
 
       {:noreply,
        %{
@@ -135,34 +180,45 @@ defmodule ProgRadioApi.SongServer do
          | song: song,
            last_data: data,
            song_history: updated_song_history,
-           retries: updated_retries
+           retries: updated_retries,
+           last_timestamp: SongProvider.now_unix()
        }, :hibernate}
     else
       _ ->
         broadcast_song(name, nil)
 
-        #        Process.send_after(self(), {:refresh, :auto}, @refresh_song_retries_max_interval)
-        #        {:noreply, %{state | song: nil, last_data: nil}, :hibernate}
-
-        ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
-        Logger.error("Data provider - #{state.name}: fetching error, exiting")
-        {:stop, :normal, nil}
+        # quitting if delay reached since last successful attempt
+        if SongProvider.now_unix() - last_timestamp > @max_seconds_errors_before_quitting do
+          ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
+          Logger.error("Data provider - #{state.name}: fetching error, exiting")
+          {:stop, :normal, nil}
+        else
+          Logger.error("Data provider - #{state.name}: fetching error, no quitting")
+          Process.send_after(self(), {:refresh, :auto}, @refresh_song_retries_max_interval)
+          {:noreply, %{state | song: nil, last_data: nil}, :hibernate}
+        end
     end
   end
 
-  @impl true
+  # get_song_data task return for non auto
   def handle_info(
-        {:refresh, _},
+        {ref, {data, song, _}},
         %{
           module: module,
           name: name,
-          last_data: last_data,
           song: last_song,
           song_history: song_history,
-          db_data: db_data
+          last_data: last_data,
+          retries: retries,
+          db_data: db_data,
+          last_timestamp: last_timestamp,
+          tasks: tasks
         } = state
       ) do
-    with {data, song} <- get_data_song(module, name, last_data),
+    Process.demonitor(ref, [:flush])
+
+    with true <- is_nil(last_timestamp) or tasks[ref] >= last_timestamp,
+         updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error do
       broadcast_song(name, song)
       updated_song_history = update_song_history(last_song, song_history, song)
@@ -180,7 +236,15 @@ defmodule ProgRadioApi.SongServer do
 
       Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 
-      {:noreply, %{state | song: song, song_history: updated_song_history, last_data: data}}
+      {:noreply,
+       %{
+         state
+         | song: song,
+           last_data: data,
+           song_history: updated_song_history,
+           retries: updated_retries,
+           last_timestamp: SongProvider.now_unix()
+       }, :hibernate}
     else
       _ ->
         next_refresh =
@@ -220,7 +284,7 @@ defmodule ProgRadioApi.SongServer do
   end
 
   def handle_info({:DOWN, _ref, _, _, reason}, state) do
-    Logger.warning("URL failed with reason #{inspect(reason)}")
+    Logger.warning("Task failed with reason #{inspect(reason)}")
     {:noreply, state}
   end
 
@@ -282,31 +346,36 @@ defmodule ProgRadioApi.SongServer do
     )
   end
 
-  @spec get_data_song(atom(), String.t(), map() | nil) :: tuple()
-  defp get_data_song(module, name, last_data) do
-    try do
-      task_data = Task.Supervisor.async(TaskSupervisor, module, :get_data, [name, last_data])
-      data = Task.await(task_data, @task_timeout)
+  @spec get_data_song_task(atom(), String.t(), atom(), map() | nil) :: tuple()
+  defp get_data_song_task(module, name, refresh_type, last_data) do
+    timestamp = SongProvider.now_unix()
 
-      #      data = apply(module, :get_data, [name, last_data])
+    task =
+      Task.Supervisor.async_nolink(TaskSupervisor, fn ->
+        try do
+          task_data = Task.Supervisor.async(TaskSupervisor, module, :get_data, [name, last_data])
+          data = Task.await(task_data, @task_timeout)
 
-      song =
-        unless data == :error do
-          task_song = Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data])
-          Task.await(task_song)
-          #          apply(module, :get_song, [name, data])
-        else
-          %{}
+          song =
+            unless data == :error do
+              task_song = Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data])
+              Task.await(task_song)
+              #          apply(module, :get_song, [name, data])
+            else
+              %{}
+            end
+
+          {data, song, refresh_type}
+        rescue
+          _ ->
+            {nil, %{}, refresh_type}
+        catch
+          :exit, _ ->
+            {nil, %{}, refresh_type}
         end
+      end)
 
-      {data, song}
-    rescue
-      _ ->
-        {nil, %{}}
-    catch
-      :exit, _ ->
-        {nil, %{}}
-    end
+    task.ref
   end
 
   defp get_updated_retries(name, song, retries) do

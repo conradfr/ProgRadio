@@ -134,15 +134,11 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
         cover_url: cover
       }
     rescue
-      reason ->
-        Logger.error(
-          "Data provider - #{name} (radiorecord): task error rescue (#{inspect(reason)})"
+      _ ->
+        Logger.debug(
+          "Data provider - #{name} (radiorecord): error fetching song data or empty"
         )
 
-        :error
-    catch
-      :exit, _ ->
-        Logger.error("Data provider - #{name} (radiorecord): task error catch")
         :error
     end
   end

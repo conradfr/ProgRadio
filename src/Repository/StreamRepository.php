@@ -61,19 +61,23 @@ class StreamRepository extends ServiceEntityRepository
 
     public function getMoreStreams(Stream $stream, int $limit=self::DEFAULT_MORE_LIMIT)
     {
-        $limitThird = (int) round($limit / 3, 0);
+        $limitFourth = (int) round($limit / 4, 0);
 
         // popular country
 
-        $resultCountry = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'popularity');
+        $resultCountry = $this->getStreams($limitFourth + 1, 0, $stream->getCountryCode(), 'popularity');
 
         // last country
 
-        $resultCountryLast = $this->getStreams($limitThird, 0, $stream->getCountryCode(), 'last');
+        $resultCountryLast = $this->getStreams($limitFourth, 0, $stream->getCountryCode(), 'last');
+
+        // last all
+
+        $resultLast = $this->getStreams($limitFourth, 0, null, 'last');
 
         // random
 
-        $qbRandom = $this->getMoreStreamQuery($stream->getId(), $limitThird);
+        $qbRandom = $this->getMoreStreamQuery($stream->getId(), $limitFourth);
         $resultRandom = $qbRandom->getQuery()->enableResultCache(self::CACHE_QUICK_TTL)->getResult();
 
         return array_merge($resultCountry, $resultCountryLast, $resultRandom);

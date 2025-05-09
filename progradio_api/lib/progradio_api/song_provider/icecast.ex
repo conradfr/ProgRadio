@@ -42,32 +42,18 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     #
     #      _ ->
     try do
-      task =
-        Task.Supervisor.async(TaskSupervisor, fn ->
-          try do
-            {:ok, %Shoutcast.Meta{data: data}} =
-              Shoutcast.read_meta(url, follow_redirect: true, pool: false)
-
-            data
-          rescue
-            reason ->
-              Logger.error("Data provider - #{name}: task error rescue (#{inspect(reason)})")
-              :error
-          catch
-            :exit, _ ->
-              Logger.error("Data provider - #{name}: task error catch")
-              :error
-          end
-        end)
-
-      Task.await(task, @task_timeout)
+      {:ok, %Shoutcast.Meta{data: data}} =
+        Shoutcast.read_meta(url, follow_redirect: true, pool: false)
+      data
     rescue
       _ ->
-        Logger.error("Data provider - #{name} (icecast): data error rescue")
+        Logger.debug("Data provider - #{name} (icecast): data error rescue")
+        :error
+    catch
+      :exit, _ ->
+        Logger.debug("Data provider - #{name} (icecast): data error catch")
         :error
     end
-
-    #    end
   end
 
   @impl true
