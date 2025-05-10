@@ -80,7 +80,7 @@ class StreamRepository extends ServiceEntityRepository
         $qbRandom = $this->getMoreStreamQuery($stream->getId(), $limitFourth);
         $resultRandom = $qbRandom->getQuery()->enableResultCache(self::CACHE_QUICK_TTL)->getResult();
 
-        return array_merge($resultCountry, $resultCountryLast, $resultRandom);
+        return array_merge($resultCountry, $resultCountryLast, $resultLast, $resultRandom);
     }
 
     protected function getMoreStreamQuery(Uuid $id, int $limit) {

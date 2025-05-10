@@ -149,6 +149,17 @@ export const useStreamsStore = defineStore('streams', {
         const data = await StreamsApi.getStreams(radioId);
         if (data !== null) {
           this.updateStreamRadios(data);
+
+          // In some case we tried to access a redirected stream so we update the router
+          if (data.streams[0].code_name !== radioId) {
+            this.$router.push(
+              {
+                name: 'streaming',
+                params: { countryOrCategoryOrUuid: data.streams[0].code_name, page: null },
+                replace: true
+              }
+            );
+          }
         }
 
         globalStore.setLoading(false);

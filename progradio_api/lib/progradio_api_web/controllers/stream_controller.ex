@@ -20,12 +20,24 @@ defmodule ProgRadioApiWeb.StreamController do
   def index(%{params: conn_params} = conn, _params)
       when is_map_key(conn_params, "radio") do
     with {:ok, api_params} <- validate(:get, conn_params) do
-      streams =
-        api_params
-        |> Map.get(:radio)
-        |> Streams.get_one()
+      stream_id = Map.get(api_params, :radio)
+      stream =
+        case Streams.get_one(stream_id) do
+          nil ->
+            # maybe it is a redirected stream
+            case Streams.get_one_preload(stream_id) do
+              nil -> nil
+              stream_preload when not is_nil(stream_preload.redirect_to) ->
+                Streams.get_one(stream_preload.redirect_to)
+              data -> nil
+            end
+          data -> data
+        end
 
-      render(conn, "index.json", streams: [streams])
+      case stream do
+        nil -> send_error(conn)
+        _ -> render(conn, "index.json", streams: [stream])
+      end
     else
       _ -> send_error(conn)
     end

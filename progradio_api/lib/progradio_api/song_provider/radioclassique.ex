@@ -13,11 +13,17 @@ defmodule ProgRadioApi.SongProvider.Radioclassique do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(_name, _last_data) do
-    @url
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> Jason.decode!()
+  def get_data(name, _last_data) do
+    try do
+      @url
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> Jason.decode!()
+    rescue
+      _ ->
+        Logger.debug("Data provider - #{name}: data error rescue")
+        :error
+    end
   end
 
   @impl true

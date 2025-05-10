@@ -101,7 +101,7 @@ defmodule ProgRadioApi.ListenersCounter do
 
       # We store sessions in redis for popularity sort (consolidated per day)
       # We restrict to one combo ip/radio per 2h
-      # Initially it was 24h but since we have trouble getting the real ip when its ipv6 and
+      # Initially it was 24h but since we have trouble getting the real ip when its ipv6 with CapRover and
       # multiple users are considered the same ip, we mitigate
       date_string = Date.utc_today() |> Date.to_iso8601()
       ip_key = "#{date_string}-#{stream_code_name}-#{listening_session.ip_address}"

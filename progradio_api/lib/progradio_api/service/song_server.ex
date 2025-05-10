@@ -138,13 +138,13 @@ defmodule ProgRadioApi.SongServer do
           last_data: last_data,
           retries: retries,
           db_data: db_data,
-          last_timestamp: last_timestamp,
-          tasks: tasks
+          last_timestamp: last_timestamp
         } = state
       ) do
     Process.demonitor(ref, [:flush])
+    {task_timestamp, updated_state} = pop_in(state.tasks[ref])
 
-    with true <- is_nil(last_timestamp) or tasks[ref] >= last_timestamp,
+    with true <- is_nil(last_timestamp) or task_timestamp >= last_timestamp,
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error do
       broadcast_song_if_needed(name, song, last_song)
@@ -176,7 +176,7 @@ defmodule ProgRadioApi.SongServer do
 
       {:noreply,
        %{
-         state
+         updated_state
          | song: song,
            last_data: data,
            song_history: updated_song_history,
@@ -195,7 +195,7 @@ defmodule ProgRadioApi.SongServer do
         else
           Logger.error("Data provider - #{state.name}: fetching error, no quitting")
           Process.send_after(self(), {:refresh, :auto}, @refresh_song_retries_max_interval)
-          {:noreply, %{state | song: nil, last_data: nil}, :hibernate}
+          {:noreply, %{updated_state | song: nil, last_data: nil}, :hibernate}
         end
     end
   end
@@ -211,13 +211,13 @@ defmodule ProgRadioApi.SongServer do
           last_data: last_data,
           retries: retries,
           db_data: db_data,
-          last_timestamp: last_timestamp,
-          tasks: tasks
+          last_timestamp: last_timestamp
         } = state
       ) do
     Process.demonitor(ref, [:flush])
+    {task_timestamp, updated_state} = pop_in(state.tasks[ref])
 
-    with true <- is_nil(last_timestamp) or tasks[ref] >= last_timestamp,
+    with true <- is_nil(last_timestamp) or task_timestamp >= last_timestamp,
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error do
       broadcast_song(name, song)
@@ -238,7 +238,7 @@ defmodule ProgRadioApi.SongServer do
 
       {:noreply,
        %{
-         state
+         updated_state
          | song: song,
            last_data: data,
            song_history: updated_song_history,
@@ -256,7 +256,7 @@ defmodule ProgRadioApi.SongServer do
 
         Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 
-        {:noreply, state}
+        {:noreply, updated_state}
     end
   end
 
@@ -283,9 +283,9 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
-  def handle_info({:DOWN, _ref, _, _, reason}, state) do
-    Logger.warning("Task failed with reason #{inspect(reason)}")
-    {:noreply, state}
+  def handle_info({:DOWN, ref, _, _, reason}, state) do
+    Logger.error("Task failed with reason #{inspect(reason)}")
+    {:noreply, %{state | tasks: Map.delete(state.tasks, ref)}}
   end
 
   # ----- Internal -----
@@ -348,8 +348,6 @@ defmodule ProgRadioApi.SongServer do
 
   @spec get_data_song_task(atom(), String.t(), atom(), map() | nil) :: tuple()
   defp get_data_song_task(module, name, refresh_type, last_data) do
-    timestamp = SongProvider.now_unix()
-
     task =
       Task.Supervisor.async_nolink(TaskSupervisor, fn ->
         try do

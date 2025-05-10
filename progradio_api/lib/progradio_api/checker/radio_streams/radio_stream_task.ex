@@ -9,42 +9,52 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
     Task.start_link(fn ->
       Logger.info("Checking: #{radio_stream.code_name} (#{radio_stream.url})")
 
-      resp = make_request(radio_stream.url, radio_stream)
+      try do
+        resp = make_request(radio_stream.url, radio_stream)
 
-      async_receive = fn resp, async_fn ->
-        receive do
-          %HTTPoison.AsyncRedirect{headers: headers} ->
-            redirect_url =
-              headers
-              |> Enum.find(fn h ->
-                match?({"location", _}, h) ||
-                  match?({"Location", _}, h)
-              end)
-              |> elem(1)
+        async_receive = fn resp, async_fn ->
+          receive do
+            %HTTPoison.AsyncRedirect{headers: headers} ->
+              redirect_url =
+                headers
+                |> Enum.find(fn h ->
+                  match?({"location", _}, h) ||
+                    match?({"Location", _}, h)
+                end)
+                |> elem(1)
 
-            Logger.debug("Check (#{radio_stream.code_name}), redirect to #{redirect_url}")
+              Logger.debug("Check (#{radio_stream.code_name}), redirect to #{redirect_url}")
 
-            make_request(redirect_url, radio_stream)
-            async_fn.(resp, async_fn)
+              make_request(redirect_url, radio_stream)
+              async_fn.(resp, async_fn)
 
-          %HTTPoison.AsyncStatus{code: status_code} ->
-            case status_code do
-              s when s in @success_status ->
-                Logger.debug("Success check (#{radio_stream.code_name})")
-                update_status(radio_stream, true)
+            %HTTPoison.AsyncStatus{code: status_code} ->
+              case status_code do
+                s when s in @success_status ->
+                  Logger.debug("Success check (#{radio_stream.code_name})")
+                  update_status(radio_stream, true)
 
-              _ ->
-                Logger.warning("Error status (#{radio_stream.code_name}): #{status_code}")
-                update_status(radio_stream, false)
-            end
+                _ ->
+                  Logger.warning("Error status (#{radio_stream.code_name}): #{status_code}")
+                  update_status(radio_stream, false)
+              end
 
-          message ->
-            Logger.warning("Non-status received (#{radio_stream.code_name}): #{inspect(message)}")
-            update_status(radio_stream, false)
+            message ->
+              Logger.warning("Non-status received (#{radio_stream.code_name}): #{inspect(message)}")
+              update_status(radio_stream, false)
+          end
         end
-      end
 
-      async_receive.(resp, async_receive)
+        async_receive.(resp, async_receive)
+      rescue
+        _ ->
+          Logger.debug("Checking - #{radio_stream.code_name} (#{radio_stream.url}) - rescue")
+          update_status(radio_stream, false)
+      catch
+        :exit, _ ->
+          Logger.debug("Checking - #{radio_stream.code_name} (#{radio_stream.url}) - catch")
+          update_status(radio_stream, false)
+      end
     end)
   end
 
