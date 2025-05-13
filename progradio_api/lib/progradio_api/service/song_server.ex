@@ -142,7 +142,8 @@ defmodule ProgRadioApi.SongServer do
 
     with true <- is_nil(last_timestamp) or task_timestamp >= last_timestamp,
          updated_retries <- get_updated_retries(name, song, retries),
-         false <- data == :error do
+         false <- data == :error,
+         false <- song == :error do
       broadcast_song_if_needed(name, song, last_song)
       updated_song_history = update_song_history(last_song, song_history, song)
       broadcast_song_history_if_needed(name, updated_song_history, song_history)
@@ -214,7 +215,8 @@ defmodule ProgRadioApi.SongServer do
 
     with true <- is_nil(last_timestamp) or task_timestamp >= last_timestamp,
          updated_retries <- get_updated_retries(name, song, retries),
-         false <- data == :error do
+         false <- data == :error,
+         false <- song == :error do
       broadcast_song(name, song)
       updated_song_history = update_song_history(last_song, song_history, song)
       broadcast_song_history_if_needed(name, updated_song_history, song_history)

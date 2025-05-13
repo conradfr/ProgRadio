@@ -12,7 +12,7 @@ defmodule ProgRadioApi.Application do
     })
 
     children = [
-      ProgRadioApiWeb.Telemetry,
+      ProgRadioApi.Cache,
       {DNSCluster, query: Application.get_env(:progradio_api, :dns_cluster_query) || :ignore},
       {Redix,
        host: Application.get_env(:progradio_api, :redis_host),
@@ -22,8 +22,9 @@ defmodule ProgRadioApi.Application do
 
       # Start the Finch HTTP client for sending emails
       {Finch, name: ProgRadioApi.Finch},
-      ProgRadioApi.Cache,
       ProgRadioApi.Repo,
+      ProgRadioApiWeb.Telemetry,
+
       {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
 
       # cron tasks

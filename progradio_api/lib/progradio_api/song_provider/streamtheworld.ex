@@ -55,12 +55,16 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
   end
 
   defp get_value(data, key) do
-    data
-    |> Map.get("#content")
-    |> Map.get("property", [])
-    |> Enum.find(%{}, fn values ->
-      Map.get(values, "-name") == key
-    end)
-    |> Map.get("#content")
+    case Map.get(data, "#content", %{}) do
+      nil -> nil
+      content ->
+        content
+        |> Map.get("property", [])
+        |> Enum.find(%{}, fn
+          value when is_map(value) -> Map.get(value, "-name") == key
+          _ -> false
+        end)
+        |> Map.get("#content")
+    end
   end
 end

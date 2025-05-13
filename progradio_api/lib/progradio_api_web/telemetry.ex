@@ -52,23 +52,23 @@ defmodule ProgRadioApiWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("progradio_api.repo.query.total_time",
+      summary("prog_radio_api.repo.query.total_time",
         unit: {:native, :millisecond},
         description: "The sum of the other measurements"
       ),
-      summary("progradio_api.repo.query.decode_time",
+      summary("prog_radio_api.repo.query.decode_time",
         unit: {:native, :millisecond},
         description: "The time spent decoding the data received from the database"
       ),
-      summary("progradio_api.repo.query.query_time",
+      summary("prog_radio_api.repo.query.query_time",
         unit: {:native, :millisecond},
         description: "The time spent executing the query"
       ),
-      summary("progradio_api.repo.query.queue_time",
+      summary("prog_radio_api.repo.query.queue_time",
         unit: {:native, :millisecond},
         description: "The time spent waiting for a database connection"
       ),
-      summary("progradio_api.repo.query.idle_time",
+      summary("prog_radio_api.repo.query.idle_time",
         unit: {:native, :millisecond},
         description:
           "The time the connection spent waiting before being checked out for the query"
@@ -78,7 +78,15 @@ defmodule ProgRadioApiWeb.Telemetry do
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
       summary("vm.total_run_queue_lengths.total"),
       summary("vm.total_run_queue_lengths.cpu"),
-      summary("vm.total_run_queue_lengths.io")
+      summary("vm.total_run_queue_lengths.io"),
+
+      # Nebulex Stats Metrics
+      last_value("prog_radio_api.cache.stats.hits", tags: [:cache]),
+      last_value("prog_radio_api.cache.stats.misses", tags: [:cache]),
+      last_value("prog_radio_api.cache.stats.writes", tags: [:cache]),
+      last_value("prog_radio_api.cache.stats.updates", tags: [:cache]),
+      last_value("prog_radio_api.cache.stats.evictions", tags: [:cache]),
+      last_value("prog_radio_api.cache.stats.expirations", tags: [:cache])
     ]
   end
 
@@ -87,6 +95,7 @@ defmodule ProgRadioApiWeb.Telemetry do
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
       # {ProgRadioApiWeb, :count_users, []}
+      {ProgRadioApi.Cache, :dispatch_stats, []}
     ]
   end
 end
