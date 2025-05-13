@@ -83,7 +83,7 @@ defmodule ProgRadioApi.Streams do
     try do
       # as there is no random function we do first pass to get the nb of hits
       # and then a second one with a random pick
-      {:ok, %Meilisearch.Search{} = results} = Search.search(%{text: text, sort: "popularity"})
+      {:ok, %Meilisearch.Search{} = results} = Search.search(%{params | sort: "popularity"})
 
       case results.estimatedTotalHits do
         0 ->
@@ -93,7 +93,7 @@ defmodule ProgRadioApi.Streams do
           pick = :rand.uniform(total - 1)
 
           {:ok, %Meilisearch.Search{} = random_results} =
-            Search.search(%{text: text, sort: "popularity", offset: pick, limit: 1})
+            Search.search(%{params | text: text, sort: "popularity", offset: pick, limit: 1})
 
           stream =
             random_results.hits
