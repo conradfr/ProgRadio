@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.SongProvider.Radioking do
+defmodule ProgRadioApi.SongProvider.Lautfm do
   require Logger
   alias ProgRadioApi.SongProvider
 
@@ -16,7 +16,7 @@ defmodule ProgRadioApi.SongProvider.Radioking do
 
       {:ok, end_at, _} =
         data
-        |> Map.get("end_at")
+        |> Map.get("ends_at")
         |> DateTime.from_iso8601()
 
       end_unix = DateTime.to_unix(end_at)
@@ -26,7 +26,7 @@ defmodule ProgRadioApi.SongProvider.Radioking do
           @refresh_auto_interval
 
         end_nb ->
-          Logger.debug("Data provider - #{name} (radioking) - next refresh: #{end_nb}")
+          Logger.debug("Data provider - #{name} (laut.fm) - next refresh: #{end_nb}")
           end_nb * 1000
       end
     rescue
@@ -41,7 +41,7 @@ defmodule ProgRadioApi.SongProvider.Radioking do
   def get_data(name, _last_data) do
     try do
       regex =
-        ~r/(?:https:\/\/play\.radioking\.io\/|https:\/\/www\.radioking\.com\/play\/)([^\/]+)(?:\/\d+)?$/
+        ~r/https:\/\/([a-zA-Z0-9-]+)\.stream\.laut\.fm/
 
       [_, id] = Regex.run(regex, name)
 
@@ -50,14 +50,14 @@ defmodule ProgRadioApi.SongProvider.Radioking do
           nil
 
         _ ->
-          "https://api.radioking.io/widget/radio/#{id}/track/current"
+          "https://api.laut.fm/station/#{id}/current_song"
           |> SongProvider.get()
           |> Map.get(:body)
           |> Jason.decode!()
       end
     rescue
       _ ->
-        Logger.debug("Data provider - #{name} (radioking): data error rescue")
+        Logger.debug("Data provider - #{name} (laut.fm): data error rescue")
         :error
     end
   end
@@ -70,21 +70,20 @@ defmodule ProgRadioApi.SongProvider.Radioking do
     try do
       case data do
         nil ->
-          Logger.info("Data provider - #{name} (radioking): error fetching song data or empty")
+          Logger.info("Data provider - #{name} (laut.fm): error fetching song data or empty")
           %{}
 
         _ ->
-          Logger.debug("Data provider - #{name} (radioking): data")
+          Logger.debug("Data provider - #{name} (laut.fm): data")
 
           %{
-            artist: SongProvider.recase(data["artist"] || nil),
+            artist: SongProvider.recase(data["artist"]["name"] || nil),
             title: SongProvider.recase(data["title"] || nil),
-            cover_url: data["cover"] || nil
           }
       end
     rescue
       _ ->
-        Logger.debug("Data provider - #{name} (radioking): song error rescue")
+        Logger.debug("Data provider - #{name} (laut.fm): song error rescue")
         :error
     end
   end

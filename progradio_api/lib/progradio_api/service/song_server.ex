@@ -116,9 +116,6 @@ defmodule ProgRadioApi.SongServer do
           module: module,
           name: name,
           last_data: last_data,
-          song: last_song,
-          song_history: song_history,
-          db_data: db_data
         } = state
       ) do
     timestamp = SongProvider.now_unix()
@@ -135,7 +132,6 @@ defmodule ProgRadioApi.SongServer do
           name: name,
           song: last_song,
           song_history: song_history,
-          last_data: last_data,
           retries: retries,
           db_data: db_data,
           last_timestamp: last_timestamp
@@ -154,10 +150,10 @@ defmodule ProgRadioApi.SongServer do
 
       next_refresh =
         cond do
-          Kernel.function_exported?(state.module, :get_auto_refresh, 0) == true ->
-            apply(state.module, :get_auto_refresh, [])
+          Kernel.function_exported?(module, :get_auto_refresh, 0) == true ->
+            apply(module, :get_auto_refresh, [])
 
-          apply(state.module, :has_custom_refresh, []) == true ->
+          apply(module, :has_custom_refresh, []) == true ->
             @refresh_song_interval_long
 
           true ->
@@ -208,7 +204,6 @@ defmodule ProgRadioApi.SongServer do
           name: name,
           song: last_song,
           song_history: song_history,
-          last_data: last_data,
           retries: retries,
           db_data: db_data,
           last_timestamp: last_timestamp
@@ -357,7 +352,7 @@ defmodule ProgRadioApi.SongServer do
           song =
             unless data == :error do
               task_song = Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data])
-              Task.await(task_song)
+              Task.await(task_song, @task_timeout)
               #          apply(module, :get_song, [name, data])
             else
               %{}
@@ -475,16 +470,26 @@ defmodule ProgRadioApi.SongServer do
     do: base_refresh + @refresh_song_retries_increment * retries
 
   defp get_url_module(song_topic) do
+    # sorted by prevalence in db
     cond do
-      String.contains?(song_topic, ".m3u8") ->
-        ProgRadioApi.SongProvider.Hls
+      String.contains?(song_topic, ".streamtheworld.com") ->
+        ProgRadioApi.SongProvider.Streamtheworld
 
-      String.contains?(song_topic, ".rcast.net") ->
-        ProgRadioApi.SongProvider.Rcast
+      String.contains?(song_topic, ".laut.fm") ->
+        ProgRadioApi.SongProvider.Lautfm
+
+      String.contains?(song_topic, ".radiojar.com") ->
+        ProgRadioApi.SongProvider.Radiojar
 
       String.contains?(song_topic, "play.radioking") or
           String.contains?(song_topic, "www.radioking") ->
         ProgRadioApi.SongProvider.Radioking
+
+      String.contains?(song_topic, ".rcast.net") ->
+        ProgRadioApi.SongProvider.Rcast
+
+      String.contains?(song_topic, ".m3u8") ->
+        ProgRadioApi.SongProvider.Hls
 
       true ->
         ProgRadioApi.SongProvider.Icecast

@@ -40,7 +40,10 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
               end
 
             message ->
-              Logger.warning("Non-status received (#{radio_stream.code_name}): #{inspect(message)}")
+              Logger.warning(
+                "Non-status received (#{radio_stream.code_name}): #{inspect(message)}"
+              )
+
               update_status(radio_stream, false)
           end
         end

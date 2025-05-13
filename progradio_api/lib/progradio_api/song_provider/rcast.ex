@@ -33,7 +33,7 @@ defmodule ProgRadioApi.SongProvider.Rcast do
       end
     rescue
       _ ->
-        Logger.debug("Data provider - #{name} (icecast): data error rescue")
+        Logger.debug("Data provider - #{name} (rcast): data error rescue")
         :error
     end
   end
@@ -45,7 +45,7 @@ defmodule ProgRadioApi.SongProvider.Rcast do
   def get_song(name, data) do
     case data do
       nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
+        Logger.info("Data provider - #{name} (rcast): error fetching song data or empty")
         %{}
 
       text when text == "Unknown Track" ->
@@ -55,7 +55,7 @@ defmodule ProgRadioApi.SongProvider.Rcast do
         %{}
 
       text ->
-        Logger.debug("Data provider - #{name}: data - #{text}")
+        Logger.debug("Data provider - #{name} (rcast): data - #{text}")
 
         %{
           artist: text,

@@ -8,14 +8,14 @@ https://www.radio-addict.com
 Dependencies
 --------------
 - PHP 8.4.x / Symfony 7.x
-- TypeScript 4.8 / VueJs 3.1+
-- NodeJS v14.x
-- Elixir 1.17.x (Api / Importer)
+- TypeScript 4.8 / VueJs 3.5+
+- NodeJS v20.x (spa & new scraper) & v14.x (old scraper)
+- Elixir 1.18.x (Api / Importer)
 - PostgreSQL 17 & Redis
-- Nginx (Apache before) (dev)
-- Caddy & FrankenPHP (prod)
+- Meilisearch
+- Nginx (dev), Caddy & FrankenPHP (prod)
 - ImageMagick
-- CapRover & Docker (deployment)
+- CapRover (Docker deployment)
 - Docker compose (dev)
 
 Run

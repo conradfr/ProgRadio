@@ -135,9 +135,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
       }
     rescue
       _ ->
-        Logger.debug(
-          "Data provider - #{name} (radiorecord): error fetching song data or empty"
-        )
+        Logger.debug("Data provider - #{name} (radiorecord): error fetching song data or empty")
 
         :error
     end

@@ -1,13 +1,10 @@
 defmodule ProgRadioApi.SongProvider.Icecast do
   require Logger
   alias ProgRadioApi.SongProvider
-  alias ProgRadioApi.TaskSupervisor
 
   @behaviour ProgRadioApi.SongProvider
 
   @refresh_auto_interval 10000
-
-  @task_timeout 7500
 
   #  @icecast_api "/status-json.xsl"
 
@@ -44,6 +41,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     try do
       {:ok, %Shoutcast.Meta{data: data}} =
         Shoutcast.read_meta(url, follow_redirect: true, pool: false)
+
       data
     rescue
       _ ->

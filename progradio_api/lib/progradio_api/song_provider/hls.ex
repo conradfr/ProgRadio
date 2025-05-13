@@ -1,13 +1,13 @@
 defmodule ProgRadioApi.SongProvider.Hls do
   require Logger
   alias ProgRadioApi.SongProvider
-  alias ProgRadioApi.TaskSupervisor
 
   @behaviour ProgRadioApi.SongProvider
 
   @refresh_auto_interval 10000
 
-  @task_timeout 7500
+  @req_timeout 7500
+  @max_iteration 10
 
   @impl true
   def has_custom_refresh(), do: false
@@ -90,10 +90,14 @@ defmodule ProgRadioApi.SongProvider.Hls do
     end)
   end
 
-  defp get_hls_data(url, original_url \\ nil) do
+  defp get_hls_data(url, original_url \\ nil, iteration \\ 0) do
     data =
       url
-      |> Req.get!(redirect: true, connect_options: [timeout: 15_000])
+      |> Req.get!(
+        redirect: true,
+        receive_timeout: @req_timeout,
+        connect_options: [timeout: @req_timeout]
+      )
       |> Map.get(:body)
       |> HLS.parse()
 
@@ -115,9 +119,15 @@ defmodule ProgRadioApi.SongProvider.Hls do
 
         case next_url do
           _ when is_binary(next_url) and next_url != "" ->
-            next_url
-            |> set_full_url_if_needed(original_url || url)
-            |> get_hls_data(original_url || url)
+            case iteration do
+              @max_iteration ->
+                nil
+
+              _ ->
+                next_url
+                |> set_full_url_if_needed(original_url || url)
+                |> get_hls_data(original_url || url, iteration + 1)
+            end
 
           _ ->
             data
