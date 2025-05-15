@@ -32,7 +32,7 @@ defmodule ProgRadioApi.SongProvider.Franceculture do
       url
       |> SongProvider.get()
       |> Map.get(:body)
-      |> Jason.decode!()
+      |> :json.decode()
       |> Map.get("now")
     rescue
       _ -> :error

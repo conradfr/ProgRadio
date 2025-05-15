@@ -58,7 +58,7 @@ defmodule ProgRadioApi.SongProvider.Radioking do
       url
       |> SongProvider.get()
       |> Map.get(:body)
-      |> Jason.decode!()
+      |> :json.decode()
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (radioking): data error rescue")

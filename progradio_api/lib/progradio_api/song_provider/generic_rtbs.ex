@@ -34,7 +34,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
         "https://www.rtbf.be/radio/liveradio/api/threads.php?key=#{id}&_limit=1&rand=#{:rand.uniform(99)}"
         |> SongProvider.get()
         |> Map.get(:body)
-        |> Jason.decode!()
+        |> :json.decode()
         |> Map.get("data")
         |> Kernel.hd()
 

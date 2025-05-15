@@ -93,7 +93,7 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
       "https://iris-bob.loverad.io/flow.json?station=#{id}&offset=1&count=1&ts=#{now_unix}"
       |> SongProvider.get()
       |> Map.get(:body)
-      |> Jason.decode!()
+      |> :json.decode()
       |> Map.get("result", %{})
       |> Map.get("entry", %{})
       |> List.first()

@@ -32,7 +32,7 @@ defmodule ProgRadioApi.SongProvider.Radiojar do
           "https://proxy.radiojar.com/api/stations/#{id}/now_playing/?t=#{now_unix}"
           |> SongProvider.get()
           |> Map.get(:body)
-          |> Jason.decode!()
+          |> :json.decode()
       end
     rescue
       _ ->

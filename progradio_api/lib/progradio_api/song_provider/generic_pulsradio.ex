@@ -11,7 +11,7 @@ defmodule ProgRadioApi.SongProvider.GenericPulsradio do
       "https://api.pulsradio.com/titre.json"
       |> SongProvider.get()
       |> Map.get(:body)
-      |> Jason.decode!()
+      |> :json.decode()
       |> Enum.find(fn r ->
         Map.get(r, "titletv", id) == id
       end)

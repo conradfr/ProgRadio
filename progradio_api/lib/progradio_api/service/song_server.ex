@@ -453,7 +453,7 @@ defmodule ProgRadioApi.SongServer do
   defp restore_history(name) do
     case Redix.command(:redix, ["GET", "history_" <> name]) do
       {:ok, nil} -> []
-      {:ok, history} -> Jason.decode!(history)
+      {:ok, history} -> :json.decode(history)
       _ -> []
     end
   end

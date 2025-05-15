@@ -53,7 +53,7 @@ defmodule ProgRadioApi.SongProvider.BelRtl do
       url
       |> SongProvider.get()
       |> Map.get(:body)
-      |> Jason.decode!()
+      |> :json.decode()
       |> Map.get("results", %{})
       |> Map.get("now")
     rescue

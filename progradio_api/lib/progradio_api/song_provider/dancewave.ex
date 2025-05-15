@@ -37,7 +37,7 @@ defmodule ProgRadioApi.SongProvider.Dancewave do
         {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
           current_song =
             Enum.join(for <<c::utf8 <- body>>, do: <<c::utf8>>)
-            |> Jason.decode!()
+            |> :json.decode()
             |> Map.get("mscp", %{})
             |> Map.get("playlist", [])
             |> List.first()

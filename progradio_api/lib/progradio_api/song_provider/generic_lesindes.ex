@@ -17,7 +17,7 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
         url
         |> SongProvider.get()
         |> Map.get(:body)
-        |> Jason.decode!()
+        |> :json.decode()
         |> convert_time_key()
 
       last_time =

@@ -22,7 +22,7 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
         connect_options: [timeout: 15_000]
       )
       |> Map.get(:body)
-      |> Jason.decode!()
+      |> :json.decode()
       |> List.first()
     rescue
       _ ->

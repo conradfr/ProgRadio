@@ -16,7 +16,7 @@ defmodule ProgRadioApi.SongProvider.Ihaveadream do
       "https://www.radio-ihaveadream.com/info-radio-live"
       |> SongProvider.get()
       |> Map.get(:body)
-      |> Jason.decode!()
+      |> :json.decode()
       |> List.first()
     rescue
       _ -> :error

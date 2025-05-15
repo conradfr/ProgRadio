@@ -50,7 +50,7 @@ defmodule ProgRadioApi.SongProvider.Cherie do
         @url
         |> SongProvider.get()
         |> Map.get(:body)
-        |> Jason.decode!()
+        |> :json.decode()
         |> Enum.find(fn e -> Map.get(e, "id", 0) == id end)
         |> Map.get("playlist", %{})
         |> Enum.filter(fn e ->

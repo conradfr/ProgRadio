@@ -45,7 +45,7 @@ defmodule ProgRadioApi.SongProvider.Mouv do
       url
       |> SongProvider.get()
       |> Map.get(:body)
-      |> Jason.decode!()
+      |> :json.decode()
     rescue
       _ -> :error
     end

@@ -126,7 +126,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   #      "#{base_url}#{@icecast_api}"
   #      |> SongProvider.get()
   #      |> Map.get(:body)
-  #      |> Jason.decode!()
+  #      |> :json.decode()
   #      |> Map.get("icestats")
   #      |> Map.get("source")
   #      |> Enum.find(fn s ->

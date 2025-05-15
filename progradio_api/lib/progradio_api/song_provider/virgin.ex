@@ -69,7 +69,7 @@ defmodule ProgRadioApi.SongProvider.Virgin do
         "https://direct-radio.rfm.fr/playout?radio=#{id}&limit=1"
         |> SongProvider.get()
         |> Map.get(:body)
-        |> Jason.decode!()
+        |> :json.decode()
         |> Map.get("nowplaying", [])
         |> List.first()
 
