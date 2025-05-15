@@ -33,7 +33,7 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
       end
     rescue
       _ ->
-        Logger.debug("Data provider - #{name} (radiojar): data error rescue")
+        Logger.debug("Data provider - #{name} (streamtheworld): data error rescue")
         :error
     end
   end
@@ -42,7 +42,7 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
   def get_song(name, data) do
     case data do
       nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
+        Logger.info("Data provider - #{name} (streamtheworld): error fetching song data or empty")
         %{}
 
       _ ->

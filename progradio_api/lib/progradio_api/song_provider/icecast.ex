@@ -61,7 +61,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   def get_song(name, data) do
     case data do
       nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
+        Logger.info("Data provider - #{name} (icecast): error fetching song data or empty")
         %{}
 
       _ ->
@@ -83,7 +83,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
           end)
           |> String.trim()
 
-        Logger.debug("Data provider - #{name}: data - #{song}")
+        Logger.debug("Data provider - #{name} (icecast): data - #{song}")
 
         cover_art =
           data
