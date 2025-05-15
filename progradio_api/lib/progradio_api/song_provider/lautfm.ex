@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Lautfm do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 7500
+  @refresh_auto_interval 10000
 
   @impl true
   def has_custom_refresh(), do: true
@@ -41,7 +41,7 @@ defmodule ProgRadioApi.SongProvider.Lautfm do
   def get_data(name, _last_data) do
     try do
       regex =
-        ~r/https:\/\/([a-zA-Z0-9-]+)\.stream\.laut\.fm/
+        ~r{laut\.fm/([a-zA-Z0-9_-]+)$}
 
       [_, id] = Regex.run(regex, name)
 

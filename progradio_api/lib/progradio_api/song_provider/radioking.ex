@@ -40,21 +40,25 @@ defmodule ProgRadioApi.SongProvider.Radioking do
   @impl true
   def get_data(name, _last_data) do
     try do
-      regex =
-        ~r/(?:https:\/\/play\.radioking\.io\/|https:\/\/www\.radioking\.com\/play\/)([^\/]+)(?:\/\d+)?$/
+      url =
+        if String.contains?(name, "listen.") do
+          regex =
+            ~r/radio\/(\d+)/
 
-      [_, id] = Regex.run(regex, name)
+          [_, id] = Regex.run(regex, name)
+          "https://www.radioking.com/widgets/api/v1/radio/#{id}/track/current?_=#{SongProvider.now_unix()}"
+        else
+          regex =
+            ~r/(?:https:\/\/play\.radioking\.io\/|https:\/\/www\.radioking\.com\/play\/)([^\/]+)(?:\/\d+)?$/
 
-      case id do
-        nil ->
-          nil
-
-        _ ->
+          [_, id] = Regex.run(regex, name)
           "https://api.radioking.io/widget/radio/#{id}/track/current"
-          |> SongProvider.get()
-          |> Map.get(:body)
-          |> Jason.decode!()
-      end
+        end
+
+      url
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> Jason.decode!()
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (radioking): data error rescue")

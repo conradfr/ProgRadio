@@ -488,8 +488,7 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, ".radiojar.com") ->
         ProgRadioApi.SongProvider.Radiojar
 
-      String.contains?(song_topic, "play.radioking") or
-          String.contains?(song_topic, "www.radioking") ->
+      String.contains?(song_topic, ".radioking.") ->
         ProgRadioApi.SongProvider.Radioking
 
       String.match?(song_topic, ~r/\/azura.*\/listen\/[a-zA-Z0-9_-]+(\/.*)?/) ->
@@ -497,6 +496,9 @@ defmodule ProgRadioApi.SongServer do
 
       String.contains?(song_topic, ".rcast.net") ->
         ProgRadioApi.SongProvider.Rcast
+
+      String.contains?(song_topic, ".creacast.com/") ->
+        ProgRadioApi.SongProvider.Creacast
 
       String.contains?(song_topic, ".m3u8") ->
         ProgRadioApi.SongProvider.Hls
