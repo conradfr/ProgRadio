@@ -47,31 +47,30 @@ defmodule ProgRadioApi.SongProvider.Mouv do
       |> Map.get(:body)
       |> Jason.decode!()
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(name, data) do
-    case Map.get(data || %{}, "now") do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+  def get_song(name, data, _last_song) do
+    try do
+      fallback =
+        data
+        |> Map.get("now", %{})
+        |> Map.get("firstLine", %{})
+        |> Map.get("title", nil)
 
+      artist =
+        data
+        |> Map.get("now", %{})
+        |> Map.get("secondLine", %{})
+        |> Map.get("title", fallback)
+
+      %{artist: artist, title: nil}
+    rescue
       _ ->
-        fallback =
-          data
-          |> Map.get("now", %{})
-          |> Map.get("firstLine", %{})
-          |> Map.get("title", nil)
-
-        artist =
-          data
-          |> Map.get("now", %{})
-          |> Map.get("secondLine", %{})
-          |> Map.get("title", fallback)
-
-        %{artist: artist, title: nil}
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

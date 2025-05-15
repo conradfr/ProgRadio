@@ -52,45 +52,42 @@ defmodule ProgRadioApi.SongProvider.Fip do
       |> SongProvider.get()
       |> Map.get(:body)
       |> Jason.decode!()
+      |> Map.get("now")
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(name, data) do
-    case Map.get(data || %{}, "now") do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+  def get_song(name, data, _last_song) do
+    try do
+      fallback =
+        data
+        |> Map.get("firstLine", nil)
 
+      artist =
+        data
+        |> Map.get("secondLine", fallback)
+
+      picture_id =
+        data
+        |> Map.get("cover")
+
+      picture =
+        case picture_id do
+          nil -> nil
+          _ -> "https://www.radiofrance.fr/pikapi/images/#{picture_id}/200x200"
+        end
+
+      %{
+        artist: artist,
+        title: nil,
+        cover_url: picture
+      }
+    rescue
       _ ->
-        fallback =
-          data
-          |> Map.get("now", %{})
-          |> Map.get("firstLine", nil)
-
-        artist =
-          data
-          |> Map.get("now", %{})
-          |> Map.get("secondLine", fallback)
-
-        picture_id =
-          data
-          |> Map.get("now", %{})
-          |> Map.get("cover")
-
-        picture =
-          case picture_id do
-            nil -> nil
-            _ -> "https://www.radiofrance.fr/pikapi/images/#{picture_id}/200x200"
-          end
-
-        %{
-          artist: artist,
-          title: nil,
-          cover_url: picture
-        }
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

@@ -12,59 +12,54 @@ defmodule ProgRadioApi.SongProvider.GenericRts do
       |> SongProvider.get()
       |> Map.get(:body)
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   def get_song(max_delay, name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+    try do
+      Logger.debug("Data provider - #{name}: parsing data")
 
-      _ ->
-        Logger.debug("Data provider - #{name}: parsing data")
+      content =
+        data
+        |> Floki.parse_document!()
+        |> Floki.find(".song-items > .song-item")
+        |> List.first()
 
-        try do
-          content =
-            data
-            |> Floki.parse_document!()
-            |> Floki.find(".song-items > .song-item")
-            |> List.first()
+      case content do
+        nil ->
+          %{}
 
-          case content do
-            nil ->
-              %{}
+        _ ->
+          within_time =
+            content
+            |> Floki.find(".song-info time")
+            |> Floki.text()
+            |> inside_current_timeframe?(max_delay)
 
-            _ ->
-              within_time =
-                content
-                |> Floki.find(".song-info time")
-                |> Floki.text()
-                |> inside_current_timeframe?(max_delay)
+          if within_time == true do
+            artist =
+              content
+              |> Floki.find(".song-info p.artist")
+              |> Floki.text()
 
-              if within_time == true do
-                artist =
-                  content
-                  |> Floki.find(".song-info p.artist")
-                  |> Floki.text()
+            title =
+              content
+              |> Floki.find(".song-info h3.title")
+              |> Floki.text()
 
-                title =
-                  content
-                  |> Floki.find(".song-info h3.title")
-                  |> Floki.text()
-
-                %{
-                  artist: artist || nil,
-                  title: title || nil
-                }
-              else
-                %{}
-              end
+            %{
+              artist: artist || nil,
+              title: title || nil
+            }
+          else
+            %{}
           end
-        rescue
-          _ -> %{}
-        end
+      end
+    rescue
+      _ ->
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 

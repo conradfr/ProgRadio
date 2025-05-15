@@ -31,5 +31,5 @@ defmodule ProgRadioApi.SongProvider.Oxygene do
   end
 
   @impl true
-  defdelegate get_song(name, data), to: GenericLesIndes
+  defdelegate get_song(name, data, last_song), to: GenericLesIndes
 end

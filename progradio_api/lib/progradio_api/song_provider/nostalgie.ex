@@ -89,42 +89,41 @@ defmodule ProgRadioApi.SongProvider.Nostalgie do
         nil
       end
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
+  def get_song(name, data, _last_song) do
+    try do
+      unless data["song"]["artist"] === @discarded_artist do
+        artist =
+          data
+          |> Map.get("song", %{})
+          |> Map.get("artist")
+
+        title =
+          data
+          |> Map.get("song", %{})
+          |> Map.get("title")
+
+        cover =
+          data
+          |> Map.get("song", %{})
+          |> Map.get("img_url")
+
+        %{
+          artist: SongProvider.recase(artist),
+          title: SongProvider.recase(title),
+          cover_url: cover
+        }
+      else
         %{}
-
+      end
+    rescue
       _ ->
-        unless data["song"]["artist"] === @discarded_artist do
-          artist =
-            data
-            |> Map.get("song", %{})
-            |> Map.get("artist")
-
-          title =
-            data
-            |> Map.get("song", %{})
-            |> Map.get("title")
-
-          cover =
-            data
-            |> Map.get("song", %{})
-            |> Map.get("img_url")
-
-          %{
-            artist: SongProvider.recase(artist),
-            title: SongProvider.recase(title),
-            cover_url: cover
-          }
-        else
-          %{}
-        end
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

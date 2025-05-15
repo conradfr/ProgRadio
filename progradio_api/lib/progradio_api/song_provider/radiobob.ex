@@ -98,38 +98,37 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
       |> Map.get("entry", %{})
       |> List.first()
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+  def get_song(name, data, _last_song) do
+    try do
+      case Map.get(data, "song", %{}) |> Map.get("entry", []) |> List.first() do
+        nil ->
+          %{}
 
-      object ->
-        case Map.get(object, "song", %{}) |> Map.get("entry", []) |> List.first() do
-          nil ->
-            %{}
+        song_data ->
+          artist =
+            Map.get(song_data, "artist", %{})
+            |> Map.get("entry", [])
+            |> List.first(%{})
+            |> Map.get("name")
 
-          song_data ->
-            artist =
-              Map.get(song_data, "artist", %{})
-              |> Map.get("entry", [])
-              |> List.first(%{})
-              |> Map.get("name")
+          picture = Map.get(song_data, "cover_art_url_s")
+          title = Map.get(song_data, "title")
 
-            picture = Map.get(song_data, "cover_art_url_s")
-            title = Map.get(song_data, "title")
-
-            %{
-              artist: artist,
-              title: title,
-              cover_url: picture
-            }
-        end
+          %{
+            artist: artist,
+            title: title,
+            cover_url: picture
+          }
+      end
+    rescue
+      _ ->
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

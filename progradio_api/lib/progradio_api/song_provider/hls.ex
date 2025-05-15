@@ -36,10 +36,7 @@ defmodule ProgRadioApi.SongProvider.Hls do
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
-
-  @impl true
-  def get_song(name, data) do
+  def get_song(name, data, _last_song) do
     try do
       data
       |> Map.get(:lines, %{})

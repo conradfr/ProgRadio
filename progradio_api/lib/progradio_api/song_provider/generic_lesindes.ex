@@ -40,18 +40,17 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
         Map.replace(data, "time", last_time)
       end
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
-
+  def get_song(name, data, _last_song) do
+    try do
+      %{artist: SongProvider.recase(data["artist"]), title: SongProvider.recase(data["title"])}
+    rescue
       _ ->
-        %{artist: SongProvider.recase(data["artist"]), title: SongProvider.recase(data["title"])}
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 

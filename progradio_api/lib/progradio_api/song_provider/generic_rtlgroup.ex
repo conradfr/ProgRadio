@@ -20,71 +20,66 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
       |> SongProvider.get()
       |> Map.get(:body)
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+  def get_song(name, data, _last_song) do
+    try do
+      Logger.debug("Data provider - #{name}: parsing data")
 
-      _ ->
-        Logger.debug("Data provider - #{name}: parsing data")
+      content =
+        data
+        |> Floki.parse_document!()
+        |> Floki.find(".cards-container > .card-qect")
+        |> List.first()
 
-        try do
-          content =
-            data
-            |> Floki.parse_document!()
-            |> Floki.find(".cards-container > .card-qect")
+      case content do
+        nil ->
+          %{}
+
+        _ ->
+          within_time =
+            content
+            |> Floki.attribute("data-time")
             |> List.first()
+            |> inside_current_timeframe?(@minutes_max_delta)
 
-          case content do
-            nil ->
-              %{}
+          if within_time == true do
+            artist =
+              content
+              |> Floki.find("div.hosts")
+              |> Floki.text()
 
-            _ ->
-              within_time =
+            title =
+              content
+              |> Floki.find("div.title")
+              |> Floki.text()
+
+            cover_url =
+              try do
                 content
-                |> Floki.attribute("data-time")
+                |> Floki.find("div.cover img")
                 |> List.first()
-                |> inside_current_timeframe?(@minutes_max_delta)
-
-              if within_time == true do
-                artist =
-                  content
-                  |> Floki.find("div.hosts")
-                  |> Floki.text()
-
-                title =
-                  content
-                  |> Floki.find("div.title")
-                  |> Floki.text()
-
-                cover_url =
-                  try do
-                    content
-                    |> Floki.find("div.cover img")
-                    |> List.first()
-                    |> Floki.attribute("src")
-                    |> Floki.text()
-                  catch
-                    _ -> nil
-                  end
-
-                %{
-                  artist: SongProvider.recase(artist) || nil,
-                  title: title || nil,
-                  cover_url: cover_url || nil
-                }
-              else
-                %{}
+                |> Floki.attribute("src")
+                |> Floki.text()
+              catch
+                _ -> nil
               end
+
+            %{
+              artist: SongProvider.recase(artist) || nil,
+              title: title || nil,
+              cover_url: cover_url || nil
+            }
+          else
+            %{}
           end
-        rescue
-          _ -> %{}
-        end
+      end
+    rescue
+      _ ->
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 

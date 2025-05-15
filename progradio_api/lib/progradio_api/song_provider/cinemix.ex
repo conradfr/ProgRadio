@@ -23,73 +23,69 @@ defmodule ProgRadioApi.SongProvider.Cinemix do
       |> SongProvider.get()
       |> Map.get(:body)
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
+  def get_song(name, data, _last_song) do
+    try do
+      Logger.debug("Data provider - #{name}: parsing data")
 
-  @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+      {:ok, html} = Floki.parse_document(data)
 
-      _ ->
-        Logger.debug("Data provider - #{name}: parsing data")
-
-        {:ok, html} = Floki.parse_document(data)
-
-        title =
-          try do
-            html
-            |> Floki.find("#currently_playing_wrapper #currently-playing-title")
-            |> Floki.text()
-            |> String.trim()
-            |> tap(fn e ->
-              if e === "", do: nil, else: e
-            end)
-          rescue
-            _ -> nil
-          end
-
-        artist =
-          try do
-            html
-            |> Floki.find("#currently_playing_wrapper #currently-playing-artist")
-            |> Floki.text()
-            |> String.trim()
-            |> tap(fn e ->
-              if e === "", do: nil, else: e
-            end)
-          rescue
-            _ -> nil
-          end
-
-        cover =
-          try do
-            html
-            |> Floki.find("#cpPictureMainSong")
-            |> Floki.text()
-            |> String.trim()
-            |> tap(fn e ->
-              if e === "", do: nil, else: e
-            end)
-          rescue
-            _ -> nil
-          end
-
-        unless artist === nil and title === nil do
-          %{
-            artist: artist,
-            title: title,
-            cover_url: cover
-          }
-        else
-          %{}
+      title =
+        try do
+          html
+          |> Floki.find("#currently_playing_wrapper #currently-playing-title")
+          |> Floki.text()
+          |> String.trim()
+          |> tap(fn e ->
+            if e === "", do: nil, else: e
+          end)
+        rescue
+          _ -> nil
         end
+
+      artist =
+        try do
+          html
+          |> Floki.find("#currently_playing_wrapper #currently-playing-artist")
+          |> Floki.text()
+          |> String.trim()
+          |> tap(fn e ->
+            if e === "", do: nil, else: e
+          end)
+        rescue
+          _ -> nil
+        end
+
+      cover =
+        try do
+          html
+          |> Floki.find("#cpPictureMainSong")
+          |> Floki.text()
+          |> String.trim()
+          |> tap(fn e ->
+            if e === "", do: nil, else: e
+          end)
+        rescue
+          _ -> nil
+        end
+
+      unless artist === nil and title === nil do
+        %{
+          artist: artist,
+          title: title,
+          cover_url: cover
+        }
+      else
+        %{}
+      end
+    rescue
+      _ ->
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

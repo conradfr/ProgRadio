@@ -18,5 +18,5 @@ defmodule ProgRadioApi.SongProvider.Musiq3 do
   end
 
   @impl true
-  defdelegate get_song(name, data), to: GenericRtbs
+  defdelegate get_song(name, data, last_song), to: GenericRtbs
 end

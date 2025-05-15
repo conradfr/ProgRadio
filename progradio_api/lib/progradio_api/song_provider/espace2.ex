@@ -19,7 +19,7 @@ defmodule ProgRadioApi.SongProvider.Espace2 do
   end
 
   @impl true
-  def get_song(name, data) do
+  def get_song(name, data, _last_song) do
     GenericRts.get_song(@minutes_max_delta, name, data)
   end
 end

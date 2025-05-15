@@ -26,18 +26,17 @@ defmodule ProgRadioApi.SongProvider.Tsfjazz do
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
-
+  def get_song(name, data, _last_song) do
+    try do
+      %{
+        artist: SongProvider.recase(Map.get(data, "artist")),
+        title: SongProvider.recase(Map.get(data, "title")),
+        cover_url: Map.get(data, "cover")
+      }
+    rescue
       _ ->
-        %{
-          artist: SongProvider.recase(Map.get(data, "artist")),
-          title: SongProvider.recase(Map.get(data, "title")),
-          cover_url: Map.get(data, "cover")
-        }
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

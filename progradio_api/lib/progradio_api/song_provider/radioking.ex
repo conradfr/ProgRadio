@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Radioking do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 10000
+  @refresh_auto_interval 7500
 
   @impl true
   def has_custom_refresh(), do: true
@@ -63,25 +63,15 @@ defmodule ProgRadioApi.SongProvider.Radioking do
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
-
-  @impl true
-  def get_song(name, data) do
+  def get_song(name, data, _last_song) do
     try do
-      case data do
-        nil ->
-          Logger.info("Data provider - #{name} (radioking): error fetching song data or empty")
-          %{}
+      Logger.debug("Data provider - #{name} (radioking): data")
 
-        _ ->
-          Logger.debug("Data provider - #{name} (radioking): data")
-
-          %{
-            artist: SongProvider.recase(data["artist"] || nil),
-            title: SongProvider.recase(data["title"] || nil),
-            cover_url: data["cover"] || nil
-          }
-      end
+      %{
+        artist: SongProvider.recase(data["artist"] || nil),
+        title: SongProvider.recase(data["title"] || nil),
+        cover_url: data["cover"] || nil
+      }
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (radioking): song error rescue")

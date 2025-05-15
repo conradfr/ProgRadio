@@ -57,23 +57,18 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+  def get_song(name, data, _last_song) do
+    try do
+      artist =
+        data["artists"]
+        |> List.first()
+        |> Map.get("name")
 
+      %{artist: artist, title: data["info"]["title"]}
+    rescue
       _ ->
-        try do
-          artist =
-            data["artists"]
-            |> List.first()
-            |> Map.get("name")
-
-          %{artist: artist, title: data["info"]["title"]}
-        rescue
-          _ -> nil
-        end
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

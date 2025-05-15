@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Rcast do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 20000
+  @refresh_auto_interval 7500
 
   @rcast_status "https://status.rcast.net/"
 
@@ -39,28 +39,31 @@ defmodule ProgRadioApi.SongProvider.Rcast do
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
+  def get_song(name, data, _last_song) do
+    try do
+      case data do
+        nil ->
+          Logger.info("Data provider - #{name} (rcast): error fetching song data or empty")
+          %{}
 
-  @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name} (rcast): error fetching song data or empty")
-        %{}
+        text when text == "Unknown Track" ->
+          %{}
 
-      text when text == "Unknown Track" ->
-        %{}
+        text when text == "" ->
+          %{}
 
-      text when text == "" ->
-        %{}
+        text ->
+          Logger.debug("Data provider - #{name} (rcast): data - #{text}")
 
-      text ->
-        Logger.debug("Data provider - #{name} (rcast): data - #{text}")
-
-        %{
-          artist: text,
-          title: nil
-        }
+          %{
+            artist: text,
+            title: nil
+          }
+      end
+    rescue
+      _ ->
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

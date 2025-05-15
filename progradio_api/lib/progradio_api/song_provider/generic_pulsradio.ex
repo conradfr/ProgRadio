@@ -16,22 +16,21 @@ defmodule ProgRadioApi.SongProvider.GenericPulsradio do
         Map.get(r, "titletv", id) == id
       end)
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.error("Data provider - #{name}: error fetching song data")
-        %{}
-
+  def get_song(name, data, _last_song) do
+    try do
+      %{
+        artist: SongProvider.recase(data["artiste"]),
+        title: SongProvider.recase(data["titre"]),
+        cover_url: data["pochette"] || nil
+      }
+    rescue
       _ ->
-        %{
-          artist: SongProvider.recase(data["artiste"]),
-          title: SongProvider.recase(data["titre"]),
-          cover_url: data["pochette"] || nil
-        }
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

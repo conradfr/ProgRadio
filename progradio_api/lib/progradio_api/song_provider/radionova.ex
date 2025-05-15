@@ -82,23 +82,22 @@ defmodule ProgRadioApi.SongProvider.Radionova do
         nil
       end
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.error("Data provider - #{name}: error fetching song data")
-        %{}
-
+  def get_song(name, data, _last_song) do
+    try do
+      %{
+        artist: SongProvider.recase(data["artist"]),
+        title: SongProvider.recase(data["title"]),
+        cover_url: data["media_url"] || nil
+      }
+    rescue
       _ ->
-        %{
-          artist: SongProvider.recase(data["artist"]),
-          title: SongProvider.recase(data["title"]),
-          cover_url: data["media_url"] || nil
-        }
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

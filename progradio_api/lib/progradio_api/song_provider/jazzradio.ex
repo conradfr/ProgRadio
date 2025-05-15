@@ -66,23 +66,22 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
         end
       end)
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
-
+  def get_song(name, data, _last_song) do
+    try do
+      %{
+        artist: SongProvider.recase(data["#content"]["chanteur"]),
+        title: SongProvider.recase(data["#content"]["chanson"]),
+        cover_url: data["#content"]["pochette"] || nil
+      }
+    rescue
       _ ->
-        %{
-          artist: SongProvider.recase(data["#content"]["chanteur"]),
-          title: SongProvider.recase(data["#content"]["chanson"]),
-          cover_url: data["#content"]["pochette"] || nil
-        }
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

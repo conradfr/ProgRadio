@@ -54,7 +54,8 @@ defmodule ProgRadioApi.SongProvider.BelRtl do
       |> SongProvider.get()
       |> Map.get(:body)
       |> Jason.decode!()
-      |> Map.get("results")
+      |> Map.get("results", %{})
+      |> Map.get("now")
     rescue
       _ ->
         nil
@@ -62,26 +63,25 @@ defmodule ProgRadioApi.SongProvider.BelRtl do
   end
 
   @impl true
-  def get_song(name, data) do
-    case Map.get(data || %{}, "now") do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+  def get_song(name, data, _last_song) do
+    try do
+      artist = Map.get(data, "artistName")
+      title = Map.get(data, "name")
+      picture = Map.get(data, "imageUrl")
 
-      now ->
-        artist = Map.get(now, "artistName")
-        title = Map.get(now, "name")
-        picture = Map.get(now, "imageUrl")
-
-        if artist != nil or title != nil do
-          %{
-            artist: artist,
-            title: title,
-            cover_url: picture
-          }
-        else
-          nil
-        end
+      if artist != nil or title != nil do
+        %{
+          artist: artist,
+          title: title,
+          cover_url: picture
+        }
+      else
+        nil
+      end
+    rescue
+      _ ->
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

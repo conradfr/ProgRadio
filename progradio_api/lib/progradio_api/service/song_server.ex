@@ -98,12 +98,13 @@ defmodule ProgRadioApi.SongServer do
         %{
           module: module,
           name: name,
-          last_data: last_data
+          last_data: last_data,
+          song: last_song
         } =
           state
       ) do
     timestamp = SongProvider.now_unix()
-    task_ref = get_data_song_task(module, name, :auto, last_data)
+    task_ref = get_data_song_task(module, name, :auto, last_data, last_song)
     state = put_in(state.tasks[task_ref], timestamp)
     {:noreply, state}
   end
@@ -116,10 +117,11 @@ defmodule ProgRadioApi.SongServer do
           module: module,
           name: name,
           last_data: last_data,
+          song: last_song
         } = state
       ) do
     timestamp = SongProvider.now_unix()
-    task_ref = get_data_song_task(module, name, :custom, last_data)
+    task_ref = get_data_song_task(module, name, :custom, last_data, last_song)
     state = put_in(state.tasks[task_ref], timestamp)
     {:noreply, state}
   end
@@ -343,8 +345,8 @@ defmodule ProgRadioApi.SongServer do
     )
   end
 
-  @spec get_data_song_task(atom(), String.t(), atom(), map() | nil) :: tuple()
-  defp get_data_song_task(module, name, refresh_type, last_data) do
+  @spec get_data_song_task(atom(), String.t(), atom(), map() | nil, map() | nil) :: tuple()
+  defp get_data_song_task(module, name, refresh_type, last_data, last_song) do
     task =
       Task.Supervisor.async_nolink(TaskSupervisor, fn ->
         try do
@@ -352,12 +354,12 @@ defmodule ProgRadioApi.SongServer do
           data = Task.await(task_data, @task_timeout)
 
           song =
-            unless data == :error do
-              task_song = Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data])
+            unless data == :error or data == nil do
+              task_song = Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data, last_song])
               Task.await(task_song, @task_timeout)
               #          apply(module, :get_song, [name, data])
             else
-              %{}
+              nil
             end
 
           {data, song, refresh_type}
@@ -476,6 +478,9 @@ defmodule ProgRadioApi.SongServer do
     cond do
       String.contains?(song_topic, ".streamtheworld.com") ->
         ProgRadioApi.SongProvider.Streamtheworld
+
+      String.contains?(song_topic, "ice.infomaniak.ch") ->
+        ProgRadioApi.SongProvider.Infomaniak
 
       String.contains?(song_topic, ".laut.fm") ->
         ProgRadioApi.SongProvider.Lautfm

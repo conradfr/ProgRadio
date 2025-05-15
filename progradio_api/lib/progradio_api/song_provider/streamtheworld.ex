@@ -29,7 +29,7 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
           |> Map.get("nowplaying-info-list", %{})
           |> Map.get("nowplaying-info")
 
-          # TODO manage delta with cue_time_start and sicard if over?
+          # TODO manage delta with cue_time_start and discard if over?
       end
     rescue
       _ ->
@@ -39,18 +39,17 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name} (streamtheworld): error fetching song data or empty")
-        %{}
-
+  def get_song(name, data, _last_song) do
+    try do
+      %{
+        artist: get_value(data, "track_artist_name"),
+        title: get_value(data, "cue_title"),
+        cover_url: get_value(data, "track_cover_url"),
+      }
+    rescue
       _ ->
-        %{
-          artist: get_value(data, "track_artist_name"),
-          title: get_value(data, "cue_title"),
-          cover_url: get_value(data, "track_cover_url"),
-        }
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 

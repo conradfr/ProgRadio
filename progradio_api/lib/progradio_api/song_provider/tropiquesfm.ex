@@ -19,5 +19,5 @@ defmodule ProgRadioApi.SongProvider.Tropiquesfm do
   end
 
   @impl true
-  defdelegate get_song(name, data), to: GenericLesIndes2
+  defdelegate get_song(name, data, last_song), to: GenericLesIndes2
 end

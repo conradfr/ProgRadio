@@ -31,5 +31,5 @@ defmodule ProgRadioApi.SongProvider.PulsradioHits do
   end
 
   @impl true
-  defdelegate get_song(name, data), to: GenericPulsradio
+  defdelegate get_song(name, data, last_song), to: GenericPulsradio
 end

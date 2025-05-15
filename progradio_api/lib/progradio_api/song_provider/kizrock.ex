@@ -30,33 +30,32 @@ defmodule ProgRadioApi.SongProvider.Kizrock do
       |> Jason.decode!()
       |> List.first()
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
+  def get_song(name, data, _last_song) do
+    try do
+      artist = Map.get(data, "artist")
+      picture = Map.get(data, "coverart")
+      title = Map.get(data, "title")
 
+      title =
+        case Map.get(data, "year") do
+          nil -> title
+          year -> "#{title} (#{year})"
+        end
+
+      %{
+        artist: artist,
+        title: title,
+        cover_url: picture
+      }
+    rescue
       _ ->
-        artist = Map.get(data, "artist")
-        picture = Map.get(data, "coverart")
-        title = Map.get(data, "title")
-
-        title =
-          case Map.get(data, "year") do
-            nil -> title
-            year -> "#{title} (#{year})"
-          end
-
-        %{
-          artist: artist,
-          title: title,
-          cover_url: picture
-        }
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

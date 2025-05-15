@@ -55,68 +55,64 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
+  def get_song(name, data, _last_song) do
+    try do
+      key =
+        if is_map_key(data, :json) and data.json == true, do: "title", else: "StreamTitle"
 
-  @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name} (icecast): error fetching song data or empty")
+      song =
+        data
+        |> Map.get(key, "")
+        |> then(fn
+          text when is_binary(text) ->
+            Enum.join(for <<c::utf8 <- text>>, do: <<c::utf8>>)
+
+          text when is_list(text) ->
+            to_string(text)
+
+          text ->
+            text
+        end)
+        |> String.trim()
+
+      Logger.debug("Data provider - #{name} (icecast): data - #{song}")
+
+      cover_art =
+        data
+        |> Map.get("StreamUrl", "")
+        |> then(fn
+          text when is_binary(text) ->
+            Enum.join(for <<c::utf8 <- text>>, do: <<c::utf8>>)
+
+          text when is_list(text) ->
+            to_string(text)
+
+          text ->
+            text
+        end)
+        |> String.trim()
+        |> then(fn x ->
+          case String.ends_with?(x, [".jpg", ".png"]) do
+            true -> x
+            _ -> nil
+          end
+        end)
+
+      # we discard empty or suspicious/incomplete entries
+      unless is_binary(song) == false or song === "" or song === "-" or
+               String.contains?(song, " - ") === false do
+        %{
+          artist: song,
+          title: nil,
+          cover_url: cover_art
+        }
+      else
         %{}
-
+      end
+    rescue
       _ ->
-        key =
-          if is_map_key(data, :json) and data.json == true, do: "title", else: "StreamTitle"
-
-        song =
-          data
-          |> Map.get(key, "")
-          |> then(fn
-            text when is_binary(text) ->
-              Enum.join(for <<c::utf8 <- text>>, do: <<c::utf8>>)
-
-            text when is_list(text) ->
-              to_string(text)
-
-            text ->
-              text
-          end)
-          |> String.trim()
-
-        Logger.debug("Data provider - #{name} (icecast): data - #{song}")
-
-        cover_art =
-          data
-          |> Map.get("StreamUrl", "")
-          |> then(fn
-            text when is_binary(text) ->
-              Enum.join(for <<c::utf8 <- text>>, do: <<c::utf8>>)
-
-            text when is_list(text) ->
-              to_string(text)
-
-            text ->
-              text
-          end)
-          |> String.trim()
-          |> then(fn x ->
-            case String.ends_with?(x, [".jpg", ".png"]) do
-              true -> x
-              _ -> nil
-            end
-          end)
-
-        # we discard empty or suspicious/incomplete entries
-        unless is_binary(song) == false or song === "" or song === "-" or
-                 String.contains?(song, " - ") === false do
-          %{
-            artist: song,
-            title: nil,
-            cover_url: cover_art
-          }
-        else
-          %{}
-        end
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 

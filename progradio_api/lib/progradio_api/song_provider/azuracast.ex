@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 10000
+  @refresh_auto_interval 7500
 
   @impl true
   def has_custom_refresh(), do: true
@@ -67,43 +67,33 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
-
-  @impl true
-  def get_song(name, data) do
+  def get_song(name, data, _last_song) do
     try do
-      case data do
-        nil ->
-          Logger.info("Data provider - #{name} (azuracast): error fetching song data or empty")
-          %{}
+      Logger.debug("Data provider - #{name} (azuracast): data")
 
-        _ ->
-          Logger.debug("Data provider - #{name} (azuracast): data")
+      artist =
+        data
+        |> Map.get("song", %{})
+        |> Map.get("artist")
 
-          artist =
-            data
-            |> Map.get("song", %{})
-            |> Map.get("artist")
+      title =
+        data
+        |> Map.get("song", %{})
+        |> Map.get("title")
 
-          title =
-            data
-            |> Map.get("song", %{})
-            |> Map.get("title")
+      cover =
+        data
+        |> Map.get("song", %{})
+        |> Map.get("art")
 
-          cover =
-            data
-            |> Map.get("song", %{})
-            |> Map.get("art")
-
-          if artist != nil or title != nil do
-            %{
-              artist: artist,
-              title: title,
-              cover_url: cover
-            }
-          else
-            nil
-          end
+      if artist != nil or title != nil do
+        %{
+          artist: artist,
+          title: title,
+          cover_url: cover
+        }
+      else
+        nil
       end
     rescue
       _ ->

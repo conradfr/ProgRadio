@@ -51,21 +51,21 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
       |> Jason.decode!()
       |> Map.get("now", nil)
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(_name, data) do
-    case data do
-      nil ->
-        nil
+  def get_song(name, data, _last_song) do
+    try do
+      artist = Map.get(data, "artiste")
+      title = Map.get(data, "titre")
 
+      %{artist: artist, title: title}
+    rescue
       _ ->
-        artist = Map.get(data, "artiste")
-        title = Map.get(data, "titre")
-
-        %{artist: artist, title: title}
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

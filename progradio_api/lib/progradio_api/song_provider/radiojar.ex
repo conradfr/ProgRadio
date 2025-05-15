@@ -42,49 +42,39 @@ defmodule ProgRadioApi.SongProvider.Radiojar do
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
-
-  @impl true
-  def get_song(name, data) do
+  def get_song(name, data, _last_song) do
     try do
-      case data do
-        nil ->
-          Logger.info("Data provider - #{name} (radiojar): error fetching song data or empty")
-          %{}
+      Logger.debug("Data provider - #{name} (radiojar): data")
 
-        _ ->
-          Logger.debug("Data provider - #{name} (radiojar): data")
+      artist =
+        case Map.get(data, "artist") do
+          nil -> nil
+          artist_raw when is_binary(artist_raw) and artist_raw == "" -> nil
+          artist_raw when is_binary(artist_raw) -> artist_raw
+          _ -> nil
+        end
 
-          artist =
-            case Map.get(data, "artist") do
-              nil -> nil
-              artist_raw when is_binary(artist_raw) and artist_raw == "" -> nil
-              artist_raw when is_binary(artist_raw) -> artist_raw
-              _ -> nil
-            end
+      title =
+        case Map.get(data, "title") do
+          nil -> nil
+          title_raw when is_binary(title_raw) and title_raw == "" -> nil
+          title_raw when is_binary(title_raw) -> title_raw
+          _ -> nil
+        end
 
-          title =
-            case Map.get(data, "title") do
-              nil -> nil
-              title_raw when is_binary(title_raw) and title_raw == "" -> nil
-              title_raw when is_binary(title_raw) -> title_raw
-              _ -> nil
-            end
+      cover =
+        case Map.get(data, "thumb") do
+          nil -> nil
+          cover_raw when is_binary(cover_raw) and cover_raw == "" -> nil
+          cover_raw when is_binary(cover_raw) -> cover_raw
+          _ -> nil
+        end
 
-          cover =
-            case Map.get(data, "thumb") do
-              nil -> nil
-              cover_raw when is_binary(cover_raw) and cover_raw == "" -> nil
-              cover_raw when is_binary(cover_raw) -> cover_raw
-              _ -> nil
-            end
-
-          %{
-            artist: artist,
-            title: title,
-            cover_url: cover
-          }
-      end
+      %{
+        artist: artist,
+        title: title,
+        cover_url: cover
+      }
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (radiojar): song error rescue")

@@ -27,17 +27,13 @@ defmodule ProgRadioApi.SongProvider.Radioclassique do
   end
 
   @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.error("Data provider - #{name}: error fetching song data")
-        %{}
-
-      map when is_map(map) ->
-        %{artist: Map.get(data, "auteur", nil), title: Map.get(data, "titre", nil)}
-
+  def get_song(name, data, _last_song) do
+    try do
+      %{artist: Map.get(data, "auteur", nil), title: Map.get(data, "titre", nil)}
+    rescue
       _ ->
-        %{}
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

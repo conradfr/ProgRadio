@@ -18,5 +18,5 @@ defmodule ProgRadioApi.SongProvider.Rtl2 do
   end
 
   @impl true
-  defdelegate get_song(name, data), to: GenericRtlgroup
+  defdelegate get_song(name, data, last_song), to: GenericRtlgroup
 end

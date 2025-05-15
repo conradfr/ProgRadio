@@ -32,13 +32,7 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
-
-  @impl true
-  def get_song(_name, nil), do: nil
-
-  @impl true
-  def get_song(name, data) do
+  def get_song(name, data, _last_song) do
     try do
       title =
         case Map.get(data, "title") do

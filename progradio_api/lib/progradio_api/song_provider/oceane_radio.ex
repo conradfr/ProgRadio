@@ -48,5 +48,5 @@ defmodule ProgRadioApi.SongProvider.OceaneRadio do
   end
 
   @impl true
-  defdelegate get_song(name, data), to: GenericLesIndes3
+  defdelegate get_song(name, data, last_song), to: GenericLesIndes3
 end

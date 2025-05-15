@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Lautfm do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 10000
+  @refresh_auto_interval 7500
 
   @impl true
   def has_custom_refresh(), do: true
@@ -63,24 +63,14 @@ defmodule ProgRadioApi.SongProvider.Lautfm do
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
-
-  @impl true
-  def get_song(name, data) do
+  def get_song(name, data, _last_song) do
     try do
-      case data do
-        nil ->
-          Logger.info("Data provider - #{name} (laut.fm): error fetching song data or empty")
-          %{}
+      Logger.debug("Data provider - #{name} (laut.fm): data")
 
-        _ ->
-          Logger.debug("Data provider - #{name} (laut.fm): data")
-
-          %{
-            artist: SongProvider.recase(data["artist"]["name"] || nil),
-            title: SongProvider.recase(data["title"] || nil),
-          }
-      end
+      %{
+        artist: SongProvider.recase(data["artist"]["name"] || nil),
+        title: SongProvider.recase(data["title"] || nil),
+      }
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (laut.fm): song error rescue")

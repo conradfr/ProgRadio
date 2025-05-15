@@ -43,22 +43,21 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes3 do
         end
       end)
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
-        %{}
-
+  def get_song(name, data, _last_song) do
+    try do
+      %{
+        artist: SongProvider.recase(data["title"]["artist"] || nil),
+        title: SongProvider.recase(data["title"]["title"] || nil),
+        cover_url: data["title"]["coverUrl"] || nil
+      }
+    rescue
       _ ->
-        %{
-          artist: SongProvider.recase(data["title"]["artist"] || nil),
-          title: SongProvider.recase(data["title"]["title"] || nil),
-          cover_url: data["title"]["coverUrl"] || nil
-        }
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end

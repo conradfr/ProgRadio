@@ -38,32 +38,28 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
           nil
       end
     rescue
-      _ -> nil
+      _ -> :error
     end
   end
 
   @impl true
-  def get_song(_name, :error), do: nil
+  def get_song(name, data, _last_song) do
+    try do
+      Logger.debug("Data provider - #{name}: data - #{data}")
 
-  @impl true
-  def get_song(name, data) do
-    case data do
-      nil ->
-        Logger.info("Data provider - #{name}: error fetching song data or empty")
+      # we discard empty or suspicious/incomplete entries
+      unless data === "" or String.contains?(data, " - ") === false do
+        %{
+          artist: data,
+          title: nil
+        }
+      else
         %{}
-
+      end
+    rescue
       _ ->
-        Logger.debug("Data provider - #{name}: data - #{data}")
-
-        # we discard empty or suspicious/incomplete entries
-        unless data === "" or String.contains?(data, " - ") === false do
-          %{
-            artist: data,
-            title: nil
-          }
-        else
-          %{}
-        end
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
     end
   end
 end
