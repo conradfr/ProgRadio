@@ -14,7 +14,7 @@ defmodule ProgRadioApi.SongProvider.Infomaniak do
   def has_custom_refresh(), do: false
 
   @impl true
-  def get_refresh(name, data, _default_refresh), do: nil
+  def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
   def get_auto_refresh(), do: @refresh_auto_interval

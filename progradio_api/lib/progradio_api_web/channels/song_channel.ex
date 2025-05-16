@@ -59,7 +59,13 @@ defmodule ProgRadioApiWeb.SongChannel do
         online_at: inspect(System.system_time(:second))
       })
 
-    ProgRadioApi.SongManager.join(song_topic, radio_stream_data)
+    ProgRadioApi.SongManager.join(song_topic, radio_stream_data, self())
+    {:noreply, socket}
+  end
+
+  # sent by song server (if already exists) when user join channel
+  def handle_info({:push_song, event, song_data}, socket) do
+    push(socket, event, song_data)
     {:noreply, socket}
   end
 

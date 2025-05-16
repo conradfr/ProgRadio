@@ -86,6 +86,14 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
+  def handle_cast({:send_last_song_to, pid}, state) do
+    data = %{topic: state.name, name: state.name, song: state.song}
+    send(pid, {:push_song, "playing", data})
+    {:noreply, state}
+  end
+
+  # todo deprecate / remove ?
+  @impl true
   def handle_cast(:broadcast, state) do
     broadcast_song(state.name, state.song)
     {:noreply, state}

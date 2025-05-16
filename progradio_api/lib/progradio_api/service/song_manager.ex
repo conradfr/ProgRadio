@@ -1,10 +1,10 @@
 defmodule ProgRadioApi.SongManager do
   require Logger
 
-  @spec join(String.t(), map()) :: any()
-  def join(song_topic, radio_stream_data)
+  @spec join(String.t(), map(), pid() | nil ) :: any()
+  def join(song_topic, radio_stream_data, caller_pid \\ nil)
 
-  def join("url:" <> song_topic, _params) do
+  def join("url:" <> song_topic, _params, caller_pid) do
     case Registry.lookup(SongProviderRegistry, "url:" <> song_topic) do
       [] ->
         Logger.debug("server for url #{song_topic} created")
@@ -20,11 +20,11 @@ defmodule ProgRadioApi.SongManager do
 
       [{pid, _value}] ->
         Logger.debug("server for url #{song_topic} already exists")
-        GenServer.cast(pid, :broadcast)
+        if caller_pid != nil, do: GenServer.cast(pid, {:send_last_song_to, caller_pid})
     end
   end
 
-  def join(song_topic, radio_stream_data) do
+  def join(song_topic, radio_stream_data, caller_pid) do
     case Registry.lookup(SongProviderRegistry, song_topic) do
       [] ->
         Logger.debug("server for topic #{song_topic} created")
@@ -37,7 +37,7 @@ defmodule ProgRadioApi.SongManager do
 
       [{pid, _value}] ->
         Logger.debug("server for topic #{song_topic} already exists")
-        GenServer.cast(pid, :broadcast)
+        if caller_pid != nil, do: GenServer.cast(pid, {:send_last_song_to, caller_pid})
     end
   end
 end
