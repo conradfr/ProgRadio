@@ -141,7 +141,7 @@ page:
         play: 'Escuchar %radio%'
         stop: 'Detener %radio%'
         summary: 'Descripción'
-        title: 'Escuchar %radio% en vivo - Programas del %date%'
+        title: 'Escuchar %radio% en directo - Programas del %date%'
         website: 'Sitio web'
 
     registered:
@@ -172,8 +172,8 @@ page:
         suggested: Radios sugeridas
         tags: Etiquetas
         share: Compartir la radio
-        title: 'Escuchar %radio% en vivo'
-        title_country: '%radio% - %country% - Escuchar en vivo'
+        title: '%radio% en directo'
+        title_country: '%radio% - Escuchar en directo - %country%'
         website: Sitio web
         banned: Esta radio está prohibida.
         desc: 'Descripción'

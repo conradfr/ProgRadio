@@ -172,8 +172,8 @@ page:
         suggested: Suggested radios
         tags: Tags
         share: Share this radio
-        title: '%radio% - Streaming live'
-        title_country: '%radio% - %country% - Streaming live'
+        title: '%radio% - Live streaming'
+        title_country: '%radio% - live streaming - %country%'
         website: Website
         banned: This radio is banned.
         desc: 'Description'

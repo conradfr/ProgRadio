@@ -141,7 +141,7 @@ page:
         play: 'Écouter %radio%'
         stop: 'Stopper %radio%'
         summary: 'Description'
-        title: 'Écouter %radio% en direct - Programmes du %date%'
+        title: '%radio% - Écouter en direct - Programmes du %date%'
         website: 'Site web'
 
     registered:
@@ -172,8 +172,8 @@ page:
         suggested: Radios suggérées
         tags: Tags
         share: Partager la radio
-        title: 'Écouter %radio% en direct'
-        title_country: '%radio% - %country% - Écouter en direct'
+        title: '%radio% écoute en direct'
+        title_country: '%radio% - Écouter en direct - %country%'
         website: Site web
         banned: Cette radio est bannie.
         desc: 'Description'

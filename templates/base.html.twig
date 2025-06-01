@@ -170,16 +170,16 @@
 {% block javascripts %}
 {% endblock %}
 
-{#{% if app.environment == 'prod' %}#}
-{#    <!-- Google tag (gtag.js) -->#}
-{#    <script defer src="https://www.googletagmanager.com/gtag/js?id={{ analytics }}"></script>#}
-{#    <script>#}
-{#      window.dataLayer = window.dataLayer || [];#}
-{#      function gtag(){dataLayer.push(arguments);}#}
-{#      gtag('js', new Date());#}
+{% if app.environment == 'prod' %}
+    <!-- Google tag (gtag.js) -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id={{ analytics }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-{#      gtag('config', '{{ analytics }}');#}
-{#    </script>#}
-{#{% endif %}#}
+      gtag('config', '{{ analytics }}');
+    </script>
+{% endif %}
 </body>
 </html>
