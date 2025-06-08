@@ -41,7 +41,7 @@ defmodule ProgRadioApi.SongProvider.Infomaniak do
             |> List.last()
 
           # over the delta, let's consider it's a not up to date data
-          if  SongProvider.now_unix() > (Map.get(data, "date") + @max_delta_seconds) do
+          if SongProvider.now_unix() > Map.get(data, "date") + @max_delta_seconds do
             nil
           else
             data
@@ -69,14 +69,14 @@ defmodule ProgRadioApi.SongProvider.Infomaniak do
         else
           %{
             artist: String.replace(title, "  -  ", " - "),
-            title: nil,
+            title: nil
           }
         end
       else
         nil
       end
     rescue
-      e ->
+      _ ->
         Logger.debug("Data provider - #{name} (infomaniak): song error rescue")
         %{}
     end

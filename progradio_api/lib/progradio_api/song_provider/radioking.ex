@@ -46,6 +46,7 @@ defmodule ProgRadioApi.SongProvider.Radioking do
             ~r/radio\/(\d+)/
 
           [_, id] = Regex.run(regex, name)
+
           "https://www.radioking.com/widgets/api/v1/radio/#{id}/track/current?_=#{SongProvider.now_unix()}"
         else
           regex =

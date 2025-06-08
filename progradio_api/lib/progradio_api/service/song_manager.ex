@@ -1,7 +1,7 @@
 defmodule ProgRadioApi.SongManager do
   require Logger
 
-  @spec join(String.t(), map(), pid() | nil ) :: any()
+  @spec join(String.t(), map(), pid() | nil) :: any()
   def join(song_topic, radio_stream_data, caller_pid \\ nil)
 
   def join("url:" <> song_topic, _params, caller_pid) do

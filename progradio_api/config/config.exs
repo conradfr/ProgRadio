@@ -124,7 +124,7 @@ config :ex_cldr,
   default_backend: ProgRadioApi.Cldr
 
 config :progradio_api, ProgRadioApi.Cache,
-   stats: true,
+  stats: true,
   # When using :shards as backend
   # backend: :shards,
   # GC interval for pushing new generation: 12 hrs

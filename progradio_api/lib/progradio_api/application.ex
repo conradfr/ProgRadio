@@ -24,7 +24,6 @@ defmodule ProgRadioApi.Application do
       {Finch, name: ProgRadioApi.Finch},
       ProgRadioApi.Repo,
       ProgRadioApiWeb.Telemetry,
-
       {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
 
       # cron tasks

@@ -4,8 +4,10 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
 
   @behaviour ProgRadioApi.SongProvider
 
+  @seconds_max_delta 600
+
   @impl true
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(), do: false
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil
@@ -22,14 +24,27 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
           nil
 
         _ ->
-          "https://np.tritondigital.com/public/nowplaying?mountName=#{id}&numberToFetch=1&eventType=track"
-          |> SongProvider.get()
-          |> Map.get(:body)
-          |> XmlToMap.naive_map()
-          |> Map.get("nowplaying-info-list", %{})
-          |> Map.get("nowplaying-info")
+          data =
+            "https://np.tritondigital.com/public/nowplaying?mountName=#{id}&numberToFetch=1&eventType=track"
+            |> SongProvider.get()
+            |> Map.get(:body)
+            |> XmlToMap.naive_map()
+            |> Map.get("nowplaying-info-list", %{})
+            |> Map.get("nowplaying-info")
 
-          # TODO manage delta with cue_time_start and discard if over?
+          # discard if over
+          case get_value(data, "cue_time_start") do
+            nil ->
+              data
+
+            time_start ->
+              if String.to_integer(time_start) / 1000 + @seconds_max_delta <
+                   SongProvider.now_unix() do
+                nil
+              else
+                data
+              end
+          end
       end
     rescue
       _ ->
@@ -44,7 +59,7 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
       %{
         artist: get_value(data, "track_artist_name"),
         title: get_value(data, "cue_title"),
-        cover_url: get_value(data, "track_cover_url"),
+        cover_url: get_value(data, "track_cover_url")
       }
     rescue
       _ ->
@@ -55,7 +70,9 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
 
   defp get_value(data, key) do
     case Map.get(data, "#content", %{}) do
-      nil -> nil
+      nil ->
+        nil
+
       content ->
         content
         |> Map.get("property", [])

@@ -85,7 +85,8 @@ defmodule ProgRadioApi.MixProject do
       {:ex2ms, "~> 1.0"},
       {:meilisearch_ex, "~> 1.2.1"},
       {:goal, "~> 1.2"},
-      {:sentry, "~> 10.9.0"}
+      {:sentry, "~> 10.9.0"},
+      {:eventsource_ex, "~> 2.0.0"}
     ]
   end
 

@@ -5,12 +5,12 @@ defmodule ProgRadioApi.SongProvider do
   @callback get_refresh(String.t(), map() | nil, integer()) :: integer() | nil
 
   @doc """
-    Get source data as map
+    Get source data as a map
   """
   @callback get_data(String.t(), map() | nil) :: map() | nil
 
   @doc """
-    Get artist & song as map
+    Get artist and song as a map
   """
   @callback get_song(String.t(), map() | nil, map() | nil) :: map() | nil
 

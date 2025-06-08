@@ -38,7 +38,8 @@ defmodule ProgRadioApi.SongServer do
         retries: 0,
         db_data: nil,
         last_timestamp: SongProvider.now_unix(),
-        tasks: %{}
+        tasks: %{},
+        push_pid: nil
       },
       name: name
     )
@@ -64,7 +65,8 @@ defmodule ProgRadioApi.SongServer do
         retries: 0,
         db_data: db_data,
         last_timestamp: SongProvider.now_unix(),
-        tasks: %{}
+        tasks: %{},
+        push_pid: nil
       },
       name: name
     )
@@ -76,13 +78,24 @@ defmodule ProgRadioApi.SongServer do
   def init(state) do
     Logger.info("Data provider - #{state.name}: starting ...")
 
-    if apply(state.module, :has_custom_refresh, []) == true,
-      do: Process.send_after(self(), {:refresh, :one_off}, 1000)
+    # There is two types of module, one supporting push events and the other retrieving the data itself w/ refreshes
+    updated_state =
+      case Kernel.function_exported?(state.module, :get_push_client_pid, 1) do
+        true ->
+          {:ok, pid} = apply(state.module, :get_push_client_pid, [state.name])
+          %{state | push_pid: pid}
 
-    Process.send_after(self(), {:refresh, :auto}, 250)
+        false ->
+          if apply(state.module, :has_custom_refresh, []) == true,
+            do: Process.send_after(self(), {:refresh, :one_off}, 1000)
+
+          Process.send_after(self(), {:refresh, :auto}, 250)
+          state
+      end
+
     Process.send_after(self(), :presence, @refresh_presence_interval)
 
-    {:ok, state}
+    {:ok, updated_state}
   end
 
   @impl true
@@ -198,6 +211,7 @@ defmodule ProgRadioApi.SongServer do
         if SongProvider.now_unix() - last_timestamp > @max_seconds_errors_before_quitting do
           ProgRadioApiWeb.Endpoint.broadcast!(state.name, "quit", %{})
           Logger.error("Data provider - #{state.name}: fetching error, exiting")
+          kill_push_process_if_any(state.push_pid)
           {:stop, :normal, nil}
         else
           Logger.error("Data provider - #{state.name}: fetching error, no quitting")
@@ -267,6 +281,44 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
+  %EventsourceEx.Message{
+    id: "1749399737229",
+    event: "message",
+    data:
+      "{\"mount\":\"s70bvdgqks8uv\",\"streamTitle\":\"Darren Styles, Dougal & Gammer - Party Don't Stop\"}",
+    dispatch_ts: ~U[2025-06-08 16:22:17.584931Z]
+  }
+
+  # messages from the push client
+  @impl true
+  def handle_info(%EventsourceEx.Message{} = push_event, %{name: name, song: last_song} = state) do
+    case apply(state.module, :get_data, [name, push_event, state.last_data]) do
+      nil ->
+        {:noreply, state}
+
+      :error ->
+        {:noreply, state}
+
+      data ->
+        case apply(state.module, :get_song, [name, data, last_song]) do
+          nil ->
+            {:noreply, state}
+
+          :error ->
+            {:noreply, state}
+
+          song ->
+            broadcast_song_if_needed(name, song, last_song)
+            updated_song_history = update_song_history(last_song, state.song_history, song)
+            broadcast_song_history_if_needed(name, updated_song_history, state.song_history)
+            update_status(song, state.db_data)
+
+            {:noreply, %{state | song: song, last_data: data, song_history: updated_song_history},
+             :hibernate}
+        end
+    end
+  end
+
   @impl true
   def handle_info(:presence, %{name: name} = state) do
     how_many_connected = how_many_connected(name)
@@ -275,6 +327,7 @@ defmodule ProgRadioApi.SongServer do
       0 ->
         broadcast_song(name, nil)
         Logger.info("Data provider - #{name}: no client connected, exiting")
+        kill_push_process_if_any(state.push_pid)
         {:stop, :normal, nil}
 
       _ ->
@@ -292,6 +345,7 @@ defmodule ProgRadioApi.SongServer do
 
   def handle_info({:DOWN, ref, _, _, reason}, state) do
     Logger.error("Task failed with reason #{inspect(reason)}")
+    kill_push_process_if_any(state.push_pid)
     {:noreply, %{state | tasks: Map.delete(state.tasks, ref)}}
   end
 
@@ -363,7 +417,9 @@ defmodule ProgRadioApi.SongServer do
 
           song =
             unless data == :error or data == nil do
-              task_song = Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data, last_song])
+              task_song =
+                Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data, last_song])
+
               Task.await(task_song, @task_timeout)
               #          apply(module, :get_song, [name, data])
             else
@@ -398,6 +454,9 @@ defmodule ProgRadioApi.SongServer do
         value
     end
   end
+
+  defp kill_push_process_if_any(push_pid) when is_nil(push_pid), do: :ok
+  defp kill_push_process_if_any(push_pid), do: Process.exit(push_pid, :kill)
 
   # ---------- UPDATE STATUS ----------
 
@@ -484,6 +543,9 @@ defmodule ProgRadioApi.SongServer do
   defp get_url_module(song_topic) do
     # sorted by prevalence in db
     cond do
+      String.contains?(song_topic, ".zeno.fm") ->
+        ProgRadioApi.SongProvider.Zeno
+
       String.contains?(song_topic, ".streamtheworld.com") ->
         ProgRadioApi.SongProvider.Streamtheworld
 
