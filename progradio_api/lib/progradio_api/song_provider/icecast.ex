@@ -39,10 +39,15 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     #
     #      _ ->
     try do
-      {:ok, %Shoutcast.Meta{data: data}} =
+      {:ok, %Shoutcast.Meta{data: data, string: string}} =
         Shoutcast.read_meta(url, follow_redirect: true, pool: false)
 
-      data
+      # the shoutcast library doesn't handle all weird icy metadata. If so we'll try to do it ourselves later
+      cond do
+        is_map(data) and map_size(data) > 0 -> data
+        is_binary(string) and string != "" -> string
+        true -> nil
+      end
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (icecast): data error rescue")
@@ -57,26 +62,47 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   @impl true
   def get_song(name, data, _last_song) do
     try do
-      key =
-        if is_map_key(data, :json) and data.json == true, do: "title", else: "StreamTitle"
+      case data do
+        data when is_map(data) ->
+          song_from_map(name, data)
 
-      song =
-        data
-        |> Map.get(key, "")
-        |> then(fn
-          text when is_binary(text) ->
-            Enum.join(for <<c::utf8 <- text>>, do: <<c::utf8>>)
+        data when is_binary(data) ->
+          parse_metadata_string(name, data)
 
-          text when is_list(text) ->
-            to_string(text)
+        _ ->
+          nil
+      end
+    rescue
+      _ ->
+        Logger.error("Data provider - #{name}: song error rescue")
+        :error
+    end
+  end
 
-          text ->
-            text
-        end)
-        |> String.trim()
+  defp song_from_map(name, data) do
+    key =
+      if is_map_key(data, :json) and data.json == true, do: "title", else: "StreamTitle"
 
-      Logger.debug("Data provider - #{name} (icecast): data - #{song}")
+    song =
+      data
+      |> Map.get(key, "")
+      |> then(fn
+        text when is_binary(text) ->
+          Enum.join(for <<c::utf8 <- text>>, do: <<c::utf8>>)
 
+        text when is_list(text) ->
+          to_string(text)
+
+        text ->
+          text
+      end)
+      |> String.trim()
+
+    Logger.debug("Data provider - #{name} (icecast): data (map) - #{song}")
+
+    # we discard empty or suspicious/incomplete entries
+    unless is_binary(song) == false or song === "" or song === "-" or
+             String.contains?(song, " - ") === false do
       cover_art =
         data
         |> Map.get("StreamUrl", "")
@@ -98,43 +124,40 @@ defmodule ProgRadioApi.SongProvider.Icecast do
           end
         end)
 
-      # we discard empty or suspicious/incomplete entries
-      unless is_binary(song) == false or song === "" or song === "-" or
-               String.contains?(song, " - ") === false do
-        %{
-          artist: song,
-          title: nil,
-          cover_url: cover_art
-        }
-      else
-        %{}
-      end
-    rescue
-      _ ->
-        Logger.error("Data provider - #{name}: song error rescue")
-        :error
+      %{
+        artist: song,
+        title: nil,
+        cover_url: cover_art
+      }
+    else
+      %{}
     end
   end
 
-  #  defp get_json_data(stream_url) do
-  #    parsed_url = URI.parse(stream_url)
-  #
-  #    base_url =
-  #      "#{parsed_url.scheme}://#{parsed_url.host}#{if parsed_url.port, do: ":#{parsed_url.port}", else: ""}"
-  #
-  #    try do
-  #      "#{base_url}#{@icecast_api}"
-  #      |> SongProvider.get()
-  #      |> Map.get(:body)
-  #      |> :json.decode()
-  #      |> Map.get("icestats")
-  #      |> Map.get("source")
-  #      |> Enum.find(fn s ->
-  #        String.contains?(s["listenurl"], parsed_url.host) == true and
-  #          String.contains?(s["listenurl"], parsed_url.path || "") == true
-  #      end)
-  #    rescue
-  #      _ -> nil
-  #    end
-  #  end
+  defp parse_metadata_string(name, data) do
+    regex = ~r/StreamTitle='(?<artist>.*?) - .*?text="(?<title>.*?)" song_spot/
+
+    case Regex.named_captures(regex, data) do
+      %{"artist" => artist, "title" => title} ->
+        Logger.debug("Data provider - #{name} (icecast): data (string) - #{artist} - #{title}")
+
+        %{
+          artist: artist,
+          title: title,
+          cover_url: extract_cover_from_metadata(data)
+        }
+
+      nil ->
+        nil
+    end
+  end
+
+  defp extract_cover_from_metadata(data) do
+    regex = ~r/amgArtworkURL="(?<artwork_url>http[^"]*)/
+
+    case Regex.named_captures(regex, data) do
+      %{"artwork_url" => url} -> url
+      nil -> nil
+    end
+  end
 end
