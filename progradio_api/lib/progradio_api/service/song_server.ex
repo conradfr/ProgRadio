@@ -570,6 +570,9 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, ".creacast.com/") ->
         ProgRadioApi.SongProvider.Creacast
 
+      String.contains?(song_topic, ".ssl-stream.com/") ->
+        ProgRadioApi.SongProvider.SslStream
+
       String.contains?(song_topic, ".m3u8") ->
         ProgRadioApi.SongProvider.Hls
 
