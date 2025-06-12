@@ -69,7 +69,7 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
   @impl true
   def get_song(name, data, _last_song) do
     try do
-      Logger.debug("Data provider - #{name} (azuracast): data")
+      Logger.debug("Data provider - #{name} (azuracast): song")
 
       artist =
         data

@@ -1,6 +1,5 @@
 defmodule ProgRadioApi.SongProvider.Zeno do
   require Logger
-  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProviderPush
 

@@ -1,11 +1,13 @@
 defmodule ProgRadioApi.SongProvider.Radiobob do
   require Logger
+  alias ProgRadioApi.SongProvider.GenericLoveradio
   alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
     "radiobob_livestream" => 65,
+    "radiobob_dab+" => 61,
     "radiobob_alternative" => 15,
     "radiobob_classic_rock" => 16,
     "radiobob_acdc" => 72,
@@ -44,91 +46,20 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
   }
 
   @impl true
-  def has_custom_refresh(), do: true
+  defdelegate has_custom_refresh(), to: GenericLoveradio
 
   @impl true
-  def get_refresh(_name, data, default_refresh) do
-    case data do
-      nil ->
-        default_refresh
-
-      _ ->
-        try do
-          now_unix = SongProvider.now_unix()
-
-          {:ok, time_start, _} =
-            data
-            |> Map.get("airtime")
-            |> DateTime.from_iso8601()
-
-          duration = Map.get(data, "duration") |> String.to_integer()
-
-          next_time =
-            time_start
-            |> DateTime.add(duration, :second)
-            |> DateTime.to_unix()
-
-          next = next_time - now_unix
-
-          if now_unix + next < now_unix do
-            default_refresh
-          else
-            next * 1000
-          end
-        rescue
-          _ -> default_refresh
-        end
-    end
-  end
+  defdelegate get_refresh(name, data, default_refresh), to: GenericLoveradio
 
   @impl true
   def get_data(name, _last_data) do
-    now_unix = SongProvider.now_unix()
-
     id =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
-    try do
-      "https://iris-bob.loverad.io/flow.json?station=#{id}&offset=1&count=1&ts=#{now_unix}"
-      |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
-      |> Map.get("result", %{})
-      |> Map.get("entry", %{})
-      |> List.first()
-    rescue
-      _ -> :error
-    end
+    GenericLoveradio.get_data("bob", id)
   end
 
   @impl true
-  def get_song(name, data, _last_song) do
-    try do
-      case Map.get(data, "song", %{}) |> Map.get("entry", []) |> List.first() do
-        nil ->
-          %{}
-
-        song_data ->
-          artist =
-            Map.get(song_data, "artist", %{})
-            |> Map.get("entry", [])
-            |> List.first(%{})
-            |> Map.get("name")
-
-          picture = Map.get(song_data, "cover_art_url_s")
-          title = Map.get(song_data, "title")
-
-          %{
-            artist: artist,
-            title: title,
-            cover_url: picture
-          }
-      end
-    rescue
-      _ ->
-        Logger.error("Data provider - #{name}: song error rescue")
-        :error
-    end
-  end
+  defdelegate get_song(name, data, last_song), to: GenericLoveradio
 end

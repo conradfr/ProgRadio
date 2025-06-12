@@ -14,6 +14,7 @@ defmodule ProgRadioApi.SongProvider.SslStream do
   def get_data(name, _last_data) do
     now_unix = SongProvider.now_unix()
     url = String.split(name, ":", parts: 2) |> List.last()
+
     try do
       "https://ssl-stream.com/portal/icecast_now_playing.php/?url=#{url}?nocache=#{now_unix}"
       |> SongProvider.get()

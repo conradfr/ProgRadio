@@ -570,11 +570,29 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, ".creacast.com/") ->
         ProgRadioApi.SongProvider.Creacast
 
+      String.contains?(song_topic, ".m3u8") ->
+        ProgRadioApi.SongProvider.Hls
+
+      String.contains?(song_topic, ".asurahosting.com/proxy/") and
+          (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
+        ProgRadioApi.SongProvider.AsuraHosting
+
+      String.contains?(song_topic, ".mexside.net") ->
+        ProgRadioApi.SongProvider.Mexside
+
+      String.contains?(song_topic, ".republicahosting.") and
+          (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
+        ProgRadioApi.SongProvider.RepublicaHosting
+
+      String.contains?(song_topic, "stream.freepi.io") and String.contains?(song_topic, "/live") ->
+        ProgRadioApi.SongProvider.Freepi
+
       String.contains?(song_topic, ".ssl-stream.com/") ->
         ProgRadioApi.SongProvider.SslStream
 
-      String.contains?(song_topic, ".m3u8") ->
-        ProgRadioApi.SongProvider.Hls
+      String.contains?(song_topic, "//0n-") and
+       String.contains?(song_topic, ".radionetz.de/") ->
+        ProgRadioApi.SongProvider.Radio0n
 
       true ->
         ProgRadioApi.SongProvider.Icecast

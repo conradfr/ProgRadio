@@ -6,8 +6,6 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   @refresh_auto_interval 10000
 
-  #  @icecast_api "/status-json.xsl"
-
   @impl true
   def has_custom_refresh(), do: false
 
@@ -21,23 +19,6 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   def get_data(name, _last_data) do
     url = SongProvider.get_stream_code_name_from_channel(name)
 
-    #    data =
-    #      case is_map(last_data) do
-    #        true when is_map_key(last_data, :json) == true and last_data.json === true ->
-    #          get_json_data(url)
-    #
-    #        true ->
-    #          nil
-    #
-    #        _ ->
-    #          get_json_data(url)
-    #      end
-    #
-    #    case data do
-    #      %{} ->
-    #        Map.put(data, :json, true)
-    #
-    #      _ ->
     try do
       {:ok, %Shoutcast.Meta{data: data, string: string}} =
         Shoutcast.read_meta(url, follow_redirect: true, pool: false)
@@ -101,8 +82,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     Logger.debug("Data provider - #{name} (icecast): data (map) - #{song}")
 
     # we discard empty or suspicious/incomplete entries
-    unless is_binary(song) == false or song === "" or song === "-" or
-             String.contains?(song, " - ") === false do
+    if is_binary(song) and song != "" and song != "-" and
+      String.contains?(song, " - ") === true do
       cover_art =
         data
         |> Map.get("StreamUrl", "")
