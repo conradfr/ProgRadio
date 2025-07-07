@@ -32,6 +32,17 @@
         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 {% endmacro %}
 
+{% macro extractDailymotionIdAndProvideiFrame(url) %}
+    {% set dailymotion_id = url | replace({
+        'https://www.dailymotion.com/video/': '',
+    }) | split('?') | first %}
+    <iframe frameborder="0" width="325" height="183"
+            src="https://geo.dailymotion.com/player/x3d09.html?video={{ dailymotion_id }}"
+            allowfullscreen
+            allow="autoplay; fullscreen; picture-in-picture; web-share">
+    </iframe>
+{% endmacro %}
+
 {% block head_supp %}
     {{ parent() }}
     <meta property="al:web:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}" />
@@ -153,6 +164,8 @@
                             <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
                         {% elseif 'youtu.be' in stream.streamUrl or 'youtube.com' in stream.streamUrl %}
                             {{ self.extractYouTubeIdAndProvideiFrame(stream.streamUrl) }}
+                        {% elseif 'dailymotion' in stream.streamUrl %}
+                            {{ self.extractDailymotionIdAndProvideiFrame(stream.streamUrl) }}
                         {% else %}
                             <div class="radio-page-streams-one mb-4 d-flex align-items-center justify-content-center justify-content-sm-start"
                                 style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none')">

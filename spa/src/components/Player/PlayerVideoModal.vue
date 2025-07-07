@@ -12,11 +12,17 @@
               :aria-label="$t('message.player.timer.modal.close')"></button>
           </div>
           <div class="modal-body-row mt-3 mb-2">
-            <iframe v-if="videoUrl" width="469" height="264" :src="videoUrl"
+            <iframe v-if="videoId && videoId[0] === VideoProvider.Youtube" width="469" height="264"
+              :src="`https://www.youtube.com/embed/${videoId[1]}?enablejsapi=1`"
               title="YouTube video player" frameborder="0"
-      sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-presentation"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-presentation"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <iframe v-if="videoId && videoId[0] === VideoProvider.Dailymotion" frameborder="0" width="325" height="183"
+              :src="`https://geo.dailymotion.com/player/x3d09.html?video=${videoId[1]}`"
+              allowfullscreen
+              allow="autoplay; fullscreen; picture-in-picture; web-share">
+            </iframe>
           </div>
         </div>
       </div>
@@ -25,28 +31,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { mapState } from 'pinia';
+import {defineComponent} from 'vue';
+import {mapState} from 'pinia';
 
+import VideoProvider from '@/types/video.ts';
 import PlayerUtils from '@/utils/PlayerUtils';
 
-import { usePlayerStore } from '@/stores/playerStore';
+import {usePlayerStore} from '@/stores/playerStore';
+
 
 export default defineComponent({
+  data(): {
+    VideoProvider: any
+  } {
+    return {
+      VideoProvider
+    }
+  },
   computed: {
     ...mapState(usePlayerStore, ['videoModalUrl']),
-    videoUrl(): string|null {
+    videoId(): [VideoProvider, string]|null {
       if (!this.videoModalUrl) {
         return null;
       }
 
-      const videoId = PlayerUtils.getVideoId(this.videoModalUrl);
-
-      if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
-      }
-
-      return null;
+      return PlayerUtils.getVideoId(this.videoModalUrl);
     }
   },
 });
