@@ -87,7 +87,8 @@ const searchStreams = async (
     queryParamsList.push(`country=${country}`);
   }
 
-  if (sort && ((country !== STREAMING_CATEGORY_LAST && country !== STREAMING_CATEGORY_HISTORY) || sort === STREAMING_SORT_RANDOM)) {
+  if (sort && ((country !== STREAMING_CATEGORY_LAST && country !== STREAMING_CATEGORY_HISTORY)
+    || sort === STREAMING_SORT_RANDOM)) {
     queryParamsList.push(`sort=${sort}`);
   } else if (country === STREAMING_CATEGORY_LAST) {
     queryParamsList.push(`sort=${STREAMING_CATEGORY_LAST.toLowerCase()}`);

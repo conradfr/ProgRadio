@@ -1,7 +1,7 @@
 <template>
   <div v-if="count && count > 0" class="mb-4">
     <strong>{{ $t('message.streaming.listeners_title') }}:</strong>&nbsp;
-    {{ $t('message.streaming.listeners', { how_many: count}) }}
+    {{ $t('message.streaming.listeners', count) }}
   </div>
 </template>
 

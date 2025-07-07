@@ -15,8 +15,8 @@
             <iframe v-if="videoId && videoId[0] === VideoProvider.Youtube" width="469" height="264"
               :src="`https://www.youtube.com/embed/${videoId[1]}?enablejsapi=1`"
               title="YouTube video player" frameborder="0"
-              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-presentation"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-presentation"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             <iframe v-if="videoId && videoId[0] === VideoProvider.Dailymotion" frameborder="0" width="325" height="183"
               :src="`https://geo.dailymotion.com/player/x3d09.html?video=${videoId[1]}`"
