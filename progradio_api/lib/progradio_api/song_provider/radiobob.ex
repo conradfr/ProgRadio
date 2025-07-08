@@ -42,7 +42,8 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
     "radiobob_festival" => 105,
     "radiobob_gothic" => 235,
     "radiobob_rockabilly" => 104,
-    "radiobob_christmas" => 76
+    "radiobob_christmas" => 76,
+    "radiobob_unplugged" => 73
   }
 
   @impl true

@@ -75,7 +75,7 @@ defmodule ProgRadioApi.MixProject do
       {:nebulex, "~> 2.6"},
       {:decorator, "~> 1.3"},
       {:observer_cli, "~> 1.7"},
-      {:ex_cldr, "~> 2.40.0"},
+      {:ex_cldr, "~> 2.42.0"},
       {:ex_cldr_territories, "~> 2.9.0"},
       {:ex_cldr_collation, "~> 0.7.5"},
       {:req, "~> 0.5.0"},
@@ -85,7 +85,7 @@ defmodule ProgRadioApi.MixProject do
       {:ex2ms, "~> 1.0"},
       {:meilisearch_ex, "~> 1.2.1"},
       {:goal, "~> 1.2"},
-      {:sentry, "~> 10.9.0"},
+      {:sentry, "~> 11.0.0"},
       {:eventsource_ex, "~> 2.0.0"}
     ]
   end
