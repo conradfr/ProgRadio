@@ -75,7 +75,7 @@ const format = async (dateObj, name) => {
       if (scrapedData[name][scrapedData[name][index].children]
           && scrapedData[name][scrapedData[name][index].children] !== null) {
         scrapedData[name][scrapedData[name][index].children].forEach((index2) => {
-          if (scrapedData[name][scrapedData[name][scrapedData[name][index2].expression]] === undefined) {
+          if (scrapedData[name][index2] === undefined || !scrapedData[name][scrapedData[name][index2].expression]) {
             return;
           }
 
