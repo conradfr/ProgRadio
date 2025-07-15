@@ -555,6 +555,9 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, ".laut.fm") ->
         ProgRadioApi.SongProvider.Lautfm
 
+      String.contains?(song_topic, ".radio.co/") ->
+        ProgRadioApi.SongProvider.RadioCo
+
       String.contains?(song_topic, ".radiojar.com") ->
         ProgRadioApi.SongProvider.Radiojar
 
