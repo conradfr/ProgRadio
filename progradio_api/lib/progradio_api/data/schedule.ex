@@ -58,9 +58,21 @@ defmodule ProgRadioApi.Schedule do
   defp schedule_of_radios_and_day(radio_code_names, day, now) do
     {radio_code_names_cached, radio_code_names_not_cached} =
       radio_code_names_cached_or_not_for_day(radio_code_names, day, now)
+    cached =
+      radio_code_names_cached
+      |> Enum.map(fn e ->
+        data = Cache.get(get_cache_key(e, day, now))
+        {e, data}
+      end)
+      |> Enum.into(%{})
+
+    cached_nil =
+      Enum.filter(cached, fn {_, e} ->
+        e == nil
+      end)
 
     not_cached =
-      case Kernel.length(radio_code_names_not_cached) do
+      case Kernel.length(radio_code_names_not_cached ++ cached_nil) do
         0 ->
           %{}
 
@@ -68,7 +80,7 @@ defmodule ProgRadioApi.Schedule do
           result =
             day
             |> query(now)
-            |> where([se, r, sc], r.code_name in ^radio_code_names_not_cached)
+            |> where([se, r, sc], r.code_name in ^(radio_code_names_not_cached ++ cached_nil))
             |> Repo.all()
             |> format()
 
@@ -86,14 +98,6 @@ defmodule ProgRadioApi.Schedule do
 
           result
       end
-
-    cached =
-      radio_code_names_cached
-      |> Enum.map(fn e ->
-        data = Cache.get(get_cache_key(e, day, now))
-        {e, data}
-      end)
-      |> Enum.into(%{})
 
     Map.merge(cached, not_cached)
   end
