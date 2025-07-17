@@ -1,9 +1,8 @@
-const osmosis = require('osmosis');
-let moment = require('moment-timezone');
-const logger = require('../../lib/logger.js');
-const utils = require('../../lib/utils.js');
-const axios = require('axios');
-const { convert } = require('html-to-text');
+import moment from 'moment-timezone';
+import logger from '../../lib/logger.js';
+import utils from '../../lib/utils.js';
+import axios from 'axios';
+import { convert } from 'html-to-text';
 
 let scrapedData = [];
 
@@ -28,9 +27,9 @@ const format = dateObj => {
       return prev;
     }
 
-    currEndDateTime = moment.tz(curr.trueschedule[0].end, 'America/Montreal');
+    const currEndDateTime = moment.tz(curr.trueschedule[0].end, 'America/Montreal');
 
-    newEntry = {
+    const newEntry = {
       'date_time_start': currStartDateTime.toISOString(),
       'date_time_end': currEndDateTime.toISOString(),
       'title': curr.name
@@ -76,9 +75,7 @@ const format = dateObj => {
 const fetch = dateObj => {
   dateObj.locale('fr');
   const format = 'YYYY-MM-DD';
-
-  // const url = `https://api.cogecolive.com/shows/queue?stationId=6&with=images,users,trueschedule&timeAsked=${dateObj.format(format)}`;
-  const url = `https://api.cogecolive.com/shows?stationId=6&dateFrom=${dateObj.format(format)}%2000:00:00&dateTo=${dateObj.format(format)}%2023:59:00&with=images,shows,trueschedule,users,stations`;
+  const url = `https://api.cogecolive.com/shows?stationId=4&dateFrom=${dateObj.format(format)}%2000:00:00&dateTo=${dateObj.format(format)}%2023:59:00&with=images,shows,trueschedule,users,stations`;
 
   logger.log('info', `fetching ${url}`);
 
@@ -106,10 +103,8 @@ const getScrap = dateObj => {
     }).catch(() => format(dateObj));
 };
 
-const scrapModule = {
-  getName: 'fm93',
-  supportTomorrow: true,
-  getScrap
+export default {
+    getName: 'montreal985',
+    supportTomorrow: true,
+    getScrap
 };
-
-module.exports = scrapModule;
