@@ -105,6 +105,14 @@
       file_server
     }
 
+    @root_assets path_regexp ^/(robots\.txt|.*\.png)$
+    handle @root_assets {
+      header Access-Control-Allow-Origin "*"
+      header Cache-Control "public, max-age=1209600"
+      header Pragma "public"
+      file_server
+    }
+
 	php_server {
 	  file_server off
     resolve_root_symlink false

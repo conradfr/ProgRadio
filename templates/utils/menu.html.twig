@@ -43,7 +43,7 @@
 {% endmacro %}
 
 {% macro streaming_menu() %}
-    <ul class="dropdown-menu" aria-labelledby="navbarCollectionsDropdown">
+    <ul class="dropdown-menu" aria-labelledby="navbarMenuCollectionsDropdown">
         {% if app.request.locale == 'fr' %}
             <li>
                 <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/fr">{{ 'menu.favorites_menu.fr'|trans }}</a>
