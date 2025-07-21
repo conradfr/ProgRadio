@@ -58,51 +58,55 @@
         {% endblock %}
     </style>
 
-    {% set canonical_locale = (isProgRadioRequest == true) ? 'fr' : 'en' %}
-
-    {% if stream is defined and stream is not null and stream.language is defined and stream.language is not null %}
-        {% if 'french' in stream.language or 'francais' in stream.language or 'français' in stream.language %}
-            {% set canonical_locale = 'fr' %}
-        {% elseif 'spanish' in stream.language or 'español' in stream.language %}
-            {% set canonical_locale = 'es' %}
-        {% elseif 'portuguese' in stream.language %}
-            {% set canonical_locale = 'pt' %}
-        {% elseif 'polish' in stream.language %}
-            {% set canonical_locale = 'pl' %}
-        {% elseif 'greek' in stream.language %}
-            {% set canonical_locale = 'el' %}
-        {% elseif 'arabic' in stream.language %}
-            {% set canonical_locale = 'ar' %}
-        {% elseif 'german' in stream.language %}
-            {% set canonical_locale = 'de' %}
-        {% elseif 'italian' in stream.language %}
-            {% set canonical_locale = 'it' %}
-        {% elseif 'romanian' in stream.language %}
-            {% set canonical_locale = 'ro' %}
-        {% elseif 'hungarian' in stream.language %}
-            {% set canonical_locale = 'hu' %}
-        {% elseif 'turskish' in stream.language %}
-            {% set canonical_locale = 'tr' %}
-        {% endif %}
-    {% endif %}
-
-    {% if 'www' in app.request.uri == false %}
-        <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
-    {%  else %}
-        <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
-    {% endif %}
-
     {% block canonical %}
-        {% if canonical_locale is defined %}
-            {% for locale in locales %}
-                {% if canonical_locale != locale %}
-                    {% if 'www' in app.request.uri == false %}
-    <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale})))|replace({'https://': 'https://www.'}) }}">
-                    {%  else %}
-    <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale}))) }}">
-                    {% endif %}
+        {% if ('/streaming' not in app.request.uri or 'streaming-' in app.request.uri)
+            and ('/schedule' not in app.request.uri or '/schedule-' in app.request.uri)
+            and '/radio' not in app.request.uri  and '/params' not in app.request.uri and '/songs' not in app.request.uri %}
+            {% set canonical_locale = (isProgRadioRequest == true) ? 'fr' : 'en' %}
+
+            {% if stream is defined and stream is not null and stream.language is defined and stream.language is not null %}
+                {% if 'french' in stream.language or 'francais' in stream.language or 'français' in stream.language %}
+                    {% set canonical_locale = 'fr' %}
+                {% elseif 'spanish' in stream.language or 'español' in stream.language %}
+                    {% set canonical_locale = 'es' %}
+                {% elseif 'portuguese' in stream.language %}
+                    {% set canonical_locale = 'pt' %}
+                {% elseif 'polish' in stream.language %}
+                    {% set canonical_locale = 'pl' %}
+                {% elseif 'greek' in stream.language %}
+                    {% set canonical_locale = 'el' %}
+                {% elseif 'arabic' in stream.language %}
+                    {% set canonical_locale = 'ar' %}
+                {% elseif 'german' in stream.language %}
+                    {% set canonical_locale = 'de' %}
+                {% elseif 'italian' in stream.language %}
+                    {% set canonical_locale = 'it' %}
+                {% elseif 'romanian' in stream.language %}
+                    {% set canonical_locale = 'ro' %}
+                {% elseif 'hungarian' in stream.language %}
+                    {% set canonical_locale = 'hu' %}
+                {% elseif 'turskish' in stream.language %}
+                    {% set canonical_locale = 'tr' %}
                 {% endif %}
-            {% endfor %}
+            {% endif %}
+
+            {% if 'www' in app.request.uri == false %}
+                <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
+            {%  else %}
+                <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
+            {% endif %}
+
+            {%- if canonical_locale is defined -%}
+                {%- for locale in locales -%}
+                    {%- if canonical_locale != locale -%}
+                        {% if 'www' in app.request.uri == false %}
+                <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale})))|replace({'https://': 'https://www.'}) }}">
+                        {%  else %}
+                <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale}))) }}">
+                        {% endif %}
+                    {%- endif -%}
+                {%- endfor -%}
+            {%- endif -%}
         {% endif %}
     {% endblock %}
 
@@ -117,6 +121,7 @@
       const appEnv = '{{ app.environment }}';
       const isProgRadio = {% if isProgRadioRequest == true %}true{% else %}false{% endif%};
       const popupUrl = '{{ url('streams_one_popup_short', {'stream': '123'}) }}';
+      {#const canonicalLocale = '{{ canonical_locale }}';#}
       {# const amazon_affiliate_id = '{{ amazon_affiliate_id }}'; #}
 
       {% block javascript_head %}
@@ -126,7 +131,6 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100{% block bodyclasssupp %}{% endblock %}">
-
 {% block body_container %}
 {% endblock %}
 

@@ -5,12 +5,6 @@
 
 {% block bodyclasssupp %} body-app{% endblock %}
 
-{% block canonical %}
-    {% if isProgRadioRequest == false %}
-        {{ parent() }}
-    {% endif %}
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
     {% include('_partials/mini_player.html.twig') %}
