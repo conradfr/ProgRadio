@@ -67,18 +67,19 @@ defmodule ProgRadioApi.SongProvider.AirtimePro do
   end
 
   @impl true
-  def get_song(name, %{"type" => "track"} = data, _last_song)  do
+  def get_song(name, %{"type" => "track"} = data, _last_song) do
     try do
       Logger.debug("Data provider - #{name} (airtime.pro): data")
 
       case Map.get(data, "metadata", %{}) |> Map.get("artist_name") do
         artist when is_binary(artist) ->
-            %{
-              artist: artist,
-              title: Map.get(data, "metadata", %{}) |> Map.get("track_title"),
-            }
+          %{
+            artist: artist,
+            title: Map.get(data, "metadata", %{}) |> Map.get("track_title")
+          }
 
-        _ -> nil
+        _ ->
+          nil
       end
     rescue
       _ ->

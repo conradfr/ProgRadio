@@ -15,6 +15,7 @@ defmodule ProgRadioApi.SongProvider.Mexside do
     Logger.debug("Data provider - #{name} (mexside): data")
 
     regex = ~r/url:(.*?)(?:\/stream|\/;)/
+
     url =
       case Regex.run(regex, name) do
         [_, url] -> url

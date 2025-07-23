@@ -58,6 +58,7 @@ defmodule ProgRadioApi.Schedule do
   defp schedule_of_radios_and_day(radio_code_names, day, now) do
     {radio_code_names_cached, radio_code_names_not_cached} =
       radio_code_names_cached_or_not_for_day(radio_code_names, day, now)
+
     cached =
       radio_code_names_cached
       |> Enum.map(fn e ->

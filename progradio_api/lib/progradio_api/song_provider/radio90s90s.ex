@@ -31,7 +31,7 @@ defmodule ProgRadioApi.SongProvider.Radio90s90s do
     "radio90s90s_britpop" => 787,
     "radio90s90s_sachsen" => 779,
     "radio90s90s_nrw" => 783,
-    "radio90s90s_dab+" => 683,
+    "radio90s90s_dab+" => 683
   }
 
   @impl true

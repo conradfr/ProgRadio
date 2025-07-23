@@ -440,8 +440,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # DNS lookup
   defp get_servers() do
-    DNS.query(@servers_dns)
-    |> Map.get(:anlist)
+    {:ok, dns} = DNS.query(@servers_dns)
+    Map.get(dns, :anlist)
   end
 
   # Disabled

@@ -86,16 +86,10 @@ config :logger,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-#  System.get_env("CORS", ".*")
-{:ok, origin} =
-  System.get_env(
-    "CORS",
-    "https?.*(programmes-radio\.com|radio-addict\.com|localhost|localhost:4001)"
-  )
-  |> Regex.compile()
+cors = System.get_env("CORS", "*") |> String.split(",")
 
 config :cors_plug,
-  origin: [origin],
+  origin: cors,
   max_age: 86400,
   methods: ["GET", "POST", "PUT", "OPTIONS"]
 

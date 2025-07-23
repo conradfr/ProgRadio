@@ -83,7 +83,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
     # we discard empty or suspicious/incomplete entries
     if is_binary(song) and song != "" and song != "-" and
-      String.contains?(song, " - ") === true do
+         String.contains?(song, " - ") === true do
       cover_art =
         data
         |> Map.get("StreamUrl", "")

@@ -37,11 +37,15 @@ defmodule ProgRadioApi.SongProvider.Radio0n do
       Logger.debug("Data provider - #{name} (0n): song")
 
       case data do
-        nil -> nil
-        :error -> nil
+        nil ->
+          nil
+
+        :error ->
+          nil
+
         _ ->
           %{
-            artist: Map.get(data,"track"),
+            artist: Map.get(data, "track"),
             title: nil,
             cover_url: nil
           }

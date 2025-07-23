@@ -28,7 +28,7 @@ defmodule ProgRadioApi.SongProvider.Deltaradio do
     "deltaradio_der_best_rockpop" => 89,
     "deltaradio_unplugged" => 88,
     "deltaradio_xmas" => 198,
-    "deltaradio_fusball_party" => 582,
+    "deltaradio_fusball_party" => 582
   }
 
   @impl true

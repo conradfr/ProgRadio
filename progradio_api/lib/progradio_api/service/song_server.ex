@@ -597,7 +597,7 @@ defmodule ProgRadioApi.SongServer do
         ProgRadioApi.SongProvider.SslStream
 
       String.contains?(song_topic, "//0n-") and
-       String.contains?(song_topic, ".radionetz.de/") ->
+          String.contains?(song_topic, ".radionetz.de/") ->
         ProgRadioApi.SongProvider.Radio0n
 
       true ->
