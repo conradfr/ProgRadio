@@ -49,7 +49,7 @@ defmodule ProgRadioApi.MixProject do
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.4"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.6"},
+      {:bandit, "~> 1.7"},
       {:hackney, "~> 1.21.0"},
       {:httpoison, "~> 2.2", override: true},
       {:tzdata, "~> 1.1.2"},

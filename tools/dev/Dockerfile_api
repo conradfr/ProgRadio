@@ -1,7 +1,11 @@
-#FROM hexpm/elixir:1.18.4-erlang-27.3.4-ubuntu-jammy-20250404
-FROM elixir:latest
+FROM hexpm/elixir:1.18.4-erlang-28.0.2-ubuntu-jammy-20250714
+#FROM elixir:latest
+
+ARG TZ=Europe/Paris
+ARG DEBIAN_FRONTEND=noninteractive
 
 ENV TZ=Europe/Paris
+ENV DEBIAN_FRONTEND=noninteractive
 
 EXPOSE 4000
 EXPOSE 4001

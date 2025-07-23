@@ -33,7 +33,7 @@ defmodule ProgRadioApiWeb.StreamController do
               stream_preload when not is_nil(stream_preload.redirect_to) ->
                 Streams.get_one(stream_preload.redirect_to)
 
-              data ->
+              _ ->
                 nil
             end
 

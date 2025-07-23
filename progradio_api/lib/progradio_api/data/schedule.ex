@@ -67,8 +67,12 @@ defmodule ProgRadioApi.Schedule do
       |> Enum.into(%{})
 
     cached_nil =
-      Enum.filter(cached, fn {_, e} ->
+      cached
+      |> Enum.filter(fn {_, e} ->
         e == nil
+      end)
+      |> Enum.map(fn {code_name, _} ->
+        code_name
       end)
 
     not_cached =
