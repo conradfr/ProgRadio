@@ -143,10 +143,6 @@ const format = async dateObj => {
         return prev;
     }, []);
 
-    console.log('-------------');
-
-    console.log(cleanedData);
-
     return Promise.resolve(cleanedData);
 };
 

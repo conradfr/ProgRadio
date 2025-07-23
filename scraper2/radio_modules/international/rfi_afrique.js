@@ -1,4 +1,4 @@
-const scrapAbstract = require('./_abstract_rfi.js');
+import scrapAbstract from './_abstract_rfi.js';
 
 const name = 'rfi_afrique';
 
@@ -7,10 +7,8 @@ const getScrap = dateObj => {
   return scrapAbstract.getScrap(dateObj, name, url)
 };
 
-const scrapModule = {
+export default {
   getName: name,
   supportTomorrow: scrapAbstract.supportTomorrow,
   getScrap
 };
-
-module.exports = scrapModule;
