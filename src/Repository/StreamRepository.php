@@ -111,7 +111,6 @@ class StreamRepository extends ServiceEntityRepository
         array $favoritesFromCookies = []
     ): array {
         $user = $this->security->getUser();
-
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"

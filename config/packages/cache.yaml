@@ -11,7 +11,7 @@ framework:
         # Redis
         #app: cache.adapter.redis
         #default_redis_provider: redis://localhost
-
+        default_redis_provider: snc_redis.default
         # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
         #app: cache.adapter.apcu
 
@@ -27,4 +27,3 @@ when@prod:
         cache:
             app: cache.adapter.redis
             system: cache.adapter.apcu
-            default_redis_provider: snc_redis.default

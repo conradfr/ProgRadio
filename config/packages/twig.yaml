@@ -7,7 +7,6 @@ twig:
         streams_proxy_key: "%env(STREAMS_PROXY_KEY)%"
         api_url: "%env(API_URL)%"
         cdn_base_url: "%env(CDN_BASE_URL)%"
-#        legacy: "%env(LEGACY)%"
         adsense_key: "%env(ADSENSE_KEY)%"
         adsense_tag_radio_horiz_key: "%env(ADSENSE_TAG_RADIO_HORIZ_KEY)%"
         adsense_tag_radio_vert_key: "%env(ADSENSE_TAG_RADIO_VERT_KEY)%"
