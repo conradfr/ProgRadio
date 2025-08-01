@@ -6,7 +6,7 @@
   z-index: 3;
   box-sizing: border-box;
   position: fixed;
-  top: $navbar-height;
+  top: calc(#{$navbar-height} + var(--safe-area-inset-top));
 
   height: $timeline-height;
   line-height: $timeline-height;
@@ -30,7 +30,7 @@
     z-index: 7;
     display: block;
     position: fixed;
-    top: $navbar-height;
+    top: calc(#{$navbar-height} + var(--safe-area-inset-top));
 
     box-sizing: border-box;
     background-color: var(--progradio-timeline-controls-bg-color);
@@ -160,7 +160,7 @@
 .timeline-cursor-head {
   z-index: 8;
   position: fixed;
-  top: calc(#{$navbar-height} + #{$timeline-height} - 3px);
+  top: calc(#{$navbar-height} + #{$timeline-height} - 3px + var(--safe-area-inset-top));
   left: 0;
 
   height: 3px;

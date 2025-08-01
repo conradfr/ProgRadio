@@ -60,7 +60,7 @@
   position: absolute;
   z-index: 2;
   //top: 41px;
-  top: 91px;
+  top: calc(91px + var(--safe-area-inset-top));
   left: 0;
 
 

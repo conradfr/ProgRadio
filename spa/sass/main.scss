@@ -41,6 +41,14 @@
 @import "page/now";
 @import "page/songs";
 
+:root {
+  // for mobile edge-to-edge
+  --safe-area-inset-top: 0px;
+  --safe-area-inset-right: 0px;
+  --safe-area-inset-bottom: 0px;
+  --safe-area-inset-left: 0px;
+}
+
 :root,
 [data-bs-theme=light] {
   --progradio-background-color: #{$background-color};
@@ -140,12 +148,18 @@
 }
 
 body {
-  padding-top: $padding-top;
+  // for mobile edge-to-edge
+  padding-top: calc($padding-top + var(--safe-area-inset-top));
+  padding-right: var(--safe-area-inset-right);
+  padding-bottom: var(--safe-area-inset-bottom);
+  padding-left: var(--safe-area-inset-left);
+
+  // padding-top: $padding-top;
   // padding-bottom: $padding-bottom;
 
   &.body-app {
     background-color: var(--progradio-background-color) !important;
-    padding-top: 50px;
+    padding-top: calc(50px + var(--safe-area-inset-top));
   }
 
   &.body-popup {

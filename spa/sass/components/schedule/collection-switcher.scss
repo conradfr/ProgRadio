@@ -3,7 +3,7 @@
 .collection-switcher {
   &:hover {
     .collection-switcher-next {
-      top: 0;
+      top: calc(0px + var(--safe-area-inset-top));
     }
   }
 
@@ -12,7 +12,7 @@
     display: block;
     box-sizing: border-box;
     position: fixed;
-    top: 20px;
+    top: calc(20px + var(--safe-area-inset-top));
     left: 0;
     width: 71px;
     padding-top: 1px;
@@ -32,10 +32,10 @@
     display: block;
     box-sizing: border-box;
     position: fixed;
-    top: $navbar-height - 34px;
+    top: calc(#{$navbar-height} - 34px + var(--safe-area-inset-top));
 
     @include media-breakpoint-down(sm) {
-      top: calc(#{$navbar-height} - 35px);
+      top: calc(#{$navbar-height} - 35px + var(--safe-area-inset-top));
     }
 
     @include width(35px);

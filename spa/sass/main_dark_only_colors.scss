@@ -227,6 +227,11 @@
     background-color: #375A7FFF !important;
   }
 
+  // because of the color not generated above the global rule fail in dark mode so we redo it here
+  .navbar {
+    border-top: calc(0px + var(--safe-area-inset-top)) solid #375A7FFF !important;
+  }
+
   .badge.text-bg-secondary {
     color: $black !important;
   }

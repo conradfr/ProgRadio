@@ -34,7 +34,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY ./tools/dev/fpm-supp.conf /usr/local/etc/php-fpm.d/fpm-supp.conf
 
 # Install extensions
-RUN pecl install apcu \
+RUN pecl install apcu igbinary \
  && docker-php-ext-install intl pdo_pgsql pgsql \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
  && docker-php-ext-install -j$(nproc) gd \
@@ -42,6 +42,7 @@ RUN pecl install apcu \
  && docker-php-ext-install opcache \
  && docker-php-ext-install gmp \
  && docker-php-ext-enable apcu \
+ && docker-php-ext-enable igbinary \
  && pecl clear-cache
 
 COPY ./tools/dev/local.ini /usr/local/etc/php/conf.d/local.ini

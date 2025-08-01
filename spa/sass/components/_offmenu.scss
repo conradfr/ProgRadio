@@ -1,3 +1,9 @@
+#offcanvasMenu {
+  .offcanvas-body {
+    padding-top: calc(var(--bs-offcanvas-padding-y) + var(--safe-area-inset-top));
+  }
+}
+
 .offcanvas-end {
   width: 19.231rem;
 }

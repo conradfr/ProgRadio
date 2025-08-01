@@ -338,7 +338,7 @@ export default defineComponent({
         window.audio.volume = (val * 0.1);
       } */
 
-      if (this.currentPlayer !== null) {
+      if (this.currentPlayer !== null && this.currentPlayer.element !== null) {
         this.currentPlayer.element.volume = (val * 0.1);
       }
     },

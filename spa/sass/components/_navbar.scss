@@ -2,6 +2,7 @@
 
 .navbar {
   background-image: none;
+  border-top: calc(0px + var(--safe-area-inset-top)) solid rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
 
   .navbar-brand {
     font-family: 'Lobster', Arial, sans-serif, cursive;

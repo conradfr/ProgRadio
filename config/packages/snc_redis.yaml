@@ -13,3 +13,11 @@ snc_redis:
             type: predis
             alias: default
             dsn: "%env(REDIS_URL)%"
+            options:
+              connection_persistent: "progradio_default_connection"  # Custom persistent ID
+
+when@prod:
+  snc_redis:
+    clients:
+      default:
+        type: phpredis

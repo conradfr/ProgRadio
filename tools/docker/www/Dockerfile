@@ -82,7 +82,7 @@ RUN touch /var/log/caddy/access.log
 RUN printenv | sed 's/^\(.*\)$/export \1/g' > /root/project_env.sh
 
 # Install extensions
-RUN pecl install apcu \
+RUN pecl install apcu igbinary \
  && docker-php-ext-install intl pdo_pgsql pgsql \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
  && docker-php-ext-install -j$(nproc) gd \
@@ -90,7 +90,20 @@ RUN pecl install apcu \
  && docker-php-ext-install opcache \
  && docker-php-ext-install gmp \
  && docker-php-ext-enable apcu \
+ && docker-php-ext-enable igbinary \
  && pecl clear-cache
+
+RUN mkdir -p /tmp/pear \
+    && cd /tmp/pear \
+    && pecl bundle redis \
+    && cd redis \
+    && phpize . \
+    && ./configure --enable-redis-igbinary \
+    && make \
+    && make install \
+    && cd ~ \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable redis
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY ./tools/docker/www/local.ini /usr/local/etc/php/conf.d/local.ini

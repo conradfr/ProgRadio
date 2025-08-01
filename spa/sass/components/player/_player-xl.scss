@@ -5,7 +5,7 @@
 
 .player-xl {
   z-index: 99;
-  bottom: 0.769rem;
+  bottom: calc(0.769rem + calc(var(--safe-area-inset-bottom) / 2));
   margin: auto;
   left: 0;
   right: 0;
@@ -15,14 +15,6 @@
   height: $player-xl-height;
   width: $player-xl-width;
 
-  @media only screen and (min-width: $player-xl-width-xl-breakpoint) and (orientation: landscape) {
-    width: $player-xl-width-xl;
-  }
-
-  @include media-breakpoint-down(sm) {
-    width: 85vw;
-  }
-
   backdrop-filter: blur(4px);
   background-color: var(--progradio-player-background-xl);
   border-radius: 5px;
@@ -31,6 +23,14 @@
   transition: all 150ms;
 
   padding-left: 5px;
+
+  @media only screen and (min-width: $player-xl-width-xl-breakpoint) and (orientation: landscape) {
+    width: $player-xl-width-xl;
+  }
+
+  @include media-breakpoint-down(sm) {
+    width: 85vw;
+  }
 
   .player-header-xl {
     flex: 1 1 70%;

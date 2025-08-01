@@ -32,76 +32,83 @@
     </div>
     <div class="me-1 mb-3">
       <button type="submit"
-        :disabled="favorites.length === 0"
-        class="btn btn-primary btn-sm me-1"
-        @click="switchToFavorites">
+              :disabled="favorites.length === 0"
+              class="btn btn-primary btn-sm me-1"
+              @click="switchToFavorites">
         <i class="bi bi-heart-fill"></i>
       </button>
     </div>
-      <div class="me-1 mb-3">
-        <button v-once class="btn btn-primary btn-sm me-1" type="submit" @click="geoloc">
-          <i class="bi bi-geo-alt-fill"></i>
-        </button>
-      </div>
-      <div class="d-flex d-row flex-wrap">
-        <div class="pe-3 mb-3 me-1 multiselect-div" style="min-width: 300px;">
-          <Multiselect
-            id="multicountry"
-            :model-value="selectedCountryInput"
-            :options="countriesOptions"
-            :canClear="false"
-            :valueProp="'code'"
-            :label="'label'"
-            :searchable="true"
-            :strict="false"
-            :noResultsText="$t('message.streaming.country_search_no_result')"
-            @change="countryChange"
-            @open="countryOpen">
-            <template #singlelabel="{ value }">
-              <div class="multiselect-single-label">
-                <img v-if="value.code === code_all || value.code === code_favorites"
-                 class="gb-flag gb-flag--mini"
-                 style="height: 20px; width: 25px;"
-                 :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
-                <img v-else-if="value.code === code_last || value.code === code_history"
-                  class="gb-flag gb-flag--mini"
-                  style="height: 20px; width: 24px;"
-                  :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
-                <vue-flag
-                  v-else
-                  :code="value.code"
-                  size="mini"
-                />&nbsp;&nbsp;{{ value.label }}
-              </div>
-            </template>
-
-            <template #option="{ option }">
-              <img v-if="option.code === code_all || option.code === code_favorites"
-                class="gb-flag gb-flag--mini"
-                style="height: 20px; width: 25px;"
-                :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
-              <img v-else-if="option.code === code_last || option.code === code_history"
+    <div class="me-1 mb-3">
+      <button v-once type="submit"
+              class="btn btn-primary btn-sm me-1"
+              @click="switchToAll">
+        <i class="bi bi-globe-americas-fill"></i>
+      </button>
+    </div>
+    <div class="me-1 mb-3">
+      <button v-once class="btn btn-primary btn-sm me-1" type="submit" @click="geoloc">
+        <i class="bi bi-geo-alt-fill"></i>
+      </button>
+    </div>
+    <div class="d-flex d-row flex-wrap">
+      <div class="pe-3 mb-3 me-1 multiselect-div" style="min-width: 300px;">
+        <Multiselect
+          id="multicountry"
+          :model-value="selectedCountryInput"
+          :options="countriesOptions"
+          :canClear="false"
+          :valueProp="'code'"
+          :label="'label'"
+          :searchable="true"
+          :strict="false"
+          :noResultsText="$t('message.streaming.country_search_no_result')"
+          @change="countryChange"
+          @open="countryOpen">
+          <template #singlelabel="{ value }">
+            <div class="multiselect-single-label">
+              <img v-if="value.code === code_all || value.code === code_favorites"
+               class="gb-flag gb-flag--mini"
+               style="height: 20px; width: 25px;"
+               :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
+              <img v-else-if="value.code === code_last || value.code === code_history"
                 class="gb-flag gb-flag--mini"
                 style="height: 20px; width: 24px;"
-                :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
-              <vue-flag v-else-if="displayFlags"
-                :code="option.code"
+                :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
+              <vue-flag
+                v-else
+                :code="value.code"
                 size="mini"
-              />&nbsp;&nbsp;{{ option.label }}
-            </template>
-          </Multiselect>
-        </div>
-        <div class="pe-3 mb-3 multiselect-div" style="min-width: 250px">
-          <Multiselect
-            id="multisort"
-            :model-value="selectedSortByInput"
-            :options="sortByOptions"
-            :canClear="false"
-            :disabled="selectedCountryInput === code_last || selectedCountryInput === code_history"
-            @change="sortByChange"
-          />
-        </div>
+              />&nbsp;&nbsp;{{ value.label }}
+            </div>
+          </template>
+
+          <template #option="{ option }">
+            <img v-if="option.code === code_all || option.code === code_favorites"
+              class="gb-flag gb-flag--mini"
+              style="height: 20px; width: 25px;"
+              :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
+            <img v-else-if="option.code === code_last || option.code === code_history"
+              class="gb-flag gb-flag--mini"
+              style="height: 20px; width: 24px;"
+              :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
+            <vue-flag v-else-if="displayFlags"
+              :code="option.code"
+              size="mini"
+            />&nbsp;&nbsp;{{ option.label }}
+          </template>
+        </Multiselect>
       </div>
+      <div class="pe-3 mb-3 multiselect-div" style="min-width: 250px">
+        <Multiselect
+          id="multisort"
+          :model-value="selectedSortByInput"
+          :options="sortByOptions"
+          :canClear="false"
+          :disabled="selectedCountryInput === code_last || selectedCountryInput === code_history"
+          @change="sortByChange"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -325,6 +332,18 @@ export default defineComponent({
       this.$router.push({
         name: 'streaming',
         params: { countryOrCategoryOrUuid: STREAMING_CATEGORY_FAVORITES.toLowerCase(), page: '1' }
+      });
+    },
+    switchToAll() {
+      this.$gtag.event(GTAG_STREAMING_ACTION_SWITCH_TO_FAVORITES, {
+        event_category: GTAG_CATEGORY_STREAMING,
+        event_label: STREAMING_CATEGORY_ALL.toLowerCase,
+        value: GTAG_STREAMING_FILTER_VALUE
+      });
+
+      this.$router.push({
+        name: 'streaming',
+        params: { countryOrCategoryOrUuid: STREAMING_CATEGORY_ALL.toLowerCase(), page: '1' }
       });
     },
     geoloc() {
