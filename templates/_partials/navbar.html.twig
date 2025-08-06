@@ -100,7 +100,7 @@
                                     <li>
                                         <a class="dropdown-item" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                             <div class="menu-flag-icon">
-                                                <img class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                                                <img class="gb-flag gb-flag--micro" loading="lazy" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                                             </div>
                                             {{ "footer.#{locale}"|trans }}
                                         </a>
@@ -133,7 +133,7 @@
                                 <li>
                                     <a class="dropdown-item" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                         <div class="menu-flag-icon">
-                                            <img class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
+                                            <img class="gb-flag gb-flag--micro" loading="lazy" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                                         </div>
                                         {{ "footer.#{locale}"|trans }}
                                     </a>
