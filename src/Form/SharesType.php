@@ -18,6 +18,7 @@ class SharesType extends AbstractType
             $builder
                 ->add($key,
                     NumberType::class, [
+                        'input' => 'string',
                         'label' => $options['labels'][$key],
                         'attr' => ['class' => 'form-control'],
                     // 'constraints' => new Length(['min' => 3]),

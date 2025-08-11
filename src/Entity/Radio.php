@@ -57,7 +57,7 @@ class Radio
     private ?Collection $collection = null;
 
     #[ORM\Column(type: 'decimal', scale: 2, options: ['default' => 0])]
-    private ?float $share = null;
+    private ?string $share = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $active = true;
@@ -129,12 +129,12 @@ class Radio
         $this->collection = $collection;
     }
 
-    public function getShare(): float
+    public function getShare(): string
     {
         return $this->share;
     }
 
-    public function setShare(float $share): void
+    public function setShare(string $share): void
     {
         $this->share = $share;
     }
