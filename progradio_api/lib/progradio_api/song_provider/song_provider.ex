@@ -28,11 +28,27 @@ defmodule ProgRadioApi.SongProvider do
 
   # ----- Utils -----
 
+  @timeout 5_000
+
   def get(url) do
     HTTPoison.get!(
       url,
       [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
-      hackney: [:insecure]
+      hackney: [:insecure],
+      timeout: @timeout,
+      recv_timeout: @timeout,
+      follow_redirect: true
+    )
+  end
+
+  # for when we have url that may be audio streams and won't return on a normal get
+  def get_maybe_stream(url) do
+    Req.get!(
+      url,
+      headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
+      redirect: false,
+      connect_options: [timeout: 15_000],
+      into: :self
     )
   end
 
@@ -67,4 +83,32 @@ defmodule ProgRadioApi.SongProvider do
 
   def recase(data) when is_binary(data), do: Recase.to_title(data)
   def recase(_data), do: nil
+
+  @spec get_song_from_icecast(map | list) :: String.t() | nil
+
+  def get_song_from_icecast(data) when is_list(data) do
+    data
+    |> Enum.find_value(fn
+      e when is_map_key(e, "title") ->
+        get_song_from_icecast(e)
+
+      _ ->
+        nil
+    end)
+  end
+
+  def get_song_from_icecast(%{"yp_currently_playing" => artist_title} = _data),
+    do: %{"artist" => artist_title, "title" => nil, cover_url: nil}
+
+  def get_song_from_icecast(%{"artist" => "", "title" => title} = _data) when is_binary(title),
+    do: %{"artist" => title, "title" => nil, cover_url: nil}
+
+  def get_song_from_icecast(%{"artist" => artist, "title" => title} = _data)
+      when is_binary(artist) and is_binary(title),
+      do: %{"artist" => artist, "title" => title, cover_url: nil}
+
+  def get_song_from_icecast(%{"title" => title} = _data) when is_binary(title),
+    do: %{"artist" => title, "title" => nil, cover_url: nil}
+
+  def get_song_from_icecast(_data), do: nil
 end

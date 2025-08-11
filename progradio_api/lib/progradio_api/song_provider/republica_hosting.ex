@@ -89,23 +89,7 @@ defmodule ProgRadioApi.SongProvider.RepublicaHosting do
         |> Map.get("icestats", %{})
         |> Map.get("source")
 
-      case data do
-        data when is_list(data) ->
-          data
-          |> Enum.find_value(fn
-            e when is_map_key(e, "title") ->
-              Map.get(e, "title")
-
-            _ ->
-              false
-          end)
-
-        data when is_map(data) ->
-          Map.get(data, "title")
-
-        _ ->
-          nil
-      end
+      SongProvider.get_song_from_icecast(data)
     rescue
       _ ->
         Logger.debug("Data provider - #{url} (republicahosting icecast): data error rescue")

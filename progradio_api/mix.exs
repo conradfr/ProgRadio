@@ -10,6 +10,7 @@ defmodule ProgRadioApi.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      compilers: [:phoenix_live_view] ++ Mix.compilers(),
       releases: [
         prod: [
           include_executables_for: [:unix],
@@ -86,7 +87,9 @@ defmodule ProgRadioApi.MixProject do
       {:meilisearch_ex, "~> 1.2.1"},
       {:goal, "~> 1.2"},
       {:sentry, "~> 11.0.0"},
-      {:eventsource_ex, "~> 2.0.0"}
+      {:eventsource_ex, "~> 2.0.0"},
+      {:lazy_html, ">= 0.0.0", only: :test},
+      {:igniter, "~> 0.6", only: [:dev, :test]}
     ]
   end
 
