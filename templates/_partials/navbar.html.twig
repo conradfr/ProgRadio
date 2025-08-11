@@ -1,6 +1,10 @@
 {% import "utils/menu.html.twig" as menu %}
 
-{% set collections_menu = scheduleCollections(app.request) %}
+{% if isProgRadioRequest == true %}
+    {% set collections_menu = scheduleCollections(app.request) %}
+{% else %}
+    {% set collections_menu = [] %}
+{% endif %}
 
 {% include '_partials/mobilemenu.html.twig' with {'collections_menu': collections_menu} %}
 
