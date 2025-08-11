@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Entity\Collection;
+use App\Service\Favorites;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\ItemInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -21,9 +23,9 @@ class FavoritesRuntime implements RuntimeExtensionInterface
         protected CacheItemPoolInterface $cache
     ) { }
 
-    public function scheduleCollections(ParameterBag $requestAttributes): array
+    public function scheduleCollections(Request $request): array
     {
-        $favorites = $requestAttributes->get('favorites', []);
+        $favorites = Favorites::getFavoriteRadios($request);
 
         return $this->cache->get(self::CACHE_PREFIX . implode('-', $favorites), function (ItemInterface $item) use ($favorites) {
             $item->expiresAfter(self::CACHE_TTL);

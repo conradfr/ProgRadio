@@ -8,6 +8,7 @@ use App\Entity\Radio;
 use App\Entity\Stream;
 use App\Entity\User;
 use App\Service\DateUtils;
+use App\Service\Favorites;
 use App\Service\RadioBrowser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ class StreamsController  extends AbstractBaseController
     #[Route('/list', name: 'streams_radios')]
     public function list(EntityManagerInterface $em, Request $request): Response
     {
-        $favorites = $request->attributes->get('favoritesStream', []);
+        $favorites = Favorites::getFavoriteStreams($request);
         $radioId = $request->query->get('radio', null);
         $howMany = (int) $request->query->get('limit', (string) self::DEFAULT_RESULTS);
         $offset = (int) $request->query->get('offset', "0");
@@ -56,7 +57,7 @@ class StreamsController  extends AbstractBaseController
             throw new BadRequestHttpException('no text');
         }
 
-        $favorites = $request->attributes->get('favoritesStream', []);
+        $favorites = Favorites::getFavoriteStreams($request);
         $howMany = (int) $request->query->get('limit', (string) self::DEFAULT_RESULTS);
         $offset = (int) $request->query->get('offset',"0");
         $country = $request->query->get('country', null);
@@ -127,7 +128,7 @@ class StreamsController  extends AbstractBaseController
         $user = $this->getUser();
 
         if ($user === null) {
-            $favorites = $request->attributes->get('favoritesStream', []);
+            $favorites = Favorites::getFavoriteStreams($request);
         }
         else {
             $favorites = $user->getFavoriteStreams()->map(

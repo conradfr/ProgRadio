@@ -9,6 +9,7 @@ use App\Entity\Stream;
 use App\Entity\StreamSuggestion;
 use App\Entity\UserSong;
 use App\Form\StreamSuggestionType;
+use App\Service\Favorites;
 use App\Service\Host;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
@@ -63,7 +64,7 @@ class DefaultController extends AbstractBaseController
     #[Route('/radios', name: 'api_radios')]
     public function radios(EntityManagerInterface $em, Request $request): Response
     {
-        $favorites = $request->attributes->get('favorites', []);
+        $favorites = Favorites::getFavoriteRadios($request);
         $radios = $em->getRepository(Radio::class)->getActiveRadios();
         $categories = $em->getRepository(Category::class)->getCategories();
         $collections = $em->getRepository(Collection::class)->getCollections($favorites);
@@ -521,7 +522,6 @@ class DefaultController extends AbstractBaseController
         }
 
         $moreStreams = $em->getRepository(Stream::class)->getMoreStreams($stream);
-        // $moreStreams = [];
 
         return $this->render('default/stream.html.twig', [
             'stream' => $stream,
@@ -703,8 +703,8 @@ class DefaultController extends AbstractBaseController
             $songs = $user->getUserSongsAsArray();
         } else {
             $songs = [];
-            $favorites = $request->attributes->get('favorites', []);
-            $favoritesStream = $request->attributes->get('favoritesStream', []);
+            $favorites = Favorites::getFavoriteRadios($request);
+            $favoritesStream = Favorites::getFavoriteStreams($request);
         }
 
         return $this->jsonResponse([

@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Collection;
 use App\Entity\Contact;
 use App\Entity\Radio;
+use App\Service\Favorites;
 use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -53,7 +54,7 @@ class SiteController extends AbstractController
     ]
     public function faq(EntityManagerInterface $em, Request $request): Response
     {
-        $favorites = $request->attributes->get('favorites', []);
+        $favorites = Favorites::getFavoriteRadios($request);
         $radios = $em->getRepository(Radio::class)->getActiveRadios();
         $collections = $em->getRepository(Collection::class)->getCollections($favorites);
 

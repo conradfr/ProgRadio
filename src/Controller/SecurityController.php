@@ -11,6 +11,7 @@ use App\Entity\UserEmailChange;
 use App\Form\ForgottenPasswordType;
 use App\Form\RegistrationFormType;
 use App\Form\UpdatePasswordType;
+use App\Service\Favorites;
 use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -60,13 +61,13 @@ class SecurityController extends AbstractController
             $user->setRoles(['ROLE_USER']);
 
             // save radio favorites
-            $favoritesFromCookies = $request->attributes->get('favorites', []);
+            $favoritesFromCookies = Favorites::getFavoriteRadios($request);
             $favoriteRadios = $em->getRepository(Radio::class)->findBy(['codeName' => $favoritesFromCookies]);
 
             $user->setFavoriteRadios(new ArrayCollection($favoriteRadios));
 
             // save streaming favorites
-            $favoritesFromCookies = $request->attributes->get('favoritesStream', []);
+            $favoritesFromCookies = Favorites::getFavoriteStreams($request);
             $favoriteStreams = $em->getRepository(Stream::class)->findBy(['id' => $favoritesFromCookies]);
 
             $user->setFavoriteStreams(new ArrayCollection($favoriteStreams));
