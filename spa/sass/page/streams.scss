@@ -143,6 +143,18 @@
       }
     }
 
+    .streams-one-errors {
+      position: absolute;
+      top: 9.615rem;
+      right: 4px;
+      color: var(--bs-warning);
+
+
+      &:hover {
+        filter: brightness(0.85);
+      }
+    }
+
     .streams-one-listeners {
       position: absolute;
       top: 127px;

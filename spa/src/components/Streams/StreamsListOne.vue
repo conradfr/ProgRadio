@@ -40,6 +40,12 @@
         size="micro"
       />
     </div>
+    <div
+        v-if="hasErrors"
+        class="streams-one-errors"
+        :title="$t('message.streaming.playing_errors')">
+      <i class="bi bi-exclamation-circle"></i>
+    </div>
     <div v-if="liveListenersCount && liveListenersCount > 0" class="streams-one-listeners"
       :title="$t('message.streaming.listeners', liveListenersCount, { how_many: liveListenersCount})">
       <span class="badge rounded-pill text-bg-secondary">
@@ -142,6 +148,9 @@ export default defineComponent({
     ...mapState(useStreamsStore, ['selectedCountry', 'favorites']),
     isFavorite() {
       return this.favorites.indexOf(this.radio.code_name) !== -1;
+    },
+    hasErrors() {
+      return this.radio.playing_error && this.radio.playing_error >= config.ERROR_DISPLAY_THRESHOLD;
     },
     liveSong() {
       if (!Object.prototype.hasOwnProperty.call(this.song, this.channelName)) {

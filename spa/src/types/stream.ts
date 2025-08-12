@@ -14,5 +14,6 @@ export interface Stream {
   website: string
   tags: string
   popup: boolean
+  playing_error: number
   type: 'stream'
 }

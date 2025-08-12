@@ -34,7 +34,7 @@ class Stream implements NormalizableInterface
     final public const string SOURCE_RADIOBROWSER = 'radio-browser';
     final public const string SOURCE_PROGRADIO = 'progradio';
 
-    final public const int ERROR_DISPLAY_THRESHOLD = 7;
+    final public const int ERROR_DISPLAY_THRESHOLD = 6;
 
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\Id]
@@ -575,7 +575,7 @@ class Stream implements NormalizableInterface
         $this->streamsHistory = $streamsHistory;
     }
 
-    public function normalize(NormalizerInterface $serializer, ?string $format = null, array $context = []): array
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = []): array
     {
         if (\Meilisearch\Bundle\Searchable::NORMALIZATION_FORMAT === $format) {
             return [
@@ -587,10 +587,10 @@ class Stream implements NormalizableInterface
                 'country_code' => $this->getCountryCode(),
                 'language' => $this->getLanguage(),
                 'clicks_last_24h' => $this->getClicksLast24h(),
+                'playing_error' => $this->getPlayingError(),
             ];
         }
 
-        dd('oh no');
         return [];
     }
 }

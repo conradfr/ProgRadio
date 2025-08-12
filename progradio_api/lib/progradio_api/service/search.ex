@@ -17,6 +17,7 @@ defmodule ProgRadioApi.Search do
           language: s.language,
           country_code: s.country_code,
           clicks_last_24h: s.clicks_last_24h,
+          playing_error: s.playing_error,
           score: s.score
         }
 

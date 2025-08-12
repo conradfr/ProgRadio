@@ -331,6 +331,7 @@ defmodule ProgRadioApi.Streams do
         score: s.score,
         popup: s.popup,
         type: "stream",
+        playing_error: s.playing_error,
         radio_code_name: fragment("COALESCE(?)", r.code_name),
         img_alt:
           fragment(
