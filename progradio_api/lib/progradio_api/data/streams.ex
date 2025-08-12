@@ -28,6 +28,8 @@ defmodule ProgRadioApi.Streams do
   @source_radio_browser "radio-browser"
   @source_progradio "progradio"
 
+  @error_random_cutoff 3
+
   # 5mn
   @cache_ttl_stream 300_000
   # 15s
@@ -441,6 +443,7 @@ defmodule ProgRadioApi.Streams do
 
       "random" ->
         query
+        |> where([s], s.playing_error < @error_random_cutoff)
         |> order_by(fragment("RANDOM()"))
         |> group_by([s, rs, r, ss], [
           s.id,
