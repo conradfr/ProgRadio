@@ -77,6 +77,12 @@
                     <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ stream.name }} <i class="bi bi-box-arrow-up-right"></i></a>
                 </h5>
 
+                {% if stream.redirectToStream is not null %}
+                    <div class="alert alert-warning mt-3" role="alert">
+                        {{ 'page.stream.submission.duplicated'|trans({'%name%': stream.redirectToStream.name, '%link%': path('streams_one_short', {'shortId': stream.redirectToStream.id|shortid, 'codename': stream.redirectToStream.name|slug })})|raw }}
+                    </div>
+                {% endif %}
+
                 <div class="my-4 alert alert-light">
                     <p><strong>{{ 'page.stream.submission.stats_title'|trans }}</strong></p>
 

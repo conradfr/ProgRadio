@@ -218,6 +218,7 @@ page:
             submit: Enviar
             delete: Excluir
             delete_confirm: Tem certeza de que deseja excluir esta rádio? Esta operação é irreversível.
+            duplicated: Esta rádio já está presente no site. A sua rádio é redirecionada para <a target="_blank" href="%link%">%name%</a>.
             stats_title: Estatísticas
             stats_this_month: "%sessions% sessões de escuta para um total de %time% este mês."
             stats_last_month: "%sessions% sessões de escuta para um total de %time% no mês passado."

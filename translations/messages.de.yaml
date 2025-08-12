@@ -218,6 +218,7 @@ page:
             submit: Absenden
             delete: Löschen
             delete_confirm: Sind Sie sicher, dass Sie diesen Radiosender löschen möchten? Dieser Vorgang ist irreversibel.
+            duplicated: Dieser Radiosender ist bereits auf der Website vorhanden. Ihr Radiosender wird weitergeleitet zu <a target="_blank" href="%link%">%name%</a>.
             stats_title: Statistiken
             stats_this_month: "%sessions% Hörsitzungen für insgesamt %time% in diesem Monat."
             stats_last_month: "%sessions% Hörsitzungen für insgesamt %time% im letzten Monat."

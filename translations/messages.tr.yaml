@@ -218,6 +218,7 @@ page:
             submit: "Gönder"
             delete: "Sil"
             delete_confirm: "Bu radyoyu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+            duplicated: Bu radyo zaten sitede mevcut. Radyonuz <a target="_blank" href="%link%">%name%</a> adresine yönlendiriliyor.
             stats_title: "İstatistikler"
             stats_this_month: "Bu ay %sessions% dinleme oturumu toplam %time%."
             stats_last_month: "Geçen ay %sessions% dinleme oturumu toplam %time%."

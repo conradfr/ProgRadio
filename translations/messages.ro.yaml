@@ -218,6 +218,7 @@ page:
             submit: Trimite
             delete: Șterge
             delete_confirm: Ești sigur că dorești să ștergi acest radio? Această operațiune este ireversibilă.
+            duplicated: Această stație de radio este deja prezentă pe site. Stația ta de radio este redirecționată către <a target="_blank" href="%link%">%name%</a>.
             stats_title: Statistică
             stats_this_month: "%sessions% sesiuni de ascultare pentru un total de %time% în această lună."
             stats_last_month: "%sessions% sesiuni de ascultare pentru un total de %time% în luna trecută."

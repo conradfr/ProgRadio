@@ -218,6 +218,7 @@ page:
             submit: Invia
             delete: Elimina
             delete_confirm: Sei sicuro di voler eliminare questa radio? Questa operazione è irreversibile.
+            duplicated: Questa radio è già presente sul sito. La tua radio è reindirizzata a <a target="_blank" href="%link%">%name%</a>.
             stats_title: Statistiche
             stats_this_month: "%sessions% sessioni di ascolto per un totale di %time% questo mese."
             stats_last_month: "%sessions% sessioni di ascolto per un totale di %time% il mese scorso."

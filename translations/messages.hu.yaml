@@ -218,6 +218,7 @@ page:
             submit: Elküld
             delete: Törlés
             delete_confirm: Biztosan törölni szeretnéd ezt a rádiót? Ez a művelet visszavonhatatlan.
+            duplicated: Ez a rádió már szerepel a weboldalon. A rádiója átirányításra kerül ide <a target="_blank" href="%link%">%name%</a>.
             stats_title: Statisztikák
             stats_this_month: "%sessions% hallgatási session %time% időtartamra ebben a hónapban."
             stats_last_month: "%sessions% hallgatási session %time% időtartamra a múlt hónapban."

@@ -218,6 +218,7 @@ page:
             submit: Soumettre
             delete: Supprimer
             delete_confirm: Êtes-vous sûrs de vouloir supprimer cette radio ? Cette opération est irréversible.
+            duplicated: Cette radio est déjà présente sur le site. Votre radio est redirigée vers <a target="_blank" href="%link%">%name%</a>.
             stats_title: Statistiques
             stats_this_month: "%sessions% sessions d'écoute pour un total de %time% ce mois-ci."
             stats_last_month: "%sessions% sessions d'écoute pour un total de %time% le mois dernier."

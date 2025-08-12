@@ -218,6 +218,7 @@ page:
             submit: إرسال
             delete: حذف
             delete_confirm: هل أنت متأكد من أنك تريد حذف هذه المحطة الإذاعية؟ هذه العملية لا يمكن التراجع عنها.
+            duplicated: هذا الراديو موجود بالفعل على الموقع. يتم توجيه راديوك إلى <a target="_blank" href="%link%">%name%</a>.
             stats_title: إحصائيات
             stats_this_month: "%sessions% جلسة استماع بإجمالي %time% هذا الشهر."
             stats_last_month: "%sessions% جلسة استماع بإجمالي %time% الشهر الماضي."

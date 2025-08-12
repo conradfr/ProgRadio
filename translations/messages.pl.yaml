@@ -218,6 +218,7 @@ page:
             submit: Prześlij
             delete: Usuń
             delete_confirm: Czy na pewno chcesz usunąć tę stację radiową? Ta operacja jest nieodwracalna.
+            duplicated: Ta stacja radiowa jest już obecna na stronie. Twoje radio jest przekierowywane do <a target="_blank" href="%link%">%name%</a>.
             stats_title: Statystyki
             stats_this_month: "%sessions% sesji słuchania na łączną liczbę %time% w tym miesiącu."
             stats_last_month: "%sessions% sesji słuchania na łączną liczbę %time% w zeszłym miesiącu."
