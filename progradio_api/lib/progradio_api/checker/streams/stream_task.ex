@@ -12,7 +12,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
 
       try do
         case request(stream.stream_url) do
-          %Req.Response{status: 200, headers: %{"content-type" => ["audio/mpeg"]}} =
+          %Req.Response{status: 200, headers: %{"content-type" => ["audio/" <> _mime]}} =
               resp ->
             Req.cancel_async_response(resp)
             reset_errors(stream)
@@ -48,6 +48,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
   # maybe this could be done on another stage
 
   defp reset_errors(%Stream{} = stream) do
+    IO.puts("----------------------------------------")
     Logger.debug("Resetting errors #{stream.id} (#{stream.stream_url})")
 
     stream
