@@ -1,11 +1,12 @@
 defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
   require Logger
   alias ProgRadioApi.Repo
+  alias ProgRadioApi.RadioStream
 
   @timeout 20_000
   @success_status [200, 302]
 
-  def start_link(radio_stream) do
+  def start_link(%RadioStream{} = radio_stream) do
     Task.start_link(fn ->
       Logger.info("Checking: #{radio_stream.code_name} (#{radio_stream.url})")
 

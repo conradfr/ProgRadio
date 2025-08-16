@@ -10,7 +10,9 @@ defmodule ProgRadioApi.Checker.CheckerSupervisor do
   def init(_init_arg) do
     children = [
       ProgRadioApi.Checker.RadioStreams.Producer,
-      ProgRadioApi.Checker.RadioStreams.Consumer
+      ProgRadioApi.Checker.RadioStreams.Consumer,
+      ProgRadioApi.Checker.Streams.Producer,
+      ProgRadioApi.Checker.Streams.Consumer
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
