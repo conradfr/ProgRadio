@@ -98,7 +98,8 @@ config :progradio_api,
   image_path: "/var/www/progradio/public/media/",
   banned_ips: "" |> String.split(","),
   redis_host: System.get_env("REDIS_HOST") || "127.0.0.1",
-  redis_db: "0"
+  redis_db: "0",
+  streams_checker: false
 
 # Configure meilsearch
 config :progradio_api,

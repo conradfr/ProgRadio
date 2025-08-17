@@ -10,10 +10,19 @@ defmodule ProgRadioApi.Checker.CheckerSupervisor do
   def init(_init_arg) do
     children = [
       ProgRadioApi.Checker.RadioStreams.Producer,
-      ProgRadioApi.Checker.RadioStreams.Consumer,
-      ProgRadioApi.Checker.Streams.Producer,
-      ProgRadioApi.Checker.Streams.Consumer
+      ProgRadioApi.Checker.RadioStreams.Consumer
     ]
+
+    children =
+      if Application.get_env(:progradio_api, :streams_checker, false) do
+        children ++
+          [
+            ProgRadioApi.Checker.Streams.Producer,
+            ProgRadioApi.Checker.Streams.Consumer
+          ]
+      else
+        children
+      end
 
     Supervisor.init(children, strategy: :one_for_one)
   end

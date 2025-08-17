@@ -122,45 +122,81 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         # found in some entries, not sure of a better way to remove them
         |> String.trim("\u0000")
         |> String.trim()
+        |> (&Map.get(overloading, :stream_url) || &1).()
+        |> stream_url_transformer()
 
       name =
         stream
         |> Map.get("name")
         |> String.trim("\u0000")
         |> String.trim()
+        |> (&Map.get(overloading, :name) || &1).()
 
       img_url = Map.get(stream, "favicon")
-      country_code = Map.get(stream, "countrycode")
-      website = Map.get(stream, "homepage")
 
-      enabled =
-        case Map.get(overloading, :enabled, nil) do
-          true -> true
-          false -> false
-          _ -> true
-        end
+      country_code =
+        stream
+        |> Map.get("countrycode")
+        |> (&Map.get(overloading, :country_code) || &1).()
+
+      website =
+        stream
+        |> Map.get("homepage")
+        |> (&Map.get(overloading, :website) || &1).()
+
+      enabled = Map.get(overloading, :enabled) || true
 
       import_updated_at =
         NaiveDateTime.utc_now()
         |> NaiveDateTime.truncate(:second)
 
+      # we try to avoid new duplicates by finding already existing identical stream
+      redirect_to =
+        if Repo.exists?(from s in Stream, where: s.id == ^id) == false do
+          case find_redirect_stream(%{
+                 id: id,
+                 name: name,
+                 stream_url: stream_url,
+                 country_code: country_code
+               }) do
+            nil ->
+              nil
+
+            {_id, redirect_to_id} ->
+              IO.puts("----------------------------------------")
+              IO.puts("----------------------------------------")
+              IO.puts("----------------------------------------")
+              IO.puts("----------------------------------------")
+              IO.puts("----------------------------------------")
+              IO.puts("----------------------------------------")
+              IO.puts("----------------------------------------")
+              IO.puts("#{inspect(id)}")
+              IO.puts("#{inspect(redirect_to_id)}")
+              IO.puts("###################################")
+              redirect_to_id
+          end
+        else
+          nil
+        end
+
       %{
         id: id,
         code_name: id,
-        name: Map.get(overloading, :name) || name,
+        name: name,
         img_url: Map.get(overloading, :img) || img_url,
         original_img: img_url,
         img: nil,
-        website: Map.get(overloading, :website) || website,
-        stream_url: (Map.get(overloading, :stream_url) || stream_url) |> stream_url_transformer(),
+        website: website,
+        stream_url: stream_url,
         original_stream_url: stream_url,
         tags: Map.get(overloading, :tags) || Map.get(stream, "tags"),
         original_tags: Map.get(stream, "tags"),
-        country_code: Map.get(overloading, :country_code) || country_code,
+        country_code: country_code,
         language: Map.get(stream, "language"),
         votes: Map.get(stream, "votes"),
         clicks_last_24h: Map.get(stream, "clickcount"),
         enabled: enabled,
+        redirect_to: redirect_to,
         import_updated_at: import_updated_at
       }
     end)
@@ -446,12 +482,12 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # Disabled
 
-  def find_redirect_for_disabled_streams() do
-    get_disabled_with_no_redirect()
-    |> Enum.map(fn s -> find_redirect_stream(s) end)
-    |> Enum.filter(&(&1 != nil))
-    |> Enum.each(&update_stream_with_redirect/1)
-  end
+  #  def find_redirect_for_disabled_streams() do
+  #    get_disabled_with_no_redirect()
+  #    |> Enum.map(fn s -> find_redirect_stream(s) end)
+  #    |> Enum.filter(&(&1 != nil))
+  #    |> Enum.each(&update_stream_with_redirect/1)
+  #  end
 
   defp get_disabled_with_no_redirect() do
     from(s in Stream,
@@ -461,13 +497,15 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> Repo.all()
   end
 
-  defp find_redirect_stream(stream_data) do
+  defp find_redirect_stream(%{} = stream_data) do
     redirect_stream_id =
       from(s in Stream,
         where:
           fragment("LOWER(?) = ?", s.name, ^String.downcase(stream_data.name)) and
-            s.country_code == ^stream_data.country_code and s.enabled == true,
-        order_by: [desc: s.clicks_last_24h, desc: s.votes],
+            s.country_code == ^stream_data.country_code and s.enabled == true and
+            s.banned == false and is_nil(s.redirect_to) and
+            s.stream_url == ^stream_data.stream_url,
+        order_by: [desc: s.score, desc: s.clicks_last_24h, desc: s.votes],
         limit: 1,
         select: s.id
       )
