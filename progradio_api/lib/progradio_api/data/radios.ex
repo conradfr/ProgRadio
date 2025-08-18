@@ -153,6 +153,7 @@ defmodule ProgRadioApi.Radios do
           name_RO: c.name_ro,
           name_HU: c.name_hu,
           name_TR: c.name_tr,
+          name_NL: c.name_nl,
           name_DK: c.name_dk,
           name_SE: c.name_se,
           short_name: c.short_name,
@@ -189,6 +190,7 @@ defmodule ProgRadioApi.Radios do
           name_RO: c.name_ro,
           name_HU: c.name_hu,
           name_TR: c.name_tr,
+          name_NL: c.name_nl,
           name_SE: c.name_se,
           name_DK: c.name_dk
         },

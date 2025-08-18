@@ -1,0 +1,382 @@
+general:
+    main_description: Luister online en ontdek radioprogramma's in Frankrijk.
+    main_title_progradio: Alle radio-roosters, alle programma's en online luisteren
+    main_title_radioaddict: Streaming van alle radiozenders in Frankrijk en over de hele wereld!
+global:
+    switch:
+        es: Ver en español
+        en: View in English
+        fr: Voir en français
+        de: Siehe Deutschland
+        pt: Veja em português
+        it: Vedi in italiano
+        pl: Zobacz polski
+        el: Δείτε στα ελληνικά
+        ar: انظر باللغة العربية
+        ro: Vezi în Roll
+        hu: Lásd Magyarországon
+        tr: Türkçe Bakın
+        nl: Zie in het Nederlands
+menu:
+    account: Mijn account
+    admin:
+        dashboard: Dashboard
+        listening: Luisterstatistieken
+        overloading: Stream Overloading
+        playing_errors: Streamfouten
+        check: Stream Check
+        shares: Marktaandelen
+        suggestions: Stream Suggesties
+        easyadmin: Easy Admin
+        actions: Admin
+    all: Alle radiozenders
+    app: Android App
+    contact: Contact
+    faq: FAQ
+    favorites: Mijn Favorieten
+    favorites_menu:
+        all: Alle landen
+        be: België
+        ch: Zwitserland
+        fr: Frankrijk
+        us: Verenigde Staten
+        mx: Mexico
+        co: Colombia
+        ar: Argentinië
+        pe: Peru
+        de: Duitsland
+        at: Oostenrijk
+        es: Spanje
+        pt: Portugal
+        br: Brazilië
+        ca: Canada
+        au: Australië
+        nz: Nieuw-Zeeland
+        gb: Groot-Brittannië
+        ie: Ierland
+        it: Italië
+        lu: Luxemburg
+        mc: Monaco
+        sm: San Marino
+        mt: Malta
+        va: Vaticaanstad
+        pl: Polen
+        gr: Griekenland
+        dz: Algerije
+        ma: Marokko
+        tn: Tunesië
+        hu: Hongarije
+        tr: Turkije
+        nl: Nederland
+    songs: Opgeslagen Titels
+    home:
+        enable: Instellen als startpagina
+        disable: Aangepaste startpagina verwijderen
+    logout: Uitloggen
+    menu: Menu
+    mode:
+        dark: Donkere modus
+        light: Lichte modus
+    now: Nu
+    params: Instellingen
+    plus: Meer
+    schedule: Programmarooster
+    signon: Inloggen
+    signup: Account aanmaken
+    streaming: Alle radiozenders
+    timer: Timer
+    title: Menu
+page:
+    contact:
+        title: 'Contact'
+        email: 'E-mail'
+        message: 'Bericht *'
+        name: 'Naam *'
+        send: 'Verzenden'
+        sent: 'Uw bericht is verzonden.'
+        add_radio_1: Ik wil mijn (web)radio toevoegen, hoe doe ik dat?
+        add_radio_2: 'U heeft twee keuzes:'
+        add_radio_3: 1/ Maak een account aan en voeg uw radio toe in uw gebruikersruimte.
+        add_radio_4: 2/ Gebruik de Radio-Browser API. Om uw radio daar in te dienen, <a target="_blank" href="https://www.radio-browser.info/#/add">klik hier</a>.
+    faq:
+        title: 'Veelgestelde vragen'
+        page_title: 'FAQ - Radioprogramma’s in Frankrijk'
+        page_description: 'Vragen over Programmmes-Radio.com'
+    forgotten_password:
+        error: <strong>Er is een fout opgetreden.</strong><br>Als de wachtwoordherstellink verouderd is, start dan de procedure opnieuw
+        click_here: klik hier
+        done_title: Wachtwoord reset
+        done: '<strong>Het wachtwoord is bijgewerkt.</strong><br>U kunt inloggen %link%door hier te klikken%link_end%.'
+        page_title: Wachtwoord vergeten
+        success: Als een account met het e-mailadres <strong>%email%</strong> is gevonden, is er een bericht met een link om het wachtwoord te resetten verzonden.
+        submit: Verzenden
+    login:
+        forgotten_password: Wachtwoord vergeten?
+        page_title: Inloggen
+    now:
+        back: '← Ga naar het programmarooster'
+        no_schedule: <strong>Oeps...</strong> er zijn geen programma’s beschikbaar.
+        page_description: 'Wat luisteren nu?'
+        page_title: 'Programma’s die nu op de radio'
+        title: 'Nu op de radio'
+    radio:
+        advanced: Gebruik de geavanceerde speler<br>(webradio’s, huidige titels...)
+        back: '← Ga naar het programmarooster van alle radiozenders'
+        current: ↓ Ga naar het huidige programma
+        description: 'De programma’s van de radio %radio% & online luisteren'
+        goto_today: Bekijk de programma’s van vandaag
+        goto_schedule: Bekijk het programmarooster
+        more_radios: 'Meer radiozenders'
+        no_schedule: 'Programma’s niet beschikbaar.'
+        not_today: U bekijkt de programma’s van een andere dag dan vandaag
+        play: 'Luister naar %radio%'
+        stop: 'Stop %radio%'
+        summary: 'Beschrijving'
+        title: '%radio% - Live luisteren - Programma’s van %date%'
+        website: 'Website'
+    registered:
+        page_title: Account aanmaken
+        alert_1: Uw account is succesvol aangemaakt!
+        alert_2: Als u favoriete radiozenders en streams had, zijn deze automatisch toegevoegd aan uw account.
+        what_now_question: Wat wilt u nu doen?
+        what_now_choice1: Inloggen op mijn account
+        what_now_choice2: Radioprogramma’s bekijken
+        what_now_choice3: Luisteren naar radiozenders
+    stream:
+        country: Land
+        description: 'Luister naar %radio% live en gratis'
+        disabled: 'Deze radio lijkt inactief.'
+        discover: Ontdek meer radiozenders, zoek op land en muziekstijlen...
+        errors: 'Er zijn leesfouten gerapporteerd voor deze radio.'
+        find: Zoeken
+        find_amazon: Zoeken op Amazon
+        find_deezer: Zoeken op Deezer
+        find_spotify: Zoeken op Spotify
+        find_youtube: Zoeken op YouTube
+        listeners: Luisteraars
+        play: 'Luisteren'
+        playing: Titel
+        playing_error: Afspeelfout
+        stop: 'Stoppen'
+        suggested: Aangeraden radiozenders
+        tags: Tags
+        share: Deel de radio
+        title: '%radio% live luisteren'
+        title_country: '%radio% - Live luisteren - %country%'
+        website: Website
+        banned: Deze radio is verboden.
+        desc: 'Beschrijving'
+        tagline: 'Slogan'
+        updated: 'Bijgewerkt'
+        languages: 'Talen'
+        popup: Er moet een pop-upvenster worden geopend om deze radio af te spelen.
+        advanced: Gebruik de geavanceerde speler<br>(volume, favorieten, geschiedenis...)
+        modification:
+            at_least_one: Vul een of meer velden in.
+            comment: Opmerking
+            img: Logo URL
+            name: Naam
+            radio: Radio
+            stream_url: Stream URL
+            success: Bedankt voor uw suggesties. Ze zijn opgeslagen en zullen spoedig worden beoordeeld.
+            suggest: Suggereer een wijziging
+            website: Website
+            submit: Verzenden
+        submission:
+            my_radios: Mijn radiozenders
+            no_radios: U heeft geen radiozenders.
+            title_new: Radiozender toevoegen
+            title_edit: Radiozender bewerken
+            img: Logo URL
+            name: Naam
+            radio: Radio
+            stream_url: Stream URL
+            slogan: Slogan
+            description: Beschrijving
+            success_new: Uw radiozender is succesvol geregistreerd en zal spoedig beschikbaar zijn.
+            success_edit: Uw radiozender is succesvol bijgewerkt.
+            success_delete: Uw radiozender is succesvol verwijderd.
+            add: Radiozender toevoegen
+            edit: Radiozender bewerken
+            website: Website
+            country: Land
+            language: Taal
+            tags: Tags (in kleine letters, gescheiden door komma's)
+            submit: Verzenden
+            delete: Verwijderen
+            delete_confirm: Weet u zeker dat u deze radiozender wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.
+            duplicated: Deze radiozender is al aanwezig op de site. Uw radiozender wordt doorgestuurd naar <a target="_blank" href="%link%">%name%</a>.
+            stats_title: Statistieken
+            stats_this_month: "%sessions% luistersessies voor een totaal van %time% deze maand."
+            stats_last_month: "%sessions% luistersessies voor een totaal van %time% vorige maand."
+    top:
+        page_title: Top radiozenders in %country%
+        description: 'Luister naar de beste radiozenders van %country%'
+        more: Bekijk meer top radiozenders in %country%
+    last:
+        page_title: Laatst beluisterde radiozenders in %country%
+        description: 'Luister naar de beste radiozenders van %country%'
+        more: Bekijk meer recent beluisterde radiozenders in %country%
+    user:
+        page_title: Account aanmaken
+    account:
+        prefix: Mijn account
+        menu:
+            email: E-mail
+            password: Wachtwoord
+            preferences: Voorkeuren
+            delete: Account verwijderen
+            streams: Mijn radiozenders
+        email:
+            page_title: Mijn e-mail wijzigen
+            info_1: Dit zal het e-mailadres bijwerken dat wordt gebruikt om in te loggen op de site.
+            info_2: Een bevestiging wordt verzonden naar het oude en nieuwe e-mailadres.
+            success: Het e-mailadres is bijgewerkt.
+            new_email: 'Nieuw e-mailadres:'
+            new_email_placeholder: voorbeeld@email.com
+            update_btn: Bijwerken
+        password:
+            page_title: Mijn wachtwoord wijzigen
+            success: Het wachtwoord is bijgewerkt.
+            update_btn: Bijwerken
+        preferences:
+            page_title: Voorkeuren
+            update_btn: Bijwerken
+            store_history: Luistergeschiedenis bewaren
+            reset_history: Geschiedenis wissen
+            reset_confirm: Weet u zeker dat u uw geschiedenis wilt verwijderen?
+            reset_confirmed: Uw geschiedenis is gewist.
+        delete:
+            page_title: Account verwijderen
+            warning: Let op, deze actie is onomkeerbaar. Uw favorieten zullen worden verwijderd.
+            confirm: Weet u zeker dat u uw account wilt verwijderen?
+            delete_btn: Mijn account verwijderen
+        delete_confirm:
+            success: Uw account is succesvol verwijderd.
+boxes:
+    already_account:
+        title: Heeft u al een account?
+        content: Klik hier om in te loggen
+    no_account:
+        title: Nog geen account?
+        content: Klik hier om u te registreren
+    why_account:
+        title: Waarom registreren?
+        content: "- Met een account kunt u uw favoriete radiozenders en streams vanaf elke browser en de app benaderen."
+        content2: "- Bewaar de titels van de nummers die u luistert."
+        content3: "- Bekijk uw geschiedenis (optioneel)"
+        content4: "- Minder advertenties"
+registrationForm:
+    email: 'E-mail'
+    error:
+        captcha: 'Captcha ongeldig, probeer het opnieuw.'
+        empty: 'Dit veld mag niet leeg zijn.'
+        password_min: 'Het wachtwoord moet minimaal 8 tekens bevatten.'
+        password: 'De wachtwoorden komen niet overeen.'
+    captcha: 'Typ de letters en cijfers hieronder'
+    password: 'Wachtwoord'
+    password_confirm: 'Bevestig wachtwoord'
+    submit_create: 'Mijn account aanmaken'
+connectionForm:
+    already_logged: U bent momenteel ingelogd als %email%
+    logout: uitloggen
+    email: 'E-mail'
+    password: 'Wachtwoord'
+    remember_me: 'Onthoud mij'
+    submit_connect: 'Inloggen'
+updatePasswordForm:
+    new: Nieuw wachtwoord
+    new_confirm: Bevestig nieuw wachtwoord
+    error_not_same: De wachtwoorden komen niet overeen.
+    error_not_empty: Dit veld mag niet leeg zijn.
+    error_length: Het wachtwoord moet minimaal 8 tekens bevatten.
+footer:
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Portuguesa
+    it: Italiano
+    pl: Polskie
+    el: Ελληνικά
+    ar: عربي
+    ro: Român
+    hu: Magyarok
+    tr: Türkçe
+    nl: Nederlands
+
+legal: 'Juridische informatie'
+cookie:
+    accept: Ja
+    allow: Persoonlijke advertenties accepteren?
+    deny: Nee
+    disclaimer: (%name% verkoopt de gegevens van bezoekers niet)
+admin:
+    api:
+        flash:
+            success: Actie voltooid.
+            error: Er is een fout opgetreden.
+        cache:
+            title: Api - Cache
+            menu: Cache
+            clear_streams: Streamcache leegmaken
+        search:
+            title: Zoeken
+            menu: Zoeken
+            import: Importeren
+    dashboard:
+        title: Dashboard
+        menu:
+            brief: Samenvatting
+            table: Tabel
+        table:
+            shows: Programma's
+            sections: Rubrieken
+            stream_abbr: St.
+        accounts:
+            title: Accounts
+            active: '%number% actieve accounts'
+            email: e-mail
+            created_at: Aanmaakdatum
+            last: (laatste %number%)
+        no_schedule:
+            title: Radiozenders zonder programma's vandaag
+            shows: Programma's
+            sections: Rubrieken
+            all_ok: Alle radiozenders hebben weergegeven programma's.
+        stream_errors:
+            title: Streamfouten
+            error: Fouten voor <strong>%number%</strong> controles
+            link: link
+            no_errors: Alle streams werken
+        live_song_errors:
+            title: Fouten in huidige titel
+            error: Fouten voor <strong>%number%</strong> controles
+            reset_all: alles resetten
+            link: link
+            no_errors: Geen fouten geregistreerd
+    listening:
+        title: Luisterstatistieken
+        today: Vandaag
+        yesterday: Gisteren
+        this_month: Deze maand
+        last_month: Vorige maand
+        ratings: Enquêtes
+    stream_errors:
+        title: Streamfouten
+        name: Naam
+        errors: Fouten
+        view: Bekijken
+        edit: Bewerken
+        reset: Reset
+        reset_all: Alles resetten
+    stream_check:
+        title: Streams controleren
+        img: Afbeelding
+        stream: Stream
+        website: Site
+        ssl: SSL
+        commit: Bevestigen
+        last_checked: Gecontroleerd
+        view: Bekijken
+        edit: Bewerken

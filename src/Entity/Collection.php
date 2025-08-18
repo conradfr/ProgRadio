@@ -73,6 +73,10 @@ class Collection
 
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 100)]
+    private string $name_nl;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
     private string $name_dk;
 
     #[Groups(['export'])]
@@ -293,6 +297,16 @@ class Collection
     public function setNameTr(string $name_tr): void
     {
         $this->name_tr = $name_tr;
+    }
+
+    public function getNameNl(): string
+    {
+        return $this->name_nl;
+    }
+
+    public function setNameNl(string $name_nl): void
+    {
+        $this->name_nl = $name_nl;
     }
 
     public function getNameDk(): string

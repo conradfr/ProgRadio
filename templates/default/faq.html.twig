@@ -371,6 +371,144 @@
             ]
         }
     ],
+    "nl": [
+        {
+            'question': "Wat is Programmes-Radio.com?",
+            'answer': [
+                "Programmes-Radio.com is een onafhankelijke website die de programmaroosters van Franse en internationale radiozenders centraliseert.",
+                "De gegevens worden dagelijks bijgewerkt vanaf de websites van de radiozenders.",
+                "U kunt ook naar elke radiozender luisteren via streaming door op het logo te klikken."
+            ]
+        },
+        {
+            'question': "Hoe worden de radiozenders gerangschikt?",
+            'answer': [
+                "Afhankelijk van de categorieën is de rangschikking gebaseerd op het gecombineerde luisteraarsaandeel van de laatste Médiamétrie-golf of in alfabetische volgorde."
+            ]
+        },
+        {
+            'question': "Sommige radiozenders hebben een advertentie aan het begin van het afspelen.",
+            'answer': [
+                "Deze advertenties worden toegevoegd door de radiozenders zelf en niet door Programmes-Radio.com.",
+                "De speler van Programmes-Radio probeert deze advertenties te minimaliseren wanneer u wisselt tussen twee radiozenders of een radio pauzeert.",
+                "In sommige gevallen kan een adblocker het afspelen van de radio blokkeren (bijvoorbeeld: RMC)."
+            ]
+        },
+        {
+            'question': "Mijn favoriete radiozender staat er niet bij.",
+            'answer': [
+                "Radiozenders worden geleidelijk toegevoegd. Laat ons weten via de Contactpagina welke radiozender u graag toegevoegd zou willen zien."
+            ]
+        },
+        {
+            'question': "Ik wil mijn (web)radio toevoegen, hoe doe ik dat?",
+            'answer': [
+                "Voor het gedeelte 'Alle radiozenders' gebruiken we de Radio-Browser API. Om uw radiozender daar in te dienen, <a target=\"_blank\" href=\"https://www.radio-browser.info/#/add\">klik hier</a>.",
+                "Als u een radiozender met een programmaroster heeft, neem dan contact met ons op via het contactformulier."
+            ]
+        },
+        {
+            'question': "Lijst van beschikbare radiozenders.",
+            'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">U kunt ook naar radiozenders van over de hele wereld luisteren op <a href="' ~ path('app') ~ 'streaming">de streamingpagina</a>, zoals bijvoorbeeld <a href="' ~ path('streams_one_short', {'shortId': '97d830f4-c35f-11e9-8502-52543be04c81'|shortid, 'codename': 'Alternative Radio'|slug }) ~ '">Alternative Radio</a> (Frankrijk), <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italië) of <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Duitsland).</p>',
+                '<p style="margin-top: 5px"><strong>De top van radiozenders uit alle landen:</strong></p>',
+                countries.list(app.request.locale, 'top')
+            ]
+        }
+    ],
+    "hu": [
+        {
+            'question': "Mi a Programmes-Radio.com?",
+            'answer': [
+                "A Programmes-Radio.com egy független weboldal, amely központosítja a francia és nemzetközi rádióadók műsorrendjét.",
+                "Az adatokat naponta frissítjük a rádióadók honlapjairól.",
+                "Bármelyik rádiót streamelhet bármely rádiót, ha a logójára kattint."
+            ]
+        },
+        {
+            'question': "Hogyan vannak a rádióadók besorolva?",
+            'answer': [
+                "A kategóriáktól függően a rangsorolás a legutóbbi Médiamétrie hullám összesen hallgatottsági arányán vagy ábécérendben alapul."
+            ]
+        },
+        {
+            'question': "Egyes rádióadóknak van reklámja a lejátszás elején.",
+            'answer': [
+                "Ezek a reklámok maguk a rádióadók adják hozzá, nem a Programmes-Radio.com.",
+                "A Programmes-Radio lejátszó megpróbálja minimalizálni ezeket a reklámokat, amikor két rádió között vált, vagy szünetelteti a lejátszást.",
+                "Egyes esetekben a reklámblokkoló blokkolhatja a rádió lejátszását (például: RMC)."
+            ]
+        },
+        {
+            'question': "Nincs ott a kedvenc rádióm.",
+            'answer': [
+                "A rádióadók fokozatosan kerülnek hozzáadásra. Az Elérhetőség oldalon jelezheti nekünk, hogy melyik rádiót szeretné hozzáadni."
+            ]
+        },
+        {
+            'question': "Szeretném hozzáadni a saját (web)rádiómat, hogyan tehetném?",
+            'answer': [
+                "Az \"Összes rádió\" részhez a Radio-Browser API-t használjuk. A rádiója hozzáadásához <a target=\"_blank\" href=\"https://www.radio-browser.info/#/add\">kattintson ide</a>.",
+                "Ha olyan rádiója van, amelynek műsorrendje is van, írjon nekünk az elérhetőségi űrlapon keresztül."
+            ]
+        },
+        {
+            'question': "Elérhető rádióadók listája.",
+            'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">A világ minden rádióját meghallgathatja a <a href="' ~ path('app') ~ 'streaming">streaming oldalon</a>, például az <a href="' ~ path('streams_one_short', {'shortId': '97d830f4-c35f-11e9-8502-52543be04c81'|shortid, 'codename': 'Alternative Radio'|slug }) ~ '">Alternative Radio</a> (Franciaország), a <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Olaszország) vagy a <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Németország).</p>',
+                '<p style="margin-top: 5px"><strong>Minden ország legjobb rádiói:</strong></p>',
+                countries.list(app.request.locale, 'top')
+            ]
+        }
+    ],
+    "tr": [
+        {
+            'question': "Programmes-Radio.com nedir?",
+            'answer': [
+                "Programmes-Radio.com, Fransız ve uluslararası radyo kanallarının program çizelgelerini merkezileştiren bağımsız bir sitedir.",
+                "Veriler, radyo kanallarının sitelerinden her gün güncellenir.",
+                "Herhangi bir radyo kanalını dinlemek için logosuna tıklayarak stream yapabilirsiniz."
+            ]
+        },
+        {
+            'question': "Radyo kanalları nasıl sıralanır?",
+            'answer': [
+                "Kategorilere göre, sıralama son Médiamétrie dalgasının birikimli dinleyici payına veya alfabetik sıraya dayanır."
+            ]
+        },
+        {
+            'question': "Bazı radyo kanallarının başında reklam vardır.",
+            'answer': [
+                "Bu reklamlar radyo kanalları tarafından eklenir, Programmes-Radio.com tarafından değil.",
+                "Programmes-Radio oyuncusu, iki radyo arasında geçiş yaparken veya bir radyoyu duraklattığınızda bu reklamları en aza indirmeye çalışır.",
+                "Bazı durumlarda reklam engelleyici, radyonun çalmasını engelleyebilir (örneğin: RMC)."
+            ]
+        },
+        {
+            'question': "Favori radyo kanalım yok.",
+            'answer': [
+                "Radyo kanalları kademeli olarak eklenir. Eklemek istediğiniz radyo kanalını İletişim sayfasından bize bildirin."
+            ]
+        },
+        {
+            'question': "(Web) radyomu eklemek istiyorum, nasıl yapabilirim?",
+            'answer': [
+                "\"Tüm radyolar\" kısmı için Radio-Browser API'sini kullanıyoruz. Radyonuzu oraya eklemek için <a target=\"_blank\" href=\"https://www.radio-browser.info/#/add\">buraya tıklayın</a>.",
+                "Eğer program çizelgesi olan bir radyonuz varsa, lütfen iletişim formu aracılığıyla bizi bilgilendirin."
+            ]
+        },
+        {
+            'question': "Mevcut radyo kanalları listesi.",
+            'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">Dünya çapındaki radyo kanallarını <a href="' ~ path('app') ~ 'streaming">streaming sayfasında</a> dinleyebilirsiniz, örneğin <a href="' ~ path('streams_one_short', {'shortId': '97d830f4-c35f-11e9-8502-52543be04c81'|shortid, 'codename': 'Alternative Radio'|slug }) ~ '">Alternative Radio</a> (Fransa), <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (İtalya) veya <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Almanya).</p>',
+                '<p style="margin-top: 5px"><strong>Tüm ülkelerin en iyi radyo kanalları:</strong></p>',
+                countries.list(app.request.locale, 'top')
+            ]
+        }
+    ]
 }
 %}
 

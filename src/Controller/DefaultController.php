@@ -94,6 +94,7 @@ class DefaultController extends AbstractBaseController
                 'hu' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/programok/{date?}',
                 'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/برامج-اليوم/{date?}',
                 'tr' => '/{_locale}/dinlemek-{codeName}-{subRadioCodeName}/programlı/{date?}',
+                'nl' => '/{_locale}/schema-{codeName}-{subRadioCodeName}/schema-van-dag/{date?}',
             ],
             name: 'radio_subradio',
             defaults: [
@@ -225,6 +226,7 @@ class DefaultController extends AbstractBaseController
                 'hu' => '/{_locale}/streaming-{codeName}-{subRadioCodeName}/{date?}',
                 'ar' => '/{_locale}/البث-{codeName}-{subRadioCodeName}/{date?}',
                 'tr' => '/{_locale}/dinlemek-{codeName}-{subRadioCodeName}/{date?}',
+                'nl' => '/{_locale}/schema-{codeName}-{subRadioCodeName}/{date?}',
             ],
             name: 'radio_subradio_legacy',
         )
@@ -291,6 +293,7 @@ class DefaultController extends AbstractBaseController
                 'hu' => '/{_locale}/streaming-{codeName}/programok/{date?}',
                 'ar' => '/{_locale}/البث-{codeName}/برامج-اليوم/{date?}',
                 'tr' => '/{_locale}/dinlemek-{codeName}/programlı/{date?}',
+                'nl' => '/{_locale}/schema-{codeName}/schema-van-dag/{date?}',
             ],
             name: 'radio',
             defaults: [
@@ -370,6 +373,7 @@ class DefaultController extends AbstractBaseController
                 'hu' => '/{_locale}/streaming-{codeName}/{date?}',
                 'ar' => '/{_locale}/البث-{codeName}/{date?}',
                 'tr' => '/{_locale}/dinlemek-{codeName}/{date?}',
+                'nl' => '/{_locale}/schema-{codeName}/{date?}',
             ],
             name: 'radio_legacy',
         )
@@ -433,6 +437,7 @@ class DefaultController extends AbstractBaseController
                 'hu' => '/{_locale}/stream-{shortId}/null',
                 'ar' => '/{_locale}/stream-{shortId}/null',
                 'tr' => '/{_locale}/stream-{shortId}/null',
+                'nl' => '/{_locale}/stream-{shortId}/null',
             ],
             name: 'streams_one_short_weird_404',
         )
@@ -463,6 +468,7 @@ class DefaultController extends AbstractBaseController
                 'hu' => '/{_locale}/stream-{shortId}/hallgat-{codename}',
                 'ar' => '/{_locale}/stream-{shortId}/استمع-{codename}',
                 'tr' => '/{_locale}/stream-{shortId}/dinlemek-{codename}',
+                'nl' => '/{_locale}/stream-{shortId}/luisteren-{codename}',
             ],
             name: 'streams_one_short',
             defaults: [
@@ -557,6 +563,7 @@ class DefaultController extends AbstractBaseController
                 'hu' => '/{_locale}/stream/{id}/hallgat-{codename}',
                 'ar' => '/{_locale}/stream/{id}/استمع-{codename}',
                 'tr' => '/{_locale}/stream/{id}/dinlemek-{codename}',
+                'nl' => '/{_locale}/stream/{id}/luisteren-{codename}',
             ],
             name: 'streams_one',
             defaults: [
@@ -599,7 +606,7 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/{_locale}/top/{countryCode}',
         name: 'streams_top',
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'],
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'weekly'
@@ -643,7 +650,7 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/{_locale}/last/{countryCode}',
         name: 'streams_last',
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'],
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'daily'
@@ -885,7 +892,7 @@ class DefaultController extends AbstractBaseController
         Route('/locale-switch/to/{locale}',
             name: 'locale_switch',
             requirements: [
-                'locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'
+                'locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl'
             ]
         )
     ]
@@ -944,7 +951,7 @@ class DefaultController extends AbstractBaseController
             name: 'index_radio_addict_locale',
             requirements: [
                 'subdomain' => 'www|local',
-                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'
+                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl'
             ],
             defaults: [ 'subdomain' => 'www'],
             host: '{subdomain}.radio-addict.com',
@@ -964,7 +971,7 @@ class DefaultController extends AbstractBaseController
         Route('/{_locale}/',
             name: 'app',
             requirements: [
-                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr'
+                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl'
             ],
             defaults: [
                 'priority' => '1.0',

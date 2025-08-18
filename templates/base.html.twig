@@ -1,8 +1,8 @@
 {% set isProgRadioRequest = isProgRadio(app.request) %}
 {% set isDarkModeRequest = isDarkModeTime(app.request) %}
 {% set domainNameRequest = getDomainName(app.request) %}
-{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro','hu','tr'] %}
-{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro', 'hu': 'hu', 'tr': 'tr'} %}
+{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro','hu','tr','nl'] %}
+{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro', 'hu': 'hu', 'tr': 'tr', 'nl': 'nl'} %}
 {# as this call his made a numerous place and seems expensive we put it as a global here #}
 {% set is_logged = is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 <!DOCTYPE html>
@@ -87,6 +87,8 @@
                     {% set canonical_locale = 'hu' %}
                 {% elseif 'turskish' in stream.language %}
                     {% set canonical_locale = 'tr' %}
+                {% elseif 'dutch' in stream.language %}
+                    {% set canonical_locale = 'nl' %}
                 {% endif %}
             {% endif %}
 

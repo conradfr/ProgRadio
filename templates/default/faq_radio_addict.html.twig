@@ -265,6 +265,96 @@
             ]
         }
     ],
+    "nl": [
+        {
+            'question': "Wat is Radio-Addict.com?",
+            'answer': [
+                "Radio-Addict.com is een onafhankelijke website om naar radiozenders van over de hele wereld te luisteren."
+            ]
+        },
+        {
+            'question': "Ik wil mijn (web)radio toevoegen, hoe doe ik dat?",
+            'answer': [
+                "U heeft twee keuzes:",
+                "1/ Maak een account aan en voeg uw radio hier toe: <a target=\"_blank\" href=\"#{url('user_page_streams')}\">klik hier</a>.",
+                "2/ Gebruik de Radio-Browser API. Om uw radio daar in te dienen, <a target=\"_blank\" href=\"https://www.radio-browser.info/#/add\">klik hier</a>."
+            ]
+        },
+        {
+            'question': "Sommige radiozenders hebben een advertentie aan het begin van het afspelen.",
+            'answer': [
+                "Deze advertenties worden toegevoegd door de radiozenders zelf en niet door Radio-Addict.com.",
+                "De speler van Radio-Addict probeert deze advertenties te minimaliseren wanneer u wisselt tussen twee radiozenders of een radio pauzeert.",
+                "In sommige gevallen kan een adblocker het afspelen van de radio blokkeren (bijvoorbeeld: RMC)."
+            ]
+        },
+        {
+            'question': "Top van radiozenders per land:",
+            'answer': [
+                countries.list(app.request.locale, 'top')
+            ]
+        }
+    ],
+    "hu": [
+        {
+            'question': "Mi a Radio-Addict.com?",
+            'answer': [
+                "A Radio-Addict.com egy független weboldal, ahol az egész világ rádióit meghallgathatja."
+            ]
+        },
+        {
+            'question': "Szeretném hozzáadni a saját (web)rádiómat, hogyan tehetném?",
+            'answer': [
+                "Két lehetősége van:",
+                "1/ Hozzon létre egy fiókot, és adja hozzá rádióját itt: <a target=\"_blank\" href=\"#{url('user_page_streams')}\">kattintson ide</a>.",
+                "2/ Használja a Radio-Browser API-t. A rádiója beküldéséhez <a target=\"_blank\" href=\"https://www.radio-browser.info/#/add\">kattintson ide</a>."
+            ]
+        },
+        {
+            'question': "Egyes rádióadóknak van reklámja a lejátszás elején.",
+            'answer': [
+                "Ezek a reklámok maguk a rádióadók adják hozzá, nem a Radio-Addict.com.",
+                "A Radio-Addict lejátszó megpróbálja minimalizálni ezeket a reklámokat, amikor két rádió között vált, vagy szünetelteti a lejátszást.",
+                "Egyes esetekben a reklámblokkoló blokkolhatja a rádió lejátszását (például: RMC)."
+            ]
+        },
+        {
+            'question': "Országonkénti legjobb rádióadók:",
+            'answer': [
+                countries.list(app.request.locale, 'top')
+            ]
+        }
+    ],
+    "tr": [
+        {
+            'question': "Radio-Addict.com nedir?",
+            'answer': [
+                "Radio-Addict.com, dünya çapındaki radyo kanallarını dinleyebileceğiniz bağımsız bir sitedir."
+            ]
+        },
+        {
+            'question': "(Web) radyomu eklemek istiyorum, nasıl yapabilirim?",
+            'answer': [
+                "İki seçeneğiniz var:",
+                "1/ Bir hesap oluşturun ve radyonuzu burada ekleyin: <a target=\"_blank\" href=\"#{url('user_page_streams')}\">buraya tıklayın</a>.",
+                "2/ Radio-Browser API'sini kullanın. Radyonuzu göndermek için <a target=\"_blank\" href=\"https://www.radio-browser.info/#/add\">buraya tıklayın</a>."
+            ]
+        },
+        {
+            'question': "Bazı radyo kanallarının başında reklam vardır.",
+            'answer': [
+                "Bu reklamlar radyo kanalları tarafından eklenir, Radio-Addict.com tarafından değil.",
+                "Radio-Addict oyuncusu, iki radyo arasında geçiş yaparken veya bir radyoyu duraklattığınızda bu reklamları en aza indirmeye çalışır.",
+                "Bazı durumlarda reklam engelleyici, radyonun çalmasını engelleyebilir (örneğin: RMC)."
+            ]
+        },
+        {
+            'question': "Ülkelere göre en iyi radyo kanalları:",
+            'answer': [
+                countries.list(app.request.locale, 'top')
+            ]
+        }
+    ]
 }
 %}
 

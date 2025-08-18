@@ -1,0 +1,32 @@
+general:
+    hello: Hallo,
+
+signature:
+    regards: Met vriendelijke groet,
+
+signup:
+    subject: '%name% - Registratie'
+    welcome: Welkom!
+    text_1: Je bent nu geregistreerd op %link%
+    text2: 'Als je favoriete radiozenders of streams had, zijn deze nu opgeslagen in je account.'
+
+reset:
+    subject: '%name% - Wachtwoord reset'
+    header: Wachtwoord reset
+    text_1: Er is een verzoek gedaan om je wachtwoord te resetten op %url%
+    text_2: 'Om je wachtwoord bij te werken, klik op deze link (geldig voor 24 uur): %link%'
+    text_3: Als je dit verzoek niet hebt gedaan, kun je deze e-mail negeren.
+
+email_change:
+    subject: '%name% - Wijziging e-mailadres'
+    header: Wijziging e-mailadres
+    text_1: Er is een verzoek gedaan om je e-mailadres te wijzigen naar %new_email% op %url%.
+    text_2: Je kunt je niet meer aanmelden met %old_email%.
+    text_3: 'Als je dit niet hebt gedaan, kun je deze wijziging annuleren door op deze link te klikken (geldig voor 24 uur): %link%'
+    text_4: We raden je ook aan om je wachtwoord te wijzigen.
+
+password_update:
+    subject: '%name% - Wachtwoordwijziging'
+    header: Wachtwoordwijziging
+    text_1: Het wachtwoord van het account dat aan dit adres is gekoppeld, is gewijzigd op %url%
+    text_2: 'Als je dit niet hebt gedaan, kun je deze wijziging annuleren en een nieuw wachtwoord kiezen door op deze link te klikken (geldig voor 24 uur): %link%'

@@ -16,6 +16,7 @@ defmodule ProgRadioApi.Collection do
     field(:name_ro, :string)
     field(:name_hu, :string)
     field(:name_tr, :string)
+    field(:name_nl, :string)
     field(:name_se, :string)
     field(:name_dk, :string)
     field(:priority, :integer)
