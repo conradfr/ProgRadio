@@ -33,7 +33,7 @@ class RadioStream
     private ?Radio $radio = null;
 
     #[Groups(['export'])]
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private ?string $url = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
