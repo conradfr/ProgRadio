@@ -56,9 +56,9 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     zlib1g-dev \
-    nginx \
     libxml2-dev \
     libwebp-dev \
+    libicu-dev \
     libcurl4-openssl-dev \
     jpegoptim \
     sudo \
@@ -196,6 +196,8 @@ COPY --chown=www-data:www-data ./ /app/
 RUN mkdir -p ./public/build/assets/
 COPY --from=buildjs /tmp/public/build/assets/ ./public/build/assets/
 COPY --from=buildjs /tmp/public/build/.vite/ ./public/build/.vite/
+
+RUN rm -rf .env.*
 
 RUN composer dump-autoload --no-scripts --no-dev --optimize --classmap-authoritative
 
