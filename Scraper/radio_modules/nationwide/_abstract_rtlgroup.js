@@ -153,9 +153,9 @@ const fetch = (url, name, dateObj) => {
       .find('.container .card-container')
       .set({
         'datetime_raw': 'header .schedule',
-        'title': 'div.title',
+        'title': 'p.title',
         'img': 'div.cover@data-bg',
-        'host': 'div.subtitle',
+        'host': 'p.subtitle',
         'sections': [
           osmosis.find('.container-cards-replays > .d-inline-block')
           .set({
