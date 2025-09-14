@@ -10,7 +10,7 @@ defmodule ProgRadioApi.SongProvider.Beurfm do
   @radio_id "2174546520932614189"
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericLesIndes3
+  defdelegate has_custom_refresh(name), to: GenericLesIndes3
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericLesIndes3

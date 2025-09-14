@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.Bergerac95 do
   @url "http://www.bergerac95.fr/cache/titreplayer3016923902222997121"
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericLesIndes
+  defdelegate has_custom_refresh(name), to: GenericLesIndes
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericLesIndes

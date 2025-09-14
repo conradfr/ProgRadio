@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.Cinemix do
   @url "https://vhost.fastserv.com/~cinemix/samPHPwebVIP/web/playing.php?buster="
 
   @impl true
-  def has_custom_refresh(), do: false
+  def has_custom_refresh(_name), do: false
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil

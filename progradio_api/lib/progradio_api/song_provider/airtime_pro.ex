@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.AirtimePro do
   @refresh_auto_interval 10000
 
   @impl true
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(_name), do: true
 
   @impl true
   def get_refresh(name, %{"type" => "track"} = data, _last_song) do

@@ -17,7 +17,7 @@ defmodule ProgRadioApi.SongProvider do
   @doc """
     Indicates if it can refresh based on metadata or not
   """
-  @callback has_custom_refresh() :: boolean()
+  @callback has_custom_refresh(String.t()) :: boolean()
 
   @doc """
     Overrides the default auto refresh rate
@@ -67,9 +67,9 @@ defmodule ProgRadioApi.SongProvider do
     Enum.join(rest, ":")
   end
 
-  @spec now_unix() :: integer()
-  def now_unix() do
-    System.os_time(:second)
+  @spec now_unix(System.time_unit()) :: integer()
+  def now_unix(unit \\ :second) do
+    System.os_time(unit)
   end
 
   @spec now_iso() :: String.t()

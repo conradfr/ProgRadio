@@ -40,7 +40,7 @@ defmodule ProgRadioApi.SongProvider.Radio80s80s do
   }
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericLoveradio
+  defdelegate has_custom_refresh(name), to: GenericLoveradio
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericLoveradio

@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
   @date_format "{0D}-{0M}-{YYYY}"
   @minutes_max_delta 4
 
-  def has_custom_refresh(), do: false
+  def has_custom_refresh(_name), do: false
 
   def get_refresh(_name, _data, _default_refresh), do: nil
 

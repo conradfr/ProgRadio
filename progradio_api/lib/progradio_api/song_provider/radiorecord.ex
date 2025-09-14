@@ -71,7 +71,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
   }
 
   @impl true
-  def has_custom_refresh(), do: false
+  def has_custom_refresh(_name), do: false
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil

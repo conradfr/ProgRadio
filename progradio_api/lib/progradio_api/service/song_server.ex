@@ -86,7 +86,7 @@ defmodule ProgRadioApi.SongServer do
           %{state | push_pid: pid}
 
         false ->
-          if apply(state.module, :has_custom_refresh, []) == true,
+          if apply(state.module, :has_custom_refresh, [state.name]) == true,
             do: Process.send_after(self(), {:refresh, :one_off}, 1000)
 
           Process.send_after(self(), {:refresh, :auto}, 250)
@@ -177,7 +177,7 @@ defmodule ProgRadioApi.SongServer do
           Kernel.function_exported?(module, :get_auto_refresh, 0) == true ->
             apply(module, :get_auto_refresh, [])
 
-          apply(module, :has_custom_refresh, []) == true ->
+          apply(module, :has_custom_refresh, [state.name]) == true ->
             @refresh_song_interval_long
 
           true ->

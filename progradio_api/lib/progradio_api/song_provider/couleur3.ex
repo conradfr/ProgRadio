@@ -8,7 +8,7 @@ defmodule ProgRadioApi.SongProvider.Couleur3 do
   @minutes_max_delta 5
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericRts
+  defdelegate has_custom_refresh(name), to: GenericRts
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericRts

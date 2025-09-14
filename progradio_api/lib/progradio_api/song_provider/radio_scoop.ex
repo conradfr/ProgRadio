@@ -26,7 +26,7 @@ defmodule ProgRadioApi.SongProvider.RadioScoop do
   @url "https://api.radioscoop.com/player/getOnAir.php?stream="
 
   @impl true
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(_name), do: true
 
   @impl true
   def get_refresh(_name, nil, default_refresh), do: default_refresh

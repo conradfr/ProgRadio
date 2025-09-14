@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.Lyonpremiere do
   @url "https://radioutils.infomaniak.com/player/lyon1ere/config/699095b8-7891-4b84-9af0-e8e1b58157d3"
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericLesIndes
+  defdelegate has_custom_refresh(name), to: GenericLesIndes
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericLesIndes

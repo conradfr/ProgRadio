@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.Radioking do
   @refresh_auto_interval 7500
 
   @impl true
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(_name), do: true
 
   @impl true
   def get_refresh(name, data, _default_refresh) do

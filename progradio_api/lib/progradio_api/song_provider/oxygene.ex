@@ -14,7 +14,7 @@ defmodule ProgRadioApi.SongProvider.Oxygene do
   }
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericLesIndes
+  defdelegate has_custom_refresh(name), to: GenericLesIndes
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericLesIndes

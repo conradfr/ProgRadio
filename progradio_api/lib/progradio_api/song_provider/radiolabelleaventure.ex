@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
   @url "https://widgetsv2.mediacpanel.com/webplayerv2/common/interval.php?user=tyizqrhg&fingerprinting="
 
   @impl true
-  def has_custom_refresh(), do: false
+  def has_custom_refresh(_name), do: false
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil

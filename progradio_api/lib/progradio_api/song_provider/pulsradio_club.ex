@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.PulsradioClub do
   @id "club"
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericPulsradio
+  defdelegate has_custom_refresh(name), to: GenericPulsradio
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericPulsradio

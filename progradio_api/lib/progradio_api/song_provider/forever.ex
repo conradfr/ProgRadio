@@ -8,7 +8,7 @@ defmodule ProgRadioApi.SongProvider.Forever do
   @radio_id "1016621215563433018"
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericLesIndes3
+  defdelegate has_custom_refresh(name), to: GenericLesIndes3
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericLesIndes3

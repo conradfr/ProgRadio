@@ -133,7 +133,7 @@ const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string|null): 
   }
 
   if (typeUtils.isRadio(radio) && !radioStreamCodeName) {
-    return `${radio.code_name}_main`;
+    return `song:${radio.code_name}_main`;
   }
 
   // @ts-ignore

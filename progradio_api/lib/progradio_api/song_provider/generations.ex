@@ -10,7 +10,7 @@ defmodule ProgRadioApi.SongProvider.Generations do
   @max_length_seconds 300
 
   @impl true
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(_name), do: true
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil

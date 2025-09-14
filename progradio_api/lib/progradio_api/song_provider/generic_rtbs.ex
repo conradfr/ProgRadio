@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
 
   @default_length 300_000
 
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(_name), do: true
 
   def get_refresh(_name, nil, default_refresh), do: default_refresh
 

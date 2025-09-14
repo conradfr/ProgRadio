@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.Funradio do
   @url "https://www.funradio.fr/quel-est-ce-titre/"
 
   @impl true
-  defdelegate has_custom_refresh(), to: GenericRtlgroup
+  defdelegate has_custom_refresh(name), to: GenericRtlgroup
 
   @impl true
   defdelegate get_refresh(name, data, default_refresh), to: GenericRtlgroup

@@ -2,7 +2,7 @@ defmodule ProgRadioApi.SongProvider.GenericPulsradio do
   require Logger
   alias ProgRadioApi.SongProvider
 
-  def has_custom_refresh(), do: false
+  def has_custom_refresh(_name), do: false
 
   def get_refresh(_name, nil, default_refresh), do: default_refresh
 

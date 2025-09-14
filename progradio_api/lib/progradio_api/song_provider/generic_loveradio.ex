@@ -2,7 +2,7 @@ defmodule ProgRadioApi.SongProvider.GenericLoveradio do
   require Logger
   alias ProgRadioApi.SongProvider
 
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(_name), do: true
 
   def get_refresh(_name, data, default_refresh) do
     case data do

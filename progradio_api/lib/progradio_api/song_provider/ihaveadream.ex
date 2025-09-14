@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.Ihaveadream do
   @behaviour ProgRadioApi.SongProvider
 
   @impl true
-  def has_custom_refresh(), do: false
+  def has_custom_refresh(_name), do: false
 
   @impl true
   def get_refresh(_name, _data, default_refresh), do: default_refresh

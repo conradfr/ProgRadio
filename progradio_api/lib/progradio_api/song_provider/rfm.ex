@@ -15,7 +15,7 @@ defmodule ProgRadioApi.SongProvider.Rfm do
   @url "http://directradio.rfm.fr/rfm/now/"
 
   @impl true
-  def has_custom_refresh(), do: false
+  def has_custom_refresh(_name), do: false
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil

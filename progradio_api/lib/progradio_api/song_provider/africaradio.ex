@@ -20,7 +20,7 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
   @refresh_fallback_ms 3000
 
   @impl true
-  def has_custom_refresh(), do: true
+  def has_custom_refresh(_name), do: true
 
   @impl true
   def get_refresh(_name, nil, default_refresh), do: default_refresh
