@@ -26,6 +26,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -192,6 +193,10 @@ class AdminController extends AbstractBaseController
         $streamOverloading = $em->getRepository(StreamOverloading::class)->find($streamId);
         $stream = $em->getRepository(Stream::class)->find($streamId);
 
+        $stream->setLastOverloadingOpen(new \DateTime());
+        $em->persist($stream);
+        $em->flush();
+
         if (!$streamOverloading) {
             $streamOverloading = new StreamOverloading();
             $streamOverloading->setId($stream->getId());
@@ -291,12 +296,19 @@ class AdminController extends AbstractBaseController
 
     #[Route('/{_locale}/admin/playing_errors/{threshold<\d+>?4}', name: 'admin_playing_errors')]
     #[Route('/{_locale}/admin/playing_errors/{threshold<\d+>?4}/{ceiling<\d+>?}', name: 'admin_playing_errors_ceiling')]
-    public function playingErrorsAction(int $threshold, ?int $ceiling, EntityManagerInterface $em): Response
+    public function playingErrorsAction(
+        int $threshold,
+        ?int $ceiling,
+        EntityManagerInterface $em,
+        #[MapQueryParameter] ?string $country = null
+    ): Response
     {
-        $errors = $em->getRepository(Stream::class)->getStreamsWithPlayingError($threshold, $ceiling);
+        $errors = $em->getRepository(Stream::class)->getStreamsWithPlayingError($threshold, $ceiling, $country);
 
         return $this->render('default/admin/playing_error.html.twig', [
             'errors' => $errors,
+            'threshold' => $threshold,
+            'ceiling' => $ceiling,
         ]);
     }
 

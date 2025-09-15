@@ -31,11 +31,11 @@ class StreamRepository extends ServiceEntityRepository
         parent::__construct($registry, Stream::class);
     }
 
-    public function getStreamsWithPlayingError(int $threshold, ?int $ceiling)
+    public function getStreamsWithPlayingError(int $threshold, ?int $ceiling, ?string $countryCode)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.playingErrorReason, s.forceHls, s.forceMpd, so.updatedAt')
+        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.popup, s.playingErrorReason, s.forceHls, s.forceMpd, so.updatedAt, s.lastOverloadingOpen')
             ->from(Stream::class, 's')
             ->leftJoin('s.streamOverloading', 'so')
             ->where('s.playingError >= :threshold')
@@ -46,6 +46,11 @@ class StreamRepository extends ServiceEntityRepository
         if ($ceiling) {
             $qb->andWhere('s.playingError <= :ceiling');
             $qb->setParameter('ceiling', $ceiling);
+        }
+
+        if ($countryCode) {
+            $qb->andWhere('s.countryCode = :countryCode');
+            $qb->setParameter('countryCode', $countryCode);
         }
 
         return $qb->getQuery()->getResult();

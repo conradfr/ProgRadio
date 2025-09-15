@@ -163,6 +163,9 @@ class Stream implements NormalizableInterface
     #[ORM\Column(nullable: true)]
     private ?bool $popup = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $lastOverloadingOpen = null;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
         $this->streamsHistory = new ArrayCollection();
@@ -592,5 +595,17 @@ class Stream implements NormalizableInterface
         }
 
         return [];
+    }
+
+    public function getLastOverloadingOpen(): ?\DateTime
+    {
+        return $this->lastOverloadingOpen;
+    }
+
+    public function setLastOverloadingOpen(?\DateTime $lastOverloadingOpen): static
+    {
+        $this->lastOverloadingOpen = $lastOverloadingOpen;
+
+        return $this;
     }
 }
