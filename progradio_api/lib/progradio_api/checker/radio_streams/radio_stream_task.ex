@@ -3,67 +3,60 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.RadioStream
 
-  @timeout 20_000
-  @success_status [200, 302]
-
   def start_link(%RadioStream{} = radio_stream) do
     Task.start_link(fn ->
       Logger.info("Checking: #{radio_stream.code_name} (#{radio_stream.url})")
+      fetch(radio_stream)
+    end)
+  end
 
-      try do
-        resp = make_request(radio_stream.url, radio_stream)
+  defp fetch(%RadioStream{} = radio_stream) do
+    try do
+      result =
+        case String.contains?(radio_stream.url, ".m3u8") do
+          true ->
+            radio_stream.url
+            |> request_file()
+            |> Map.get(:body)
+            |> HLS.parse()
+            |> Map.get(:lines)
+            |> Enum.find_value(fn
+              %HLS.M3ULine{type: :uri} = line ->
+                case String.contains?(line.value, ".m3u8") do
+                  true ->
+                    fetch(%{radio_stream | url: build_url(radio_stream, line.value)})
 
-        async_receive = fn resp, async_fn ->
-          receive do
-            %HTTPoison.AsyncRedirect{headers: headers} ->
-              redirect_url =
-                headers
-                |> Enum.find(fn h ->
-                  match?({"location", _}, h) ||
-                    match?({"Location", _}, h)
-                end)
-                |> elem(1)
+                  false ->
+                    radio_stream |> build_url(line.value) |> request_stream()
+                end
 
-              Logger.debug("Check (#{radio_stream.code_name}), redirect to #{redirect_url}")
+              _e ->
+                false
+            end)
 
-              make_request(redirect_url, radio_stream)
-              async_fn.(resp, async_fn)
-
-            %HTTPoison.AsyncStatus{code: status_code} ->
-              case status_code do
-                s when s in @success_status ->
-                  Logger.debug("Success check (#{radio_stream.code_name})")
-                  update_status(radio_stream, true)
-
-                _ ->
-                  Logger.warning("Error status (#{radio_stream.code_name}): #{status_code}")
-                  update_status(radio_stream, false)
-              end
-
-            message ->
-              Logger.warning(
-                "Non-status received (#{radio_stream.code_name}): #{inspect(message)}"
-              )
-
-              update_status(radio_stream, false)
-          end
+          false ->
+            request_stream(radio_stream.url)
         end
 
-        async_receive.(resp, async_receive)
-      rescue
-        _ ->
-          Logger.debug("Checking - #{radio_stream.code_name} (#{radio_stream.url}) - rescue")
-          update_status(radio_stream, false)
-      catch
-        :exit, _ ->
-          Logger.debug("Checking - #{radio_stream.code_name} (#{radio_stream.url}) - catch")
-          update_status(radio_stream, false)
+      case result do
+        :ok -> update_status(radio_stream, true)
+        _ -> update_status(radio_stream, false)
       end
-    end)
+    rescue
+      e ->
+        Logger.debug("Checking - #{radio_stream.code_name} (#{radio_stream.url}) - rescue")
+        update_status(radio_stream, false)
+    catch
+      :exit, _ ->
+        Logger.debug("Checking - #{radio_stream.code_name} (#{radio_stream.url}) - catch")
+        update_status(radio_stream, false)
+    end
   end
 
   # maybe this could be done on another stage
   defp update_status(radio_stream, working) do
+    Logger.debug("Checking: #{radio_stream.code_name} (#{radio_stream.url}) : #{working}")
+
     retries =
       case working do
         true -> 0
@@ -74,42 +67,82 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
     Repo.update(radio_stream)
   end
 
-  defp make_request(url, radio_stream) do
+  defp request_file(stream_url) when is_binary(stream_url) do
     try do
-      HTTPoison.get!(url, %{},
-        stream_to: self(),
-        async: :once,
-        follow_redirect: true,
-        timeout: @timeout,
-        recv_timeout: @timeout,
-        hackney: [pool: :checker, insecure: true]
+      Req.get!(
+        stream_url,
+        headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
+        redirect: true
+        #        connect_options: [
+        #          timeout: @req_timeout,
+        #          transport_opts: [verify: :verify_none]
+        #        ],
+        #        receive_timeout: @req_timeout,
       )
     rescue
-      e in HTTPoison.Error ->
-        case e.reason do
-          reason when is_binary(reason) ->
-            Logger.warning("Error (#{radio_stream.code_name}): #{e.reason}")
-
-          reason when reason == :checkout_timeout ->
-            Logger.warning(
-              "Error (#{radio_stream.code_name}): checkout_timeout - restarting pool ..."
-            )
-
-            :hackney_pool.stop_pool(:checker)
-
-          reason when is_tuple(reason) and tuple_size(reason) == 2 ->
-            {_error, {_error2, error_message}} = reason
-            Logger.warning("Error (#{radio_stream.code_name}): #{to_string(error_message)}")
-
-          unknown ->
-            Logger.warning("Error (#{radio_stream.code_name}): #{to_string(unknown)}")
-        end
-
-        update_status(radio_stream, false)
+      e ->
+        Logger.debug("Checking (request) - (#{stream_url}) - rescue")
+        [:error, e]
     catch
-      _ ->
-        Logger.debug("Checking - #{radio_stream.code_name} (#{url}) - catch")
-        update_status(radio_stream, false)
+      :exit, _ ->
+        Logger.debug("Checking (request) - (#{stream_url}) - catch")
+        [:error, nil]
     end
+  end
+
+  defp request_stream(stream_url) when is_binary(stream_url) do
+    try do
+      case Req.get!(
+             stream_url,
+             headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
+             redirect: true,
+             connect_options: [
+               #          timeout: @req_timeout,
+               transport_opts: [verify: :verify_none]
+             ],
+             #        receive_timeout: @req_timeout,
+             retry: false,
+             into: fn {:data, _data}, {req, resp} ->
+               {:halt, {req, resp}}
+             end
+           ) do
+        %Req.Response{status: 200, headers: %{"content-type" => ["audio/" <> _mime]}} =
+            _resp ->
+          #            Req.cancel_async_response(resp)
+          :ok
+
+        %Req.Response{status: 200, headers: %{"content-type" => ["video/" <> _mime]}} =
+            _resp ->
+          #            Req.cancel_async_response(resp)
+          :ok
+
+        _resp ->
+          #          Req.cancel_async_response(resp)
+          [:error, nil]
+      end
+    rescue
+      e ->
+        Logger.debug("Checking (request async) - (#{stream_url}) - rescue")
+        [:error, e]
+    catch
+      :exit, _ ->
+        Logger.debug("Checking (request async) - (#{stream_url}) - catch")
+        [:error, nil]
+    end
+  end
+
+  defp build_url(%RadioStream{} = _radio_stream, "http" <> _url_rest = url) do
+    url
+  end
+
+  defp build_url(%RadioStream{url: base_url} = _radio_stream = _args, url) do
+    base_url
+    |> String.trim_trailing("/")
+    |> String.split("/")
+    |> Enum.reverse()
+    |> Enum.drop(1)
+    |> Enum.reverse()
+    |> Enum.join("/")
+    |> then(&(&1 <> "/" <> String.trim_leading(url, "/")))
   end
 end

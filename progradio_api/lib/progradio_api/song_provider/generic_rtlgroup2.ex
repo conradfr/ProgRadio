@@ -4,10 +4,12 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup2 do
 
   def get_refresh(_name, data, default_refresh) when is_map(data) do
     try do
-      case (data["endDate"] - SongProvider.now_unix(:millisecond)) do
+      case data["endDate"] - SongProvider.now_unix(:millisecond) do
         seconds when seconds > 0 ->
           seconds + 500
-        _ -> default_refresh
+
+        _ ->
+          default_refresh
       end
     rescue
       _ -> default_refresh
@@ -20,14 +22,13 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup2 do
     now_unix = SongProvider.now_unix(:millisecond)
 
     try do
-      data =
-        "https://www.rtl.fr/ws/live/#{id}/last-tracks"
-        |> SongProvider.get()
-        |> Map.get(:body)
-        |> :json.decode()
-        |> Enum.find(nil, fn e ->
-          now_unix >= e["startDate"] and now_unix <= e["endDate"]
-        end)
+      "https://www.rtl.fr/ws/live/#{id}/last-tracks"
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> :json.decode()
+      |> Enum.find(nil, fn e ->
+        now_unix >= e["startDate"] and now_unix <= e["endDate"]
+      end)
     rescue
       _ -> :error
     end

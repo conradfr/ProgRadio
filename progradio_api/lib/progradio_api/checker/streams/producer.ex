@@ -25,11 +25,11 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
     query =
       from s in Stream,
         select: s,
+        #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
         where:
           s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
             s.playing_error > 0 and
             s.force_hls == false and s.force_mpd == false and
-            fragment("? not ilike '%.m3u8%'", s.stream_url) and
             fragment("? not ilike '%.mpd%'", s.stream_url),
         order_by: fragment("RANDOM()"),
         limit: ^demand

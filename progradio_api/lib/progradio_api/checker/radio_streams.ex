@@ -7,7 +7,18 @@ defmodule ProgRadioApi.Checker.RadioStreams do
   def check() do
     get_radio_streams()
     |> Enum.each(fn radio_stream ->
-      ProgRadioApi.Checker.RadioStreams.Producer.sync_notify(radio_stream)
+      try do
+        ProgRadioApi.Checker.RadioStreams.Producer.async_notify(radio_stream)
+      rescue
+        e ->
+          Logger.debug("FUUUUU Checking (request async) - (#{radio_stream.url}) - rescue")
+          IO.puts("#{inspect(e)}")
+          [:error, e]
+      catch
+        :exit, _ ->
+          Logger.debug("FUUUUUU Checking (request async) - (#{radio_stream.url}) - catch")
+          [:error, nil]
+      end
     end)
 
     :ok
@@ -18,10 +29,11 @@ defmodule ProgRadioApi.Checker.RadioStreams do
       from(rs in RadioStream,
         join: r in Radio,
         on: r.id == rs.radio_id,
-        where: r.active == true and rs.enabled == true,
+        where: r.active == true and rs.enabled == true and rs.id > 300 and rs.id < 400,
         order_by: [desc: rs.id]
       )
 
     Repo.all(query)
+    |> IO.inspect()
   end
 end

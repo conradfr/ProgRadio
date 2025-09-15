@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.Rtl do
     "rtl_100_hits" => "62826c07ffe16b07d248f18b",
     "rtl_collection_georges_lang" => "66165d554e34a01a336c767f",
     "rtl_100_80" => "647de2277c4bd84ed40f56fa",
-    "rtl_grand_studio" => "647de254ee62ff54dcde4c6a",
+    "rtl_grand_studio" => "647de254ee62ff54dcde4c6a"
   }
 
   @impl true

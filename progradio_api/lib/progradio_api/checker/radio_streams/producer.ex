@@ -11,10 +11,20 @@ defmodule ProgRadioApi.Checker.RadioStreams.Producer do
     GenStage.call(__MODULE__, {:notify, event}, timeout)
   end
 
+  @doc "Sends an event without waiting for it to be dispatched."
+  def async_notify(event) do
+    GenStage.cast(__MODULE__, {:notify, event})
+  end
+
   ## Callbacks
 
   def init(:ok) do
     {:producer, {:queue.new(), 0}, dispatcher: GenStage.BroadcastDispatcher}
+  end
+
+  def handle_cast({:notify, event}, {queue, pending_demand}) do
+    queue = :queue.in({nil, event}, queue)
+    dispatch_events(queue, pending_demand, [])
   end
 
   def handle_call({:notify, event}, from, {queue, pending_demand}) do
@@ -32,6 +42,9 @@ defmodule ProgRadioApi.Checker.RadioStreams.Producer do
 
   defp dispatch_events(queue, demand, events) do
     case :queue.out(queue) do
+      {{:value, {nil, event}}, queue} ->
+        dispatch_events(queue, demand - 1, [event | events])
+
       {{:value, {from, event}}, queue} ->
         GenStage.reply(from, :ok)
         dispatch_events(queue, demand - 1, [event | events])

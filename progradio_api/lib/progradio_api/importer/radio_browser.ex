@@ -122,7 +122,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         # found in some entries, not sure of a better way to remove them
         |> String.trim("\u0000")
         |> String.trim()
-        |> (&Map.get(overloading, :stream_url) || &1).()
+        |> (&(Map.get(overloading, :stream_url) || &1)).()
         |> stream_url_transformer()
 
       name =
@@ -130,19 +130,19 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         |> Map.get("name")
         |> String.trim("\u0000")
         |> String.trim()
-        |> (&Map.get(overloading, :name) || &1).()
+        |> (&(Map.get(overloading, :name) || &1)).()
 
       img_url = Map.get(stream, "favicon")
 
       country_code =
         stream
         |> Map.get("countrycode")
-        |> (&Map.get(overloading, :country_code) || &1).()
+        |> (&(Map.get(overloading, :country_code) || &1)).()
 
       website =
         stream
         |> Map.get("homepage")
-        |> (&Map.get(overloading, :website) || &1).()
+        |> (&(Map.get(overloading, :website) || &1)).()
 
       enabled = Map.get(overloading, :enabled) || true
 
