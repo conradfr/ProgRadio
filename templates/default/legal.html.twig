@@ -2,29 +2,86 @@
 
 {% import _self as self %}
 
-{% block title %}Mentions légales{% endblock %}
+{% block title %}{{ 'legal'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h3 class="mb-4">Mentions légales</h3>
-            <p>Programmes-Radio.com et Radio-Addict.com sont publiés par FunkyBits, auto-entreprise à Paris.<p>
-            <p>Le site web est hébergé par la société ONLINE SAS, BP 438 - 75366 Paris CEDEX 08 - http://www.online.net.</p>
-            <p>Le code source est <a target="_blank" href="https://github.com/conradfr/ProgRadio">disponible sur Github</a> selon la licence
-                <a target="_blank" href="https://opensource.org/licenses/NPOSL-3.0">Non-Profit Open Software License 3.0 (NPOSL-3.0)</a>.</p>
-            <p>L'application utilise des cookies pour sauvegarder les radios favorites de l'utilisateur et les données du lecteur audio et du streaming.</p>
-            <p>Les applications Android "Programmes Radio" et "Radio-Addict" ne collectent pas de données utilisateurs et ne revendent pas de données à des tiers.</p>
-            <p>L'email des utilisateurs est uniquement utilisé pour se connecter au compte (optionnel).</p>
-            <p>De plus les utilisateurs ont la possibilité de supprimer leur compte.</p>
-            <p>Ce site utilise des icones et drapeaux de <a target="_blank" href="https://www.flaticon.com/authors/freepik">Freepik</a>
-                depuis from <a target="_blank" href="https://www.flaticon.com/authors/freepik">www.flaticon.com</a></p>
-            <p>Ce site utilise des icones de <a target="_blank" href="https://www.flaticon.com/authors/pixel-perfect">Pixel Perfect</a>
-                depuis from <a target="_blank" href="https://www.flaticon.com/authors/pixel-perfect">www.flaticon.com</a></p>
-            <p>Ce site utilise des icones de <a target="_blank" href="https://www.flaticon.com/authors/google">Google</a>
-                depuis from <a target="_blank" href="https://www.flaticon.com/authors/google">www.flaticon.com</a></p>
-            <p>La section streaming utilise les données de l'API communautaire <a href="http://www.radio-browser.info/">Radio Browser</a>. Les lectures de radio sont comptabilisées de manière anonyme par cette API pour établir le classement par popularité.</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% if app.request.locale == 'fr' %}
+                    <h3 class="mb-4">Mentions légales</h3>
+                    <p>Programmes-Radio.com et Radio-Addict.com sont publiés par FunkyBits, auto-entreprise à Paris.<p>
+                    <p>Le site web est hébergé par la société Hetzner Online GmbH - Industriestr. 25 - 91710 Gunzenhausen - Allemagne - https://www.hetzner.com/</p>
+
+                    <h3 class="mb-4">Politique de confidentialité</h3>
+                    <p>L'application utilise des cookies pour sauvegarder les radios favorites de l'utilisateur et les données du lecteur audio et du streaming.</p>
+                    <p>Les applications Android "Programmes Radio" et "Radio-Addict" ainsi que les sites webs afférents ne revendent pas de données nominatives ou non-nominatives à des tiers.</p>
+                    <p>L'email des utilisateurs est uniquement utilisé pour se connecter au compte (optionnel).</p>
+                    <p>L'historique des radios jouées par un utilisateur connecté est sauvegardé. L'utilisateur peut désactiver cette option dans les paramètres du compte.</p>
+                    <p>Les utilisateurs ont la possibilité de supprimer leur compte.</p>
+                    <p>La localisation est demandée en option à l'utilisateur pour sélectionner les radios de son pays. </p>
+                    <p>Google Analytics est utilisé pour collecter les données non-nominatives de fréquentation du site.</p>
+
+                    <h3 class="mb-4">Information technique</h3>
+                    <p>Le code source est disponible <a target="_blank" href="https://github.com/conradfr/ProgRadio">sur Github</a> selon la licence
+                        <a target="_blank" href="https://opensource.org/licenses/NPOSL-3.0">Non-Profit Open Software License 3.0 (NPOSL-3.0)</a>.</p>
+                    <p>Ce site utilise des icones et drapeaux de <a target="_blank" href="https://www.flaticon.com/authors/freepik">Freepik</a>
+                        depuis from <a target="_blank" href="https://www.flaticon.com/authors/freepik">www.flaticon.com</a></p>
+                    <p>Ce site utilise des icones de <a target="_blank" href="https://www.flaticon.com/authors/pixel-perfect">Pixel Perfect</a>
+                        depuis from <a target="_blank" href="https://www.flaticon.com/authors/pixel-perfect">www.flaticon.com</a></p>
+                    <p>Ce site utilise des icones de <a target="_blank" href="https://www.flaticon.com/authors/google">Google</a>
+                        depuis from <a target="_blank" href="https://www.flaticon.com/authors/google">www.flaticon.com</a></p>
+                    <p>La section streaming utilise les données de l'API communautaire <a href="http://www.radio-browser.info/">Radio Browser</a>. Les lectures de radio sont comptabilisées de manière anonyme par cette API pour établir le classement par popularité.</p>
+                {% elseif app.request.locale == 'es' %}
+                    <h3 class="mb-4">Aviso legal</h3>
+                    <p>Programmes-Radio.com y Radio-Addict.com están publicados por FunkyBits, autoempresa con sede en París.</p>
+                    <p>El sitio web está alojado por Hetzner Online GmbH - Industriestr. 25 - 91710 Gunzenhausen - Alemania - <a target="_blank" href="https://www.hetzner.com/">www.hetzner.com</a>.</p>
+
+                    <h3 class="mb-4">Política de privacidad</h3>
+                    <p>La aplicación utiliza cookies para guardar las emisoras de radio favoritas del usuario y los datos del reproductor de audio y del streaming.</p>
+                    <p>Las aplicaciones Android "Programmes Radio" y "Radio-Addict", así como los sitios web asociados, **no venden datos personales ni no personales a terceros**.</p>
+                    <p>El correo electrónico de los usuarios se utiliza **únicamente para iniciar sesión en la cuenta (opcional)**.</p>
+                    <p>El historial de emisoras reproducidas por un usuario conectado se guarda. El usuario puede desactivar esta opción en la configuración de su cuenta.</p>
+                    <p>Los usuarios tienen la posibilidad de **eliminar su cuenta**.</p>
+                    <p>Se solicita el acceso a la ubicación de forma opcional para seleccionar las emisoras de su país.</p>
+                    <p>Se utiliza Google Analytics para recopilar datos anónimos de tráfico del sitio.</p>
+
+                    <h3 class="mb-4">Información técnica</h3>
+                    <p>El código fuente está disponible en <a target="_blank" href="https://github.com/conradfr/ProgRadio">GitHub</a> bajo la licencia
+                        <a target="_blank" href="https://opensource.org/licenses/NPOSL-3.0">Non-Profit Open Software License 3.0 (NPOSL-3.0)</a>.</p>
+                    <p>Este sitio utiliza iconos y banderas de <a target="_blank" href="https://www.flaticon.com/authors/freepik">Freepik</a>
+                        desde <a target="_blank" href="https://www.flaticon.com">www.flaticon.com</a>.</p>
+                    <p>Este sitio utiliza iconos de <a target="_blank" href="https://www.flaticon.com/authors/pixel-perfect">Pixel Perfect</a>
+                        desde <a target="_blank" href="https://www.flaticon.com">www.flaticon.com</a>.</p>
+                    <p>Este sitio utiliza iconos de <a target="_blank" href="https://www.flaticon.com/authors/google">Google</a>
+                        desde <a target="_blank" href="https://www.flaticon.com">www.flaticon.com</a>.</p>
+                    <p>La sección de streaming utiliza datos de la API comunitaria <a href="http://www.radio-browser.info/">Radio Browser</a>. Las reproducciones de radio se contabilizan de forma anónima mediante esta API para elaborar el ranking de popularidad.</p>
+                {% else %}
+                    <h3 class="mb-4">Legal Notice</h3>
+                    <p>Programmes-Radio.com and Radio-Addict.com are published by FunkyBits, a self-employed business based in Paris, France.</p>
+                    <p>The website is hosted by Hetzner Online GmbH - Industriestr. 25 - 91710 Gunzenhausen - Deutschland - https://www.hetzner.com/</p>
+
+                    <h3 class="mb-4">Privacy Policy</h3>
+                    <p>The app uses cookies to save users' favorite radio stations and audio player/streaming data.</p>
+                    <p>The "Programmes Radio" and "Radio-Addict" Android apps, along with their associated websites, do not sell personal or non-personal user data to third parties.</p>
+                    <p>User emails are only used for optional account login.</p>
+                    <p>The listening history of logged-in users is saved. Users can disable this feature in their account settings.</p>
+                    <p>Location access is optionally requested to help users select radio stations from their country.</p>
+                    <p>Google Analytics is used to collect anonymous website traffic data.</p>
+
+                    <h3 class="mb-4">Technical Information</h3>
+                    <p>The source code is available on <a target="_blank" href="https://github.com/conradfr/ProgRadio">GitHub</a> under the
+                        <a target="_blank" href="https://opensource.org/licenses/NPOSL-3.0">Non-Profit Open Software License 3.0 (NPOSL-3.0)</a>.</p>
+                    <p>This site uses icons and flags by <a target="_blank" href="https://www.flaticon.com/authors/freepik">Freepik</a>
+                        from <a target="_blank" href="https://www.flaticon.com">www.flaticon.com</a>.</p>
+                    <p>This site uses icons by <a target="_blank" href="https://www.flaticon.com/authors/pixel-perfect">Pixel Perfect</a>
+                        from <a target="_blank" href="https://www.flaticon.com">www.flaticon.com</a>.</p>
+                    <p>This site uses icons by <a target="_blank" href="https://www.flaticon.com/authors/google">Google</a>
+                        from <a target="_blank" href="https://www.flaticon.com">www.flaticon.com</a>.</p>
+                    <p>The streaming section uses data from the community API <a href="http://www.radio-browser.info/">Radio Browser</a>. Radio plays are counted anonymously by this API to generate popularity rankings.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
+

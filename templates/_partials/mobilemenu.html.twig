@@ -175,20 +175,22 @@
             {% endif %}
 
             <!-- app -->
-            <li class="nav-item">
-                <div class="d-flex flex-row align-items-center">
-                    <div class="align-self-center offmenu-item-icon">
-                        <a class="nav-link pb-1" href="https://play.google.com/store/apps/details?id=io.programmes_radio.www.progradio">
-                            <img style="width: 22px" src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}">
-                        </a>
+            {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
+                <li class="nav-item">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="align-self-center offmenu-item-icon">
+                            <a class="nav-link pb-1" href="{{ getField('play_store', app.request) }}">
+                                <img style="width: 22px" src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}">
+                            </a>
+                        </div>
+                        <div>
+                            <a class="nav-link pb-1" href="{{ getField('play_store', app.request) }}">
+                                {{ 'menu.app'|trans }}
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <a class="nav-link pb-1" href="{{ getField('play_store', app.request) }}o">
-                            {{ 'menu.app'|trans }}
-                        </a>
-                    </div>
-                </div>
-            </li>
+                </li>
+            {% endif %}
 
             <li class="nav-item offcanvas-divider mt-3 mb-1"></li>
 
