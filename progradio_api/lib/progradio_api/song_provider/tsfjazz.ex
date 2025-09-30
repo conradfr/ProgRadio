@@ -16,8 +16,6 @@ defmodule ProgRadioApi.SongProvider.Tsfjazz do
       "https://www.tsfjazz.com/player/qect"
       |> SongProvider.post(%{})
       |> Map.get(:body)
-      |> Jason.encode_to_iodata!()
-      |> :json.decode()
       |> Map.get("current")
     rescue
       _ ->

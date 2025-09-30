@@ -11,12 +11,11 @@ defmodule ProgRadioApi.Checker.RadioStreams do
         ProgRadioApi.Checker.RadioStreams.Producer.async_notify(radio_stream)
       rescue
         e ->
-          Logger.debug("FUUUUU Checking (request async) - (#{radio_stream.url}) - rescue")
-          IO.puts("#{inspect(e)}")
+          Logger.debug("Checking (request async) - (#{radio_stream.url}) - rescue")
           [:error, e]
       catch
         :exit, _ ->
-          Logger.debug("FUUUUUU Checking (request async) - (#{radio_stream.url}) - catch")
+          Logger.debug("Checking (request async) - (#{radio_stream.url}) - catch")
           [:error, nil]
       end
     end)

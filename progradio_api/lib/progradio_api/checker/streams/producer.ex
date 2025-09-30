@@ -1,5 +1,6 @@
 defmodule ProgRadioApi.Checker.Streams.Producer do
   use GenStage
+  require Logger
   import Ecto.Query, only: [from: 2]
 
   alias ProgRadioApi.Repo
@@ -21,7 +22,8 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
 
   # we take <demand> random streams with errors
   def handle_demand(demand, _state) when demand > 0 do
-    # ignoring hls/dash for now
+    Logger.info("Streams Error Check - Producer: handling demand...")
+    # ignoring dash and forced hls for now
     query =
       from s in Stream,
         select: s,

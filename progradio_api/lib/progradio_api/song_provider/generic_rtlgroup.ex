@@ -48,12 +48,12 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
           if within_time == true do
             artist =
               content
-              |> Floki.find("div.hosts")
+              |> Floki.find(".hosts")
               |> Floki.text()
 
             title =
               content
-              |> Floki.find("div.title")
+              |> Floki.find(".title")
               |> Floki.text()
 
             cover_url =

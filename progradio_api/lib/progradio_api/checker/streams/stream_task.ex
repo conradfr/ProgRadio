@@ -47,7 +47,6 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
     rescue
       e ->
         Logger.debug("Checking - #{stream.id} (#{stream.stream_url}) - rescue")
-        IO.puts("#{inspect(e)}")
     catch
       :exit, _ ->
         Logger.debug("Checking - #{stream.id} (#{stream.stream_url}) - catch")
@@ -94,20 +93,39 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
              end
            ) do
         %Req.Response{status: 200, headers: %{"content-type" => ["audio/" <> _mime]}} =
-            _resp ->
+          _resp ->
           #            Req.cancel_async_response(resp)
           :ok
 
         %Req.Response{status: 200, headers: %{"content-type" => ["video/" <> _mime]}} =
-            _resp ->
+          _resp ->
           #            Req.cancel_async_response(resp)
           :ok
 
+        %Req.Response{status: 200} =
+          _resp ->
+          #            Req.cancel_async_response(resp)
+          [:error, "Not an audio or video stream"]
+
+        %Req.Response{status: 404} =
+          _resp ->
+          #            Req.cancel_async_response(resp)
+          [:error, "Not found (404)"]
+
+        %Req.Response{status: 500} =
+          _resp ->
+          #            Req.cancel_async_response(resp)
+          [:error, "Error returned from stream server (error 500)"]
+
         _resp ->
           #          Req.cancel_async_response(resp)
-          [:error, nil]
+          [:error, "Undefined error"]
       end
     rescue
+      e in Req.TransportError ->
+        Logger.debug("Checking (request async) - (#{stream_url}) - rescue (req)")
+        [:error, e.reason]
+
       e ->
         Logger.debug("Checking (request async) - (#{stream_url}) - rescue")
         [:error, e]

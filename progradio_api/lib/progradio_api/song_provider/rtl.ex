@@ -1,6 +1,7 @@
 defmodule ProgRadioApi.SongProvider.Rtl do
   require Logger
 
+  alias ProgRadioApi.SongProvider.GenericRtlgroup
   alias ProgRadioApi.SongProvider.GenericRtlgroup2
   alias ProgRadioApi.SongProvider
 
@@ -16,6 +17,8 @@ defmodule ProgRadioApi.SongProvider.Rtl do
     "rtl_grand_studio" => "647de254ee62ff54dcde4c6a"
   }
 
+  @url "https://www.rtl.fr/quel-est-ce-titre/"
+
   @impl true
   def has_custom_refresh(name) do
     key =
@@ -26,7 +29,17 @@ defmodule ProgRadioApi.SongProvider.Rtl do
   end
 
   @impl true
-  defdelegate get_refresh(name, data, default_refresh), to: GenericRtlgroup2
+  def get_refresh(name, data, default_refresh) do
+    key =
+      SongProvider.get_stream_code_name_from_channel(name)
+      |> (&Map.get(@stream_ids, &1)).()
+
+    if key != "" do
+      GenericRtlgroup2.get_refresh(name, data, default_refresh)
+    else
+      GenericRtlgroup.get_refresh(name, data, default_refresh)
+    end
+  end
 
   @impl true
   def get_data(name, last_data) do
@@ -37,10 +50,20 @@ defmodule ProgRadioApi.SongProvider.Rtl do
     if key != "" do
       GenericRtlgroup2.get_data(key, name, last_data)
     else
-      nil
+      GenericRtlgroup.get_data(@url)
     end
   end
 
   @impl true
-  defdelegate get_song(name, data, last_song), to: GenericRtlgroup2
+  def get_song(name, data, last_song) do
+    key =
+      SongProvider.get_stream_code_name_from_channel(name)
+      |> (&Map.get(@stream_ids, &1)).()
+
+    if key != "" do
+      GenericRtlgroup2.get_song(name, data, last_song)
+    else
+      GenericRtlgroup.get_song(name, data, last_song)
+    end
+  end
 end
