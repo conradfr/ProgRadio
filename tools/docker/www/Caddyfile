@@ -57,21 +57,21 @@
 
   @stream_media path_regexp streamMedia ^/media/stream/(.+)$
   handle @stream_media {
-    header Cache-Control "public, max-age=1209600"
+    header Cache-Control "public, max-age=31536000, immutable"
     header Pragma "public"
     file_server
   }
 
   @img_paths path_regexp imgPaths ^/img/([0-9a-z]+/)(.+\.(ico|css|gif|jpg|jpeg|png|webp))$
   handle @img_paths {
-    header Cache-Control "public, max-age=1209600"
+    header Cache-Control "public, max-age=31536000, immutable"
     header Pragma "public"
     file_server
   }
 
   @web_assets path /\.svg$ /\.eot$ /\.otf$ /\.ttf$ /\.woff$ /\.woff2$ /\.js$
   handle @web_assets {
-    header Cache-Control "public, max-age=1209600"
+    header Cache-Control "public, max-age=31536000, immutable"
     header Pragma "public"
     header Access-Control-Allow-Origin "*"
     file_server
@@ -86,7 +86,7 @@
 
   @img_assets path_regexp imgAssets ^/img/(.+\.(ico|css|js|gif|jpg|jpeg|webp|png|svg|woff2))$
   handle @img_assets {
-    header Cache-Control "public, max-age=1209600"
+    header Cache-Control "public, max-age=31536000, immutable"
     header Pragma "public"
     file_server
   }
@@ -100,7 +100,7 @@
     @build_assets path_regexp ^/(fonts|js|build/*)/(.+\.(css|js|gif|svg|eot|ttf|woff|woff2))$
     handle @build_assets {
       header Access-Control-Allow-Origin "*"
-      header Cache-Control "public, max-age=1209600"
+      header Cache-Control "public, max-age=31536000, immutable"
       header Pragma "public"
       file_server
     }
@@ -108,7 +108,7 @@
     @root_assets path_regexp ^/(robots\.txt|.*\.png)$
     handle @root_assets {
       header Access-Control-Allow-Origin "*"
-      header Cache-Control "public, max-age=1209600"
+      header Cache-Control "public, max-age=31536000, immutable"
       header Pragma "public"
       file_server
     }
