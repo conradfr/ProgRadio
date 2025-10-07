@@ -108,7 +108,7 @@
     @root_assets path_regexp ^/(robots\.txt|.*\.png)$
     handle @root_assets {
       header Access-Control-Allow-Origin "*"
-      header Cache-Control "public, max-age=31536000, immutable"
+      header Cache-Control "public, max-age=31536000"
       header Pragma "public"
       file_server
     }

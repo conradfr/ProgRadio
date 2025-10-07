@@ -43,13 +43,14 @@
                 {% else %}
                     <select class="form-select w-md-50 w-75" aria-label="Radios" name="streamsSelect" id="streamsSelect">
                         <option value=""></option>
-                        {% for item in app.user.streams %}
+                        {% for item in app.user.streams|sort((a, b) => a.name <=> b.name) %}
                             <option value="{{ item.id }}">{{ item.name }}</option>
                         {% endfor %}
                     </select>
                 {% endif %}
             </div>
         </div>
+
         {% if edit == true %}
             {# Todo improve #}
             <div class="col-12 col-md-4">
@@ -60,6 +61,15 @@
             </div>
         {% endif %}
     </div>
+
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <div class="alert alert-light text-center mb-5" role="alert">
+                {{ 'sponsor.streams_page'|trans|raw }}
+            </div>
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col-12 col-md-6">

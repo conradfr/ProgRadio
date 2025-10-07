@@ -60,7 +60,6 @@ RUN apt-get update && apt-get install -y \
     libwebp-dev \
     libicu-dev \
     libcurl4-openssl-dev \
-    jpegoptim \
     sudo \
     cron \
     goaccess

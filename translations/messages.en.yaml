@@ -90,6 +90,10 @@ menu:
     timer: Timer
     title: Menu
 
+sponsor:
+    suggestion_page: "Monitor your webradio and get alerts when it's down.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Try StreamChecker by Radio-Addict</a>"
+    streams_page: "Monitor your webradios and get alerts when they are down.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Try StreamChecker by Radio-Addict</a>"
+
 page:
     contact:
         title: 'Contact'
