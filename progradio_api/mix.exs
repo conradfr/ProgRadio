@@ -89,7 +89,8 @@ defmodule ProgRadioApi.MixProject do
       {:sentry, "~> 11.0.0"},
       {:eventsource_ex, "~> 2.0.0"},
       {:lazy_html, ">= 0.0.0", only: :test},
-      {:igniter, "~> 0.6", only: [:dev, :test]}
+      {:igniter, "~> 0.6", only: [:dev, :test]},
+      {:openai_ex, "~> 0.9.17"}
     ]
   end
 
