@@ -91,8 +91,8 @@ menu:
     title: Menú
 
 sponsor:
-    suggestion_page: "Supervisa tu emisora online y recibe alertas cuando deje de emitir.<br><a href="https://stream-checker.radio-addict.com" target="_blank">Prueba StreamChecker de Radio-Addict</a>"
-    streams_page: "Supervisa tus emisoras online y recibe alertas cuando dejen de emitir.<br><a href="https://stream-checker.radio-addict.com" target="_blank">Prueba StreamChecker de Radio-Addict</a>"
+    suggestion_page: "Supervisa tu emisora online y recibe alertas cuando deje de emitir.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Prueba StreamChecker de Radio-Addict</a>"
+    streams_page: "Supervisa tus emisoras online y recibe alertas cuando dejen de emitir.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Prueba StreamChecker de Radio-Addict</a>"
 
 page:
     contact:
