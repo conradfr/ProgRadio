@@ -53,6 +53,10 @@
     <meta property="og:image" content="{{ asset(self.picture(stream)) }}">
     <meta property="og:description" content="{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}">
     <meta name="thumbnail" content="{{ asset(self.picture(stream)) }}">
+    {% if stream.updatedAt is defined and stream.updatedAt is not null %}
+    <meta property="og:updated_time" content="{{ stream.updatedAt|date('Y-m-d\\TH:i:sP') }}" />
+    <meta property="article:modified_time" content="{{ stream.updatedAt|date('Y-m-d\\TH:i:sP') }}" />
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
