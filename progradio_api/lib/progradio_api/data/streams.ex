@@ -8,6 +8,7 @@ defmodule ProgRadioApi.Streams do
   require Logger
   import Ecto.Query
   use Nebulex.Caching
+  alias Stream, as: StreamStd
 
   alias ProgRadioApi.Repo
 
@@ -795,6 +796,56 @@ defmodule ProgRadioApi.Streams do
   end
 
   # ---------- CHECK ----------
+
+  def check_disabled() do
+    batch_size = 5
+
+    query =
+      from s in Stream,
+        select: s,
+        where: is_nil(s.redirect_to) and s.enabled == false and s.banned == false
+
+    Repo.transaction(
+      fn ->
+        query
+        |> Repo.stream(max_rows: 100)
+        |> StreamStd.chunk_every(batch_size)
+        |> StreamStd.each(fn batch ->
+          process_batch(batch)
+        end)
+        |> StreamStd.run()
+      end,
+      timeout: :infinity
+    )
+  end
+
+  defp process_batch(batch) do
+    batch
+    |> Enum.map(fn stream_record ->
+      {stream_record, check_working(stream_record)}
+    end)
+    |> Enum.filter(fn {_record, working} -> working == :ok end)
+    |> Enum.each(fn {record, _working} ->
+      IO.puts(
+        "WORKING #{record.id} - #{record.name} - #{record.country_code} - #{record.stream_url}"
+      )
+    end)
+  end
+
+  defp check_working(e) do
+    try do
+      task = Task.async(fn -> ProgRadioApi.Checker.Streams.StreamTask.fetch(e) end)
+
+      case Task.await(task) do
+        {:ok, _} -> :ok
+        _ -> :error
+      end
+    rescue
+      _ -> :error
+    catch
+      :exit, _ -> :error
+    end
+  end
 
   def check(initial_offset \\ 0) do
     total = count_streams_to_check()

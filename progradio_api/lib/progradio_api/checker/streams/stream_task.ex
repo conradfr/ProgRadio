@@ -12,7 +12,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
     end)
   end
 
-  defp fetch(%Stream{} = stream) do
+  def fetch(%Stream{} = stream) do
     try do
       result =
         case String.contains?(stream.stream_url, ".m3u8") do

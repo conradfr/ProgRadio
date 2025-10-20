@@ -32,13 +32,18 @@ defmodule ProgRadioApi.Importer.Ai do
         offset: ^offset,
         limit: ^limit
 
-      query
-      |> Repo.stream(max_rows: 100)
-      |> Stream.chunk_every(batch_size)
-      |> Stream.each(fn batch ->
-        process_batch(batch, openai)
-      end)
-      |> Stream.run()
+    Repo.transaction(
+      fn ->
+        query
+        |> Repo.stream(max_rows: 100)
+        |> Stream.chunk_every(batch_size)
+        |> Stream.each(fn batch ->
+          process_batch(batch, openai)
+        end)
+        |> Stream.run()
+      end,
+      timeout: :infinity
+    )
   end
 
   defp process_batch(batch, openai) do
@@ -84,7 +89,10 @@ defmodule ProgRadioApi.Importer.Ai do
     case Chat.Completions.create(openai, chat_req) do
       {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
       when is_binary(content) and content != "" ->
-        Logger.info("Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..10)} (...)")
+        Logger.info(
+          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..10)} (...)"
+        )
+
         content
 
       _ ->
