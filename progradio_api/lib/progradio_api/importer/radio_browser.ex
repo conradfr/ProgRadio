@@ -163,16 +163,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
               nil
 
             {_id, redirect_to_id} ->
-              IO.puts("----------------------------------------")
-              IO.puts("----------------------------------------")
-              IO.puts("----------------------------------------")
-              IO.puts("----------------------------------------")
-              IO.puts("----------------------------------------")
-              IO.puts("----------------------------------------")
-              IO.puts("----------------------------------------")
-              IO.puts("#{inspect(id)}")
-              IO.puts("#{inspect(redirect_to_id)}")
-              IO.puts("###################################")
               redirect_to_id
           end
         else

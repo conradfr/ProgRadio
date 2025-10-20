@@ -82,6 +82,10 @@
               <a target="_blank" :href="stream.website">{{ stream.website }}</a>
             </div>
 
+            <div v-if="stream.description" class="mb-3">
+              {{ stream.description }}
+            </div>
+
             <div v-if="stream.tags" class="row">
               <div class="col-12 col-sm-9">
                 <div class="stream-one-tags">

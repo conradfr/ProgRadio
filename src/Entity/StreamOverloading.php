@@ -34,6 +34,9 @@ class StreamOverloading
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string  $website = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
     #[ORM\Column(type: 'string', length: 2, nullable: true)]
     private ?string $tags = null;
 
@@ -206,5 +209,15 @@ class StreamOverloading
         $this->popup = $popup;
 
         return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
     }
 }

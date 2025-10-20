@@ -116,6 +116,7 @@
             {% endif %}
 
             <div class="mt-5 mb-1"><strong>Playing errors:</strong> {{ stream.playingError }}</div>
+            <div class="mt-5 mb-1"><strong>Description:</strong> {{ stream.description }}</div>
             <div class="mb-1"><a href="{{ path('admin_reset_stream_paying_error', {id: stream.id}) }}">Reset</a></div>
         </div>
     </div>

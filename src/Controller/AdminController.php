@@ -232,6 +232,10 @@ class AdminController extends AbstractBaseController
                 $stream->setWebsite($streamOverloading->getWebsite());
             }
 
+            if ($streamOverloading->getDescription() !== null) {
+                $stream->setDescription($streamOverloading->getDescription());
+            }
+
             if ($streamOverloading->getTags() !== null) {
                 $tags = $streamOverloading->getTags();
                 $tags = strtolower($tags);

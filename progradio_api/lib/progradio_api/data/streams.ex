@@ -327,6 +327,7 @@ defmodule ProgRadioApi.Streams do
         tags: s.tags,
         country_code: s.country_code,
         website: s.website,
+        description: s.description,
         clicks_last_24h: s.clicks_last_24h,
         score: s.score,
         popup: s.popup,
