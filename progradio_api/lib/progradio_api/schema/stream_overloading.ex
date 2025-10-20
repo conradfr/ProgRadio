@@ -33,4 +33,12 @@ defmodule ProgRadioApi.StreamOverloading do
     ])
     |> validate_required([:id])
   end
+
+  def changeset_enabled(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :enabled
+    ])
+    |> validate_required([:id, :enabled])
+  end
 end

@@ -9,6 +9,8 @@ defmodule ProgRadioApi.Streams do
   import Ecto.Query
   use Nebulex.Caching
   alias Stream, as: StreamStd
+  alias Ecto.Multi
+  import Ecto.Changeset, only: [change: 2, put_assoc: 3]
 
   alias ProgRadioApi.Repo
 
@@ -798,7 +800,7 @@ defmodule ProgRadioApi.Streams do
   # ---------- CHECK ----------
 
   def check_disabled() do
-    batch_size = 5
+    batch_size = 100
 
     query =
       from s in Stream,
@@ -820,16 +822,50 @@ defmodule ProgRadioApi.Streams do
   end
 
   defp process_batch(batch) do
-    batch
-    |> Enum.map(fn stream_record ->
-      {stream_record, check_working(stream_record)}
-    end)
-    |> Enum.filter(fn {_record, working} -> working == :ok end)
-    |> Enum.each(fn {record, _working} ->
-      IO.puts(
-        "WORKING #{record.id} - #{record.name} - #{record.country_code} - #{record.stream_url}"
-      )
-    end)
+    changesets =
+      batch
+      |> Enum.map(fn stream_record ->
+        {stream_record, check_working(stream_record)}
+      end)
+      |> Enum.filter(fn {_record, working} -> working == :ok end)
+      |> Enum.map(fn {record, _working} ->
+#          changeset = Stream.changeset_enabled(record, %{enabled: true})
+#          case Repo.get(StreamOverloading, record.id) do
+#            nil -> changeset
+#            overloading -> [changeset, StreamOverloading.changeset_enabled(overloading, %{enabled: true})]
+#          end
+        Stream.changeset_enabled(record, %{enabled: true})
+      end)
+#      |> IO.inspect()
+#      |> List.flatten()
+#      |> IO.inspect()
+
+    case update_batch(changesets) do
+      {:ok, count} ->
+        Logger.info("Successfully updated #{count} records in batch")
+
+      {:error, reason} ->
+        Logger.error("Failed to update batch: #{inspect(reason)}")
+    end
+  end
+
+  defp update_batch(changesets) when changesets == [], do: {:ok, 0}
+
+  defp update_batch(changesets) do
+    multi =
+      changesets
+      |> Enum.with_index()
+      |> Enum.reduce(Multi.new(), fn {changeset, idx}, multi ->
+        Multi.update(multi, {:stream, idx}, changeset)
+      end)
+
+    case Repo.transaction(multi) do
+      {:ok, results} ->
+        {:ok, map_size(results)}
+
+      {:error, _name, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   defp check_working(e) do
