@@ -206,7 +206,7 @@ class StreamRepository extends ServiceEntityRepository
             && strtoupper($countryOrCategory) !== Stream::HISTORY
             && strtoupper($countryOrCategory) !== Stream::FAVORITES) {
             $query->enableResultCache(self::CACHE_TTL);
-        } else {
+        } elseif ($sort !== 'random') {
             $query->enableResultCache(self::CACHE_QUICK_TTL);
         }
 

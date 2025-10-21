@@ -37,7 +37,7 @@
     "@typescript/lib-dom": "npm:@types/web@0.0.63",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
-    "bootstrap": "^5.3.7",
+    "bootstrap": "^5.3.8",
     "eslint": "^9.23.0",
     "eslint-import-resolver-vite": "^2.1.0",
     "eslint-plugin-import": "^2.31.0",

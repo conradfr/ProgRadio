@@ -41,18 +41,14 @@
       />
     </div>
     <div
-        v-if="(selectedCountry === code_all
-        || selectedCountry === code_favorites || selectedCountry === code_last)
-          && radio.country_code !== null"
+        v-if="userLogged && userIsAdmin"
         class="streams-one-admin-copy cursor-pointer"
         style="margin-top: 2px"
         @click.stop="copyIdToClipboard">
       <i class="bi bi-clipboard"></i>
     </div>
     <div
-        v-if="(selectedCountry === code_all
-        || selectedCountry === code_favorites || selectedCountry === code_last)
-          && radio.country_code !== null"
+        v-if="userLogged && userIsAdmin"
         class="streams-one-admin-edit cursor-pointer"
         style="margin-top: 2px">
       <a target="_blank" :href="`/${locale}/admin/overloading/${radio.code_name}`"><i class="bi bi-pen"></i></a>
@@ -166,6 +162,7 @@ export default defineComponent({
       'radioPlayingCodeName'
     ]),
     ...mapState(useStreamsStore, ['selectedCountry', 'favorites']),
+    ...mapState(useUserStore, { userLogged: 'logged', userIsAdmin: 'isAdmin' }),
     isFavorite() {
       return this.favorites.indexOf(this.radio.code_name) !== -1;
     },
