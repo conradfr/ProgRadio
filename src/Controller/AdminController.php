@@ -211,12 +211,14 @@ class AdminController extends AbstractBaseController
 
             $streamOverloading = $em->getRepository(StreamOverloading::class)->find($streamId);
 
-            $stream->setPlayingError(0);
-
             // push change now instead of waiting for the stream import cron
             // omit picture as it can't be done in the Symfony app
 
             if ($streamOverloading->getStreamUrl() !== null) {
+                if ($streamOverloading->getStreamUrl() !== $stream->getStreamUrl()) {
+                    $stream->setPlayingError(0);
+                }
+
                 $stream->setStreamUrl($streamOverloading->getStreamUrl());
             }
 

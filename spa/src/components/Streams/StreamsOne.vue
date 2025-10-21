@@ -22,7 +22,7 @@
               <i class="bi bi-x-lg"></i>
             </div>
             <div class="d-none d-md-block float-end me-4">
-              <a target="_blank" class="link-no-to-bold"
+              <a v-if="!userLogged || !userIsAdmin" target="_blank" class="link-no-to-bold"
                  :href="`/${locale}/streams/suggestion/${stream.code_name}`">
                 {{ $t('message.streaming.suggest') }}
               </a>

@@ -721,7 +721,7 @@ class DefaultController extends AbstractBaseController
                 'songs' => $songs,
                 'logged' => $user !== null,
                 'storeHistory' => $user !== null && $user->getStoreHistory(),
-                'isAdmin' => $user !== null && $authChecker->isGranted('ROLE_ADMIN')
+                'isAdmin' => $user !== null && $authChecker->isGranted('ROLE_SUPER_ADMIN')
             ]
         ]);
     }

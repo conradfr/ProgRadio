@@ -10,16 +10,6 @@
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: 70% 70%;
-
-  /* IE only, default to black icon */
-  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    background-color: transparent;
-
-    background-image: url(/img/play-button-inside-a-circle.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 75% 75%;
-  }
 }
 
 .stream-one-tags {
@@ -104,6 +94,12 @@
       width: 100px;
     }
 
+    &:hover {
+      .streams-one-admin-edit, .streams-one-admin-copy {
+        visibility: visible;
+      }
+    }
+
     /* from gb-flag */
     .streams-one-icon {
       height: 15px;
@@ -137,6 +133,36 @@
       position: absolute;
       top: -2px;
       right: 4px;
+
+      &:hover {
+        filter: brightness(0.85);
+      }
+    }
+
+    .streams-one-admin-edit {
+      @include media-breakpoint-down(sm) {
+        display:none;
+      }
+
+      visibility: hidden;
+      position: absolute;
+      top: -2px;
+      right: 51px;
+
+      &:hover {
+        filter: brightness(0.85);
+      }
+    }
+
+    .streams-one-admin-copy {
+      @include media-breakpoint-down(sm) {
+        display:none;
+      }
+
+      visibility: hidden;
+      position: absolute;
+      top: -2px;
+      right: 75px;
 
       &:hover {
         filter: brightness(0.85);

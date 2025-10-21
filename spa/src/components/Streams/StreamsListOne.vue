@@ -41,6 +41,23 @@
       />
     </div>
     <div
+        v-if="(selectedCountry === code_all
+        || selectedCountry === code_favorites || selectedCountry === code_last)
+          && radio.country_code !== null"
+        class="streams-one-admin-copy cursor-pointer"
+        style="margin-top: 2px"
+        @click.stop="copyIdToClipboard">
+      <i class="bi bi-clipboard"></i>
+    </div>
+    <div
+        v-if="(selectedCountry === code_all
+        || selectedCountry === code_favorites || selectedCountry === code_last)
+          && radio.country_code !== null"
+        class="streams-one-admin-edit cursor-pointer"
+        style="margin-top: 2px">
+      <a target="_blank" :href="`/${locale}/admin/overloading/${radio.code_name}`"><i class="bi bi-pen"></i></a>
+    </div>
+    <div
         v-if="hasErrors"
         class="streams-one-errors"
         :title="$t('message.streaming.playing_errors')">
@@ -60,6 +77,7 @@ import { defineComponent, nextTick, toRaw } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import type { PropType } from 'vue';
 
+import { useGlobalStore } from '@/stores/globalStore.ts';
 import { useStreamsStore } from '@/stores/streamsStore';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
@@ -88,7 +106,8 @@ export default defineComponent({
     code_all: string,
     code_last: string,
     code_favorites: string,
-    styleObject: any
+    styleObject: any,
+    locale: any
   } {
     const img = StreamsUtils.getPictureUrl(this.radio);
 
@@ -106,7 +125,8 @@ export default defineComponent({
       code_favorites: config.STREAMING_CATEGORY_FAVORITES,
       styleObject: {
         backgroundImage: `url("${img}")`
-      }
+      },
+      locale: this.$i18n.locale,
     };
   },
   beforeMount() {
@@ -181,6 +201,7 @@ export default defineComponent({
     }
   },
   methods: {
+    ...mapActions(useGlobalStore, ['displayToast']),
     ...mapActions(useUserStore, ['toggleStreamFavorite']),
     ...mapActions(usePlayerStore, [
       'joinChannel',
@@ -284,6 +305,25 @@ export default defineComponent({
       });
 
       this.toggleStreamFavorite(this.radio);
+    },
+    copyIdToClipboard() {
+      if (!this.radio) {
+        return;
+      }
+
+      try {
+        navigator.clipboard.writeText(this.radio.code_name);
+
+        this.displayToast({
+          message: 'Id copied',
+          type: 'success'
+        });
+      } catch (_e) {
+        this.displayToast({
+          message: 'Error copying id',
+          type: 'error'
+        });
+      }
     }
   }
 });
