@@ -38,7 +38,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.popup, s.playingErrorReason, s.forceHls, s.forceMpd, so.updatedAt, s.lastOverloadingOpen')
             ->from(Stream::class, 's')
             ->leftJoin('s.streamOverloading', 'so')
-            ->where('s.playingError >= :threshold')
+            ->where('s.playingError >= :threshold and s.enabled = true')
             ->orderBy('s.playingError', 'DESC');
 
         $qb->setParameter('threshold', $threshold);
