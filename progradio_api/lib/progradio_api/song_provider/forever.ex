@@ -5,7 +5,16 @@ defmodule ProgRadioApi.SongProvider.Forever do
   @behaviour ProgRadioApi.SongProvider
 
   @url "https://www.foreverlaradio.fr/api/TitleDiffusions"
-  @radio_id "1016621215563433018"
+
+  @stream_id %{
+    "forever_main" => "1016621215563433018",
+    "forever_evreux" => "1016621215563433018",
+    "forever_chartres" => "1016621215563433018",
+    "forever_laval" => "1016621215563433018",
+    "forever_libourne" => "1016621215563433018",
+    "forever_arcachon" => "1016621215563433018",
+    "forever_lemans" => "1016621215563433018",
+  }
 
   @impl true
   defdelegate has_custom_refresh(name), to: GenericLesIndes3
@@ -15,7 +24,7 @@ defmodule ProgRadioApi.SongProvider.Forever do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @radio_id)
+    GenericLesIndes3.get_data(@url, name, @stream_id)
   end
 
   @impl true
