@@ -2,10 +2,10 @@ const scrapAbstract = require('./_abstract_lesindes2.js');
 
 const name = 'forever';
 
-const getScrap = dateObj => {
+const getScrap = (dateObj, subRadio) => {
   const url = 'https://www.foreverlaradio.fr/emissions';
   const description_prefix = 'https://www.foreverlaradio.fr';
-  return scrapAbstract.getScrap(dateObj, url, name, description_prefix);
+  return scrapAbstract.getScrap(dateObj, url, subRadio, description_prefix);
 };
 
 const scrapModule = {

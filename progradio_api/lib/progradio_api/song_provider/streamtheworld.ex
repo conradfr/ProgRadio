@@ -50,6 +50,10 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
       _ ->
         Logger.debug("Data provider - #{name} (streamtheworld): data error rescue")
         :error
+    catch
+      :exit, _ ->
+        Logger.debug("Data provider - #{name} (streamtheworld): data error catch")
+        [:error, nil]
     end
   end
 

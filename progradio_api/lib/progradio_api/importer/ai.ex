@@ -26,8 +26,7 @@ defmodule ProgRadioApi.Importer.Ai do
         #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
         where:
           s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
-            not is_nil(s.country_code) and
-            s.playing_error == 0 and s.source == "radio-browser" and is_nil(s.description),
+            not is_nil(s.country_code) and is_nil(s.description),
         order_by: [desc: s.score, desc: s.clicks_last_24h],
         offset: ^offset,
         limit: ^limit

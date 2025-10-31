@@ -46,21 +46,31 @@ defmodule ProgRadioApi.SongProvider.Rouge do
 
   @impl true
   def get_data(name, _last_data) do
-    id =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
-      |> Integer.to_string()
+    try do
+      id =
+        SongProvider.get_stream_code_name_from_channel(name)
+        |> (&Map.get(@stream_ids, &1)).()
+        |> Integer.to_string()
 
-    data =
-      "https://www.mediaone-digital.ch/cache/#{id}.json"
-      |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
-      |> Map.get("live", [])
+      data =
+        "https://www.mediaone-digital.ch/cache/#{id}.json"
+        |> SongProvider.get()
+        |> Map.get(:body)
+        |> :json.decode()
+        |> Map.get("live", [])
 
-    case length(data) do
-      0 -> nil
-      _ -> hd(data)
+      case length(data) do
+        0 -> nil
+        _ -> hd(data)
+      end
+    rescue
+      _ ->
+        Logger.debug("Data provider - #{name}: data error rescue")
+        :error
+    catch
+      :exit, _ ->
+        Logger.debug("Data provider - #{name}: data error catch")
+        [:error, nil]
     end
   end
 
