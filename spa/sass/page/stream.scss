@@ -1,8 +1,14 @@
+@import 'nouislider/dist/nouislider.css';
+
 .stream-page {
   h4 {
     @include media-breakpoint-down(sm) {
       text-align: center;
     }
+  }
+
+  .fs-4 {
+    font-size: 1.385rem;
   }
 
   .stream-page-stream {
@@ -60,6 +66,37 @@
     .more-link {
       font-size: 0.923rem;
     }
+  }
+
+  #volume-slider {
+    height: 7px;
+    border: none;
+    width: 6.538rem;
+  }
+
+  #volume-slider .noUi-connect {
+    background: $primary;
+  }
+
+  #volume-slider .noUi-handle::before, #volume-slider .noUi-handle::after {
+    content: none;
+  }
+
+  #volume-slider .noUi-handle {
+    box-shadow: none;
+    border: none;
+    height: 14px;
+    width: 14px;
+    top: -4px;
+    right: -7px; /* half the width */
+    border-radius: 9px;
+    background: lighten($primary, 10%);
+  }
+
+  #volume-slider.noUi-target, .noUi-target {
+    background-color: lighten($primary, 40%) !important;
+    box-shadow: none !important;
+    border: none;
   }
 }
 

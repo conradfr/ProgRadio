@@ -1,5 +1,7 @@
 import { createApp } from './utils/petite-vue.es.js';
+import cookies from './utils/cookies';
 import { Socket } from '../js/phoenix';
+import noUiSlider from 'nouislider';
 
 // from config
 import {
@@ -14,7 +16,8 @@ import {
   POPUP_SETTINGS,
   POPUP_URL_WILDCARD,
   PROGRADIO_AGENT,
-  RADIOADDICT_AGENT
+  RADIOADDICT_AGENT,
+  COOKIE_VOLUME
 } from './config/config.js';
 
 /* eslint-disable no-undef */
@@ -145,12 +148,19 @@ const setPlayingAlertVisible = (visible) => {
 
 const setAudioVolume = (volume) => {
   if (volume) {
-    window.audio.volume = volume;
+    if (window.audio) {
+      window.audio.volume = volume / 10;
+    }
     return;
   }
 
-  if (typeof appVolume !== 'undefined') {
+  if (typeof appVolume !== 'undefined' && window.audio) {
     window.audio.volume = appVolume;
+  }
+
+  // default
+  if (window.audio) {
+    window.audio.volume = cookies.get(COOKIE_VOLUME, 10) / 10
   }
 };
 
@@ -216,6 +226,27 @@ createApp({
   options: {
     webSocket: typeof appWebSocket !== 'undefined' ? appWebSocket : true,
     sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
+  },
+  init() {
+    const slider = document.getElementById('volume-slider');
+    if (slider) {
+      const volume = cookies.get(COOKIE_VOLUME, 10)
+      setAudioVolume(volume);
+      noUiSlider.create(slider, {
+        start: volume,
+        connect: 'lower',
+        range: {
+          'min': 0,
+          'max': 10
+        }
+      });
+
+      slider.noUiSlider.on('update.one', (e) => {
+        const newVolume = parseFloat(e[0]).toFixed(2);
+        cookies.set(COOKIE_VOLUME, newVolume);
+        setAudioVolume(newVolume);
+      });
+    }
   },
   play(streamingUrl, codeName, options) {
     if (!options) {

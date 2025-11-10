@@ -166,7 +166,7 @@
                             {{ self.extractDailymotionIdAndProvideiFrame(stream.streamUrl) }}
                         {% else %}
                             <div class="radio-page-streams-one mb-4 d-flex align-items-center justify-content-center justify-content-sm-start"
-                                style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none')">
+                                style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init()">
                                 <div v-cloak>
                                     <div
                                         v-if="playing === PLAYER_STATE_STOPPED"
@@ -205,6 +205,9 @@
                                         @click="stop('{{ stream.id }}')"
                                         class="radio-page-play">
                                         <div class="fs-4">&nbsp;{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}</div>
+                                    </div>
+                                    <div id="volume-slider-wrapper" class="d-none d-sm-block ps-2 pt-2">
+                                        <div id="volume-slider"></div>
                                     </div>
                                 </div>
                             </div>
