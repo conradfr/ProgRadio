@@ -9,7 +9,6 @@ let scrapedData = [];
 // Keeping old code_name for now
 
 const format = dateObj => {
-
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
 
@@ -22,13 +21,13 @@ const format = dateObj => {
       return prev;
     }
 
-    // Should not have next day end by let's ignore if any
-    if (match_time[1] > match_time[3]) {
-      return prev;
-    }
-
     const startDateTime = moment(curr.dateObj);
     const endDateTime = moment(curr.dateObj);
+
+    // Should not have next day end by let's ignore if any
+    if (match_time[1] > match_time[3]) {
+      endDateTime.add(1, 'days');
+    }
 
     startDateTime.hour(match_time[1]);
     if (match_time[2] !== '') {
