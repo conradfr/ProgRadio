@@ -1,4 +1,5 @@
 worker {
 	file ./public/index.php
 	env APP_RUNTIME Runtime\FrankenPhpSymfony\Runtime
+	env FRANKENPHP_CONFIG="worker /app/public/index.php"
 }

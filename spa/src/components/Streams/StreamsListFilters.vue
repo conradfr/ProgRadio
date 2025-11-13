@@ -337,7 +337,7 @@ export default defineComponent({
     switchToAll() {
       this.$gtag.event(GTAG_STREAMING_ACTION_SWITCH_TO_FAVORITES, {
         event_category: GTAG_CATEGORY_STREAMING,
-        event_label: STREAMING_CATEGORY_ALL.toLowerCase,
+        event_label: STREAMING_CATEGORY_ALL.toLowerCase(),
         value: GTAG_STREAMING_FILTER_VALUE
       });
 

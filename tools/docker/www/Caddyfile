@@ -116,5 +116,7 @@
 	php_server {
 	  file_server off
     resolve_root_symlink false
+    try_files {path} index.php
+    root /app/public
   }
 }
