@@ -4,6 +4,7 @@ defmodule ProgRadioApi.Checker.Streams.Consumer do
   alias ProgRadioApi.Checker.Streams.StreamTask
 
   @max_demand 3
+  @max_restart 100
 
   def start_link(_opts) do
     ConsumerSupervisor.start_link(__MODULE__, :ok)
@@ -17,7 +18,7 @@ defmodule ProgRadioApi.Checker.Streams.Consumer do
       %{id: StreamTask, start: {StreamTask, :start_link, []}, restart: :transient}
     ]
 
-    opts = [strategy: :one_for_one, subscribe_to: [{Producer, max_demand: @max_demand}]]
+    opts = [strategy: :one_for_one, max_restarts: @max_restart, subscribe_to: [{Producer, max_demand: @max_demand}]]
     ConsumerSupervisor.init(children, opts)
   end
 end

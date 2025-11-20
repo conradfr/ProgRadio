@@ -3,6 +3,8 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.RadioStream
 
+  @max_redirects 5
+
   def start_link(%RadioStream{} = radio_stream) do
     Task.start_link(fn ->
       Logger.info("Checking: #{radio_stream.code_name} (#{radio_stream.url})")
@@ -10,7 +12,14 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
     end)
   end
 
-  defp fetch(%RadioStream{} = radio_stream) do
+  defp fetch(radio_stream, loop_count \\ 0)
+
+  defp fetch(%RadioStream{} = radio_stream, loop_count) when loop_count > @max_redirects do
+    Logger.debug("Checking: #{radio_stream.code_name} : max loop reached")
+    [:error, nil]
+  end
+
+  defp fetch(%RadioStream{} = radio_stream, loop_count) do
     try do
       result =
         case String.contains?(radio_stream.url, ".m3u8") do
@@ -24,7 +33,7 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
               %HLS.M3ULine{type: :uri} = line ->
                 case String.contains?(line.value, ".m3u8") do
                   true ->
-                    fetch(%{radio_stream | url: build_url(radio_stream, line.value)})
+                    fetch(%{radio_stream | url: build_url(radio_stream, line.value)}, loop_count + 1)
 
                   false ->
                     radio_stream |> build_url(line.value) |> request_stream()
@@ -64,7 +73,7 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
       end
 
     radio_stream = Ecto.Changeset.change(radio_stream, %{status: working, retries: retries})
-    Repo.update(radio_stream)
+    Repo.update!(radio_stream)
   end
 
   defp request_file(stream_url) when is_binary(stream_url) do
@@ -72,8 +81,8 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
       Req.get!(
         stream_url,
         headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
-        redirect: true
-        #        connect_options: [
+        redirect: true,
+        max_redirects: @max_redirects
         #          timeout: @req_timeout,
         #          transport_opts: [verify: :verify_none]
         #        ],
@@ -96,6 +105,7 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
              stream_url,
              headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
              redirect: true,
+             max_redirects: @max_redirects,
              connect_options: [
                #          timeout: @req_timeout,
                transport_opts: [verify: :verify_none]

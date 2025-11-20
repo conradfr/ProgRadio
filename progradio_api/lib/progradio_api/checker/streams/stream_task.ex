@@ -5,6 +5,8 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
 
   # TODO probably mutualize code w/ radio_stream_task.ex
 
+  @max_redirects 5
+
   def start_link(%Stream{} = stream) do
     Task.start_link(fn ->
       Logger.info("Checking: #{stream.id} (#{stream.stream_url})")
@@ -12,7 +14,17 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
     end)
   end
 
-  def fetch(%Stream{} = stream) do
+  #  stream = ProgRadioApi.Repo.get(ProgRadioApi.Stream, "a93e7e66-836e-4077-bb4d-dc1124e68506")
+  # ProgRadioApi.Checker.Streams.StreamTask.fetch(stream)
+
+  def fetch(stream, loop_count \\ 0)
+
+  def fetch(%Stream{} = stream, loop_count) when loop_count > @max_redirects do
+    Logger.debug("Checking: #{stream.id} : max loop reached")
+    [:error, nil]
+  end
+
+  def fetch(%Stream{} = stream, loop_count) do
     try do
       result =
         case String.contains?(stream.stream_url, ".m3u8") do
@@ -26,7 +38,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
               %HLS.M3ULine{type: :uri} = line ->
                 case String.contains?(line.value, ".m3u8") do
                   true ->
-                    fetch(%{stream | stream_url: build_url(stream, line.value)})
+                    fetch(%{stream | stream_url: build_url(stream, line.value)},  loop_count + 1)
 
                   false ->
                     stream |> build_url(line.value) |> request_stream()
@@ -45,11 +57,13 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
         _ -> :ok
       end
     rescue
-      e ->
+      _e ->
         Logger.debug("Checking - #{stream.id} (#{stream.stream_url}) - rescue")
+        :ok
     catch
       :exit, _ ->
         Logger.debug("Checking - #{stream.id} (#{stream.stream_url}) - catch")
+        :ok
     end
   end
 
@@ -58,7 +72,8 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
       Req.get!(
         stream_url,
         headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
-        redirect: true
+        redirect: true,
+        max_redirects: @max_redirects
         #        connect_options: [
         #          timeout: @req_timeout,
         #          transport_opts: [verify: :verify_none]
@@ -82,6 +97,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
              stream_url,
              headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
              redirect: true,
+             max_redirects: @max_redirects,
              connect_options: [
                #          timeout: @req_timeout,
                transport_opts: [verify: :verify_none]
@@ -165,6 +181,6 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
         false -> Stream.changeset_playing_error(stream, %{"playing_error" => 0, "playing_error_reason" => nil})
       end
 
-    Repo.update(changeset)
+    Repo.update!(changeset)
   end
 end

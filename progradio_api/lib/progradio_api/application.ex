@@ -26,11 +26,6 @@ defmodule ProgRadioApi.Application do
       ProgRadioApiWeb.Telemetry,
       {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
 
-      # cron tasks
-      ProgRadioApi.Scheduler,
-      ProgRadioApi.Checker.CheckerSupervisor,
-      ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor,
-
       # Broadway
       {ProgRadioApi.Importer.ScheduleImporter, []},
 
@@ -52,6 +47,11 @@ defmodule ProgRadioApi.Application do
       # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
       # {ProgRadioApi.Worker, arg}
       # Start to serve requests, typically the last entry
+
+      # cron tasks
+      ProgRadioApi.Scheduler,
+      ProgRadioApi.Checker.CheckerSupervisor,
+      ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor,
 
       ProgRadioApiWeb.Endpoint
     ]
