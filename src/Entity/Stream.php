@@ -166,6 +166,9 @@ class Stream implements NormalizableInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTime $lastOverloadingOpen = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $checked = null;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
         $this->streamsHistory = new ArrayCollection();
@@ -605,6 +608,18 @@ class Stream implements NormalizableInterface
     public function setLastOverloadingOpen(?\DateTime $lastOverloadingOpen): static
     {
         $this->lastOverloadingOpen = $lastOverloadingOpen;
+
+        return $this;
+    }
+
+    public function isChecked(): ?bool
+    {
+        return $this->checked;
+    }
+
+    public function setChecked(?bool $checked): static
+    {
+        $this->checked = $checked;
 
         return $this;
     }

@@ -31,6 +31,8 @@ class StreamSuggestionType extends AbstractType implements EventSubscriberInterf
             ->add('streamUrl', TextType::class, ['label' => $this->translator->trans('page.stream.modification.stream_url'), 'required' => false])
             ->add('website', TextType::class, ['label' => $this->translator->trans('page.stream.modification.website'), 'required' => false])
             ->add('tags', TextType::class, ['label' => $this->translator->trans('page.stream.submission.tags'), 'required' => false])
+            ->add('slogan', TextType::class, ['label' => $this->translator->trans('page.stream.submission.description'), 'required' => false])
+            ->add('description', TextareaType::class, ['label' => $this->translator->trans('page.stream.submission.slogan'), 'required' => false])
             ->add('message', TextareaType::class, ['label'=> 'page.stream.modification.comment','attr' => ['class' => 'form-control']])
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3([
@@ -65,6 +67,8 @@ class StreamSuggestionType extends AbstractType implements EventSubscriberInterf
             && $submittedData->getStreamUrl() === null
             && $submittedData->getWebsite() === null
             && $submittedData->getTags() === null
+            && $submittedData->getSlogan() === null
+            && $submittedData->getDescription() === null
         ) {
             throw new TransformationFailedException(
                 'at_least_one',

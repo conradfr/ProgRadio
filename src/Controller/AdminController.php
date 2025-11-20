@@ -365,6 +365,10 @@ class AdminController extends AbstractBaseController
             if ($streamSuggestion->getName() === null
             && $streamSuggestion->getImg() === null
             && $streamSuggestion->getStreamUrl() === null
+            && $streamSuggestion->getTags() === null
+            && $streamSuggestion->getSlogan() === null
+            && $streamSuggestion->getDescription() === null
+            && $streamSuggestion->getStreamUrl() === null
             && $streamSuggestion->getWebsite() === null) {
                 $em->remove($streamSuggestion);
                 $removed = true;
@@ -494,6 +498,28 @@ class AdminController extends AbstractBaseController
     public function resetStreamRedirect(Stream $stream, EntityManagerInterface $em): Response
     {
         $stream->setRedirectToStream(null);
+
+        $em->persist($stream);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_overloading', ['streamId' => $stream->getId()], 301);
+    }
+
+    #[Route('/{_locale}/reset_stream_description/{id}', name: 'admin_reset_description')]
+    public function resetStreamDescription(Stream $stream, EntityManagerInterface $em): Response
+    {
+        $stream->setDescription(null);
+
+        $em->persist($stream);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_overloading', ['streamId' => $stream->getId()], 301);
+    }
+
+    #[Route('/{_locale}/reset_stream_slogan/{id}', name: 'admin_reset_slogan')]
+    public function resetStreamSlogan(Stream $stream, EntityManagerInterface $em): Response
+    {
+        $stream->setSlogan(null);
 
         $em->persist($stream);
         $em->flush();

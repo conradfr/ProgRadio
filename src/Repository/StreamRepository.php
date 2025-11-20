@@ -35,7 +35,7 @@ class StreamRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.popup, s.playingErrorReason, s.forceHls, s.forceMpd, so.updatedAt, s.lastOverloadingOpen')
+        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.popup, s.playingErrorReason, s.forceHls, s.forceMpd, so.updatedAt, s.lastOverloadingOpen, s.checked')
             ->from(Stream::class, 's')
             ->leftJoin('s.streamOverloading', 'so')
             ->where('s.playingError >= :threshold and s.enabled = true')

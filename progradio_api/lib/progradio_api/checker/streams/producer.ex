@@ -22,7 +22,7 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
 
   # we take <demand> random streams with errors
   def handle_demand(demand, _state) when demand > 0 do
-    Logger.info("Streams Error Check - Producer: handling demand...")
+    Logger.info("Streams Error Check - Producer: handling demand #{demand}...")
     # ignoring dash and forced hls for now
     query =
       from s in Stream,
@@ -35,6 +35,9 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
             fragment("? not ilike '%.mpd%'", s.stream_url),
         order_by: fragment("RANDOM()"),
         limit: ^demand
+
+    results = Repo.all(query)
+    Logger.info("Streams Error Check - Producer: handling demand #{demand}, found: #{length(results)}...")
 
     {:noreply, Repo.all(query), nil}
   end

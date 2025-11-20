@@ -30,6 +30,7 @@ class StreamOverloadingType extends AbstractType
             ->add('redirect', TextType::class, ['label' => 'Redirect', 'required' => false, 'mapped' => false])
             ->add('enabled', CheckboxType::class, ['label' => 'Enabled', 'required' => false])
             ->add('banned', CheckboxType::class, ['label' => 'Banned', 'required' => false])
+            ->add('slogan', TextareaType::class, ['label' => 'Slogan', 'required' => false])
             ->add('description', TextareaType::class, ['label' => 'Description', 'required' => false])
             ->add('Save', SubmitType::class, ['label'=> 'Update', 'attr' => ['class' => 'mt-3 btn btn-primary', 'required' => false]])
         ;

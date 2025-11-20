@@ -27,6 +27,7 @@ defmodule ProgRadioApi.Stream do
     field(:enabled, :boolean)
     field(:banned, :boolean)
     field(:popup, :boolean)
+    field(:checked, :boolean)
     field(:slogan, :string)
     field(:description, :string)
     field(:redirect_to, :binary_id)
@@ -98,6 +99,14 @@ defmodule ProgRadioApi.Stream do
       :last_listening_at
     ])
     |> validate_required([:id, :last_listening_at])
+  end
+
+  def changeset_checked(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :checked
+    ])
+    |> validate_required([:id, :checked])
   end
 
   def changeset_playing_error(stream, params \\ %{}) do

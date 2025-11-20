@@ -33,6 +33,5 @@ defmodule ProgRadioApi.Checker.RadioStreams do
       )
 
     Repo.all(query)
-    |> IO.inspect()
   end
 end

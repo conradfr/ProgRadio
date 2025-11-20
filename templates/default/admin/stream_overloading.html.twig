@@ -20,6 +20,10 @@
         document.getElementById('stream_overloading_streamUrl').value = 'https://stream.zeno.fm/';
       };
 
+      document.getElementById('tags').onclick = () => {
+        document.getElementById('stream_overloading_tags').value = '{{ stream.tags }}';
+      };
+
     </script>
 {% endblock %}
 
@@ -71,6 +75,14 @@
                 {{ form_row(form.website) }}
                 {{ form_row(form.redirect) }}
 
+                <div class="d-flex justify-content-between mt-4 mb-1">
+                    <div>{{ form_row(form.enabled) }}</div>
+                    <div>{{ form_row(form.banned) }}</div>
+                </div>
+
+                {{ form_row(form.description) }}
+                {{ form_row(form.slogan) }}
+
             {{ form_end(form) }}
         </div>
         <div class="col-12 col-md-5 offset-md-1">
@@ -82,7 +94,7 @@
                 <div class="mb-1"><strong>Original stream url:</strong> <a target="_blank" href="{{ stream.originalStreamUrl }}">{{ stream.originalStreamUrl }}</a></div>
             {% endif %}
 
-            <div class="mb-1"><strong>Tags:</strong> {{ stream.tags }}</div>
+            <div class="mb-1"><strong>Tags:</strong> <span id="tags">{{ stream.tags }}</span></div>
 
             {% if stream.originalTags is defined and stream.originalTags is not empty %}
                 <div class="mb-1"><strong>Original tags:</strong> {{ stream.originalTags }}</a></div>
@@ -116,8 +128,11 @@
             {% endif %}
 
             <div class="mt-5 mb-1"><strong>Playing errors:</strong> {{ stream.playingError }}</div>
+            <div class=""><a href="{{ path('admin_reset_stream_paying_error', {id: stream.id}) }}">Reset</a></div>
             <div class="mt-5 mb-1"><strong>Description:</strong> {{ stream.description }}</div>
-            <div class="mb-1"><a href="{{ path('admin_reset_stream_paying_error', {id: stream.id}) }}">Reset</a></div>
+            <div class="mb-1"><a href="{{ path('admin_reset_description', {id: stream.id}) }}">Reset</a></div>
+            <div class="mt-5 mb-1"><strong>Slogan:</strong> {{ stream.slogan }}</div>
+            <div class="mb-1"><a href="{{ path('admin_reset_slogan', {id: stream.id}) }}">Reset</a></div>
         </div>
     </div>
 </div>

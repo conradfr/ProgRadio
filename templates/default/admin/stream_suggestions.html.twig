@@ -70,6 +70,24 @@
                     </div>
                 {% endif %}
 
+                {% if stream_suggestion.slogan %}
+                    <div class="mb-5">
+                        <h5>Slogan:</h5>
+                        <p><strong>Current:</strong> {% if stream_suggestion.stream.slogan is defined and stream_suggestion.stream.slogan is not empty %}{{ stream_suggestion.stream.slogan }}{% endif %}</p>
+                        <p><strong>Suggested:</strong> {{ stream_suggestion.slogan }}</p>
+                        <a class="btn btn-primary btn-sm" href="{{ path('admin_stream_suggestions_commit', {id: stream_suggestion.id, field: 'slogan'}) }}" role="button">Commit</a>
+                    </div>
+                {% endif %}
+
+                {% if stream_suggestion.description %}
+                    <div class="mb-5">
+                        <h5>Description:</h5>
+                        <p><strong>Current:</strong> {% if stream_suggestion.stream.description is defined and stream_suggestion.stream.description is not empty %}{{ stream_suggestion.stream.description }}{% endif %}</p>
+                        <p><strong>Suggested:</strong> {{ stream_suggestion.description }}</p>
+                        <a class="btn btn-primary btn-sm" href="{{ path('admin_stream_suggestions_commit', {id: stream_suggestion.id, field: 'description'}) }}" role="button">Commit</a>
+                    </div>
+                {% endif %}
+
                 {% if stream_suggestion.tags %}
                     <div class="mb-5">
                         <h5>Tags:</h5>

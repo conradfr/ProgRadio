@@ -63,6 +63,9 @@ class StreamOverloading
     #[ORM\Column(nullable: true)]
     private ?bool $popup = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slogan = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -219,5 +222,17 @@ class StreamOverloading
     public function setDescription(?string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getSlogan(): ?string
+    {
+        return $this->slogan;
+    }
+
+    public function setSlogan(?string $slogan): static
+    {
+        $this->slogan = $slogan;
+
+        return $this;
     }
 }

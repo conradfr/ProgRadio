@@ -36,7 +36,7 @@
 {% endblock %}
 
 {% block body %}
-    <div id="admin" class="container">
+    <div id="admin" class="container-xxl">
         <div class="row">
             <div class="col-12">
 
@@ -68,10 +68,10 @@
                     -->
                     {% for stream_error in errors %}
                         <tr id="row-{{ stream_error.id }}">
-                            <td class="text-center" style="width: 100px !important"><a target="_blank"
-                                                                                       href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a>
+                            <td class="text-center" style="width: 50px !important"><a target="_blank"
+                                href="{{ path('admin_overloading', {streamId: stream_error.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a>
                             </td>
-                            <td class="text-center" style="width: 100px !important">
+                            <td class="text-center" style="width: 65px !important">
                                 <a href="javascript:;"
                                    onclick="resetStream('{{ stream_error.id }}')">{{ 'admin.stream_errors.reset'|trans }}</a>
                             </td>
@@ -92,15 +92,42 @@
                                     {% if stream_error.popup %} <span style="color: blue">(popup)</span>{% endif %}
                                 </div>
                             </td>
-                            <td class="text-center" style="width: 150px !important">{{ stream_error.playingError }}</td>
+                            <td class="text-center" style="width: 100px !important">{{ stream_error.playingError }}</td>
                             <td class="text-center" style="width: 300px !important">{{ stream_error.playingErrorReason }}</td>
                             <td class="text-center" style="width: 100px !important">
                                 <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_error.id|shortid, 'codename': stream_error.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a> /
                                 <a target="_blank" href="{{ path('app') }}streaming/{{ stream_error.id }}">{{ 'admin.stream_errors.view'|trans }}</a>
                             </td>
                             <td class="text-center"><a class="link-dark" href="{{ path('admin_playing_errors_ceiling', {'threshold' : threshold, 'ceiling': ceiling}) }}?country={{ stream_error.countryCode }}">{{ stream_error.countryCode }}</a></td>
-                            <td class="text-center">{% if stream_error.updatedAt is not null %}{{ stream_error.updatedAt|format_datetime('short', 'short') }}{% else %}-{% endif %}</td>
-                            <td class="text-center">{% if stream_error.lastOverloadingOpen is not null %}{{ stream_error.lastOverloadingOpen|format_datetime('short', 'short') }}{% else %}-{% endif %}</td>
+
+                            <td class="text-center
+                            {% if stream_error.lastOverloadingOpen is not null %}
+                                {% set days = (stream_error.lastOverloadingOpen|date('U') - 'now'|date('U')) / 86400 %}
+                                {% if days < -60 %}text-danger
+                                {% elseif days < -30 %}text-warning
+                                {% endif %}
+                            {% endif %}">
+                                {% if stream_error.lastOverloadingOpen is not null %}
+                                    {{ stream_error.lastOverloadingOpen|format_datetime('short', 'short') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td class="text-center">
+                                <a href="{{ stream_error.streamUrl }}" target="_blank">
+                                    {% if stream_error.streamUrl starts with 'http://' %}
+                                        http
+                                    {% else %}
+                                        https
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                {% if stream_error.checked is not null and stream_error.checked == true and stream_error.streamUrl starts with 'http://' %}
+                                    <i class="bi bi-check2"></i>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
