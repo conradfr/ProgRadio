@@ -77,7 +77,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, s.name, s.img, s.countryCode as country_code, r.codeName as radio_code_name, s.enabled, CASE WHEN(rd.id is not null) THEN 1 ELSE 0 END as redirect_to,'
+        $qb->select('s.id, s.name, s.img, s.countryCode as country_code, r.codeName as radio_code_name, s.enabled, s.popup, CASE WHEN(rd.id is not null) THEN 1 ELSE 0 END as redirect_to, CASE WHEN s.streamUrl LIKE \'http://%\' THEN true ELSE false END AS is_http,'
             . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
             ->from(Stream::class, 's')
             ->leftJoin('s.radioStream', 'rs')
