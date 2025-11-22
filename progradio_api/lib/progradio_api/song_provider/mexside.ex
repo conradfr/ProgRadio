@@ -25,6 +25,7 @@ defmodule ProgRadioApi.SongProvider.Mexside do
     try do
       url
       |> Kernel.<>("/stats")
+      |> IO.inspect()
       |> SongProvider.get()
       |> Map.get(:body)
       |> XmlToMap.naive_map()
@@ -36,6 +37,9 @@ defmodule ProgRadioApi.SongProvider.Mexside do
         :error
     catch
       :error, reason ->
+        Logger.debug("Data provider - #{name} (mexside): caught error #{inspect(reason)}")
+        :error
+      {:error, reason} ->
         Logger.debug("Data provider - #{name} (mexside): caught error #{inspect(reason)}")
         :error
       :exit, _ ->
