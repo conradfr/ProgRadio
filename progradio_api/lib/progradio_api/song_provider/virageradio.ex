@@ -52,6 +52,13 @@ defmodule ProgRadioApi.SongProvider.Virageradio do
       end)
     rescue
       _ -> :error
+    catch
+      :error, reason ->
+        :error
+      {:error, reason} ->
+        :error
+      :exit, _ ->
+        [:error, nil]
     end
   end
 
