@@ -364,6 +364,20 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
   def regenbogen(stream_url), do: stream_url
 
+  def securenetsystems({:continue, stream_url}) do
+    pattern = ~r/http:(.+)\.securenetsystems\.net\/(.+)/
+
+    case Regex.match?(pattern, stream_url) do
+      true ->
+        {:ok, String.replace_leading(stream_url, "http://", "https://")}
+
+      false ->
+        {:continue, stream_url}
+    end
+  end
+
+  def securenetsystems(stream_url), do: stream_url
+
   # ---------- UTILS ----------
 
   defp remove_query_string(stream_url) do

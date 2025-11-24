@@ -333,6 +333,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> StreamTransformers.r80s80s()
       |> StreamTransformers.bobde()
       |> StreamTransformers.regenbogen()
+      |> StreamTransformers.securenetsystems()
 
     updated_stream_url
   end

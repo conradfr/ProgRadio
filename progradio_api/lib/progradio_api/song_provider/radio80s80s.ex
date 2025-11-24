@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Radio80s80s do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "radio80s80s_livestream" => 568,
+    "radio80s80s_livestream" => 62,
     "radio80s80s_inthemix" => 558,
     "radio80s80s_love" => 85,
     "radio80s80s_italo_disco" => 283,

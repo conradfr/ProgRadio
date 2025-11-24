@@ -38,7 +38,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
               %HLS.M3ULine{type: :uri} = line ->
                 case String.contains?(line.value, ".m3u8") do
                   true ->
-                    fetch(%{stream | stream_url: build_url(stream, line.value)},  loop_count + 1)
+                    fetch(%{stream | stream_url: build_url(stream, line.value)}, loop_count + 1)
 
                   false ->
                     stream |> build_url(line.value) |> request_stream()
