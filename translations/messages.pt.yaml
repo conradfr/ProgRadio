@@ -100,7 +100,7 @@ page:
         sent: 'Sua mensagem foi enviada com sucesso.'
         add_radio_1: Desejo adicionar minha (web)rádio, como fazer?
         add_radio_2: 'Você tem duas escolhas:'
-        add_radio_3: 1/ Crie uma conta e adicione sua rádio no seu espaço de usuário.
+        add_radio_3: Crie uma conta e adicione sua rádio no seu espaço de usuário.
         add_radio_4: 2/ Usar a API Radio-Browser. Para submeter sua rádio, <a target="_blank" href="https://www.radio-browser.info/#/add">clique aqui</a>.
 
     faq:
@@ -222,6 +222,7 @@ page:
             stats_title: Estatísticas
             stats_this_month: "%sessions% sessões de escuta para um total de %time% este mês."
             stats_last_month: "%sessions% sessões de escuta para um total de %time% no mês passado."
+            email_toggle: Receber e-mail mensal com estatísticas
 
     top:
         page_title: Top das rádios em %country%

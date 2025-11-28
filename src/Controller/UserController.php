@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\ListeningSession;
 use App\Entity\Stream;
+use App\Entity\User;
 use App\Entity\UserEmailChange;
 use App\Form\StoreHistoryType;
 use App\Form\StreamSubmissionType;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -310,6 +312,22 @@ class UserController extends AbstractBaseController
         );
 
         return $this->redirectToRoute('user_page_streams', []);
+    }
+
+    #[Route('/email-stats-toggle', name: 'user_page_streams_email_stats_toggle')]
+    #[IsGranted('ROLE_USER')]
+    public function toggleUserEmailStats(
+        EntityManagerInterface $em,
+        #[CurrentUser] User $user
+    ): Response
+    {
+        $user->setStatisticsEmail(!$user->isSatisticsEmail());
+        $em->persist($user);
+        $em->flush();
+
+        return $this->jsonResponse([
+            'status' => $user->isSatisticsEmail()
+        ]);
     }
 
     #[Route('/{_locale}/delete', name: 'user_page_delete')]

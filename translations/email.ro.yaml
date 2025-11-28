@@ -1,5 +1,6 @@
 general:
     hello: Bună ziua,
+    sponsor: "<a href=\"https://stream-checker.radio-addict.com\">Stream Checker</a>: monitorizează-ți fluxurile și primești alerte imediat când acestea încetează să funcționeze"
 
 signature:
     regards: Salutări,
@@ -30,3 +31,10 @@ password_update:
     header: Password update
     text_1: The password associated with this account has been made on %url%
     text_2: "If you didn't initiate it you can cancel this request and set a new password by clicking here (valid for 24h) : %link%"
+
+stream_stats:
+    subject: Statisticile posturilor tale de radio
+    top_1: "Bună %user_email%"
+    top_2: "Iată statisticile de ascultare ale posturilor tale de radio din luna trecută:"
+    disable: "Te poți dezabona de la acest e-mail conectându-te în contul tău, pe pagina posturilor tale de radio."
+    stat: "<strong>%name%</strong>: %sessions% sesiune(sesiuni) de ascultare, totalizând %time%"

@@ -1,0 +1,6 @@
+framework:
+  webhook:
+    routing:
+      progradio_api:
+        service: App\Webhook\ProgRadioApiRequestParser
+        secret: "%env(PROGRADIO_API_WEBHOOK_SECRET)%"

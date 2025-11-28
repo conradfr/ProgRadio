@@ -133,6 +133,23 @@ config :progradio_api, ProgRadioApi.Cache,
   # GC min timeout: 10 min
   gc_cleanup_max_timeout: :timer.minutes(10)
 
+config :progradio_api, Oban,
+  engine: Oban.Engines.Basic,
+  notifier: Oban.Notifiers.Postgres,
+  queues: [
+    default: 2,
+    email_stats: 1,
+    cron: 1
+  ],
+  repo: ProgRadioApi.Repo,
+  plugins: [
+    {Oban.Plugins.Pruner, max_age: 300},
+    {Oban.Plugins.Cron,
+     crontab: [
+       {"0 4 2 * *", ProgRadioApi.EmailStatsCronWorker, queue: :cron, max_attempts: 2}
+     ]}
+  ]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

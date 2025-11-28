@@ -100,7 +100,7 @@ page:
         sent: "Mesajınız başarıyla gönderildi."
         add_radio_1: "(Web) radyomu eklemek istiyorum, nasıl yapabilirim?"
         add_radio_2: "İki seçeneğiniz var:"
-        add_radio_3: "1/ Bir hesap oluşturun ve radyonuzu kullanıcı alanınıza ekleyin."
+        add_radio_3: "Bir hesap oluşturun ve radyonuzu kullanıcı alanınıza ekleyin."
         add_radio_4: "2/ Radio-Browser API'sini kullanın. Radyonuzu göndermek için <a target='_blank' href='https://www.radio-browser.info/#/add'>buraya tıklayın</a>."
 
     faq:
@@ -222,6 +222,7 @@ page:
             stats_title: "İstatistikler"
             stats_this_month: "Bu ay %sessions% dinleme oturumu toplam %time%."
             stats_last_month: "Geçen ay %sessions% dinleme oturumu toplam %time%."
+            email_toggle: Aylık istatistik e-postaları al
 
     top:
         page_title: "%country%'deki en iyi radyolar"

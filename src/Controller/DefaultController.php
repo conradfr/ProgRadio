@@ -27,6 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -896,7 +897,12 @@ class DefaultController extends AbstractBaseController
             ]
         )
     ]
-    public function localSwitch(Request $request, string $locale): Response
+    public function localSwitch(
+        Request $request,
+        #[CurrentUser] ?User $user,
+        EntityManagerInterface $em,
+        string $locale
+    ): Response
     {
         $redirect = $request->query->get('redirect', '/');
         $toUrl = urldecode($redirect);
@@ -906,6 +912,12 @@ class DefaultController extends AbstractBaseController
         foreach (Host::DATA as $host) {
             $whitelist[] = $host['domain'];
             $whitelist[] = 'www.'. $host['domain'];
+        }
+
+        if ($user) {
+            $user->setLocale($locale);
+            $em->persist($user);
+            $em->flush();
         }
 
         if (!in_array(parse_url($toUrl)['host'] ?? '', $whitelist)) {

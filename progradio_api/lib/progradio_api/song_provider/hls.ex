@@ -1,6 +1,8 @@
 defmodule ProgRadioApi.SongProvider.Hls do
   require Logger
+
   alias ProgRadioApi.SongProvider
+  alias ProgRadioApi.Utils.ReqUtils
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -91,9 +93,10 @@ defmodule ProgRadioApi.SongProvider.Hls do
     data =
       url
       |> Req.get!(
-        redirect: true,
-        receive_timeout: @req_timeout,
-        connect_options: [timeout: @req_timeout]
+        ReqUtils.get_options(
+          receive_timeout: @req_timeout,
+          connect_options: [timeout: @req_timeout]
+        )
       )
       |> Map.get(:body)
       |> HLS.parse()

@@ -100,7 +100,7 @@ page:
         sent: 'Üzeneted sikeresen elküldve.'
         add_radio_1: Szeretném hozzáadni a (web)rádiómat, hogyan tegyem?
         add_radio_2: 'Két lehetőséged van:'
-        add_radio_3: 1/ Hozz létre egy fiókot és add hozzá rádiódat a felhasználói területedben.
+        add_radio_3: Hozz létre egy fiókot és add hozzá rádiódat a felhasználói területedben.
         add_radio_4: 2/ Használd a Radio-Browser API-t. A rádiód beküldéséhez <a target="_blank" href="https://www.radio-browser.info/#/add">kattints ide</a>.
 
     faq:
@@ -222,6 +222,7 @@ page:
             stats_title: Statisztikák
             stats_this_month: "%sessions% hallgatási session %time% időtartamra ebben a hónapban."
             stats_last_month: "%sessions% hallgatási session %time% időtartamra a múlt hónapban."
+            email_toggle: Havonta küldött statisztikai e-mailek fogadása
 
     top:
         page_title: Top rádiók %country%-ban

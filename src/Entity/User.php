@@ -88,6 +88,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime')]
     private ?\DateTime $passwordResetExpiration = null;
 
+    #[ORM\Column(length: 2, nullable: true)]
+    private ?string $locale = null;
+
+    #[ORM\Column]
+    private ?bool $statisticsEmail = null;
+
     public function __construct() {
         $this->favoriteRadios = new ArrayCollection();
         $this->favoriteStreams = new ArrayCollection();
@@ -331,5 +337,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $now->add(new \DateInterval('PT' . self::TOKEN_EXPIRATION . 'H'));
 
         $this->passwordResetExpiration = $now;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): static
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    public function isSatisticsEmail(): ?bool
+    {
+        return $this->statisticsEmail;
+    }
+
+    public function setStatisticsEmail(bool $statisticsEmail): static
+    {
+        $this->statisticsEmail = $statisticsEmail;
+
+        return $this;
     }
 }

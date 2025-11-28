@@ -26,6 +26,12 @@
         const url = '{{ path('user_page_streams') }}';
         window.location = `${url}/${event.target.value}`;
       });
+
+      const emailStatToggleElement = document.getElementById('emailStatsToggle');
+
+      emailStatToggleElement.addEventListener('change', function() {
+        fetch('{{ path('user_page_streams_email_stats_toggle') }}');
+      });
     </script>
 {% endblock %}
 
@@ -47,6 +53,14 @@
                             <option value="{{ item.id }}">{{ item.name }}</option>
                         {% endfor %}
                     </select>
+
+                    <div class="form-check mt-5">
+                        <input class="form-check-input" type="checkbox" value="" id="emailStatsToggle" name="emailStatsToggle"
+                                {% if app.user.isSatisticsEmail == true %}checked{% endif %}>
+                        <label class="form-check-label ps-1" for="checkDefault">
+                            {{ 'page.stream.submission.email_toggle'|trans }}
+                        </label>
+                    </div>
                 {% endif %}
             </div>
         </div>

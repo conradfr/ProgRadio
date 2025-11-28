@@ -1,5 +1,6 @@
 general:
     hello: Kedves Felhasználó,
+    sponsor: "<a href=\"https://stream-checker.radio-addict.com\">Stream Checker</a>: figyelje adásait, és azonnal kapjon értesítést, ha megszűnnek működni"
 
 signature:
     regards: Üdvözlettel,
@@ -30,3 +31,10 @@ password_update:
     header: Jelszó módosítása
     text_1: Az ehhez az e-mail címhez tartozó fiók jelszava módosításra került a %url% oldalon
     text_2: "Ha nem Ön kezdeményezte a módosítást, visszavonhatja a változtatást és új jelszót választhat az alábbi hivatkozásra kattintva (24 óráig érvényes): %link%"
+
+stream_stats:
+    subject: Rádió(i) statisztikái
+    top_1: "Helló %user_email%"
+    top_2: "Itt vannak rádió(i) hallgatási statisztikái az előző hónapból:"
+    disable: "Ebből az e-mailből a rádiók oldalán belépve a fiókjába tud leiratkozni."
+    stat: "<strong>%name%</strong>: %sessions% hallgatási munkamenet, összesen %time%"

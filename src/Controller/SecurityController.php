@@ -59,6 +59,8 @@ class SecurityController extends AbstractController
             $user->setPassword($hashedPassword);
 
             $user->setRoles(['ROLE_USER']);
+            $user->setLocale(substr($request->getLocale(), 0,2) );
+            $user->setStatisticsEmail(true);
 
             // save radio favorites
             $favoritesFromCookies = Favorites::getFavoriteRadios($request);

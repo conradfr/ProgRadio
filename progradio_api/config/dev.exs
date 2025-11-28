@@ -69,6 +69,10 @@ config :phoenix, :plug_init_mode, :runtime
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
 
+config :progradio_api,
+  webhook_secret: "not_really_secret_in_dev",
+  webhook_url: "https://web/webhook/progradio_api"
+
 config :progradio_api, ProgRadioApi.Cache,
   max_size: 100_000,
   allocated_memory: 1_000_000_000

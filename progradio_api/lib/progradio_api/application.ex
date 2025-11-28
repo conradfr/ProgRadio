@@ -50,6 +50,7 @@ defmodule ProgRadioApi.Application do
 
       # cron tasks
       ProgRadioApi.Scheduler,
+      {Oban, Application.fetch_env!(:progradio_api, Oban)},
       ProgRadioApi.Checker.CheckerSupervisor,
       ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor,
       ProgRadioApiWeb.Endpoint

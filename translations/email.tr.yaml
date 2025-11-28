@@ -1,5 +1,6 @@
 general:
     hello: Merhaba,
+    sponsor: "<a href=\"https://stream-checker.radio-addict.com\">Stream Checker</a>: yayınlarınızı izleyin ve durduğunda anında uyarı alın"
 
 signature:
     regards: Saygılarımızla,
@@ -30,3 +31,10 @@ password_update:
     header: Şifre Değişikliği
     text_1: Bu e-posta adresine bağlı hesabın şifresi %url% adresinde değiştirildi
     text_2: "Bu değişikliği siz yapmadıysanız, bu bağlantıya tıklayarak değişikliği iptal edebilir ve yeni bir şifre belirleyebilirsiniz (24 saat geçerli): %link%"
+
+stream_stats:
+    subject: Radyo(lar)ınızın istatistikleri
+    top_1: "Merhaba %user_email%"
+    top_2: "İşte radyo(lar)ınızın geçen ayki dinleme istatistikleri:"
+    disable: "Bu e-postadan hesabınıza giriş yaparak radyolar sayfanız üzerinden çıkış yapabilirsiniz."
+    stat: "<strong>%name%</strong>: %sessions% dinleme seansı, toplam %time%"

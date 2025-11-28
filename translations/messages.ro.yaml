@@ -100,7 +100,7 @@ page:
         sent: 'Mesajul tău a fost trimis cu succes.'
         add_radio_1: Doresc să adaug radioul meu (web), cum pot face acest lucru?
         add_radio_2: 'Ai două opțiuni:'
-        add_radio_3: 1/ Creează un cont și adaugă radioul tău în spațiul tău de utilizator.
+        add_radio_3: Creează un cont și adaugă radioul tău în spațiul tău de utilizator.
         add_radio_4: 2/ Folosește API-ul Radio-Browser. Pentru a trimite radioul tău, <a target="_blank" href="https://www.radio-browser.info/#/add">apasă aici</a>.
 
     faq:
@@ -222,6 +222,7 @@ page:
             stats_title: Statistică
             stats_this_month: "%sessions% sesiuni de ascultare pentru un total de %time% în această lună."
             stats_last_month: "%sessions% sesiuni de ascultare pentru un total de %time% în luna trecută."
+            email_toggle: Primește e-mail lunar cu statistici
 
     top:
         page_title: Top radiouri în %country%

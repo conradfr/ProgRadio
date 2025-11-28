@@ -96,7 +96,7 @@ page:
         sent: 'Uw bericht is verzonden.'
         add_radio_1: Ik wil mijn (web)radio toevoegen, hoe doe ik dat?
         add_radio_2: 'U heeft twee keuzes:'
-        add_radio_3: 1/ Maak een account aan en voeg uw radio toe in uw gebruikersruimte.
+        add_radio_3: Maak een account aan en voeg uw radio toe in uw gebruikersruimte.
         add_radio_4: 2/ Gebruik de Radio-Browser API. Om uw radio daar in te dienen, <a target="_blank" href="https://www.radio-browser.info/#/add">klik hier</a>.
     faq:
         title: 'Veelgestelde vragen'
@@ -209,6 +209,8 @@ page:
             stats_title: Statistieken
             stats_this_month: "%sessions% luistersessies voor een totaal van %time% deze maand."
             stats_last_month: "%sessions% luistersessies voor een totaal van %time% vorige maand."
+            email_toggle: Maandelijkse statistieken per e-mail ontvangen
+
     top:
         page_title: Top radiozenders in %country%
         description: 'Luister naar de beste radiozenders van %country%'

@@ -1,5 +1,6 @@
 general:
     hello: Salve,
+    sponsor: "<a href=\"https://stream-checker.radio-addict.com\">Stream Checker</a>: monitora i tuoi stream e ricevi un'avviso immediato se smettono di funzionare"
 
 signature:
     regards: Saluti,
@@ -30,3 +31,10 @@ password_update:
     header: Aggiornamento della password
     text_1: La password associata a questo account è stata creata su %url%
     text_2: "Se non l'ha avviato, può annullare questa richiesta e impostare una nuova password facendo clic qui (valida per 24 ore): %link%"
+
+stream_stats:
+    subject: Le statistiche delle tue radio
+    top_1: "Ciao %user_email%"
+    top_2: "Ecco le statistiche di ascolto delle tue radio del mese scorso:"
+    disable: "Puoi disiscriverti da questa email accedendo al tuo account nella pagina delle tue radio."
+    stat: "<strong>%name%</strong>: %sessions% sessione(i) di ascolto per un totale di %time%"

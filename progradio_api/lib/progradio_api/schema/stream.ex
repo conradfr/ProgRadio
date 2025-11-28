@@ -1,10 +1,8 @@
 defmodule ProgRadioApi.Stream do
   use Ecto.Schema
   import Ecto.Changeset
-  alias ProgRadioApi.ListeningSession
-  alias ProgRadioApi.RadioStream
-  alias ProgRadioApi.StreamSong
-  alias ProgRadioApi.StreamOverloading
+
+  alias ProgRadioApi.{ListeningSession, RadioStream, StreamSong, StreamOverloading, User}
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -41,6 +39,7 @@ defmodule ProgRadioApi.Stream do
     field(:created_at, :utc_datetime)
     field(:updated_at, :utc_datetime)
 
+    belongs_to(:user, User)
     belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream_song, StreamSong)
     has_many(:listening_session, ListeningSession)

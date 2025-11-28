@@ -141,5 +141,7 @@ if config_env() == :prod do
   config :progradio_api,
     image_path: System.get_env("MEDIA_PATH"),
     banned_ips: (System.get_env("BAN_IP") || "") |> String.split(","),
+    webhook_secret: System.get_env("PROGRADIO_API_WEBHOOK_SECRET"),
+    webhook_url: System.get_env("PROGRADIO_API_WEBHOOK_URL"),
     streams_checker: true
 end

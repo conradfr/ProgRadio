@@ -100,7 +100,7 @@ page:
         sent: 'Ihre Nachricht wurde erfolgreich gesendet.'
         add_radio_1: Ich möchte meinen (Web-)Radiosender hinzufügen, wie geht das?
         add_radio_2: 'Sie haben zwei Möglichkeiten:'
-        add_radio_3: 1/ Erstellen Sie ein Konto und fügen Sie Ihren Radiosender in Ihrem Benutzerbereich hinzu.
+        add_radio_3: Erstellen Sie ein Konto und fügen Sie Ihren Radiosender in Ihrem Benutzerbereich hinzu.
         add_radio_4: 2/ Verwenden Sie die Radio-Browser-API. Um Ihren Radiosender einzureichen, <a target="_blank" href="https://www.radio-browser.info/#/add">klicken Sie hier</a>.
 
     faq:
@@ -222,6 +222,7 @@ page:
             stats_title: Statistiken
             stats_this_month: "%sessions% Hörsitzungen für insgesamt %time% in diesem Monat."
             stats_last_month: "%sessions% Hörsitzungen für insgesamt %time% im letzten Monat."
+            email_toggle: Monatliche Statistik-E-Mails erhalten
 
     top:
         page_title: Top-Radiosender in %country%
