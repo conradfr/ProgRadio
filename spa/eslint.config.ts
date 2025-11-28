@@ -38,7 +38,7 @@ export default typescriptEslint.config(
                 projectService: true,
                 // @ts-ignore
                 tsconfigRootDir: import.meta.dirname,
-                project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
+                // project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
                 ecmaVersion: 'latest',
                 parser: "@typescript-eslint/parser",
                 extraFileExtensions: [".vue"]
