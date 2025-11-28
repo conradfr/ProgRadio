@@ -36,7 +36,10 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
         limit: ^demand
 
     results = Repo.all(query)
-    Logger.info("Streams Error Check - Producer: handling demand #{demand}, found: #{length(results)}")
+
+    Logger.info(
+      "Streams Error Check - Producer: handling demand #{demand}, found: #{length(results)}"
+    )
 
     {:noreply, Repo.all(query), nil}
   end

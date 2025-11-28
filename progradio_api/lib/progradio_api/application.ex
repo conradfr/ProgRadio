@@ -52,7 +52,6 @@ defmodule ProgRadioApi.Application do
       ProgRadioApi.Scheduler,
       ProgRadioApi.Checker.CheckerSupervisor,
       ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor,
-
       ProgRadioApiWeb.Endpoint
     ]
 

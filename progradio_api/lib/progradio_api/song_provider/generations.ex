@@ -91,8 +91,10 @@ defmodule ProgRadioApi.SongProvider.Generations do
     catch
       :error, _reason ->
         :error
+
       {:error, _reason} ->
         :error
+
       :exit, _ ->
         [:error, nil]
     end

@@ -90,8 +90,10 @@ defmodule ProgRadioApi.SongProvider.Mradio do
     catch
       :error, reason ->
         :error
+
       {:error, reason} ->
         :error
+
       :exit, _ ->
         [:error, nil]
     end

@@ -70,8 +70,10 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
     catch
       :error, reason ->
         :error
+
       {:error, reason} ->
         :error
+
       :exit, _ ->
         [:error, nil]
     end

@@ -829,16 +829,17 @@ defmodule ProgRadioApi.Streams do
       end)
       |> Enum.filter(fn {_record, working} -> working == :ok end)
       |> Enum.map(fn {record, _working} ->
-#          changeset = Stream.changeset_enabled(record, %{enabled: true})
-#          case Repo.get(StreamOverloading, record.id) do
-#            nil -> changeset
-#            overloading -> [changeset, StreamOverloading.changeset_enabled(overloading, %{enabled: true})]
-#          end
+        #          changeset = Stream.changeset_enabled(record, %{enabled: true})
+        #          case Repo.get(StreamOverloading, record.id) do
+        #            nil -> changeset
+        #            overloading -> [changeset, StreamOverloading.changeset_enabled(overloading, %{enabled: true})]
+        #          end
         Stream.changeset_enabled(record, %{enabled: true})
       end)
-#      |> IO.inspect()
-#      |> List.flatten()
-#      |> IO.inspect()
+
+    #      |> IO.inspect()
+    #      |> List.flatten()
+    #      |> IO.inspect()
 
     case update_batch(changesets) do
       {:ok, count} ->

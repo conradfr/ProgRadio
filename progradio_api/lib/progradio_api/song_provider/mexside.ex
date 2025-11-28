@@ -38,9 +38,11 @@ defmodule ProgRadioApi.SongProvider.Mexside do
       :error, reason ->
         Logger.debug("Data provider - #{name} (mexside): caught error #{inspect(reason)}")
         :error
+
       {:error, reason} ->
         Logger.debug("Data provider - #{name} (mexside): caught error #{inspect(reason)}")
         :error
+
       :exit, _ ->
         Logger.debug("Data provider - #{name} (mexside): data error catch")
         [:error, nil]

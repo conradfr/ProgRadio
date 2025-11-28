@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.Forever do
     "forever_laval" => "1016621215563433018",
     "forever_libourne" => "1016621215563433018",
     "forever_arcachon" => "1016621215563433018",
-    "forever_lemans" => "1016621215563433018",
+    "forever_lemans" => "1016621215563433018"
   }
 
   @impl true
