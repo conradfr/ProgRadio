@@ -111,7 +111,10 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
              max_redirects: @max_redirects,
              connect_options: [
                #          timeout: @req_timeout,
-               transport_opts: [verify: :verify_none]
+               transport_opts: [
+                 middlebox_comp_mode: false,
+                 verify: :verify_none
+               ]
              ],
              #        receive_timeout: @req_timeout,
              retry: false,

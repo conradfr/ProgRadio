@@ -1,4 +1,6 @@
 defmodule ProgRadioApi.SongProvider do
+  alias ProgRadioApi.Utils.ReqUtils
+
   @doc """
     Get next song refresh in seconds
   """
@@ -45,10 +47,10 @@ defmodule ProgRadioApi.SongProvider do
   def get_maybe_stream(url) do
     Req.get!(
       url,
-      headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
-      redirect: false,
-      connect_options: [timeout: 15_000],
-      into: :self
+      ReqUtils.get_options(
+        redirect: false,
+        into: :self
+      )
     )
   end
 
