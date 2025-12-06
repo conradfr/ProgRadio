@@ -17,7 +17,7 @@
 {% endmacro %}
 
 {% macro title(stream) %}
-{% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}
+{% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}{% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %} - {{ stream.slogan }}{% endif %}
 {% endmacro %}
 
 {% macro extractYouTubeIdAndProvideiFrame(url) %}
