@@ -3,7 +3,6 @@ let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
-let dayCode = null;
 
 const format = dateObj => {
 
@@ -27,7 +26,7 @@ const format = dateObj => {
 
     newEntry = {
       'date_time_start': startDateTime.toISOString(),
-      'img': `https://www.rtl.be${curr.img}`,
+      'img': encodeURI(curr.img),
       'title': curr.title
     };
 
@@ -51,63 +50,30 @@ const format = dateObj => {
   return Promise.resolve(cleanedData);
 };
 
-const find_day_nb = dateObj => {
-  dateObj.locale('fr');
-  const url = 'https://www.rtl.be/belrtl/page/grille-des-emissions-bel-rtl.htm';
-
-  const daySearched = dateObj.format('DD/MM/YY');
-
-  // logger.log('info', `fetching ${url}`);
-
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .select('.timing-grid > div')
-      .set({
-        'code': '@data-info',
-        'date': 'h3 span',
-        'day': 'h3'
-      })
-      .data(function (listing) {
-        if (listing.date === daySearched) {
-          dayCode = listing.code;
-        }
-      })
-      .done(function () {
-        if (dayCode !== null) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-  });
-};
-
 const fetch = async dateObj => {
   dateObj.locale('fr');
 
-  await find_day_nb(dateObj);
-
-  if (dayCode === null) {
-    return null;
-  }
-
-  const url = 'https://www.rtl.be/belrtl/page/grille-des-emissions-bel-rtl.htm';
+  const day = dateObj.format('YYYY-MM-DD');
+  const url = `https://www.rtl.be/belrtl/programmes?date=${day}`;
 
   logger.log('info', `fetching ${url}`);
 
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find(`.grid-details[data-info="${dayCode}"]`)
-      .select('.program')
+      .select('.r-viewmode--prog-timeline')
       .set({
-        'datetime_raw': '.program-timing',
-        'img': '.program-details img@src',
-        'title': 'h2 a',
-        'host': '.program-details span',
-        'description': 'p',
+        'datetime_raw': '.r-article--time',
+        'img': '.r-article--img img@src',
+        'title': '.r-article--title a',
+        'host': '.r-article--authors',
       })
+      .do(
+        osmosis.follow('.r-article--title > a.r-article--link@href')
+          .set({
+            'description': '.r-description-gen'
+          })
+      )
       .data(function (listing) {
         scrapedData.push(listing);
       })
