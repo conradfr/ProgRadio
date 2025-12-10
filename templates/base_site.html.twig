@@ -12,7 +12,7 @@
 
                 {% for locale in locales %}
                     {% if app.request.locale != locale %}
-                        <a title="{{ "footer.#{locale}"|trans }}" href="{{ url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode }}">
+                        <a title="{{ "footer.#{locale}"|trans }}" href="{{ url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale})) }}">
                             <img class="gb-flag gb-flag--micro" loading="lazy" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                         </a>
                     {% endif %}
