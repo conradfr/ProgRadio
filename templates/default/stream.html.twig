@@ -221,7 +221,7 @@
                         {% endif %}
 
                         {% if stream.popup == true %}
-                            <div class="mb-4"><small><i class="bi bi-info-circle"></i>&nbsp;&nbsp;{{ 'page.stream.popup'|trans }}</small></div>
+                            <div class="mb-4 text-warning"><small><i class="bi bi-info-circle"></i>&nbsp;&nbsp;{{ 'page.stream.popup'|trans }}</small></div>
                         {% endif %}
 
                         <div id="playing-alert" class="alert alert-danger d-none mb-4" role="alert">
@@ -271,9 +271,9 @@
 
                     {% if stream.banned != true %}
                         {% if stream.countryCode is not null and stream.countryCode != '' %}
-                            <div class="mb-3">
+                            <div class="mb-3 flags-container">
                                 <strong>{{ 'page.stream.country'|trans }}:</strong>
-                                {{ stream.getCountry(app.request.locale) }}
+                                <a href="{{ path('streaming_spa') }}/{{ stream.countryCode|lower }}">{{ stream.getCountry(app.request.locale) }}</a>&nbsp;&nbsp;<img class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ stream.countryCode|lower ~ '.svg') }}" alt="flag" />
                             </div>
                         {% endif %}
 
