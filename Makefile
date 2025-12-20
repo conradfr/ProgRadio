@@ -5,6 +5,7 @@ DOCKER_COMP = docker compose
 PHP_CONT = $(DOCKER_COMP) exec php-fpm
 SPA_CONT = $(DOCKER_COMP) exec spa
 API_CONT = $(DOCKER_COMP) exec api
+DB_CONT = $(DOCKER_COMP) exec database
 SCRAPER_CONT = $(DOCKER_COMP) exec scraper
 SCRAPER2_CONT = $(DOCKER_COMP) exec scraper2
 
@@ -49,6 +50,11 @@ bash: ## Connect to the FrankenPHP container via bash so up and down arrows go t
 test: ## Start tests with phpunit, pass the parameter "c=" to add options to phpunit, example: make test c="--group e2e --stop-on-failure"
 	@$(eval c ?=)
 	@$(DOCKER_COMP) exec -e APP_ENV=test php-fpm bin/phpunit $(c)
+
+## —— DB ———————————————————————————————————————————————————————————————
+
+db-import:
+	@$(DB_CONT) psql -d progradio -U postgres < /var/tmp/sql/sql
 
 ## —— API ———————————————————————————————————————————————————————————————
 
