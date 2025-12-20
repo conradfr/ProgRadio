@@ -144,7 +144,14 @@
                             <a target="_blank" href="{{ path('admin_overloading', {streamId: stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a>
                         {% endif %}
                         </div>
-                        <h4 class="mb-4">{{ stream.name }}</h4>
+                        <h4 class="mb-4">
+                            {{ stream.name }}
+                            {% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %}
+                                <div class="text-muted small-12 mt-2 text-truncate">
+                                    {{ stream.slogan }}
+                                </div>
+                            {% endif %}
+                        </h4>
                     </div>
 
                     {% if stream.enabled == false %}
@@ -282,6 +289,12 @@
                     </div>
 
                     {% if stream.banned != true %}
+                        {% if stream.description is defined and stream.description is not null and stream.description != '' %}
+                            <div class="mb-3">
+                                {{ stream.description }}
+                            </div>
+                        {% endif %}
+
                         {% if stream.tags is not null and stream.tags != '' %}
                             <div class="row mb-3">
                                 <div class="col-12 col-sm-9">
@@ -301,21 +314,15 @@
                             </div>
                         {% endif %}
 
+{#                        {% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %}#}
+{#                            <div class="mb-3">#}
+{#                                <strong>{{ 'page.stream.tagline'|trans }}:</strong> {{ stream.slogan }}#}
+{#                            </div>#}
+{#                        {% endif %}#}
+
                         {% if stream.language is defined and stream.language is not null and stream.language != '' %}
                             <div class="mb-3">
                                 <strong>{{ 'page.stream.languages'|trans }}:</strong> {{ stream.language|replace({',': ', '}) }}
-                            </div>
-                        {% endif %}
-
-                        {% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %}
-                            <div class="mb-3">
-                                <strong>{{ 'page.stream.tagline'|trans }}:</strong> {{ stream.slogan }}
-                            </div>
-                        {% endif %}
-
-                        {% if stream.description is defined and stream.description is not null and stream.description != '' %}
-                            <div class="mb-3">
-                                <strong>{{ 'page.stream.desc'|trans }}:</strong> {{ stream.description }}
                             </div>
                         {% endif %}
 
