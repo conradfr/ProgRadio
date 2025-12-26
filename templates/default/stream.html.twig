@@ -161,7 +161,12 @@
                     {% endif %}
 
                     {% if stream.playingError >= constant('App\\Entity\\Stream::ERROR_DISPLAY_THRESHOLD')  %}
-                        <p class="text-warning text-center text-md-start"><i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.errors'|trans }}</p>
+                        <div class="mb-4">
+                            <p class="text-warning text-center text-md-start mb-0">
+                                <i class="bi bi-exclamation-circle"></i>&nbsp;&nbsp;{{ 'page.stream.errors'|trans }}
+                            </p>
+                            <small class="d-none d-sm-block text-muted">{{ 'sponsor.short'|trans({'%name%': stream.name, '%url%': stream.streamUrl|url_encode})|raw }}</small>
+                        </div>
                     {% endif %}
 
                     <div class="stream-page-stream" v-scope>

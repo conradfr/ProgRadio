@@ -90,6 +90,12 @@ menu:
     timer: Timer
     title: Menü
 
+sponsor:
+    suggestion_page: "Ist das Ihr Radiosender?<br>Überwachen Sie %name% und erhalten Sie sofort eine Benachrichtigung, wenn er still oder offline ist.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Probieren Sie StreamChecker von Radio-Addict aus</a>"
+    streams_page: "Überwachen Sie Ihre Webradios und erhalten Sie Benachrichtigungen, wenn sie offline sind.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Probieren Sie StreamChecker von Radio-Addict aus</a>"
+    streams_page_edit: "Überwachen Sie %name% und erhalten Sie Benachrichtigungen, wenn er offline ist.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Probieren Sie StreamChecker von Radio-Addict aus</a>"
+    short: "Ist das Ihr Radiosender? <a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Überwachen Sie %name% mit Stream-Checker</a>"
+
 page:
     contact:
         title: 'Kontakt'

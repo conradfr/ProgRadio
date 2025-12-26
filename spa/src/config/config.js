@@ -31,7 +31,7 @@ export const COLLECTION_ALL = 'all';
 
 export const RADIO_LIST_IGNORE_COUNTRY = 'FR';
 
-export const ERROR_DISPLAY_THRESHOLD = 6;
+export const ERROR_DISPLAY_THRESHOLD = 5;
 
 export const CACHE_KEY_RADIOS = 'radios_v2';
 export const CACHE_KEY_COLLECTIONS = 'collections';

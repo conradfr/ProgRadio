@@ -90,6 +90,12 @@ menu:
     timer: المؤقت
     title: القائمة
 
+sponsor:
+    suggestion_page: "هل هذه إذاعتك؟<br>راقب %name% واحصل على تنبيهات فورية عندما تكون صامتة أو غير متصلة.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">جرب StreamChecker من Radio-Addict</a>"
+    streams_page: "راقب إذاعاتك على الويب واحصل على تنبيهات عندما تكون غير متصلة.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">جرب StreamChecker من Radio-Addict</a>"
+    streams_page_edit: "راقب %name% واحصل على تنبيهات عندما تكون غير متصلة.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">جرب StreamChecker من Radio-Addict</a>"
+    short: "هل هذه إذاعتك؟<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">راقب %name% باستخدام Stream-Checker</a>"
+
 page:
     contact:
         title: 'الاتصال'

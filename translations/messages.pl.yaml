@@ -90,6 +90,12 @@ menu:
     timer: Minutnik
     title: Menu
 
+sponsor:
+    suggestion_page: "Czy to Twoje radio?<br>Monitoruj %name% i otrzymuj natychmiastowe powiadomienia, gdy jest wyciszone lub offline.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Wypróbuj StreamChecker od Radio-Addict</a>"
+    streams_page: "Monitoruj swoje radia internetowe i otrzymuj powiadomienia, gdy są offline.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Wypróbuj StreamChecker od Radio-Addict</a>"
+    streams_page_edit: "Monitoruj %name% i otrzymuj powiadomienia, gdy jest offline.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Wypróbuj StreamChecker od Radio-Addict</a>"
+    short: "Czy to Twoje radio?<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Monitoruj %name% za pomocą Stream-Checker</a>"
+
 page:
     contact:
         title: 'Kontakt'

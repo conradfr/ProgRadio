@@ -77,9 +77,14 @@
     </div>
 
     <div class="row">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-6">
             <div class="alert alert-light text-center mb-5" role="alert">
-                {{ 'sponsor.streams_page'|trans|raw }}
+                {% if edit == true and stream is defined and stream is not null and stream.name is not null and stream.streamUrl is not null %}
+                    {{ 'sponsor.streams_page_edit'|trans({'%name%': stream.name, '%url%': stream.streamUrl|url_encode})|raw }}
+                {% else %}
+                    {{ 'sponsor.streams_page'|trans|raw }}
+                {% endif %}
+
             </div>
         </div>
     </div>

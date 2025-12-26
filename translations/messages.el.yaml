@@ -90,6 +90,12 @@ menu:
     timer: Χρονομέτρηση
     title: Μενού
 
+sponsor:
+    suggestion_page: "Είναι αυτό το ραδιόφωνό σας;<br>Παρακολουθήστε το %name% και λάβετε άμεση ειδοποίηση όταν είναι σιωπηλό ή εκτός λειτουργίας.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Δοκιμάστε το StreamChecker από το Radio-Addict</a>"
+    streams_page: "Παρακολουθήστε τα διαδικτυακά σας ραδιόφωνα και λάβετε ειδοποιήσεις όταν είναι εκτός λειτουργίας.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Δοκιμάστε το StreamChecker από το Radio-Addict</a>"
+    streams_page_edit: "Παρακολουθήστε το %name% και λάβετε ειδοποιήσεις όταν είναι εκτός λειτουργίας.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Δοκιμάστε το StreamChecker από το Radio-Addict</a>"
+    short: "Είναι αυτό το ραδιόφωνό σας;<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Παρακολουθήστε το %name% με το Stream-Checker</a>"
+
 page:
     contact:
         title: 'Επικοινωνία'

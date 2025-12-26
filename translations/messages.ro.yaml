@@ -90,6 +90,12 @@ menu:
     timer: Timer
     title: Meniu
 
+sponsor:
+    suggestion_page: "Acesta este radioul dumneavoastră?<br>Monitorizați %name% și primiți alerte instantanee când este mut sau offline.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Încercați StreamChecker de la Radio-Addict</a>"
+    streams_page: "Monitorizați-vă radiourile web și primiți alerte când sunt offline.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Încercați StreamChecker de la Radio-Addict</a>"
+    streams_page_edit: "Monitorizați %name% și primiți alerte când este offline.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Încercați StreamChecker de la Radio-Addict</a>"
+    short: "Acesta este radioul dumneavoastră?<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Monitorizați %name% cu Stream-Checker</a>"
+
 page:
     contact:
         title: 'Contact'

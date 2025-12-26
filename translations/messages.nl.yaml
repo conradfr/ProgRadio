@@ -86,6 +86,13 @@ menu:
     streaming: Alle radiozenders
     timer: Timer
     title: Menu
+
+sponsor:
+    suggestion_page: "Is dit uw radio?<br>Monitor %name% en ontvang direct meldingen wanneer deze stil of offline is.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Probeer StreamChecker van Radio-Addict</a>"
+    streams_page: "Monitor uw webradio's en ontvang meldingen wanneer ze offline zijn.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Probeer StreamChecker van Radio-Addict</a>"
+    streams_page_edit: "Monitor %name% en ontvang meldingen wanneer deze offline is.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Probeer StreamChecker van Radio-Addict</a>"
+    short: "Is dit uw radio?<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Monitor %name% met Stream-Checker</a>"
+
 page:
     contact:
         title: 'Contact'

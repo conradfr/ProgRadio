@@ -17,6 +17,11 @@
   background: none !important;
   background-color: var(--progradio-alert-light-bg) !important;
   color: var(--progradio-alert-light-color);
+
+  a {
+    color: var(--progradio-alert-light-color-link) !important;
+  }
+
   h5 {
     color: var(--progradio-alert-light-color);
   }

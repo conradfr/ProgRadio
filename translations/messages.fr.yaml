@@ -91,8 +91,10 @@ menu:
     title: Menu
 
 sponsor:
-    suggestion_page: "Surveillez votre webradio et recevez une alerte en cas de panne.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Essayez StreamChecker par Radio-Addict</a>"
+    suggestion_page: "Est-ce votre radio ?<br>Surveillez %name% et recevez une alerte en cas de silence prolongé ou de panne.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Essayez StreamChecker par Radio-Addict</a>"
     streams_page: "Surveillez vos webradios et recevez une alerte en cas de panne.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Essayez StreamChecker par Radio-Addict</a>"
+    streams_page_edit: "Surveillez %name% et recevez une alerte en cas de silence prolongé ou de panne.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Essayez StreamChecker par Radio-Addict</a>"
+    short: "Est-ce votre radio ? <a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Surveillez %name% avec Stream-Checker</a>"
 
 page:
     contact:

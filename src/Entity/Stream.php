@@ -34,7 +34,7 @@ class Stream implements NormalizableInterface
     final public const string SOURCE_RADIOBROWSER = 'radio-browser';
     final public const string SOURCE_PROGRADIO = 'progradio';
 
-    final public const int ERROR_DISPLAY_THRESHOLD = 6;
+    final public const int ERROR_DISPLAY_THRESHOLD = 5;
 
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\Id]

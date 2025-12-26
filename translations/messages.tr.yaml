@@ -90,6 +90,12 @@ menu:
     timer: "Zamanlayıcı"
     title: "Menü"
 
+sponsor:
+    suggestion_page: "Bu sizin radyonuz mu?<br>%name% radyosunu izleyin ve sessiz veya çevrimdışı olduğunda anında uyarı alın.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Radio-Addict'ten StreamChecker'ı deneyin</a>"
+    streams_page: "Web radyolarınızı izleyin ve çevrimdışı olduklarında uyarı alın.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Radio-Addict'ten StreamChecker'ı deneyin</a>"
+    streams_page_edit: "%name% radyosunu izleyin ve çevrimdışı olduğunda uyarı alın.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Radio-Addict'ten StreamChecker'ı deneyin</a>"
+    short: "Bu sizin radyonuz mu?<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Stream-Checker ile %name% radyosunu izleyin</a>"
+
 page:
     contact:
         title: "İletişim"

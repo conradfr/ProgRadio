@@ -90,6 +90,12 @@ menu:
     timer: Időzítő
     title: Menü
 
+sponsor:
+    suggestion_page: "Ez az Ön rádiója?<br>Figyelje %name% állomást és kapjon azonnali értesítést, ha néma vagy offline.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Próbálja ki a StreamChecker-t a Radio-Addict-től</a>"
+    streams_page: "Figyelje webrádióit és kapjon értesítéseket, ha offline állapotban vannak.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Próbálja ki a StreamChecker-t a Radio-Addict-től</a>"
+    streams_page_edit: "Figyelje %name% állomást és kapjon értesítéseket, ha offline állapotban van.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Próbálja ki a StreamChecker-t a Radio-Addict-től</a>"
+    short: "Ez az Ön rádiója?<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Figyelje %name% állomást a Stream-Checker-rel</a>"
+
 page:
     contact:
         title: 'Kapcsolat'
