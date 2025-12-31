@@ -53,8 +53,8 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
         end
 
       case result do
-        :ok -> reset_errors(stream)
-        _ -> :ok
+        :ok -> reset_errors_if_needed(stream, true)
+        _ ->  reset_errors_if_needed(stream, false)
       end
     rescue
       _e ->
@@ -172,12 +172,25 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
 
   # maybe this could be done on another stage
 
-  defp reset_errors(%Stream{} = stream) do
+  # if https we reset errors, otherwise we mark it as working (checked)
+  # this is so we identify working http streams that fails in an https website
+  # then we can check if they have an updated https stream or assign it to the popup function
+
+  defp reset_errors_if_needed(stream, status)
+
+  defp reset_errors_if_needed(%Stream{} = stream, false) do
+    with true <- String.starts_with?(stream.stream_url, "http://") do
+      stream
+      |> Stream.changeset_checked(%{"checked" => false})
+      |> Repo.update!()
+    else
+      _ -> :ok
+    end
+  end
+
+  defp reset_errors_if_needed(%Stream{} = stream, true) do
     Logger.debug("Resetting errors #{stream.id} (#{stream.stream_url})")
 
-    # if https we reset errors, otherwise we mark it as working (checked)
-    # this is so we identify working http streams that fails in an https website
-    # then we can check if they have an updated https stream or assign it to the popup function
     changeset =
       case String.starts_with?(stream.stream_url, "http://") do
         true ->
