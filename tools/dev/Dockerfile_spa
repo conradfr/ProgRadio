@@ -13,6 +13,10 @@ WORKDIR /app/spa
 #RUN npm i caniuse-lite browserslist
 #RUN npx update-browserslist-db@latest
 
+RUN apk update && \
+    apk upgrade && \
+    apk add git
+
 RUN npm install
 
 #CMD [ "npm", "run", "dev"]

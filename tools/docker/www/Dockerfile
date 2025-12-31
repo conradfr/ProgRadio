@@ -6,6 +6,10 @@ WORKDIR /tmp
 COPY ./spa/package.json /tmp
 COPY ./spa/package-lock.json /tmp
 
+RUN apk update && \
+    apk upgrade && \
+    apk add git
+
 RUN npm install
 
 RUN mkdir /tmp/public/
