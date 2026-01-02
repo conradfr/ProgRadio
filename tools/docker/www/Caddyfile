@@ -116,6 +116,12 @@
 	php_server {
 	  file_server off
     resolve_root_symlink false
+
+    @cdn_redirect host_regexp ^cdn\.(.+)$
+    handle @cdn_redirect {
+        redir https://www{re.host_regexp.1}{uri} 301
+    }
+
     try_files {path} index.php
     root /app/public
   }
