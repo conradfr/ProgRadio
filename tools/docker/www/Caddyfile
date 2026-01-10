@@ -97,31 +97,32 @@
     file_server
   }
 
-    @build_assets path_regexp ^/(fonts|js|build/*)/(.+\.(css|js|gif|svg|eot|ttf|woff|woff2))$
-    handle @build_assets {
-      header Access-Control-Allow-Origin "*"
-      header Cache-Control "public, max-age=31536000, immutable"
-      header Pragma "public"
-      file_server
-    }
+  @build_assets path_regexp ^/(bundles|fonts|js|build/*)/(.+\.(css|js|gif|svg|eot|ttf|woff|woff2))$
+  handle @build_assets {
+    header Access-Control-Allow-Origin "*"
+    header Cache-Control "public, max-age=31536000, immutable"
+    header Pragma "public"
+    file_server
+  }
 
-    @root_assets path_regexp ^/(robots\.txt|.*\.png)$
-    handle @root_assets {
-      header Access-Control-Allow-Origin "*"
-      header Cache-Control "public, max-age=31536000"
-      header Pragma "public"
-      file_server
-    }
+  @root_assets path_regexp ^/(robots\.txt|.*\.png)$
+  handle @root_assets {
+    header Access-Control-Allow-Origin "*"
+    header Cache-Control "public, max-age=31536000"
+    header Pragma "public"
+    file_server
+  }
+
+  # Redirect cdn.* to www.* unless path starts with /media
+  @cdn_non_media {
+    header_regexp hostmatch Host ^cdn\.(.+)$
+    not path /media*
+  }
+  redir @cdn_non_media https://www.{re.hostmatch.1}{uri} permanent
 
 	php_server {
 	  file_server off
     resolve_root_symlink false
-
-    @cdn_redirect host_regexp ^cdn\.(.+)$
-    handle @cdn_redirect {
-        redir https://www{re.host_regexp.1}{uri} 301
-    }
-
     try_files {path} index.php
     root /app/public
   }

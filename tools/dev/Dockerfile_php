@@ -6,6 +6,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 EXPOSE 9000
 
 RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    lsb-release \
     iputils-ping \
     netcat-traditional \
     build-essential \
@@ -16,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     libgmp-dev \
     locales \
     zip \
+    git \
     jpegoptim optipng pngquant gifsicle \
     vim \
     unzip \
@@ -51,7 +55,7 @@ COPY ./tools/dev/local.ini /usr/local/etc/php/conf.d/local.ini
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN #composer install --prefer-dist --no-scripts --no-interaction
+# RUN composer install --prefer-dist --no-scripts --no-dev --no-interaction --no-autoloader && rm -rf /root/.composer
 
 RUN mkdir -p /var/www/var/logs/
 RUN mkdir -p /var/www/var/log/

@@ -497,7 +497,7 @@ export const usePlayerStore = defineStore('player', {
           this.song = {};
           this.socketHasClosed = true;
           this.listeners = {};
-          // this.socket = null;
+          this.socket = null;
           this.clearSocketTimer();
         });
 

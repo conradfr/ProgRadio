@@ -120,13 +120,13 @@
 
       const streamsProxy = '{{ streams_proxy }}';
       const streamsProxyKey = '{{ streams_proxy_key }}';
+      const test = 'test';
       const apiUrl = '{{ api_url }}';
       const cdnBaseUrl = '{{ cdn_base_url }}';
       const appEnv = '{{ app.environment }}';
       const isProgRadio = {% if isProgRadioRequest == true %}true{% else %}false{% endif%};
       const popupUrl = '{{ url('streams_one_popup_short', {'stream': '123'}) }}';
       {#const canonicalLocale = '{{ canonical_locale }}';#}
-      {# const amazon_affiliate_id = '{{ amazon_affiliate_id }}'; #}
 
       {% block javascript_head %}
       // placeholder
