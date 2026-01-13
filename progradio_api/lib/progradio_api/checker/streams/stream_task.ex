@@ -54,7 +54,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
 
       case result do
         :ok -> reset_errors_if_needed(stream, true)
-        _ ->  reset_errors_if_needed(stream, false)
+        _ -> reset_errors_if_needed(stream, false)
       end
     rescue
       _e ->

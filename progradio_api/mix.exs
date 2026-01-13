@@ -16,7 +16,8 @@ defmodule ProgRadioApi.MixProject do
           include_executables_for: [:unix],
           applications: [runtime_tools: :permanent]
         ]
-      ]
+      ],
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
