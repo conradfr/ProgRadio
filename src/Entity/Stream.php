@@ -169,6 +169,9 @@ class Stream implements NormalizableInterface
     #[ORM\Column(nullable: true)]
     private ?bool $checked = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $forceProxy = null;
+
     public function __construct() {
         $this->listeningSessions = new ArrayCollection();
         $this->streamsHistory = new ArrayCollection();
@@ -620,6 +623,18 @@ class Stream implements NormalizableInterface
     public function setChecked(?bool $checked): static
     {
         $this->checked = $checked;
+
+        return $this;
+    }
+
+    public function isForceProxy(): ?bool
+    {
+        return $this->forceProxy;
+    }
+
+    public function setForceProxy(?bool $forceProxy): static
+    {
+        $this->forceProxy = $forceProxy;
 
         return $this;
     }

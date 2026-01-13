@@ -66,6 +66,9 @@ class StreamOverloading
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slogan = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $forceProxy = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -232,6 +235,18 @@ class StreamOverloading
     public function setSlogan(?string $slogan): static
     {
         $this->slogan = $slogan;
+
+        return $this;
+    }
+
+    public function isForceProxy(): ?bool
+    {
+        return $this->forceProxy;
+    }
+
+    public function setForceProxy(?bool $forceProxy): static
+    {
+        $this->forceProxy = $forceProxy;
 
         return $this;
     }

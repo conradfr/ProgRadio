@@ -331,6 +331,12 @@ createApp({
           });
         });
       });
+    } else if (options && options.force_proxy && options.force_proxy === true) {
+      this.play(
+        `${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}`,
+        codeName,
+        { ...options, force_proxy: false }
+      );
     } else {
       /*
       const streamUrl = (streamingUrl.trim().substring(0, 5) !== 'https')
@@ -346,10 +352,9 @@ createApp({
         if (streamingUrl.trim().substring(0, 5) !== 'https') {
           this.stop();
           this.play(
-            `${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}`,
+            streamingUrl,
             codeName,
-            options.topic,
-            options.streamCodeName
+            { ...options, force_proxy: true }
           );
           return;
         }

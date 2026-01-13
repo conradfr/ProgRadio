@@ -522,7 +522,7 @@ export default defineComponent({
       }
 
       // previous stream is the same as this one
-      if (this.currentPlayer.url === url) {
+      if (this.currentPlayer.url === url && this.currentPlayer.element) {
         this.currentPlayer.element.volume = (this.volume * 0.1);
         this.playingStarted(this.currentPlayer);
         return;
@@ -632,6 +632,10 @@ export default defineComponent({
             this.playingStarted(this.currentPlayer);
           });
         });
+      } else if (options && options.force_proxy) {
+        // @ts-expect-error apiUrl is defined on the global scope
+        // eslint-disable-next-line no-undef
+        this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${url}`);
       } else {
         // const streamUrl = (url.substring(0, 5) !== 'https')
         // _eslint-disable-next-line no-undef
@@ -663,9 +667,7 @@ export default defineComponent({
 
           // if stream failed and is http we try to switch to our https proxy
           if (url.trim().substring(0, 5) !== 'https') {
-            // @ts-expect-error apiUrl is defined on the global scope
-            // eslint-disable-next-line no-undef
-            this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${url}`, options);
+            this.play(url, { ...options, force_proxy: true });
             return;
           }
 

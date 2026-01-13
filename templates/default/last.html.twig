@@ -62,7 +62,7 @@ img/stream-placeholder.png
                         }">
                             <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
                                  v-if="playing === PLAYER_STATE_STOPPED || radioId !== '{{- stream.code_name }}'"
-                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}'})"
+                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}'})"
                             >
                                 <div class="streams-one-img-play"></div>
                             </div>

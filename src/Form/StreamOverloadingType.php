@@ -23,6 +23,7 @@ class StreamOverloadingType extends AbstractType
             ->add('streamUrl', TextType::class, ['label' => 'Stream Url', 'required' => false])
             ->add('forceHls', CheckboxType::class, ['label' => 'Force HLS', 'required' => false])
             ->add('forceMpd', CheckboxType::class, ['label' => 'Force MPD', 'required' => false])
+            ->add('forceProxy', CheckboxType::class, ['label' => 'Force Proxy', 'required' => false])
             ->add('popup', CheckboxType::class, ['label' => 'Popup', 'required' => false])
             ->add('countryCode', TextType::class, ['label' => 'Country Code', 'required' => false])
             ->add('website', TextType::class, ['label' => 'Website', 'required' => false])

@@ -198,6 +198,8 @@ const buildPlayOptions = (radio: Radio|Stream) => {
     options.force_hls = true;
   } else if (radio.force_mpd) {
     options.force_mpd = true;
+  } else if (radio.force_proxy) {
+    options.force_proxy = true;
   }
 
   return options;
@@ -425,9 +427,6 @@ const calculatedFlux = () => {
 const getAmazonSongLink = (song: string): string => {
   const songCleaned = song.replace(' - ', ' ');
 
-  // _eslint-disable-next-line camelcase */
-  // return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&tag=
-  // ${amazon_affiliate_id}&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
   return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
 };
 

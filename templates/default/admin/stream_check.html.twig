@@ -79,7 +79,7 @@
                             <td class="text-center" v-scope>
                                 <div
                                     v-if="radioId !== '{{ stream.id }}' || playing === PLAYER_STATE_STOPPED"
-                                    @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}})"
+                                    @click="play('{{ stream.streamUrl }}', '{{ stream.id }}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}})"
                                     class="admin-play">
                                     <i class="bi bi-play-circle"></i>
                                 </div>

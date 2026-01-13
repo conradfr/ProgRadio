@@ -328,6 +328,7 @@ defmodule ProgRadioApi.Streams do
         stream_url: fragment("COALESCE(?, ?)", rs.url, s.stream_url),
         force_hls: s.force_hls,
         force_mpd: s.force_mpd,
+        force_proxy: s.force_proxy,
         tags: s.tags,
         country_code: s.country_code,
         website: s.website,

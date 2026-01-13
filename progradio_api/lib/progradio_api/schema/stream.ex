@@ -33,6 +33,7 @@ defmodule ProgRadioApi.Stream do
     field(:playing_error_reason, :string, default: nil)
     field(:force_hls, :boolean)
     field(:force_mpd, :boolean)
+    field(:force_proxy, :boolean)
     #    field(:editing_key, :string)
     field(:import_updated_at, :utc_datetime, default: nil)
     field(:last_listening_at, :utc_datetime, default: nil)

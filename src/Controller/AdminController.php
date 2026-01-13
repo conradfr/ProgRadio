@@ -254,6 +254,7 @@ class AdminController extends AbstractBaseController
 
             $stream->setForceHls($streamOverloading->getForceHls());
             $stream->setForceMpd($streamOverloading->getForceMpd());
+            $stream->setForceProxy($streamOverloading->isForceProxy());
             $stream->setPopup($streamOverloading->isPopup());
 
             if (!empty($form->get('redirect')->getData())) {

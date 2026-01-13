@@ -11,6 +11,7 @@ export interface Stream {
   stream_url: string
   force_hls: boolean
   force_mpd: boolean
+  force_proxy: boolean
   website: string
   tags: string
   popup: boolean

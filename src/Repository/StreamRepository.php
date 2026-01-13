@@ -35,7 +35,7 @@ class StreamRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.popup, s.playingErrorReason, s.forceHls, s.forceMpd, so.updatedAt, s.lastOverloadingOpen, s.checked')
+        $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.popup, s.playingErrorReason, s.forceHls, s.forceMpd, s.forceProxy, so.updatedAt, s.lastOverloadingOpen, s.checked')
             ->from(Stream::class, 's')
             ->leftJoin('s.streamOverloading', 'so')
             ->where('s.playingError >= :threshold and s.enabled = true')
@@ -118,7 +118,7 @@ class StreamRepository extends ServiceEntityRepository
         $user = $this->security->getUser();
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,s.playingError as playing_error,"
+        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,s.playingError as playing_error,"
             . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
@@ -225,7 +225,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"
+        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
             . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
@@ -318,7 +318,7 @@ class StreamRepository extends ServiceEntityRepository
     ): ?array {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.popup as popup,"
+        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
             . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
@@ -549,7 +549,7 @@ class StreamRepository extends ServiceEntityRepository
     public function getStreamCheckListPagination(int $page, int $perPage): PaginationInterface
     {
         $qb = $this->createQueryBuilder('s');
-        $qb->select('s.id, s.enabled, s.name, s.streamUrl, s.forceHls, s.forceMpd, s.website, s.countryCode, sc.checkedAt, sc.img as check_img, sc.streamUrl as check_stream, sc.website as check_website, sc.websiteSsl as check_ssl')
+        $qb->select('s.id, s.enabled, s.name, s.streamUrl, s.forceHls, s.forceMpd, s.forceProxy, s.website, s.countryCode, sc.checkedAt, sc.img as check_img, sc.streamUrl as check_stream, sc.website as check_website, sc.websiteSsl as check_ssl')
            ->where('sc.img = false or sc.website = false or sc.websiteSsl = false')
            ->join('s.streamCheck', 'sc')
            ->orderBy('s.clicksLast24h', 'desc');

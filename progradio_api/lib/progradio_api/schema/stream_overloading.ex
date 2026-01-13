@@ -14,6 +14,7 @@ defmodule ProgRadioApi.StreamOverloading do
     field(:enabled, :boolean)
     field(:force_hls, :boolean)
     field(:force_mpd, :boolean)
+    field(:force_proxy, :boolean)
     field(:created_at, :utc_datetime)
     field(:updated_at, :utc_datetime)
   end
