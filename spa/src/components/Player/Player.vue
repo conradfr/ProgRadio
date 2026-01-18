@@ -89,7 +89,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
-// import throttle from 'lodash/throttle';
 
 import { useGlobalStore } from '@/stores/globalStore';
 import { usePlayerStore } from '@/stores/playerStore';
@@ -260,23 +259,25 @@ export default defineComponent({
     // we refresh the state if the app is running
     if (this.externalPlayer === true) {
       AndroidApi.getState();
+    } else {
       // @ts-ignore
-    } else if (window.navigator.connection !== undefined) {
-      // @ts-ignore
-      window.navigator.connection.onchange = this.updateFlux();
-    }
+      if (window.navigator.connection !== undefined) {
+        // @ts-ignore
+        window.navigator.connection.onchange = this.updateFlux();
+      }
 
-    // OS hotkeys support
-    if ('mediaSession' in navigator) {
-      setTimeout(
-          () => {
-            navigator.mediaSession.setActionHandler('previoustrack', this.keyPlayPrevious.bind(this));
-            navigator.mediaSession.setActionHandler('nexttrack', this.keyPlayNext.bind(this));
-            navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
-            navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
-          },
-          250
-      );
+      // OS hotkeys support
+      if ('mediaSession' in navigator) {
+        setTimeout(
+            () => {
+              navigator.mediaSession.setActionHandler('previoustrack', this.keyPlayPrevious.bind(this));
+              navigator.mediaSession.setActionHandler('nexttrack', this.keyPlayNext.bind(this));
+              navigator.mediaSession.setActionHandler('play', this.keyPlayPause.bind(this));
+              navigator.mediaSession.setActionHandler('pause', this.keyPlayPause.bind(this));
+            },
+            250
+        );
+      }
     }
   },
   watch: {
@@ -667,6 +668,7 @@ export default defineComponent({
 
           // if stream failed and is http we try to switch to our https proxy
           if (url.trim().substring(0, 5) !== 'https') {
+            this.stop();
             this.play(url, { ...options, force_proxy: true });
             return;
           }
