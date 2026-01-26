@@ -56,6 +56,7 @@ defmodule ProgRadioApi.EmailStatsSendWorker do
       on: s.id == ls.stream_id,
       where: s.id in ^stream_ids,
       group_by: [s.id],
+      order_by: [asc: s.name],
       select: %{
         id: s.id,
         name: s.name,

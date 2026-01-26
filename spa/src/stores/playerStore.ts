@@ -497,8 +497,8 @@ export const usePlayerStore = defineStore('player', {
           this.song = {};
           this.socketHasClosed = true;
           this.listeners = {};
-          this.socket = null;
           this.clearSocketTimer();
+          this.socket = null;
         });
 
         /* this.socket.onError((error: any) => {
@@ -508,6 +508,9 @@ export const usePlayerStore = defineStore('player', {
 
       if (this.socket && !this.socket.isConnected()) {
         this.socket.connect();
+      } else if (this.socket) {
+        this.socket = null;
+        this.connectSocket();
       }
     },
     setSocketTimer() {
@@ -540,6 +543,8 @@ export const usePlayerStore = defineStore('player', {
         return false;
       }
 
+      this.connectSocket();
+
       /* TEMP
         No subscribing for mpd streams as we don't support it
         This will not catch "forced" mpd streams but there are not a lot so this is acceptable
@@ -566,8 +571,6 @@ export const usePlayerStore = defineStore('player', {
       if (Object.prototype.hasOwnProperty.call(this.channels, topicName)) {
         return false;
       }
-
-      this.connectSocket();
 
       return nextTick(() => {
         setTimeout(() => {

@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.19.3-erlang-28.2-ubuntu-jammy-20251013
+FROM hexpm/elixir:1.19.5-erlang-28.3-ubuntu-jammy-20260109
 
 EXPOSE 80
 
