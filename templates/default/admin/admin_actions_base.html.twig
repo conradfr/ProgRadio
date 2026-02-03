@@ -4,7 +4,7 @@
     {{ entry == route ? 'class="nav-link active" aria-current="page"' : 'class="nav-link"' }}
 {% endmacro %}
 
-{% set current_path = app.request.get('_route') %}
+{% set current_path = app.current_route %}
 
 {% block body %}
     <div id="admin" class="container-fluid">

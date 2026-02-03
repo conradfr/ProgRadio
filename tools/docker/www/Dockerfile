@@ -24,7 +24,7 @@ RUN ls /tmp
 
 # --------------- PHP ---------------
 
-FROM dunglas/frankenphp:1-php8.4
+FROM dunglas/frankenphp:1-php8.5
 
 RUN mkdir -p /scripts
 COPY ./tools/docker/www/docker-entry.sh /scripts
@@ -89,8 +89,6 @@ RUN pecl install apcu igbinary \
  && docker-php-ext-install intl pdo_pgsql pgsql \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
  && docker-php-ext-install -j$(nproc) gd \
- && docker-php-ext-configure opcache --enable-opcache \
- && docker-php-ext-install opcache \
  && docker-php-ext-install gmp \
  && docker-php-ext-enable apcu \
  && docker-php-ext-enable igbinary \
@@ -119,6 +117,7 @@ RUN cat /usr/local/etc/php/conf.d/local.ini
 EXPOSE 80
 
 ARG APP_ENV=${APP_ENV}
+ARG DEFAULT_URI=${DEFAULT_URI}
 ARG REDIS_URL=${REDIS_URL}
 ARG MAILER_DSN=${MAILER_DSN}
 ARG EMAIL_FROM=${EMAIL_FROM}
@@ -147,6 +146,7 @@ ARG MEILISEARCH_PREFIX=${MEILISEARCH_PREFIX}
 ARG PROGRADIO_API_WEBHOOK_SECRET=${PROGRADIO_API_WEBHOOK_SECRET}
 
 ENV APP_ENV=${APP_ENV} \
+  DEFAULT_URI=${DEFAULT_URI} \
   REDIS_URL=${REDIS_URL} \
   MAILER_DSN=${MAILER_DSN} \
   EMAIL_FROM=${EMAIL_FROM} \

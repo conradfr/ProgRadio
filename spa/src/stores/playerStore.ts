@@ -508,9 +508,6 @@ export const usePlayerStore = defineStore('player', {
 
       if (this.socket && !this.socket.isConnected()) {
         this.socket.connect();
-      } else if (this.socket) {
-        this.socket = null;
-        this.connectSocket();
       }
     },
     setSocketTimer() {

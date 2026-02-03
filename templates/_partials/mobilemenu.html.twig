@@ -201,7 +201,7 @@
                     <li class="nav-item  {% if not is_granted('ROLE_ADMIN') and loop.last == true %}mb-5{% endif %}">
                         <div class="d-flex flex-row align-items-center">
                             <div class="align-self-center offmenu-item-icon">
-                                {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode %}
+                                {% set redirect_url = url(app.current_route, app.current_route_parameters|merge({'_locale': locale}))|url_encode %}
                                 <a class="nav-link" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                     <img style="width: 22px" class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[locale] ~ '.svg') }}" alt="{{ "footer.#{locale}"|trans }}">
                                 </a>

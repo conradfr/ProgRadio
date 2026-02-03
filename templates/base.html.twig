@@ -93,20 +93,20 @@
             {% endif %}
 
             {% if 'www' in app.request.uri == false %}
-                <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
-                <link rel="canonical" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
+                <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
+                <link rel="canonical" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
             {%  else %}
-                <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
-                <link rel="canonical" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
+                <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
+                <link rel="canonical" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
             {% endif %}
 
             {%- if canonical_locale is defined -%}
                 {%- for locale in locales -%}
                     {%- if canonical_locale != locale -%}
                         {% if 'www' in app.request.uri == false %}
-                <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale})))|replace({'https://': 'https://www.'}) }}">
+                <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge(app.request.query.all)|merge({'_locale': locale})))|replace({'https://': 'https://www.'}) }}">
                         {%  else %}
-                <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale}))) }}">
+                <link rel="alternate" hreflang="{{ locale }}" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge(app.request.query.all)|merge({'_locale': locale}))) }}">
                         {% endif %}
                     {%- endif -%}
                 {%- endfor -%}
@@ -180,14 +180,14 @@
 
 {% if app.environment == 'prod' %}
     <!-- Google tag (gtag.js) -->
-    <script defer src="https://www.googletagmanager.com/gtag/js?id={{ analytics }}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+{#    <script defer src="https://www.googletagmanager.com/gtag/js?id={{ analytics }}"></script>#}
+{#    <script>#}
+{#      window.dataLayer = window.dataLayer || [];#}
+{#      function gtag(){dataLayer.push(arguments);}#}
+{#      gtag('js', new Date());#}
 
-      gtag('config', '{{ analytics }}');
-    </script>
+{#      gtag('config', '{{ analytics }}');#}
+{#    </script>#}
 {% endif %}
 </body>
 </html>

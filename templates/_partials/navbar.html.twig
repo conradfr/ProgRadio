@@ -100,7 +100,7 @@
 
                             {% for locale in locales %}
                                 {% if app.request.locale != locale %}
-                                    {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode %}
+                                    {% set redirect_url = url(app.current_route, app.current_route_parameters|merge({'_locale': locale}))|url_encode %}
                                     <li>
                                         <a class="dropdown-item" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                             <div class="menu-flag-icon">
@@ -133,7 +133,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarLocaleDropdown">
                         {% for locale in locales %}
                             {% if app.request.locale != locale %}
-                                {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': locale}))|url_encode %}
+                                {% set redirect_url = url(app.current_route, app.current_route_parameters|merge({'_locale': locale}))|url_encode %}
                                 <li>
                                     <a class="dropdown-item" href="{{ path('locale_switch', {'locale': locale}) }}?redirect={{ redirect_url }}">
                                         <div class="menu-flag-icon">
