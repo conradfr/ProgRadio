@@ -8,7 +8,8 @@
 
 {% block javascript_head %}
 const baseUrl = '/';
-const gtCode = '{{ analytics }}';
+{#const gtCode = '{{ analytics }}';#}
+const gtCode = null;
 const logged = {{ is_logged == true ? 'true' : 'false' }};
 const locale = '{{ app.request.locale }}';
 const geocode = '{{ geocode }}';

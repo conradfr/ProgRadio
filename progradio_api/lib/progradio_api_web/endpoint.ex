@@ -14,7 +14,7 @@ defmodule ProgRadioApiWeb.Endpoint do
 
   socket "/socket", ProgRadioApiWeb.UserSocket,
     websocket: [connect_info: [session: @session_options]],
-    longpoll: [connect_info: [session: @session_options]]
+    longpoll: false
 
   # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
   socket "/live", Phoenix.LiveView.Socket

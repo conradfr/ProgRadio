@@ -22,15 +22,19 @@ defmodule ProgRadioApi.SongProvider.Rfm do
 
   @impl true
   def get_data(name, _last_data) do
-    id =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+    try do
+      id =
+        SongProvider.get_stream_code_name_from_channel(name)
+        |> (&Map.get(@stream_ids, &1)).()
 
-    (@url <> id)
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> :json.decode()
-    |> Map.get("current", %{})
+      (@url <> id)
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> :json.decode()
+      |> Map.get("current", %{})
+    rescue
+      _ -> :error
+    end
   end
 
   @impl true

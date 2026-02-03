@@ -34,26 +34,30 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
   def get_data(_name, _last_data) do
     now_unix = SongProvider.now_unix()
 
-    @url
-    |> SongProvider.get()
-    |> Map.get(:body)
-    |> :json.decode()
-    |> Map.get("schedule", [])
-    |> Enum.find(nil, fn e ->
-      time_start =
-        e
-        |> Map.get("info", %{})
-        |> Map.get("start_ts", 0)
-        |> String.to_integer()
+    try do
+      @url
+      |> SongProvider.get()
+      |> Map.get(:body)
+      |> :json.decode()
+      |> Map.get("schedule", [])
+      |> Enum.find(nil, fn e ->
+        time_start =
+          e
+          |> Map.get("info", %{})
+          |> Map.get("start_ts", 0)
+          |> String.to_integer()
 
-      time_end =
-        e
-        |> Map.get("info", %{})
-        |> Map.get("end_ts", 0)
-        |> String.to_integer()
+        time_end =
+          e
+          |> Map.get("info", %{})
+          |> Map.get("end_ts", 0)
+          |> String.to_integer()
 
-      now_unix >= time_start and now_unix <= time_end
-    end)
+        now_unix >= time_start and now_unix <= time_end
+      end)
+    rescue
+      _ -> :error
+    end
   end
 
   @impl true

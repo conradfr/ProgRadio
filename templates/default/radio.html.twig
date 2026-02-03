@@ -21,9 +21,9 @@
         <meta name="robots" content="noindex">
     {% endif %}
 
-    <meta property="al:web:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}" />
+    <meta property="al:web:url" content="{{ absolute_url(path(app.current_route, app.current_route_parameters)) }}" />
     <meta property="og:title" content="{{ 'page.radio.title'|trans({'%radio%': sub_radio.name}) }}">
-    <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
+    <meta property="og:url" content="{{ absolute_url(path(app.current_route, app.current_route_parameters)) }}">
     <meta property="og:type" content="music.radio_station">
     <meta property="og:site_name" content="{{ domainNameRequest }}">
     <meta property="og:image" content="{{ asset('img/radio/page/' ~ radio.codename ~ '.png') }}">

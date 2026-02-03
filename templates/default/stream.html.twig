@@ -45,9 +45,9 @@
 
 {% block head_supp %}
     {{ parent() }}
-    <meta property="al:web:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}" />
+    <meta property="al:web:url" content="{{ absolute_url(path(app.current_route, app.current_route_parameters)) }}" />
     <meta property="og:title" content="{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}">
-    <meta property="og:url" content="{{ absolute_url(path(app.request.get('_route'), app.request.get('_route_params'))) }}">
+    <meta property="og:url" content="{{ absolute_url(path(app.current_route, app.current_route_parameters)) }}">
     <meta property="og:type" content="music.radio_station">
     <meta property="og:site_name" content="{{ domainNameRequest }}">
     <meta property="og:image" content="{{ asset(self.picture(stream)) }}">
@@ -103,7 +103,7 @@
 
                 {% set prefLanguage = app.request.preferredLanguage|slice(0, 2) %}
                 {% if prefLanguage in locales and app.request.locale != app.request.preferredLanguage|slice(0, 2) %}
-                    {% set redirect_url = url(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': prefLanguage}))|url_encode %}
+                    {% set redirect_url = url(app.current_route, app.current_route_parameters|merge({'_locale': prefLanguage}))|url_encode %}
                     <div class="position-absolute text-center d-sm-none" style="top: 55px; left: 10px; max-width: 45px;">
                         <a class="nav-link" href="{{ path('locale_switch', {'locale': prefLanguage }) }}?redirect={{ redirect_url }}">
                             <img style="width: 16px" class="gb-flag gb-flag--micro" src="{{ asset('img/flags/' ~ flags[prefLanguage] ~ '.svg') }}" alt="{{ "footer.#{prefLanguage}"|trans }}">

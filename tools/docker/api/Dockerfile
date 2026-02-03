@@ -2,6 +2,8 @@ FROM hexpm/elixir:1.19.5-erlang-28.3-ubuntu-jammy-20260109
 
 EXPOSE 80
 
+RUN ulimit -n 65536
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG DATABASE_URL=${DATABASE_URL}

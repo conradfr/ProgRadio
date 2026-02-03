@@ -172,11 +172,11 @@
                 </div>
 
                 <ul class="nav nav-pills flex-column mt-3">
-                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'today') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'today'}) }}">{{ 'admin.listening.today'|trans }}</a></li>
-                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'yesterday') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'yesterday'}) }}">{{ 'admin.listening.yesterday'|trans }}</a></li>
-                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'thismonth') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'thismonth'}) }}">{{ 'admin.listening.this_month'|trans }}</a></li>
-                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'lastmonth') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'lastmonth'}) }}">{{ 'admin.listening.last_month'|trans }}</a></li>
-                    <li class="nav-item d-none d-sm-block"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'ratings') }}" href="{{ path(app.request.get('_route'), {'dateRange': 'ratings', 'countryCode': 'fr'}) }}">{{ 'admin.listening.ratings'|trans }}</a></li>
+                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'today') }}" href="{{ path(app.current_route, {'dateRange': 'today'}) }}">{{ 'admin.listening.today'|trans }}</a></li>
+                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'yesterday') }}" href="{{ path(app.current_route, {'dateRange': 'yesterday'}) }}">{{ 'admin.listening.yesterday'|trans }}</a></li>
+                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'thismonth') }}" href="{{ path(app.current_route, {'dateRange': 'thismonth'}) }}">{{ 'admin.listening.this_month'|trans }}</a></li>
+                    <li class="nav-item"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'lastmonth') }}" href="{{ path(app.current_route, {'dateRange': 'lastmonth'}) }}">{{ 'admin.listening.last_month'|trans }}</a></li>
+                    <li class="nav-item d-none d-sm-block"><a class="nav-link daylink {{ _self.dateRangeActive(dateRange, 'ratings') }}" href="{{ path(app.current_route, {'dateRange': 'ratings', 'countryCode': 'fr'}) }}">{{ 'admin.listening.ratings'|trans }}</a></li>
                 </ul>
             </div>
 

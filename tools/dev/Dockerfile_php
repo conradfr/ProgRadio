@@ -1,4 +1,4 @@
-FROM php:8.4-fpm
+FROM php:8.5-fpm
 
 ENV TZ=Europe/Paris
 ARG DEBIAN_FRONTEND=noninteractive
@@ -43,8 +43,6 @@ RUN pecl install apcu \
  && docker-php-ext-install intl pdo_pgsql pgsql \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
  && docker-php-ext-install -j$(nproc) gd \
- && docker-php-ext-configure opcache --enable-opcache \
- && docker-php-ext-install opcache \
  && docker-php-ext-enable apcu \
  && pecl clear-cache
 

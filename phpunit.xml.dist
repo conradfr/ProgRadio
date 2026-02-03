@@ -22,6 +22,18 @@
         <!-- MESSENGER_TRANSPORT_DSN=redis://localhost:6379/messages -->
         <env name="MESSENGER_TRANSPORT_DSN" value="doctrine://default?auto_setup=0"/>
         <!-- ###- symfony/messenger ### -->
+
+        <!-- ###+ symfony/framework-bundle ### -->
+        <env name="APP_ENV" value="dev"/>
+        <env name="APP_SECRET" value=""/>
+        <env name="APP_SHARE_DIR" value="var/share"/>
+        <!-- ###- symfony/framework-bundle ### -->
+
+        <!-- ###+ symfony/routing ### -->
+        <!-- Configure how to generate URLs in non-HTTP contexts, such as CLI commands. -->
+        <!-- See https://symfony.com/doc/current/routing.html#generating-urls-in-commands -->
+        <env name="DEFAULT_URI" value="http://localhost"/>
+        <!-- ###- symfony/routing ### -->
     </php>
 
     <testsuites>
