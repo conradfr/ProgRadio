@@ -22,6 +22,7 @@ const init = (mailConfig) => {
     mailConfig.username = process.env.MAIL_USERNAME || mailConfig.username;
     mailConfig.password = process.env.MAIL_PASSWORD || mailConfig.password;
     mailConfig.host = process.env.MAIL_HOST || mailConfig.host;
+    mailConfig.port = process.env.MAIL_PORT || mailConfig.port;
     mailConfig.to = process.env.MAIL_TO || mailConfig.to;
     mailConfig.from = process.env.MAIL_USERNAME || mailConfig.from;
 
