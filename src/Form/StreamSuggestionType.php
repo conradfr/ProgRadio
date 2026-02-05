@@ -33,7 +33,7 @@ class StreamSuggestionType extends AbstractType implements EventSubscriberInterf
             ->add('tags', TextType::class, ['label' => $this->translator->trans('page.stream.submission.tags'), 'required' => false])
             ->add('slogan', TextType::class, ['label' => $this->translator->trans('page.stream.submission.slogan'), 'required' => false])
             ->add('description', TextareaType::class, ['label' => $this->translator->trans('page.stream.submission.description'), 'required' => false])
-            ->add('message', TextareaType::class, ['label'=> 'page.stream.modification.comment','attr' => ['class' => 'form-control']])
+            ->add('message', TextareaType::class, ['label'=> 'page.stream.modification.comment','attr' => ['class' => 'form-control'], 'required' => false])
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3([
                     'message' => 'karser_recaptcha3.message',

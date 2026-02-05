@@ -327,7 +327,7 @@ class AdminController extends AbstractBaseController
     #[Route('/{_locale}/admin/stream_suggestions/{id}/{field}',
         name: 'admin_stream_suggestions_commit',
         requirements: [
-            'field' => 'name|img|streamUrl|website|tags'
+            'field' => 'name|img|streamUrl|website|tags|slogan|description'
         ])]
     public function streamSuggestionsAction(EntityManagerInterface $em, ?StreamSuggestion $streamSuggestion = null, ?string $field = null): Response
     {
@@ -349,10 +349,17 @@ class AdminController extends AbstractBaseController
                 $streamOverloading->setEnabled(true);
             }
 
+            // avoid blank space in tags after commas
+            if ($field === 'tags') {
+                $value = strtolower($value);
+                $value = str_replace(', ', ',', $value);
+            }
+
             // img are not directly updated
             if ($field === 'img') {
                 $streamOverloading->setImg($value);
-            } else {
+            }
+            else {
                 call_user_func([$stream, 'set' . ucfirst($field)], $value);
                 call_user_func([$streamOverloading, 'set' . ucfirst($field)], $value);
 
