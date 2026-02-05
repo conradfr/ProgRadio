@@ -71,7 +71,9 @@ defmodule ProgRadioApiWeb.StreamController do
   # ---------- POST ----------
 
   def playing_error(conn, %{"id" => id} = params) when is_binary(id) do
-    Streams.register_streaming_error(id, Map.get(params, "error"))
+    spawn(fn ->
+      Streams.register_streaming_error(id, Map.get(params, "error"))
+    end)
 
     render(conn, "playing_error.json", %{})
   end

@@ -19,10 +19,12 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
            ),
          {:ok, listening_session} <-
            ListeningSessions.create_listening_session(listening_session_params, conn.remote_ip) do
-      ListenersCounter.register_listening_session(listening_session, false)
+      spawn(fn ->
+        ListenersCounter.register_listening_session(listening_session, false)
 
-      if Map.has_key?(listening_session_params, "stream_id"),
-        do: Streams.reset_streaming_error(listening_session_params["stream_id"])
+        if Map.has_key?(listening_session_params, "stream_id"),
+           do: Streams.reset_streaming_error(listening_session_params["stream_id"])
+      end)
 
       conn
       |> put_status(:created)
@@ -51,14 +53,16 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
              listening_session_params,
              conn.remote_ip
            ) do
-      if Map.get(listening_session_params, "ending") == true do
-        ListenersCounter.remove_listening_session(updated_listening_session)
-      else
-        ListenersCounter.register_listening_session(updated_listening_session, true)
-      end
+      spawn(fn ->
+        if Map.get(listening_session_params, "ending") == true do
+          ListenersCounter.remove_listening_session(updated_listening_session)
+        else
+          ListenersCounter.register_listening_session(updated_listening_session, true)
+        end
 
-      if Map.has_key?(listening_session_params, "stream_id"),
-        do: Streams.reset_streaming_error(listening_session_params["stream_id"])
+        if Map.has_key?(listening_session_params, "stream_id"),
+           do: Streams.reset_streaming_error(listening_session_params["stream_id"])
+      end)
 
       conn
       |> put_status(:ok)
