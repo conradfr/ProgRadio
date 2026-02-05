@@ -412,7 +412,8 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     startListeningSession() {
-      this.sessionInterval = setInterval(() => {
+      // the first one is shorter
+      setTimeout(() => {
         PlayerUtils.sendListeningSession(
           this.playing,
           this.radio,
@@ -420,6 +421,15 @@ export const usePlayerStore = defineStore('player', {
           this.session
         );
       }, config.LISTENING_SESSION_MIN_SECONDS * 1000);
+
+      this.sessionInterval = setInterval(() => {
+        PlayerUtils.sendListeningSession(
+          this.playing,
+          this.radio,
+          this.radioStreamCodeName,
+          this.session
+        );
+      }, config.LISTENING_SESSION_INTERVAL_SECONDS * 1000);
     },
     setListeningSessionId({ id, ctrl }: { id: string, ctrl: number }) {
       if (this.playing && ctrl === this.session.ctrl) {

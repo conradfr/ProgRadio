@@ -331,11 +331,12 @@ export const useStreamsStore = defineStore('streams', {
       return true;
     },
     sendSearchText(text: string|null): void {
+      return;
       if (!text || text === '') {
         return;
       }
 
-      StreamsApi.sendSearchTerm(text);
+      // StreamsApi.sendSearchTerm(text);
     }
   }
 });

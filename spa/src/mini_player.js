@@ -6,6 +6,7 @@ import noUiSlider from 'nouislider';
 // from config
 import {
   LISTENING_SESSION_MIN_SECONDS,
+  LISTENING_SESSION_INTERVAL_SECONDS,
   LISTENING_SESSION_SOURCE_SSR,
   WEBSOCKET_DISCONNECT_AFTER,
   WEBSOCKET_MAX_RETRIES,
@@ -22,7 +23,8 @@ import {
 
 /* eslint-disable no-undef */
 
-const LISTENING_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
+const LISTENING_MIN_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
+const LISTENING_INTERVAL = LISTENING_SESSION_INTERVAL_SECONDS * 1000;
 
 // todo now that we removed the dynamic video tag, refactor the window.audio = elem.
 
@@ -71,7 +73,7 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
 
   const dateTimeEnd = new Date();
 
-  if (dateTimeEnd.getTime() - dateTimeStart.getTime() < LISTENING_INTERVAL) {
+  if (dateTimeEnd.getTime() - dateTimeStart.getTime() < LISTENING_MIN_INTERVAL) {
     return;
   }
 
@@ -180,7 +182,7 @@ const setTitle = (song) => {
 };
 
 const incrementPlayCount = (stationUuid) => {
-  if (appEnv !== 'dev') {
+  if (!stationUuid) {
     return;
   }
 
@@ -397,7 +399,6 @@ createApp({
 
     if (this.playing !== false && this.options.sendStatistics) {
       updateListeningSession(this.radioId, this.playingStart, this.sessionId, true);
-
       sendGaEvent('stop', 'SSR', this.radioId, 1);
     }
 
@@ -406,6 +407,9 @@ createApp({
     this.listeningInterval = null;
     this.sessionId = null;
     this.playingStart = null;
+    this.song = null;
+    this.cover = null;
+    this.leaveChannels();
   },
   playingStarted(topic, streamCodeName) {
     this.playing = PLAYER_STATE_PLAYING;
@@ -414,8 +418,17 @@ createApp({
 
     // For some reason the interval was not set when the code was at the end of this function
     if (this.options.sendStatistics) {
+      setTimeout(() => {
+        updateListeningSession(this.radioId, this.playingStart, this.sessionId)?.then((data) => {
+          if (data.id !== null) {
+            this.sessionId = data.id;
+            this.playingStart = new Date(data.date_time_start);
+          }
+        });
+      }, LISTENING_MIN_INTERVAL);
+
       this.listeningInterval = setInterval(() => {
-        updateListeningSession(this.radioId, this.playingStart, this.sessionId).then((data) => {
+        updateListeningSession(this.radioId, this.playingStart, this.sessionId)?.then((data) => {
           if (data.id !== null) {
             this.sessionId = data.id;
             this.playingStart = new Date(data.date_time_start);
@@ -424,21 +437,27 @@ createApp({
       }, LISTENING_INTERVAL);
 
       setTimeout(() => {
+        // playing must have stop
+        if (!this.radioId) {
+          return;
+        }
         incrementPlayCount(this.radioId);
-      }, LISTENING_INTERVAL + 500);
+      }, LISTENING_MIN_INTERVAL + 500);
     }
 
     window.audio.addEventListener('timeupdate', () => {
       this.lastUpdated = new Date();
     });
 
-    if (topic && topic.trim() !== '') {
-      this.joinChannel(topic.trim());
-    }
+    setTimeout(() => {
+      if (topic && topic.trim() !== '') {
+        this.joinChannel(topic.trim());
+      }
 
-    if (streamCodeName && streamCodeName.trim() !== '') {
-      this.joinChannel(`listeners:${streamCodeName.trim()}`);
-    }
+      if (streamCodeName && streamCodeName.trim() !== '') {
+        this.joinChannel(`listeners:${streamCodeName.trim()}`);
+      }
+    }, 1000);
   },
   playingError(codeName, errorText) {
     // the delay prevents sending an error when the user just click a link and goes to another page...
@@ -492,10 +511,16 @@ createApp({
       this.socket.connect();
     }
   },
+  disconnectSocket() {
+    if (this.socket && this.socket.isConnected()) {
+      this.socket.disconnect();
+    }
+  },
   setSocketTimer() {
     // reset if currently one
     this.clearSocketTimer();
 
+    // safeguard, will close socket after n hours
     this.socketTimer = setTimeout(() => {
       if (this.socket) {
         this.socket.disconnect();
@@ -509,6 +534,24 @@ createApp({
       this.socketTimer = null;
     }
   },
+  leaveChannels() {
+    for (const topicName in this.channels) {
+      this.leaveChannel(topicName);
+    }
+  },
+  leaveChannel(topic) {
+    if (!this.channels[topic]) {
+      return;
+    }
+
+    this.channels[topic].leave();
+    delete this.channels[topic];
+    this.listeners = null;
+
+    if (Object.keys(this.channels).length === 0) {
+      this.disconnectSocket();
+    }
+  },
   joinChannel(topic) {
     if (!this.options.webSocket) {
       return;
@@ -519,9 +562,7 @@ createApp({
       this.visibilityListeners[topic] = true;
       document.addEventListener('visibilitychange', () => {
         if (this.channels[topic] && document.hidden) {
-          this.channels[topic].leave();
-          delete this.channels[topic];
-          this.listeners = null;
+          this.leaveChannel(topic);
         } else {
           this.joinChannel(topic);
         }

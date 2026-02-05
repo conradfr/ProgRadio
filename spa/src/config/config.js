@@ -92,6 +92,7 @@ export const WEBSOCKET_MAX_RETRIES = 50;
 export const WEBSOCKET_HEARTBEAT = 50000; /* ms */
 
 export const LISTENING_SESSION_MIN_SECONDS = 15;
+export const LISTENING_SESSION_INTERVAL_SECONDS = 30;
 export const LISTENING_SESSION_SOURCE = 'web';
 export const LISTENING_SESSION_SOURCE_SSR = 'seo';
 
