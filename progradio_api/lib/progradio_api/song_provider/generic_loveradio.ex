@@ -38,9 +38,16 @@ defmodule ProgRadioApi.SongProvider.GenericLoveradio do
     end
   end
 
-  def get_data(code_name, id) do
+  def get_data(code_name, id, url \\ nil) do
+    start_url =
+      if url != nil do
+        url
+      else
+        "https://iris-#{code_name}.loverad.io"
+      end
+
     try do
-      "https://iris-#{code_name}.loverad.io/flow.json?station=#{id}&offset=1&count=1&ts=#{SongProvider.now_unix()}"
+      "#{start_url}/flow.json?station=#{id}&offset=1&count=1&ts=#{SongProvider.now_unix()}"
       |> SongProvider.get()
       |> Map.get(:body)
       |> :json.decode()
