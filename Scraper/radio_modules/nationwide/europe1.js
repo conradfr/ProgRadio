@@ -1,11 +1,10 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
-let util = require('util');
 const logger = require('../../lib/logger.js');
 
 let scrapedData = [];
 
-const dayEn = {
+const dayFr = {
   1: 'lundi',
   2: 'mardi',
   3: 'mercredi',
@@ -21,8 +20,8 @@ const format = dateObj => {
     let startDateTime = moment(dateObj);
     const endDateTime = moment(dateObj);
 
-    let regexp = new RegExp(/([0-9]{2})h([0-9]{2}) - ([0-9]{2})h([0-9]{2})/);
-    let match =  entry['time'].match(regexp);
+    const regexp = new RegExp(/([0-9]{2})h([0-9]{2}) - ([0-9]{2})h([0-9]{2})/);
+    const match =  entry['time'].match(regexp);
 
     if (!match) {
       return prev;
@@ -43,13 +42,39 @@ const format = dateObj => {
     entry.date_time_start = startDateTime.toISOString();
     entry.date_time_end = endDateTime.toISOString();
 
-    entry.sections = [];
+    if (entry.host) {
+      entry.host = entry.host.replace(/\t/g, '');
+    }
+
+    if (
+      entry.sections == null ||
+      !Array.isArray(entry.sections) ||
+      (entry.sections.length > 0 && typeof entry.sections[0] === 'string')
+    ) {
+      delete entry.sections;
+    } else {
+      for (let i = entry.sections.length - 1; i >= 0; i--) {
+        let section = entry.sections[i];
+        let matchTime = section['datetime_raw'].match(regexp);
+
+        if (!matchTime) {
+          entry.sections[i].sections.splice(i, 1);
+          return;
+        }
+
+        let startDateTimeSection = moment(dateObj);
+        startDateTimeSection.hour(matchTime[1]);
+        startDateTimeSection.minute(matchTime[2]);
+        startDateTimeSection.second(0);
+        entry.sections[i].date_time_start =  startDateTimeSection.toISOString();
+        delete entry.sections[i].datetime_raw;
+      }
+    }
 
     prev.push(entry);
     return prev;
   }, []);
 
-  console.log(cleanedData);
   return Promise.resolve(cleanedData);
 };
 
@@ -57,7 +82,7 @@ const fetch = dateObj => {
   const url = 'https://www.europe1.fr/grille-des-programmes';
 
   dateObj.locale('fr');
-  const day = dayEn[dateObj.day()];
+  const day = dayFr[dateObj.isoWeekday()];
 
   logger.log('info', `fetching ${url} (${day})`);
 
@@ -65,23 +90,46 @@ const fetch = dateObj => {
     return osmosis
       .get(url)
       .find(`#panel-${day}`)
-      .select('.week-programme')
+      .select('.programme-semaine')
       .set({
         'time': '.horaires-item-programme',
         'title': '.title-item-programme',
         'host': '.author-item-programme',
         'img': '.cover-item-programme > img@src',
+        'sections': [
+          osmosis.select('.chroniques-broadcast-grid .item-chronique')
+            .set({
+              'datetime_raw': '.horaires-item-chronique',
+              'title': '.title-item-chronique',
+              'presenter': '.author-item-chronique',
+              'img': '.cover-item-chronique img@src'
+            })
+        //   // osmosis.select('.chroniques-broadcast-grid .item-chronique')
+        //   //   .set({
+        //   //     'datetime_raw': '.horaires-item-chronique',
+        //   //     'title': '.title-item-chronique',
+        //   //     'presenter': '.author-item-chronique',
+        //   //     'img': '.cover-item-chronique img@src'
+        //   //   })
+        ]
       })
+      // .do(
+      //   osmosis.select('.chroniques-broadcast-grid .item-chronique')
+      //     .set({
+      //       'datetime_raw': '.horaires-item-chronique',
+      //       'title': '.title-item-chronique',
+      //       'presenter': '.author-item-chronique',
+      //       'img': '.cover-item-chronique img@src'
+      //     })
+      // )
       .do(
         osmosis.follow('.item-programme > a@href')
           .set({
-            // 'description': '.emission-description__content > div',
-            'test': '.animator-link'
+            'description': '.emission-description .emission-description__content > div > div:not(.visually-hidden)',
           })
       )
       .data(function (listing) {
         scrapedData.push(listing);
-        console.log(listing);
       })
       .done(function () {
         resolve(true);
