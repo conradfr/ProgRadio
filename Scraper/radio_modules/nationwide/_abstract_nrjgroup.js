@@ -30,21 +30,20 @@ const format = (dateObj, name) => {
     // NOTE: there is a bug in the page, all datetimes on it have the day date even if next day,
     //       so we need to account for that
 
+    // if (previous day is sunday we need to sub 7 days)
+    if (dateObj.day() === 1 && startDateTime.day() !== dateObj.day()) {
+      startDateTime.subtract(7, 'days');
+      endDateTime.subtract(7, 'days');
+    }
+
     // this is previous day
     if (startDateTime.isBefore(dateObj, 'day')) {
       if (index === 0) {
         return prev;
       }
 
-      const firstEndTimePrevDay = moment.tz(array[0].datetime_raw_end, 'YYYY-MM-DDTHH:mm:ss', 'Europe/Paris');
-
-      // if (previous day is sunday we need to sub 7 days)
-      if (dateObj.day() === 1 && startDateTime.day() !== dateObj.day()) {
-        firstEndTimePrevDay.subtract(7, 'days');
-      }
-
       // this is previous day normal scheduling, ignoring
-      if (startDateTime.isSameOrAfter(firstEndTimePrevDay)) {
+      if (startDateTime.hours() > 5) {
         return prev;
       }
 
@@ -59,7 +58,7 @@ const format = (dateObj, name) => {
         const firstStartTimeToday = moment.tz(prev[0].date_time_start, moment.ISO_8601, 'Europe/Paris');
 
         // this is next day scheduling, ignoring
-        if (startDateTime.isSameOrBefore(firstStartTimeToday)) {
+        if (startDateTime.isSameOrBefore(firstStartTimeToday) && startDateTime.hour() < 6) {
           return prev;
         }
       }
