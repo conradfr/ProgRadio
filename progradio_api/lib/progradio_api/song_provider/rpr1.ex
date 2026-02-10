@@ -26,7 +26,7 @@ defmodule ProgRadioApi.SongProvider.Rpr1 do
     "rpr1_70er" => 34,
     "rpr1_90er" => 24,
     "rpr1_2000er" => 114,
-    "rpr1_2010er" => 50,
+    "rpr1_2010er" => 145,
     "rpr1_karneval" => 136,
     "rpr1_pappnasen" => 56,
     "rpr1_schinkenstrasse" => 52,

@@ -125,4 +125,12 @@ defmodule ProgRadioApi.Stream do
     ])
     |> validate_required([:description])
   end
+
+  def changeset_tags(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :tags
+    ])
+    |> validate_required([:tags])
+  end
 end

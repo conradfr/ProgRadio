@@ -11,6 +11,8 @@ defmodule ProgRadioApi.Importer.Ai do
 
   @default_batch_size 200
 
+  # ---------- PUBLIC ----------
+
   def update_description(limit \\ 1, offset \\ 0, batch_size \\ @default_batch_size) do
     openai =
       OpenaiEx._for_azure(
@@ -26,7 +28,7 @@ defmodule ProgRadioApi.Importer.Ai do
         #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
         where:
           s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
-            not is_nil(s.country_code) and is_nil(s.description),
+            not is_nil(s.country_code) and (is_nil(s.description) or s.description == ""),
         order_by: [desc: s.score, desc: s.clicks_last_24h],
         offset: ^offset,
         limit: ^limit
@@ -37,7 +39,7 @@ defmodule ProgRadioApi.Importer.Ai do
         |> Repo.stream(max_rows: 100)
         |> Stream.chunk_every(batch_size)
         |> Stream.each(fn batch ->
-          process_batch(batch, openai)
+          process_description_batch(batch, openai)
         end)
         |> Stream.run()
       end,
@@ -45,7 +47,43 @@ defmodule ProgRadioApi.Importer.Ai do
     )
   end
 
-  defp process_batch(batch, openai) do
+  def update_tags(limit \\ 1, offset \\ 0, batch_size \\ @default_batch_size) do
+    openai =
+      OpenaiEx._for_azure(
+        System.fetch_env!("AZURE_GPT_API_KEY"),
+        System.fetch_env!("AZURE_GPT_BASE_URL"),
+        System.fetch_env!("AZURE_GPT_DEPLOYMENT"),
+        System.fetch_env!("AZURE_GPT_VERSION")
+      )
+
+    query =
+      from s in ProgRadioStream,
+           select: s,
+             #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
+           where:
+             s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
+             not is_nil(s.country_code) and (is_nil(s.tags) or s.tags == ""),
+           order_by: [desc: s.score, desc: s.clicks_last_24h],
+           offset: ^offset,
+           limit: ^limit
+
+    Repo.transaction(
+      fn ->
+        query
+        |> Repo.stream(max_rows: 100)
+        |> Stream.chunk_every(batch_size)
+        |> Stream.each(fn batch ->
+                          process_tags_batch(batch, openai)
+        end)
+        |> Stream.run()
+      end,
+      timeout: :infinity
+    )
+  end
+
+  # ---------- PRIVATE ----------
+
+  defp process_description_batch(batch, openai) do
     changesets =
       batch
       |> Enum.map(fn stream_record ->
@@ -89,7 +127,61 @@ defmodule ProgRadioApi.Importer.Ai do
       {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
       when is_binary(content) and content != "" ->
         Logger.info(
-          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..10)} (...)"
+          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..10)}"
+        )
+
+        content
+
+      _ ->
+        Logger.info("No result for radio #{e.name}- #{e.id}")
+        nil
+    end
+  end
+
+  defp process_tags_batch(batch, openai) do
+    changesets =
+      batch
+      |> Enum.map(fn stream_record ->
+        {stream_record, fetch_tags(stream_record, openai)}
+      end)
+      |> Enum.filter(fn {_record, tags} -> tags != nil end)
+      |> Enum.map(fn {record, tags} ->
+        ProgRadioStream.changeset_tags(record, %{tags: tags})
+      end)
+
+    case update_batch(changesets) do
+      {:ok, count} ->
+        Logger.info("Successfully updated #{count} records in batch")
+
+      {:error, reason} ->
+        Logger.error("Failed to update batch: #{inspect(reason)}")
+    end
+  end
+
+  defp fetch_tags(e, openai) do
+    prompt =
+      "Find five tags maximum that resume the radio whose name is given by the chat input. Focus on the type of radio (music, news, talk etc...) and if it's a music station focus also on the most relevant music style. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer nothing if you don't find something. Tags must be in English. Return them as one line, each tag in lowercase and separated by a comma, no blank space around the commas."
+
+    params = """
+    radio: #{e.name}
+    website: #{if not is_nil(e.website), do: e.website, else: "none"}
+    country code: #{e.country_code}
+    """
+
+    chat_req =
+      Chat.Completions.new(
+        model: "gpt-4.1-mini",
+        messages: [
+          ChatMessage.system(prompt),
+          ChatMessage.user(params)
+        ]
+      )
+
+    case Chat.Completions.create(openai, chat_req) do
+      {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
+      when is_binary(content) and content != "" ->
+        Logger.info(
+          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..100)} (...)"
         )
 
         content
