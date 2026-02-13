@@ -36,7 +36,6 @@ interface Focus {
 
 interface State {
   socket: any
-  socketHasClosed: boolean
   socketTimer: number|null
   channels:any
   channelsRefCount: ChannelsRefCount
@@ -69,7 +68,6 @@ const flux = PlayerUtils.calculatedFlux();
 export const usePlayerStore = defineStore('player', {
   state: (): State => ({
     socket: null,
-    socketHasClosed: false,
     socketTimer: null,
     channels: {},
     channelsRefCount: {},
@@ -483,32 +481,27 @@ export const usePlayerStore = defineStore('player', {
         this.socket.onOpen(() => {
           this.setSocketTimer();
 
-          if (this.socketHasClosed === true) {
-            Object.entries(this.channelsRefCount).forEach(
-              ([key, value]) => {
-                if ((value as number) > 0) {
-                  const topicName = PlayerUtils.extractTopicName(key);
+          // restore channels
+          Object.entries(this.channelsRefCount).forEach(
+            ([key, value]) => {
+              if ((value as number) > 0) {
+                const topicName = PlayerUtils.extractTopicName(key);
 
-                  if (topicName) {
-                    this.joinChannel(key, topicName);
-                  } else {
-                    this.joinChannel(key);
-                  }
+                if (topicName) {
+                  this.joinChannel(key, topicName);
+                } else {
+                  this.joinChannel(key);
                 }
               }
-            );
-          }
-
-          this.socketHasClosed = false;
+            }
+          );
         });
 
         this.socket.onClose(() => {
           // this.channels = {};
           this.song = {};
-          this.socketHasClosed = true;
           this.listeners = {};
           this.clearSocketTimer();
-          this.socket = null;
         });
 
         /* this.socket.onError((error: any) => {

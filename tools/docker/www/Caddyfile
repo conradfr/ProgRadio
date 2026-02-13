@@ -32,10 +32,10 @@
 	root * public/
 	encode zstd br gzip
 
-  log_skip /media/*
-  log_skip /.well-known/traffic-advice
-  @skip path_regexp \.(js|css|png|jpe?g|gif|ico|woff|otf|ttf|eot|svg|txt|pdf|docx?|xlsx?)$
-  log_skip @skip
+  # log_skip /media/*
+  # log_skip /.well-known/traffic-advice
+  # @skip path_regexp \.(js|css|png|jpe?g|gif|webp|ico|woff|woff2|otf|ttf|eot|svg|txt|pdf|docx?|xlsx?)$
+  # log_skip @skip
 
   {$CADDY_SERVER_EXTRA_DIRECTIVES}
 
