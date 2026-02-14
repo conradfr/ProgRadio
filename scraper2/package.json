@@ -13,7 +13,7 @@
     "axios": "^1.8.4",
     "cheerio": "^1.0.0",
     "command-line-args": "^6.0.1",
-    "fast-xml-parser": "^5.0.9",
+    "fast-xml-parser": "^5.3.4",
     "html-to-text": "^9.0.5",
     "js-yaml": "^4.1.0",
     "moment": "^2.30.1",
