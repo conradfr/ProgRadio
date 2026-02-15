@@ -59,9 +59,7 @@ export default defineComponent({
       return filter(this.radio.streams, r => r.main === true)[0];
     },
     picture() {
-      // @ts-expect-error defined on global scope
-      // eslint-disable-next-line no-undef
-      return `${cdnBaseUrl}${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
+      return `${this.$CDN_BASE_URL}${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
     },
     currentShow() {
       const subRadio = this.getSubRadio(this.radio.code_name);

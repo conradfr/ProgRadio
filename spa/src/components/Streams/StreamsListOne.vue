@@ -26,7 +26,7 @@
     <div class="streams-one-fav cursor-pointer"
       :class="{ 'streams-one-fav-isfavorite': isFavorite }"
       @click.stop="toggleFavorite">
-      <img class="streams-one-icon" :alt="radio.code_name" src="/img/favorites_streams.svg">
+      <img class="streams-one-icon" :src="`${$CDN_BASE_URL}img/favorites_streams.svg`">
     </div>
     <div
       v-if="(selectedCountry === code_all
@@ -52,6 +52,12 @@
         class="streams-one-admin-edit cursor-pointer"
         style="margin-top: 2px">
       <a target="_blank" :href="`/${locale}/admin/overloading/${radio.code_name}`"><i class="bi bi-pen"></i></a>
+    </div>
+    <div
+        v-if="radio.popup"
+        class="streams-one-popup"
+        :title="$t('message.streaming.popup')">
+      <i class="bi bi-exclamation-circle"></i>
     </div>
     <div
         v-if="hasErrors"

@@ -69,11 +69,11 @@
               <img v-if="value.code === code_all || value.code === code_favorites"
                class="gb-flag gb-flag--mini"
                style="height: 20px; width: 25px;"
-               :src="'/img/' + value.code.toLowerCase() + '_streams.svg'">
+               :src="`${$CDN_BASE_URL}img/${value.code.toLowerCase()}_streams.svg`">
               <img v-else-if="value.code === code_last || value.code === code_history"
                 class="gb-flag gb-flag--mini"
                 style="height: 20px; width: 24px;"
-                :src="'/img/' + value.code.toLowerCase() + '_streams.png'">
+                :src="`${$CDN_BASE_URL}img/${value.code.toLowerCase()}_streams.png`">
               <vue-flag
                 v-else
                 :code="value.code"
@@ -86,11 +86,11 @@
             <img v-if="option.code === code_all || option.code === code_favorites"
               class="gb-flag gb-flag--mini"
               style="height: 20px; width: 25px;"
-              :src="'/img/' + option.code.toLowerCase() + '_streams.svg'">
+              :src="`${$CDN_BASE_URL}img/${option.code.toLowerCase()}_streams.svg`">
             <img v-else-if="option.code === code_last || option.code === code_history"
               class="gb-flag gb-flag--mini"
               style="height: 20px; width: 24px;"
-              :src="'/img/' + option.code.toLowerCase() + '_streams.png'">
+              :src="`${$CDN_BASE_URL}img/${option.code.toLowerCase()}_streams.png`">
             <vue-flag v-else-if="displayFlags"
               :code="option.code"
               size="mini"

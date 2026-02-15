@@ -117,6 +117,8 @@
   @cdn_non_media {
     header_regexp hostmatch Host ^cdn\.(.+)$
     not path /media*
+    not path /img*
+    not path /fonts*
   }
   redir @cdn_non_media https://www.{re.hostmatch.1}{uri} permanent
 

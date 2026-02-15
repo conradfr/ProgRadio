@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-1">
                             {% if one.country_code is defined %}
-                                <img class="gb-flag gb-flag--micro" title="{{ one.country_code }}" alt="{{ one.country_code }}" src="/img/flags/{{ one.country_code|lower }}.svg">
+                                <img class="gb-flag gb-flag--micro" title="{{ one.country_code }}" alt="{{ one.country_code }}" src="{{ asset('img/flags/' ~ one.country_code|lower ~ '.svg') }}">
                             {% else %}
                                 -
                             {% endif %}

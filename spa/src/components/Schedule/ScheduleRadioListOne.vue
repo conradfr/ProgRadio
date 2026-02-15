@@ -22,14 +22,14 @@
       :class="{ 'radio-submenu': hover }"
       :style="subMenuStyleObject">
       <div class="radio-submenu-entry radio-submenu-entry-favorites" @click="toggleFavorite">
-        <img v-if="isFavorite" src="/img/favorite_heart.svg" class="filter-fav" />
+        <img v-if="isFavorite" :src="`${$CDN_BASE_URL}img/favorite_heart.svg`" class="filter-fav" />
         <p v-if="isFavorite">{{ $t('message.player.favorites.remove') }}</p>
-        <img v-if="!isFavorite" src="/img/favorite-empty_heart.svg" class="filter-fav" />
+        <img v-if="!isFavorite" :src="`${$CDN_BASE_URL}img/favorite-empty_heart.svg`" class="filter-fav" />
         <p v-if="!isFavorite">{{ $t('message.player.favorites.add') }}</p>
       </div>
       <router-link class="radio-submenu-entry radio-submenu-entry-radiopage"
         :to="'/' + locale + '/radio/' + radio.code_name">
-        <img src="/img/list.svg" class="filter-page" />
+        <img :src="`${$CDN_BASE_URL}img/list.svg`" class="filter-page" />
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
       </router-link>
     </div>
@@ -128,9 +128,7 @@ export default defineComponent({
       hoverTimer: null,
       locale: this.$i18n.locale,
       styleObject: {
-        // @ts-expect-error defined on global scope
-        // eslint-disable-next-line no-undef
-        backgroundImage: `url("${cdnBaseUrl}img/radio/schedule/${this.radio.code_name}.png")`
+        backgroundImage: `url("${this.$CDN_BASE_URL}img/radio/schedule/${this.radio.code_name}.png")`
       },
     };
   },
@@ -220,9 +218,7 @@ export default defineComponent({
         : `schedule/${this.radio.code_name}.png`;
 
       return {
-        // @ts-expect-error defined on global scope
-        // eslint-disable-next-line no-undef
-        backgroundImage: `url("${cdnBaseUrl}img/radio/${logo}")`
+        backgroundImage: `url("${this.$CDN_BASE_URL}img/radio/${logo}")`
       }
     },
     visibilityChange() {

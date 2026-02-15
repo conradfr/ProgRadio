@@ -70,9 +70,7 @@ export default defineComponent({
         DateTime.fromISO(this.show.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
     },
     picture(): string {
-      // @ts-expect-error defined on global scope
-      // eslint-disable-next-line no-undef
-      return `${cdnBaseUrl}${THUMBNAIL_PAGE_PROGRAM_PATH}${this.show.picture_url}`;
+      return `${this.$CDN_BASE_URL}${THUMBNAIL_PAGE_PROGRAM_PATH}${this.show.picture_url}`;
     }
   }
 });

@@ -43,7 +43,9 @@ const getPictureUrl = (radio: Radio|Stream, show: Program|null = null) => {
   }
 
   if (typeUtils.isRadio(radio)) {
-    return `/img/radio/schedule/${radio.code_name}.png`;
+    // @ts-expect-error defined on global scope
+    // eslint-disable-next-line no-undef`
+    return `${cdnBaseUrl}img/radio/schedule/${radio.code_name}.png`;
   }
 
   if (radio.img !== null && radio.img !== '') {
@@ -52,7 +54,9 @@ const getPictureUrl = (radio: Radio|Stream, show: Program|null = null) => {
     return `${cdnBaseUrl}${config.THUMBNAIL_STREAM_PATH}${radio.img}`;
   }
 
-  return '/img/stream-placeholder.png';
+  // @ts-expect-error defined on global scope
+  // eslint-disable-next-line no-undef
+  return `${cdnBaseUrl}img/stream-placeholder.png`;
 };
 
 const getNextRadio = (currentRadio: Radio|Stream, radios: Radio[], way: 'backward'|'forward') => {

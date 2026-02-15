@@ -53,7 +53,7 @@
                                                 @click="play('{{ entry.radio.streamingUrl }}', '{{ entry.radio.codeName }}')"
                                                 class="radio-page-play">
                                                 <img alt="{{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}"
-                                                     src="/img/play-button-inside-a-circle.svg">
+                                                     src="{{ asset('img/play-button-inside-a-circle.svg') }}">
                                                 <div class="radio-page-play-text">
                                                     {{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}
                                                 </div>

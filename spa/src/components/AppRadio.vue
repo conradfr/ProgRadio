@@ -217,9 +217,7 @@ export default defineComponent({
         return '';
       }
 
-      // @ts-expect-error defined on global scope
-      // eslint-disable-next-line no-undef
-      return `${cdnBaseUrl}${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
+      return `${this.$CDN_BASE_URL}${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
     },
     capitalizedDate(): string {
       if (!this.date) return '';

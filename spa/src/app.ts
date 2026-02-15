@@ -10,6 +10,10 @@ import i18n from './lang/i18n';
 
 const app = createApp(App);
 
+// @ts-expect-error defined on global scope
+// eslint-disable-next-line no-undef
+app.config.globalProperties.$CDN_BASE_URL = cdnBaseUrl;
+
 app.use(i18n);
 const pinia = createPinia();
 
@@ -30,7 +34,9 @@ app.use(VueGtag, {
 
 app.use(VueFlags, {
   // Specify the path of the folder where the flags are stored.
-  iconPath: '/img/flags/',
+  // @ts-expect-error defined on global scope
+  // eslint-disable-next-line no-undef
+  iconPath: `${cdnBaseUrl}img/flags/`,
 });
 
 app.mount('#app');

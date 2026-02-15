@@ -175,6 +175,16 @@
       right: 4px;
       color: var(--bs-warning);
 
+      &:hover {
+        filter: brightness(0.85);
+      }
+    }
+
+    .streams-one-popup {
+      position: absolute;
+      top: 9.615rem;
+      left: 4px;
+      color: var(--bs-info);
 
       &:hover {
         filter: brightness(0.85);

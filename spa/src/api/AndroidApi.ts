@@ -35,7 +35,9 @@ const getPictureUrl = (radio: Radio|Stream, show: Program|null = null): string|n
   }
 
   if (typeUtils.isRadio(radio)) {
-    return `/img/radio/page/${radio.code_name}.png`;
+    // @ts-expect-error defined on global scope
+    // eslint-disable-next-line no-undef
+    return `${cdnBaseUrl}img/radio/page/${radio.code_name}.png`;
   }
 
   if (radio.img_alt !== null && radio.img_alt !== '') {

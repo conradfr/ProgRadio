@@ -186,7 +186,7 @@ export default defineComponent({
     picturePath(): string {
       // @ts-expect-error defined on global scope
       // eslint-disable-next-line no-undef
-      return `${cdnBaseUrl}${THUMBNAIL_PROGRAM_PATH}${this.program.picture_url}`;
+      return `${this.$CDN_BASE_URL}${THUMBNAIL_PROGRAM_PATH}${this.program.picture_url}`;
     }
   },
   methods: {

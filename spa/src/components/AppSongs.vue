@@ -28,7 +28,7 @@
             {{ $t('message.songs_page.no_songs') }}
           </p>
           <div class="text-center">
-            <img class="img-fluid" src="/img/songsave.png" alt="">
+            <img class="img-fluid" :src="`${$CDN_BASE_URL}img/songsave.png`" alt="">
           </div>
         </div>
       </div>

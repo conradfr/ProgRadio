@@ -67,14 +67,10 @@ export default defineComponent({
       playingStreamCodeName: 'radioStreamCodeName'
     }),
     playImage() {
-      // @ts-expect-error defined on global scope
-      // eslint-disable-next-line no-undef
-      return `${cdnBaseUrl}img/play-button-inside-a-circle.svg`;
+      return `${this.$CDN_BASE_URL}img/play-button-inside-a-circle.svg`;
     },
     pauseImage() {
-      // @ts-expect-error defined on global scope
-      // eslint-disable-next-line no-undef
-      return `${cdnBaseUrl}img/rounded-pause-button.svg`;
+      return `${this.$CDN_BASE_URL}img/rounded-pause-button.svg`;
     }
   },
   methods: {

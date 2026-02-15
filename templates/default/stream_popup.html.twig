@@ -82,7 +82,7 @@
                                                 @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}'})"
                                                 class="radio-page-play">
                                             <img alt="{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}"
-                                                 src="/img/play-button-inside-a-circle.svg">
+                                                 src="{{ asset('img/play-button-inside-a-circle.svg') }}">
                                         </div>
                                         <div
                                                 v-if="playing === PLAYER_STATE_PLAYING"

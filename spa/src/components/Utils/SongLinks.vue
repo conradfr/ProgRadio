@@ -17,7 +17,7 @@
     <a class="link-no-to-bold" target="_blank"
        :title="$t( 'message.songs_page.find_deezer')"
        :href="encodeURI(`https://www.deezer.com/search/${title}`)">
-      <img src="/img/deezericon.png" :alt="$t('message.songs_page.find_deezer')">
+      <img :src="`${$CDN_BASE_URL}img/deezericon.png`" :alt="$t('message.songs_page.find_deezer')">
       &nbsp;<span class="d-none d-sm-inline">{{ $t('message.songs_page.find_deezer') }}</span>
     </a>&nbsp;&nbsp;
 
