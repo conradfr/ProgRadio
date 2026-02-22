@@ -53,6 +53,7 @@ services:
       - '4001:4001'
     volumes:
       - ./:/app
+      - ./public/media:/var/www/media
     working_dir: /app/progradio_api
     depends_on:
       - database
