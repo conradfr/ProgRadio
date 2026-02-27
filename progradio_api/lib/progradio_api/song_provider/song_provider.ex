@@ -47,10 +47,8 @@ defmodule ProgRadioApi.SongProvider do
   def get_maybe_stream(url) do
     Req.get!(
       url,
-      ReqUtils.get_options(
-        redirect: false,
-        into: :self
-      )
+      redirect: false,
+      into: :self
     )
   end
 

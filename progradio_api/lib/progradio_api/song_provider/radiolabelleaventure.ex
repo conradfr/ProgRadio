@@ -19,7 +19,11 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
 
       if end_at > now_unix do
         next_refresh = end_at - now_unix
-        Logger.debug("Data provider - #{name} (radiolabelleaventure) - next refresh: #{next_refresh}")
+
+        Logger.debug(
+          "Data provider - #{name} (radiolabelleaventure) - next refresh: #{next_refresh}"
+        )
+
         next_refresh * 1000
       else
         default_refresh

@@ -79,7 +79,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
     rescue
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")
-        :error
+        nil
     end
   end
 

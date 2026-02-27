@@ -214,7 +214,7 @@ defmodule ProgRadioApi.SongServer do
           kill_push_process_if_any(state.push_pid)
           {:stop, :normal, nil}
         else
-          Logger.error("Data provider - #{state.name}: fetching error, no quitting")
+          Logger.info("Data provider - #{state.name}: fetching error, no quitting")
           Process.send_after(self(), {:refresh, :auto}, @refresh_song_retries_max_interval)
           {:noreply, %{updated_state | song: nil, last_data: nil}, :hibernate}
         end
@@ -273,7 +273,7 @@ defmodule ProgRadioApi.SongServer do
             @refresh_song_interval
             |> Kernel.+(Enum.random(-5..5))
 
-        Logger.error("Data provider - #{state.name}: fetching error")
+        Logger.info("Data provider - #{state.name}: fetching error")
 
         Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
 
@@ -344,7 +344,7 @@ defmodule ProgRadioApi.SongServer do
   end
 
   def handle_info({:DOWN, ref, _, _, reason}, state) do
-    Logger.error("Task failed with reason #{inspect(reason)}")
+    Logger.error("Task failed #{inspect(reason)}")
     kill_push_process_if_any(state.push_pid)
     {:noreply, %{state | tasks: Map.delete(state.tasks, ref)}}
   end

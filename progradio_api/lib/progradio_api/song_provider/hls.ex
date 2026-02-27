@@ -93,10 +93,8 @@ defmodule ProgRadioApi.SongProvider.Hls do
     data =
       url
       |> Req.get!(
-        ReqUtils.get_options(
-          receive_timeout: @req_timeout,
-          connect_options: [timeout: @req_timeout]
-        )
+        receive_timeout: @req_timeout,
+        connect_options: [timeout: @req_timeout]
       )
       |> Map.get(:body)
       |> HLS.parse()

@@ -498,15 +498,16 @@ export const usePlayerStore = defineStore('player', {
         });
 
         this.socket.onClose(() => {
+          console.log('Websocket closed');
           // this.channels = {};
           this.song = {};
           this.listeners = {};
           this.clearSocketTimer();
         });
 
-        /* this.socket.onError((error: any) => {
+         this.socket.onError((error: any) => {
           console.log(error);
-        }); */
+        });
       }
 
       if (this.socket && !this.socket.isConnected()) {

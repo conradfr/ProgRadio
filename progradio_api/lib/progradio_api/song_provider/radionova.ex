@@ -77,7 +77,10 @@ defmodule ProgRadioApi.SongProvider.Radionova do
         end)
 
       if radio != nil do
-        Map.get(radio, "currentTrack")
+        case Map.get(radio, "currentTrack") do
+          :null -> nil
+          track -> track
+        end
       else
         nil
       end

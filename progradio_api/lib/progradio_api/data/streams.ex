@@ -666,7 +666,7 @@ defmodule ProgRadioApi.Streams do
 
       api_data =
         "https://laut.fm/fm-api/station/#{code_name}"
-        |> Req.get!(ReqUtils.get_options(redirect: false))
+        |> Req.get!(redirect: false)
         |> Map.get(:body)
 
       tags =
@@ -959,7 +959,7 @@ defmodule ProgRadioApi.Streams do
 
                 try do
                   stream.website
-                  |> Req.get!(ReqUtils.get_options(receive_timeout: @check_timeout))
+                  |> Req.get!(receive_timeout: @check_timeout)
                   |> Map.get(:status)
                 rescue
                   _ -> 666
@@ -991,7 +991,7 @@ defmodule ProgRadioApi.Streams do
                 try do
                   stream.website
                   |> String.replace("http://", "https://", global: false)
-                  |> Req.get!(ReqUtils.get_options(receive_timeout: @check_timeout))
+                  |> Req.get!(receive_timeout: @check_timeout)
                   |> Map.get(:status)
                 rescue
                   _ -> 666
@@ -1025,7 +1025,7 @@ defmodule ProgRadioApi.Streams do
 
                 try do
                   stream.website
-                  |> Req.get!(ReqUtils.get_options(receive_timeout: @check_timeout))
+                  |> Req.get!(receive_timeout: @check_timeout)
                   |> Map.get(:status)
                 rescue
                   _ -> 666

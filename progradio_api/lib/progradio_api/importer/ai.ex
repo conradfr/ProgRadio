@@ -58,14 +58,14 @@ defmodule ProgRadioApi.Importer.Ai do
 
     query =
       from s in ProgRadioStream,
-           select: s,
-             #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
-           where:
-             s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
-             not is_nil(s.country_code) and (is_nil(s.tags) or s.tags == ""),
-           order_by: [desc: s.score, desc: s.clicks_last_24h],
-           offset: ^offset,
-           limit: ^limit
+        select: s,
+        #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
+        where:
+          s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
+            not is_nil(s.country_code) and (is_nil(s.tags) or s.tags == ""),
+        order_by: [desc: s.score, desc: s.clicks_last_24h],
+        offset: ^offset,
+        limit: ^limit
 
     Repo.transaction(
       fn ->
@@ -73,7 +73,7 @@ defmodule ProgRadioApi.Importer.Ai do
         |> Repo.stream(max_rows: 100)
         |> Stream.chunk_every(batch_size)
         |> Stream.each(fn batch ->
-                          process_tags_batch(batch, openai)
+          process_tags_batch(batch, openai)
         end)
         |> Stream.run()
       end,
@@ -126,9 +126,7 @@ defmodule ProgRadioApi.Importer.Ai do
     case Chat.Completions.create(openai, chat_req) do
       {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
       when is_binary(content) and content != "" ->
-        Logger.info(
-          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..10)}"
-        )
+        Logger.info("Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..10)}")
 
         content
 

@@ -37,11 +37,11 @@ defmodule ProgRadioApi.SongProvider.Infomaniak do
             |> SongProvider.get()
             |> Map.get(:body)
             |> :json.decode()
-            |> Map.get("data")
+            |> Map.get("data", [])
             |> List.last()
 
           # over the delta, let's consider it's a not up to date data
-          if SongProvider.now_unix() > Map.get(data, "date") + @max_delta_seconds do
+          if data == nil or SongProvider.now_unix() > Map.get(data, "date") + @max_delta_seconds do
             nil
           else
             data
@@ -50,7 +50,7 @@ defmodule ProgRadioApi.SongProvider.Infomaniak do
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (infomaniak): data error rescue")
-        :error
+        nil
     end
   end
 

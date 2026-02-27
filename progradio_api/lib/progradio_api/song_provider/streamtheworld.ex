@@ -29,8 +29,12 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
             |> SongProvider.get()
             |> Map.get(:body)
             |> XmlToMap.naive_map()
-            |> Map.get("nowplaying-info-list", %{})
-            |> Map.get("nowplaying-info")
+            |> IO.inspect()
+            |> Map.get("nowplaying-info-list")
+            |> then(fn
+              nil -> nil
+              val -> Map.get(val, "nowplaying-info", %{})
+            end)
 
           # discard if over
           case get_value(data, "cue_time_start") do
@@ -80,12 +84,12 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
     end
   end
 
-  defp get_value(data, key) do
-    case Map.get(data, "#content", %{}) do
+  defp get_value(%{} = data, key) do
+    case Map.get(data, "#content", nil) do
       nil ->
         nil
 
-      content ->
+      %{} = content ->
         content
         |> Map.get("property", [])
         |> Enum.find(%{}, fn
@@ -93,6 +97,11 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
           _ -> false
         end)
         |> Map.get("#content")
+
+      _ ->
+        nil
     end
   end
+
+  defp get_value(_data, _key), do: nil
 end

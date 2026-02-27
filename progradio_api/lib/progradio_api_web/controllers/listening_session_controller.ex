@@ -23,7 +23,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
         ListenersCounter.register_listening_session(listening_session, false)
 
         if Map.has_key?(listening_session_params, "stream_id"),
-           do: Streams.reset_streaming_error(listening_session_params["stream_id"])
+          do: Streams.reset_streaming_error(listening_session_params["stream_id"])
       end)
 
       conn
@@ -61,7 +61,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
         end
 
         if Map.has_key?(listening_session_params, "stream_id"),
-           do: Streams.reset_streaming_error(listening_session_params["stream_id"])
+          do: Streams.reset_streaming_error(listening_session_params["stream_id"])
       end)
 
       conn
