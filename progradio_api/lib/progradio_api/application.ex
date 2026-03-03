@@ -9,12 +9,12 @@ defmodule ProgRadioApi.Application do
   def start(_type, _args) do
     :logger.add_handler(:my_sentry_handler, Sentry.LoggerHandler, %{
       config: %{
-        capture_log_messages: true,
-        level: :error,
-        metadata: [:file, :line],
-        rate_limiting: [max_events: 10, interval: _1_second = 1_000],
-        capture_log_messages: true,
-        excluded_domains: [:bandit]
+#        capture_log_messages: true,
+#        level: :error,
+#        metadata: [:file, :line],
+#        rate_limiting: [max_events: 10, interval: _1_second = 1_000],
+#        capture_log_messages: true,
+        excluded_domains: [:bandit, :thousand_island]
       }
     })
 

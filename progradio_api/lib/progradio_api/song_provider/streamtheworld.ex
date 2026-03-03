@@ -29,7 +29,6 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
             |> SongProvider.get()
             |> Map.get(:body)
             |> XmlToMap.naive_map()
-            |> IO.inspect()
             |> Map.get("nowplaying-info-list")
             |> then(fn
               nil -> nil
