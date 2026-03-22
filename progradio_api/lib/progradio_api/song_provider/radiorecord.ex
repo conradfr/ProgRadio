@@ -67,7 +67,9 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
     "radiorecord_trop" => 530,
     "radiorecord_uplift" => 504,
     "radiorecord_vip" => 538,
-    "radiorecord_workout" => 43339
+    "radiorecord_workout" => 43339,
+    "radiorecord_naft" => 561,
+    "radiorecord_basshouse" => 541
   }
 
   @impl true
