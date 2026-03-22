@@ -1,4 +1,4 @@
-const scrapAbstract = require('./_abstract_radiofrance.js');
+const scrapAbstract = require('./_abstract_radiofrance_webscrap2026');
 
 const name = 'franceinfo';
 

@@ -25,6 +25,7 @@ const init = (mailConfig) => {
     mailConfig.port = process.env.MAIL_PORT || mailConfig.port;
     mailConfig.to = process.env.MAIL_TO || mailConfig.to;
     mailConfig.from = process.env.MAIL_USERNAME || mailConfig.from;
+    mailConfig.ssl = false;
 
     logger.add(new winston.transports.Mail(mailConfig));
   }
