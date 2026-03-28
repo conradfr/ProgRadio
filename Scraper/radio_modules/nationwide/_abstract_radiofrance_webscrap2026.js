@@ -51,7 +51,7 @@ const format = async (dateObj, name) => {
 
     const newEntry = {
       'date_time_start': currDateTime.toISOString(),
-      'title': curr.title,
+      'title': curr.title || curr.title_alt,
       'img': curr.img ? curr.img : null,
       'sections': []
     };
@@ -89,6 +89,7 @@ const fetch = (name, dateObj) => {
         'date_raw': '.typo-text-small', // utc
         'img': 'img.ImageRatio-img@src',
         'title': '.title > a',
+        'title_alt': '.title',
         'description': '.typo-text-web-adjusted',
         // 'host': '.TimeSlotContent-producers'
       })

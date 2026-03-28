@@ -1,6 +1,7 @@
 01 00 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -n >> /var/log/cron.log 2>&1
 10 00 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -o >> /var/log/cron.log 2>&1
-01 07 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r franceinter rmc >> /var/log/cron.log 2>&1
+01 07 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r rmc >> /var/log/cron.log 2>&1
+01 07 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r franceinter >> /var/log/cron.log 2>&1
 02 07 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r franceinfo >> /var/log/cron.log 2>&1
 03 07 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r francemusique >> /var/log/cron.log 2>&1
 04 07 * * * . /root/project_env.sh; cd /home/node/app && /usr/local/bin/node index.js -r franceculture >> /var/log/cron.log 2>&1
