@@ -461,6 +461,7 @@ export const usePlayerStore = defineStore('player', {
     },
     connectSocket() {
       if (!this.socket) {
+        console.log('no websocket');
         const opts = {
 
           heartbeatIntervalMs: config.WEBSOCKET_HEARTBEAT,
@@ -479,6 +480,7 @@ export const usePlayerStore = defineStore('player', {
         this.socket = new Socket(`wss://${apiUrl}/socket`, opts);
 
         this.socket.onOpen(() => {
+          console.log('websocket open');
           this.setSocketTimer();
 
           // restore channels
@@ -498,7 +500,7 @@ export const usePlayerStore = defineStore('player', {
         });
 
         this.socket.onClose(() => {
-          console.log('Websocket closed');
+          console.log('websocket closed');
           // this.channels = {};
           this.song = {};
           this.listeners = {};
@@ -511,6 +513,7 @@ export const usePlayerStore = defineStore('player', {
       }
 
       if (this.socket && !this.socket.isConnected()) {
+        console.log('websocket connecting');
         this.socket.connect();
       }
     },
@@ -520,8 +523,9 @@ export const usePlayerStore = defineStore('player', {
 
       this.socketTimer = setTimeout(() => {
         if (this.socket) {
+          console.log('websocket auto-close');
           this.socket.disconnect();
-          this.socketTimer = null;
+          this.clearSocketTimer();
         }
       }, config.WEBSOCKET_DISCONNECT_AFTER);
     },
