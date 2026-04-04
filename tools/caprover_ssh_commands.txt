@@ -1,0 +1,2 @@
+Remote api:
+sudo docker exec -i $(sudo docker ps -a --format '{{.Image}} {{.Names}}' | grep '^img-captain-progradio-api-prod:' | head -1 | awk '{print $2}') _build/prod/rel/prod/bin/prod remote

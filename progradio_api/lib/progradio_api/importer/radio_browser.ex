@@ -14,6 +14,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   @servers_dns "all.api.radio-browser.info"
   @api_all_radios "stations"
+  @page_size 10000
 
   @max_concurrency 4
   @task_timeout 1_000_000
@@ -65,22 +66,17 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   defp get_radios(host, stream_id \\ nil) do
     # ?limit=5&offset=500
-    url =
+    base_url =
       if stream_id != nil and is_binary(stream_id) do
         "https://#{host}/json/#{@api_all_radios}/byuuid/#{stream_id}"
       else
         "https://#{host}/json/#{@api_all_radios}"
       end
 
-    Logger.info("Streams import: url - #{url}")
+    Logger.info("Streams import: url - #{base_url}")
 
     try do
-      HTTPoison.get!(
-        url,
-        [{"User-Agent", "radio-addict.com"}]
-      )
-      |> Map.get(:body)
-      |> Jason.decode!()
+      fetch_all_pages(base_url, 0, [])
       |> Enum.uniq_by(fn s -> Map.get(s, "stationuuid") end)
       |> Enum.filter(fn s ->
         Map.get(s, "lastcheckok") !== 0 and Map.get(s, "stationuuid") !== "" and
@@ -100,6 +96,31 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       _ ->
         Logger.warning("Streams import: error importing radios")
         []
+    end
+  end
+
+
+
+  defp fetch_all_pages(base_url, offset, acc) do
+    separator = if String.contains?(base_url, "?"), do: "&", else: "?"
+    url = "#{base_url}#{separator}limit=#{@page_size}&offset=#{offset}"
+
+    Logger.info("Streams import: fetching offset=#{offset}, limit=#{@page_size}")
+
+    results =
+      HTTPoison.get!(
+        url,
+        [{"User-Agent", "radio-addict.com"}]
+      )
+      |> Map.get(:body)
+      |> Jason.decode!()
+
+    new_acc = acc ++ results
+
+    if length(results) >= @page_size do
+      fetch_all_pages(base_url, offset + @page_size, new_acc)
+    else
+      new_acc
     end
   end
 
@@ -307,7 +328,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
   # upgrade urls with known formats to newer one that will work anytime
   # todo as most of these are similar maybe streamline to less functions
-  defp stream_url_transformer(stream_url) do
+  def stream_url_transformer(stream_url) do
     {_, updated_stream_url} =
       {:continue, stream_url}
       |> StreamTransformers.streamtheworld()
@@ -319,6 +340,10 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> StreamTransformers.laut()
       |> StreamTransformers.laut_url()
       |> StreamTransformers.network181()
+      |> StreamTransformers.exclusive_to_m3u8()
+      |> StreamTransformers.you_classical_radio_to_m3u8()
+      |> StreamTransformers.tiktok_to_m3u8()
+      |> StreamTransformers.positively_relaxation_to_m3u8()
       |> StreamTransformers.exclusive()
       |> StreamTransformers.harmony()
       |> StreamTransformers.streamabc()
