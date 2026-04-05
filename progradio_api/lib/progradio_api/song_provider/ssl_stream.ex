@@ -20,7 +20,7 @@ defmodule ProgRadioApi.SongProvider.SslStream do
       |> SongProvider.get()
       |> Map.get(:body)
     rescue
-      e ->
+      _ ->
         Logger.info("Data provider - (ssl-stream) #{name}: data error rescue")
         nil
     end

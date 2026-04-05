@@ -55,7 +55,7 @@ defmodule ProgRadioApi.Checker.RadioStreams.RadioStreamTask do
         _ -> update_status(radio_stream, false)
       end
     rescue
-      e ->
+      _ ->
         Logger.debug("Checking - #{radio_stream.code_name} (#{radio_stream.url}) - rescue")
         update_status(radio_stream, false)
     catch

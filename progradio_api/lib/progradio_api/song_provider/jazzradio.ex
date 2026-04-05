@@ -68,10 +68,7 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
     rescue
       _ -> :error
     catch
-      :error, reason ->
-        :error
-
-      {:error, reason} ->
+      :error, _reason ->
         :error
 
       :exit, _ ->

@@ -192,7 +192,7 @@ page:
         modification:
             at_least_one: املأ حقلاً واحداً أو أكثر.
             comment: تعليق
-            img: رابط الشعار
+            img: "رابط الشعار (.jpg, .png, .gif)"
             name: الاسم
             radio: الراديو
             stream_url: رابط التدفق
@@ -206,7 +206,7 @@ page:
             no_radios: ليس لديك محطات إذاعية.
             title_new: إضافة محطة إذاعية
             title_edit: تعديل محطة إذاعية
-            img: رابط الشعار
+            img: رابط الشعار (.jpg, .png, .gif)
             name: الاسم
             radio: الراديو
             stream_url: رابط التدفق

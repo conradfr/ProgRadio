@@ -36,7 +36,7 @@ defmodule ProgRadioApi.SongProvider.Creacast do
   def get_song(name, data, _last_song) do
     try do
       # This is just a plain file, will have php errors if error from the server
-      if String.contains?(data, "Notice") do
+      if String.contains?(data, "Notice") or String.contains?(data, "ERROR 808") do
         %{}
       else
         %{

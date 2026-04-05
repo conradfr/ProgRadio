@@ -9,7 +9,7 @@ defmodule ProgRadioApi.EmailStatsCronWorker do
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: _args}) do
-    Logger.debug("Cron worker")
+    Logger.debug("Email cron worker")
 
     from(s in Stream,
       join: u in User,

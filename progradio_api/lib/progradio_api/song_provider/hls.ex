@@ -2,7 +2,6 @@ defmodule ProgRadioApi.SongProvider.Hls do
   require Logger
 
   alias ProgRadioApi.SongProvider
-  alias ProgRadioApi.Utils.ReqUtils
 
   @behaviour ProgRadioApi.SongProvider
 

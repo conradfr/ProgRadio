@@ -27,7 +27,6 @@ defmodule ProgRadioApi.SongProvider.Regenbogen do
     "regenbogen_90er" => 13,
     "regenbogen_2000er" => 29,
     "regenbogen_2010er" => 142,
-    "regenbogen_tanzbar" => 45,
     "regenbogen_latin_hits" => 21,
     "regenbogen_konfetti" => 77,
     "regenbogen_soft_beat" => 164,

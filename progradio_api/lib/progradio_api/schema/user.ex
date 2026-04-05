@@ -1,6 +1,5 @@
 defmodule ProgRadioApi.User do
   use Ecto.Schema
-  import Ecto.Changeset
 
   alias ProgRadioApi.Stream
 
@@ -8,6 +7,6 @@ defmodule ProgRadioApi.User do
     field :email, :string
     field :locale, :string
     field :statistics_email, :boolean
-    has_many(:tests, Stream)
+    has_many(:streams, Stream)
   end
 end

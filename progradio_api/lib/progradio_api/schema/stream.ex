@@ -22,6 +22,7 @@ defmodule ProgRadioApi.Stream do
     field(:score, :integer, default: 0)
     field(:stream_song_code_name, :string)
     field(:source, :string, default: "radio-browser")
+    field(:external_id, :string, default: nil)
     field(:enabled, :boolean)
     field(:banned, :boolean)
     field(:popup, :boolean)
@@ -68,7 +69,9 @@ defmodule ProgRadioApi.Stream do
       :score,
       :enabled,
       :redirect_to,
-      :import_updated_at
+      :import_updated_at,
+      :source,
+      :external_id
     ])
     |> validate_required([:id, :name, :stream_url])
   end
@@ -132,5 +135,13 @@ defmodule ProgRadioApi.Stream do
       :tags
     ])
     |> validate_required([:tags])
+  end
+
+  def changeset_redirect_to(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :redirect_to
+    ])
+    |> validate_required([:redirect_to])
   end
 end

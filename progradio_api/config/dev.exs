@@ -76,3 +76,8 @@ config :progradio_api,
 config :progradio_api, ProgRadioApi.Cache,
   max_size: 100_000,
   allocated_memory: 1_000_000_000
+
+config :progradio_api, Oban,
+  plugins: [
+    {Oban.Plugins.Pruner, max_age: 300}
+  ]

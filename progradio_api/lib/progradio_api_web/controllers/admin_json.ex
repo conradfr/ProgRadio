@@ -6,4 +6,8 @@ defmodule ProgRadioApiWeb.AdminJSON do
   def search_index(_params) do
     %{status: "ok"}
   end
+
+  def import_stream_image(_params) do
+    %{status: :ok}
+  end
 end

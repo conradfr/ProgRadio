@@ -4,7 +4,6 @@ defmodule ProgRadioApi.EmailStatsSendWorker do
   require Logger
 
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.SendMail
   alias ProgRadioApi.{Stream, ListeningSession}
 
   @sleep_ms 500
@@ -46,14 +45,25 @@ defmodule ProgRadioApi.EmailStatsSendWorker do
   end
 
   defp get_stats(stream_ids) do
-    # thanks Claude
-    today = Date.utc_today()
-    last_of_previous_month = Date.add(%{today | day: 1}, -1)
-    first_of_previous_month = %{last_of_previous_month | day: 1}
+    first_of_previous_month =
+      Date.utc_today()
+      |> Map.put(:day, 1)
+      |> Date.add(-1)
+      |> Map.put(:day, 1)
+      |> DateTime.new!(~T[00:00:00], "Etc/UTC")
+
+    last_of_previous_month =
+      Date.utc_today()
+      |> Map.put(:day, 1)
+      |> Date.add(-1)
+      |> DateTime.new!(~T[23:59:59], "Etc/UTC")
 
     from(s in Stream,
       left_join: ls in ListeningSession,
-      on: s.id == ls.stream_id,
+      on:
+        s.id == ls.stream_id and
+          ls.date_time_start >= ^first_of_previous_month and
+          ls.date_time_end <= ^last_of_previous_month,
       where: s.id in ^stream_ids,
       group_by: [s.id],
       order_by: [asc: s.name],

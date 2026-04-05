@@ -192,7 +192,7 @@ page:
         modification:
             at_least_one: Fill at least one field.
             comment: Comment
-            img: Logo url
+            img: Logo url (.jpg, .png, .gif)
             name: Name
             radio: Radio
             stream_url: Stream url
@@ -206,7 +206,7 @@ page:
             no_radios: You have no radios.
             title_new: Add a radio
             title_edit: Edit a radio
-            img: Logo url
+            img: Logo url (.jpg, .png, .gif)
             name: Name
             radio: Radio
             slogan: Slogan

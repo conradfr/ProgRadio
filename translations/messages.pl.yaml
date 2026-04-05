@@ -192,7 +192,7 @@ page:
         modification:
             at_least_one: Wypełnij jedno lub więcej pól.
             comment: Komentarz
-            img: URL logo
+            img: URL logo  (.jpg, .png, .gif)
             name: Nazwa
             radio: Radio
             stream_url: URL strumienia
@@ -206,7 +206,7 @@ page:
             no_radios: Nie masz żadnych stacji radiowych.
             title_new: Dodaj stację radiową
             title_edit: Edytuj stację radiową
-            img: URL logo
+            img: URL logo  (.jpg, .png, .gif)
             name: Nazwa
             radio: Radio
             stream_url: URL strumienia

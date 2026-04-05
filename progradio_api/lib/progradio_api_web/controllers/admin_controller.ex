@@ -4,7 +4,10 @@ defmodule ProgRadioApiWeb.AdminController do
   import Canada, only: [can?: 2]
   import Ex2ms
 
+  alias ProgRadioApi.Repo
   alias ProgRadioApi.{Cache, Search}
+  alias ProgRadioApi.Utils.ImporterUtils
+  alias ProgRadioApi.Stream
 
   def empty_cache_stream(conn, _params) do
     with api_key when api_key != nil <- Map.get(conn.private, :api_key),
@@ -39,10 +42,30 @@ defmodule ProgRadioApiWeb.AdminController do
     end
   end
 
-  def import_stream_image(conn, %{"stream_id" => stream_id} = _params)
-      when is_binary(stream_id) do
+  # ---------- IMG ----------
+
+  def import_stream_image(conn, %{"stream_id" => stream_id} = _params) do
     with api_key when api_key != nil <- Map.get(conn.private, :api_key),
-         true <- can?(api_key, manage(:admin)) do
+         true <- can?(api_key, manage(:admin)),
+         %Stream{} = stream <- Repo.get(Stream, stream_id) do
+      stream_data =
+        [
+          %{
+            id: stream.id,
+            code_name: stream.id,
+            img_url: stream.original_img
+          }
+        ]
+        |> ImporterUtils.import_images()
+        |> List.first()
+
+      if Map.get(stream_data, :img) != nil do
+        stream
+        |> Stream.changeset_img(stream_data)
+        |> Repo.update()
+      end
+
+      render(conn, "import_stream_image.json", %{})
     else
       _ -> send_error(conn)
     end

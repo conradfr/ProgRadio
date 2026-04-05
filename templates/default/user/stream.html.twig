@@ -50,7 +50,7 @@
                     <select class="form-select w-md-50 w-75" aria-label="Radios" name="streamsSelect" id="streamsSelect">
                         <option value=""></option>
                         {% for item in app.user.streams|sort((a, b) => a.name <=> b.name) %}
-                            <option value="{{ item.id }}">{{ item.name }}</option>
+                            <option value="{{ item.id }}" {% if stream is defined and stream.id == item.id %}selected{% endif %}>{{ item.name }}</option>
                         {% endfor %}
                     </select>
 
@@ -143,6 +143,13 @@
                 {{ form_row(form.countryCode) }}
                 {{ form_row(form.language) }}
                 {{ form_row(form.originalImg) }}
+
+                {% if stream.img is not null %}
+                  <div class="my-2">
+                    <img style="max-height: 100px; max-width: 100px " src="/media/stream/{{ stream.img }}">
+                  </div>
+                {% endif %}
+
                 {{ form_row(form.streamUrl) }}
                 {{ form_row(form.website) }}
                 {{ form_row(form.description) }}

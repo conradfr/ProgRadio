@@ -103,6 +103,7 @@
 
             <div class="mb-1"><strong>Country:</strong> {{ stream.countryCode }}</div>
             <div class="mb-1"><strong>Website:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a></div>
+            {% if stream.source is defined %}<div class="mb-1"><strong>Source:</strong> {{ stream.source }}</div>{% endif %}
 
             <div class="mb-1"><strong>Enabled:</strong>
                 {% if stream.enabled == true %}Yes{% else %}No{% endif %}

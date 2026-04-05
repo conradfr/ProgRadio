@@ -574,8 +574,8 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, ".rcast.net") ->
         ProgRadioApi.SongProvider.Rcast
 
-      String.contains?(song_topic, ".creacast.com/") ->
-        ProgRadioApi.SongProvider.Creacast
+      #      String.contains?(song_topic, ".creacast.com/") ->
+      #        ProgRadioApi.SongProvider.Creacast
 
       String.contains?(song_topic, ".m3u8") ->
         ProgRadioApi.SongProvider.Hls

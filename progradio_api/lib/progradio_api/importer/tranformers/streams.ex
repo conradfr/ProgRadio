@@ -167,11 +167,13 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   def exclusive(stream_url), do: stream_url
 
   def exclusive_to_m3u8({:continue, stream_url}) do
-    pattern = ~r{https?://(?:[^/]+\.mystreaming\.net(?::\d+)?|streaming\.exclusive\.radio(?::\d+)?)/(er|er-app)/([^/]+)/icecast\.audio}
+    pattern =
+      ~r{https?://(?:[^/]+\.mystreaming\.net(?::\d+)?|streaming\.exclusive\.radio(?::\d+)?)/(er|er-app)/([^/]+)/icecast\.audio}
 
     case Regex.run(pattern, stream_url) do
       [_, prefix, extracted] ->
         {:ok, "https://streaming.exclusive.radio/#{prefix}/#{extracted}/playlist.m3u8"}
+
       nil ->
         {:continue, stream_url}
     end
@@ -180,11 +182,13 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   def exclusive_to_m3u8(stream_url), do: stream_url
 
   def tiktok_to_m3u8({:continue, stream_url}) do
-    pattern = ~r{https?://(?:[^/]+\.mystreaming\.net(?::\d+)?|streaming\.exclusive\.radio(?::\d+)?)/(tt)/([^/]+)/icecast\.audio}
+    pattern =
+      ~r{https?://(?:[^/]+\.mystreaming\.net(?::\d+)?|streaming\.exclusive\.radio(?::\d+)?)/(tt)/([^/]+)/icecast\.audio}
 
     case Regex.run(pattern, stream_url) do
-      [_, prefix, extracted] ->
+      [_, _prefix, extracted] ->
         {:ok, "https://streaming.ticktock.radio/tt-app/#{extracted}/playlist.m3u8"}
+
       nil ->
         {:continue, stream_url}
     end
@@ -193,11 +197,13 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   def tiktok_to_m3u8(stream_url), do: stream_url
 
   def you_classical_radio_to_m3u8({:continue, stream_url}) do
-    pattern = ~r{https?://(?:[^/]+\.mystreaming\.net(?::\d+)?|streaming\.exclusive\.radio(?::\d+)?)/(uber)/([^/]+)/icecast\.audio}
+    pattern =
+      ~r{https?://(?:[^/]+\.mystreaming\.net(?::\d+)?|streaming\.exclusive\.radio(?::\d+)?)/(uber)/([^/]+)/icecast\.audio}
 
     case Regex.run(pattern, stream_url) do
-      [_, prefix, extracted] ->
+      [_, _prefix, extracted] ->
         {:ok, "https://drive.uber.radio/uber-app/#{extracted}/playlist.m3u8"}
+
       nil ->
         {:continue, stream_url}
     end
@@ -206,19 +212,19 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   def you_classical_radio_to_m3u8(stream_url), do: stream_url
 
   def positively_relaxation_to_m3u8({:continue, stream_url}) do
-    pattern = ~r{https?://(?:[^/]+\.mystreaming\.net(?::\d+)?|streaming\.exclusive\.radio(?::\d+)?)/(pr)/([^/]+)/icecast\.audio}
+    pattern =
+      ~r{https?://(?:[^/]+\.mystreaming\.net(?::\d+)?|streaming\.exclusive\.radio(?::\d+)?)/(pr)/([^/]+)/icecast\.audio}
 
     case Regex.run(pattern, stream_url) do
-      [_, prefix, extracted] ->
+      [_, _prefix, extracted] ->
         {:ok, "https://streaming.positivity.radio/pr-app/#{extracted}/playlist.m3u8"}
+
       nil ->
         {:continue, stream_url}
     end
   end
 
   def positively_relaxation_to_m3u8(stream_url), do: stream_url
-
-
 
   def harmony({:continue, stream_url}) do
     pattern = ~r/http:\/\/(.+)\.harmonyfm(.+)/

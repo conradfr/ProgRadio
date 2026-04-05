@@ -1,6 +1,4 @@
 defmodule ProgRadioApi.SongProvider do
-  alias ProgRadioApi.Utils.ReqUtils
-
   @doc """
     Get next song refresh in seconds
   """

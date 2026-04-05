@@ -10,13 +10,11 @@ defmodule ProgRadioApi.Streams do
   use Nebulex.Caching
   alias Stream, as: StreamStd
   alias Ecto.Multi
-  import Ecto.Changeset, only: [change: 2, put_assoc: 3]
 
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
   alias ProgRadioApi.Search
-  alias ProgRadioApi.Utils.ReqUtils
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamCheck, StreamSong}
 
@@ -31,6 +29,7 @@ defmodule ProgRadioApi.Streams do
 
   @source_radio_browser "radio-browser"
   @source_progradio "progradio"
+  @source_weloveradio "weloveradio"
 
   @error_random_cutoff 3
 

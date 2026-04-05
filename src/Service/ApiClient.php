@@ -51,6 +51,23 @@ class ApiClient
         return false;
     }
 
+    public function importStreamImage(string $streamId): bool
+    {
+      try {
+        $response = $this->request('/stream/image?stream_id=' . $streamId, 'GET');
+
+        if ($response->getStatusCode() === 200) {
+          return true;
+        }
+
+        return false;
+      } catch (\Exception $e) {
+        $this->logger->warning('Api client error', ['error' => $e->getMessage()]);
+      }
+
+      return false;
+  }
+
     protected function request(string $path, string $method = 'GET', mixed $data = null): ResponseInterface
     {
         return $this->client->request(

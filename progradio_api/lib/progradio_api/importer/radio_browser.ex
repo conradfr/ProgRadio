@@ -5,9 +5,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Streams
-  alias ProgRadioApi.Search
   alias ProgRadioApi.Importer.ImageImporter
-  alias ProgRadioApi.Importer.StreamsImporter.StreamMatcher
+  alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.StreamsImporter.Transformers.Streams, as: StreamTransformers
 
   # TODO unbundle if we diversify streams sources
@@ -16,15 +15,12 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   @api_all_radios "stations"
   @page_size 10000
 
-  @max_concurrency 4
-  @task_timeout 1_000_000
-
   def import() do
     {result, _} =
       get_one_random_server()
       |> get_radios()
       |> format()
-      |> import_images()
+      |> ImporterUtils.import_images()
       |> delete_images_from_removed_stations()
       |> store()
 
@@ -33,9 +29,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     overload_disabled()
     reattach_image_of_stream_with_no_image()
     #    find_redirect_for_disabled_streams()
-    StreamMatcher.match()
     #    consolidate_stats()
-    Search.index_all()
     :ok
   end
 
@@ -46,7 +40,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> Enum.each(fn stream_id when is_binary(stream_id) ->
       Repo.get(Stream, stream_id)
       |> __MODULE__.format_from_stream()
-      |> import_image()
+      |> ImporterUtils.import_image()
       |> store_one()
     end)
   end
@@ -57,7 +51,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> Enum.each(fn stream_id when is_binary(stream_id) ->
       Repo.get(Stream, stream_id)
       |> __MODULE__.format_from_stream()
-      |> import_image()
+      |> ImporterUtils.import_image()
       |> store_one()
     end)
   end
@@ -98,8 +92,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         []
     end
   end
-
-
 
   defp fetch_all_pages(base_url, offset, acc) do
     separator = if String.contains?(base_url, "?"), do: "&", else: "?"
@@ -255,49 +247,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   end
 
   # Images
-
-  defp import_images(streams) do
-    streams
-    |> Task.async_stream(fn s -> import_image(s) end,
-      timeout: @task_timeout,
-      max_concurrency: @max_concurrency
-    )
-    |> Enum.reduce([], fn {:ok, s}, acc -> acc ++ [s] end)
-  end
-
-  @spec import_image(struct) :: struct
-  defp import_image(stream, field \\ :img_url) do
-    case Map.get(stream, field) do
-      url when is_binary(url) and url !== "" ->
-        case String.ends_with?(url, ".svg") do
-          false ->
-            if field == :mg_url, do: Map.delete(stream, :img_url)
-
-            try do
-              with {:ok, filename} <- ImageImporter.import_stream(url, stream) do
-                Map.put(stream, :img, filename)
-              else
-                _ -> stream
-              end
-            rescue
-              _ ->
-                stream
-            catch
-              _ ->
-                stream
-
-              :exit, _ ->
-                stream
-            end
-
-          true ->
-            stream
-        end
-
-      _ ->
-        stream
-    end
-  end
 
   defp delete_images_from_removed_stations(streams) do
     ids_to_keep =
@@ -472,7 +421,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         }
       )
       |> Repo.all()
-      |> import_images()
+      |> ImporterUtils.import_images()
 
     Multi.new()
     |> upsert_streams(streams)

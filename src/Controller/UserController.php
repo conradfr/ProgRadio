@@ -12,6 +12,7 @@ use App\Form\StoreHistoryType;
 use App\Form\StreamSubmissionType;
 use App\Form\UpdateEmailType;
 use App\Form\UpdatePasswordType;
+use App\Service\ApiClient;
 use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -220,7 +221,8 @@ class UserController extends AbstractBaseController
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         SearchService $searchService,
-        ?Stream $stream = null,
+        ApiClient $apiClient,
+        ?Stream $stream = null
     ): Response
     {
         $edit = true;
@@ -255,6 +257,11 @@ class UserController extends AbstractBaseController
             if ($edit === true) {
                 $em->persist($stream);
                 $em->flush();
+
+                if (!empty($stream->getOriginalImg())) {
+                  $apiClient->importStreamImage($stream->getId()->toString());
+                  $stream = $em->getRepository(Stream::class)->find($stream->getId());
+                }
             } else {
                 $em->getRepository(Stream::class)->insertNewStream($stream);
             }

@@ -43,7 +43,7 @@ defmodule ProgRadioApiWeb.Router do
 
     delete "/admin/cache/streams", AdminController, :empty_cache_stream
     get "/admin/search/index", AdminController, :search_index
-    get "/admin/image/stream/import", AdminController, :import_stream_image
+    get "/admin/stream/image", AdminController, :import_stream_image
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

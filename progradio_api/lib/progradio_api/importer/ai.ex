@@ -7,9 +7,11 @@ defmodule ProgRadioApi.Importer.Ai do
   alias ProgRadioApi.Stream, as: ProgRadioStream
   alias OpenaiEx.Chat
   alias OpenaiEx.ChatMessage
-  alias OpenaiEx.MsgContent
 
   @default_batch_size 200
+
+  # ProgRadioApi.Importer.Ai.update_description(1000)
+  # ProgRadioApi.Importer.Ai.update_tags(1000)
 
   # ---------- PUBLIC ----------
 

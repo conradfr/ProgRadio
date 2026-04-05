@@ -48,6 +48,10 @@ config :progradio_api, ProgRadioApi.Scheduler,
       schedule: "12 0 */1 * *",
       task: {ProgRadioApi.Streams, :switch_search_terms_day, []}
     ],
+    search_index: [
+      schedule: "51 * * * *",
+      task: {ProgRadioApi.Search, :index_all, []}
+    ],
     import_overload: [
       schedule: "15,45 * * * *",
       task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :overload_recently_updated, []}
@@ -139,16 +143,10 @@ config :progradio_api, Oban,
   queues: [
     default: 2,
     email_stats: 1,
-    cron: 1
+    cron: 1,
+    import_stream_weloveradio: 1
   ],
-  repo: ProgRadioApi.Repo,
-  plugins: [
-    {Oban.Plugins.Pruner, max_age: 300},
-    {Oban.Plugins.Cron,
-     crontab: [
-       {"0 4 2 * *", ProgRadioApi.EmailStatsCronWorker, queue: :cron, max_attempts: 2}
-     ]}
-  ]
+  repo: ProgRadioApi.Repo
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

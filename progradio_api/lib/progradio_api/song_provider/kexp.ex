@@ -41,10 +41,10 @@ defmodule ProgRadioApi.SongProvider.Kexp do
   end
 
   @impl true
-  def get_song(name, nil, _last_song), do: nil
+  def get_song(_name, nil, _last_song), do: nil
 
   @impl true
-  def get_song(name, :error, _last_song), do: nil
+  def get_song(_name, :error, _last_song), do: nil
 
   @impl true
   def get_song(name, data, _last_song) do
@@ -54,7 +54,7 @@ defmodule ProgRadioApi.SongProvider.Kexp do
       %{
         artist: Map.get(data, "artist"),
         title: Map.get(data, "song"),
-        cover_url: Map.get(data, "thumbnail_uri"),
+        cover_url: Map.get(data, "thumbnail_uri")
       }
     rescue
       _ ->
