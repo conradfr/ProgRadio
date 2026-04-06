@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zorilla/puppeteer-extra": "^1.0.1",
+    "@zorilla/puppeteer-extra-plugin-stealth": "^1.0.2",
     "axios": "^1.8.4",
     "cheerio": "^1.0.0",
     "command-line-args": "^6.0.1",
@@ -18,6 +20,8 @@
     "js-yaml": "^4.1.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.48",
+    "puppeteer": "^24.40.0",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "winston": "^3.17.0",
     "winston-mail-lite": "^1.1.1"
   }

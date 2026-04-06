@@ -76,6 +76,7 @@
 
 # Idea's Ide
 .idea/
+.editorconfig
 
 # Bower components
 /public/bower_components/

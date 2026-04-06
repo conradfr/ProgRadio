@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:24-trixie-slim
 
 ENV TZ=Europe/Paris
 
@@ -30,7 +30,9 @@ ENV MAIL_PASSWORD=${MAIL_PASSWORD} \
 
 RUN apt-get update \
     && apt-get -y install \
-    cron
+    cron chromium \
+    ca-certificates \
+    bash git
 
 ADD ./tools/docker/scraper/crontab /etc/cron.d/scraper-cron
 RUN chmod 0644 /etc/cron.d/scraper-cron
