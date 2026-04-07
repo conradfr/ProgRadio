@@ -89,29 +89,30 @@ const fetch = dateObj => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
+      .debug()
       .find(`#panel-${day}`)
       .select('.programme-semaine')
       .set({
         'time': '.horaires-item-programme',
-        'title': '.title-item-programme',
-        'host': '.author-item-programme',
-        'img': '.cover-item-programme > img@src',
-        'sections': [
-          osmosis.select('.chroniques-broadcast-grid .item-chronique')
-            .set({
-              'datetime_raw': '.horaires-item-chronique',
-              'title': '.title-item-chronique',
-              'presenter': '.author-item-chronique',
-              'img': '.cover-item-chronique img@src'
-            })
-        //   // osmosis.select('.chroniques-broadcast-grid .item-chronique')
-        //   //   .set({
-        //   //     'datetime_raw': '.horaires-item-chronique',
-        //   //     'title': '.title-item-chronique',
-        //   //     'presenter': '.author-item-chronique',
-        //   //     'img': '.cover-item-chronique img@src'
-        //   //   })
-        ]
+        // 'title': '.title-item-programme',
+        // 'host': '.author-item-programme',
+        // 'img': '.cover-item-programme > img@src',
+        // 'sections': [
+        //   osmosis.select('.chroniques-broadcast-grid .item-chronique')
+        //     .set({
+        //       'datetime_raw': '.horaires-item-chronique',
+        //       'title': '.title-item-chronique',
+        //       'presenter': '.author-item-chronique',
+        //       'img': '.cover-item-chronique img@src'
+        //     })
+        // //   // osmosis.select('.chroniques-broadcast-grid .item-chronique')
+        // //   //   .set({
+        // //   //     'datetime_raw': '.horaires-item-chronique',
+        // //   //     'title': '.title-item-chronique',
+        // //   //     'presenter': '.author-item-chronique',
+        // //   //     'img': '.cover-item-chronique img@src'
+        // //   //   })
+        // ]
       })
       // .do(
       //   osmosis.select('.chroniques-broadcast-grid .item-chronique')
@@ -122,13 +123,14 @@ const fetch = dateObj => {
       //       'img': '.cover-item-chronique img@src'
       //     })
       // )
-      .do(
-        osmosis.follow('.item-programme > a@href')
-          .set({
-            'description': '.emission-description .emission-description__content > div > div:not(.visually-hidden)',
-          })
-      )
+      // .do(
+      //   osmosis.follow('.item-programme > a@href')
+      //     .set({
+      //       'description': '.emission-description .emission-description__content > div > div:not(.visually-hidden)',
+      //     })
+      // )
       .data(function (listing) {
+        console.log('lol');
         scrapedData.push(listing);
       })
       .done(function () {

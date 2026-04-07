@@ -1,4 +1,6 @@
 Remote api:
 sudo docker exec -i $(sudo docker ps -a --format '{{.Image}} {{.Names}}' | grep '^img-captain-progradio-api-prod:' | head -1 | awk '{print $2}') _build/prod/rel/prod/bin/prod remote
 
-sudo docker exec -i $(sudo docker ps -a --format '{{.Image}} {{.Names}}' | grep '^img-captain-progradio-scraper-prod:' | head -1 | awk '{print $2}') node index.js -r europe1
+sudo docker exec -i $(sudo docker ps -a --format '{{.Image}} {{.Names}}' | grep '^img-captain-progradio-scraper-prod:' | head -1 | awk '{print $2}') node index.js -r
+
+sudo docker exec -i $(sudo docker ps -a --format '{{.Image}} {{.Names}}' | grep '^img-captain-progradio-scraper2-prod:' | head -1 | awk '{print $2}') node index.js -r

@@ -1,7 +1,7 @@
+const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 const axios = require('axios');
-const { convert } = require('html-to-text');
 
 let scrapedData = [];
 
@@ -21,33 +21,36 @@ const format = async dateObj => {
   // we use reduce instead of map to act as a map+filter in one pass
   const cleanedData = await scrapedData.reduce(async function (prev, curr) {
     return prev.then(async (items) => {
-      const currStartDateTime = moment(curr.startsAt);
+      const currStartDateTime = moment(curr.startTime);
 
       if (currStartDateTime.isBetween(startDateTime, endDateTime, 'seconds', '[]') === false) {
         return items;
       }
 
-      currEndDateTime = moment(curr.endsAt);
+      currEndDateTime = moment(curr.endTime);
 
-      newEntry = {
+      const newEntry = {
         'date_time_start': currStartDateTime.toISOString(),
         'date_time_end': currEndDateTime.toISOString(),
         'title': curr.title,
-        'host': curr.summary,
-        'img': curr.picture && curr.picture.url.replace('{0}', '180').replace('{1}', '1x1')
+        'host': curr.hosts,
+        'img': curr.picture && curr.picture.pattern.replace('{width}', '180').replace('{ratio}', '1x1')
       };
 
       // seems to have moved to a json based variable in a script, let's ignore for now
-/*      await osmosis
-        .get(`https://ici.radio-canada.ca/ohdio${curr.url}`)
-        .find('.section-main .about-content')
-        .set({
-          'description':  ['p'],
-        })
-        .data(function(listing) {
-          console.log(listing);
-          newEntry.description = listing.description.join(' ');
-        });*/
+      try {
+        await osmosis
+          .get(`https://ici.radio-canada.ca/ohdio${curr.url}`)
+          .find('#sommaire')
+          .set({
+            'description':  ['p'],
+          })
+          .data(function(listing) {
+            newEntry.description = listing.description.join(' ');
+          });
+        } catch (error) {
+          // nothing
+        }
 
       await items.push(newEntry);
       return items;
@@ -61,13 +64,19 @@ const fetch = dateObj => {
   dateObj.locale('fr');
   const format = 'YYYY-MM-DD';
 
-  const url = `https://services.radio-canada.ca/neuro/sphere/v1/audio/apps/radios/premiere/schedule/${dateObj.format(format)}?context=web&regionId=8`;
+  const url = `https://services.radio-canada.ca/bff/audio/graphql?opname=broadcastSchedule&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%229c91936aea5a25108578e5887fb1a377575d38d55fb30448208bf858e10024b3%22%7D%7D&variables=%7B%22params%22%3A%7B%22broadcastingNetworkId%22%3A3%2C%22device%22%3A%22Web%22%2C%22date%22%3A%22${dateObj.format(format)}%22%2C%22liveSchedule%22%3Afalse%2C%22regionId%22%3A8%7D%7D`;
 
   logger.log('info', `fetching ${url}`);
 
-  return axios.get(url)
+  return axios.get(url, {
+    headers: {
+      'content-type': 'application/json',
+      'apollo-require-preflight': 1,
+      'Host': 'services.radio-canada.ca'
+    }
+  })
     .then(function (response) {
-      scrapedData = [...scrapedData, ...response.data.broadcasts];
+      scrapedData = [...scrapedData, ...response.data.data.broadcastSchedule.broadcasts];
       // return resolve(true);
     })/*.catch((error) => logger.ilog('warn', error))*/;
 };

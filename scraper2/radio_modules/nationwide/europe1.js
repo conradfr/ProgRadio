@@ -4,6 +4,18 @@ import logger from '../../lib/logger.js';
 import puppeteer from '@zorilla/puppeteer-extra'
 import StealthPlugin from '@zorilla/puppeteer-extra-plugin-stealth'
 
+const dayFr = {
+  1: 'lundi',
+  2: 'mardi',
+  3: 'mercredi',
+  4: 'jeudi',
+  5: 'vendredi',
+  6: 'samedi',
+  7: 'dimanche'
+};
+
+let scrapedData = [];
+
 let html = null;
 
 puppeteer.use(StealthPlugin())
@@ -20,19 +32,46 @@ const setBrowser = async () => {
       },
     })
   }
+
+  return Promise.resolve(true);
 }
 
-const dayFr = {
-  1: 'lundi',
-  2: 'mardi',
-  3: 'mercredi',
-  4: 'jeudi',
-  5: 'vendredi',
-  6: 'samedi',
-  7: 'dimanche'
-};
+const getDescription = async (url) => {
+  let description = null;
+  try {
+    await setBrowser();
+    const page = await browser.newPage();
+    await page.goto(`https://www.europe1.fr${url}`, {
+      waitUntil: 'networkidle2',
+      timeout: 30000,
+    });
+    const pageHtml = await page.content();
 
-let scrapedData = [];
+    if (pageHtml) {
+      const $ = cheerio.load(pageHtml);
+      const dataPage = $.extract({
+        show: [
+          {
+            selector: `.emission-description .emission-description__content > div`,
+            value: {
+              description: 'div:not(.visually-hidden)',
+            }
+          }
+        ]
+      });
+
+      if (dataPage) {
+        description = dataPage.show?.[0]?.description;
+      }
+    }
+
+    await page.close();
+  } catch (error) {
+    logger.log('error fetch description', error);
+  }
+
+  return Promise.resolve(description);
+};
 
 const format = async dateObj => {
   dateObj.tz('Europe/Paris');
@@ -98,37 +137,8 @@ const format = async dateObj => {
     // fetch description if link
     // do it here instead of scrapping function to avoid scraping future discarded entries
     if (entry.page) {
-      try {
-        await setBrowser();
-        const page = await browser.newPage();
-        await page.goto(`https://www.europe1.fr${entry.page}`, {
-          waitUntil: 'networkidle2',
-          timeout: 30000,
-        });
-        const pageHtml = await page.content();
-
-        if (pageHtml) {
-          const $ = cheerio.load(pageHtml);
-          const dataPage = $.extract({
-            show: [
-              {
-                selector: `.emission-description .emission-description__content > div`,
-                value: {
-                  description: 'div:not(.visually-hidden)',
-                }
-              }
-            ]
-          });
-
-          if (dataPage) {
-            newEntry.description = dataPage.show?.[0]?.description;
-          }
-        }
-
-        await page.close();
-      } catch (error) {
-        logger.log('error fetch description', error);
-      }
+      const description = await getDescription(entry.page);
+      newEntry.description = description;
     }
 
     prev.push(newEntry);
