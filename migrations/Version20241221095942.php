@@ -59,21 +59,21 @@ final class Version20241221095942 extends AbstractMigration
         ];
 
         for ($i = 0; $i < count($radios); $i++) {
-            $this->connection->exec(
+            $this->connection->executeQuery(
                 'INSERT INTO radio (id, category_id, code_name, name, country_code, timezone, share, collection_id) VALUES ('
                 . ($i + 147) . ',' . $radios[$i]['category'] . ",'" . $radios[$i]['code_name'] . "','" . $radios[$i]['name'] . "','" . $radios[$i]['country'] . "','" . $radios[$i]['timezone'] . "'," . $radios[$i]['share'] . "," . $radios[$i]['collection'] . ");"
             );
         }
 
         for ($i = 0; $i < count($subRadios); $i++) {
-            $this->connection->exec(
+            $this->connection->executeQuery(
                 'INSERT INTO sub_radio (id, radio_id, code_name, name, main, enabled) VALUES ('
                 . ($i + 256) . ',' . $subRadios[$i]['radio_id'] . ",'" . $subRadios[$i]['code_name'] . "','" . $subRadios[$i]['name'] . "'," . $subRadios[$i]['main'] . ',true);'
             );
         }
 
         for ($i = 0; $i < count($stream); $i++) {
-            $this->connection->exec(
+            $this->connection->executeQuery(
                 "INSERT INTO radio_stream (code_name, name, url, radio_id, sub_radio_id, current_song,main,enabled) VALUES ('"
                 . $stream[$i]['code_name'] . "','" . $stream[$i]['name'] . "','" . $stream[$i]['url'] . "'," . $stream[$i]['radio_id'] . ',' . $stream[$i]['sub_radio'] . ',' . $stream[$i]['current_song'] . ',' . $stream[$i]['main'] . ',' . $stream[$i]['enabled'] . ')'
             );
