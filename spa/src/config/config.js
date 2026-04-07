@@ -89,7 +89,7 @@ export const PLAYER_TYPE_STREAM = 'stream';
 
 export const WEBSOCKET_DISCONNECT_AFTER = 36000000; /* 10h in ms */
 export const WEBSOCKET_MAX_RETRIES = 50;
-export const WEBSOCKET_HEARTBEAT = 45000; /* ms */
+export const WEBSOCKET_HEARTBEAT = 30000; /* ms */
 
 export const LISTENING_SESSION_MIN_SECONDS = 15;
 export const LISTENING_SESSION_INTERVAL_SECONDS = 30;
