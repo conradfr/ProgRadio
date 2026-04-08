@@ -52,6 +52,30 @@ const format = dateObj => {
       description: entry.description || null
     };
 
+    if (entry.subs && entry.subs.length > 0) {
+      const sections = [];
+      entry.subs.forEach(function (sub) {
+        const matchSub = sub.time_raw[dayIndex].match(regexp);
+
+        if (matchSub !== null) {
+          const sectionStartDateTime = moment(dateObj);
+          sectionStartDateTime.hour(matchSub[1]);
+          sectionStartDateTime.minute(matchSub[2]);
+          sectionStartDateTime.second(0);
+
+          sections.push({
+            date_time_start: sectionStartDateTime.toISOString(),
+            title: sub.title,
+            presenter: sub.presenter || null,
+            description: sub.description || null,
+            img: sub.img ? `https://www.bretagne5.fr${sub.img}` : null,
+          });
+        }
+
+        newEntry.sections = sections;
+      });
+    }
+
     prev.push(newEntry);
     return prev;
   }, []);
@@ -68,14 +92,24 @@ const fetch = dateObj => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find('.list-programs .program_item')
+      .find('#node_content > .views-element-container > .view-the-programs > .view-content > .list-programs > .program_item')
       // .select('.item')
       .set({
         'img': '.media--image img@data-src',
         'day_raw': ['.office-hours__item-label'],
         'time_raw': ['.office-hours__item-slots'],
         'title': '.col_3_program h3',
-        'host': '.author_content span'
+        'host': '.author_content span',
+        'subs': [
+          osmosis.select('.sub_shows_display .list-programs > .program_item')
+            .set({
+              'time_raw': ['.office-hours__item-slots'],
+              'title': '.col_3_program h3',
+              'description': '.title_program',
+              'presenter': '.author_content span',
+              'img': '.media--image img@data-src'
+            })
+        ]
       })
       .do(
         osmosis.follow('a.ajax-link@href:first')
@@ -84,6 +118,10 @@ const fetch = dateObj => {
           })
       )
       .data(function (listing) {
+        if (listing.subs && listing.subs.length > 0 && typeof listing.subs[0] === 'string' ) {
+          delete listing.subs
+        }
+
         scrapedData.push(listing);
       })
       .done(function () {
