@@ -44,6 +44,10 @@ config :progradio_api, ProgRadioApi.Scheduler,
       schedule: "10 04 */10 * *",
       task: {ProgRadioApi.Importer.StreamsImporter.Lautfm, :import, []}
     ],
+#    import_api50k: [
+#      schedule: "10 3 1 * *",
+#      task: {ProgRadioApi.Importer.StreamsImporter.Api50k, :import, []}
+#    ],
     stats: [
       schedule: "40 01 */1 * *",
       task: {ProgRadioApi.Streams, :update_stats, []}
@@ -101,7 +105,6 @@ config :cors_plug,
   max_age: 86400,
   methods: ["GET", "POST", "PUT", "OPTIONS"]
 
-# Configure redis
 config :progradio_api,
   image_path: "/var/www/media/",
   banned_ips: "" |> String.split(","),

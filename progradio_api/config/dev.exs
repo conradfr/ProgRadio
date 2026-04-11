@@ -81,3 +81,5 @@ config :progradio_api, Oban,
   plugins: [
     {Oban.Plugins.Pruner, max_age: 300}
   ]
+
+import_config "dev.secret.exs"

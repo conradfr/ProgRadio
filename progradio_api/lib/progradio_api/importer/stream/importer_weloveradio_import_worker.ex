@@ -45,7 +45,27 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
         |> Enum.map(&String.downcase(&1["name"]))
         |> Enum.join(",")
 
+      tags =
+        case tags do
+          "" -> nil
+          value -> value
+        end
+
       id = find_existing_stream(args) || Ecto.UUID.bingenerate() |> Ecto.UUID.cast!()
+
+      slogan =
+        case Map.get(args, "slogan") do
+          "null" -> nil
+          "" -> nil
+          value -> value
+        end
+
+      description =
+        case Map.get(args, "description") do
+          "null" -> nil
+          "" -> nil
+          value -> value
+        end
 
       stream =
         %{
@@ -63,8 +83,8 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
           tags: tags,
           original_tags: tags,
           country_code: Map.get(args, "country"),
-          slogan: Map.get(args, "slogan"),
-          description: Map.get(args, "description"),
+          slogan: slogan,
+          description: description,
           language: Map.get(args, "lang"),
           enabled: true,
           redirect_to: nil,

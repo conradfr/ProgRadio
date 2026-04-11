@@ -4,8 +4,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
   alias Ecto.Multi
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
-  alias ProgRadioApi.Streams
-  alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Utils.ImporterUtils
 
   @base_url "https://api.laut.fm"
@@ -69,7 +67,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
   defp format(data) do
     data
     |> Enum.map(fn stream ->
-      id = find_existing_stream(stream) || Ecto.UUID.bingenerate() |> Ecto.UUID.cast!()
+      existing_stream = find_existing_stream(stream) || %{}
+      id = Map.get(existing_stream, :id) || Ecto.UUID.bingenerate() |> Ecto.UUID.cast!()
 
       overloading =
         case Repo.get(StreamOverloading, id) do
@@ -77,7 +76,12 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
           overload_data -> overload_data
         end
 
-      img_url = Map.get(stream, "images", %{}) |> Map.get("station")
+      img_url =
+        stream
+        |> Map.get("images", %{})
+        |> Map.get("station")
+        |> ImporterUtils.replace_value_maybe(@source, existing_stream, :original_img)
+        |> (&(Map.get(overloading, :img) || &1)).()
 
       country_code =
         "DE"
@@ -86,12 +90,19 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
       website =
         stream
         |> Map.get("page_url")
+        |> ImporterUtils.replace_value_maybe(@source, existing_stream, :website)
         |> (&(Map.get(overloading, :website) || &1)).()
 
       enabled =
         stream
         |> Map.get("active")
         |> (&(Map.get(overloading, :enabled) || &1)).()
+
+      name =
+        stream
+        |> Map.get("display_name")
+        |> ImporterUtils.replace_value_maybe(@source, existing_stream, :name)
+        |> (&(Map.get(overloading, :name) || &1)).()
 
       import_updated_at =
         NaiveDateTime.utc_now()
@@ -101,24 +112,38 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
         Map.get(overloading, :tags) ||
           Map.get(stream, "genres", []) |> Enum.join(",") |> String.downcase()
 
+      stream_url =
+        stream
+        |> Map.get("stream_url")
+        |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :stream_url) || &1)).()
+        |> (&(Map.get(overloading, :stream_url) || &1)).()
+        |> ImporterUtils.stream_url_transformer()
+
       %{
         id: id,
         code_name: id,
-        name: Map.get(stream, "display_name"),
+        external_id:
+          Map.get(stream, "name")
+          |> ImporterUtils.replace_value_maybe(@source, existing_stream, :external_id),
+        name: name,
         img_url: img_url,
         original_img: img_url,
         img: nil,
         website: website,
-        stream_url: Map.get(stream, "stream_url"),
+        stream_url: stream_url,
         original_stream_url: Map.get(stream, "stream_url"),
         tags: tags,
         original_tags: Map.get(stream, "tags"),
         country_code: country_code,
-        language: Map.get(stream, "language"),
+        language:
+          Map.get(stream, "language")
+          |> ImporterUtils.replace_value_maybe(@source, existing_stream, :language),
         enabled: enabled,
-        description: Map.get(stream, "description"),
+        description:
+          Map.get(stream, "description")
+          |> ImporterUtils.replace_value_maybe(@source, existing_stream, :description),
         import_updated_at: import_updated_at,
-        source: @source
+        source: ImporterUtils.replace_value_maybe(@source, @source, existing_stream, :source)
       }
     end)
     |> Enum.filter(fn s -> s.name !== nil and String.trim(s.name) !== "" end)
@@ -157,7 +182,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
             original_stream_url: s.original_stream_url,
             enabled: s.enabled,
             import_updated_at: s.import_updated_at,
-            source: s.source
+            source: s.source,
+            external_id: s.external_id
           ]
         ],
         conflict_target: :id
@@ -168,8 +194,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
   defp find_existing_stream(%{} = data) do
     from(s in Stream,
       where: s.stream_url == ^data["stream_url"],
-      limit: 1,
-      select: s.id
+      limit: 1
     )
     |> Repo.one()
   end

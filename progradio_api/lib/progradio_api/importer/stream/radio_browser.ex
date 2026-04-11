@@ -7,13 +7,11 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.Streams
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Utils.ImporterUtils
-  alias ProgRadioApi.Importer.StreamsImporter.Transformers.Streams, as: StreamTransformers
-
-  # TODO unbundle if we diversify streams sources
 
   @servers_dns "all.api.radio-browser.info"
   @api_all_radios "stations"
   @page_size 10000
+  @source "radio-browser"
 
   def import() do
     {result, _} =
@@ -24,11 +22,10 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> delete_images_from_removed_stations()
       |> store()
 
-    Logger.info("Streams import: #{result}")
+    Logger.info("Streams import: Radio-browser #{result}")
 
     overload_disabled()
     reattach_image_of_stream_with_no_image()
-    #    find_redirect_for_disabled_streams()
     #    consolidate_stats()
     :ok
   end
@@ -67,7 +64,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         "https://#{host}/json/#{@api_all_radios}"
       end
 
-    Logger.info("Streams import: url - #{base_url}")
+    Logger.info("Streams import: Radio-browser - url - #{base_url}")
 
     try do
       fetch_all_pages(base_url, 0, [])
@@ -97,7 +94,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     separator = if String.contains?(base_url, "?"), do: "&", else: "?"
     url = "#{base_url}#{separator}limit=#{@page_size}&offset=#{offset}"
 
-    Logger.info("Streams import: fetching offset=#{offset}, limit=#{@page_size}")
+    Logger.info("Streams import: Radio-browser - fetching offset=#{offset}, limit=#{@page_size}")
 
     results =
       HTTPoison.get!(
@@ -120,6 +117,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     data
     |> Enum.map(fn stream ->
       id = Map.get(stream, "stationuuid")
+      existing_stream = Repo.get(Stream, id) || %{}
 
       overloading =
         case Repo.get(StreamOverloading, id) do
@@ -135,29 +133,45 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         # found in some entries, not sure of a better way to remove them
         |> String.trim("\u0000")
         |> String.trim()
+        |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :stream_url) || &1)).()
         |> (&(Map.get(overloading, :stream_url) || &1)).()
-        |> stream_url_transformer()
+        |> ImporterUtils.stream_url_transformer()
 
       name =
         stream
         |> Map.get("name")
         |> String.trim("\u0000")
         |> String.trim()
+        |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :name) || &1)).()
         |> (&(Map.get(overloading, :name) || &1)).()
 
-      img_url = Map.get(stream, "favicon")
+      img_url =
+        Stream
+        |> Map.get("favicon")
+        |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :original_img) || &1)).()
+        |> (&(Map.get(overloading, :original_img) || &1)).()
 
       country_code =
         stream
         |> Map.get("countrycode")
+        |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :country_code) || &1)).()
         |> (&(Map.get(overloading, :country_code) || &1)).()
 
       website =
         stream
         |> Map.get("homepage")
+        |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :website) || &1)).()
         |> (&(Map.get(overloading, :website) || &1)).()
 
       enabled = Map.get(overloading, :enabled) || true
+
+      tags =
+        case Map.get(stream, "tags") do
+          "" -> nil
+          tag when is_binary(tag) -> String.downcase(tag)
+          _ -> nil
+        end
+        |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :tags) || &1)).()
 
       import_updated_at =
         NaiveDateTime.utc_now()
@@ -181,26 +195,30 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         else
           nil
         end
+        |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :redirect_to) || &1)).()
 
       %{
         id: id,
         code_name: id,
         name: name,
-        img_url: Map.get(overloading, :img) || img_url,
+        img_url: img_url,
         original_img: img_url,
         img: nil,
         website: website,
         stream_url: stream_url,
         original_stream_url: stream_url,
-        tags: Map.get(overloading, :tags) || Map.get(stream, "tags"),
+        tags: Map.get(overloading, :tags) || tags,
         original_tags: Map.get(stream, "tags"),
         country_code: country_code,
-        language: Map.get(stream, "language"),
+        language:
+          Map.get(stream, "language")
+          |> ImporterUtils.replace_value_maybe(@source, existing_stream, :language),
         votes: Map.get(stream, "votes"),
         clicks_last_24h: Map.get(stream, "clickcount"),
         enabled: enabled,
         redirect_to: redirect_to,
-        import_updated_at: import_updated_at
+        import_updated_at: import_updated_at,
+        source: ImporterUtils.replace_value_maybe(@source, @source, existing_stream, :source)
       }
     end)
     |> Enum.filter(fn s -> s.name !== nil and String.trim(s.name) !== "" end)
@@ -233,7 +251,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       original_img: stream.original_img,
       website: Map.get(overloading, :website) || stream.website,
       stream_url:
-        (Map.get(overloading, :stream_url) || stream.stream_url) |> stream_url_transformer(),
+        (Map.get(overloading, :stream_url) || stream.stream_url)
+        |> ImporterUtils.stream_url_transformer(),
       original_stream_url: stream.original_stream_url,
       tags: stream.tags,
       original_tags: stream.original_tags,
@@ -242,7 +261,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       votes: stream.votes,
       clicks_last_24h: stream.clicks_last_24h,
       enabled: enabled,
-      import_updated_at: import_updated_at
+      import_updated_at: import_updated_at,
+      source: stream.source
     }
   end
 
@@ -273,43 +293,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     #    end)
 
     {ids_to_keep, streams}
-  end
-
-  # upgrade urls with known formats to newer one that will work anytime
-  # todo as most of these are similar maybe streamline to less functions
-  def stream_url_transformer(stream_url) do
-    {_, updated_stream_url} =
-      {:continue, stream_url}
-      |> StreamTransformers.streamtheworld()
-      |> StreamTransformers.streamtheworld_url()
-      |> StreamTransformers.infomaniak()
-      |> StreamTransformers.ssr()
-      |> StreamTransformers.zeno()
-      |> StreamTransformers.zeno_url()
-      |> StreamTransformers.laut()
-      |> StreamTransformers.laut_url()
-      |> StreamTransformers.network181()
-      |> StreamTransformers.exclusive_to_m3u8()
-      |> StreamTransformers.you_classical_radio_to_m3u8()
-      |> StreamTransformers.tiktok_to_m3u8()
-      |> StreamTransformers.positively_relaxation_to_m3u8()
-      |> StreamTransformers.exclusive()
-      |> StreamTransformers.harmony()
-      |> StreamTransformers.streamabc()
-      |> StreamTransformers.radioparadise()
-      |> StreamTransformers.creacast()
-      |> StreamTransformers.network1fm()
-      |> StreamTransformers.radiojar()
-      |> StreamTransformers.radiojar_url()
-      |> StreamTransformers.prohifi()
-      #      |> StreamTransformers.revma()
-      #      |> StreamTransformers.revma_url()
-      |> StreamTransformers.r80s80s()
-      |> StreamTransformers.bobde()
-      |> StreamTransformers.regenbogen()
-      |> StreamTransformers.securenetsystems()
-
-    updated_stream_url
   end
 
   # Store
@@ -355,7 +338,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             original_tags: s.original_tags,
             website: s.website,
             language: s.language,
-            stream_url: s.stream_url |> stream_url_transformer(),
+            stream_url: s.stream_url |> ImporterUtils.stream_url_transformer(),
             original_stream_url: s.original_stream_url,
             votes: s.votes,
             clicks_last_24h: s.clicks_last_24h,
@@ -445,23 +428,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     Map.get(dns, :anlist)
   end
 
-  # Disabled
-
-  #  def find_redirect_for_disabled_streams() do
-  #    get_disabled_with_no_redirect()
-  #    |> Enum.map(fn s -> find_redirect_stream(s) end)
-  #    |> Enum.filter(&(&1 != nil))
-  #    |> Enum.each(&update_stream_with_redirect/1)
-  #  end
-
-  defp get_disabled_with_no_redirect() do
-    from(s in Stream,
-      where: is_nil(s.redirect_to) and not is_nil(s.country_code) and s.enabled == false,
-      select: %{id: s.id, name: s.name, country_code: s.country_code}
-    )
-    |> Repo.all()
-  end
-
   defp find_redirect_stream(%{} = stream_data) do
     redirect_stream_id =
       from(s in Stream,
@@ -480,36 +446,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       nil -> nil
       _ -> {stream_data.id, redirect_stream_id}
     end
-  end
-
-  defp update_stream_with_redirect({stream_id, redirect_stream_id}) do
-    query =
-      from s in Stream,
-        where: s.id == ^stream_id
-
-    Repo.update_all(query, set: [redirect_to: redirect_stream_id])
-  end
-
-  # Images
-
-  # For some reason (current or previous bug?) some streams have a 404 image
-  # Trying to clean up and reuse former one
-  def reattach_image_of_stream_with_404_image() do
-    get_streams_with_404_image()
-    |> Enum.map(fn %{id: id, img: _img} -> ImageImporter.find_image_for_stream(id) end)
-    |> Enum.each(&update_stream_with_image/1)
-  end
-
-  defp get_streams_with_404_image() do
-    from(s in Stream,
-      where: not is_nil(s.img) and s.enabled == true,
-      select: %{id: s.id, img: s.img}
-    )
-    |> Repo.all()
-    |> Enum.filter(fn s ->
-      "#{Application.get_env(:progradio_api, :image_path)}stream/#{s.img}"
-      |> File.exists?() == false
-    end)
   end
 
   # If a stream has no image (usually from a dead link) we reuse the former one if any,

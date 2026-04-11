@@ -39,7 +39,7 @@ if config_env() == :prod do
   config :progradio_api, ProgRadioApi.Repo,
     # ssl: true,
     url: database_url,
-    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "12"),
     socket_options: maybe_ipv6
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
@@ -125,7 +125,7 @@ if config_env() == :prod do
 
   config :progradio_api, ProgRadioApi.PubSub,
     adapter: Phoenix.PubSub.PG2,
-    pool_size: String.to_integer(System.get_env("PUBSUB_POOL_SIZE") || "6")
+    pool_size: String.to_integer(System.get_env("PUBSUB_POOL_SIZE") || "8")
 
   # Configure redis
   config :progradio_api,
@@ -143,5 +143,6 @@ if config_env() == :prod do
     banned_ips: (System.get_env("BAN_IP") || "") |> String.split(","),
     webhook_secret: System.get_env("PROGRADIO_API_WEBHOOK_SECRET"),
     webhook_url: System.get_env("PROGRADIO_API_WEBHOOK_URL"),
-    streams_checker: true
+    streams_checker: true,
+    stream_import_api_50k_key: System.get_env("API_50K_KEY")
 end

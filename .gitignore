@@ -118,6 +118,8 @@
 /progradio_api/priv/static/
 /progradio_api/priv/cert/*
 
+**/*.secret.exs
+
 # Tools
 
 # Vagrant
