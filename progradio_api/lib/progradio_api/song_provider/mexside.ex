@@ -26,7 +26,6 @@ defmodule ProgRadioApi.SongProvider.Mexside do
       url
       |> Kernel.<>("/stats")
       |> SongProvider.get()
-      |> Map.get(:body)
       |> XmlToMap.naive_map()
       |> Map.get("SHOUTCASTSERVER", %{})
       |> Map.get("SONGTITLE")

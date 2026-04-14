@@ -26,8 +26,7 @@ defmodule ProgRadioApi.SongProvider.Kizrock do
     try do
       "#{url}?_=#{now_unix}"
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> List.first()
     rescue
       _ -> :error

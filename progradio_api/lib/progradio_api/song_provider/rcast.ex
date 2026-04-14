@@ -29,7 +29,6 @@ defmodule ProgRadioApi.SongProvider.Rcast do
         [_url, id] ->
           (@rcast_status <> id)
           |> SongProvider.get()
-          |> Map.get(:body)
       end
     rescue
       _ ->

@@ -41,7 +41,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioCronWorker do
         |> String.split("\n")
         |> Enum.find(&String.starts_with?(&1, "1:"))
         |> String.replace_prefix("1:", "")
-        |> :json.decode()
+        |> JSON.decode!()
         |> ImporterWeLoveRadioImportWorker.new()
         |> Oban.insert()
     rescue

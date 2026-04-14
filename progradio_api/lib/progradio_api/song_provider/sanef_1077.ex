@@ -62,8 +62,7 @@ defmodule ProgRadioApi.SongProvider.Sanef1077 do
       data =
         "https://radiovis.radio-screen.com/radioscreen-sync/data/#{id}_now_playing.json"
         |> SongProvider.get()
-        |> Map.get(:body)
-        |> :json.decode()
+        |> JSON.decode!()
         |> Map.get("nowplaying", [])
         |> List.first()
 

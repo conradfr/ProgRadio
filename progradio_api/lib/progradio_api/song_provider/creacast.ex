@@ -25,7 +25,6 @@ defmodule ProgRadioApi.SongProvider.Creacast do
         _ ->
           "https://www.creacast.com/get_title.php?usr=#{id}&mode=raw"
           |> SongProvider.get()
-          |> Map.get(:body)
       end
     rescue
       _ -> :error

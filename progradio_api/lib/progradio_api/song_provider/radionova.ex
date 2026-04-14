@@ -65,8 +65,7 @@ defmodule ProgRadioApi.SongProvider.Radionova do
       radio =
         "https://www.nova.fr/radios-data/www.nova.fr/all.json"
         |> SongProvider.get()
-        |> Map.get(:body)
-        |> :json.decode()
+        |> JSON.decode!()
         |> Enum.find(fn r ->
           code =
             r

@@ -27,7 +27,6 @@ defmodule ProgRadioApi.SongProvider.Streamtheworld do
           data =
             "https://np.tritondigital.com/public/nowplaying?mountName=#{id}&numberToFetch=1&eventType=track"
             |> SongProvider.get()
-            |> Map.get(:body)
             |> XmlToMap.naive_map()
             |> Map.get("nowplaying-info-list")
             |> then(fn

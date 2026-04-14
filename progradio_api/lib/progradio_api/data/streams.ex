@@ -27,9 +27,7 @@ defmodule ProgRadioApi.Streams do
   @redis_ttl 172_800
   @text_key "searches"
 
-  @source_radio_browser "radio-browser"
   @source_progradio "progradio"
-  @source_weloveradio "weloveradio"
 
   @error_random_cutoff 3
 
@@ -630,113 +628,6 @@ defmodule ProgRadioApi.Streams do
 
   # ---------- CLEAN ----------
 
-  def improve_laut_fm() do
-    query =
-      from s in Stream,
-        left_join: so in StreamOverloading,
-        on: so.id == s.id,
-        where:
-          is_nil(s.redirect_to) == true and is_nil(s.website) == false and
-            s.website != s.stream_url and
-            fragment(
-              "? ilike '%laut.fm%'",
-              s.website
-            ),
-        select: %{
-          id: s.id,
-          website: s.website,
-          so_id: so.id,
-          stream_url: s.stream_url
-        }
-
-    query
-    |> Repo.all()
-    |> Enum.filter(fn s ->
-      s.website !== s.stream_url && String.contains?(s.website, "stream") === false
-    end)
-    |> Enum.each(fn s ->
-      improve_laut_fm_radio(s)
-    end)
-  end
-
-  defp improve_laut_fm_radio(%{} = data) do
-    try do
-      {:ok, code_name} = extract_laut_fm_codename(data.website)
-
-      api_data =
-        "https://laut.fm/fm-api/station/#{code_name}"
-        |> Req.get!(redirect: false)
-        |> Map.get(:body)
-
-      tags =
-        api_data
-        |> Map.get("genres")
-        |> Enum.map(fn g -> String.downcase(g) end)
-        |> Enum.join(",")
-
-      updated_data = %{
-        name: Map.get(api_data, "display_name"),
-        #        img: Map.get(api_data, "images") |> Map.get("station_120x120"),
-        slogan: Map.get(api_data, "format"),
-        description: Map.get(api_data, "description"),
-        website: Map.get(api_data, "page_url"),
-        stream_url: Map.get(api_data, "stream_url"),
-        tags: tags
-      }
-
-      stream = Repo.get(Stream, data.id)
-
-      {:ok, _} =
-        stream
-        |> Stream.changeset(updated_data)
-        |> Repo.update()
-
-      updated_data =
-        updated_data
-        |> Map.put(:img, Map.get(api_data, "images", %{}) |> Map.get("station"))
-        |> Map.put(:updated_at, NaiveDateTime.utc_now())
-
-      if data.so_id != nil do
-        stream_overloading = Repo.get(StreamOverloading, data.id)
-
-        {:ok, _} =
-          stream_overloading
-          |> StreamOverloading.changeset(updated_data)
-          |> Repo.update()
-      else
-        updated_data =
-          updated_data
-          |> Map.put(:id, data.id)
-          |> Map.put(:created_at, NaiveDateTime.utc_now())
-
-        {:ok, _} =
-          %StreamOverloading{}
-          |> StreamOverloading.changeset(updated_data)
-          |> Repo.insert()
-      end
-
-      :ok
-    rescue
-      _ ->
-        Logger.warning("#{data.website} error")
-        :ok
-    catch
-      _ ->
-        Logger.warning("#{data.website} error")
-        :ok
-    end
-  end
-
-  # done by claude.ai
-  defp extract_laut_fm_codename(url) do
-    regex = ~r/https?:\/\/(www\.)?laut\.fm\/([a-zA-Z0-9-]+)/
-
-    case Regex.run(regex, url) do
-      [_, _, codename] -> {:ok, codename}
-      _ -> {:error, "No match found"}
-    end
-  end
-
   # only executed manually
   def delete_img_of_duplicates() do
     query =
@@ -754,48 +645,6 @@ defmodule ProgRadioApi.Streams do
         File.rm("#{Application.get_env(:progradio_api, :image_path)}stream/#{f}")
       end)
     end)
-  end
-
-  # only executed manually, should not be too useful after the first time...
-  def reduce_duplicates() do
-    query =
-      from s in Stream,
-        select: %{
-          name: s.name,
-          country_code: s.country_code,
-          ids: fragment("array_agg(?)", s.id)
-        },
-        where: is_nil(s.redirect_to) and s.enabled == true and s.banned == false,
-        order_by: [desc: fragment("count(?)", s.id)],
-        having: fragment("count(?) > 1", s.id),
-        group_by: [s.name, s.country_code]
-
-    query
-    |> Repo.all()
-    |> Enum.each(fn s ->
-      best_stream_id = find_best_stream_of_duplicates(s)
-
-      unless best_stream_id == nil do
-        Ecto.Adapters.SQL.query!(
-          Repo,
-          "UPDATE stream SET redirect_to = $1 where id = any($2) and id != $3",
-          [Ecto.UUID.dump!(best_stream_id), s.ids, Ecto.UUID.dump!(best_stream_id)]
-        )
-      end
-    end)
-  end
-
-  defp find_best_stream_of_duplicates(stream_data) do
-    query =
-      from s in Stream,
-        select: s.id,
-        where:
-          s.name == ^stream_data.name and s.country_code == ^stream_data.country_code and
-            is_nil(s.redirect_to) and s.enabled == true and s.banned == false,
-        order_by: [desc: s.score, desc: s.clicks_last_24h, desc: s.votes],
-        limit: 1
-
-    Repo.one(query)
   end
 
   # ---------- CHECK ----------

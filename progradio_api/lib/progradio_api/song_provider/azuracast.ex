@@ -46,8 +46,7 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
           data =
             "#{url}/api/nowplaying/#{id}"
             |> SongProvider.get()
-            |> Map.get(:body)
-            |> :json.decode()
+            |> JSON.decode!()
             |> Map.get("now_playing", %{})
 
           now_unix = SongProvider.now_unix()

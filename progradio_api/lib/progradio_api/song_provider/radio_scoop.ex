@@ -76,8 +76,7 @@ defmodule ProgRadioApi.SongProvider.RadioScoop do
       data =
         "#{@url}#{id}"
         |> SongProvider.get()
-        |> Map.get(:body)
-        |> :json.decode()
+        |> JSON.decode!()
         |> Map.get("result")
         |> Enum.filter(fn r -> Map.get(r, "status") == "playing" end)
 

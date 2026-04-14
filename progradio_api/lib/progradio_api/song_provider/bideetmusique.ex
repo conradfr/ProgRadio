@@ -17,7 +17,6 @@ defmodule ProgRadioApi.SongProvider.Bideetmusique do
     try do
       @url
       |> SongProvider.get()
-      |> Map.get(:body)
     rescue
       _ -> :error
     end

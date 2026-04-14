@@ -35,8 +35,7 @@ defmodule ProgRadioApi.SongProvider.Infomaniak do
           data =
             "https://metadata.infomaniak.com/api/radio/#{id}/metadata"
             |> SongProvider.get()
-            |> Map.get(:body)
-            |> :json.decode()
+            |> JSON.decode!()
             |> Map.get("data", [])
             |> List.last()
 

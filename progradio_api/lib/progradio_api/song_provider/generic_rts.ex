@@ -10,7 +10,6 @@ defmodule ProgRadioApi.SongProvider.GenericRts do
     try do
       url
       |> SongProvider.get()
-      |> Map.get(:body)
     rescue
       _ -> :error
     end
