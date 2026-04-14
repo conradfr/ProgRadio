@@ -27,7 +27,6 @@ defmodule ProgRadioApi.SongProvider.Radiochablais do
     try do
       (@url <> id)
       |> SongProvider.get()
-      |> Map.get(:body)
     rescue
       _ -> :error
     end

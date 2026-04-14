@@ -27,8 +27,7 @@ defmodule ProgRadioApi.SongProvider.Freepi do
         |> hd()
         |> Kernel.<>("/status-json.xsl")
         |> SongProvider.get()
-        |> Map.get(:body)
-        |> :json.decode()
+        |> JSON.decode!()
         |> Map.get("icestats", %{})
         |> Map.get("source")
 

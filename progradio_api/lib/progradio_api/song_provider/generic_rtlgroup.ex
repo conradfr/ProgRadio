@@ -18,7 +18,6 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
       # /songs?hour=19&minute=6
       (url <> date_string)
       |> SongProvider.get()
-      |> Map.get(:body)
     rescue
       _ -> :error
     end

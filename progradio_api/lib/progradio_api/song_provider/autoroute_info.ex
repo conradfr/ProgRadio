@@ -25,8 +25,7 @@ defmodule ProgRadioApi.SongProvider.AutorouteInfo do
     try do
       "https://autorouteinfo.pro/api/info_live.json"
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> Map.get("networks", %{})
       |> Map.get(key, %{})
       |> Map.get("audio", nil)

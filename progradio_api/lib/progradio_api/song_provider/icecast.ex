@@ -60,7 +60,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
           song_data =
             body
-            |> :json.decode()
+            |> JSON.decode!()
             |> Map.get("icestats", %{})
             |> Map.get("source")
 

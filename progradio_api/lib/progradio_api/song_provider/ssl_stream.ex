@@ -18,7 +18,6 @@ defmodule ProgRadioApi.SongProvider.SslStream do
     try do
       "https://ssl-stream.com/portal/icecast_now_playing.php/?url=#{url}?nocache=#{now_unix}"
       |> SongProvider.get()
-      |> Map.get(:body)
     rescue
       _ ->
         Logger.info("Data provider - (ssl-stream) #{name}: data error rescue")

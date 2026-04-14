@@ -30,8 +30,7 @@ defmodule ProgRadioApi.SongProvider.RadioCo do
         _ ->
           "https://public.radio.co/api/v2/#{id}/track/current"
           |> SongProvider.get()
-          |> Map.get(:body)
-          |> :json.decode()
+          |> JSON.decode!()
           |> Map.get("data")
       end
     rescue

@@ -47,8 +47,7 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
     try do
       url
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> Map.get("now", nil)
     rescue
       _ -> :error

@@ -24,8 +24,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup2 do
     try do
       "https://www.rtl.fr/ws/live/#{id}/last-tracks"
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> Enum.find(nil, fn e ->
         now_unix >= e["startDate"] and now_unix <= e["endDate"]
       end)

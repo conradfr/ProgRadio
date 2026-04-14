@@ -87,8 +87,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
     try do
       @url
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> Map.get("result")
       |> Enum.find(fn e -> e["id"] == channel end)
     rescue

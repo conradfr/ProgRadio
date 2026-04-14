@@ -39,13 +39,16 @@ defmodule ProgRadioApi.SongProvider do
       recv_timeout: @timeout,
       follow_redirect: true
     )
+    |> Map.get(:body)
   end
 
   # for when we have url that may be audio streams and won't return on a normal get
   def get_maybe_stream(url) do
     Req.get!(
       url,
-      redirect: false,
+      retry: false,
+      redirect: true,
+      max_redirects: 2,
       into: :self
     )
   end

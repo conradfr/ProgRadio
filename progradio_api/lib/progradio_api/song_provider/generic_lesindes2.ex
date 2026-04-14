@@ -43,7 +43,7 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes2 do
         |> Jason.encode!()
       )
       |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> Map.get("data")
       |> Map.get("TitleDiffusions")
       |> Enum.find(nil, fn e ->

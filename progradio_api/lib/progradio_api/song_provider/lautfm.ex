@@ -52,8 +52,7 @@ defmodule ProgRadioApi.SongProvider.Lautfm do
         _ ->
           "https://api.laut.fm/station/#{id}/current_song"
           |> SongProvider.get()
-          |> Map.get(:body)
-          |> :json.decode()
+          |> JSON.decode!()
       end
     rescue
       _ ->

@@ -17,8 +17,7 @@ defmodule ProgRadioApi.SongProvider.Radioclassique do
     try do
       @url
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
     rescue
       _ ->
         Logger.debug("Data provider - #{name}: data error rescue")

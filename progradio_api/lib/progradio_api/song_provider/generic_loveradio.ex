@@ -49,8 +49,7 @@ defmodule ProgRadioApi.SongProvider.GenericLoveradio do
     try do
       "#{start_url}/flow.json?station=#{id}&offset=1&count=1&ts=#{SongProvider.now_unix()}"
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> Map.get("result", %{})
       |> Map.get("entry", %{})
       |> List.first()

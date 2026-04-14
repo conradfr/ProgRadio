@@ -21,7 +21,7 @@ defmodule ProgRadioApi.SongProvider.Zeno do
   def get_data(name, %EventsourceEx.Message{} = push_event, last_data) do
     try do
       push_event.data
-      |> :json.decode()
+      |> JSON.decode!()
     rescue
       _ ->
         Logger.error("Data provider - #{name}: push event error")

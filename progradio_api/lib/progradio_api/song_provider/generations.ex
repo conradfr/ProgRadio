@@ -57,7 +57,6 @@ defmodule ProgRadioApi.SongProvider.Generations do
     try do
       @url
       |> SongProvider.get()
-      |> Map.get(:body)
       |> XmlToMap.naive_map()
       |> Map.get("prog", %{})
       |> Map.get("morceau", [])

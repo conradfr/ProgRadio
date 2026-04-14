@@ -44,7 +44,6 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
     try do
       "https://www.jazzradio.fr/winradio/prog#{id}.xml?=#{now_unix}"
       |> SongProvider.get()
-      |> Map.get(:body)
       |> XmlToMap.naive_map()
       |> Map.get("prog", %{})
       |> Map.get("morceau", [])

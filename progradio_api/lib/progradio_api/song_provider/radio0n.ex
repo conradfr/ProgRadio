@@ -22,8 +22,7 @@ defmodule ProgRadioApi.SongProvider.Radio0n do
     try do
       "https://www.0nradio.com/now_playing.php?station_url=https://www.0nradio.com/now_playing/#{extracted_part}.json&_=#{SongProvider.now_unix()}"
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (0n): data error rescue")

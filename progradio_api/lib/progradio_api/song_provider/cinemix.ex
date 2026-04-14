@@ -21,7 +21,6 @@ defmodule ProgRadioApi.SongProvider.Cinemix do
     try do
       (@url <> buster)
       |> SongProvider.get()
-      |> Map.get(:body)
     rescue
       _ -> :error
     end

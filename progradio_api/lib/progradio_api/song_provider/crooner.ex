@@ -19,8 +19,7 @@ defmodule ProgRadioApi.SongProvider.Crooner do
 
       @url
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> Map.get(id, [])
       |> Enum.find(nil, fn e ->
         Map.get(e, "isCurrent") == true

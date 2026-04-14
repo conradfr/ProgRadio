@@ -65,7 +65,6 @@ defmodule ProgRadioApi.SongProvider.AsuraHosting do
       |> hd()
       |> Kernel.<>("/currentsong")
       |> SongProvider.get()
-      |> Map.get(:body)
     rescue
       _ ->
         Logger.debug("Data provider - #{url} (asura_hosting shoutcast): data error rescue")
@@ -83,8 +82,7 @@ defmodule ProgRadioApi.SongProvider.AsuraHosting do
         |> hd()
         |> Kernel.<>("/status-json.xsl")
         |> SongProvider.get()
-        |> Map.get(:body)
-        |> :json.decode()
+        |> JSON.decode!()
         |> Map.get("icestats", %{})
         |> Map.get("source")
 

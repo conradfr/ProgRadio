@@ -10,8 +10,7 @@ defmodule ProgRadioApi.SongProvider.GenericPulsradio do
     try do
       "https://api.pulsradio.com/titre.json"
       |> SongProvider.get()
-      |> Map.get(:body)
-      |> :json.decode()
+      |> JSON.decode!()
       |> Enum.find(fn r ->
         Map.get(r, "titletv", id) == id
       end)
