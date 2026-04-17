@@ -568,6 +568,9 @@ defmodule ProgRadioApi.SongServer do
       String.match?(song_topic, ~r/\/azura.*\/listen\/[a-zA-Z0-9_-]+(\/.*)?/) ->
         ProgRadioApi.SongProvider.Azuracast
 
+      String.match?(song_topic, ~r/revma\..*\/zc\d+/) ->
+        ProgRadioApi.SongProvider.Revma
+
       String.contains?(song_topic, ".out.airtime.pro") ->
         ProgRadioApi.SongProvider.AirtimePro
 
@@ -577,8 +580,8 @@ defmodule ProgRadioApi.SongServer do
       #      String.contains?(song_topic, ".creacast.com/") ->
       #        ProgRadioApi.SongProvider.Creacast
 
-      String.contains?(song_topic, ".m3u8") ->
-        ProgRadioApi.SongProvider.Hls
+      String.contains?(song_topic, "streaming.nrjaudio.fm") ->
+        ProgRadioApi.SongProvider.Nrjstreaming
 
       String.contains?(song_topic, ".asurahosting.com/proxy/") and
           (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
@@ -600,6 +603,9 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, "//0n-") and
           String.contains?(song_topic, ".radionetz.de/") ->
         ProgRadioApi.SongProvider.Radio0n
+
+      String.contains?(song_topic, ".m3u8") ->
+        ProgRadioApi.SongProvider.Hls
 
       true ->
         ProgRadioApi.SongProvider.Icecast

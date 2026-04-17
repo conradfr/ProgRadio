@@ -20,7 +20,9 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
       get_radios()
       |> format()
       |> Enum.uniq_by(fn s -> Map.get(s, :id) end)
-      |> Enum.reject(fn s -> Map.get(s, :stream_url, nil) == nil or Map.get(s, :stream_url, "") == "" end)
+      |> Enum.reject(fn s ->
+        Map.get(s, :stream_url, nil) == nil or Map.get(s, :stream_url, "") == ""
+      end)
       |> ImporterUtils.import_images()
       |> store()
 
@@ -40,7 +42,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
       end)
     rescue
       e ->
-        IO.puts("#{inspect e}")
+        IO.puts("#{inspect(e)}")
         Logger.warning("50k import: error importing radios - rescue")
         []
     catch
@@ -59,22 +61,24 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
       :crypto.hash(:sha, url)
       |> Base.encode16(case: :lower)
 
+    # we implement cache has the (paying) api has a tendency to timeout
+    # we put it in redix instead of Nebulex (ETS) to survive restart
     results =
-      # we implement cache has the (paying) api has a tendency to timeout
-      # we put it in redix instead of Nebulex (ETS) to survive restart
       case Redix.command!(:redix, ["GET", cache_key]) do
         nil ->
           Logger.info("50k import: no cache - #{url}")
+
           result =
             HTTPoison.get!(
               url,
               [
-                {"x-rapidapi-key", Application.get_env(:progradio_api, :stream_import_api_50k_key)},
+                {"x-rapidapi-key",
+                 Application.get_env(:progradio_api, :stream_import_api_50k_key)},
                 {"x-rapidapi-host", "50k-radio-stations.p.rapidapi.com"},
                 {"content-type", "application/json"}
               ],
               timeout: @timeout,
-              recv_timeout: @timeout,
+              recv_timeout: @timeout
             )
             |> Map.get(:body)
             |> Jason.decode!()
@@ -83,7 +87,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
           Redix.command!(:redix, ["SETEX", cache_key, @cache_ttl, Jason.encode!(result)])
           result
 
-        result -> Jason.decode!(result)
+        result ->
+          Jason.decode!(result)
       end
 
     new_acc = acc ++ results
@@ -151,7 +156,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
 
       stream_url =
         stream
-        |> Map.get("streams", [%{"url": nil}])
+        |> Map.get("streams", [%{url: nil}])
         |> List.first()
         |> Map.get("url")
         |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :stream_url) || &1)).()
@@ -250,7 +255,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
 
     from(s in Stream,
       where:
-        ((s.stream_url == ^stream_url or s.original_stream_url == ^stream_url) and s.country_code == ^country_code) or
+        ((s.stream_url == ^stream_url or s.original_stream_url == ^stream_url) and
+           s.country_code == ^country_code) or
           (s.source == @source and s.external_id == ^(data["id"] |> Integer.to_string())),
       limit: 1
     )
