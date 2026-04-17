@@ -9,7 +9,7 @@
 {% endmacro %}
 
 {% macro stream_code_name(stream) %}
-{% if stream.radioStream.codeName is defined %}{{ stream.radioStream.codeName }}{% else %}{{ stream.streamSongCodeName|default(stream.id) }}{% endif %}
+{% if stream.radioStream.codeName is defined %}{{ stream.radioStream.codeName }}{% elseif stream.streamSong is defined and stream.streamSong is not null and stream.streamSongCodeName is defined and stream.streamSongCodeName is not null %}{{ stream.streamSong.codeName }}_{{ stream.streamSongCodeName }}{% else %}{{ stream.id }}{% endif %}
 {% endmacro %}
 
 {% macro stream_url(stream) %}
@@ -265,7 +265,7 @@
                         </div>
 
                         <div class="mb-3 text-start" v-if="listeners !== null" v-cloak>
-                            <strong>{{ 'page.stream.listeners'|trans }}:</strong>
+                            <strong>{{ 'page.stream.listeners'|trans }}:</strong>&nbsp;
                             {% verbatim %}
                               <i v-if="listeners === 1" class="bi bi-person-fill"></i>
                               <i v-if="listeners > 1" class="bi bi-people-fill"></i>
