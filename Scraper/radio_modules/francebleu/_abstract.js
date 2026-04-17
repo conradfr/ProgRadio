@@ -57,7 +57,7 @@ const format = async (dateObj, name) => {
           'date_time_start': startDateTime.toISOString(),
           'date_time_end': endDateTime.toISOString(),
           'title': data.title,
-          'img': 'https://www.francebleu.fr/images/emission-fallback.png',
+          'img': 'https://www.ici.fr/images/emission-fallback.png',
           'sections': []
         }
 
@@ -78,7 +78,7 @@ const format = async (dateObj, name) => {
 
         if (data.path) {
           try {
-            const res = await axios.get(`https://www.francebleu.fr/api/path?value=${data.path}`);
+            const res = await axios.get(`https://www.ici.fr/api/path?value=${data.path}`);
 
             if (res.data.context.Concept.body[0].children[0].value) {
               newEntry.description = res.data.context.Concept.body[0].children[0].value;
@@ -138,7 +138,7 @@ const fetch = async (urlName, name, dateObj, prev) => {
   dateObj.locale('fr');
   const format = 'YYYY-MM-DD';
 
-  const url = `https://www.francebleu.fr/api/path?date=${dateObj.format(format)}&value=radio%2Fgrille-programmes%2F${urlName}`;
+  const url = `https://www.ici.fr/api/path?date=${dateObj.format(format)}&value=radio%2Fgrille-programmes%2F${urlName}`;
 
   logger.log('info', `fetching ${url}`);
 
