@@ -416,15 +416,25 @@ defmodule ProgRadioApi.SongServer do
           data = Task.await(task_data, @task_timeout)
 
           song =
-            unless data == :error or data == nil or
-                     (is_tuple(data) and (elem(data, 2) == :error or elem(data, 2) == nil)) do
-              task_song =
-                Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data, last_song])
+            case data do
+              :error ->
+                nil
 
-              Task.await(task_song, @task_timeout)
-              #          apply(module, :get_song, [name, data])
-            else
-              nil
+              nil ->
+                nil
+
+              {_, _, :error} ->
+                nil
+
+              {_, _, nil} ->
+                nil
+
+              _ ->
+                task_song =
+                  Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data, last_song])
+
+                Task.await(task_song, @task_timeout)
+                # apply(module, :get_song, [name, data])
             end
 
           {data, song, refresh_type}

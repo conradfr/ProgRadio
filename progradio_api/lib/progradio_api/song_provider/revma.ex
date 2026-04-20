@@ -63,7 +63,7 @@ defmodule ProgRadioApi.SongProvider.Revma do
           end
       end
     rescue
-      e ->
+      _ ->
         Logger.debug("Data provider - #{name} (revma): data error rescue")
         :error
     catch

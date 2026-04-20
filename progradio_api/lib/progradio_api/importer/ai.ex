@@ -1,7 +1,6 @@
 defmodule ProgRadioApi.Importer.Ai do
   require Logger
   import Ecto.Query, only: [from: 2]
-  import Ecto.Changeset, only: [change: 2, put_assoc: 3]
   alias Ecto.Multi
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream, as: ProgRadioStream

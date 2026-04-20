@@ -98,7 +98,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
 
       Logger.debug("Stream import job: WeLoveRadio: #{stream.name}")
 
-      {:ok, saved_stream} =
+      {:ok, _saved_stream} =
         %Stream{}
         |> Stream.changeset(stream)
         |> Repo.insert(
@@ -153,13 +153,12 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
   end
 
   defp find_existing_stream(%{} = data) do
-    redirect_stream_id =
-      from(s in Stream,
-        where: s.external_id == ^Integer.to_string(data["radio_id"]) and s.source == @source_name,
-        limit: 1,
-        select: s.id
-      )
-      |> Repo.one()
+    from(s in Stream,
+      where: s.external_id == ^Integer.to_string(data["radio_id"]) and s.source == @source_name,
+      limit: 1,
+      select: s.id
+    )
+    |> Repo.one()
   end
 
   # we try to find an existing stream from other source with the same name and country code

@@ -6,11 +6,11 @@ defmodule ProgRadioApi.SongProvider.Nrjstreaming do
   @behaviour ProgRadioApi.SongProvider
 
   @urls %{
-      "nrj" => "https://www.nrj.fr/onair.json",
-      "nostalgie" => "https://www.nostalgie.fr/onair.json",
-      "cherie" => "https://www.cheriefm.fr/onair.json",
-      "rireetchansons" => "https://www.rireetchansons.fr/onair.json"
-    }
+    "nrj" => "https://www.nrj.fr/onair.json",
+    "nostalgie" => "https://www.nostalgie.fr/onair.json",
+    "cherie" => "https://www.cheriefm.fr/onair.json",
+    "rireetchansons" => "https://www.rireetchansons.fr/onair.json"
+  }
 
   @minutes_max_delta 300
   @discarded_artist ["NRJ", "Nostalgie", "Chérie", "Rire & Chansons"]
@@ -53,7 +53,7 @@ defmodule ProgRadioApi.SongProvider.Nrjstreaming do
       [_, id] = Regex.run(regex, name)
 
       {str_radio, str_number} = get_stream_number(id, url)
-      data = get_onair(@url[str_radio], str_radio)
+      data = get_onair(@urls[str_radio], str_radio)
 
       item =
         data
@@ -161,12 +161,14 @@ defmodule ProgRadioApi.SongProvider.Nrjstreaming do
               list when is_list(list) ->
                 Enum.find_value(list, fn entry ->
                   if Map.get(entry, "url_128k_mp3") == stream_url or
-                     Map.get(entry, "url_64k_aac") == stream_url or
-                     Map.get(entry, "url_hd_aac") == stream_url do
+                       Map.get(entry, "url_64k_aac") == stream_url or
+                       Map.get(entry, "url_hd_aac") == stream_url do
                     {radio_id, entry["id"]}
                   end
                 end)
-              _ -> nil
+
+              _ ->
+                nil
             end
           end)
 

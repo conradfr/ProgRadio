@@ -4,7 +4,6 @@ defmodule ProgRadioApiWeb.StreamController do
   use Goal
 
   alias ProgRadioApi.Streams
-  alias ProgRadioApi.Utils.ImporterUtils
 
   # ---------- GET ----------
 

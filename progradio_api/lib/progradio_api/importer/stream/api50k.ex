@@ -5,7 +5,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Utils.ImporterUtils
-  alias ProgRadioApi.Streams
 
   @base_url "https://50k-radio-stations.p.rapidapi.com"
   @page_size 100
@@ -41,12 +40,11 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
         length(Map.get(s, "streams", [])) == 0
       end)
     rescue
-      e ->
-        IO.puts("#{inspect(e)}")
+      _ ->
         Logger.warning("50k import: error importing radios - rescue")
         []
     catch
-      e ->
+      _ ->
         Logger.warning("50k import: error importing radios - catch")
         []
     end

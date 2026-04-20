@@ -71,7 +71,7 @@ defmodule ProgRadioApi.MixProject do
       {:elixir_xml_to_map, "~> 3.0"},
       {:recase, "~> 0.7"},
       #      {:shoutcast, "~> 0.1.0"},
-      {:shoutcast, git: "https://github.com/conradfr/shoutcast_ex.git", branch: "hackney_close"},
+      {:shoutcast, git: "https://github.com/conradfr/shoutcast_ex.git", branch: "master"},
       {:floki, "~> 0.38.0"},
       {:canada, "~> 2.0"},
       {:nebulex, "~> 2.6"},

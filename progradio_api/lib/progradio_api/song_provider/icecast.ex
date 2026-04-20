@@ -6,6 +6,18 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   @refresh_auto_interval 10000
 
+  # duplicated in song_provider.ex
+  @forbidden_titles [
+    "nodesc",
+    "Unknown - Unknown",
+    " - ",
+    "-",
+    "DJ Mike Llama - Llama Whippin' Intro",
+    "Stream not found",
+    "Now Playing info goes here",
+    "Dj Online"
+  ]
+
   @impl true
   def has_custom_refresh(_name), do: false
 
@@ -66,6 +78,21 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
           {:icecast, url_status, song_data}
 
+        #        %Req.Response{
+        #          status: 200,
+        #          headers: %{"content-type" => ["text/html"]}
+        #        } = resp ->
+        #          body = Enum.join(resp.body)
+        #          Req.cancel_async_response(resp)
+        #
+        #          song_data =
+        #            body
+        #            |> JSON.decode!()
+        #            |> Map.get("icestats", %{})
+        #            |> Map.get("source")
+        #
+        #          {:icecast, url_status, song_data}
+
         _ ->
           {:icecast, url_status, :error}
       end
@@ -80,17 +107,20 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   @impl true
   def get_data(name, {:default, url, _last_data}) do
     try do
-      {:ok, %Shoutcast.Meta{data: data, string: string}} =
-        Shoutcast.read_meta(url, follow_redirect: true, pool: false)
+      case Shoutcast.read_meta(url, follow_redirect: true, insecure: true, pool: false) do
+        {:error, e} ->
+          {:default, url, nil}
 
-      # the shoutcast library doesn't handle all weird icy metadata. If so we'll try to do it ourselves later
-      cond do
-        is_map(data) and map_size(data) > 0 -> {:default, url, data}
-        is_binary(string) and string != "" -> {:default, url, string}
-        true -> {:default, url, nil}
+        {:ok, %Shoutcast.Meta{data: data, string: string, location: final_location}} ->
+          # the shoutcast library doesn't handle all weird icy metadata. If so we'll try to do it ourselves later
+          cond do
+            is_map(data) and map_size(data) > 0 -> {:default, final_location, data}
+            is_binary(string) and string != "" -> {:default, final_location, string}
+            true -> {:default, final_location || url, nil}
+          end
       end
     rescue
-      _ ->
+      e ->
         Logger.debug(
           "Data provider - #{name} (generic shoutcast/icecast): default data error rescue"
         )
@@ -127,18 +157,11 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   end
 
   @impl true
-  def get_song(name, {type, _url, data}, _last_song) do
+  def get_song(name, {type, _url, data} = params, _last_song) do
     try do
       case data do
-        data when type == :shoutcast ->
-          %{
-            artist: data,
-            title: nil,
-            cover_url: nil
-          }
-
-        data when type == :icecast ->
-          SongProvider.get_song_from_icecast(data)
+        data when type in [:shoutcast, :icecast] ->
+          SongProvider.get_song_from_shoutcast_or_icecast(params, name, "icecast")
 
         data when is_map(data) ->
           song_from_map(name, data)
@@ -196,8 +219,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     Logger.debug("Data provider - #{name} (generic shoutcast/icecast): data (map) - #{song}")
 
     # we discard empty or suspicious/incomplete entries
-    if is_binary(song) and song != "" and song != "-" and
-         String.contains?(song, " - ") === true do
+    if is_binary(song) and song != "" and
+         song not in @forbidden_titles do
       cover_art =
         data
         |> Map.get("StreamUrl", "")
@@ -233,6 +256,20 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     regex = ~r/StreamTitle='(?<artist>.*?) - .*?text="(?<title>.*?)" song_spot/
 
     case Regex.named_captures(regex, data) do
+      %{"artist" => "", "title" => ""} ->
+        Logger.debug(
+          "Data provider - #{name} (generic shoutcast/icecast): data (string) - Empty data"
+        )
+
+        nil
+
+      %{"artist" => artist} when artist in @forbidden_titles ->
+        Logger.debug(
+          "Data provider - #{name} (generic shoutcast/icecast): data (string) - Forbidden string"
+        )
+
+        nil
+
       %{"artist" => artist, "title" => title} ->
         Logger.debug(
           "Data provider - #{name} (generic shoutcast/icecast): data (string) - #{artist} - #{title}"
