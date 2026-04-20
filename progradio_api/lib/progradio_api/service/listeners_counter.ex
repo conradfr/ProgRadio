@@ -54,17 +54,17 @@ defmodule ProgRadioApi.ListenersCounter do
 
   def remove_listening_session(_listening_session), do: :ok
 
-  def send_counter_of_stream(stream_code_name) when is_binary(stream_code_name) do
-    GenServer.cast(@name, {:send_counter_of, stream_code_name})
+  def get_count_of_stream(stream_code_name) when is_binary(stream_code_name) do
+    GenServer.call(@name, {:get_count_of, stream_code_name})
   end
 
-  def send_counter_of_stream(_stream_code_name), do: :ok
+  def get_count_of_stream(_stream_code_name), do: :ok
 
-  #  def get_count_of_stream(stream_code_name) when is_binary(stream_code_name) do
-  #    GenServer.call(@name, {:count_of, stream_code_name})
-  #  end
-  #
-  #  def get_count_of_stream(_stream_code_name), do: 0
+  def send_count_of_stream(stream_code_name) when is_binary(stream_code_name) do
+    GenServer.cast(@name, {:send_count_of, stream_code_name})
+  end
+
+  def send_count_of_stream(_stream_code_name), do: :ok
 
   # ----- Server callbacks -----
 
@@ -76,6 +76,12 @@ defmodule ProgRadioApi.ListenersCounter do
     Process.send_after(self(), :refresh_counter, @refresh_counter)
 
     {:ok, state}
+  end
+
+  @impl true
+  def handle_call({:get_count_of, stream_code_name}, _from, state) do
+    count = Map.get(state.counter, stream_code_name, 0)
+    {:reply, count, state}
   end
 
   @impl true
@@ -137,7 +143,7 @@ defmodule ProgRadioApi.ListenersCounter do
   end
 
   @impl true
-  def handle_cast({:send_counter_of, stream_code_name}, state) do
+  def handle_cast({:send_count_of, stream_code_name}, state) do
     case Map.get(state.counter, stream_code_name) do
       nil ->
         0
@@ -248,13 +254,6 @@ defmodule ProgRadioApi.ListenersCounter do
 
     {:noreply, updated_state}
   end
-
-  #  @impl true
-  #  def handle_call({:count_of, stream_code_name}, _from, %{counter: counter} = state) do
-  #    count = Map.get(counter, stream_code_name, 0)
-  #
-  #    {:reply, count, state}
-  #  end
 
   defp get_channel_name(%ListeningSession{} = listening_session) do
     case Map.get(listening_session, :radio_stream_id) do

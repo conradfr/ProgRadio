@@ -69,6 +69,7 @@ if config_env() == :prod do
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       port: port
     ],
+    websocket: [compress: false, max_frame_size: 2_000_000],
     secret_key_base: secret_key_base,
     check_origin: origin,
     url: [host: System.get_env("HOST"), port: 443, scheme: "https"]
