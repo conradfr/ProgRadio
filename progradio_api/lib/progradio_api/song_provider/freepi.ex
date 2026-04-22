@@ -16,11 +16,11 @@ defmodule ProgRadioApi.SongProvider.Freepi do
 
   @impl true
   def get_data(name, _last_data) do
-    SongProvider.get_icecast_data(name, @provider_name)
+    #    SongProvider.get_icecast_data(name, @provider_name)
   end
 
   @impl true
   def get_song(name, data, _last_song) do
-    SongProvider.get_song_from_shoutcast_or_icecast(data, name, @provider_name)
+    #    SongProvider.get_song_from_shoutcast_or_icecast(data, name, @provider_name)
   end
 end

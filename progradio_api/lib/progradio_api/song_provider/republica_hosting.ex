@@ -23,14 +23,14 @@ defmodule ProgRadioApi.SongProvider.RepublicaHosting do
 
     cond do
       # todo not do cond has shoutcast failing will move to icecast?
-      String.contains?(name, "/stream") -> SongProvider.get_shoutcast_data(name, @provider_name)
-      String.contains?(name, "/live") -> SongProvider.get_icecast_data(name, @provider_name)
+      #      String.contains?(name, "/stream") -> SongProvider.get_shoutcast_data(name, @provider_name)
+      #      String.contains?(name, "/live") -> SongProvider.get_icecast_data(name, @provider_name)
       true -> nil
     end
   end
 
   @impl true
   def get_song(name, data, _last_song) do
-    SongProvider.get_song_from_shoutcast_or_icecast(data, name, @provider_name)
+    #    SongProvider.get_song_from_shoutcast_or_icecast(data, name, @provider_name)
   end
 end
