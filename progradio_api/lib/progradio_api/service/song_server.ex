@@ -105,13 +105,6 @@ defmodule ProgRadioApi.SongServer do
     {:noreply, state}
   end
 
-  # todo deprecate / remove ?
-  @impl true
-  def handle_cast(:broadcast, state) do
-    broadcast_song(state.name, state.song)
-    {:noreply, state}
-  end
-
   # auto refresh
   @impl true
   def handle_info(
@@ -194,6 +187,23 @@ defmodule ProgRadioApi.SongServer do
 
       Process.send_after(self(), {:refresh, :auto}, next_refresh)
 
+      # special case: when icecast is indecisive (not sure what metadata pick if multiple)
+      # we switch it to default (reading stream metadata)
+      # should be only after the first :auto
+      # we have to do it here because of the split get_data / get_song
+      # todo revisit?
+      # in case of the special case we trigger an immediate refresh, otherwise the regular rate
+      {data, song} =
+        case song do
+          :indecisive ->
+            Logger.debug("Data provider - #{name}: indecisive returned")
+            Process.send_after(self(), {:refresh, :scheduled}, 250)
+            {:indecisive, nil}
+
+          _ ->
+            {data, song}
+        end
+
       {:noreply,
        %{
          updated_state
@@ -246,16 +256,19 @@ defmodule ProgRadioApi.SongServer do
       broadcast_song_history_if_needed(name, updated_song_history, song_history)
       update_status(song, db_data)
 
-      next_refresh =
-        apply(module, :get_refresh, [name, data, @refresh_song_interval]) ||
-          @refresh_song_interval
-          |> Kernel.+(Enum.random(-5..5))
+      # the if is for :indecisive special case that triggers one refresh
+      if apply(state.module, :has_custom_refresh, [state.name]) == true do
+        next_refresh =
+          apply(module, :get_refresh, [name, data, @refresh_song_interval]) ||
+            @refresh_song_interval
+            |> Kernel.+(Enum.random(-5..5))
 
-      Logger.debug(
-        "Data provider - #{name}: song updated, next update in #{trunc(next_refresh / 1000)} seconds"
-      )
+        Logger.debug(
+          "Data provider - #{name}: song updated, next update in #{trunc(next_refresh / 1000)} seconds"
+        )
 
-      Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
+        Process.send_after(self(), {:refresh, :scheduled}, next_refresh)
+      end
 
       {:noreply,
        %{
@@ -593,19 +606,19 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, "streaming.nrjaudio.fm") ->
         ProgRadioApi.SongProvider.Nrjstreaming
 
-      String.contains?(song_topic, ".asurahosting.com/proxy/") and
-          (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
-        ProgRadioApi.SongProvider.AsuraHosting
+      #      String.contains?(song_topic, ".asurahosting.com/proxy/") and
+      #          (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
+      #        ProgRadioApi.SongProvider.AsuraHosting
 
       String.contains?(song_topic, ".mexside.net") ->
         ProgRadioApi.SongProvider.Mexside
 
-      String.contains?(song_topic, ".republicahosting.") and
-          (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
-        ProgRadioApi.SongProvider.RepublicaHosting
+      #      String.contains?(song_topic, ".republicahosting.") and
+      #          (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
+      #        ProgRadioApi.SongProvider.RepublicaHosting
 
-      String.contains?(song_topic, "stream.freepi.io") and String.contains?(song_topic, "/live") ->
-        ProgRadioApi.SongProvider.Freepi
+      #      String.contains?(song_topic, "stream.freepi.io") and String.contains?(song_topic, "/live") ->
+      #        ProgRadioApi.SongProvider.Freepi
 
       String.contains?(song_topic, ".ssl-stream.com/") ->
         ProgRadioApi.SongProvider.SslStream
