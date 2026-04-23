@@ -29,7 +29,7 @@ export default defineComponent({
       if (this.stream) {
         this.joinListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
       }
-    }, 250);
+    }, Math.floor(Math.random() * (750 - 150 + 1)) + 150);
   },
   beforeUnmount() {
     setTimeout(() => {

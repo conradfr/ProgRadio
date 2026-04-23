@@ -130,7 +130,6 @@ const fetch = dateObj => {
       //     })
       // )
       .data(function (listing) {
-        console.log('lol');
         scrapedData.push(listing);
       })
       .done(function () {

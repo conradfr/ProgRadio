@@ -93,10 +93,10 @@
             {% endif %}
 
             {% if 'www' in app.request.uri == false %}
-                <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
+                <link rel="canonical" hreflang="x-default" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
                 <link rel="canonical" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all)))|replace({'https://': 'https://www.'})|default(app.request.uri) }}">
             {%  else %}
-                <link rel="canonical" hreflang="{{ canonical_locale }}" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
+                <link rel="canonical" hreflang="x-default" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
                 <link rel="canonical" href="{{ absolute_url(path(app.current_route, app.current_route_parameters|merge({'_locale': canonical_locale})|merge(app.request.query.all))) }}">
             {% endif %}
 

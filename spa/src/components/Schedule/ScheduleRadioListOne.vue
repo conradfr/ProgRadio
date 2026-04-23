@@ -103,7 +103,7 @@ import {
 
 import PlayerUtils from '@/utils/PlayerUtils';
 
-const MAX_RANDOM_MS = 75;
+const MAX_RANDOM_MS = 150;
 
 export default defineComponent({
   props: {
@@ -233,13 +233,13 @@ export default defineComponent({
       setTimeout(() => {
         this.joinChannel(this.channelName);
         this.joinListenersChannel(`${this.radio.code_name}_main`);
-      }, 250 + MAX_RANDOM_MS);
+      }, 250 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
     leaveChannels() {
       setTimeout(() => {
         this.leaveChannel(this.channelName);
         this.leaveListenersChannel(`${this.radio.code_name}_main`);
-      }, 1000 + MAX_RANDOM_MS);
+      }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
     playStop(radioCodeName: string, isSubStream: boolean) {
       const streamCodeName = isSubStream ? radioCodeName

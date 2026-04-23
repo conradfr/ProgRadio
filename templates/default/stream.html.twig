@@ -51,6 +51,7 @@
     <meta property="og:type" content="music.radio_station">
     <meta property="og:site_name" content="{{ domainNameRequest }}">
     <meta property="og:image" content="{{ asset(self.picture(stream)) }}">
+    <meta property="og:image:secure_url" content="{{ asset(self.picture(stream)) }}">
     <meta property="og:description" content="{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}">
     <meta name="thumbnail" content="{{ asset(self.picture(stream)) }}">
     {% if stream.updatedAt is defined and stream.updatedAt is not null %}

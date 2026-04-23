@@ -91,7 +91,7 @@ import PlayerUtils from '@/utils/PlayerUtils';
 import * as config from '@/config/config';
 
 // used to space the channel joins a bit
-const MAX_RANDOM_MS = 100;
+const MAX_RANDOM_MS = 750;
 
 export default defineComponent({
   props: {
@@ -229,19 +229,20 @@ export default defineComponent({
       this.joinChannels();
     },
     joinChannels() {
+      const randomJoinMs = Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50;
       setTimeout(() => {
         this.joinChannel(this.channelName);
-      }, 250 + MAX_RANDOM_MS);
+      }, 250 + randomJoinMs);
 
       setTimeout(() => {
         this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
-      }, 1000 + MAX_RANDOM_MS);
+      }, 1000 + randomJoinMs);
     },
     leaveChannels() {
       setTimeout(() => {
         this.leaveChannel(this.channelName);
         this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
-      }, 1000);
+      }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
     playStop() {
       // stop if playing
