@@ -1,3 +1,6 @@
+// DEPRECATED, has been refactored to scrap2
+// this code works but we were getting hit by Cloudflare protection on prod server
+
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');

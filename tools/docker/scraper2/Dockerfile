@@ -11,8 +11,6 @@ ARG API_KEY=${API_KEY}
 ARG API_SCHEDULE_URL=${API_SCHEDULE_URL}
 ARG API_RADIOS_URL=${API_RADIOS_URL}
 ARG NODE_ENV=${NODE_ENV}
-ARG PROXY_URL=${PROXY_URL}
-ARG PROXY_KEY=${PROXY_KEY}
 
 ENV MAIL_PASSWORD=${MAIL_PASSWORD} \
     MAIL_USERNAME=${MAIL_USERNAME} \
@@ -22,9 +20,7 @@ ENV MAIL_PASSWORD=${MAIL_PASSWORD} \
     API_KEY=${API_KEY} \
     API_SCHEDULE_URL=${API_SCHEDULE_URL} \
     API_RADIOS_URL=${API_RADIOS_URL} \
-    NODE_ENV=${NODE_ENV} \
-    PROXY_URL=${PROXY_URL} \
-    PROXY_KEY=${PROXY_KEY}
+    NODE_ENV=${NODE_ENV}
 
 # RUN echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" > /etc/apt/sources.list
 
@@ -34,7 +30,7 @@ RUN apt-get update \
     ca-certificates \
     bash git
 
-ADD ./tools/docker/scraper/crontab /etc/cron.d/scraper-cron
+ADD ./tools/docker/scraper2/crontab /etc/cron.d/scraper-cron
 RUN chmod 0644 /etc/cron.d/scraper-cron
 RUN crontab /etc/cron.d/scraper-cron
 
