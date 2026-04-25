@@ -138,6 +138,8 @@
 /tools/capistrano/ssh/deployer*
 /tools/capistrano/log/capistrano.log
 
+/tools/docker_build.txt
+
 # misc folder
 /work/
 
@@ -160,3 +162,6 @@
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
+
+#docker built images
+/*.tar

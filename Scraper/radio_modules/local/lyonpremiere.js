@@ -16,19 +16,19 @@ const format = dateObj => {
       return prev;
     }
 
-    regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})\s([0-9]{1,2})[h|H]([0-9]{2})/);
+    regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})[\s-]([0-9]{1,2})[h|H]([0-9]{2})/);
     let match = entry.datetime_raw.match(regexp);
 
     if (match === null) {
-      return;
+      return prev;
     }
 
-    let startDateTime = moment(dateObj);
+    const startDateTime = moment(dateObj);
     startDateTime.hour(match[1]);
     startDateTime.minute(match[2]);
     startDateTime.second(0);
 
-    endDateTime = moment(dateObj);
+    const endDateTime = moment(dateObj);
     endDateTime.hour(match[3]);
     endDateTime.minute(match[4]);
     endDateTime.second(0);
