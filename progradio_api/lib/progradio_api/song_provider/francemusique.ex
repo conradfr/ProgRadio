@@ -1,75 +1,42 @@
 defmodule ProgRadioApi.SongProvider.Francemusique do
   require Logger
   alias ProgRadioApi.SongProvider
+  alias ProgRadioApi.SongProvider.GenericRadioFrance
 
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "francemusique_main" => "",
-    "francemusique_baroque" => "francemusique_baroque",
-    "francemusique_classique_easy" => "francemusique_classique_easy",
-    "francemusique_piano_zen" => "francemusique_piano_zen",
-    "francemusique_opera" => "francemusique_opera",
-    "francemusique_concert_rf" => "francemusique_concert_rf",
-    "francemusique_evenmentielle" => "francemusique_evenmentielle"
+    "francemusique_main" => "4",
+    "francemusique_baroque" => "408",
+    "francemusique_classique_easy" => "401",
+    "francemusique_piano_zen" => "410",
+    "francemusique_opera" => "409",
+    "francemusique_concert_rf" => "403",
+    "francemusique_jazz" => "405",
+    "francemusique_contemporaine" => "406",
+    "francemusique_classique_love" => "411",
+    "francemusique_films" => "407",
+    "francemusique_classique_plus" => "402",
+    "francemusique_ocora" => "404"
   }
 
-  @refresh_fallback_s 3
-  @refresh_fallback_ms 3000
+  @impl true
+  defdelegate has_custom_refresh(name), to: GenericRadioFrance
 
   @impl true
-  def has_custom_refresh(_name), do: true
+  defdelegate get_refresh(name, data, default_refresh), to: GenericRadioFrance
 
   @impl true
-  def get_refresh(_name, nil, default_refresh), do: default_refresh
-
-  @impl true
-  def get_refresh(_name, data, default_refresh) do
-    next = Map.get(data, "delayToRefresh", default_refresh) + 5
-
-    if next < @refresh_fallback_s do
-      @refresh_fallback_ms
-    else
-      next
-    end
-  end
-
-  @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, last_data) do
     id =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
-    url = "https://www.radiofrance.fr/francemusique/api/live?webradio=#{id}"
+    url = "https://api.radiofrance.fr/livemeta/live/#{id}/transistor_musical_player"
 
-    try do
-      url
-      |> SongProvider.get()
-      |> JSON.decode!()
-      |> Map.get("now")
-    rescue
-      _ -> :error
-    end
+    GenericRadioFrance.get_data(url, name, last_data)
   end
 
   @impl true
-  def get_song(name, data, _last_song) do
-    try do
-      artist =
-        data
-        |> Map.get("secondLine", %{})
-        |> Map.get("title", nil)
-
-      title =
-        data
-        |> Map.get("firstLine", %{})
-        |> Map.get("title", nil)
-
-      %{artist: artist, title: title}
-    rescue
-      _ ->
-        Logger.error("Data provider - #{name}: song error rescue")
-        :error
-    end
-  end
+  defdelegate get_song(name, data, last_song), to: GenericRadioFrance
 end

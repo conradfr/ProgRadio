@@ -32,18 +32,6 @@ defmodule ProgRadioApi.SongProvider do
 
   @timeout 5_000
 
-  # duplicated in icecast.ex
-  @forbidden_titles [
-    "nodesc",
-    "Unknown - Unknown",
-    " - ",
-    "-",
-    "DJ Mike Llama - Llama Whippin' Intro",
-    "Stream not found",
-    "Now Playing info goes here",
-    "Dj Online"
-  ]
-
   def get(url) do
     HTTPoison.get!(
       url,

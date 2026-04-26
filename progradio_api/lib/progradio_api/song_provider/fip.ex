@@ -1,6 +1,7 @@
 defmodule ProgRadioApi.SongProvider.Fip do
   require Logger
   alias ProgRadioApi.SongProvider
+  alias ProgRadioApi.SongProvider.GenericRadioFrance
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -20,74 +21,23 @@ defmodule ProgRadioApi.SongProvider.Fip do
     "fip_cultes" => 709
   }
 
-  @refresh_fallback_s 3
-  @refresh_fallback_ms 3000
+  @impl true
+  defdelegate has_custom_refresh(name), to: GenericRadioFrance
 
   @impl true
-  def has_custom_refresh(_name), do: true
+  defdelegate get_refresh(name, data, default_refresh), to: GenericRadioFrance
 
   @impl true
-  def get_refresh(_name, nil, default_refresh), do: default_refresh
-
-  @impl true
-  def get_refresh(_name, data, default_refresh) do
-    next = Map.get(data, "delayToRefresh", default_refresh) + 5
-
-    if next < @refresh_fallback_s do
-      @refresh_fallback_ms
-    else
-      next
-    end
-  end
-
-  @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, last_data) do
     id =
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
     url = "https://api.radiofrance.fr/livemeta/live/#{id}/transistor_musical_player"
 
-    try do
-      url
-      |> SongProvider.get()
-      |> JSON.decode!()
-      |> Map.get("now")
-    rescue
-      _ -> :error
-    end
+    GenericRadioFrance.get_data(url, name, last_data)
   end
 
   @impl true
-  def get_song(name, data, _last_song) do
-    try do
-      fallback =
-        data
-        |> Map.get("firstLine", nil)
-
-      artist =
-        data
-        |> Map.get("secondLine", fallback)
-
-      picture_id =
-        data
-        |> Map.get("cover")
-
-      picture =
-        case picture_id do
-          nil -> nil
-          _ -> "https://www.radiofrance.fr/pikapi/images/#{picture_id}/200x200"
-        end
-
-      %{
-        artist: artist,
-        title: nil,
-        cover_url: picture
-      }
-    rescue
-      _ ->
-        Logger.error("Data provider - #{name}: song error rescue")
-        :error
-    end
-  end
+  defdelegate get_song(name, data, last_song), to: GenericRadioFrance
 end

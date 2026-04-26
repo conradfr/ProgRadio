@@ -1,4 +1,4 @@
-defmodule ProgRadioApi.SongProvider.Franceculture do
+defmodule ProgRadioApi.SongProvider.Franceinfo do
   require Logger
   alias ProgRadioApi.SongProvider
   alias ProgRadioApi.SongProvider.GenericRadioFrance
@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Franceculture do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "franceculture_main" => "5"
+    "franceinfo_main" => "2",
   }
 
   @impl true
@@ -21,7 +21,7 @@ defmodule ProgRadioApi.SongProvider.Franceculture do
       SongProvider.get_stream_code_name_from_channel(name)
       |> (&Map.get(@stream_ids, &1)).()
 
-    url = "https://api.radiofrance.fr/livemeta/live/#{id}/transistor_culture_player"
+    url = "https://api.radiofrance.fr/livemeta/live/#{id}/transistor_info_player"
 
     GenericRadioFrance.get_data(url, name, last_data)
   end
