@@ -1,3 +1,5 @@
+// DEPRECATED this has been refactored in scraper2
+
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');

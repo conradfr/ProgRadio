@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260426105011 extends AbstractMigration
+final class Version20260427071659 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -22,10 +22,10 @@ final class Version20260426105011 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $radios = [
             [
-                'code_name' => 'banquisefm',
-                'name' => 'Banquise FM',
+                'code_name' => 'rmc_gold',
+                'name' => 'RMC Gold',
                 'category' => 2,
-                'collection' => 7,
+                'collection' => 9,
                 'share' => 0,
                 'country' => 'FR',
                 'timezone' => 'Europe/Paris'
@@ -34,55 +34,37 @@ final class Version20260426105011 extends AbstractMigration
 
         $subRadios = [
             [
-                'code_name' => 'banquisefm_main',
-                'name' => 'Banquise FM',
+                'code_name' => 'rmc_gold_main',
+                'name' => 'RMC Gold',
                 'main' => 'true',
-                'radio_id' => 154
+                'radio_id' => 155
             ],
         ];
 
         $stream = [
             [
-                'code_name' => 'banquisefm_main',
-                'name' => 'Banquise FM',
+                'code_name' => 'rmc_gold_main',
+                'name' => 'RMC Gold',
                 'main' => 'true',
-                'radio_id' => 154,
+                'radio_id' => 155,
                 'current_song' => 'false',
-                'url' => 'https://ecoute.banquisefm.com/listen.mp3',
+                'url' => 'https://hls-rmcgold.nextradiotv.com/ssai/master.m3u8',
                 'enabled' => 'true',
-                'sub_radio' => 302
+                'sub_radio' => 303
             ],
-            [
-                'code_name' => 'banquisefm_hits',
-                'name' => 'Banquise FM Hits',
-                'main' => 'false',
-                'radio_id' => 154,
-                'current_song' => 'false',
-                'url' => 'https://ecoute.banquisefm.com:2022/listen.mp3',
-                'enabled' => 'true'
-            ],
-            [
-                'code_name' => 'banquisefm_mix',
-                'name' => 'Banquise FM Mix',
-                'main' => 'false',
-                'radio_id' => 154,
-                'current_song' => 'false',
-                'url' => 'https://ecoute.banquisefm.com:2021/listen.mp3',
-                'enabled' => 'true'
-            ]
         ];
 
         for ($i = 0; $i < count($radios); $i++) {
             $this->connection->executeQuery(
                 'INSERT INTO radio (id, category_id, code_name, name, country_code, timezone, share, collection_id) VALUES ('
-                . ($i + 154) . ',' . $radios[$i]['category'] . ",'" . $radios[$i]['code_name'] . "','" . $radios[$i]['name'] . "','" . $radios[$i]['country'] . "','" . $radios[$i]['timezone'] . "'," . $radios[$i]['share'] . "," . $radios[$i]['collection'] . ");"
+                . ($i + 155) . ',' . $radios[$i]['category'] . ",'" . $radios[$i]['code_name'] . "','" . $radios[$i]['name'] . "','" . $radios[$i]['country'] . "','" . $radios[$i]['timezone'] . "'," . $radios[$i]['share'] . "," . $radios[$i]['collection'] . ");"
             );
         }
 
         for ($i = 0; $i < count($subRadios); $i++) {
             $this->connection->executeQuery(
                 'INSERT INTO sub_radio (id, radio_id, code_name, name, main, enabled) VALUES ('
-                . ($i + 302) . ',' . $subRadios[$i]['radio_id'] . ",'" . $subRadios[$i]['code_name'] . "','" . $subRadios[$i]['name'] . "'," . $subRadios[$i]['main'] . ',true);'
+                . ($i + 303) . ',' . $subRadios[$i]['radio_id'] . ",'" . $subRadios[$i]['code_name'] . "','" . $subRadios[$i]['name'] . "'," . $subRadios[$i]['main'] . ',true);'
             );
         }
 
