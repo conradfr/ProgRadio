@@ -261,22 +261,24 @@ class AdminController extends AbstractBaseController
                 $streamRedirect = $em->getRepository(Stream::class)->find($form->get('redirect')->getData());
 
                 if ($streamRedirect) {
+                    // history
                     $userStreams = $em->getRepository(UserStream::class)->findBy(['stream' => $stream]);
-
-                    // transfer the favorite to the correct stream, except if already exists
                     foreach ($userStreams as $userStream) {
-                        $fav = $em->getRepository(UserStream::class)->findOneBy(['user' => $userStream->getUser(), 'stream' => $streamRedirect]);
-
-                        if (!$fav) {
-                            $user = $userStream->getUser();
-                            $user->addStream($streamRedirect);
-
-                            $em->persist($user);
-                            $em->flush();
-                        }
-
                         $em->remove($userStream);
                     }
+
+                    // favorites
+                    $users = $em->getRepository(User::class)->findByFavoriteStream($stream);
+                    /** @var User $user */
+                    foreach ($users as $user) {
+                        $user->addFavoriteStream($streamRedirect);
+                        $user->removeFavoriteStream($stream);
+
+                        $em->persist($user);
+                        $em->flush();
+                    }
+
+                    $em->flush();
 
                     $stream->setRedirectToStream($streamRedirect);
                 }

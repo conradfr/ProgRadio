@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\Stream;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
@@ -105,6 +106,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function findByFavoriteStream(Stream $stream): array
+    {
+        return $this->createQueryBuilder('u')
+            ->innerJoin('u.favoriteStreams', 's')
+            ->where('s = :stream')
+            ->setParameter('stream', $stream)
+            ->getQuery()
+            ->getResult();
     }
 
     public function supportsClass($class)
