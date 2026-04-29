@@ -9,7 +9,7 @@ defmodule ProgRadioApi.SongProvider.Franceinter do
     "franceinter_main" => "1",
     "franceinter_lamusique" => "1101",
     "franceinter_petit" => "1102",
-    "franceinter_toutpetit" => "1103",
+    "franceinter_toutpetit" => "1103"
   }
 
   @impl true

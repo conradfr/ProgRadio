@@ -51,7 +51,7 @@ defmodule ProgRadioApi.SongProvider.FranceBleu do
     "france_bleu_saintetienneloire" => "93",
     "france_bleu_sudlorraine" => "",
     "france_bleu_touraine" => "47",
-    "france_bleu_vaucluse" => "48",
+    "france_bleu_vaucluse" => "48"
   }
 
   @impl true

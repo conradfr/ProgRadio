@@ -1,6 +1,5 @@
 defmodule ProgRadioApi.SongProvider.FrancebleuLimousin do
   require Logger
-  alias ProgRadioApi.SongProvider
   alias ProgRadioApi.SongProvider.FranceBleu
 
   @behaviour ProgRadioApi.SongProvider
@@ -12,7 +11,7 @@ defmodule ProgRadioApi.SongProvider.FrancebleuLimousin do
   defdelegate get_refresh(name, data, default_refresh), to: FranceBleu
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(_name, last_data) do
     FranceBleu.get_data("song:france_bleu_limousin", last_data)
   end
 

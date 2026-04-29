@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Franceinfo do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "franceinfo_main" => "2",
+    "franceinfo_main" => "2"
   }
 
   @impl true

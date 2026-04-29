@@ -109,7 +109,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   def get_data(name, {:default, url, _last_data}) do
     try do
       case Shoutcast.read_meta(url, follow_redirect: true, insecure: true, pool: false) do
-        {:error, e} ->
+        {:error, _e} ->
           {:default, url, nil}
 
         {:ok, %Shoutcast.Meta{data: data, string: string, location: final_location}} ->
@@ -121,7 +121,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
           end
       end
     rescue
-      e ->
+      _e ->
         Logger.debug(
           "Data provider - #{name} (generic shoutcast/icecast): default data error rescue"
         )
@@ -162,8 +162,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   def get_song(name, {type, _url, data} = params, _last_song) do
     try do
       case data do
-        data when type in [:shoutcast, :icecast] ->
-          get_song_from_shoutcast_or_icecast(params, name, "icecast")
+        _data when type in [:shoutcast, :icecast] ->
+          get_song_from_shoutcast_or_icecast(params, name, "generic shoutcast/icecast")
 
         data when is_map(data) ->
           song_from_map(name, data)
@@ -196,8 +196,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
           base_url = get_base_url(url)
 
           [
-            {:icecast, base_url <> "/status-json.xsl"},
-            {:shoutcast, base_url <> "/currentsong"}
+            {:icecast, base_url <> "/status-json.xsl"}
+            #            {:shoutcast, base_url <> "/currentsong"}
           ]
       end
 
@@ -283,8 +283,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   defp get_song_from_shoutcast_or_icecast(data, url, name)
 
-  defp get_song_from_shoutcast_or_icecast(nil, _url, _name), do: nil
-  defp get_song_from_shoutcast_or_icecast(:error, _url, _name), do: nil
+  #  defp get_song_from_shoutcast_or_icecast(nil, _url, _name), do: nil
+  #  defp get_song_from_shoutcast_or_icecast(:error, _url, _name), do: nil
 
   defp get_song_from_shoutcast_or_icecast({_type, _url_status, data}, url, name)
        when is_binary(data) do
@@ -308,7 +308,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     end
   end
 
-  defp get_song_from_shoutcast_or_icecast({_type, _url_status, data}, url, name)
+  defp get_song_from_shoutcast_or_icecast({_type, _url_status, data}, url, _name)
        when is_map(data) or is_list(data) do
     # we delegate to the specific icecast function
     case get_song_from_icecast(data, url) do
@@ -318,7 +318,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
       nil ->
         nil
 
-      %{artist: nil} = song ->
+      %{artist: nil} = _song ->
         nil
 
       %{artist: artist} = song when is_binary(artist) and artist != "" ->
@@ -330,17 +330,6 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   end
 
   defp get_song_from_shoutcast_or_icecast({_type, _url_status, _data}, _url, _name), do: nil
-
-  defp get_song_from_icecast(data, url, name) do
-    try do
-      Logger.debug("Data provider - #{url} (#{name}): song")
-      get_song_from_icecast(data, url)
-    rescue
-      _ ->
-        Logger.debug("Data provider - #{url} (#{name}): song error rescue")
-        :error
-    end
-  end
 
   @spec get_song_from_icecast(map | list, String.t()) :: String.t() | nil
 

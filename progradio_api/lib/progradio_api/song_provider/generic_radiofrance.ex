@@ -6,7 +6,6 @@ defmodule ProgRadioApi.SongProvider.GenericRadioFrance do
 
   def get_refresh(_name, nil, _default_refresh), do: nil
 
-  @impl true
   def get_refresh(_name, data, default_refresh) do
     now_unix = SongProvider.now_unix()
     end_unix = (Map.get(data, "endTime", default_refresh) || default_refresh) + 5
@@ -17,7 +16,7 @@ defmodule ProgRadioApi.SongProvider.GenericRadioFrance do
     end
   end
 
-  def get_data(url, name, last_data) do
+  def get_data(url, name, _last_data) do
     try do
       url
       |> SongProvider.get()
@@ -30,7 +29,6 @@ defmodule ProgRadioApi.SongProvider.GenericRadioFrance do
     end
   end
 
-  @impl true
   def get_song(name, data, _last_song) do
     try do
       fallback =

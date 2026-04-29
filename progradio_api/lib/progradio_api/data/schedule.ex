@@ -95,7 +95,7 @@ defmodule ProgRadioApi.Schedule do
               Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
             end
 
-            fn {k, e} ->
+            fn {_k, _e} ->
               nil
               # don't cache
             end

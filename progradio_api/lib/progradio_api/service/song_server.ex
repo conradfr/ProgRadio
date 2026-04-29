@@ -606,19 +606,8 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, "streaming.nrjaudio.fm") ->
         ProgRadioApi.SongProvider.Nrjstreaming
 
-      #      String.contains?(song_topic, ".asurahosting.com/proxy/") and
-      #          (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
-      #        ProgRadioApi.SongProvider.AsuraHosting
-
       String.contains?(song_topic, ".mexside.net") ->
         ProgRadioApi.SongProvider.Mexside
-
-      #      String.contains?(song_topic, ".republicahosting.") and
-      #          (String.ends_with?(song_topic, "/stream") or String.contains?(song_topic, "/live")) ->
-      #        ProgRadioApi.SongProvider.RepublicaHosting
-
-      #      String.contains?(song_topic, "stream.freepi.io") and String.contains?(song_topic, "/live") ->
-      #        ProgRadioApi.SongProvider.Freepi
 
       String.contains?(song_topic, ".ssl-stream.com/") ->
         ProgRadioApi.SongProvider.SslStream
