@@ -20,40 +20,59 @@ puppeteer.use(StealthPlugin())
 let browser = null;
 
 const setBrowser = async () => {
-  if (!browser) {
-    browser = await puppeteer.launch({
-      executablePath: '/usr/bin/chromium',
-      headless: true,
-      args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
-      env: {
-        ...process.env,
-      },
-    })
+  if (browser && browser.isConnected()) {
+    return;
   }
+  // kill any stale reference
+  if (browser) {
+    try { await browser.close(); } catch (_) {}
+    browser = null;
+  }
+  browser = await puppeteer.launch({
+    executablePath: '/usr/bin/chromium',
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--single-process',
+    ],
+    timeout: 240000,
+    env: {
+      ...process.env,
+    },
+  });
 
   return Promise.resolve(true);
-}
+};
 
-const getDescription = async (url) => {
-  let description = '';
-  await setBrowser();
-  const page = await browser.newPage();
-  await page.goto(url, {
-    waitUntil: 'networkidle2',
-    timeout: 30000,
-  });
-  const html = await page.content();
+const getDescription = async (url) => {nano
+  try {
+    logger.log('info', `fetching description ${url}`);
+    let description = '';
+    await setBrowser();
+    const page = await browser.newPage();
+    await page.goto(url, {
+      waitUntil: 'networkidle2',
+      timeout: 120000,
+    });
+    const html = await page.content();
 
-  const $ = cheerio.load(html);
-  const data = $.extract({
-    description: '.main-article p',
-  });
+    const $ = cheerio.load(html);
+    const data = $.extract({
+      description: '.main-article p',
+    });
 
-  if(data.description) {
-    description = data.description;
+    if(data.description) {
+      description = data.description;
+    }
+
+    return Promise.resolve(description);
+  } catch (error) {
+    logger.log('error fetching description', error);
+    return Promise.resolve(null);
   }
-
-  return Promise.resolve(description);
 };
 
 const format = async (dateObj, name) => {
@@ -156,7 +175,7 @@ const fetch = async (dateObj, name, url) => {
     const page = await browser.newPage();
     await page.goto(url, {
       waitUntil: 'networkidle2',
-      timeout: 30000,
+      timeout: 1200000,
     });
     const html = await page.content();
 
@@ -186,7 +205,7 @@ const fetch = async (dateObj, name, url) => {
       scrapedData[name] = data.shows;
     }
   } catch (error) {
-    logger.log('error fetch schedule', error);
+    logger.log('error fetching schedule', error);
     browser.close();
   }
 

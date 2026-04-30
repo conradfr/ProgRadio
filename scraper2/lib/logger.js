@@ -4,7 +4,7 @@ import winston from 'winston';
 import Mail from 'winston-mail-lite';
 
 const logger = winston.createLogger({
-  level: 'warn',
+  level: 'warning',
   transports: [
     new winston.transports.File({filename: '../var/logs/cron.log'})
   ]

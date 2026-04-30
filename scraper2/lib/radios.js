@@ -11,6 +11,7 @@ const fetchRadios = async (config, logger) => {
     }})
     .then(function (response) {
       logger.log('debug', 'Listing radios: done');
+      console.log(response.data.radios);
       return response.data.radios || false;
     }).catch((error) => {
       logger.log('debug', `Listing radios: api request failed (${error}).`);
