@@ -106,7 +106,7 @@ defmodule ProgRadioApi.Importer.Ai do
 
   defp fetch_description(e, openai) do
     prompt =
-      "Describe in three sentences maximum the radio whose name is given by the chat input. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer nothing if you don't find something. Your answer must be in the most appropriate language for the country code given in the chat input, taking also into account the language given in the input chat (if any), Translate it if you need."
+      "Describe in three sentences maximum the radio whose name is given by the chat input. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer an empty string if you don't find information (not that you didn't find information). Your answer must be in the most appropriate language for the country code given in the chat input, taking also into account the language given in the input chat (if any), Translate it if you need."
 
     params = """
     radio: #{e.name}
@@ -159,7 +159,7 @@ defmodule ProgRadioApi.Importer.Ai do
 
   defp fetch_tags(e, openai) do
     prompt =
-      "Find five tags maximum that resume the radio whose name is given by the chat input. Focus on the type of radio (music, news, talk etc...) and if it's a music station focus also on the most relevant music style. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer nothing if you don't find something. Tags must be in English. Return them as one line, each tag in lowercase and separated by a comma, no blank space around the commas."
+      "Find five tags maximum that resume the radio whose name is given by the chat input. Focus on the type of radio (music, news, talk etc...) and if it's a music station focus also on the most relevant music style. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer an empty string if you don't find something. Tags must be in English. Return them as one line, each tag in lowercase and separated by a comma, no blank space around the commas."
 
     params = """
     radio: #{e.name}
