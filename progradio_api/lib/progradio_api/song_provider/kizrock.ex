@@ -5,8 +5,8 @@ defmodule ProgRadioApi.SongProvider.Kizrock do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "kizrock_metal" => "https://www.kaleidoscopiccreation.mobi/kizrock/song_history_metal.json",
-    "kizrock_rock" => "https://www.kaleidoscopiccreation.mobi/kizrock/song_history_kizrock.json"
+    "kizrock_metal" => "https://kizrock.com/?qtproxycall=https%3A%2F%2Fgo.2stream.net%2Fkizrock_metal&icymetadata=1&_=",
+    "kizrock_rock" => "https://kizrock.com/?qtproxycall=https%3A%2F%2Fgo.2stream.net%2Fkizrock&icymetadata=1&_="
   }
 
   @impl true
@@ -24,10 +24,8 @@ defmodule ProgRadioApi.SongProvider.Kizrock do
       |> (&Map.get(@stream_ids, &1)).()
 
     try do
-      "#{url}?_=#{now_unix}"
+      "#{url}#{now_unix}"
       |> SongProvider.get()
-      |> JSON.decode!()
-      |> List.first()
     rescue
       _ -> :error
     end
@@ -36,21 +34,11 @@ defmodule ProgRadioApi.SongProvider.Kizrock do
   @impl true
   def get_song(name, data, _last_song) do
     try do
-      artist = Map.get(data, "artist")
-      picture = Map.get(data, "coverart")
-      title = Map.get(data, "title")
-
-      title =
-        case Map.get(data, "year") do
-          nil -> title
-          year -> "#{title} (#{year})"
-        end
-
-      %{
-        artist: artist,
-        title: title,
-        cover_url: picture
-      }
+      case data do
+        "" -> nil
+        data when is_binary(data) -> %{artist: data, title: nil}
+        _ -> nil
+      end
     rescue
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")

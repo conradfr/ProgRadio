@@ -10,6 +10,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   @forbidden_titles [
     "nodesc",
     "no desc",
+    "Unknown",
     "Unknown - Unknown",
     " - ",
     "-",

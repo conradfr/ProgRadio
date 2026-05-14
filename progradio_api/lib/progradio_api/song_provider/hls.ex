@@ -47,8 +47,20 @@ defmodule ProgRadioApi.SongProvider.Hls do
       |> Enum.find_value(%{}, fn line ->
         case extract_info(line.value) do
           %{} = artist_title when map_size(artist_title) > 0 ->
-            case Map.get(artist_title, "artist", "") do
-              "" -> %{artist: Map.get(artist_title, "title")}
+            artist =
+              artist_title
+              |> Map.get("artist")
+              |> then(fn t -> if t == nil or t in SongProvider.get_forbidden_titles(), do: nil, else: t end)
+
+            title =
+              artist_title
+              |> Map.get("title")
+              |> then(fn t -> if t == nil or t in SongProvider.get_forbidden_titles(), do: nil, else: t end)
+
+            case artist do
+              nil when not is_nil(title)-> %{artist: title}
+              "" when not is_nil(title)-> %{artist: title}
+              "" -> false
               _ -> artist_title
             end
 

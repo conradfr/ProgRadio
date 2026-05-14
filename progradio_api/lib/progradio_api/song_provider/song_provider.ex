@@ -30,6 +30,20 @@ defmodule ProgRadioApi.SongProvider do
 
   # ----- Utils -----
 
+  # duplicated in icecast.ex
+  @forbidden_titles [
+    "nodesc",
+    "no desc",
+    "Unknown",
+    "Unknown - Unknown",
+    " - ",
+    "-",
+    "DJ Mike Llama - Llama Whippin' Intro",
+    "Stream not found",
+    "Now Playing info goes here",
+    "Dj Online"
+  ]
+
   @timeout 5_000
 
   def get(url) do
@@ -86,4 +100,7 @@ defmodule ProgRadioApi.SongProvider do
 
   def recase(data) when is_binary(data), do: Recase.to_title(data)
   def recase(_data), do: nil
+
+  def get_forbidden_titles(), do: @forbidden_titles
+
 end

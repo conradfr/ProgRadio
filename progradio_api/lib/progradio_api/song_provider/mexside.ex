@@ -4,8 +4,6 @@ defmodule ProgRadioApi.SongProvider.Mexside do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @empty_artists ["nodesc", "Unknown - Unknown", " - ", "DJ Mike Llama - Llama Whippin' Intro"]
-
   @impl true
   def has_custom_refresh(_name), do: false
 
@@ -56,7 +54,7 @@ defmodule ProgRadioApi.SongProvider.Mexside do
       Logger.debug("Data provider - #{name} (mexside): song")
 
       if data != nil and data != :error and is_binary(data) and data != "" and
-           data not in @empty_artists do
+           data not in SongProvider.get_forbidden_titles() do
         %{
           artist: data,
           title: nil,
