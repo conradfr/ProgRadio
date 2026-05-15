@@ -10,6 +10,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   @forbidden_titles [
     "nodesc",
     "no desc",
+    "undefined",
     "Unknown",
     "Unknown - Unknown",
     " - ",
@@ -246,8 +247,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     Logger.debug("Data provider - #{name} (generic shoutcast/icecast): data (map) - #{song}")
 
     # we discard empty or suspicious/incomplete entries
-    if is_binary(song) and song != "" and
-         song not in @forbidden_titles do
+    if is_binary(song) and String.trim(song) != "" and
+       String.trim(song) not in @forbidden_titles do
       cover_art =
         data
         |> Map.get("StreamUrl", "")
@@ -293,7 +294,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
     try do
       if data != "" and String.contains?(data, "Error 404") == false and
-           Enum.member?(@forbidden_titles, data) == false do
+           Enum.member?(@forbidden_titles, String.trim(data)) == false do
         %{
           artist: data,
           title: nil,
@@ -323,7 +324,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
         nil
 
       %{artist: artist} = song when is_binary(artist) and artist != "" ->
-        if Enum.member?(@forbidden_titles, artist) == false, do: song, else: nil
+        if Enum.member?(@forbidden_titles, String.trim(artist)) == false, do: song, else: nil
 
       song ->
         song
@@ -410,11 +411,15 @@ defmodule ProgRadioApi.SongProvider.Icecast do
           "Data provider - #{name} (generic shoutcast/icecast): data (string) - #{artist} - #{title}"
         )
 
-        %{
-          artist: artist,
-          title: title,
-          cover_url: extract_cover_from_metadata(data)
-        }
+        if Enum.member?(@forbidden_titles, String.trim(artist)) == false do
+          %{
+            artist: artist,
+            title: title,
+            cover_url: extract_cover_from_metadata(data)
+          }
+        else
+          nil
+        end
 
       nil ->
         case data do

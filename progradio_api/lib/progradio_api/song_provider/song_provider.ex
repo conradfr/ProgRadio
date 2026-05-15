@@ -34,6 +34,7 @@ defmodule ProgRadioApi.SongProvider do
   @forbidden_titles [
     "nodesc",
     "no desc",
+    "undefined",
     "Unknown",
     "Unknown - Unknown",
     " - ",

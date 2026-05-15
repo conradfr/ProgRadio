@@ -178,8 +178,8 @@ page:
         suggested: Radio suggerite
         tags: Tag
         share: Condividi la radio
-        title: 'Ascolta %radio% in diretta'
-        title_country: '%radio% - %country% - Ascolta in diretta'
+        title: 'Ascolta %radio% in diretta e gratuitamente'
+        title_country: '%radio% - Ascolta in diretta e gratuitamente'
         website: Sito web
         banned: Questa radio è bannata.
         desc: 'Descrizione'

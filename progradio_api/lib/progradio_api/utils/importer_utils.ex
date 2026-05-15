@@ -65,6 +65,8 @@ defmodule ProgRadioApi.Utils.ImporterUtils do
       |> StreamTransformers.bobde()
       |> StreamTransformers.regenbogen()
       |> StreamTransformers.securenetsystems()
+      |> StreamTransformers.radioca()
+      |> StreamTransformers.radiosenlinea()
 
     updated_stream_url
   end

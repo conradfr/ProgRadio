@@ -168,8 +168,8 @@ page:
         suggested: Aangeraden radiozenders
         tags: Tags
         share: Deel de radio
-        title: '%radio% live luisteren'
-        title_country: '%radio% - Live luisteren - %country%'
+        title: '%radio% luister live en gratis.'
+        title_country: '%radio% - Luister live en gratis.'
         website: Website
         banned: Deze radio is verboden.
         desc: 'Beschrijving'

@@ -438,6 +438,34 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
 
   def securenetsystems(stream_url), do: stream_url
 
+  def radioca({:continue, stream_url}) do
+    pattern = ~r/http:\/\/(.+\.radioca\.st):(\d+)\/(.*)/
+
+    case Regex.run(pattern, stream_url) do
+      [_, host, port, rest] ->
+        {:ok, "https://#{host}/#{port}/#{rest}"}
+
+      nil ->
+        {:continue, stream_url}
+    end
+  end
+
+  def radioca(stream_url), do: stream_url
+
+  def radiosenlinea({:continue, stream_url}) do
+    pattern = ~r/http:\/\/(.+\.radiosenlinea\.com\.ar):(\d+)\/(.*)/
+
+    case Regex.run(pattern, stream_url) do
+      [_, host, port, rest] ->
+        {:ok, "https://#{host}/#{port}/#{rest}"}
+
+      nil ->
+        {:continue, stream_url}
+    end
+  end
+
+  def radiosenlinea(stream_url), do: stream_url
+
   # ---------- UTILS ----------
 
   defp remove_query_string(stream_url) do

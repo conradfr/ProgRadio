@@ -50,11 +50,13 @@ defmodule ProgRadioApi.SongProvider.Hls do
             artist =
               artist_title
               |> Map.get("artist")
+              |> then(fn val -> if is_binary(val), do: String.trim(val), else: val end)
               |> then(fn t -> if t == nil or t in SongProvider.get_forbidden_titles(), do: nil, else: t end)
 
             title =
               artist_title
               |> Map.get("title")
+              |> then(fn val -> if is_binary(val), do: String.trim(val), else: val end)
               |> then(fn t -> if t == nil or t in SongProvider.get_forbidden_titles(), do: nil, else: t end)
 
             case artist do

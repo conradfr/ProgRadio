@@ -1,0 +1,20 @@
+# Website description
+> This website can have two domain names: www.programmes-radio.com and www.radio-addict.com
+> www.programmes-radio.com has a section with daily updated schedule of French-speaking radios.
+> Both www.programmes-radio.com and www.radio-addict.com offer to browse and listen to radio stations all over the world,
+> in a streamlined and efficient way, with the current song playing and additional information.
+> The UI is available in multiple locales, in the first part of the url after the domain: /en, /fr etc
+> For French-speaking radios we prioritize the www.programmes-radio.com domain, otherwise we usually redirect to www.radio-addict.com
+> The website is optimized for both desktop and mobile. There is also an Android app for both domain name.
+
+## Sections
+- [Schedule](/schedule): This is the French-speaking radios schedule webapp part of the website
+- [Radios](/streaming): This is the webapp part where you can browse and listen to radios from all over the world, search per country and search by text (name, tags & genre, description).
+- [FAQ](/faq): The FAQ contains direct link to radios and access to top radios per country.
+- [Now]((/now): Visualize in a quick glance current radio shows playing for all radios.
+
+## Specific details
+- Some radios may need to be opened in a popup to be listened to as their http streaming url does not work in a https webpage.
+- There is more than 130000 radios to listen to.
+- There is never more than one ad per page for a good browsing experience, and no video or audio ad.
+- Each radio offer tags that define its genre and more data, tags can be clicked to search with it

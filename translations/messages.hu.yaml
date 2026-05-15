@@ -178,8 +178,8 @@ page:
         suggested: Ajánlott rádiók
         tags: Címkék
         share: Rádió megosztása
-        title: '%radio% élő hallgatása'
-        title_country: '%radio% - %country% - Élő hallgatás'
+        title: '%radio% élő hallgatása és ingyen'
+        title_country: '%radio% - Hallgasd élőben és ingyen'
         website: Weboldal
         banned: Ez a rádió tiltott.
         desc: 'Leírás'

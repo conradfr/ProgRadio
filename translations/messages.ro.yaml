@@ -178,8 +178,8 @@ page:
         suggested: Radiouri sugerate
         tags: Etichete
         share: Partajează radioul
-        title: 'Ascultă %radio% în direct'
-        title_country: '%radio% - %country% - Ascultă în direct'
+        title: 'Ascultă %radio% live și gratuit'
+        title_country: '%radio% - Ascultă live și gratuit'
         website: Site web
         banned: Acest radio este interzis.
         desc: 'Descriere'

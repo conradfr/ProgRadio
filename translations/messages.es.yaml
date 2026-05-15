@@ -178,8 +178,8 @@ page:
         suggested: Radios sugeridas
         tags: Etiquetas
         share: Compartir la radio
-        title: '%radio% en directo'
-        title_country: '%radio% - Escuchar en directo - %country%'
+        title: '%radio% en directo y gratis'
+        title_country: '%radio% - Escucha en directo y gratis'
         website: Sitio web
         banned: Esta radio está prohibida.
         desc: 'Descripción'

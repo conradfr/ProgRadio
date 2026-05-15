@@ -178,8 +178,8 @@ page:
         suggested: Sugerowane stacje radiowe
         tags: Tagi
         share: Udostępnij stację radiową
-        title: 'Słuchaj %radio% na żywo'
-        title_country: '%radio% - %country% - Słuchaj na żywo'
+        title: 'Słuchaj %radio% na żywo i za darmo'
+        title_country: '%radio% - Słuchaj na żywo i za darmo'
         website: Strona internetowa
         banned: Ta stacja radiowa jest zbanowana.
         desc: 'Opis'

@@ -297,7 +297,7 @@
                     {% if stream.banned != true %}
                         {% if stream.description is defined and stream.description is not null and stream.description != '' %}
                             <div class="mb-3">
-                                {{ stream.description }}
+                                {{ stream.description|nl2br }}
                             </div>
                         {% endif %}
 
