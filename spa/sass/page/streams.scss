@@ -259,7 +259,7 @@
         width: 90%;
         text-align: center;
         overflow: hidden;
-        color: $gray-500;
+        color: lighten($gray-600, 7%);
         font-size:  0.846rem;
         line-height: 1.3em;
       }
