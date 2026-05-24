@@ -103,6 +103,9 @@ class Stream implements NormalizableInterface
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private ?bool $banned = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $noAds = null;
+
     /**
      * @var ListeningSession[]
      */
@@ -635,6 +638,18 @@ class Stream implements NormalizableInterface
     public function setForceProxy(?bool $forceProxy): static
     {
         $this->forceProxy = $forceProxy;
+
+        return $this;
+    }
+
+    public function isNoAds(): ?bool
+    {
+        return $this->noAds;
+    }
+
+    public function setNoAds(?bool $noAds): static
+    {
+        $this->noAds = $noAds;
 
         return $this;
     }
