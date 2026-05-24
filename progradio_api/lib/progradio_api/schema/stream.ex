@@ -2,7 +2,7 @@ defmodule ProgRadioApi.Stream do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ProgRadioApi.{ListeningSession, RadioStream, StreamSong, StreamOverloading, User}
+  alias ProgRadioApi.{ListeningSession, RadioStream, StreamSong, StreamOverloading, StreamAutoUpdate, User}
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -45,6 +45,7 @@ defmodule ProgRadioApi.Stream do
     belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream_song, StreamSong)
     has_many(:listening_session, ListeningSession)
+    has_one(:stream_auto_update, StreamAutoUpdate)
     has_one(:stream_overloading, StreamOverloading, foreign_key: :id)
   end
 
@@ -143,5 +144,11 @@ defmodule ProgRadioApi.Stream do
       :redirect_to
     ])
     |> validate_required([:redirect_to])
+  end
+
+  def changeset_url(stream, params \\ %{}) do
+    stream
+    |> cast(params, [:stream_url])
+    |> validate_required([:stream_url])
   end
 end

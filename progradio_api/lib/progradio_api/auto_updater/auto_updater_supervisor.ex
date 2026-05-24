@@ -10,7 +10,9 @@ defmodule ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor do
   def init(_init_arg) do
     children = [
       ProgRadioApi.AutoUpdater.RadioStreams.Producer,
-      ProgRadioApi.AutoUpdater.RadioStreams.Consumer
+      ProgRadioApi.AutoUpdater.RadioStreams.Consumer,
+      ProgRadioApi.AutoUpdater.Streams.Producer,
+      ProgRadioApi.AutoUpdater.Streams.Consumer
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

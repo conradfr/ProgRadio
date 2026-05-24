@@ -36,5 +36,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('RadioStream', 'fas fa-list', 'easy_admin_radio_stream_index');
         yield MenuItem::linkToRoute('Radio', 'fas fa-list', 'easy_admin_radio_index');
         yield MenuItem::linkToRoute('SubRadio', 'fas fa-list', 'easy_admin_sub_radio_index');
+        yield MenuItem::linkToRoute('Stream', 'fas fa-list', 'easy_admin_stream_index');
+        yield MenuItem::linkToRoute('StreamAutoUpdate', 'fas fa-list', 'easy_admin_stream_auto_update_index');
     }
 }
