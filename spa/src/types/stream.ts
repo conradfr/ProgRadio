@@ -17,4 +17,5 @@ export interface Stream {
   popup: boolean
   playing_error: number
   type: 'stream'
+  source: string
 }

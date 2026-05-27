@@ -8,7 +8,7 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
   alias ProgRadioApi.Stream
 
   @source_name "radiobox"
-  @sleep_ms 5000
+  @sleep_ms 500
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: args}) do

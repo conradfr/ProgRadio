@@ -95,7 +95,7 @@
     }
 
     &:hover {
-      .streams-one-admin-edit, .streams-one-admin-copy {
+      .streams-one-admin-info, .streams-one-admin-edit, .streams-one-admin-copy {
         visibility: visible;
       }
     }
@@ -139,6 +139,21 @@
       }
     }
 
+    .streams-one-admin-info {
+      @include media-breakpoint-down(sm) {
+        display:none;
+      }
+
+      visibility: hidden;
+      position: absolute;
+      top: -2px;
+      right: 91px;
+
+      &:hover {
+        filter: brightness(0.85);
+      }
+    }
+
     .streams-one-admin-edit {
       @include media-breakpoint-down(sm) {
         display:none;
@@ -147,7 +162,7 @@
       visibility: hidden;
       position: absolute;
       top: -2px;
-      right: 51px;
+      right: 41px;
 
       &:hover {
         filter: brightness(0.85);
@@ -162,7 +177,7 @@
       visibility: hidden;
       position: absolute;
       top: -2px;
-      right: 75px;
+      right: 66px;
 
       &:hover {
         filter: brightness(0.85);

@@ -332,6 +332,7 @@ defmodule ProgRadioApi.Streams do
         description: s.description,
         clicks_last_24h: s.clicks_last_24h,
         score: s.score,
+        source: s.source,
         popup: s.popup,
         type: "stream",
         playing_error: s.playing_error,

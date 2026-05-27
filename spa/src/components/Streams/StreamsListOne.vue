@@ -41,6 +41,14 @@
       />
     </div>
     <div
+      v-if="userLogged && userIsAdmin"
+      class="streams-one-admin-info cursor-pointer"
+      style="margin-top: 2px"
+      data-bs-html="true" :title="adminInfoTooltip"
+      v-tooltip>
+      <i class="bi bi-info-circle"></i>
+    </div>
+    <div
         v-if="userLogged && userIsAdmin"
         class="streams-one-admin-copy cursor-pointer"
         style="margin-top: 2px"
@@ -88,6 +96,8 @@ import type { Stream } from '@/types/stream';
 import PlayerStatus from '@/types/player_status';
 import StreamsUtils from '@/utils/StreamsUtils';
 import PlayerUtils from '@/utils/PlayerUtils';
+import tooltip from '@/directives/tooltip'
+
 import * as config from '@/config/config';
 
 // used to space the channel joins a bit
@@ -99,6 +109,9 @@ export default defineComponent({
       type: Object as PropType<Stream>,
       required: true
     }
+  },
+  directives: {
+    tooltip
   },
   data(): {
     PlayerStatus: any,
@@ -201,6 +214,13 @@ export default defineComponent({
       }
 
       return [...new Set(this.radio.tags.split(','))];
+    },
+    adminInfoTooltip() {
+      if (!this.userLogged || !this.userIsAdmin) {
+        return '';
+      }
+
+      return `ssl: ${this.radio.stream_url.startsWith('https') ? 'yes' : 'no' }<br>source: ${this.radio.source || 'n/a'}`
     }
   },
   methods: {
