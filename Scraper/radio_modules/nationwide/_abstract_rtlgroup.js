@@ -1,14 +1,25 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
+const srcset = require('srcset');
+const orderBy = require("lodash.orderby");
 
 const scrapedData = {};
 const cleanedData = {};
-let referenceIndex = 0;
+// let referenceIndex = 0;
 
 const format = (dateObj, name, cutOffHour) => {
   // we use reduce instead of map to act as a map+filter in one pass
   cleanedData[name] = scrapedData[name].reduce(function (prev, curr, index, array) {
+    if (!curr.datetime_raw && !curr.datetime_raw_alt) {
+      return prev;
+    }
+
+    // live show at the time of scraping as different markup
+    if (!curr.datetime_raw) {
+      curr.datetime_raw = curr.datetime_raw_alt;
+    }
+
     let regexp = new RegExp(/^([0-9]{1,2})[h]([0-9]{2})\s-\s([0-9]{1,2})[h]([0-9]{2})/);
     let match = curr.datetime_raw.match(regexp);
 
@@ -74,14 +85,22 @@ const format = (dateObj, name, cutOffHour) => {
       'host': curr.host !== undefined ? curr.host.trim() : null
     };
 
-    // temp has there is a ssl error on the server on img import for rtl
-    if (curr.img !== undefined && curr.img !== null) {
-      if (curr.img.startsWith('https')) {
-        newEntry.img = 'http' + curr.img.substr(5);
-      } else {
-        newEntry.img = curr.img;
+    if (curr.img !== undefined && curr.img !== null && curr.img.trim() !== '') {
+      const images = srcset.parse(curr.img);
+      if (images.length > 0) {
+        const imagesSorted = orderBy(images, ['width'], ['desc']);
+        newEntry.img = imagesSorted[0].url;
       }
     }
+
+    // temp has there is a ssl error on the server on img import for rtl
+    // if (curr.img !== undefined && curr.img !== null) {
+    //   if (curr.img.startsWith('https')) {
+    //     newEntry.img = 'http' + curr.img.substr(5);
+    //   } else {
+    //     newEntry.img = curr.img;
+    //   }
+    // }
 
     // sections
 
@@ -91,13 +110,16 @@ const format = (dateObj, name, cutOffHour) => {
       newEntry.sections = [];
 
       curr.sections.forEach(function (section) {
+          // weird edge case
+          if (typeof section === 'string') {
+            return;
+          }
+
           regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{2})/);
           match = section.datetime_raw.match(regexp);
           if (match !== null) {
             const newSection = {};
-
             const sectionStartDateTime = moment(curr.dateObj);
-
             sectionStartDateTime.tz(dateObj.tz());
 
             sectionStartDateTime.hour(match[1]);
@@ -112,19 +134,20 @@ const format = (dateObj, name, cutOffHour) => {
             }
 
             if (section.description !== undefined && section.description !== null) {
-              newSection.description = section.description.trim() || null;
+              newSection.description = typeof section.description === 'Array' ? section.description[0].trim() : section.description[0].trim();
             }
 
-            if (section.img_alt !== undefined && section.img_alt !== null && section.img_alt !== '') {
-              newSection.img = section.img_alt;
-            } else if (section.img !== undefined && section.img !== null && section.img !== '') {
-              newSection.img = section.img;
-            }
-
-            // temp has there is a ssl error on the server on img import for rtl
-            if (newSection.img !== undefined && newSection.img !== null) {
-              if (newSection.img.startsWith('https')) {
-                newSection.img = 'http' + newSection.img.substr(5);
+            if (section.img !== undefined && section.img !== null && section.img.trim() !== '') {
+              const images = srcset.parse(section.img);
+              if (images.length > 0) {
+                const imagesSorted = orderBy(images, ['width'], ['desc']);
+                newSection.img = imagesSorted[0].url;
+              }
+            } else if (section.img_alt !== undefined && section.img_alt !== null && section.img_alt.trim() !== '') {
+              const images = srcset.parse(section.img_alt);
+              if (images.length > 0) {
+                const imagesSorted = orderBy(images, ['width'], ['desc']);
+                newSection.img = imagesSorted[0].url;
               }
             }
 
@@ -150,33 +173,34 @@ const fetch = (url, name, dateObj) => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
-      .find('.container .card-container')
+      .find('.container .programme-card')
       .set({
-        'datetime_raw': 'header .schedule',
-        'title': 'p.title',
-        'img': 'div.cover@data-bg',
-        'host': 'p.subtitle',
+        'datetime_raw': '.programme-card__time',
+        'datetime_raw_alt': '.programme-card__live-time',
+        'title': '.programme-card__title',
+        'img': 'picture source@data-srcset',
+        'host': '.programme-card__hosts',
         'sections': [
-          osmosis.find('.container-cards-replays > .d-inline-block')
+          osmosis.find('.programme-card__chroniques-list .programme-card__chronique')
           .set({
-            'datetime_raw': '.content .time',
-            'title': '.content .title',
-            'presenter': '.content .subtitle',
-            'img': 'picture img.picture@data-src'
+            'datetime_raw': '.programme-card__chronique-time',
+            'title': '.programme-card__chronique-title',
+            'presenter': '.programme-card__chronique-hosts',
+            'img': '.programme-card__chronique-cover picture source@data-srcset'
           })
           .do(
             osmosis.follow('@href')
               .set({
-                'description': '.header .description',
-                'img_alt': '.header picture img@data-src'
+                'description': '.read-more-container p.description',
+                'img_alt': '.cover picture source@data-srcset'
               })
           )
         ]
       })
       .do(
-        osmosis.follow('header > a@href')
+        osmosis.follow('.programme-card__body > a@href')
           .set({
-            'description': '.read-more-container'
+            'description': '.read-more-container .description'
           })
       )
       .data(function (listing) {

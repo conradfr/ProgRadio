@@ -76,7 +76,7 @@ const format = (dateObj, name) => {
       endDateTime.add(1, 'days');
     }
 
-    newEntry = {
+    const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,

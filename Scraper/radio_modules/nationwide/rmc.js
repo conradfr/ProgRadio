@@ -74,7 +74,7 @@ const format = dateObj => {
     if (curr.img !== undefined && curr.img !== null && curr.img.trim() !== '') {
       const images = srcset.parse(curr.img);
       if (images.length > 0) {
-        imagesSorted = orderBy(images, ['width'], ['desc']);
+        const imagesSorted = orderBy(images, ['width'], ['desc']);
         newEntry.img = imagesSorted[0].url;
       }
     }
