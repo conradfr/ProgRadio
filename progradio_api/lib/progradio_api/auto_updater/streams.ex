@@ -5,6 +5,8 @@ defmodule ProgRadioApi.AutoUpdater.Streams do
   alias ProgRadioApi.{Stream, StreamAutoUpdate}
 
   def auto_update() do
+    Logger.info("Streams auto-updater: task starting ...")
+
     get_streams()
     |> Enum.each(fn stream ->
       ProgRadioApi.AutoUpdater.Streams.Producer.sync_notify(stream)
