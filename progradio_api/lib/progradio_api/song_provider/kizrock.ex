@@ -5,8 +5,10 @@ defmodule ProgRadioApi.SongProvider.Kizrock do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "kizrock_metal" => "https://kizrock.com/?qtproxycall=https%3A%2F%2Fgo.2stream.net%2Fkizrock_metal&icymetadata=1&_=",
-    "kizrock_rock" => "https://kizrock.com/?qtproxycall=https%3A%2F%2Fgo.2stream.net%2Fkizrock&icymetadata=1&_="
+    "kizrock_metal" =>
+      "https://kizrock.com/?qtproxycall=https%3A%2F%2Fgo.2stream.net%2Fkizrock_metal&icymetadata=1&_=",
+    "kizrock_rock" =>
+      "https://kizrock.com/?qtproxycall=https%3A%2F%2Fgo.2stream.net%2Fkizrock&icymetadata=1&_="
   }
 
   @impl true

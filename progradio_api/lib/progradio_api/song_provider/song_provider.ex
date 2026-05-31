@@ -103,5 +103,4 @@ defmodule ProgRadioApi.SongProvider do
   def recase(_data), do: nil
 
   def get_forbidden_titles(), do: @forbidden_titles
-
 end

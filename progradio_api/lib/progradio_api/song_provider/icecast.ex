@@ -248,7 +248,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
     # we discard empty or suspicious/incomplete entries
     if is_binary(song) and String.trim(song) != "" and
-       String.trim(song) not in @forbidden_titles do
+         String.trim(song) not in @forbidden_titles do
       cover_art =
         data
         |> Map.get("StreamUrl", "")
