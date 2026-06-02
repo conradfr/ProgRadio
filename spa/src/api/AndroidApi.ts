@@ -3,19 +3,15 @@ import forEach from 'lodash/forEach';
 import {
   ANDROID_SONG_MIN_VERSION,
   ANDROID_CHANNEL_IN_LIST_MIN_VERSION,
-  THUMBNAIL_NOTIFICATION_PROGRAM_PATH,
-  THUMBNAIL_STREAM_PATH,
-  THUMBNAIL_PAGE_PATH
+  THUMBNAIL_NOTIFICATION_PROGRAM_PATH
 } from '@/config/config';
 
 import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
-import type { RadioStream } from '@/types/radio_stream';
 import type { Program } from '@/types/program';
 
-import typeUtils from '@/utils/typeUtils';
 import PlayerUtils from '@/utils/PlayerUtils';
-import ScheduleUtils from '@/utils/ScheduleUtils';
+import StreamsUtils from '@/utils/StreamsUtils';
 
 /* eslint-disable no-undef */
 
@@ -29,99 +25,68 @@ const getVersion = () => {
   return Android.getVersion !== undefined ? Android.getVersion() : 15; // temp
 };
 
-const getPictureUrl = (radio: Radio|Stream, show: Program|null = null): string|null => {
+const getPictureUrl = (stream: Stream, radio: Radio|null = null, show: Program|null = null): string|null => {
   if (show !== null && show.picture_url !== null) {
-    return `/${THUMBNAIL_NOTIFICATION_PROGRAM_PATH}${show.picture_url}`;
-  }
-
-  if (typeUtils.isRadio(radio)) {
     // @ts-expect-error defined on global scope
-    // eslint-disable-next-line no-undef
-    return `${cdnBaseUrl}img/radio/page/${radio.code_name}.png`;
+    return `${cdnBaseUrl}${THUMBNAIL_NOTIFICATION_PROGRAM_PATH}${show.picture_url}`;
   }
 
-  if (radio.img_alt !== null && radio.img_alt !== '') {
-    return `/${THUMBNAIL_PAGE_PATH}${radio.img_alt}.png`;
-  }
-
-  if (radio.img !== null && radio.img !== '') {
-    return `/${THUMBNAIL_STREAM_PATH}${radio.img}`;
-  }
-
-  return null;
+  return StreamsUtils.getPictureUrl(stream, radio);
 };
 
-const formatRadios = (radios: Record<string, Radio>): Array<object> => {
-  const radiosExport: Array<object> = [];
+const formatRadios = (streams: Record<string, Stream>): Array<object> => {
+  const streamsExport: Array<object> = [];
 
-  forEach(radios, (radio) => {
-    if (typeUtils.isStream(radio) || radio.streaming_enabled) {
-      let codeName = radio.code_name;
-      let streamUrl = null;
+  forEach(streams, (stream) => {
+    if (stream.stream_url) {
+      const radioToExport: Record<string, any> = {
+        codeName: stream.code_name,
+        name: stream.name,
+        streamUrl: stream.stream_url,
+        pictureUrl: getPictureUrl(stream)
+      };
 
-      if (typeUtils.isRadio(radio)) {
-        codeName = `${radio.code_name}_main`;
-        const stream = ScheduleUtils.getStreamFromCodeName(`${radio.code_name}_main`, radio);
-        if (stream !== null) {
-          streamUrl = stream.url;
-        }
-      } else {
-        // @ts-ignore
-        streamUrl = radio.stream_url;
+      if (getVersion() >= ANDROID_CHANNEL_IN_LIST_MIN_VERSION) {
+        radioToExport.channelName = PlayerUtils.getChannelName(stream);
       }
 
-      if (streamUrl !== undefined && streamUrl !== null) {
-        const radioToExport: Record<string, any> = {
-          codeName,
-          name: radio.name,
-          streamUrl,
-          pictureUrl: getPictureUrl(radio)
-        };
-
-        if (getVersion() >= ANDROID_CHANNEL_IN_LIST_MIN_VERSION) {
-          radioToExport.channelName = PlayerUtils.getChannelName(radio, codeName);
-        }
-
-        radiosExport.push(radioToExport);
-      }
+      streamsExport.push(radioToExport);
     }
   });
 
-  return radiosExport;
+  return streamsExport;
 };
 
 export default {
   hasAndroid,
   getVersion,
-  play(radio: Radio|Stream, stream: RadioStream|null = null, currentShow: Program|null = null) {
-    if (!hasAndroid) { return; }
-    const showTitle = currentShow === null ? null : currentShow.title;
-    const radioCodeName = stream === null ? radio.code_name : stream.code_name;
-    const radioName = stream === null ? radio.name : stream.name;
-    const streamUrl = stream === null ? radio.stream_url : stream.url;
-
-    if (streamUrl === null || streamUrl === undefined) {
+  play(stream: Stream, radio: Radio|null = null, currentShow: Program|null = null) {
+    if (!stream || !stream.stream_url) {
       return;
     }
+
+    if (!hasAndroid) { return; }
+    const showTitle = currentShow === null ? null : currentShow.title;
+    const radioCodeName = radio ? radio.code_name : stream.code_name;
 
     if (this.getVersion() < ANDROID_SONG_MIN_VERSION) {
       // @ts-expect-error Android is defined by the device
       Android.play(
-        radioCodeName,
-        radioName,
-        streamUrl,
+        stream.code_name,
+        stream.name,
+        stream.stream_url,
         showTitle,
-        getPictureUrl(radio, currentShow)
+        getPictureUrl(stream, radio, currentShow)
       );
     } else {
       // @ts-expect-error Android is defined by the device
       Android.play(
-        radioCodeName,
-        radioName,
-        streamUrl,
+        stream.code_name,
+        stream.name,
+        stream.stream_url,
         showTitle,
-        getPictureUrl(radio, currentShow),
-        PlayerUtils.getChannelName(radio, radioCodeName)
+        getPictureUrl(stream, radio, currentShow),
+        PlayerUtils.getChannelName(stream, radio)
       );
     }
   },
@@ -130,10 +95,10 @@ export default {
     // @ts-expect-error Android is defined by the device
     Android.pause();
   },
-  list(radios: Radio[]|Stream[]) {
+  list(streams: Stream[]) {
     if (!hasAndroid) { return; }
     // @ts-expect-error Android is defined by the device
-    Android.list(JSON.stringify(formatRadios(radios)));
+    Android.list(JSON.stringify(formatRadios(streams)));
   },
   getState() {
     if (!hasAndroid) { return; }

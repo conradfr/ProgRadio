@@ -1,18 +1,15 @@
-import type { SubRadio } from './sub_radio.ts';
-import type { RadioStream } from './radio_stream.ts';
+import type { Stream } from './stream.ts';
 
 export interface Radio {
-  category: string
+  id: number
   code_name: string
   country_code: string
-  id: number
   name: string
+  category: string
   share: number
   streaming_enabled: boolean
-  streams: Record<string, RadioStream>
-  sub_radios: Record<string, SubRadio>
+  streams: Record<string, Stream>
   type: 'radio'
-  img: string
   stream_url: string,
   has_preroll: boolean
 }

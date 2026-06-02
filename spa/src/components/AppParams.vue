@@ -90,7 +90,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    document.title = this.$i18n.t('message.params_page.title');
+    document.title = this.$t('message.params_page.title');
 
     this.streamFlux = this.flux.selected;
     this.streamFluxDuration = this.flux.delayBeforeStop;
@@ -111,7 +111,7 @@ export default defineComponent({
       this.displayToast(
         {
           type: 'success',
-          message: this.$i18n.t('message.params_page.updated')
+          message: this.$t('message.params_page.updated')
         });
     }
   }

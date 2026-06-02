@@ -14,11 +14,9 @@ import { mapState } from 'pinia';
 
 import { usePlayerStore } from '@/stores/playerStore';
 
-import typeUtils from '@/utils/typeUtils.ts';
-
 export default defineComponent({
   computed: {
-    ...mapState(usePlayerStore, ['radio', 'currentSong']),
+    ...mapState(usePlayerStore, ['stream', 'currentSong']),
     currentSongTitle() {
       if (!this.currentSong || !this.currentSong[0]) {
         return null;
@@ -36,19 +34,21 @@ export default defineComponent({
   },
   methods: {
     gotoRadio() {
-      if (!this.radio) {
+      if (!this.stream) {
         return;
       }
 
-      if (typeUtils.isRadio(this.radio)) {
+      // @ts-expect-error defined on global scope
+      // eslint-disable-next-line no-undef
+      if (this.stream.radio_stream_code_name && isProgRadio) {
         this.$router.push({
           name: 'radio',
-          params: { radio: this.radio.code_name }
+          params: { radio: this.stream.radio_code_name }
         });
       } else {
         this.$router.push({
           name: 'streaming',
-          params: { countryOrCategoryOrUuid: this.radio.code_name, page: null }
+          params: { countryOrCategoryOrUuid: this.stream.code_name, page: null }
         });
       }
     }

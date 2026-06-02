@@ -156,7 +156,7 @@ export default defineComponent({
         this.displaySelector = false;
 
         this.displayToast({
-          message: this.$i18n.t('message.generic.error'),
+          message: this.$t('message.generic.error'),
           type: 'error'
         });
       }

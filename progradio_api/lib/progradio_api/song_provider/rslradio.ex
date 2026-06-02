@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Rslradio do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes
 
   @behaviour ProgRadioApi.SongProvider

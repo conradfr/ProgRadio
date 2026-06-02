@@ -14,9 +14,9 @@ import { usePlayerStore } from '@/stores/playerStore';
 
 export default defineComponent({
   computed: {
-    ...mapState(usePlayerStore, ['radio', 'radioStreamCodeName']),
+    ...mapState(usePlayerStore, ['stream', 'radio']),
     imgSrc() {
-      return StreamsUtils.getPictureUrl(this.radio, this.radioStreamCodeName);
+      return StreamsUtils.getPictureUrl(this.stream, this.radio);
     }
   },
   methods: {

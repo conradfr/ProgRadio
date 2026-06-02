@@ -9,6 +9,7 @@ use App\Entity\Stream;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -25,6 +26,9 @@ class StreamRepository extends ServiceEntityRepository
     protected const int CACHE_QUICK_TTL = 30;
 
     protected const int DEFAULT_MORE_LIMIT = 21;
+
+    protected const int CACHE_RADIOS_TTL = 604800; // week
+    protected const string CACHE_RADIOS_ID = 'enabled_radios_streams';
 
     public function __construct(private readonly Security $security, protected PaginatorInterface $paginator, ManagerRegistry $registry, )
     {
@@ -91,15 +95,14 @@ class StreamRepository extends ServiceEntityRepository
     protected function getMoreStreamQuery(Uuid $id, int $limit) {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id as code_name, s.name as name, s.img, COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt, s.website')
+        $qb->select('s.id as code_name, s.name as name, s.img, COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.website')
             ->from(Stream::class, 's')
-            ->leftJoin('s.radioStream', 'rs')
-            ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.radio', 'r')
             ->where("s.img is not null")
             ->andWhere("RANDOM() < 0.01")
             ->andWhere('s.id != :id')
             ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
-            ->groupBy('s.id, r.codeName, rs.codeName')
+            ->groupBy('s.id, r.codeName, s.radioStreamCodeName')
             ->setMaxResults($limit)
             ->setParameter('null', null);
 
@@ -118,16 +121,15 @@ class StreamRepository extends ServiceEntityRepository
         $user = $this->security->getUser();
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,s.playingError as playing_error,"
-            . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
-            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
-            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
+        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,s.playingError as playing_error,"
+            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE s.radioStreamCodeName END as radio_stream_code_name')
             ->from(Stream::class, 's')
-            ->leftJoin('s.radioStream', 'rs')
-            ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
-            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong')
+            ->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled')
             ->setMaxResults($limit)
             // needed as using NULL directly was not working, neither were hacks like NULLIF(1,1) or omitting the ELSE
             ->setParameter('null', null);
@@ -168,7 +170,7 @@ class StreamRepository extends ServiceEntityRepository
                     ->setParameter('user', $user);
             }
 
-            $qb->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong, sh.lastListenedAt');
+            $qb->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled, sh.lastListenedAt');
 
             switch ($sort) {
                 case 'random':
@@ -193,7 +195,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addSelect('MAX(s.lastListeningAt) as last_listen')
                        //->distinct()
                        ->andWhere('s.lastListeningAt IS NOT NULL')
-                       ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, rs.currentSong, rs.codeName, rs.url, s.lastListeningAt')
+                       ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, s.radioStreamCodeName, s.streamUrl, s.lastListeningAt')
                        ->addOrderBy('MAX(s.lastListeningAt)', 'DESC');
                     break;
             }
@@ -225,17 +227,16 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
-            . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
-            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
-            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
+        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
+            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE s.radioStreamCodeName END as radio_stream_code_name')
             ->from(Stream::class, 's')
-            ->leftJoin('s.radioStream', 'rs')
-            ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
-            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong')
+            ->groupBy('s.id, s.streamUrl, r.codeName, s.streamCodeName, ss.codeName, ss.enabled')
             //->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
             ->setParameter('text', '%' . $text . '%')
@@ -318,17 +319,16 @@ class StreamRepository extends ServiceEntityRepository
     ): ?array {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as code_name, s.name, s.img, COALESCE(rs.url, s.streamUrl) as stream_url, s.tags, s.countryCode as country_code, s.website, s.clicksLast24h as clicks_last_24h, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
-            . 'COALESCE(CASE WHEN(BOOL_AND(rs.ownLogo) = TRUE) THEN rs.codeName ELSE :null END, r.codeName) as img_alt,'
-            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE rs.currentSong END as current_song,'
-            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE rs.codeName END as radio_stream_code_name')
+        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
+            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
+            . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE s.radioStreamCodeName END as radio_stream_code_name')
             ->from(Stream::class, 's')
-            ->leftJoin('s.radioStream', 'rs')
-            ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.id = :id')
             ->andWhere('s.enabled = true and s.banned = false')
-            ->groupBy('s.id, rs.url, r.codeName, rs.codeName, ss.codeName, ss.enabled, rs.currentSong')
+            ->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled')
             ->setMaxResults(1)
             ->setParameter('null', null);
 
@@ -465,30 +465,49 @@ class StreamRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    public function getBestStreamForRadio(Radio $radio): ?Stream
+    public function getBestStreamForRadio(Radio $radio, array $subRadioSelection): ?Stream
     {
-        $radioStream = $radio->getMainStream();
+        $stream = null;
 
-        if ($radioStream === null) {
-            return null;
+        // check first if user has selected a specific subradio
+        if (array_key_exists($radio->getCodeName(), $subRadioSelection)) {
+            $qb = $this->getEntityManager()->createQueryBuilder();
+
+            $qb->select('s')
+                ->from(Stream::class, 's')
+                ->innerJoin('s.radio', 'r')
+                ->where('r.id = :radioId')
+                ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL and s.radioStreamCodeName = :radioStreamCodeName')
+                ->setFirstResult(0)
+                ->setMaxResults(1)
+                ->setParameter('radioId', $radio->getId())
+                ->setParameter('radioStreamCodeName', $subRadioSelection[$radio->getCodeName()]);
+
+            $query = $qb->getQuery();
+            $query->enableResultCache(self::CACHE_TTL);
+
+            $stream = $query->getOneOrNullResult();
         }
 
-        $qb = $this->getEntityManager()->createQueryBuilder();
+        if (!$stream) {
+            $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s')
-            ->from(Stream::class, 's')
-            ->innerJoin('s.radioStream', 'rs')
-            ->where('rs.id = :id')
-            ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
-            ->orderBy('s.score', 'DESC')
-            ->setFirstResult(0)
-            ->setMaxResults(1)
-            ->setParameter('id', $radioStream->getId());
+            $qb->select('s')
+                ->from(Stream::class, 's')
+                ->innerJoin('s.radio', 'r')
+                ->where('r.id = :radioId')
+                ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL and s.isMainRadio = TRUE')
+                ->setFirstResult(0)
+                ->setMaxResults(1)
+                ->setParameter('radioId', $radio->getId());
 
-        $query = $qb->getQuery();
-        $query->enableResultCache(self::CACHE_TTL);
+            $query = $qb->getQuery();
+            $query->enableResultCache(self::CACHE_TTL);
 
-        return $query->getOneOrNullResult();
+            $stream = $query->getOneOrNullResult();
+        }
+
+        return $stream;
     }
 
     public function insertOrUpdateStreamListening(User $user, Stream $stream)
@@ -500,7 +519,7 @@ class StreamRepository extends ServiceEntityRepository
             VALUES
             (?, ?, ?)
             ON CONFLICT (user_id, stream_id)
-            DO 
+            DO
                 UPDATE SET last_listened_at = ?;
         EOD;
 
@@ -552,7 +571,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb->select('s.id, s.enabled, s.name, s.streamUrl, s.forceHls, s.forceMpd, s.forceProxy, s.website, s.countryCode, sc.checkedAt, sc.img as check_img, sc.streamUrl as check_stream, sc.website as check_website, sc.websiteSsl as check_ssl')
            ->where('sc.img = false or sc.website = false or sc.websiteSsl = false')
            ->join('s.streamCheck', 'sc')
-           ->orderBy('s.clicksLast24h', 'desc');
+           ->orderBy('s.score', 'desc');
 
         return $this->paginator->paginate(
             $qb->getQuery(),

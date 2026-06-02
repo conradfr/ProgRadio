@@ -38,12 +38,12 @@
       <div v-for="entry in secondaryStreams" :key="entry.code_name"
         class="radio-submenu-entry radio-submenu-entry-secondary"
         :title="entry.name"
-        @click="playStop(entry.code_name, true)">
-        <div class="radio-submenu-entry-secondary-logo" :style="styleObjectRadioStream(entry.code_name)">
+        @click="playStop(entry)">
+        <div class="radio-submenu-entry-secondary-logo" :style="styleObjectRadioStream(entry.radio_stream_code_name)">
           <div class="radio-logo-play"
             :class="{
-              'radio-logo-play-active': (entry.code_name === playingStreamCodeName),
-              'radio-logo-play-paused': (entry.code_name === playingStreamCodeName
+              'radio-logo-play-active': (playingStream && entry.radio_stream_code_name === playingStream.radio_stream_code_name),
+              'radio-logo-play-paused': (playingStream && entry.radio_stream_code_name === playingStream.radio_stream_code_name
                 && playing === PlayerStatus.Stopped),
               'radio-logo-play-hide': (radio.streaming_enabled === false)
             }">
@@ -52,20 +52,18 @@
         <p>{{ entry.name }}</p>
       </div>
     </div>
-    <a :title="radio.name" @click="playStop(radio.code_name, false)">
-      <div class="radio-logo"
-        :title="getSubRadio(radio.code_name).name || ''"
-        :class="{'radio-logo-nohover': radio.streaming_enabled === false}">
+    <a :title="title" @click="playStop()">
+      <div class="radio-logo" :class="{'radio-logo-nohover': radio.streaming_enabled === false}">
         <div class="radio-logo-bg" :style="styleObject">
           <div class="radio-logo-play"
             :class="{
               'radio-logo-play-hide': radio.streaming_enabled === false,
-              'radio-logo-play-active': radio.code_name === radioPlayingCodeName,
-              'radio-logo-play-paused': radio.code_name === radioPlayingCodeName
+              'radio-logo-play-active': playingRadio && radio.code_name === playingRadio.code_name,
+              'radio-logo-play-paused': playingRadio && radio.code_name === playingRadio.code_name
                 && playing === PlayerStatus.Stopped,
               'radio-logo-play-secondary':
-                (radio.code_name === radioPlayingCodeName
-                  && isWebRadio(radio.code_name, playingStreamCodeName))
+                (playingRadio && playingStream && radio.code_name === playingRadio.code_name
+                  && !playingStream.is_sub_radio)
             }">
           </div>
         </div>
@@ -81,6 +79,7 @@ import { mapState, mapActions } from 'pinia';
 import filter from 'lodash/filter';
 
 import type { Radio } from '@/types/radio';
+import type { Stream } from '@/types/streams';
 import PlayerStatus from '@/types/player_status';
 
 import { useScheduleStore } from '@/stores/scheduleStore';
@@ -114,7 +113,6 @@ export default defineComponent({
   },
   data(): {
     PlayerStatus: any,
-    channelName: string,
     hover: boolean,
     hoverTimer: number|null,
     locale: string,
@@ -122,8 +120,6 @@ export default defineComponent({
   } {
     return {
       PlayerStatus,
-      // @dodo fix null mobile app
-      channelName: PlayerUtils.getChannelName(this.radio, `${this.radio.code_name}_main`) || '',
       hover: false,
       hoverTimer: null,
       locale: this.$i18n.locale,
@@ -141,15 +137,23 @@ export default defineComponent({
     this.leaveChannels();
   },
   computed: {
+    ...mapState(useScheduleStore, ['getSubRadio', 'isWebRadio']),
+    ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite' }),
     ...mapState(usePlayerStore, [
       'playing',
       'externalPlayer',
-      'radioPlayingCodeName',
-      'listeners'
+      'listeners',
     ]),
-    ...mapState(usePlayerStore, { playingStreamCodeName: 'radioStreamCodeName' }),
-    ...mapState(useScheduleStore, ['getSubRadio', 'isWebRadio']),
-    ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite' }),
+    ...mapState(usePlayerStore, {
+      playingStream: 'stream',
+      playingRadio: 'radio'
+    }),
+    title() {
+      return this.subRadio ? this.subRadio.name : '';
+    },
+    subRadio() {
+      return this.getSubRadio(this.radio.code_name);
+    },
     subMenuStyleObject() {
       return {
         width: `${RADIO_MENU_WIDTH * 2}px`,
@@ -159,7 +163,7 @@ export default defineComponent({
     },
     subMenuStyleObjectStreams() {
       let howManyStreams: any = filter(this.radio.streams,
-        s => s.main === true || !s.sub_radio);
+        s => s.main === true || !s.is_sub_radio);
       howManyStreams = Object.keys(howManyStreams).length;
 
       const howMany = howManyStreams > 0
@@ -171,13 +175,13 @@ export default defineComponent({
       };
     },
     secondaryStreams() {
-      return filter(this.radio.streams, s => s.main === false && !s.sub_radio);
+      return filter(this.radio.streams, s => s.is_main_radio === false && !s.is_sub_radio);
     },
     isFavorite() {
       return this.isRadioFavorite(this.radio.code_name);
     },
     hasSubRadios() {
-      return Object.keys(this.radio.sub_radios).length > 1;
+      return (Object.keys(this.radio.streams).length - Object.keys(this.secondaryStreams).length) > 1;
     },
     displayFlag() {
       return this.radio.country_code !== null
@@ -188,17 +192,15 @@ export default defineComponent({
         return null;
       }
 
-      const topicName = `${this.radio.code_name}_main`;
-
-      if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
+      if (!Object.prototype.hasOwnProperty.call(this.listeners, this.radio.code_name)) {
         return null;
       }
 
-      if (!this.listeners[topicName] || this.listeners[topicName] === 0) {
+      if (!this.listeners[this.radio.code_name] || this.listeners[this.radio.code_name] === 0) {
         return null;
       }
 
-      return this.listeners[topicName];
+      return this.listeners[this.radio.code_name];
     },
   },
   methods: {
@@ -207,8 +209,6 @@ export default defineComponent({
     ...mapActions(usePlayerStore, [
       'playRadio',
       'stop',
-      'joinChannel',
-      'leaveChannel',
       'joinListenersChannel',
       'leaveListenersChannel'
     ]),
@@ -231,25 +231,22 @@ export default defineComponent({
     },
     joinChannels() {
       setTimeout(() => {
-        this.joinChannel(this.channelName);
-        this.joinListenersChannel(`${this.radio.code_name}_main`);
+        this.joinListenersChannel(this.radio.code_name);
       }, 250 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
     leaveChannels() {
       setTimeout(() => {
-        this.leaveChannel(this.channelName);
-        this.leaveListenersChannel(`${this.radio.code_name}_main`);
+        this.leaveListenersChannel(this.radio.code_name);
       }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
-    playStop(radioCodeName: string, isSubStream: boolean) {
-      const streamCodeName = isSubStream ? radioCodeName
-        : this.getSubRadio(radioCodeName).radio_stream;
+    playStop(stream: Stream | null = null) {
+      // eslint-disable-next-line no-param-reassign
+      stream = stream || this.subRadio;
 
       // stop if playing
       if (this.playing !== PlayerStatus.Stopped
-        && this.radioPlayingCodeName === this.radio.code_name
-        && ((isSubStream && this.playingStreamCodeName === streamCodeName)
-          || !isSubStream)) {
+        && (this.playingStream && stream && stream.id === this.playingStream.id)
+        && (this.playingRadio && this.radio && this.radio.code_name === this.playingRadio.code_name)) {
         if (this.externalPlayer === false) {
           this.$gtag.event(GTAG_ACTION_STOP, {
             event_category: GTAG_CATEGORY_SCHEDULE,
@@ -271,7 +268,7 @@ export default defineComponent({
           });
         }
 
-        this.playRadio({ radioCodeName: this.radio.code_name, streamCodeName });
+        this.playRadio({ radio: this.radio, stream: stream });
       }
     },
     toggleFavorite() {

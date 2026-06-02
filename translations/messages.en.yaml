@@ -375,8 +375,6 @@ admin:
             last: (last %number%)
         no_schedule:
             title: Radios with no schedule today
-            shows: Sections
-            sections: Sections
             all_ok: All radios have schedule today.
         stream_errors:
             title: Stream errors

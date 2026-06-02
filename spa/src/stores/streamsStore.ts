@@ -239,6 +239,7 @@ export const useStreamsStore = defineStore('streams', {
         this.getStreamRadios();
       });
     },
+    /*
     pageSelection(page: number) {
       this.page = page;
 
@@ -246,6 +247,7 @@ export const useStreamsStore = defineStore('streams', {
         this.getStreamRadios();
       });
     },
+    */
     // TODO refactor page selection
     pageSet(page: number) {
       if (typeof page !== 'number') {

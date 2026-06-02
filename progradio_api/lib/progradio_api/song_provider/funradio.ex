@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Funradio do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericRtlgroup
 
   @behaviour ProgRadioApi.SongProvider

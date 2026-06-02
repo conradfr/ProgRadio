@@ -89,7 +89,9 @@ export default defineComponent({
     const app = document.getElementById('app');
     app.classList.add('no-background');
 
-    document.title = this.$i18n.t('message.now_page.title');
+    document.title = this.$t('message.now_page.title');
+
+    this.setCalendarToday();
   },
   beforeUnmount() {
     const body = document.querySelector('body');
@@ -97,12 +99,6 @@ export default defineComponent({
 
     const app = document.getElementById('app');
     app.classList.remove('no-background');
-  },
-  beforeRouteEnter(_to, _from, next) {
-    next(() => {
-      const schedule = useScheduleStore();
-      schedule.setCalendarToday();
-    });
   },
   computed: {
     ...mapState(useScheduleStore,
@@ -118,7 +114,7 @@ export default defineComponent({
     }),
   },
   methods: {
-    ...mapActions(useScheduleStore, ['getSchedule', 'switchCollection', 'getRadiosData']),
+    ...mapActions(useScheduleStore, ['getSchedule', 'switchCollection', 'getRadiosData', 'setCalendarToday']),
     setActiveCollection(collectionCodeName) {
       this.switchCollection(collectionCodeName);
     },

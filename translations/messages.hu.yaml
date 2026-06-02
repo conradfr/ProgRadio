@@ -375,8 +375,6 @@ admin:
             last: (%number% utolsó)
         no_schedule:
             title: Rádiók ma műsor nélkül
-            shows: Műsorok
-            sections: Krónikák
             all_ok: Az összes rádiónak vannak megjelenített műsorai.
         stream_errors:
             title: Stream hibák

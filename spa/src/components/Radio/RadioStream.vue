@@ -1,6 +1,7 @@
 <template>
   <div class="radio-page-streams-one text-center mb-4">
-    <div v-if="stream.code_name !== playingStreamCodeName || playerStore.playing === PlayerStatus.Stopped"
+    <div v-if="(playingStream && stream && stream.code_name !== playingStream.code_name)
+      || playerStore.playing === PlayerStatus.Stopped"
       class="radio-page-play" @click="play">
       <img :alt="$t('message.radio_page.play', { radio: stream.name })"
         :src="playImage">
@@ -8,14 +9,16 @@
        {{ $t('message.radio_page.play', { radio: stream.name }) }}
       </div>
     </div>
-    <div v-if="stream.code_name === playingStreamCodeName && playerStore.playing === PlayerStatus.Playing"
+    <div v-if="playingStream && stream && stream.code_name === playingStream.code_name
+      && playerStore.playing === PlayerStatus.Playing"
         class="radio-page-play" @click="stop">
       <img :alt="$t('message.radio_page.stop', { radio: stream.name })" :src="pauseImage">
       <div class="radio-page-play-text">
        {{ $t('message.radio_page.stop', { radio: stream.name }) }}
       </div>
     </div>
-    <div v-if="stream.code_name === playingStreamCodeName && playerStore.playing === PlayerStatus.Loading"
+    <div v-if="playingStream && stream && stream.code_name === playingStream.code_name
+      && playerStore.playing === PlayerStatus.Loading"
       class="radio-page-play" @click="stop">
       <div class="spinner-border" role="status"
          :title="$t('message.radio_page.stop', { radio: stream.name })">
@@ -36,7 +39,7 @@ import { mapState, mapStores } from 'pinia';
 import { usePlayerStore } from '@/stores/playerStore';
 
 import type { Radio } from '@/types/radio';
-import type { RadioStream } from '@/types/radio_stream';
+import type { Stream } from '@/types/stream';
 import PlayerStatus from '@/types/player_status';
 
 import {
@@ -52,7 +55,7 @@ export default defineComponent({
       required: true
     },
     stream: {
-      type: Object as PropType<RadioStream>,
+      type: Object as PropType<Stream>,
       required: true
     },
   },
@@ -64,7 +67,7 @@ export default defineComponent({
   computed: {
     ...mapStores(usePlayerStore),
     ...mapState(usePlayerStore, {
-      playingStreamCodeName: 'radioStreamCodeName'
+      playingStream: 'stream'
     }),
     playImage() {
       return `${this.$CDN_BASE_URL}img/play-button-inside-a-circle.svg`;
@@ -84,8 +87,8 @@ export default defineComponent({
       }
 
       this.playerStore.playRadio({
-        radioCodeName: this.radio.code_name,
-        streamCodeName: this.stream.code_name
+        radio: this.radio,
+        stream: this.stream
       });
     },
     stop() {

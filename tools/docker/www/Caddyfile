@@ -113,6 +113,10 @@
     file_server
   }
 
+  # Redirect -francebleu_X to -france_bleu-france_bleu_X
+  @francebleu_redirect path_regexp francebleuRedirect ^(.*)-francebleu_(.+)$
+  redir @francebleu_redirect {re.francebleuRedirect.1}-france_bleu-france_bleu_{re.francebleuRedirect.2} permanent
+
   # Redirect cdn.* to www.* unless path starts with /media
   @cdn_non_media {
     header_regexp hostmatch Host ^cdn\.(.+)$

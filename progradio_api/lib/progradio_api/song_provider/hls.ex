@@ -68,7 +68,7 @@ defmodule ProgRadioApi.SongProvider.Hls do
               nil -> false
               "" when not is_nil(title) -> %{artist: title}
               "" -> false
-              _  -> artist_title
+              _ -> artist_title
             end
 
           _ ->

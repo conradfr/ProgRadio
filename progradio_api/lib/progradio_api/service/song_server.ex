@@ -4,7 +4,6 @@ defmodule ProgRadioApi.SongServer do
   alias ProgRadioApiWeb.Presence
   alias ProgRadioApi.StreamSong
   alias ProgRadioApi.SongProvider
-  alias ProgRadioApi.RadioStream
   alias ProgRadioApi.TaskSupervisor
 
   @max_song_history 10
@@ -486,16 +485,6 @@ defmodule ProgRadioApi.SongServer do
 
   @spec update_status(map() | nil, map() | nil) :: any()
   defp update_status(song, db_data)
-
-  defp update_status(%{} = song, %{:type => "radio_stream"} = db_data) do
-    if map_size(song) == 0 or
-         ((Map.get(song, :artist) == nil or song.artist == "") and
-            (Map.get(song, :title) == nil or song.title == "")) do
-      RadioStream.update_status(db_data.id, true)
-    else
-      RadioStream.update_status(db_data.id, false)
-    end
-  end
 
   defp update_status(%{} = song, %{:type => "stream_song"} = db_data) do
     if map_size(song) == 0 or

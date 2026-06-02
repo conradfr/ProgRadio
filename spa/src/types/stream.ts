@@ -1,13 +1,11 @@
 export interface Stream {
-  clicks_last_24h: number
+  id: string
   code_name: string
+  name: string
   country_code: string
   current_song: boolean
-  img: string
-  img_alt: string
-  name: string
-  radio_code_name: string
-  radio_stream_code_name: string
+  img: string | null
+  img_alt?: string | null
   stream_url: string
   force_hls: boolean
   force_mpd: boolean
@@ -18,4 +16,9 @@ export interface Stream {
   playing_error: number
   type: 'stream'
   source: string
+  radio_code_name: string
+  radio_stream_code_name: string
+  is_main_radio?: boolean
+  is_sub_radio?: boolean
+  has_logo?: boolean | null
 }

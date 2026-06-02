@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Contactfm do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes3
 
   #  Radio was renamed Radio µontact on 11/2022

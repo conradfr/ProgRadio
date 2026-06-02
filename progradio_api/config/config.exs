@@ -28,15 +28,7 @@ config :progradio_api, ProgRadioApiWeb.Endpoint,
 config :progradio_api, ProgRadioApi.Scheduler,
   timezone: "Europe/Paris",
   jobs: [
-    radio_streams_check: [
-      schedule: "25 */2 * * *",
-      task: {ProgRadioApi.Checker.RadioStreams, :check, []}
-    ],
-    radio_streams_auto_update: [
-      schedule: "32 */2 * * *",
-      task: {ProgRadioApi.AutoUpdater.RadioStreams, :auto_update, []}
-    ],
-    # todo change pattern once list grows, this is just POC that copies radio_streams_update
+    # todo change pattern once list grows, this is just POC that copies (now removed) radio_streams_update
     streams_auto_update: [
       schedule: "12 */1 * * *",
       task: {ProgRadioApi.AutoUpdater.Streams, :auto_update, []}
@@ -112,12 +104,14 @@ config :cors_plug,
 
 config :progradio_api,
   image_path: "/var/www/media/",
+  cdn_base_url: System.get_env("CDN_BASE_URL") || "https://localhost/",
   banned_ips: "" |> String.split(","),
   redis_host: System.get_env("REDIS_HOST") || "127.0.0.1",
   redis_db: "0",
-  streams_checker: false
+  streams_checker: false,
+  auto_updater: false
 
-# Configure meilsearch
+# Configure meilisearch
 config :progradio_api,
   meilisearch_url: System.get_env("MEILISEARCH_URL") || "http://meilisearch:7700",
   meilisearch_api_key:

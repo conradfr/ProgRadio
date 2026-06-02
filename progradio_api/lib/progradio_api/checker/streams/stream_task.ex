@@ -3,8 +3,6 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream
 
-  # TODO probably mutualize code w/ radio_stream_task.ex
-
   @max_redirects 5
 
   def start_link(%Stream{} = stream) do

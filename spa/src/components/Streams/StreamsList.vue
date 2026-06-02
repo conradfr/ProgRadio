@@ -1,10 +1,10 @@
 <template>
-  <div v-if="radios.length" class="streams d-flex justify-content-center">
+  <div v-if="streams.length" class="streams d-flex justify-content-center">
     <TransitionGroup name="stream-list">
       <streams-list-one
-        v-for="entry in radios"
-        :key="entry.code_name"
-        :radio="entry">
+        v-for="entry in streams"
+        :key="entry.id"
+        :stream="entry">
       </streams-list-one>
     </TransitionGroup>
   </div>
@@ -15,7 +15,7 @@
       </div>
     </div>
   </div>
-  <streams-list-pagination v-if="radios.length"></streams-list-pagination>
+  <streams-list-pagination v-if="streams.length"></streams-list-pagination>
   <div v-if="locale !== 'fr' || !isProgRadio || !userLogged" class="mt-0 mt-sm-2">
     <adsense mode="horizontal_fix"></adsense>
   </div>
@@ -56,7 +56,7 @@ export default defineComponent({
       userLogged: 'logged'
     }),
     ...mapState(useStreamsStore, {
-      radios: 'streamRadios'
+      streams: 'streamRadios'
     })
   },
 });

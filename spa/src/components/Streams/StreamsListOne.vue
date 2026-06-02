@@ -1,8 +1,9 @@
 <template>
   <div class="streams-one"
     :class="{
-     'streams-one-play-active': (radio.code_name === radioPlayingCodeName),
-     'streams-one-play-paused': (radio.code_name === radioPlayingCodeName && playing === PlayerStatus.Stopped)
+     'streams-one-play-active': (playingStream && stream.code_name === playingStream.code_name),
+     'streams-one-play-paused': (playingStream && stream.code_name === playingStream.code_name
+        && playing === PlayerStatus.Stopped)
     }"
     @mouseover="hover = true"
     @mouseleave="hover = false">
@@ -10,12 +11,12 @@
       <div class="streams-one-img-play"></div>
     </div>
     <div class="streams-one-name" :title="$t('message.streaming.more')"
-      @click="nameClick(radio.code_name)">
-      <span v-once class="streams-one-name-detail">{{ radio.name }}</span>
+      @click="nameClick(stream.code_name)">
+      <span v-once class="streams-one-name-detail">{{ stream.name }}</span>
       <div v-if="!hover && currentSong" class="streams-one-song">
         ♫ {{ currentSong }}
       </div>
-      <div v-else-if="radio.tags" v-once class="streams-one-tags">
+      <div v-else-if="stream.tags" v-once class="streams-one-tags">
         <span v-for="tag in tags" :key="tag"
           class="badge badge-inverse"
           @click.stop="tagClick(tag)">
@@ -31,12 +32,12 @@
     <div
       v-if="(selectedCountry === code_all
         || selectedCountry === code_favorites || selectedCountry === code_last)
-          && radio.country_code !== null"
+          && stream.country_code !== null"
       class="streams-one-flag cursor-pointer"
       @click.stop="flagClick">
       <vue-flag
         v-once
-        :code="radio.country_code"
+        :code="stream.country_code"
         size="micro"
       />
     </div>
@@ -59,10 +60,10 @@
         v-if="userLogged && userIsAdmin"
         class="streams-one-admin-edit cursor-pointer"
         style="margin-top: 2px">
-      <a target="_blank" :href="`/${locale}/admin/overloading/${radio.code_name}`"><i class="bi bi-pen"></i></a>
+      <a target="_blank" :href="`/${locale}/admin/overloading/${stream.code_name}`"><i class="bi bi-pen"></i></a>
     </div>
     <div
-        v-if="radio.popup"
+        v-if="stream.popup"
         class="streams-one-popup"
         :title="$t('message.streaming.popup')">
       <i class="bi bi-exclamation-circle"></i>
@@ -105,7 +106,7 @@ const MAX_RANDOM_MS = 750;
 
 export default defineComponent({
   props: {
-    radio: {
+    stream: {
       type: Object as PropType<Stream>,
       required: true
     }
@@ -124,14 +125,14 @@ export default defineComponent({
     styleObject: any,
     locale: any
   } {
-    const img = StreamsUtils.getPictureUrl(this.radio);
+    const img = StreamsUtils.getPictureUrl(this.stream, this.radio);
 
     return {
       PlayerStatus,
       // @dodo fix null mobile app
       channelName: PlayerUtils.getChannelName(
-          this.radio,
-          this.radio.radio_stream_code_name
+          this.stream,
+          this.radio
       ) || '',
       currentSong: null,
       hover: false,
@@ -178,15 +179,18 @@ export default defineComponent({
       'externalPlayer',
       'song',
       'listeners',
-      'radioPlayingCodeName'
+      'radio'
     ]),
+    ...mapState(usePlayerStore, {
+      playingStream: 'stream'
+    }),
     ...mapState(useStreamsStore, ['selectedCountry', 'favorites']),
     ...mapState(useUserStore, { userLogged: 'logged', userIsAdmin: 'isAdmin' }),
     isFavorite() {
-      return this.favorites.indexOf(this.radio.code_name) !== -1;
+      return this.favorites.indexOf(this.stream.code_name) !== -1;
     },
     hasErrors() {
-      return this.radio.playing_error && this.radio.playing_error >= config.ERROR_DISPLAY_THRESHOLD;
+      return this.stream.playing_error && this.stream.playing_error >= config.ERROR_DISPLAY_THRESHOLD;
     },
     liveSong() {
       if (!Object.prototype.hasOwnProperty.call(this.song, this.channelName)) {
@@ -196,31 +200,29 @@ export default defineComponent({
       return this.song[this.channelName];
     },
     liveListenersCount() {
-      const topicName = this.radio.radio_stream_code_name || this.radio.code_name;
-
-      if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
+      if (!Object.prototype.hasOwnProperty.call(this.listeners, this.stream.id)) {
         return null;
       }
 
-      if (!this.listeners[topicName] || this.listeners[topicName] === 0) {
+      if (!this.listeners[this.stream.id] || this.listeners[this.stream.id] === 0) {
         return null;
       }
 
-      return this.listeners[topicName];
+      return this.listeners[this.stream.id];
     },
     tags() {
-      if (!this.radio.tags || typeof this.radio.tags !== 'string') {
+      if (!this.stream.tags || typeof this.stream.tags !== 'string') {
         return [];
       }
 
-      return [...new Set(this.radio.tags.split(','))];
+      return [...new Set(this.stream.tags.split(','))];
     },
     adminInfoTooltip() {
       if (!this.userLogged || !this.userIsAdmin) {
         return '';
       }
 
-      return `ssl: ${this.radio.stream_url.startsWith('https') ? 'yes' : 'no' }<br>source: ${this.radio.source || 'n/a'}`
+      return `ssl: ${this.stream.stream_url.startsWith('https') ? 'yes' : 'no' }<br>source: ${this.stream.source || 'n/a'}`
     }
   },
   methods: {
@@ -255,23 +257,23 @@ export default defineComponent({
       }, 250 + randomJoinMs);
 
       setTimeout(() => {
-        this.joinListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+        this.joinListenersChannel(this.stream.id);
       }, 1000 + randomJoinMs);
     },
     leaveChannels() {
       setTimeout(() => {
         this.leaveChannel(this.channelName);
-        this.leaveListenersChannel(this.radio.radio_stream_code_name || this.radio.code_name);
+        this.leaveListenersChannel(this.stream.id);
       }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
     playStop() {
       // stop if playing
-      if (this.radioPlayingCodeName === this.radio.code_name
+      if (this.playingStream && this.playingStream.code_name === this.stream.code_name
         && this.playing !== PlayerStatus.Stopped) {
         if (this.externalPlayer === false) {
           this.$gtag.event(config.GTAG_ACTION_STOP, {
             event_category: config.GTAG_CATEGORY_STREAMING,
-            event_label: this.radio.code_name,
+            event_label: this.stream.code_name,
             value: config.GTAG_ACTION_STOP_VALUE
           });
         }
@@ -283,21 +285,21 @@ export default defineComponent({
       if (this.externalPlayer === false) {
         this.$gtag.event(config.GTAG_ACTION_PLAY, {
           event_category: config.GTAG_CATEGORY_STREAMING,
-          event_label: this.radio.code_name,
+          event_label: this.stream.code_name,
           value: config.GTAG_ACTION_PLAY_VALUE
         });
       }
 
-      this.playStream(this.radio);
+      this.playStream(this.stream);
     },
     flagClick() {
       this.$gtag.event(config.GTAG_STREAMING_ACTION_FILTER_COUNTRY, {
         event_category: config.GTAG_CATEGORY_STREAMING,
-        event_label: this.radio.country_code.toLowerCase(),
+        event_label: this.stream.country_code.toLowerCase(),
         value: config.GTAG_STREAMING_FILTER_VALUE
       });
 
-      this.countrySelection(this.radio.country_code);
+      this.countrySelection(this.stream.country_code);
     },
     tagClick(tag: string) {
       this.$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
@@ -324,19 +326,19 @@ export default defineComponent({
     toggleFavorite() {
       this.$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
         event_category: config.GTAG_CATEGORY_SCHEDULE,
-        event_label: this.radio.code_name,
+        event_label: this.stream.code_name,
         value: config.GTAG_ACTION_FAVORITE_TOGGLE_VALUE
       });
 
-      this.toggleStreamFavorite(this.radio);
+      this.toggleStreamFavorite(this.stream);
     },
     copyIdToClipboard() {
-      if (!this.radio) {
+      if (!this.stream) {
         return;
       }
 
       try {
-        navigator.clipboard.writeText(this.radio.code_name);
+        navigator.clipboard.writeText(this.stream.id);
 
         this.displayToast({
           message: 'Id copied',

@@ -375,8 +375,6 @@ admin:
             last: (%number% ultimi)
         no_schedule:
             title: Radio senza programmi oggi
-            shows: Programmi
-            sections: Rubriche
             all_ok: Tutte le radio hanno programmi visualizzati.
         stream_errors:
             title: Errori stream

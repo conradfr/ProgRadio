@@ -88,90 +88,48 @@ class ScheduleEntryRepository extends EntityRepository
     }
 
     /**
-     * Get stats for each day of the last 7 days with total shows per radio
-     * and the difference with the same day the week before
-     *
-     * @todo update to support subradios
-     *
      * @throws \Exception
      */
-    public function getStatsByDayAndRadio(): array
+    public function getSubRadiosWithNoSchedule(): array
     {
-        $dateTime = new \DateTime();
-        $dateTimeOneWeek = clone $dateTime;
-        $dateTimeOneWeek->add(\DateInterval::createfromdatestring('-6 day'));
-        $dateTimeTwoWeeks = clone $dateTime;
-        $dateTimeTwoWeeks->add(\DateInterval::createfromdatestring('-13 day'));
+        $datetime = new \DateTime();
+        $dayStart = (clone $datetime)->setTime(0, 0, 0)->format('Y-m-d H:i:s');
+        $dayEnd   = (clone $datetime)->setTime(0, 0, 0)->modify('+1 day')->format('Y-m-d H:i:s');
 
         $queryStr = <<<EOT
-        WITH day_agg AS (
-            select r.id as radio_id, r.code_name as radio_code_name,
-               date_trunc('day', se.date_time_start at time zone 'UTC') as se_day,
-               date_trunc('day', se.date_time_start at time zone 'UTC') + INTERVAL '7 day' as se_day_next,
-           count(distinct se.id) as total,
-           count(e.id) as sub_total
-        
-            from schedule_entry se
-                inner join radio r on r.id = se.radio_id
-                inner join sub_radio sr on se.sub_radio_id = sr.id
-                left join section_entry e on se.id = e.schedule_entry_id
-                
-            where se.date_time_start <= :todayTime AT TIME ZONE 'UTC'
-                and se.date_time_start >= :twoWeeksTime AT TIME ZONE 'UTC'
-                and sr.main = true
-        
-            GROUP BY r.id, 3
-        )
-    
-        SELECT date_trunc('day', dayrange)::date as day,
-               r.code_name,
-               COALESCE(da.total, 0) as total,
-               COALESCE(da.sub_total, 0) as sub_total,
-               COALESCE(pda.total, 0) prev_total,
-               COALESCE(pda.sub_total, 0) prev_sub_total,
-               (COALESCE(da.total, 0) - COALESCE(pda.total, 0)) as diff,
-               (COALESCE(da.sub_total, 0) - COALESCE(pda.sub_total, 0)) as sub_diff
-           
-        FROM generate_series (:week::timestamp, :today::timestamp, '1 day'::interval) dayrange
-               CROSS JOIN radio as r
-               LEFT JOIN day_agg as da on da.se_day = dayrange and da.radio_id = r.id
-               LEFT join day_agg pda on pda.se_day_next = da.se_day and pda.radio_id = da.radio_id
-    
-        where dayrange <= :today
-                and dayrange >= :week
-                and r.active = true
-    
-        ORDER BY r.share desc, r.code_name asc, day desc;
+        SELECT s.id, s.name, s.radio_stream_code_name, r.code_name
+
+        FROM stream s
+            INNER JOIN radio AS r ON r.id = s.radio_id
+
+        WHERE s.is_sub_radio = TRUE
+            AND r.active = TRUE
+            AND s.enabled = TRUE
+            AND NOT EXISTS (
+                SELECT 1 FROM schedule_entry se
+                WHERE se.stream_id = s.id
+                    AND se.date_time_start >= :day_start
+                    AND se.date_time_start < :day_end
+            )
+
+        ORDER BY s.name ASC;
 EOT;
 
         $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('day', 'day', 'string')
-            ->addScalarResult('code_name', 'radio_code_name', 'string')
-            ->addScalarResult('total', 'total', 'integer')
-            ->addScalarResult('prev_total', 'prev_total', 'integer')
-            ->addScalarResult('diff', 'diff', 'integer')
-            ->addScalarResult('sub_total', 'section_total', 'integer')
-            ->addScalarResult('prev_sub_section', 'prev_section_total', 'integer')
-            ->addScalarResult('sub_diff', 'section_diff', 'integer');
+        $rsm->addScalarResult('id', 'id', 'string')
+            ->addScalarResult('name', 'name', 'string')
+            ->addScalarResult('radio_stream_code_name', 'radio_stream_code_name', 'string')
+            ->addScalarResult('code_name', 'code_name', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($queryStr, $rsm);
         $query->setParameters(new ArrayCollection([
-            new Parameter(':today', $dateTime->format(self::DAY_FORMAT)),
-            new Parameter(':week', $dateTimeOneWeek->format(self::DAY_FORMAT)),
-            new Parameter(':todayTime', $dateTime->format(self::DAY_FORMAT) . ' 23:29:59'),
-            new Parameter(':twoWeeksTime', $dateTimeTwoWeeks->format(self::DAY_FORMAT) . ' 00:00:00')
+            new Parameter(':day_start', $dayStart),
+            new Parameter(':day_end',   $dayEnd),
         ]));
 
         $query->disableResultCache();
-        $result = $query->getResult();
 
-        $return = [];
-
-        foreach ($result as $item) {
-            $return[$item['radio_code_name']][] = $item;
-        }
-
-        return $return;
+        return $query->getResult();
     }
 
     protected function hydrateSection(&$row): ?array
@@ -199,7 +157,7 @@ EOT;
         return 'r.codeName, se.title, se.host,se.description, se.pictureUrl as picture_url,'
             . 'AT_TIME_ZONE(se.dateTimeStart,\'UTC\') as start_at,'
             . 'AT_TIME_ZONE(se.dateTimeEnd,\'UTC\') as end_at, EXTRACT(se.dateTimeEnd, se.dateTimeStart) / 60 AS duration,'
-            . 'MD5(CONCAT(r.codeName, se.title, se.dateTimeStart, sr.id)) as hash,'
+            . 'MD5(CONCAT(r.codeName, se.title, se.dateTimeStart, r.codeName)) as hash,'
             . 'CASE WHEN(AT_TIME_ZONE(se.dateTimeStart, \'UTC\') < :datetime_start) THEN 1 ELSE 0 END as start_overflow,'
             . 'CASE WHEN(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') > :datetime_end AND (HOUR(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\')) <> 23 OR MINUTE(AT_TIME_ZONE(se.dateTimeEnd, \'UTC\')) <> 0)) THEN 1 ELSE 0 END as end_overflow,'
             . 'sc.title as section_title, sc.pictureUrl as section_picture_url, sc.presenter as section_presenter, sc.description as section_description,'
@@ -218,7 +176,7 @@ EOT;
             ->from(ScheduleEntry::class, 'se')
             ->innerJoin('se.radio', 'r')
             ->leftJoin('se.sectionEntries', 'sc')
-            ->leftJoin('se.subRadio', 'sr')
+            ->leftJoin('se.stream', 's')
             ->where(
                 '(TIMEZONE(\'UTC\', se.dateTimeStart) >= :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeStart) < :datetime_end)'
                 . 'OR (TIMEZONE(\'UTC\', se.dateTimeEnd) > :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeEnd) <= :datetime_end)')
@@ -237,25 +195,26 @@ EOT;
             $qb->andWhere('r.codeName = :radio')
                 ->setParameter('radio', $scheduleResource->getValue());
 
-            if ($scheduleResource->getSubValue() !== null) {
-                $qb->andWhere('sr.id = :subRadioId')
-                    ->setParameter('subRadioId', $scheduleResource->getSubValue()->getId());
+            if ($scheduleResource->getStreamValue() !== null) {
+                $qb->andWhere('s.id = :streamId')
+                    ->setParameter('streamId', $scheduleResource->getStreamValue()->getId());
             } else {
-                $qb->andWhere('sr.main = true');
+                $qb->andWhere('s.isMainRadio = true');
             }
         } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_RADIOS) {
             $qb->andWhere('r.codeName IN (:radios)')
-                ->andWhere('sr.main = true')
+                ->andWhere('s.isMainRadio = true')
                 ->setParameter('radios', $scheduleResource->getValue());
         } elseif ($scheduleResource->getType() === ScheduleResource::TYPE_COLLECTION) {
             $qb->innerJoin('r.collection', 'c')
                 ->andWhere('c.codeName = :collection')
-                ->andWhere('sr.main = true')
+                ->andWhere('s.isMainRadio = true')
                 ->setParameter('collection', $scheduleResource->getValue());
         }
 
         $query = $qb->getQuery();
         $query->disableResultCache();  // rely on app schedule cache and only get fresh data here
+
         return $query->getResult();
     }
 
@@ -267,17 +226,16 @@ EOT;
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
-            ->addSelect('r.name as radio_name, r.share as radio_share, rs.name as radio_stream_name, rs.url as streaming_url, c.codeName as collectionCodeName')
+            ->addSelect('r.name as radio_name, r.share as radio_share, s.name as radio_stream_name, s.streamUrl as streaming_url, c.codeName as collectionCodeName')
             ->from(ScheduleEntry::class, 'se')
             ->innerJoin('se.radio', 'r')
-            ->innerJoin('se.subRadio', 'sr')
-            ->leftJoin('r.streams', 'rs')
+            ->innerJoin('se.stream', 's')
             ->innerJoin('r.collection', 'c')
             ->leftJoin('se.sectionEntries', 'sc')
             ->where('AT_TIME_ZONE(se.dateTimeStart, \'UTC\') <= :datetime')
             ->andWhere('AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') >= :datetime')
             ->andWhere('r.active = :active')
-            ->andWhere('rs.main = TRUE AND rs.enabled = TRUE')
+            ->andWhere('s.isMainRadio = TRUE AND s.enabled = TRUE')
             ->addOrderBy('r.share', 'DESC')
             ->addOrderBy('r.codeName', 'ASC')
             ->addOrderBy('se.dateTimeStart', 'ASC')

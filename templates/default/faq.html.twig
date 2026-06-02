@@ -7,7 +7,7 @@
 {% block description %}{{ 'page.faq.page_description'|trans }}{% endblock %}
 
 {% macro radios_list(collections, radios, locale) %}
-    {%  set radios_sorted = radios|sort %}
+    {% set radios_sorted = radios|sort %}
     {% for collection in collections %}
         {% if collection.code_name != 'favorites' %}
             <p>

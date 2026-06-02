@@ -26,7 +26,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
     overload_disabled()
     reattach_image_of_stream_with_no_image()
-    #    consolidate_stats()
     :ok
   end
 
@@ -146,7 +145,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         |> (&(Map.get(overloading, :name) || &1)).()
 
       img_url =
-        Stream
+        stream
         |> Map.get("favicon")
         |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :original_img) || &1)).()
         |> (&(Map.get(overloading, :original_img) || &1)).()
@@ -213,8 +212,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         language:
           Map.get(stream, "language")
           |> ImporterUtils.replace_value_maybe(@source, existing_stream, :language),
-        votes: Map.get(stream, "votes"),
-        clicks_last_24h: Map.get(stream, "clickcount"),
         enabled: enabled,
         redirect_to: redirect_to,
         import_updated_at: import_updated_at,
@@ -258,8 +255,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       original_tags: stream.original_tags,
       country_code: Map.get(overloading, :country_code) || stream.country_code,
       language: stream.language,
-      votes: stream.votes,
-      clicks_last_24h: stream.clicks_last_24h,
       enabled: enabled,
       import_updated_at: import_updated_at,
       source: stream.source
@@ -340,8 +335,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             language: s.language,
             stream_url: s.stream_url |> ImporterUtils.stream_url_transformer(),
             original_stream_url: s.original_stream_url,
-            votes: s.votes,
-            clicks_last_24h: s.clicks_last_24h,
             enabled: s.enabled,
             import_updated_at: s.import_updated_at
           ]
@@ -389,8 +382,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
           tags: s.tags,
           original_tags: s.original_tags,
           language: s.language,
-          votes: s.votes,
-          clicks_last_24h: s.clicks_last_24h,
           name: fragment("COALESCE(?, ?)", so.name, s.name),
           img_url: so.img,
           img: s.img,
@@ -436,7 +427,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             s.country_code == ^stream_data.country_code and s.enabled == true and
             s.banned == false and is_nil(s.redirect_to) and
             s.stream_url == ^stream_data.stream_url,
-        order_by: [desc: s.score, desc: s.clicks_last_24h, desc: s.votes],
+        order_by: [desc: s.score],
         limit: 1,
         select: s.id
       )
@@ -471,30 +462,5 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         where: s.id == ^stream_id
 
     Repo.update_all(query, set: [img: filename])
-  end
-
-  # merge redirected streams
-  def consolidate_stats() do
-    from(s in Stream,
-      left_join: s2 in Stream,
-      on: s2.redirect_to == s.id and not is_nil(s2.import_updated_at),
-      where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
-      group_by: [s.id],
-      select: %{
-        id: s.id,
-        clicks_last_24h: s.clicks_last_24h,
-        clicks: fragment("COALESCE(sum(?), 0)", s2.clicks_last_24h)
-      }
-    )
-    |> Repo.all()
-    |> Enum.each(fn e ->
-      Ecto.Adapters.SQL.query!(
-        Repo,
-        "UPDATE stream SET score = $1 where id = $2",
-        [e.clicks_last_24h + Decimal.to_integer(e.clicks), Ecto.UUID.dump!(e.id)]
-      )
-    end)
-
-    :ok
   end
 end

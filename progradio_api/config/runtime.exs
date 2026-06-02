@@ -145,5 +145,6 @@ if config_env() == :prod do
     webhook_secret: System.get_env("PROGRADIO_API_WEBHOOK_SECRET"),
     webhook_url: System.get_env("PROGRADIO_API_WEBHOOK_URL"),
     streams_checker: true,
+    auto_updater: true,
     stream_import_api_50k_key: System.get_env("API_50K_KEY")
 end

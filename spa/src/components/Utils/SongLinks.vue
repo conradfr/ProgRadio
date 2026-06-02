@@ -20,13 +20,6 @@
       <img :src="`${$CDN_BASE_URL}img/deezericon.png`" :alt="$t('message.songs_page.find_deezer')">
       &nbsp;<span class="d-none d-sm-inline">{{ $t('message.songs_page.find_deezer') }}</span>
     </a>&nbsp;&nbsp;
-
-    <a v-if="amazonLink" class="link-no-to-bold" target="_blank"
-       :title="$t( 'message.songs_page.buy_amazon')"
-       :href="amazonLink">
-      <i class="bi bi-amazon"></i>&nbsp;
-      <span class="d-none d-sm-inline">{{ $t('message.songs_page.buy_amazon') }}</span>
-    </a>
   </div>
 </template>
 
@@ -47,14 +40,5 @@ export default defineComponent({
       default: ''
     }
   },
-  computed: {
-    amazonLink() {
-      if (!this.title || this.title === '') {
-        return null;
-      }
-
-      return PlayerUtils.getAmazonSongLink(this.title);
-    }
-  }
 });
 </script>

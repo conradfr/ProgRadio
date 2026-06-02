@@ -374,8 +374,6 @@ admin:
             last: "(%number% son)"
         no_schedule:
             title: "Bugün programı olmayan radyolar"
-            shows: "Programlar"
-            sections: "Kronikler"
             all_ok: "Tüm radyoların programları görüntüleniyor."
         stream_errors:
             title: "Akış hataları"

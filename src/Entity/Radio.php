@@ -63,20 +63,13 @@ class Radio
     private bool $active = true;
 
     /**
-     * @var RadioStream[]|null
+     * @var Stream[]|null
      */
-    #[ORM\OneToMany(targetEntity: RadioStream::class, mappedBy: 'radio', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: Stream::class, mappedBy: 'radio', fetch: 'EXTRA_LAZY')]
     private ?DoctrineCollection $streams;
-
-    /**
-     * @var SubRadio[]
-     */
-    #[ORM\OneToMany(targetEntity: SubRadio::class, mappedBy: 'radio')]
-    private DoctrineCollection $subRadios;
 
     public function __construct() {
         $this->streams = new ArrayCollection();
-        $this->subRadios = new ArrayCollection();
     }
 
     public function getId(): int
@@ -179,10 +172,10 @@ class Radio
         $this->streams = $streams;
     }
 
-    public function getMainStream(): ?RadioStream
+    public function getMainStream(): ?Stream
     {
         foreach ($this->streams as $stream) {
-            if ($stream->isMain() === true) {
+            if ($stream->isIsMainRadio() === true) {
                 return $stream;
             }
         }
@@ -190,14 +183,18 @@ class Radio
         return null;
     }
 
-    public function getSubRadios(): DoctrineCollection
+    /**
+     * @return Stream[]
+     */
+    public function getSubRadios(): array
     {
-        return $this->subRadios;
-    }
+        $subRadios = $this->getStreams()->filter(
+            fn(Stream $stream) => $stream->isSubRadio() === true
+        )->toArray();
 
-    public function setSubRadios(DoctrineCollection $subRadios): void
-    {
-        $this->subRadios = $subRadios;
+        usort($subRadios, fn(Stream $a, Stream $b) => strcmp($a->getName(), $b->getName()));
+
+        return $subRadios;
     }
 
     public function getDescriptionFr(): ?string

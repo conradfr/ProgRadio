@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.Search do
-  require Application
   import Ecto.Query
 
   alias ProgRadioApi.Repo
@@ -16,7 +15,6 @@ defmodule ProgRadioApi.Search do
           tags: s.tags,
           language: s.language,
           country_code: s.country_code,
-          clicks_last_24h: s.clicks_last_24h,
           playing_error: s.playing_error,
           score: s.score
         }
@@ -42,8 +40,7 @@ defmodule ProgRadioApi.Search do
 
     Meilisearch.Settings.SortableAttributes.update(client, new_index, [
       "name",
-      "score",
-      "clicks_last_24h"
+      "score"
     ])
 
     Meilisearch.Settings.FilterableAttributes.update(client, new_index, ["country_code"])
@@ -79,7 +76,6 @@ defmodule ProgRadioApi.Search do
         tags: stream.tags,
         language: stream.language,
         country_code: stream.country_code,
-        clicks_last_24h: stream.clicks_last_24h,
         score: stream.score
       }
 
@@ -131,7 +127,7 @@ defmodule ProgRadioApi.Search do
   defp add_sort(params, %{:sort => sort}) when is_binary(sort) do
     q_sort =
       case sort do
-        "popularity" -> ["score:desc", "clicks_last_24h:desc"]
+        "popularity" -> ["score:desc"]
         "name" -> ["name:asc"]
       end
 

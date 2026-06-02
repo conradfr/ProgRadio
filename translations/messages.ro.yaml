@@ -375,8 +375,6 @@ admin:
             last: (%number% ultimele)
         no_schedule:
             title: Radiouri fără programe astăzi
-            shows: Programe
-            sections: Cronici
             all_ok: Toate radiourile au programe afișate.
         stream_errors:
             title: Erori stream

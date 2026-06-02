@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Optionmusique do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericRts
 
   @behaviour ProgRadioApi.SongProvider

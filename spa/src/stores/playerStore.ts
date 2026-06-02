@@ -42,10 +42,10 @@ interface State {
   playing: PlayerStatus
   externalPlayer: boolean
   externalPlayerVersion: number|null
-  radio: Radio|Stream|null
-  radioStreamCodeName: string|null
-  prevRadio: Radio|Stream|null
-  prevRadioStreamCodeName: string|null
+  stream: Stream|null
+  radio: Radio|null
+  prevStream: Stream|null
+  prevRadio: Radio|null
   show: Program|null
   song: Songs
   songHistory: SongHistory
@@ -74,14 +74,14 @@ export const usePlayerStore = defineStore('player', {
     playing: PlayerStatus.Stopped,
     externalPlayer: AndroidApi.hasAndroid,
     externalPlayerVersion: AndroidApi.getVersion(),
+    stream: cache.hasCache(config.LAST_STREAM_PLAYED)
+      ? cache.getCache(config.LAST_STREAM_PLAYED) : null,
     radio: cache.hasCache(config.LAST_RADIO_PLAYED)
       ? cache.getCache(config.LAST_RADIO_PLAYED) : null,
-    radioStreamCodeName: cache.hasCache(config.LAST_RADIO_STREAM_PLAYED)
-      ? cache.getCache(config.LAST_RADIO_STREAM_PLAYED) : null,
+    prevStream: cache.hasCache(config.PREV_STREAM_PLAYED)
+      ? cache.getCache(config.PREV_STREAM_PLAYED) : null,
     prevRadio: cache.hasCache(config.PREV_RADIO_PLAYED)
       ? cache.getCache(config.PREV_RADIO_PLAYED) : null,
-    prevRadioStreamCodeName: cache.hasCache(config.PREV_RADIO_STREAM_PLAYED)
-      ? cache.getCache(config.PREV_RADIO_STREAM_PLAYED) : null,
     show: null,
     song: {},
     songHistory: {},
@@ -106,27 +106,19 @@ export const usePlayerStore = defineStore('player', {
     videoModalUrl: null
   }),
   getters: {
-    radioPlayingCodeName: state => (state.radio !== null ? state.radio.code_name : null),
+    radioPlayingCodeName: state => (state.stream !== null ? state.stream.code_name : null),
     displayVolume: state => state.focus.icon || state.focus.fader || false,
     timerIsActive: state => state.timer !== undefined && state.timer !== null && state.timer !== 0,
-    streamUrl: (state) => {
-      if (state.radio === null) { return null; }
-
-      if (typeUtils.isStream(state.radio) || state.radioStreamCodeName === null) {
-        return state.radio.stream_url;
-      }
-
-      return state.radio.streams[state.radioStreamCodeName].url;
-    },
+    streamUrl: (state) => state.stream ? state.stream.stream_url : null,
     liveSong: state => (
-      radio: Radio|Stream,
-      radioStreamCodeName: string|null
+      stream: Stream,
+      radio: Radio | null = null
     ): [string|null, string|null] | null => {
-      if (!radio || (typeUtils.isRadio(state.radio) && !(radio as Radio).streaming_enabled)) {
+      if (!stream || (radio && !(radio as Radio).streaming_enabled)) {
         return null;
       }
 
-      const channelName = PlayerUtils.getChannelName(toRaw(radio), radioStreamCodeName);
+      const channelName = PlayerUtils.getChannelName(toRaw(stream), radio ? toRaw(radio) : null);
       // @todo find bug from app
       if (!channelName || channelName === '') {
         return null;
@@ -146,52 +138,46 @@ export const usePlayerStore = defineStore('player', {
       return [PlayerUtils.formatSong(state.song[channelName].song), state.song[channelName].song.cover_url || null];
     },
     currentSong(state): [string|null, string|null] | null {
-      if (state.radio === null || state.radio === undefined) {
+      if (!state.stream) {
         return null;
       }
 
-      return this.liveSong(state.radio, state.radioStreamCodeName);
+      return this.liveSong(state.stream, state.radio);
     },
   },
   actions: {
     playRadio(params: any) {
       const global = useGlobalStore();
-      const scheduleStore = useScheduleStore();
 
       this.stop();
 
-      const { radioCodeName, streamCodeName } = params;
-      const radio = find(scheduleStore.radios, { code_name: radioCodeName });
+      const { radio, stream } = params;
 
-      if (radio === undefined || !radio.streaming_enabled) {
+      if (radio === undefined || !radio.streaming_enabled || !stream) {
         return;
       }
 
-      const stream = ScheduleUtils.getStreamFromCodeName(streamCodeName, radio);
+      cache.setCache(config.LAST_STREAM_PLAYED, stream);
+      cache.setCache(config.LAST_RADIO_PLAYED, radio);
 
-      if (stream !== null) {
-        cache.setCache(config.LAST_RADIO_PLAYED, radio);
-        cache.setCache(config.LAST_RADIO_STREAM_PLAYED, stream.code_name);
+      this.setPrevious({ stream, radio });
 
-        this.setPrevious({ radio, streamCodeName: stream.code_name });
+      if (this.externalPlayer === true) {
+        AndroidApi.play(stream, radio);
 
-        if (this.externalPlayer === true) {
-          AndroidApi.play(radio, stream);
-
-          setTimeout(() => {
-            global.sendList(radio);
-          }, 2000);
-        } else {
-          nextTick(() => {
-            this.play({ radio, streamCodeName: stream.code_name });
-            this.startListeningSession();
-          });
-        }
-
+        setTimeout(() => {
+          global.sendList(radio);
+        }, 2000);
+      } else {
         nextTick(() => {
-          this.updateShow();
+          this.play({ stream, radio });
+          this.startListeningSession();
         });
       }
+
+      nextTick(() => {
+        this.updateShow();
+      });
     },
     playStream(stream: Stream) {
       const streamsStore = useStreamsStore();
@@ -199,14 +185,16 @@ export const usePlayerStore = defineStore('player', {
 
       this.stop();
 
-      setTimeout(() => {
-        StreamsApi.incrementPlayCount(stream.code_name, streamsStore.radioBrowserApi);
-      }, 500);
+      if (stream.source && stream.source === config.SOURCE_INCREMENT_COUNT) {
+        setTimeout(() => {
+          StreamsApi.incrementPlayCount(stream.code_name, streamsStore.radioBrowserApi);
+        }, 500);
+      }
 
-      cache.setCache(config.LAST_RADIO_PLAYED, stream);
-      cache.setCache(config.LAST_RADIO_STREAM_PLAYED, null);
+      cache.setCache(config.LAST_STREAM_PLAYED, stream);
+      cache.setCache(config.LAST_RADIO_PLAYED, null);
 
-      this.setPrevious({ radio: stream });
+      this.setPrevious({ stream });
 
       // update last listened if user is logged and is stream
       // not set in interval below to no send it at each update, may change later
@@ -242,7 +230,7 @@ export const usePlayerStore = defineStore('player', {
           return;
         }
 
-        this.play({ radio: stream });
+        this.play({ stream });
         this.startListeningSession();
       });
     },
@@ -255,9 +243,8 @@ export const usePlayerStore = defineStore('player', {
 
         this.stop();
       } else {
-        if (this.externalPlayer === true && (this.radio !== null && this.radio !== undefined)) {
-          const stream = ScheduleUtils.getStreamFromCodeName(this.radioStreamCodeName, this.radio);
-          AndroidApi.play(this.radio, stream);
+        if (this.externalPlayer === true && this.stream) {
+          AndroidApi.play(this.stream);
           return;
         }
 
@@ -265,10 +252,10 @@ export const usePlayerStore = defineStore('player', {
         this.startListeningSession();
       }
     },
-    play({ radio, streamCodeName = null }: { radio: Radio|Stream, streamCodeName?: string|null }) {
+    play({ stream, radio = null }: { stream: Stream, radio: Radio|null }) {
       this.radio = radio;
-      this.radioStreamCodeName = streamCodeName || null;
       this.show = null;
+      this.stream = stream;
       this.playing = PlayerStatus.Loading;
       // state.song = {};
       this.session = {
@@ -295,8 +282,7 @@ export const usePlayerStore = defineStore('player', {
       if (this.playing === PlayerStatus.Playing) {
         PlayerUtils.sendListeningSession(
           this.playing,
-          this.radio,
-          this.radioStreamCodeName,
+          this.stream,
           this.session,
           true);
       }
@@ -335,7 +321,7 @@ export const usePlayerStore = defineStore('player', {
 
       this.stop();
 
-      if (this.radio === undefined || this.radio === null) {
+      if (!this.stream) {
         return;
       }
 
@@ -360,8 +346,8 @@ export const usePlayerStore = defineStore('player', {
         if (nextRadio !== null) {
           this.setPrevious({ radio: nextRadio, streamCodeName: `${nextRadio.code_name}_main` });
           this.playRadio({
-            radioCodeName: nextRadio.code_name,
-            streamCodeName: `${nextRadio.code_name}_main`
+            radio: nextRadio.code_name,
+            stream: scheduleStore.getSubRadio(nextRadio.code_name)
           });
         }
       } else if (typeUtils.isStream(this.radio)) {
@@ -379,34 +365,41 @@ export const usePlayerStore = defineStore('player', {
     },
     // Previously played radio
     togglePrevious() {
-      if (this.prevRadio === undefined || this.prevRadio === null) {
+      if (!this.prevStream) {
         return;
       }
 
-      const prevRadio = toRaw(this.prevRadio);
+      const prevStream = toRaw(this.prevStream);
+      const currentStream = this.stream;
       const currentRadio = this.radio;
 
-      const currentStreamCodeName = this.radioStreamCodeName;
+      if (this.prevRadio) {
+        const prevRadio = toRaw(this.prevRadio);
 
-      if (typeUtils.isRadio(prevRadio)) {
+
         this.playRadio({
-          radioCodeName: prevRadio.code_name,
-          streamCodeName: this.prevRadioStreamCodeName
+          stream: prevStream,
+          radio: prevRadio
         });
-      } else if (typeUtils.isStream(prevRadio)) {
-        this.playStream(prevRadio);
+      } else {
+        this.playStream(prevStream);
       }
 
-      this.setPrevious({ radio: currentRadio!, streamCodeName: currentStreamCodeName });
+      this.setPrevious({ stream: currentStream, radio: currentRadio });
     },
-    setPrevious({ radio, streamCodeName = null }: { radio: Radio|Stream, streamCodeName?: string|null }) {
-      if (this.radio !== null && (this.radio.code_name !== radio.code_name
-        || this.radioStreamCodeName !== (streamCodeName || null))) {
-        cache.setCache(config.PREV_RADIO_PLAYED, this.radio);
-        cache.setCache(config.PREV_RADIO_STREAM_PLAYED, this.radioStreamCodeName);
+    setPrevious({ stream, radio = null }: { stream: Stream, radio?: Radio | null }) {
+      if (!stream) {
+        return;
+      }
 
+      if (this.stream && stream.id !== this.stream.id) {
+        cache.setCache(config.PREV_STREAM_PLAYED, this.stream);
+        this.prevStream = this.stream;
+      }
+
+      if ((!radio && this.radio) || (this.radio && radio && radio.code_name !== this.radio.code_name)) {
+        cache.setCache(config.PREV_RADIO_PLAYED, this.radio);
         this.prevRadio = this.radio;
-        this.prevRadioStreamCodeName = this.radioStreamCodeName || null;
       }
     },
     startListeningSession() {
@@ -414,8 +407,7 @@ export const usePlayerStore = defineStore('player', {
       setTimeout(() => {
         PlayerUtils.sendListeningSession(
           this.playing,
-          this.radio,
-          this.radioStreamCodeName,
+          this.stream,
           this.session
         );
       }, config.LISTENING_SESSION_MIN_SECONDS * 1000);
@@ -423,8 +415,7 @@ export const usePlayerStore = defineStore('player', {
       this.sessionInterval = setInterval(() => {
         PlayerUtils.sendListeningSession(
           this.playing,
-          this.radio,
-          this.radioStreamCodeName,
+          this.stream,
           this.session
         );
       }, config.LISTENING_SESSION_INTERVAL_SECONDS * 1000);
@@ -440,16 +431,13 @@ export const usePlayerStore = defineStore('player', {
         this.session.start = DateTime.fromISO(data.date_time_start).setZone(config.TIMEZONE);
       }
     },
-    async setStreamPlayingError(codeName: string, errorText?: string) {
-      await StreamsApi.addStreamPlayingError(codeName, errorText);
-    },
-    updateRadio() {
-      this.show = null;
+    async setStreamPlayingError(streamId: string, errorText?: string) {
+      await StreamsApi.addStreamPlayingError(streamId, errorText);
     },
     updateShow() {
       const scheduleStore = useScheduleStore();
 
-      if (this.radio === null || !typeUtils.isRadio(this.radio)) {
+      if (!this.radio) {
         return;
       }
 
@@ -539,7 +527,7 @@ export const usePlayerStore = defineStore('player', {
     },
     joinChannel(topicName: string, innerName: string|null = null) {
       // should not happen but...
-      if (topicName === 'url:null') {
+      if (!topicName || topicName === 'url:null') {
         return false;
       }
 
@@ -624,6 +612,11 @@ export const usePlayerStore = defineStore('player', {
       });
     },
     leaveChannel(topicName:string, innerName: string|null = null) {
+      // should not happen but...
+      if (!topicName || topicName === 'url:null') {
+        return false;
+      }
+
       if (this.socket === null
         || !Object.prototype.hasOwnProperty.call(this.channels, topicName)) {
         return;
@@ -817,12 +810,36 @@ export const usePlayerStore = defineStore('player', {
 
       const { playbackState, radioCodeName } = params;
 
-      let radio: Radio|Stream|null|undefined = find(scheduleStore.radios, { code_name: radioCodeName });
-      let radioStream = null;
+      let radio = null;
+      let stream = streamsStore !== undefined
+        ? find(streamsStore.streamRadios, { code_name: radioCodeName }) : undefined;
 
-      // if not radio, maybe radio substream, or maybe stream
-      // @todo better handling of types
-      if (radio === undefined || radio === null) {
+      if (!stream) {
+        let found = false;
+        const radios = Object.keys(scheduleStore.radios);
+        let i = 0;
+        do {
+          const radioStream = scheduleStore.radios[radios[i]]
+          && scheduleStore.radios[radios[i]].streams
+            ? find(scheduleStore.radios[radios[i]].streams,
+              { code_name: radioCodeName }) : null;
+
+          if (radioStream) {
+            stream = radioStream;
+            radio = scheduleStore.radios[radios[i]];
+            found = true;
+          }
+          i += 1;
+        } while (!found && i < radios.length);
+      }
+
+      if (!stream) {
+        return;
+      }
+
+      /*
+      let radio = null;
+      if (stream.radio_stream_code_name) {
         let found = false;
         const radios = Object.keys(scheduleStore.radios);
         let i = 0;
@@ -830,7 +847,7 @@ export const usePlayerStore = defineStore('player', {
           radioStream = scheduleStore.radios[radios[i]] !== undefined
           && scheduleStore.radios[radios[i]].streams !== undefined
             ? find(scheduleStore.radios[radios[i]].streams,
-              { code_name: radioCodeName }) : undefined;
+              { code_name: stream.radio_stream_code_name }) : undefined;
 
           if (radioStream !== undefined) {
             radio = scheduleStore.radios[radios[i]];
@@ -838,12 +855,7 @@ export const usePlayerStore = defineStore('player', {
           }
           i += 1;
         } while (!found && i < radios.length);
-
-        if (radio === undefined) {
-          radio = streamsStore !== undefined
-            ? find(streamsStore.streamRadios, { code_name: radioCodeName }) : undefined;
-        }
-      }
+      } */
 
       let newPlaybackState = PlayerStatus.Stopped;
 
@@ -853,12 +865,11 @@ export const usePlayerStore = defineStore('player', {
         newPlaybackState = PlayerStatus.Loading;
       }
 
-      if (radio !== undefined /* && radio.streaming_enabled === true */
+      if (stream /* && radio.streaming_enabled === true */
         && config.PLAYER_STATE.indexOf(playbackState) !== -1) {
         this.playing = newPlaybackState;
+        this.stream = stream;
         this.radio = radio;
-        this.radioStreamCodeName = radioStream !== null
-          && radioStream !== undefined ? radioStream.code_name : null;
         // state.show = show;
 
         nextTick(() => {

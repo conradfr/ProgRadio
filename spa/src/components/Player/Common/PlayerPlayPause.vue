@@ -1,5 +1,5 @@
 <template>
-  <div class="player-playpause" :class="{ 'player-playpause-disabled': radio === null }"
+  <div class="player-playpause" :class="{ 'player-playpause-disabled': stream === null }"
     @click="$emit('togglePlay');">
     <i v-if="playing !== PlayerStatus.Loading"
         class="bi"
@@ -21,13 +21,12 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
 import PlayerStatus from '@/types/player_status';
-import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 
 export default defineComponent({
   props: {
-    radio: {
-      type: Object as PropType<Radio|Stream>,
+    stream: {
+      type: Object as PropType<Stream>,
       required: false,
       default: null
     },

@@ -16,9 +16,10 @@ import {
   PLAYER_STATE_STOPPED,
   POPUP_SETTINGS,
   POPUP_URL_WILDCARD,
+  COOKIE_VOLUME,
+  SOURCE_INCREMENT_COUNT,
   PROGRADIO_AGENT,
-  RADIOADDICT_AGENT,
-  COOKIE_VOLUME
+  RADIOADDICT_AGENT
 } from './config/config.js';
 
 /* eslint-disable no-undef */
@@ -95,8 +96,6 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
 
   if (radioId.includes('-')) {
     data.stream_id = radioId;
-  } else {
-    data.radio_stream_code_name = `${radioId}_main`;
   }
 
   return fetch(url, {
@@ -304,7 +303,8 @@ createApp({
               window.audio.play().then(() => {
                 this.playingStarted(
                   options.topic ? options.topic.trim() : null,
-                  options.streamCodeName ? options.streamCodeName.trim() : null
+                  options.streamCodeName ? options.streamCodeName.trim() : null,
+                  options.source ? options.source.trim() : null,
                 );
               });
             });
@@ -328,7 +328,8 @@ createApp({
           window.audio.play().then(() => {
             this.playingStarted(
               options.topic ? options.topic.trim() : null,
-              options.streamCodeName ? options.streamCodeName.trim() : null
+              options.streamCodeName ? options.streamCodeName.trim() : null,
+              options.source ? options.source.trim() : null,
             );
           });
         });
@@ -367,7 +368,8 @@ createApp({
       window.audio.play().then(() => {
         this.playingStarted(
           options.topic ? options.topic.trim() : null,
-          options.streamCodeName ? options.streamCodeName.trim() : null
+          options.streamCodeName ? options.streamCodeName.trim() : null,
+          options.source ? options.source.trim() : null,
         );
       });
     }
@@ -411,7 +413,7 @@ createApp({
     this.cover = null;
     this.leaveChannels();
   },
-  playingStarted(topic, streamCodeName) {
+  playingStarted(topic, streamCodeName, source) {
     this.playing = PLAYER_STATE_PLAYING;
     this.lastUpdated = new Date();
     this.playingStart = new Date();
@@ -436,13 +438,15 @@ createApp({
         });
       }, LISTENING_INTERVAL);
 
-      setTimeout(() => {
-        // playing must have stop
-        if (!this.radioId) {
-          return;
-        }
-        incrementPlayCount(this.radioId);
-      }, LISTENING_MIN_INTERVAL + 500);
+      if (source && SOURCE_INCREMENT_COUNT.indexOf(source) > -1) {
+        setTimeout(() => {
+          // playing must have stopped
+          if (!this.radioId) {
+            return;
+          }
+          incrementPlayCount(this.radioId);
+        }, LISTENING_MIN_INTERVAL + 500);
+      }
     }
 
     window.audio.addEventListener('timeupdate', () => {

@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Mouv do
-  require Logger
   alias ProgRadioApi.SongProvider
   alias ProgRadioApi.SongProvider.GenericRadioFrance
 

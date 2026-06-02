@@ -21,7 +21,8 @@ defmodule ProgRadioApi.AutoUpdater.Streams do
       from(s in Stream,
         join: su in StreamAutoUpdate,
         on: s.id == su.stream_id,
-        where: s.enabled == true and s.banned == false and is_nil(s.redirect_to) and not is_nil(su.id),
+        where:
+          s.enabled == true and s.banned == false and is_nil(s.redirect_to) and not is_nil(su.id),
         preload: [:stream_auto_update]
       )
 
@@ -29,7 +30,9 @@ defmodule ProgRadioApi.AutoUpdater.Streams do
 
     query =
       from(s in Stream,
-        where: s.enabled == true and s.banned == false and is_nil(s.redirect_to) and fragment("? ilike '%.radio12345.com%'", s.website),
+        where:
+          s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
+            fragment("? ilike '%.radio12345.com%'", s.website),
         preload: [:stream_auto_update]
       )
 

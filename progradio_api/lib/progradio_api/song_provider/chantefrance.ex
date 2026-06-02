@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Chantefrance do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes3
 
   @behaviour ProgRadioApi.SongProvider

@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Bergerac95 do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes
 
   @behaviour ProgRadioApi.SongProvider

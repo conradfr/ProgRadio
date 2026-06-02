@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Classic21 do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericRtbs
 
   @behaviour ProgRadioApi.SongProvider

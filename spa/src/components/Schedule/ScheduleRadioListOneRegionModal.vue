@@ -12,11 +12,11 @@
         </div>
         <div class="modal-body pb-0">
           <div class="d-flex flex-row flex-wrap justify-content-evenly">
-            <button v-for="sub_radio in subRadiosSorted" v-once :key="sub_radio.code_name"
+            <button v-for="sub_radio in subRadiosSorted" v-once :key="sub_radio.radio_stream_code_name"
               type="button" class="btn m-2"
-              :class="{ 'btn-primary': currentSubRadioCodeName === sub_radio.code_name,
-                'btn-seconday': currentSubRadioCodeName === sub_radio.code_name }"
-              @click="regionClick(sub_radio.code_name)">
+              :class="{ 'btn-primary': currentSubRadioCodeName === sub_radio.radio_stream_code_name,
+                'btn-secondary': currentSubRadioCodeName === sub_radio.radio_stream_code_name }"
+              @click="regionClick(sub_radio.radio_stream_code_name)">
               {{ sub_radio.name }}
             </button>
           </div>
@@ -49,15 +49,22 @@ export default defineComponent({
     ...mapState(useScheduleStore, ['radios', 'getSubRadio']),
     ...mapState(useScheduleStore, { radio: 'radioForRegionModal' }),
     subRadiosSorted() {
-      if (this.radio === null || this.radio.sub_radios === null) {
+      if (!this.radio || !this.radio.streams) {
         return [];
       }
 
-      return Object.keys(this.radio.sub_radios).sort().reduce(
+      return Object.keys(this.radio.streams)
+        .sort()
+        .reduce(
         (obj, key) => {
-          /* eslint-disable no-param-reassign */
-          // @ts-ignore
-          obj[key] = this.radio.sub_radios[key];
+          const stream = this.radio.streams[key];
+          // filter web radios
+          if (stream && stream.is_main_radio || stream.is_sub_radio) {
+            /* eslint-disable no-param-reassign */
+            // @ts-ignore
+            obj[key] = this.radio.streams[key];
+          }
+
           return obj;
         }, {}
       );
@@ -73,7 +80,7 @@ export default defineComponent({
   // computed: mapState(usePlayerStore, ['timer']),
   methods: {
     ...mapActions(useUserStore, ['setSubRadio']),
-    regionClick(subRadioCodeName: string) {
+    regionClick(subRadioStreamCodeName: string) {
       if (this.radio === null) {
         return;
       }
@@ -93,7 +100,7 @@ export default defineComponent({
         value: GTAG_ACTION_REGION_VALUE
       });
 
-      this.setSubRadio(this.radio.code_name, subRadioCodeName);
+      this.setSubRadio(this.radio.code_name, subRadioStreamCodeName);
     }
   }
 });

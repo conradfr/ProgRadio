@@ -1,5 +1,5 @@
 <template>
-  <div class="app-streams">
+  <div class="app-streams" >
     <div class="container">
       <loading></loading>
       <div class="row">
@@ -54,7 +54,7 @@ export default defineComponent({
   mounted() {
     const body = document.querySelector('body');
     body?.classList.add('body-app');
-    document.title = this.$i18n.t('message.streaming.title');
+    document.title = this.$t('message.streaming.title');
 
     // favorites shortcut
     const mobileFavoritesShortcut = document.getElementById('mobile-streaming-favorites-shortcut');
@@ -93,15 +93,15 @@ export default defineComponent({
       }
     });
   },
-  beforeRouteUpdate(to, _from, next) {
+  beforeRouteUpdate(to) {
     const streamsStore = useStreamsStore();
 
-    if (to.params.hasOwnProperty('countryOrCategoryOrUuid')) {
+    if (Object.prototype.hasOwnProperty.call(to.params, 'countryOrCategoryOrUuid')) {
       // this is a radio (uuid)
-      if (to.params.countryOrCategoryOrUuid.indexOf('-') !== -1) {
+      if ((to.params.countryOrCategoryOrUuid as string).indexOf('-') !== -1) {
         streamsStore.setSoloExtended((to.params.countryOrCategoryOrUuid as string));
       } else {
-        if (to.params.hasOwnProperty('page') && to.params.page !== '') {
+        if (Object.prototype.hasOwnProperty.call(to.params, 'page') && to.params.page !== '') {
           streamsStore.pageSet(parseInt((to.params.page as string), 10));
         }
 
@@ -109,7 +109,6 @@ export default defineComponent({
         streamsStore.setSoloExtended(null);
       }
     }
-    next();
   },
   watch: {
     playing() {
@@ -146,9 +145,9 @@ export default defineComponent({
 
         preTitle += `${this.playingRadio.name} - `;
 
-        document.title = `${preTitle}${this.$i18n.t('message.streaming.title')}`;
+        document.title = `${preTitle}${this.$t('message.streaming.title')}`;
       } else {
-        document.title = this.$i18n.t('message.streaming.title');
+        document.title = this.$t('message.streaming.title');
       }
     }
   }

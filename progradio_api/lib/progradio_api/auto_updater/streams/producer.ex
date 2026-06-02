@@ -24,16 +24,12 @@ defmodule ProgRadioApi.AutoUpdater.Streams.Producer do
   end
 
   def handle_demand(incoming_demand, {queue, pending_demand}) do
-    Logger.info(
-      "Streams Auto-Updater - Producer: handling demand"
-    )
+    Logger.info("Streams Auto-Updater - Producer: handling demand")
     dispatch_events(queue, incoming_demand + pending_demand, [])
   end
 
   defp dispatch_events(queue, 0, events) do
-    Logger.info(
-      "Streams Error Check - Producer: dispatch events: #{length(events)}"
-    )
+    Logger.info("Streams Error Check - Producer: dispatch events: #{length(events)}")
 
     {:noreply, Enum.reverse(events), {queue, 0}}
   end

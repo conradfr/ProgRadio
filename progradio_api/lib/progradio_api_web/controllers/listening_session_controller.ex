@@ -6,11 +6,6 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   alias ProgRadioApi.ListenersCounter
   alias ProgRadioApi.Streams
 
-  #  def index(conn, _params) do
-  #    listening_session = ListeningSessions.list_listening_session()
-  #    render(conn, "index.json", listening_session: listening_session)
-  #  end
-
   def create(conn, listening_session_params) do
     with false <-
            (conn.remote_ip |> Tuple.to_list() |> Enum.join(".")) in Application.get_env(
@@ -22,6 +17,8 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
       spawn(fn ->
         ListenersCounter.register_listening_session(listening_session, false)
 
+        # todo use checker job instead
+        # because currently slow loading stream that fails will be a false positive
         if Map.has_key?(listening_session_params, "stream_id"),
           do: Streams.reset_streaming_error(listening_session_params["stream_id"])
       end)
@@ -60,6 +57,8 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
           ListenersCounter.register_listening_session(updated_listening_session, true)
         end
 
+        # todo use checker job instead
+        # because currently slow loading stream that fails will be a false positive
         if Map.has_key?(listening_session_params, "stream_id"),
           do: Streams.reset_streaming_error(listening_session_params["stream_id"])
       end)

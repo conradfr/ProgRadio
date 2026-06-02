@@ -86,6 +86,7 @@ defmodule ProgRadioApi.AutoUpdater.Streams.StreamTask do
         nil ->
           Logger.warning("Auto-update stream (mixlr_json): #{stream.id} - error (no api data)")
           {:error, nil}
+
         _ ->
           {:ok, url}
       end
@@ -96,7 +97,8 @@ defmodule ProgRadioApi.AutoUpdater.Streams.StreamTask do
     end
   end
 
-  defp update_in_db(%Stream{stream_auto_update: stream_auto_update} = _stream, nil) when not is_nil(stream_auto_update) do
+  defp update_in_db(%Stream{stream_auto_update: stream_auto_update} = _stream, nil)
+       when not is_nil(stream_auto_update) do
     stream_auto_update
     |> StreamAutoUpdate.update_run(%{last_failed_run: NaiveDateTime.utc_now()})
     |> Repo.update()

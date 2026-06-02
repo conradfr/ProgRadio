@@ -2,30 +2,30 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Store do
   import Ecto.Query, only: [from: 2]
   alias Ecto.Multi
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.{Radio, SubRadio, ScheduleEntry, SectionEntry}
+  alias ProgRadioApi.{Radio, Stream, ScheduleEntry, SectionEntry}
 
   @spec persist(list(map), struct, struct, Date.t()) :: any
-  def persist(shows, %Radio{} = radio, %SubRadio{} = sub_radio, date) do
+  def persist(shows, %Radio{} = radio, %Stream{} = stream, date) do
     {multi, to_not_delete} =
       Multi.new()
-      |> (&build_multi(shows, radio, sub_radio, &1, [])).()
+      |> (&build_multi(shows, radio, stream, &1, [])).()
 
     multi_delete =
       Multi.new()
-      |> delete_schedule(to_not_delete, radio, sub_radio, date)
+      |> delete_schedule(to_not_delete, radio, stream, date)
 
     multi_combine = Ecto.Multi.append(multi_delete, multi)
     Repo.transaction(multi_combine)
   end
 
   @spec delete_schedule(Multi.t(), list(integer), struct, struct, Date.t()) :: any
-  defp delete_schedule(multi, to_not_delete, %Radio{} = radio, %SubRadio{} = sub_radio, date) do
+  defp delete_schedule(multi, to_not_delete, %Radio{} = radio, %Stream{} = stream, date) do
     q =
       from(
         se in "schedule_entry",
         where:
           se.radio_id == type(^radio.id, :integer) and
-            se.sub_radio_id == type(^sub_radio.id, :integer) and
+            se.stream_id == type(^stream.id, Ecto.UUID) and
             fragment("DATE(? at time zone 'UTC' at time zone 'Europe/Paris')", se.date_time_start) ==
               ^date and se.id not in ^to_not_delete
       )
@@ -37,13 +37,13 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Store do
 
   @spec build_multi(list(map), struct, struct, Multi, list(integer)) ::
           {Multi, list(integer)} | fun
-  defp build_multi(shows, radio, sub_radio, multi, to_not_delete)
+  defp build_multi(shows, radio, stream, multi, to_not_delete)
 
-  defp build_multi([], _radio, _sub_radio, multi, to_not_delete) do
+  defp build_multi([], _radio, _stream, multi, to_not_delete) do
     {multi, to_not_delete}
   end
 
-  defp build_multi(shows, %Radio{} = radio, %SubRadio{} = sub_radio, multi, to_not_delete) do
+  defp build_multi(shows, %Radio{} = radio, %Stream{} = stream, multi, to_not_delete) do
     [head | tail] = shows
 
     # In case two schedules have the same radio_id & date_time_start get_by() will raise
@@ -53,13 +53,13 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Store do
         case ScheduleEntry
              |> Repo.get_by(%{
                radio_id: radio.id,
-               sub_radio_id: sub_radio.id,
+               stream_id: stream.id,
                date_time_start: head["date_time_start"],
                date_time_end: head["date_time_end"]
              }) do
           nil ->
             changeset =
-              sub_radio
+              stream
               |> Ecto.build_assoc(:schedule_entry, %ScheduleEntry{})
               |> Map.put(:radio_id, radio.id)
               |> ScheduleEntry.create_changeset(head)
@@ -79,7 +79,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Store do
       rescue
         _ ->
           changeset =
-            sub_radio
+            stream
             |> Ecto.build_assoc(:schedule_entry, %ScheduleEntry{})
             |> Map.put(:radio_id, radio.id)
             |> ScheduleEntry.create_changeset(head)
@@ -89,7 +89,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Store do
         entry -> entry
       end
 
-    build_multi(tail, radio, sub_radio, multi, to_not_delete)
+    build_multi(tail, radio, stream, multi, to_not_delete)
   end
 
   # Sections id

@@ -27,36 +27,37 @@ export default defineComponent({
   mounted() {
     setTimeout(() => {
       if (this.stream) {
-        this.joinListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
+        this.joinListenersChannel(this.channelName);
       }
     }, Math.floor(Math.random() * (750 - 150 + 1)) + 150);
   },
   beforeUnmount() {
     setTimeout(() => {
       if (this.stream) {
-        this.leaveListenersChannel(this.stream.radio_stream_code_name || this.stream.code_name);
+        this.leaveListenersChannel(this.channelName);
       }
     }, 1000);
   },
   computed: {
     ...mapState(usePlayerStore, ['listeners']),
+    channelName() {
+      // This is the "whole radio" vs one stream count
+      return typeUtils.isRadio(this.stream) ? this.stream.code_name : this.stream.id;
+    },
     count() {
       if (!this.stream) {
         return null;
       }
 
-      const topicName = (typeUtils.isStream(this.stream) ? this.stream.radio_stream_code_name
-        : this.stream.code_name) || this.stream.code_name;
-
-      if (!Object.prototype.hasOwnProperty.call(this.listeners, topicName)) {
+      if (!Object.prototype.hasOwnProperty.call(this.listeners, this.channelName)) {
         return null;
       }
 
-      if (!this.listeners[topicName] || this.listeners[topicName] === 0) {
+      if (!this.listeners[this.channelName] || this.listeners[this.channelName] === 0) {
         return null;
       }
 
-      return this.listeners[topicName];
+      return this.listeners[this.channelName];
     },
   },
   methods: {

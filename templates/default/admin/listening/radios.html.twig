@@ -33,9 +33,9 @@
                     <td style="width: 20%">
                         <div class="row position-relative" v-scope v-cloak>
                             {% if one != 'empty' %}
-                                <span v-if="totalOfRadio('radio', '{{ one.codeName}}') > 0"
+                                <span v-if="totalOfRadio('radio', '{{ one.codeNameRadio}}') > 0"
                                       class="admin-ls-badge position-absolute top-0 start-0 translate-middle badge rounded-pill bg-success">
-                                {%  verbatim %}{{{% endverbatim %} totalOfRadio('radio', '{{ one.codeName}}') {%  verbatim %}}}{% endverbatim %}
+                                {%  verbatim %}{{{% endverbatim %} totalOfRadio('radio', '{{ one.codeNameRadio}}') {%  verbatim %}}}{% endverbatim %}
                                 </span>
                                 <div class="col-md-3"><img title="{{ one.name }}" alt="{{ one.name }}" src="{{ asset('img/radio/schedule/' ~ one.codeNameRadio ~ '.png') }}"></div>
                                 <div class="col-md-4">

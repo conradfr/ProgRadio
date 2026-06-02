@@ -36,6 +36,8 @@ defmodule ProgRadioApiWeb.Endpoint do
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :progradio_api
   end
 
+  plug ProgRadioApiWeb.Plug.HealthCheck
+
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 

@@ -11,12 +11,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
 import type { PropType } from 'vue';
 import filter from 'lodash/filter';
 
 import type { Radio } from '@/types/radio';
 
+import { useScheduleStore } from '@/stores/scheduleStore';
+
 import RadioStream from './RadioStream.vue';
+
 
 export default defineComponent({
   components: {
@@ -29,11 +33,12 @@ export default defineComponent({
     }
   },
   computed: {
+    ...mapState(useScheduleStore, ['getSubRadio']),
     primaryStream() {
-      return filter(this.radio.streams, r => r.main === true)[0];
+      return this.getSubRadio(this.radio.code_name);
     },
     secondaryStreams() {
-      return filter(this.radio.streams, r => r.main === false);
+      return filter(this.radio.streams, r => r.code_name !== this.primaryStream.code_name);
     },
   }
 });

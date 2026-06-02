@@ -1,21 +1,21 @@
 import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
 
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 
-import type {Radio} from '@/types/radio';
-import type {Program} from '@/types/program';
-import type {Stream} from '@/types/stream';
-import type {Song} from '@/types/song';
-import type {ListeningSession} from '@/types/listening_session';
-import type {PlayOptions} from '@/types/play_options';
+import type { Radio } from '@/types/radio';
+import type { Program } from '@/types/program';
+import type { Stream } from '@/types/stream';
+import type { Song } from '@/types/song';
+import type { ListeningSession } from '@/types/listening_session';
+import type { PlayOptions } from '@/types/play_options';
 import PlayerStatus from '@/types/player_status';
 import VideoProvider from '@/types/video.ts';
 
 import * as config from '@/config/config';
 import ScheduleApi from '@/api/ScheduleApi';
 import typeUtils from './typeUtils.ts';
-import ScheduleUtils from './ScheduleUtils.ts';
+import StreamsUtils from '@/utils/StreamsUtils';
 import cookies from './cookies.ts';
 
 type NotificationData = {
@@ -35,28 +35,14 @@ const VIDEO_LINKS = [
 
 /* ---------- RADIOS ---------- */
 
-const getPictureUrl = (radio: Radio|Stream, show: Program|null = null) => {
+const getPictureUrl = (stream: Stream, radio: Radio|null = null, show: Program|null = null) => {
   if (show !== null && show.picture_url !== null) {
     // @ts-expect-error defined on global scope
     // eslint-disable-next-line no-undef
     return `${cdnBaseUrl}${config.THUMBNAIL_NOTIFICATION_PROGRAM_PATH}${show.picture_url}`;
   }
 
-  if (typeUtils.isRadio(radio)) {
-    // @ts-expect-error defined on global scope
-    // eslint-disable-next-line no-undef`
-    return `${cdnBaseUrl}img/radio/schedule/${radio.code_name}.png`;
-  }
-
-  if (radio.img !== null && radio.img !== '') {
-    // @ts-expect-error defined on global scope
-    // eslint-disable-next-line no-undef
-    return `${cdnBaseUrl}${config.THUMBNAIL_STREAM_PATH}${radio.img}`;
-  }
-
-  // @ts-expect-error defined on global scope
-  // eslint-disable-next-line no-undef
-  return `${cdnBaseUrl}img/stream-placeholder.png`;
+  return StreamsUtils.getPictureUrl(stream, radio);
 };
 
 const getNextRadio = (currentRadio: Radio|Stream, radios: Radio[], way: 'backward'|'forward') => {
@@ -114,44 +100,16 @@ const getNextStream = (currentStream: Stream, streams: Stream[], way: 'backward'
   return streams[newIndex];
 };
 
-const getStreamUrl = (radio: Radio|Stream, radioStreamCodeName: string|null) => {
-  if (typeUtils.isRadio(radio) && !radio.streaming_enabled) {
-    return null;
-  }
-
-  if (typeUtils.isStream(radio) || radioStreamCodeName === null) {
-    return radio.stream_url;
-  }
-
-  if (Object.keys(radio.streams).length > 0
-    && Object.prototype.hasOwnProperty.call(radio.streams, radioStreamCodeName)) {
-    return radio.streams[radioStreamCodeName].url;
-  }
-
-  return null;
-};
-
-const getChannelName = (radio: Radio|Stream, radioStreamCodeName: string|null): string => {
-  if (typeUtils.isRadio(radio) && !radio.streaming_enabled) {
+const getChannelName = (stream: Stream, radio: Radio|null): string => {
+  if (radio && !radio.streaming_enabled) {
     return '';
   }
 
-  if (typeUtils.isRadio(radio) && !radioStreamCodeName) {
-    return `song:${radio.code_name}_main`;
+  if (stream && stream.current_song && stream.radio_stream_code_name) {
+    return `song:${stream.radio_stream_code_name}`;
   }
 
-  // @ts-ignore
-  if ((radioStreamCodeName && typeUtils.isRadio(radio)
-      && Object.keys(radio.streams).length > 0
-      && Object.prototype.hasOwnProperty.call(radio.streams, radioStreamCodeName)
-      && radio.streams[radioStreamCodeName].current_song)
-    || (typeUtils.isStream(radio) && radio.current_song)) {
-    const channelNameEnd = typeUtils.isRadio(radio)
-      ? radioStreamCodeName : radio.radio_stream_code_name;
-    return `song:${channelNameEnd}`;
-  }
-
-  return `url:${getStreamUrl(radio, radioStreamCodeName)}`;
+  return `url:${stream.stream_url}`;
 };
 
 const formatSong = (songData: Song): string|null => {
@@ -191,12 +149,8 @@ const extractTopicName = (fullTopicName: string): string|null => {
   return fullTopicName.substring(10);
 };
 
-const buildPlayOptions = (radio: Radio|Stream) => {
+const buildPlayOptions = (radio: Stream) => {
   const options: PlayOptions = {};
-
-  if (typeUtils.isRadio(radio)) {
-    return options;
-  }
 
   if (radio.force_hls) {
     options.force_hls = true;
@@ -268,25 +222,19 @@ const getVideoId = (url: string): [VideoProvider, string]|null => {
 /* ---------- NOTIFICATION ---------- */
 
 const buildNotificationData = (
-  radio: Radio|Stream,
-  streamCodeName: string,
+  stream: Stream,
+  radio: Radio|null = null,
   show: Program|null = null
 ) => {
   const data: NotificationData = {
-    name: radio.name,
+    name: stream.name,
     times: null,
     host: null,
     title: null,
     icon: getPictureUrl(radio, show)
   };
 
-  const stream = ScheduleUtils.getStreamFromCodeName(streamCodeName, radio);
-
-  if (stream !== null) {
-    data.name = stream.name;
-  }
-
-  if (show !== undefined && show !== null) {
+  if (show) {
     const start = DateTime.fromISO(show.start_at).setZone(config.TIMEZONE)
       .toLocaleString(DateTime.TIME_SIMPLE);
     const end = DateTime.fromISO(show.end_at).setZone(config.TIMEZONE)
@@ -352,15 +300,15 @@ const buildNotification = (data: NotificationData) => {
 };
 
 const showNotification = (
-  radio: Radio|Stream,
-  streamCodeName: string,
+  radio: Stream,
+  stream: Radio|null = null,
   show: Program|null = null
 ) => {
   if (!('Notification' in window)) {
     return;
   }
 
-  const data = buildNotificationData(radio, streamCodeName, show);
+  const data = buildNotificationData(stream, radio, show);
   buildMediaSessionMetadata(data);
 
   const isMobile = window.matchMedia('only screen and (max-width: 1365px)');
@@ -402,9 +350,9 @@ const calculatedFlux = () => {
     // @ts-ignore
     && window.navigator.connection !== undefined
     // @ts-ignore
-    && (window.navigator.connection.effectiveType !== undefined
-    // @ts-ignore
-    && window.navigator.connection.effectiveType === config.PLAYER_MULTI_ALLOWED_TYPE)
+    && (window.navigator.connection.effectiveType
+      // @ts-ignore
+      && config.PLAYER_MULTI_ALLOWED_TYPE.indexOf(window.navigator.connection.effectiveType) > -1)
     // @ts-ignore
     && (window.navigator.connection.downlink !== undefined)) {
     // @ts-ignore
@@ -428,22 +376,15 @@ const calculatedFlux = () => {
   return data;
 };
 
-const getAmazonSongLink = (song: string): string => {
-  const songCleaned = song.replace(' - ', ' ');
-
-  return encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${songCleaned}`);
-};
-
 /* ---------- API ---------- */
 
 const sendListeningSession = (
   playingStatus: PlayerStatus,
-  radio: Radio|Stream,
-  radioStreamCodeName: string|null,
+  stream: Stream,
   session: ListeningSession,
   ending?: boolean
 ) => {
-  if (playingStatus === PlayerStatus.Playing && session.start !== null) {
+  if (playingStatus === PlayerStatus.Playing && session && session.start !== null) {
     const dateTimeEnd = DateTime.local().setZone(config.TIMEZONE);
 
     if (dateTimeEnd.diff(session.start).as('seconds') < config.LISTENING_SESSION_MIN_SECONDS) {
@@ -452,8 +393,7 @@ const sendListeningSession = (
 
     setTimeout(() => {
       ScheduleApi.sendListeningSession(
-        radio.code_name,
-        radioStreamCodeName,
+        stream.id,
         session.start!,
         dateTimeEnd,
         session.id!,
@@ -477,7 +417,6 @@ export default {
   showNotification,
   sendListeningSession,
   calculatedFlux,
-  getAmazonSongLink,
   extractTopicName,
   buildPlayOptions
 };

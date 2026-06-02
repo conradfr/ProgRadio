@@ -1,6 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Rtl do
-  require Logger
-
   alias ProgRadioApi.SongProvider.GenericRtlgroup
   alias ProgRadioApi.SongProvider.GenericRtlgroup2
   alias ProgRadioApi.SongProvider

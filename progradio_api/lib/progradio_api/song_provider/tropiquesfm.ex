@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Tropiquesfm do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes2
 
   @behaviour ProgRadioApi.SongProvider

@@ -2,7 +2,7 @@ defmodule ProgRadioApi.ScheduleEntry do
   use Ecto.Schema
   import Ecto.Changeset
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.{Radio, SubRadio, SectionEntry}
+  alias ProgRadioApi.{Radio, Stream, SectionEntry}
 
   schema "schedule_entry" do
     field(:date_time_start, :utc_datetime)
@@ -13,7 +13,7 @@ defmodule ProgRadioApi.ScheduleEntry do
     field(:picture_url, :string)
     has_many(:sections, SectionEntry, on_replace: :delete)
     belongs_to(:radio, Radio)
-    belongs_to(:sub_radio, SubRadio)
+    belongs_to(:stream, Stream, type: :binary_id)
   end
 
   def create_changeset(schedule, params \\ %{}) do

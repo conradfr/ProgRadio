@@ -182,12 +182,7 @@
 
             <div class="col-md-10">
                 {% include('default/admin/listening/total.html.twig') %}
-
-                {% if old_view == true %}
-                    {% include('default/admin/listening/radios_old.html.twig') %}
-                {% else %}
-                    {% include('default/admin/listening/radios.html.twig') %}
-                {% endif %}
+                {% include('default/admin/listening/radios.html.twig') %}
                 {% include('default/admin/listening/streams.html.twig') %}
             </div>
         </div>

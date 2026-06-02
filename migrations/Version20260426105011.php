@@ -86,8 +86,6 @@ final class Version20260426105011 extends AbstractMigration
             );
         }
 
-        echo 'lol';
-
         for ($i = 0; $i < count($stream); $i++) {
             $this->connection->executeQuery(
                 "INSERT INTO radio_stream (code_name, name, url, radio_id, sub_radio_id, current_song,main,enabled) VALUES ('"

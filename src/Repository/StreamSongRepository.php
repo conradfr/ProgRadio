@@ -16,7 +16,7 @@ class StreamSongRepository extends EntityRepository
             ->where('ss.enabled = :active')
             ->andWhere('ss.retries > 0')
             ->orderBy('ss.retries', 'DESC')
-            ->addOrderBy('s.votes', 'DESC');
+            ->addOrderBy('s.score', 'DESC');
 
         $qb->setParameter('active', true);
 

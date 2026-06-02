@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Radio90s90s do
-  require Logger
   alias ProgRadioApi.SongProvider
   alias ProgRadioApi.SongProvider.GenericLoveradio
 

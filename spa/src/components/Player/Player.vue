@@ -15,18 +15,18 @@
       <div class="h-100 d-flex justify-content-between align-items-center">
         <div class="player-header-xl d-flex align-items-center">
           <PlayerImageXL />
-          <PlayerPlayPause :radio="radio" :playing="playing" @togglePlay="() => togglePlay()" />
-          <PlayerInfoXL v-if="radio" />
-          <PlayerInfoRolling v-if="radio" />
-          <div v-if="!radio" class="player-name player-name-help">
+          <PlayerPlayPause :stream="stream" :playing="playing" @togglePlay="() => togglePlay()" />
+          <PlayerInfoXL v-if="stream" />
+          <PlayerInfoRolling v-if="stream" />
+          <div v-if="!stream" class="player-name player-name-help">
             {{ $t('message.player.placeholder') }}
           </div>
         </div>
-        <PlayerSongXL v-if="radio && currentSong" />
+        <PlayerSongXL v-if="stream && currentSong" />
         <div class="player-actions-xl d-flex justify-content-end">
           <PlayerVolumeXL v-if="!externalPlayer" :muted="muted" @toggleMute="() => toggleMute()" />
           <PlayerSaveSong />
-          <PlayerFavorite v-if="radio" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
+          <PlayerFavorite v-if="stream" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
             @favoriteToggle="() => favoriteToggle()" />
           <timer></timer>
           <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId" :asIcon="true"
@@ -64,18 +64,18 @@
             'bi-volume-down-fill': !(muted || focus.icon) && volume <= 4
           }"></i>
         </div>
-        <PlayerPlayPause :radio="radio" :playing="playing" @togglePlay="() => togglePlay()" />
+        <PlayerPlayPause :stream="stream" :playing="playing" @togglePlay="() => togglePlay()" />
         <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId"
           @changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
         />
-        <PlayerInfoRolling v-if="radio" />
+        <PlayerInfoRolling v-if="stream" />
         <Transition name="timer-fade" mode="out-in">
           <PlayerSaveSong v-if="userLogged && currentSong && currentSong[0]" />
         </Transition>
-        <div v-if="!radio" class="player-name player-name-help">
+        <div v-if="!stream" class="player-name player-name-help">
           {{ $t('message.player.placeholder') }}
         </div>
-        <PlayerFavorite v-if="radio" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
+        <PlayerFavorite v-if="stream" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
           @favoriteToggle="() => favoriteToggle()" />
         <timer></timer>
       </div>
@@ -282,31 +282,31 @@ export default defineComponent({
   },
   watch: {
     playing(val: PlayerStatus) {
-      if (this.radio === null) {
+      if (this.stream === null) {
         return;
       }
 
-      if (val === PlayerStatus.Playing) {
-        let channelName;
-
-        if ((this.radio.type === config.PLAYER_TYPE_RADIO
-                && this.radio.streams[this.radioStreamCodeName!].current_song === true)
-            || (this.radio.type === config.PLAYER_TYPE_STREAM
-                && this.radio.current_song === true)) {
-          const channelNameEnd = this.radio.type === config.PLAYER_TYPE_RADIO
-              ? this.radioStreamCodeName : this.radio.radio_stream_code_name;
-          channelName = `song:${channelNameEnd}`;
-        } else {
-          channelName = `url:${this.streamUrl}`;
-        }
-
-        this.joinChannel(channelName);
-      }
+      // if (val === PlayerStatus.Playing) {
+      //   let channelName;
+      //
+      //   if ((this.radio.type === config.PLAYER_TYPE_RADIO
+      //           && this.radio.streams[this.radioStreamCodeName!].current_song === true)
+      //       || (this.radio.type === config.PLAYER_TYPE_STREAM
+      //           && this.radio.current_song === true)) {
+      //     const channelNameEnd = this.radio.type === config.PLAYER_TYPE_RADIO
+      //         ? this.radioStreamCodeName : this.radio.radio_stream_code_name;
+      //     channelName = `song:${channelNameEnd}`;
+      //   } else {
+      //     channelName = `url:${this.streamUrl}`;
+      //   }
+      //
+      //   this.joinChannel(channelName);
+      // }
 
       if (this.externalPlayer === true) { return; }
 
       if (val === PlayerStatus.Loading && this.streamUrl !== null) {
-        const options = PlayerUtils.buildPlayOptions(this.radio);
+        const options = PlayerUtils.buildPlayOptions(this.stream);
         this.play(this.streamUrl, options);
       } else if (val === PlayerStatus.Stopped) {
         this.pause();
@@ -364,8 +364,8 @@ export default defineComponent({
 
       if (display) {
         PlayerUtils.showNotification(
+            this.stream,
             this.radio,
-            this.radioStreamCodeName,
             this.show
         );
       }
@@ -382,11 +382,11 @@ export default defineComponent({
       'displayVolume',
       'streamUrl',
       'timerIsActive',
+      'stream',
       'radio',
       'show',
       'prevRadio',
       'externalPlayer',
-      'radioStreamCodeName',
       'playing',
       'muted',
       'volume',
@@ -402,22 +402,22 @@ export default defineComponent({
     },
     isFavorite(store: any): boolean {
       // (I don't remember where that store argument comes from and why it works)
-      if (this.radio === null) {
+      if (this.stream === null) {
         return false;
       }
 
       // radio
-      if (typeUtils.isRadio(this.radio)) {
+      if (this.radio) {
         return store.isRadioFavorite(this.radio.code_name);
       }
 
       // stream
-      return this.streamFavorites.indexOf(this.radio.code_name) !== -1;
+      return this.streamFavorites.indexOf(this.stream.code_name) !== -1;
     },
     favoriteTitle(): string {
-      return (this.radio !== null && this.isFavorite === true
-          ? this.$i18n.t('message.player.favorites.remove')
-          : this.$i18n.t('message.player.favorites.add'));
+      return (this.stream !== null && this.isFavorite === true
+          ? this.$t('message.player.favorites.remove')
+          : this.$t('message.player.favorites.add'));
     },
     /* used to watch multiple properties at once (will not be necessary in Vue3) */
     /* todo revisit now that we use Vue 3 */
@@ -462,17 +462,6 @@ export default defineComponent({
       this.playNextDispatch();
       // throttle(function (this: any) { this.playNextDispatch(); }, 200, { leading: true, trailing: false });
     },
-    radioLink(): string {
-      if (this.radio === null) {
-        return '#';
-      }
-
-      if (this.radio.type === 'radio') {
-        return `/${this.locale}/radio/${this.radio.code_name}`;
-      }
-
-      return `/${this.locale}/streaming/${this.radio.code_name}`;
-    },
     toggleMute() {
       this.toggleMuteDispatch();
 
@@ -488,7 +477,7 @@ export default defineComponent({
       if (this.externalPlayer === false) {
         this.$gtag.event(config.GTAG_ACTION_TOGGLE_PLAY, {
           event_category: config.GTAG_CATEGORY_PLAYER,
-          event_label: this.radio !== null ? this.radio!.code_name : null,
+          event_label: this.stream ? this.stream.id : null,
           value: config.GTAG_ACTION_TOGGLE_PLAY_VALUE
         });
       }
@@ -556,14 +545,14 @@ export default defineComponent({
 
               if (data.fatal) {
                 this.displayToast({
-                  message: this.$i18n.t('message.player.play_error'),
+                  message: this.$t('message.player.play_error'),
                   type: 'error'
                 });
 
                 this.playError();
 
-                if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
-                  this.setStreamPlayingError(this.radio.code_name, data.details);
+                if (this.stream) {
+                  this.setStreamPlayingError(this.stream.id, data.details);
                 }
               }
             });
@@ -612,14 +601,14 @@ export default defineComponent({
             }
 
             this.displayToast({
-              message: this.$i18n.t('message.player.play_error'),
+              message: this.$t('message.player.play_error'),
               type: 'error'
             });
 
             this.playError();
 
-            if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
-              this.setStreamPlayingError(this.radio.code_name);
+            if (this.stream) {
+              this.setStreamPlayingError(this.stream.id);
             }
           });
 
@@ -678,19 +667,19 @@ export default defineComponent({
 
           if (error.name === 'NotAllowedError') {
             this.displayToast({
-              message: this.$i18n.t('message.player.autoplay_error'),
+              message: this.$t('message.player.autoplay_error'),
               type: 'error'
             });
           } else {
             this.displayToast({
-              message: this.$i18n.t('message.player.play_error'),
+              message: this.$t('message.player.play_error'),
               type: 'error'
             });
 
             this.playError();
 
-            if (this.radio && this.radio.type === config.PLAYER_TYPE_STREAM) {
-              this.setStreamPlayingError(this.radio.code_name, error.name);
+            if (this.stream) {
+              this.setStreamPlayingError(this.stream.id, error.name);
             }
           }
         });
@@ -796,10 +785,10 @@ export default defineComponent({
       tooltip.set('player-timer', config.COOKIE_TOOLTIP_TIMER);
     },
     favoriteToggle() {
-      if (this.radio !== null) {
+      if (this.stream) {
         this.$gtag.event(config.GTAG_ACTION_FAVORITE_TOGGLE, {
-          event_category: config.GTAG_CATEGORY_SCHEDULE,
-          event_label: this.radio.code_name,
+          event_category: config.GTAG_CATEGORY_PLAYER,
+          event_label: this.stream.id,
           value: config.GTAG_ACTION_FAVORITE_TOGGLE_VALUE
         });
 
@@ -817,13 +806,13 @@ export default defineComponent({
       );
     },
     togglePrevious() {
-      if (this.prevRadio === null) {
+      if (!this.prevRadio) {
         return;
       }
 
       this.$gtag.event(config.GTAG_ACTION_TOGGLE_PREVIOUS, {
         event_category: config.GTAG_CATEGORY_PLAYER,
-        event_label: this.prevRadio.code_name,
+        event_label: this.prevRadio.id,
         value: config.GTAG_ACTION_TOGGLE_PREVIOUS_VALUE
       });
 

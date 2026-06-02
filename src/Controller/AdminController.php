@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\Collection;
 use App\Entity\ListeningSession;
 use App\Entity\Radio;
-use App\Entity\RadioStream;
 use App\Entity\Stream;
 use App\Entity\StreamCheck;
 use App\Entity\StreamOverloading;
@@ -21,14 +20,10 @@ use App\Form\StreamOverloadingType;
 use App\Service\ApiClient;
 use App\Service\DateUtils;
 use Meilisearch\Bundle\SearchService;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -42,21 +37,20 @@ class AdminController extends AbstractBaseController
     public function indexAction(EntityManagerInterface $em): Response
     {
         $radios = $em->getRepository(Radio::class)->getActiveRadiosFull();
-        $stats = $em->getRepository(ScheduleEntry::class)->getStatsByDayAndRadio();
-        $radioStreamsStatus = $em->getRepository(RadioStream::class)->getStreamsStatus();
-        $currentSongStatus = $em->getRepository(RadioStream::class)->getCurrentSongStatus();
+        // $currentSongStatus = $em->getRepository(RadioStream::class)->getCurrentSongStatus();
         $streamSongStatus = $em->getRepository(StreamSong::class)->getCurrentSongStatus();
         $users = $em->getRepository(User::class)->lastNAccounts();
         $userCount = $em->getRepository(User::class)->count([]);
+        $noSchedule = $em->getRepository(ScheduleEntry::class)->getSubRadiosWithNoSchedule();
 
         return $this->render('default/admin/dashboard.html.twig', [
             'radios' => $radios,
-            'stats' => $stats,
             'users' => $users,
-            'radio_streams_status' => $radioStreamsStatus,
-            'current_song_status' => $currentSongStatus,
+            // 'radio_streams_status' => $radioStreamsStatus,
+//            'current_song_status' => $currentSongStatus,
             'stream_song_status' => $streamSongStatus,
-            'userCount' => $userCount
+            'userCount' => $userCount,
+            'noSchedule' => $noSchedule
         ]);
     }
 
@@ -178,7 +172,6 @@ class AdminController extends AbstractBaseController
             'dateStart' => $dates[0],
             'dateEnd' => $dates[1],
             'dateRange' => $dateRange,
-            'old_view' => $request->query->get('old', null) !== null
         ]);
     }
 
@@ -568,34 +561,34 @@ class AdminController extends AbstractBaseController
         return $this->redirectToRoute('admin_playing_errors', [], 301);
     }
 
-    #[Route('/reset_stream/{id}', name: 'admin_reset_stream_retries')]
-    public function resetStreamRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
-    {
-        $radioStream->setRetries(0);
-        $radioStream->setStatus(true);
-
-        $em->persist($radioStream);
-        $em->flush();
-
-        return $this->redirectToRoute('admin', [], 301);
-    }
-
-    #[Route('/reset_current_song/{id}', name: 'admin_reset_current_song_retries')]
-    public function resetCurrentSongRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
-    {
-        $radioStream->setCurrentSongRetries(0);
-//        $radioStream->setCurrentSong(true);
-
-        $em->persist($radioStream);
-        $em->flush();
-
-        return $this->redirectToRoute('admin', [], 301);
-    }
+//    #[Route('/reset_stream/{id}', name: 'admin_reset_stream_retries')]
+//    public function resetStreamRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
+//    {
+//        $radioStream->setRetries(0);
+//        $radioStream->setStatus(true);
+//
+//        $em->persist($radioStream);
+//        $em->flush();
+//
+//        return $this->redirectToRoute('admin', [], 301);
+//    }
+//
+//    #[Route('/reset_current_song/{id}', name: 'admin_reset_current_song_retries')]
+//    public function resetCurrentSongRetries(RadioStream $radioStream, EntityManagerInterface $em): Response
+//    {
+//        $radioStream->setCurrentSongRetries(0);
+////        $radioStream->setCurrentSong(true);
+//
+//        $em->persist($radioStream);
+//        $em->flush();
+//
+//        return $this->redirectToRoute('admin', [], 301);
+//    }
 
     #[Route('/reset_current_song_all', name: 'admin_reset_current_song_retries_all')]
     public function resetCurrentSongRetriesAll(EntityManagerInterface $em): Response
     {
-        $em->getRepository(RadioStream::class)->resetAllLiveSongErrors();
+        // $em->getRepository(RadioStream::class)->resetAllLiveSongErrors();
 
         return $this->redirectToRoute('admin', [], 301);
     }

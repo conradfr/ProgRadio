@@ -74,8 +74,13 @@ class StreamsController  extends AbstractBaseController
         );
     }
 
+    // this is used in the frontend to get the corresponding stream when favoriting a radio
     #[Route('/bestradio/{codeName}', name: 'streams_best_radio')]
-    public function bestRadio(string $codeName, EntityManagerInterface $em): Response
+    public function bestRadio(
+        string $codeName,
+        Request $request,
+        EntityManagerInterface $em,
+    ): Response
     {
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName]);
 
@@ -83,7 +88,7 @@ class StreamsController  extends AbstractBaseController
             throw new NotFoundHttpException('radio not found');
         }
 
-        $stream =  $em->getRepository(Stream::class)->getBestStreamForRadio($radio);
+        $stream = $em->getRepository(Stream::class)->getBestStreamForRadio($radio, Favorites::getFavoriteSubRadios($request));
         $streamToReturn = null;
 
         if ($stream !== null) {
@@ -156,14 +161,14 @@ class StreamsController  extends AbstractBaseController
         if ($user->getFavoriteStreams()->contains($stream)) {
             $user->removeFavoriteStream($stream);
 
-            if ($stream->hasMainRadioStream()) {
-                $user->removeFavoriteRadio($stream->getRadioStream()->getRadio());
+            if ($stream->getRadio()) {
+                $user->removeFavoriteRadio($stream->getRadio());
             }
         } else {
             $user->addFavoriteStream($stream);
 
-            if ($stream->hasMainRadioStream()) {
-                $user->addFavoriteRadio($stream->getRadioStream()->getRadio());
+            if ($stream->getRadio()) {
+                $user->addFavoriteRadio($stream->getRadio());
             }
         }
 

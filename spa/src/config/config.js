@@ -30,6 +30,7 @@ export const COLLECTION_EXCLUDED_FROM_ALL = ['favorites', 'francebleu'];
 export const COLLECTION_ALL = 'all';
 
 export const RADIO_LIST_IGNORE_COUNTRY = 'FR';
+export const SOURCE_INCREMENT_COUNT = 'radio-browser';
 
 export const ERROR_DISPLAY_THRESHOLD = 5;
 
@@ -40,10 +41,10 @@ export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites';
 export const CACHE_KEY_STREAM_FAVORITES = 'stream_favorites';
 export const CACHE_KEY_STREAM_COUNTRIES = 'stream_countries';
 
-export const LAST_RADIO_PLAYED = 'lastplayed';
-export const LAST_RADIO_STREAM_PLAYED = 'stream-lastplayed';
-export const PREV_RADIO_PLAYED = 'prevplayed';
-export const PREV_RADIO_STREAM_PLAYED = 'stream-prevplayed';
+export const LAST_STREAM_PLAYED = 'last_stream_played';
+export const LAST_RADIO_PLAYED = 'last_played_radio';
+export const PREV_STREAM_PLAYED = 'prev_stream_played';
+export const PREV_RADIO_PLAYED = 'prev_radio_played';
 
 export const COOKIE_PREFIX = 'progradio_v4';
 export const COOKIE_TTL = '31536000';
@@ -85,6 +86,7 @@ export const PLAYER_NOTIFICATION_ID = 'progradio-play';
 export const PLAYER_NOTIFICATION_LENGTH = 3000; /* ms */
 
 export const PLAYER_TYPE_RADIO = 'radio';
+export const PLAYER_TYPE_RADIO_STREAM = 'radio_stream';
 export const PLAYER_TYPE_STREAM = 'stream';
 
 export const WEBSOCKET_DISCONNECT_AFTER = 36000000; /* 10h in ms */
@@ -118,7 +120,7 @@ export const PLAYER_STOP_DELAY_LOWER_BANDWIDTH_THRESHOLD_MBPS = 0.5;
 export const PLAYER_STOP_DELAY_HIGH_BANDWIDTH_MS = 1800000; // 30mn
 export const PLAYER_STOP_DELAY_LOWER_BANDWIDTH_MS = 600000; // 10mn
 
-export const PLAYER_MULTI_ALLOWED_TYPE = '4g';
+export const PLAYER_MULTI_ALLOWED_TYPE = ['4g', '5g'];
 export const PLAYER_MULTI_DISABLED_TYPE = 'cellular';
 
 // from https://developer.android.com/reference/android/media/session/PlaybackState

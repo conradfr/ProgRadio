@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Lapremiere do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericRtbs
 
   @behaviour ProgRadioApi.SongProvider

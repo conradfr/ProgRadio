@@ -16,13 +16,17 @@ defmodule ProgRadioApi.Streams do
   alias ProgRadioApi.Cache
   alias ProgRadioApi.Search
   alias ProgRadioApi.Importer.ImageImporter
-  alias ProgRadioApi.{Radio, RadioStream, Stream, StreamOverloading, StreamCheck, StreamSong}
+  alias ProgRadioApi.{Radio, Stream, StreamOverloading, StreamCheck, StreamSong}
 
   @default_limit 48
 
   @check_batch_size 20
   @check_timeout 60_000
   @check_task_timeout 90_000
+
+  @thumbnail_stream_path "media/stream/"
+  @img_placeholder "img/stream-placeholder.png"
+  @radio_path "img/radio/page/"
 
   @redis_ttl 172_800
   @text_key "searches"
@@ -54,16 +58,16 @@ defmodule ProgRadioApi.Streams do
   def get_one(id) do
     base_query()
     |> where([s], s.id == ^id)
-    |> group_by([s, rs, r, ss], [
+    |> group_by([s, r, ss], [
       s.id,
       r.code_name,
       ss.code_name,
       ss.enabled,
-      rs.current_song,
-      rs.code_name,
-      rs.url
+      s.radio_stream_code_name,
+      s.stream_url
     ])
     |> Repo.one()
+    |> img_to_full_url()
   end
 
   @decorate cacheable(
@@ -75,9 +79,11 @@ defmodule ProgRadioApi.Streams do
     query =
       from s in Stream,
         where: s.id == ^id,
-        preload: [:radio_stream, :stream_song]
+        preload: [:stream_song]
 
-    Repo.one(query)
+    query
+    |> Repo.one()
+    |> img_to_full_url()
   end
 
   # special case : search + random button
@@ -104,23 +110,24 @@ defmodule ProgRadioApi.Streams do
             |> Map.get("id")
             |> get_one()
             |> List.wrap()
+            |> Enum.map(&img_to_full_url/1)
 
           [stream, total]
       end
     rescue
-      _ -> build_query(params)
+      _ -> build_query(params) |> Enum.map(&img_to_full_url/1)
     end
   end
 
   # avoid caching random sort
-  def get(%{:sort => "random"} = params), do: build_query(params)
+  def get(%{:sort => "random"} = params), do: build_query(params) |> Enum.map(&img_to_full_url/1)
 
   @decorate cacheable(
               cache: Cache,
               key: {@cache_prefix_stream, params},
               opts: [ttl: @cache_ttl_stream_last]
             )
-  def get(%{:sort => "last"} = params), do: build_query(params)
+  def get(%{:sort => "last"} = params), do: build_query(params) |> Enum.map(&img_to_full_url/1)
 
   # when there is a search text and supported sort we use meilisearch
   #  @decorate cacheable(
@@ -142,10 +149,11 @@ defmodule ProgRadioApi.Streams do
         |> add_ids(ids)
         |> add_sort(params)
         |> Repo.all()
+        |> Enum.map(&img_to_full_url/1)
 
       [streams, results.estimatedTotalHits]
     rescue
-      _ -> build_query(params)
+      _ -> build_query(params) |> Enum.map(&img_to_full_url/1)
     end
   end
 
@@ -154,7 +162,7 @@ defmodule ProgRadioApi.Streams do
               key: {@cache_prefix_stream, params},
               opts: [ttl: @cache_ttl_stream]
             )
-  def get(params), do: build_query(params)
+  def get(params), do: build_query(params) |> Enum.map(&img_to_full_url/1)
 
   @decorate cacheable(
               cache: Cache,
@@ -296,6 +304,26 @@ defmodule ProgRadioApi.Streams do
     Repo.all(query)
   end
 
+  def img_to_full_url(%{} = stream) do
+    img_url =
+      cond do
+        is_map_key(stream, :img_alt) and not is_nil(stream.img_alt) ->
+          @radio_path <> stream.img_alt <> ".png"
+
+        is_map_key(stream, :radio_code_name) and not is_nil(stream.radio_code_name) ->
+          @radio_path <> stream.radio_code_name <> ".png"
+
+        is_map_key(stream, :img) and not is_nil(stream.img) ->
+          @thumbnail_stream_path <> stream.img
+
+        true ->
+          @img_placeholder
+      end
+
+    stream
+    |> Map.put(:img, Application.get_env(:progradio_api, :cdn_base_url) <> img_url)
+  end
+
   # ---------- INTERNAL ----------
 
   defp build_query(params) do
@@ -310,19 +338,18 @@ defmodule ProgRadioApi.Streams do
 
   defp base_query() do
     from s in Stream,
-      left_join: rs in RadioStream,
-      on: rs.id == s.radio_stream_id,
       left_join: r in Radio,
-      on: r.id == rs.radio_id,
+      on: r.id == s.radio_id,
       left_join: ss in StreamSong,
       on: ss.id == s.stream_song_id,
       where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
       limit: @default_limit,
       select: %{
+        id: s.id,
         code_name: s.id,
         name: s.name,
         img: s.img,
-        stream_url: fragment("COALESCE(?, ?)", rs.url, s.stream_url),
+        stream_url: s.stream_url,
         force_hls: s.force_hls,
         force_mpd: s.force_mpd,
         force_proxy: s.force_proxy,
@@ -330,27 +357,12 @@ defmodule ProgRadioApi.Streams do
         country_code: s.country_code,
         website: s.website,
         description: s.description,
-        clicks_last_24h: s.clicks_last_24h,
         score: s.score,
         source: s.source,
         popup: s.popup,
         type: "stream",
         playing_error: s.playing_error,
         radio_code_name: fragment("COALESCE(?)", r.code_name),
-        img_alt:
-          fragment(
-            "COALESCE(CASE WHEN BOOL_AND(?) is TRUE THEN ? ELSE null END, ?)",
-            rs.own_logo,
-            rs.code_name,
-            r.code_name
-          ),
-        current_song:
-          fragment(
-            "CASE WHEN(? IS NOT NULL and ? = TRUE) THEN TRUE ELSE ? END",
-            ss.code_name,
-            ss.enabled,
-            rs.current_song
-          ),
         radio_stream_code_name:
           fragment(
             "CASE WHEN(? IS NOT NULL and ? = TRUE AND ? IS NOT NULL) THEN CONCAT(?, '_', ?) ELSE ? END",
@@ -359,7 +371,20 @@ defmodule ProgRadioApi.Streams do
             s.stream_song_code_name,
             ss.code_name,
             s.stream_song_code_name,
-            rs.code_name
+            s.radio_stream_code_name
+          ),
+        img_alt:
+          fragment(
+            "COALESCE(CASE WHEN BOOL_AND(?) is TRUE THEN ? ELSE null END, ?)",
+            s.own_logo,
+            s.radio_stream_code_name,
+            r.code_name
+          ),
+        current_song:
+          fragment(
+            "CASE WHEN(? IS NOT NULL and ? = TRUE) THEN TRUE ELSE FALSE END",
+            ss.code_name,
+            ss.enabled
           )
       }
   end
@@ -406,70 +431,65 @@ defmodule ProgRadioApi.Streams do
       "name" ->
         query
         |> order_by([s], asc: s.name)
-        |> group_by([s, rs, r, ss], [
+        |> group_by([s, r, ss], [
           s.id,
           r.code_name,
           ss.code_name,
           ss.enabled,
-          rs.current_song,
-          rs.code_name,
-          rs.url
+          s.radio_stream_code_name,
+          s.stream_url
         ])
 
       "popularity" ->
         query
-        |> order_by([s], desc: s.score, desc: s.clicks_last_24h)
-        |> group_by([s, rs, r, ss], [
+        |> order_by([s], desc: s.score)
+        |> group_by([s, r, ss], [
           s.id,
           r.code_name,
           ss.code_name,
           ss.enabled,
-          rs.current_song,
-          rs.code_name,
-          rs.url
+          s.radio_stream_code_name,
+          s.stream_url
         ])
 
       "last" ->
         query
         |> where(
-          [s, rs, r, ss],
+          [s, r, ss],
           fragment("? < now() at time zone 'utc' + interval '120 second'", s.last_listening_at)
         )
-        |> order_by([s, rs, r, ss], desc: max(s.last_listening_at))
-        |> group_by([s, rs, r, ss], [
+        |> order_by([s, r, ss], desc: max(s.last_listening_at))
+        |> group_by([s, r, ss], [
           s.id,
           r.code_name,
           ss.code_name,
           ss.enabled,
-          rs.current_song,
-          rs.code_name,
-          rs.url
+          s.radio_stream_code_name,
+          s.stream_url
         ])
 
       "random" ->
         query
         |> where([s], s.playing_error < @error_random_cutoff)
         |> order_by(fragment("RANDOM()"))
-        |> group_by([s, rs, r, ss], [
+        |> group_by([s, r, ss], [
           s.id,
           r.code_name,
           ss.code_name,
           ss.enabled,
-          rs.current_song,
-          rs.code_name,
-          rs.url
+          s.radio_stream_code_name,
+          s.stream_url
         ])
 
       _ ->
         query
-        |> group_by([s, rs, r, ss], [
+        |> group_by([s, r, ss], [
           s.id,
           r.code_name,
           ss.code_name,
           ss.enabled,
-          rs.current_song,
-          rs.code_name,
-          rs.url
+          s.radio_stream_code_name,
+          s.stream_url
         ])
     end
   end
@@ -583,15 +603,12 @@ defmodule ProgRadioApi.Streams do
         )
 
         from(s in Stream,
-          left_join: rs in RadioStream,
-          on: rs.id == s.radio_stream_id,
           left_join: r in Radio,
-          on: r.id == rs.radio_id,
+          on: r.id == s.radio_id,
           where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
           select: %{
             id: s.id,
-            code_name: fragment("COALESCE(?,  ?::text)", rs.code_name, s.id)
-            #            clicks_last_24h: fragment("COALESCE(?,  0)", s.clicks_last_24h)
+            code_name: fragment("COALESCE(?,  ?::text)", s.radio_stream_code_name, s.id)
           }
         )
         |> Repo.all()
@@ -759,7 +776,7 @@ defmodule ProgRadioApi.Streams do
           (is_nil(so.enabled) or so.enabled != false) and s.banned == false and
             is_nil(s.redirect_to),
         #        where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
-        order_by: [desc: s.clicks_last_24h],
+        order_by: [desc: s.score],
         limit: ^how_many,
         offset: ^offset
 

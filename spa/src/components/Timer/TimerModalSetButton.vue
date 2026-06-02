@@ -34,13 +34,13 @@ export default defineComponent({
   computed: {
     text() {
       if (this.asHour) {
-        return this.$i18n.t(
+        return this.$t(
           'message.player.timer.modal.x_hours',
           { hours: (parseInt(this.minutes, 10) / 60) }
         );
       }
 
-      return this.$i18n.t('message.player.timer.modal.x_minutes', { minutes: this.minutes });
+      return this.$t('message.player.timer.modal.x_minutes', { minutes: this.minutes });
     },
   },
   methods: {

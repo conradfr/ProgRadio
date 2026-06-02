@@ -8,31 +8,20 @@ defmodule ProgRadioApi.ListeningSessions do
 
   alias ProgRadioApi.Repo
   #  alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Stream, RadioStream, ListeningSession}
+  alias ProgRadioApi.{Stream, ListeningSession}
 
   @last_update_max_minutes 15
 
   #  @cache_prefix "listening_session_"
   #  @cache_ttl 90_000
 
-  #  @decorate cacheable(
-  #              cache: Cache,
-  #              key: [@cache_prefix, id],
-  #              opts: [ttl: @cache_ttl]
-  #            )
-  def get_listening_session!(id), do: Repo.get!(ListeningSession, id)
-
-  #  @decorate cacheable(
-  #              cache: Cache,
-  #              key: [@cache_prefix, radio_stream_code_name],
-  #              opts: [ttl: @cache_ttl]
-  #            )
-  def get_listening_session!(id, %{"radio_stream_code_name" => radio_stream_code_name} = _attrs) do
-    radio_stream = Repo.get_by(RadioStream, code_name: radio_stream_code_name)
-
-    case radio_stream do
-      nil -> nil
-      _ -> Repo.get_by(ListeningSession, id: id, radio_stream_id: radio_stream.id)
+  # Legacy: kept for old mobile apps for now
+  # TODO remove after some time
+  def get_listening_session!(id, %{"code_name" => stream_id} = _attrs) do
+    with stream when not is_nil(stream) <- Repo.get(Stream, stream_id) do
+      Repo.get_by(ListeningSession, id: id, stream_id: stream.id)
+    else
+      _ -> nil
     end
   end
 
@@ -49,66 +38,34 @@ defmodule ProgRadioApi.ListeningSessions do
     end
   end
 
-  #  @decorate cacheable(
-  #              cache: Cache,
-  #              key: [@cache_prefix, code_name],
-  #              opts: [ttl: @cache_ttl]
-  #            )
-  def get_listening_session!(id, %{"code_name" => code_name} = _attrs) do
-    case Ecto.UUID.cast(code_name) do
-      # not uuid, must be a radio_stream
-      :error ->
-        radio_stream = Repo.get_by(RadioStream, code_name: code_name)
-
-        case radio_stream do
-          nil -> nil
-          _ -> Repo.get_by(ListeningSession, id: id, radio_stream_id: radio_stream.id)
-        end
-
-      _ ->
-        Repo.get_by(ListeningSession, id: id, stream_id: code_name)
-    end
-  end
-
-  def create_listening_session(attrs \\ %{}, remote_ip \\ nil)
-
-  # listening session for radios or streams
+  # Legacy: kept for old mobile apps for now
+  # TODO remove after some time
   def create_listening_session(
-        %{"id" => id} = attrs,
+        %{"id" => stream_id} = attrs,
         remote_ip
       ) do
-    case Ecto.UUID.cast(id) do
-      # not uuid, must be a radio_stream
-      :error ->
-        attrs
-        |> Map.put("radio_stream_code_name", id)
-        |> Map.delete("id")
-        |> create_listening_session(remote_ip)
+    with %{} = stream <- Repo.get(Stream, stream_id) do
+      params = %{
+        "last_listening_at" => NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+      }
 
-      _ ->
-        attrs
-        |> Map.put("stream_id", id)
-        |> Map.delete("id")
-        |> create_listening_session(remote_ip)
+      stream
+      |> Stream.changeset_last_listening_at(params)
+      |> Repo.update()
+
+      ip_binary = get_ip_as_binary(remote_ip)
+
+      stream
+      |> Ecto.build_assoc(:listening_session, %ListeningSession{ip_address: ip_binary})
+      |> ListeningSession.changeset(attrs)
+      |> Repo.insert()
+    else
+      _ -> {:error, nil}
     end
-  end
-
-  # listening session for radios
-  def create_listening_session(
-        %{"radio_stream_code_name" => radio_stream_code_name} = attrs,
-        remote_ip
-      )
-      when is_map_key(attrs, "radio_stream_code_name") do
-    ip_binary = get_ip_as_binary(remote_ip)
-
-    Repo.get_by(RadioStream, code_name: radio_stream_code_name)
-    |> Ecto.build_assoc(:listening_session, %ListeningSession{ip_address: ip_binary})
-    |> ListeningSession.changeset(attrs)
-    |> Repo.insert()
   end
 
   # listening session for streams
-  def create_listening_session(%{"stream_id" => stream_id} = attrs, remote_ip)
+  def create_listening_session(%{"stream_id" => stream_id} = attrs \\ %{}, remote_ip \\ nil)
       when is_map_key(attrs, "stream_id") do
     with %{} = stream <- Repo.get(Stream, stream_id) do
       params = %{

@@ -93,7 +93,7 @@ export default defineComponent({
           this.displayToast(
             {
               type: 'success',
-              message: this.$i18n.t('message.toast.home.disabled')
+              message: this.$t('message.toast.home.disabled')
             });
 
           this.$gtag.event(GTAG_ACTION_HOME_REMOVE, {
@@ -113,7 +113,7 @@ export default defineComponent({
         this.displayToast(
           {
             type: 'success',
-            message: this.$i18n.t('message.toast.home.enabled')
+            message: this.$t('message.toast.home.enabled')
           });
 
         this.$gtag.event(GTAG_ACTION_HOME_SET, {

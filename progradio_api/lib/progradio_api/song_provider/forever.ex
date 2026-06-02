@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Forever do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes3
 
   @behaviour ProgRadioApi.SongProvider

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Radio;
-use App\Entity\RadioStream;
-use App\Entity\SubRadio;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -33,9 +31,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToRoute('RadioStream', 'fas fa-list', 'easy_admin_radio_stream_index');
         yield MenuItem::linkToRoute('Radio', 'fas fa-list', 'easy_admin_radio_index');
-        yield MenuItem::linkToRoute('SubRadio', 'fas fa-list', 'easy_admin_sub_radio_index');
         yield MenuItem::linkToRoute('Stream', 'fas fa-list', 'easy_admin_stream_index');
         yield MenuItem::linkToRoute('StreamAutoUpdate', 'fas fa-list', 'easy_admin_stream_auto_update_index');
     }

@@ -13,8 +13,7 @@
         :radio="radio"
         :program="entry"
         :intersectionObserver="intersectionObserver"
-        :isIntersecting="intersected.indexOf(entry.hash) !== -1"
-        :radioPlaying="playing && playingStreamCodeName === `${radio.code_name}_main`">
+        :isIntersecting="intersected.indexOf(entry.hash) !== -1">
       </schedule-radio-program>
     </template>
   </div>
@@ -30,7 +29,6 @@ import type { ScheduleOfSubRadio } from '@/types/schedule';
 
 import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
-import { usePlayerStore } from '@/stores/playerStore';
 
 import ScheduleRadioProgram from './ScheduleRadioProgram.vue';
 
@@ -63,10 +61,6 @@ export default defineComponent({
   computed: {
     ...mapState(useGlobalStore, ['isLoading']),
     ...mapState(useScheduleStore, ['scrollIndex']),
-    ...mapState(usePlayerStore, {
-      playing: 'playing',
-      playingStreamCodeName: 'radioStreamCodeName'
-    }),
     noProgramStyleObject() {
       return {
         left: `${this.scrollIndex}px`,

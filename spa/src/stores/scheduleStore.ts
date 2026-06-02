@@ -10,7 +10,7 @@ import hash from 'object-hash';
 import type { Category } from '@/types/category';
 import type { Collection } from '@/types/collection';
 import type { Radio } from '@/types/radio';
-import type { SubRadio } from '@/types/sub_radio';
+import type { Stream } from '@/types/stream';
 import type { Schedule } from '@/types/schedule';
 import type { ScheduleDisplay } from '@/types/schedule_display';
 import type { Program } from '@/types/program';
@@ -150,14 +150,14 @@ export const useScheduleStore = defineStore('schedule', {
         return false;
       }
 
-      return !state.radios[radioCodeName].streams[radioStreamCodeName].sub_radio;
+      return !state.radios[radioCodeName].streams[radioStreamCodeName].is_sub_radio;
     },
-    getSubRadio: state => (radioCodeName: string) : SubRadio => {
+    getSubRadio: state => (radioCodeName: string): Stream => {
       const userStore = useUserStore();
       const userSubRadioCodeName = userStore.getSubRadioCodeName(radioCodeName);
 
       if (userSubRadioCodeName !== null) {
-        return state.radios[radioCodeName].sub_radios[userSubRadioCodeName];
+        return state.radios[radioCodeName].streams[userSubRadioCodeName];
       }
 
       return ScheduleUtils.getMainSubRadio(radioCodeName, state.radios);
@@ -257,7 +257,11 @@ export const useScheduleStore = defineStore('schedule', {
         this.categoriesExcluded,
         this.preRollExcluded);
 
-      AndroidApi.list(radios);
+      const radioStreams = radios.map((entry: Radio) => {
+        return this.getSubRadio(entry.code_name);
+      });
+
+      AndroidApi.list(radioStreams);
     },
 
     // ---------- CATEGORY ----------
@@ -332,23 +336,30 @@ export const useScheduleStore = defineStore('schedule', {
       const globalStore = useGlobalStore();
       const userStore = useUserStore();
 
+      let hasFullCache = true;
+
       // use cache before network fetching
       if (cache.hasCache(config.CACHE_KEY_RADIOS)) {
         this.radios = cache.getCache(config.CACHE_KEY_RADIOS);
+      } else {
+        hasFullCache = false;
       }
 
       if (cache.hasCache(config.CACHE_KEY_CATEGORIES)) {
         this.categories = cache.getCache(config.CACHE_KEY_CATEGORIES);
+      } else {
+        hasFullCache = false;
       }
 
-      if (cache.hasCache(config.CACHE_KEY_CATEGORIES)) {
+      if (cache.hasCache(config.CACHE_KEY_COLLECTIONS)) {
         this.updateCollections(cache.getCache(config.CACHE_KEY_COLLECTIONS));
+      } else {
+        hasFullCache = false;
       }
-
-      globalStore.setLoading(true);
 
       setTimeout(
         async () => {
+          globalStore.setLoading(true);
           const radiosData = await ScheduleApi.getRadiosData();
 
           if (radiosData !== null) {
@@ -369,7 +380,7 @@ export const useScheduleStore = defineStore('schedule', {
 
           globalStore.setLoading(false);
         },
-        50
+        hasFullCache ? 2500 : 50
       );
     },
     getSchedule(params: any = {}) {
@@ -414,7 +425,7 @@ export const useScheduleStore = defineStore('schedule', {
               this.updateSchedule(scheduleData);
             } */
           },
-          75
+          100
         );
       } else {
         if (cache.hasSessionCache(cacheHash)) {
@@ -423,7 +434,6 @@ export const useScheduleStore = defineStore('schedule', {
 
         setTimeout(
           async () => {
-            // let scheduleData = await ScheduleApi.getSchedule(dateStr, { now: true });
             const scheduleData = await ScheduleApi.getSchedule(dateStr);
             if (scheduleData !== null) {
               this.updateSchedule(scheduleData);
@@ -435,7 +445,7 @@ export const useScheduleStore = defineStore('schedule', {
               this.updateSchedule(scheduleData);
             } */
           },
-          75
+          100
         );
       }
     },

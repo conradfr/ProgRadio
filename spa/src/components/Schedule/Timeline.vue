@@ -60,8 +60,8 @@ export default defineComponent({
       displayFilter: 'displayCategoryFilter',
     }),
     scheduleDate(): string {
-      if (this.isToday === true) { return this.$i18n.t('message.schedule.today'); }
-      if (this.isTomorrow === true) { return this.$i18n.t('message.schedule.tomorrow'); }
+      if (this.isToday === true) { return this.$t('message.schedule.today'); }
+      if (this.isTomorrow === true) { return this.$t('message.schedule.tomorrow'); }
       return this.cursorTime.toLocaleString(DateTime.DATE_SHORT);
     }
   },

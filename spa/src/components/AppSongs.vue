@@ -57,20 +57,13 @@ export default defineComponent({
     SongLinks
   },
   mounted() {
-    document.title = this.$i18n.t('message.songs_page.title');
+    document.title = this.$t('message.songs_page.title');
   },
   computed: {
     ...mapState(useUserStore, ['songs'])
   },
   methods: {
     ...mapActions(useUserStore, ['deleteSong']),
-    amazonLink(song: string) {
-      if (!song || song === '') {
-        return null;
-      }
-
-      return PlayerUtils.getAmazonSongLink(song);
-    },
     removeSong(songId: number) {
       this.deleteSong(songId);
 

@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Radiobob do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLoveradio
   alias ProgRadioApi.SongProvider
 

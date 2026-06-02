@@ -17,10 +17,10 @@ export default defineComponent({
     ...mapState(usePlayerStore, ['timer', 'timerIsActive']),
     title(): string {
       if (this.timer === null || this.timer === 0) {
-        return this.$i18n.t('message.player.timer.title');
+        return this.$t('message.player.timer.title');
       }
 
-      return this.$i18n.t(
+      return this.$t(
         'message.player.timer.end_in',
         this.timer,
         { minutes: this.timer }

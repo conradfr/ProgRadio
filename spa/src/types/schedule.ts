@@ -9,5 +9,5 @@ export interface ScheduleOfSubRadios {
 }
 
 export interface Schedule {
-  [key: string]: ScheduleOfSubRadios
+  [key: string]: ScheduleOfSubRadios | null
 }

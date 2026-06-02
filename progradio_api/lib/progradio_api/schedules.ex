@@ -3,7 +3,7 @@ defmodule ProgRadioApi.Schedules do
   The Schedule context.
   """
 
-  alias ProgRadioApi.{Radio, SubRadio}
+  alias ProgRadioApi.{Radio, Stream}
 
   @queue_schedule_one_prefix "schedule_input:one:"
   @queue_schedule_one_ttl 172_800
@@ -19,10 +19,12 @@ defmodule ProgRadioApi.Schedules do
     'items': [schedule_entries]
   }
   """
-  def add_schedule_to_queue(%Radio{} = radio, %SubRadio{} = sub_radio, %{} = data) do
+  def add_schedule_to_queue(%Radio{} = radio, %Stream{} = stream, %{} = data) do
     with valid when valid == true <-
            Enum.all?(["radio", "date", "items"], &Map.has_key?(data, &1)) do
-      redis_key = @queue_schedule_one_prefix <> radio.code_name <> "-" <> sub_radio.code_name
+      redis_key =
+        @queue_schedule_one_prefix <> radio.code_name <> "-" <> stream.radio_stream_code_name
+
       Redix.command!(:redix, ["SETEX", redis_key, @queue_schedule_one_ttl, Jason.encode!(data)])
       Redix.command!(:redix, ["LREM", @queue_list, 1, redis_key])
       Redix.command!(:redix, ["RPUSH", @queue_list, redis_key])

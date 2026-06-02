@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.OceaneRadio do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes3
   alias ProgRadioApi.SongProvider
 

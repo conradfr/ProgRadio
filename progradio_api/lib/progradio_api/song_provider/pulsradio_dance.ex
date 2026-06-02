@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.PulsradioDance do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericPulsradio
 
   @behaviour ProgRadioApi.SongProvider

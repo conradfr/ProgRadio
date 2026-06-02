@@ -168,7 +168,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
         fragment("LOWER(?) = ?", s.name, ^String.downcase(data["name"])) and
           s.country_code == ^data["country"] and s.enabled == true and
           s.banned == false and is_nil(s.redirect_to) and s.source != @source_name,
-      order_by: [desc: s.score, desc: s.clicks_last_24h, desc: s.votes],
+      order_by: [desc: s.score],
       limit: 1
     )
     |> Repo.one()

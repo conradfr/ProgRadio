@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Affiliate;
-use App\Entity\Stream;
-use App\Entity\StreamSuggestion;
-use App\Entity\UserSong;
 use App\Form\StreamSuggestionType;
 use App\Service\Favorites;
 use App\Service\Host;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
-use App\Entity\SubRadio;
 use App\Entity\Category;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
+use App\Entity\Affiliate;
+use App\Entity\Stream;
+use App\Entity\StreamSuggestion;
+use App\Entity\UserSong;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,22 +57,6 @@ class DefaultController extends AbstractBaseController
 
         return $this->jsonResponse([
             'schedule' => $schedule
-        ]);
-    }
-
-    // LEGACY
-    #[Route('/radios', name: 'api_radios')]
-    public function radios(EntityManagerInterface $em, Request $request): Response
-    {
-        $favorites = Favorites::getFavoriteRadios($request);
-        $radios = $em->getRepository(Radio::class)->getActiveRadios();
-        $categories = $em->getRepository(Category::class)->getCategories();
-        $collections = $em->getRepository(Collection::class)->getCollections($favorites);
-
-        return $this->jsonResponse([
-            'radios' => $radios,
-            'categories' => $categories,
-            'collections' => $collections
         ]);
     }
 
@@ -145,8 +128,17 @@ class DefaultController extends AbstractBaseController
             throw new NotFoundHttpException('Radio not found');
         }
 
-        /** @var SubRadio|null $subRadio */
-        $subRadio = $em->getRepository(SubRadio::class)->findOneBy(['codeName' => $subRadioCodeName, 'enabled' => true]);
+        // subradio has been merged to stream
+        // TODO finalize renaming
+        /** @var Stream|null $subRadio */
+        $subRadio = $em->getRepository(Stream::class)->findOneBy(
+            [
+                'radio' => $radio,
+                'radioStreamCodeName' => $subRadioCodeName,
+                'isSubRadio' => true,
+                'enabled' => true
+            ]
+        );
         if (!$subRadio) {
             throw new NotFoundHttpException('Radio not found');
         }
@@ -205,6 +197,9 @@ class DefaultController extends AbstractBaseController
                 's_maxage' => ScheduleManager::CACHE_SCHEDULE_TTL
             ]);
         }
+
+        // we save subradio (region) as preference for the user
+        $response = Favorites::setFavoriteSubRadios($codeName, $subRadioCodeName, $request, $response);
 
         return $response;
     }
@@ -337,8 +332,17 @@ class DefaultController extends AbstractBaseController
             throw new NotFoundHttpException('Radio not found');
         }
 
-        /** @var SubRadio|null $subRadio */
-        $subRadio = $em->getRepository(SubRadio::class)->findOneBy(['radio' => $radio, 'main' => true, 'enabled' => true]);
+        $favorites = Favorites::getFavoriteSubRadios($request);
+        $subRadio = null;
+        // we check if user has chosen a specific region before
+        if (isset($favorites[$radio->getCodeName()])) {
+            /** @var Stream|null $subRadio */
+            $subRadio = $em->getRepository(Stream::class)->findOneBy(['radio' => $radio, 'radioStreamCodeName' => $favorites[$radio->getCodeName()], 'enabled' => true]);
+        } else {
+            /** @var Stream|null $subRadio */
+            $subRadio = $em->getRepository(Stream::class)->findOneBy(['radio' => $radio, 'isMainRadio' => true, 'enabled' => true]);
+        }
+
         if (!$subRadio) {
             throw new NotFoundHttpException('Radio not found');
         }
@@ -346,7 +350,7 @@ class DefaultController extends AbstractBaseController
         // We don't do a redirect to keep the url clean without the default subradio.
         return $this->radioSubRadio(
             $codeName,
-            $subRadio->getCodeName(),
+            $subRadio->getRadioStreamCodeName(),
             $em,
             $scheduleManager,
             $host,
@@ -732,7 +736,7 @@ class DefaultController extends AbstractBaseController
     public function toggleFavorite(string $codeName, EntityManagerInterface $em): Response
     {
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName]);
-        
+
         if (!$radio) {
             throw new NotFoundHttpException('radio not found');
         }

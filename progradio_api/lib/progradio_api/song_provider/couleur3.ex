@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Couleur3 do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericRts
 
   @behaviour ProgRadioApi.SongProvider

@@ -127,10 +127,16 @@ const getRandom = async (country?: string|null): Promise<Stream|null> => {
 
 const getBestFromRadio = async (radioCodeName: string): Promise<Stream|null> => {
   const response = await fetch(`/streams/bestradio/${radioCodeName}`);
-  return await response.json();
+  const result = await response.json();
+
+  if (result && result.stream) {
+    return result.stream
+  }
+
+  return null;
 };
 
-const addStreamPlayingError = async (radioCodeName: string, errorText?: string): Promise<string|null> => {
+const addStreamPlayingError = async (streamId: string, errorText?: string): Promise<string|null> => {
   const params = {};
 
   if (errorText) {
@@ -139,7 +145,7 @@ const addStreamPlayingError = async (radioCodeName: string, errorText?: string):
   }
 
   // @ts-expect-error apiUrl is defined on the global scope
-  const response = await fetch(`https://${apiUrl}/stream_error/${radioCodeName}`, {
+  const response = await fetch(`https://${apiUrl}/stream_error/${streamId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

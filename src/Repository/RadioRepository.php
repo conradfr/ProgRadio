@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Radio;
-use App\Entity\RadioStream;
+use App\Entity\Stream;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Parameter;
@@ -20,15 +20,15 @@ class RadioRepository extends EntityRepository
 
     public function getActiveRadios(): array {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT r.id, r.codeName as code_name, r.name, s.url as streamUrl,
-                    s.url as streamingUrl, r.share, COALESCE(s.enabled, false) as streaming_enabled,
+            "SELECT r.id, r.codeName as code_name, r.name, s.streamUrl as streamUrl,
+                    s.streamUrl as streamingUrl, r.share, COALESCE(s.enabled, false) as streaming_enabled,
                     c.codeName as category, 'radio' as type,
-                    s.url as stream_url 
+                    s.streamUrl as stream_url
                 FROM " . Radio::class
                   . " r INNER JOIN r.category c
-                  LEFT JOIN r.streams s
-                WHERE r.active = :active 
-                  AND s.main = TRUE
+                  INNER JOIN r.streams s
+                WHERE r.active = :active
+                  AND s.isMainRadio = TRUE
                 ORDER BY r.codeName ASC
             "
         );
@@ -40,39 +40,24 @@ class RadioRepository extends EntityRepository
 
         $resultRadios = array_column($result, null, 'code_name');
 
-        $ids = array_column($result, 'id');
-        $radioStreamsResult = $this->getEntityManager()->getRepository(RadioStream::class)->getStreamsOfRadios($ids);
-
-        $resultRadios = array_map(function ($radio) {
+        return array_map(function ($radio) {
             $radio['streams'] = [];
             unset($radio['id']);
             return $radio;
         } , $resultRadios);
-
-        foreach ($radioStreamsResult as $radioStream) {
-            $resultRadios[$radioStream['radio_code_name']]['streams'][$radioStream['code_name']] = [
-                'code_name' => $radioStream['code_name'],
-                'name' => $radioStream['name'],
-                'url' => $radioStream['url'],
-                'main' => $radioStream['main'],
-                'current_song' => $radioStream['current_song']
-            ];
-        }
-
-        return $resultRadios;
     }
 
     public function getActiveRadiosFull(): array {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT r.codeName, r.name, s.url as streamingUrl, r.share, COALESCE(s.enabled, false) as streamingEnabled,
-                    s.retries as streamingRetries, s.status as streamingStatus,
+            "SELECT r.codeName, r.name, s.streamUrl as streamingUrl, r.share, COALESCE(s.enabled, false) as streamingEnabled,
+                    s.playingError as streamingRetries,
                     c.codeName as category, 'radio' as type,
-                    s.url as streamUrl 
+                    s.streamUrl as streamUrl
                 FROM " . Radio::class
                   . " r INNER JOIN r.category c
                   LEFT JOIN r.streams s
                 WHERE r.active = :active
-                  AND s.main = TRUE
+                  AND s.isMainRadio = TRUE
             "
         );
 
@@ -126,11 +111,11 @@ class RadioRepository extends EntityRepository
 
         $qb->select('r.id, r.codeName, r.name')
             ->from(Radio::class, 'r')
-            ->innerJoin('r.streams', 'rs')
+            ->innerJoin('r.streams', 's')
             ->where('r.collection ' . $equality . ' :collection')
             ->andWhere('r.active = TRUE')
             ->andWhere('r != :radio')
-            ->andWhere('(rs.main = TRUE and rs.enabled = TRUE)')
+            ->andWhere('(s.isMainRadio = TRUE and s.enabled = TRUE)')
             ->addOrderBy('r.share', $sort)
             ->addOrderBy('r.codeName', $sort2)
             ->setMaxResults($max);

@@ -8,7 +8,8 @@ defmodule ProgRadioApi.Schedule do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, SubRadio, Collection, ScheduleEntry, SectionEntry}
+  alias ProgRadioApi.{Radio, Collection, ScheduleEntry, SectionEntry}
+  alias ProgRadioApi.Stream, as: ProgRadioStream
 
   @timezone "Europe/Paris"
 
@@ -125,13 +126,13 @@ defmodule ProgRadioApi.Schedule do
         on: se.radio_id == r.id,
         left_join: sc in SectionEntry,
         on: sc.schedule_entry_id == se.id,
-        inner_join: sr in SubRadio,
-        on: sr.id == se.sub_radio_id,
+        inner_join: s in ProgRadioStream,
+        on: s.id == se.stream_id,
         where: r.active == true,
         #        order_by: [asc: se.date_time_start, asc: sc.date_time_start],
         select: %{
           code_name: r.code_name,
-          sub_radio_code_name: sr.code_name,
+          stream_code_name: s.radio_stream_code_name,
           title: se.title,
           host: se.host,
           description: se.description,
@@ -142,7 +143,7 @@ defmodule ProgRadioApi.Schedule do
               r.code_name,
               se.title,
               se.date_time_start,
-              se.sub_radio_id
+              s.radio_stream_code_name
             ),
           start_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_start),
           end_at: fragment("? AT TIME ZONE 'UTC'", se.date_time_end),
@@ -213,24 +214,24 @@ defmodule ProgRadioApi.Schedule do
   defp format(data) do
     radio_schedule =
       data
-      |> Stream.map(fn e -> {e.code_name, e.sub_radio_code_name} end)
+      |> Stream.map(fn e -> {e.code_name, e.stream_code_name} end)
       |> Stream.uniq()
       |> Enum.reduce(%{}, fn
-        {radio_code_name, sub_radio_code_name}, acc when is_map_key(acc, radio_code_name) ->
-          case Map.get(acc[radio_code_name], sub_radio_code_name) do
-            nil -> put_in(acc, [radio_code_name, sub_radio_code_name], %{})
+        {radio_code_name, stream_code_name}, acc when is_map_key(acc, radio_code_name) ->
+          case Map.get(acc[radio_code_name], stream_code_name) do
+            nil -> put_in(acc, [radio_code_name, stream_code_name], %{})
             _ -> acc
           end
 
-        {radio_code_name, sub_radio_code_name}, acc ->
-          Map.put(acc, radio_code_name, %{sub_radio_code_name => %{}})
+        {radio_code_name, stream_code_name}, acc ->
+          Map.put(acc, radio_code_name, %{stream_code_name => %{}})
       end)
 
     radio_schedule_with_shows =
       data
       |> Enum.reduce(radio_schedule, fn e, acc ->
         # add in schedule_entry not already there
-        case Map.has_key?(acc[e.code_name][e.sub_radio_code_name], e.hash) do
+        case Map.has_key?(acc[e.code_name][e.stream_code_name], e.hash) do
           false ->
             schedule_entry = %{
               hash: e.hash,
@@ -246,7 +247,7 @@ defmodule ProgRadioApi.Schedule do
               sections: []
             }
 
-            put_in(acc, [e.code_name, e.sub_radio_code_name, e.hash], schedule_entry)
+            put_in(acc, [e.code_name, e.stream_code_name, e.hash], schedule_entry)
 
           true ->
             acc
@@ -265,8 +266,8 @@ defmodule ProgRadioApi.Schedule do
         start_at: e.section_start_at
       }
 
-      (acc[e.code_name][e.sub_radio_code_name][e.hash].sections ++ [section_entry])
-      |> (&put_in(acc, [e.code_name, e.sub_radio_code_name, e.hash, :sections], &1)).()
+      (acc[e.code_name][e.stream_code_name][e.hash].sections ++ [section_entry])
+      |> (&put_in(acc, [e.code_name, e.stream_code_name, e.hash, :sections], &1)).()
     end)
   end
 
@@ -313,6 +314,6 @@ defmodule ProgRadioApi.Schedule do
   end
 
   # todo separate today / past day ttls, but currently past days are accessed by bots in Symfony side anyway
-  defp get_cache_ttl(now) when now == true, do: @cache_ttl_schedule_now
+  defp get_cache_ttl(true), do: @cache_ttl_schedule_now
   defp get_cache_ttl(_now), do: @cache_ttl_schedule
 end

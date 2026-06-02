@@ -56,7 +56,7 @@ export default defineComponent({
   computed: {
     ...mapState(useScheduleStore, ['cursorTime', 'schedule', 'getSubRadio']),
     primaryStream() {
-      return filter(this.radio.streams, r => r.main === true)[0];
+      return filter(this.radio.streams, r => r.is_main_radio === true)[0];
     },
     picture() {
       return `${this.$CDN_BASE_URL}${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
@@ -64,9 +64,10 @@ export default defineComponent({
     currentShow() {
       const subRadio = this.getSubRadio(this.radio.code_name);
       const schedule = this.schedule[this.radio.code_name]
-        ? this.schedule[this.radio.code_name][subRadio.code_name] : null;
+        && this.schedule[this.radio.code_name][subRadio.radio_stream_code_name]
+        ? this.schedule[this.radio.code_name][subRadio.radio_stream_code_name] : null;
 
-      if (schedule === undefined || schedule === null) {
+      if (!schedule) {
         return null;
       }
 

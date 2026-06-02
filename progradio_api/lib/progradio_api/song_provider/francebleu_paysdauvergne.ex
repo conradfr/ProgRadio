@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.FrancebleuPaysdauvergne do
-  require Logger
   alias ProgRadioApi.SongProvider.FranceBleu
 
   @behaviour ProgRadioApi.SongProvider

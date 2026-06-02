@@ -27,13 +27,13 @@ class ListeningSessionRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('rs.id, rs.codeName, rs.name, r.codeName as codeNameRadio, c.id as c_id, c.codeName as c_codeName,'
+        $qb->select('s.id, s.radioStreamCodeName, s.name, r.codeName as codeNameRadio, c.id as c_id, c.codeName as c_codeName,'
                 . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
             ->from(Radio::class, 'r')
             ->innerJoin('r.collection', 'c')
-            ->leftJoin('r.streams', 'rs')
-            ->leftJoin('rs.listeningSessions', 'ls')
-            ->groupBy('rs.id, r.codeName, c.id')
+            ->leftJoin('r.streams', 's')
+            ->leftJoin('s.listeningSessions', 'ls')
+            ->groupBy('s.id, r.codeName, c.id')
             ->addOrderBy('total_seconds', 'DESC');
 
         $this->addDates($qb, $startDate, $endDate);
@@ -52,6 +52,8 @@ class ListeningSessionRepository extends ServiceEntityRepository
         $qb->select('ls.source,'
             . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
             ->from(ListeningSession::class, 'ls')
+            ->join('ls.stream', 's')
+            ->leftJoin('s.radio', 'r')
             ->groupBy('ls.source')
             ->addOrderBy('total_seconds', 'DESC');
 
@@ -60,9 +62,9 @@ class ListeningSessionRepository extends ServiceEntityRepository
         $qb->andWhere('ls.source IS NOT NULL');
 
         if ($type === 'radio') {
-            $qb->andWhere('ls.stream IS NULL');
+            $qb->andWhere('r.id IS NOT NULL');
         } else {
-            $qb->andWhere('ls.radioStream IS NULL');
+            $qb->andWhere('r.id IS NULL');
         }
 
         $query = $qb->getQuery();
@@ -77,18 +79,20 @@ class ListeningSessionRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, s.name, s.img, s.countryCode as country_code, r.codeName as radio_code_name, s.enabled, s.popup, CASE WHEN(rd.id is not null) THEN 1 ELSE 0 END as redirect_to, CASE WHEN s.streamUrl LIKE \'http://%\' THEN true ELSE false END AS is_http,'
+        $qb->select('s.id, s.name, s.img, s.countryCode as country_code, r.codeName as radio_code_name, s.enabled, s.popup, CASE WHEN(rd.id is not null) THEN 1 ELSE 0 END as redirect_to,'
+            . 'CASE WHEN s.streamUrl LIKE \'http://%\' THEN true ELSE false END AS is_http,'
             . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
             ->from(Stream::class, 's')
-            ->leftJoin('s.radioStream', 'rs')
             ->leftJoin('s.redirectToStream', 'rd')
-            ->leftJoin('rs.radio', 'r')
+            ->leftJoin('s.radio', 'r')
             ->leftJoin('s.listeningSessions', 'ls')
             ->groupBy('s.id, r.codeName, rd.id')
             ->addOrderBy('total_seconds', 'DESC');
 
         $this->addDates($qb, $startDate, $endDate);
         $this->addCountryCode($qb, 's', $countryCode);
+
+        $qb->andWhere('r.id IS NULL');
 
         $query = $qb->getQuery();
         $query->disableResultCache();

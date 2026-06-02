@@ -1,11 +1,12 @@
 defmodule ProgRadioApi.ListenersCounter do
   use GenServer
+  use Nebulex.Caching
   require Logger
 
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.Streams
-  alias ProgRadioApi.{ListeningSession, RadioStream}
+  alias ProgRadioApi.Stream, as: ProgRadioStream
+  alias ProgRadioApi.ListeningSession
 
   @name :listeners_counter
 
@@ -14,6 +15,10 @@ defmodule ProgRadioApi.ListenersCounter do
   @refresh_counter 15000
 
   @timestamp_threshold_seconds 32
+
+  @cache_prefix_channel_name "stream_channel_name_"
+  # 1d
+  @cache_ttl_channel_name_ms 86_400_000
 
   @redis_ttl 432_000
   @redis_ip_ttl 7_200
@@ -34,12 +39,16 @@ defmodule ProgRadioApi.ListenersCounter do
   def register_listening_session(listening_session, is_update)
 
   def register_listening_session(%ListeningSession{} = listening_session, is_update) do
-    stream_code_name = get_channel_name(listening_session)
+    case get_channel_ids(listening_session.stream_id) do
+      nil ->
+        {:error, :stream_not_found}
 
-    GenServer.cast(
-      @name,
-      {:register_listening_session, {stream_code_name, listening_session}, is_update}
-    )
+      channel_ids ->
+        GenServer.cast(
+          @name,
+          {:register_listening_session, {channel_ids, listening_session}, is_update}
+        )
+    end
   end
 
   def register_listening_session(_listening_session, _is_update), do: :ok
@@ -47,9 +56,18 @@ defmodule ProgRadioApi.ListenersCounter do
   def remove_listening_session(listening_session)
 
   def remove_listening_session(%ListeningSession{} = listening_session) do
-    stream_code_name = get_channel_name(listening_session)
+    case get_channel_ids(listening_session.stream_id) do
+      nil ->
+        {:error, :stream_not_found}
 
-    GenServer.cast(@name, {:remove_listening_session, {stream_code_name, listening_session.id}})
+      channel_ids ->
+        GenServer.cast(
+          @name,
+          {:remove_listening_session, {channel_ids, listening_session}}
+        )
+
+        GenServer.cast(@name, {:remove_listening_session, {channel_ids, listening_session.id}})
+    end
   end
 
   def remove_listening_session(_listening_session), do: :ok
@@ -86,7 +104,8 @@ defmodule ProgRadioApi.ListenersCounter do
 
   @impl true
   def handle_cast(
-        {:register_listening_session, {stream_code_name, listening_session}, is_update},
+        {:register_listening_session, {{stream_id, radio_code_name}, listening_session},
+         is_update},
         state
       ) do
     unix_timestamp = System.os_time(:second)
@@ -96,28 +115,44 @@ defmodule ProgRadioApi.ListenersCounter do
         state,
         [
           :sessions,
-          Access.key(stream_code_name, %{listening_session.id => nil}),
+          Access.key(stream_id, %{listening_session.id => nil}),
           listening_session.id
         ],
         unix_timestamp
       )
 
+    updated_state =
+      if radio_code_name != nil do
+        put_in(
+          updated_state,
+          [
+            :sessions,
+            Access.key(radio_code_name, %{listening_session.id => nil}),
+            listening_session.id
+          ],
+          unix_timestamp
+        )
+      else
+        updated_state
+      end
+
     unless is_update == true do
-      Process.send(self(), {:refresh_counter, stream_code_name}, [])
+      Process.send(self(), {:refresh_counter, stream_id}, [])
+      if radio_code_name != nil, do: Process.send(self(), {:refresh_counter, radio_code_name}, [])
 
       # We store sessions in redis for popularity sort (consolidated per day)
       # We restrict to one combo ip/radio per 2h
       # Initially it was 24h but since we have trouble getting the real ip when its ipv6 with CapRover and
       # multiple users are considered the same ip, we mitigate
       date_string = Date.utc_today() |> Date.to_iso8601()
-      ip_key = "#{date_string}-#{stream_code_name}-#{listening_session.ip_address}"
+      ip_key = "#{date_string}-#{stream_id}-#{listening_session.ip_address}"
 
       # TODO use set instead ?
       if Cache.has_key?(ip_key) == false or Redix.command!(:redix, ["GET", ip_key]) == nil do
         Redix.command!(:redix, ["SET", ip_key, "1", "EX", @redis_ip_ttl])
         Cache.put(ip_key, "1", ttl: @redis_ip_ttl_ms)
 
-        Redix.command!(:redix, ["ZINCRBY", "#{date_string}-listens", 1, stream_code_name])
+        Redix.command!(:redix, ["ZINCRBY", "#{date_string}-listens", 1, stream_id])
         Redix.command!(:redix, ["EXPIRE", "#{date_string}-listens", @redis_ttl, "NX"])
       end
     end
@@ -126,33 +161,50 @@ defmodule ProgRadioApi.ListenersCounter do
   end
 
   @impl true
-  def handle_cast({:remove_listening_session, {stream_code_name, listening_session_id}}, state) do
+  def handle_cast(
+        {:remove_listening_session, {{stream_id, radio_code_name}, listening_session_id}},
+        state
+      ) do
     {_whatever, updated_state} =
       pop_in(
         state,
         [
           :sessions,
-          Access.key(stream_code_name, %{listening_session_id => nil}),
+          Access.key(stream_id, %{listening_session_id => nil}),
           listening_session_id
         ]
       )
 
-    Process.send(self(), {:refresh_counter, stream_code_name}, [])
+    {_whatever, updated_state} =
+      if radio_code_name != nil do
+        pop_in(
+          updated_state,
+          [
+            :sessions,
+            Access.key(radio_code_name, %{listening_session_id => nil}),
+            listening_session_id
+          ]
+        )
+      else
+        {:ok, updated_state}
+      end
+
+    if radio_code_name != nil, do: Process.send(self(), {:refresh_counter, radio_code_name}, [])
 
     {:noreply, updated_state}
   end
 
   @impl true
-  def handle_cast({:send_count_of, stream_code_name}, state) do
-    case Map.get(state.counter, stream_code_name) do
+  def handle_cast({:send_count_of, stream_id_or_radio_code_name}, state) do
+    case Map.get(state.counter, stream_id_or_radio_code_name) do
       nil ->
         0
 
       counter ->
         ProgRadioApiWeb.Endpoint.broadcast!(
-          "listeners:" <> stream_code_name,
+          "listeners:" <> stream_id_or_radio_code_name,
           "counter_update",
-          %{name: stream_code_name, listeners: counter}
+          %{name: stream_id_or_radio_code_name, listeners: counter}
         )
     end
 
@@ -164,7 +216,7 @@ defmodule ProgRadioApi.ListenersCounter do
     unix_timestamp = System.os_time(:second)
 
     cleaned_sessions =
-      Enum.reduce(state.sessions, %{}, fn {stream_code_name, sessions}, acc ->
+      Enum.reduce(state.sessions, %{}, fn {stream_id_or_radio_code_name, sessions}, acc ->
         filtered_sessions =
           sessions
           |> Enum.filter(fn {_listening_session_id, timestamp} ->
@@ -174,7 +226,7 @@ defmodule ProgRadioApi.ListenersCounter do
 
         case map_size(filtered_sessions) do
           0 -> acc
-          _ -> Map.put(acc, stream_code_name, filtered_sessions)
+          _ -> Map.put(acc, stream_id_or_radio_code_name, filtered_sessions)
         end
       end)
 
@@ -187,17 +239,17 @@ defmodule ProgRadioApi.ListenersCounter do
 
   # todo use this function for the global :refresh_counter ?
   @impl true
-  def handle_info({:refresh_counter, stream_code_name}, state) do
+  def handle_info({:refresh_counter, stream_id_or_radio_code_name}, state) do
     count =
       state
       |> Map.get(:sessions)
-      |> Map.get(stream_code_name, %{})
+      |> Map.get(stream_id_or_radio_code_name, %{})
       |> Kernel.map_size()
 
     ProgRadioApiWeb.Endpoint.broadcast!(
-      "listeners:" <> stream_code_name,
+      "listeners:" <> stream_id_or_radio_code_name,
       "counter_update",
-      %{name: stream_code_name, listeners: count}
+      %{name: stream_id_or_radio_code_name, listeners: count}
     )
 
     updated_state =
@@ -205,7 +257,7 @@ defmodule ProgRadioApi.ListenersCounter do
         state,
         [
           :counter,
-          Access.key(stream_code_name, 0)
+          Access.key(stream_id_or_radio_code_name, 0)
         ],
         count
       )
@@ -219,15 +271,15 @@ defmodule ProgRadioApi.ListenersCounter do
     counters_code_name =
       state
       |> Map.get(:counter, %{})
-      |> Enum.map(fn {code_name, _counter} -> code_name end)
+      |> Enum.map(fn {stream_id_or_radio_code_name, _counter} -> stream_id_or_radio_code_name end)
 
     counter =
       state
       |> Map.get(:sessions)
-      |> Enum.reduce([], fn {stream_code_name, sessions}, acc ->
+      |> Enum.reduce([], fn {stream_id_or_radio_code_name, sessions}, acc ->
         case map_size(sessions) do
           0 -> acc
-          number -> [{stream_code_name, number} | acc]
+          number -> [{stream_id_or_radio_code_name, number} | acc]
         end
       end)
       |> Enum.into(%{})
@@ -238,14 +290,17 @@ defmodule ProgRadioApi.ListenersCounter do
 
     spawn(fn ->
       counters_code_name
-      |> Stream.each(fn stream_code_name ->
-        count = Map.get(counter, stream_code_name, 0)
+      |> Stream.each(fn stream_id_or_radio_code_name ->
+        count = Map.get(counter, stream_id_or_radio_code_name, 0)
         # only broadcast if changed
-        if Map.get(state.counter, stream_code_name, nil) != count do
+        if Map.get(state.counter, stream_id_or_radio_code_name, nil) != count do
           ProgRadioApiWeb.Endpoint.broadcast!(
-            "listeners:" <> stream_code_name,
+            "listeners:" <> stream_id_or_radio_code_name,
             "counter_update",
-            %{name: stream_code_name, listeners: Map.get(counter, stream_code_name, 0)}
+            %{
+              name: stream_id_or_radio_code_name,
+              listeners: Map.get(counter, stream_id_or_radio_code_name, 0)
+            }
           )
         end
       end)
@@ -255,30 +310,17 @@ defmodule ProgRadioApi.ListenersCounter do
     {:noreply, updated_state}
   end
 
-  defp get_channel_name(%ListeningSession{} = listening_session) do
-    case Map.get(listening_session, :radio_stream_id) do
-      nil ->
-        stream = Streams.get_one_preload(listening_session.stream_id)
-
-        channel_name =
-          cond do
-            Map.get(stream, :stream_song) != nil ->
-              "#{stream.stream_song.code_name}_#{stream.stream_song_code_name}"
-
-            Map.get(stream, :radio_stream) != nil ->
-              stream.radio_stream.code_name
-
-            true ->
-              nil
-          end
-
-        # return default if nil
-        channel_name || stream.id
-
-      radio_stream_id ->
-        RadioStream
-        |> Repo.get!(radio_stream_id)
-        |> Map.get(:code_name)
+  @decorate cacheable(
+              cache: Cache,
+              key: "#{@cache_prefix_channel_name}#{id}",
+              opts: [ttl: @cache_ttl_channel_name_ms]
+            )
+  defp get_channel_ids(id) do
+    with true <- is_binary(id),
+         %ProgRadioStream{} = stream <- Repo.get(ProgRadioStream, id) |> Repo.preload(:radio) do
+      {stream.id, if(stream.radio != nil, do: stream.radio.code_name, else: nil)}
+    else
+      _ -> nil
     end
   end
 end

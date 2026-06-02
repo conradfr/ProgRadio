@@ -93,8 +93,7 @@ export default defineComponent({
         return {};
       }
 
-      const subRadioCodeName = this.getSubRadio(radioCodeName).code_name;
-
+      const subRadioCodeName = this.getSubRadio(radioCodeName).radio_stream_code_name;
       if (!this.schedule[radioCodeName][subRadioCodeName]) {
         return {};
       }

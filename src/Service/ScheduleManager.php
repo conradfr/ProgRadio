@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
 use App\Entity\Radio;
-use App\Entity\SubRadio;
+use App\Entity\Stream;
 use App\ValueObject\ScheduleResource;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -35,8 +35,8 @@ class ScheduleManager
             $key .= '_' . $scheduleResource->getValue();
         }
 
-        if ($scheduleResource->getSubValue() !== null) {
-            $key .= '_' . $scheduleResource->getSubValue()->getCodeName();
+        if ($scheduleResource->getStreamValue() !== null) {
+            $key .= '_' . $scheduleResource->getStreamValue()->getRadioStreamCodeName();
         }
 
         return $key;
@@ -59,7 +59,7 @@ class ScheduleManager
         return $this->getDaySchedule($scheduleResource);
     }
 
-    public function getDayScheduleOfRadio(\DateTime $dateTime, string $radioCodeName, ?SubRadio $subRadio = null): array
+    public function getDayScheduleOfRadio(\DateTime $dateTime, string $radioCodeName, ?Stream $subRadio = null): array
     {
         $scheduleResource = new ScheduleResource($dateTime, ScheduleResource::TYPE_RADIO, $radioCodeName, $subRadio);
 

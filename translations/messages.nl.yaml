@@ -350,8 +350,6 @@ admin:
             last: (laatste %number%)
         no_schedule:
             title: Radiozenders zonder programma's vandaag
-            shows: Programma's
-            sections: Rubrieken
             all_ok: Alle radiozenders hebben weergegeven programma's.
         stream_errors:
             title: Streamfouten

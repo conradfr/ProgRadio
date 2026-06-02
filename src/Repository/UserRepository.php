@@ -53,7 +53,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult();
     }
 
-    public function lastNAccounts(int $howMany=10)
+    public function lastNAccounts(int $howMany=15)
     {
         $qb = $this->createQueryBuilder('u')
             ->select('u.id, u.email, u.createdAt')

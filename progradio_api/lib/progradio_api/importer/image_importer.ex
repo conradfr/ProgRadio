@@ -1,6 +1,5 @@
 defmodule ProgRadioApi.Importer.ImageImporter do
   import Mogrify
-  require Application
   require Logger
   alias ProgRadioApi.Cache
   alias ProgRadioApi.ImageCache
@@ -28,7 +27,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       unless ImageCache.is_cached(full_path) do
         Logger.debug("Importing base64: #{filename} to #{full_path}")
 
-        case File.write!(full_path, Base.decode64!(base64_data["data"]), [:binary]) do
+        case File.write(full_path, Base.decode64!(base64_data["data"]), [:binary]) do
           :ok -> {:ok, filename}
           _ -> {:error, nil}
         end
@@ -79,7 +78,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       unless ImageCache.is_cached(full_path) do
         Logger.debug("Importing base64: #{filename} to #{full_path}")
 
-        case File.write!(full_path_temp, Base.decode64!(base64_data["data"]), [:binary]) do
+        case File.write(full_path_temp, Base.decode64!(base64_data["data"]), [:binary]) do
           :ok ->
             case process(full_path_temp, full_path) do
               {:ok, _} -> {:ok, filename}

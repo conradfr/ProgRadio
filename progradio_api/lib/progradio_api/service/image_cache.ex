@@ -1,6 +1,4 @@
 defmodule ProgRadioApi.ImageCache do
-  require Application
-
   # 7 days
   @ttl 604_800
 

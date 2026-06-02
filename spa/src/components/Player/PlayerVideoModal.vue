@@ -31,13 +31,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import {mapState} from 'pinia';
+import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
 
 import VideoProvider from '@/types/video.ts';
 import PlayerUtils from '@/utils/PlayerUtils';
 
-import {usePlayerStore} from '@/stores/playerStore';
+import { usePlayerStore } from '@/stores/playerStore';
 
 
 export default defineComponent({

@@ -10,7 +10,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Intl\Countries;
 use App\Entity\StreamOverloading;
-use App\Entity\RadioStream;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
@@ -79,12 +78,6 @@ class Stream implements NormalizableInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $website = null;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 0])]
-    private ?int $votes = null;
-
-    #[ORM\Column(type: 'integer', name: 'clicks_last_24h', options: ['default' => 0])]
-    private ?int $clicksLast24h = null;
-
     #[ORM\Column(type: 'integer', name: 'score', options: ['default' => 0])]
     private ?int $score = null;
 
@@ -106,15 +99,27 @@ class Stream implements NormalizableInterface
     #[ORM\Column(type: 'boolean')]
     private ?bool $noAds = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $ownLogo = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isMainRadio = false;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isSubRadio = false;
+
+    #[ORM\Column(type: 'string', length: 100)]
+    private ?string $radioStreamCodeName = null;
+
+    #[ORM\ManyToOne(targetEntity: Radio::class, inversedBy: 'streams')]
+    #[ORM\JoinColumn(name: 'radio_id', referencedColumnName: 'id')]
+    private ?Radio $radio = null;
+
     /**
      * @var ListeningSession[]
      */
     #[ORM\OneToMany(targetEntity: ListeningSession::class, mappedBy: 'stream', fetch: 'EXTRA_LAZY')]
     private Collection $listeningSessions;
-
-    #[ORM\ManyToOne(targetEntity: RadioStream::class, inversedBy: 'streams')]
-    #[ORM\JoinColumn(name: 'radio_stream_id', referencedColumnName: 'id')]
-    private ?RadioStream $radioStream;
 
     #[ORM\ManyToOne(targetEntity: StreamSong::class, inversedBy: 'streams')]
     #[ORM\JoinColumn(name: 'stream_song_id', referencedColumnName: 'id')]
@@ -267,26 +272,6 @@ class Stream implements NormalizableInterface
         $this->language = $language;
     }
 
-    public function getVotes(): int
-    {
-        return $this->votes;
-    }
-
-    public function setVotes(int $votes): void
-    {
-        $this->votes = $votes;
-    }
-
-    public function getClicksLast24h(): ?int
-    {
-        return $this->clicksLast24h;
-    }
-
-    public function setClicksLast24h(int $clicksLast24h): void
-    {
-        $this->clicksLast24h = $clicksLast24h;
-    }
-
     public function getScore(): ?int
     {
         return $this->score;
@@ -305,25 +290,6 @@ class Stream implements NormalizableInterface
     public function setListeningSessions(Collection $listeningSessions): void
     {
         $this->listeningSessions = $listeningSessions;
-    }
-
-    public function hasMainRadioStream()
-    {
-        if ($this->radioStream !== null && $this->radioStream->isMain() === true) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function getRadioStream(): ?RadioStream
-    {
-        return $this->radioStream;
-    }
-
-    public function setRadioStream($radioStream): void
-    {
-        $this->radioStream = $radioStream;
     }
 
     public function getStreamSong(): ?StreamSong
@@ -598,7 +564,6 @@ class Stream implements NormalizableInterface
                 'score' => $this->getScore(),
                 'country_code' => $this->getCountryCode(),
                 'language' => $this->getLanguage(),
-                'clicks_last_24h' => $this->getClicksLast24h(),
                 'playing_error' => $this->getPlayingError(),
             ];
         }
@@ -652,5 +617,57 @@ class Stream implements NormalizableInterface
         $this->noAds = $noAds;
 
         return $this;
+    }
+
+    public function hasOwnLogo(): ?bool
+    {
+        return $this->ownLogo;
+    }
+
+    public function setOwnLogo(?bool $ownLogo): static
+    {
+        $this->ownLogo = $ownLogo;
+
+        return $this;
+    }
+
+    public function isIsMainRadio(): bool
+    {
+        return $this->isMainRadio;
+    }
+
+    public function setIsMainRadio(bool $isMainRadio): void
+    {
+        $this->isMainRadio = $isMainRadio;
+    }
+
+    public function getRadioStreamCodeName(): string
+    {
+        return $this->radioStreamCodeName;
+    }
+
+    public function setRadioStreamCodeName(string $radioStreamCodeName): void
+    {
+        $this->radioStreamCodeName = $radioStreamCodeName;
+    }
+
+    public function getRadio(): Radio
+    {
+        return $this->radio;
+    }
+
+    public function setRadio(Radio $radio): void
+    {
+        $this->radio = $radio;
+    }
+
+    public function isSubRadio(): bool
+    {
+        return $this->isSubRadio;
+    }
+
+    public function setIsSubRadio(bool $isSubRadio): void
+    {
+        $this->isSubRadio = $isSubRadio;
     }
 }

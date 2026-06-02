@@ -375,8 +375,6 @@ admin:
             last: (%number% ostatnich)
         no_schedule:
             title: Stacje radiowe bez programów dzisiaj
-            shows: Programy
-            sections: Kroniki
             all_ok: Wszystkie stacje radiowe mają wyświetlane programy.
         stream_errors:
             title: Błędy strumieni

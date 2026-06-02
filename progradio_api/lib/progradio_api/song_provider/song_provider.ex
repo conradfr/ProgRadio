@@ -1,6 +1,4 @@
 defmodule ProgRadioApi.SongProvider do
-  require Logger
-
   @doc """
     Get next song refresh in seconds
   """

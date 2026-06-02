@@ -4,7 +4,7 @@ defmodule ProgRadioApiWeb.ScheduleController do
   use ProgRadioApiWeb, :controller
 
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.{Radio, SubRadio, Schedule}
+  alias ProgRadioApi.{Radio, Stream, Schedule}
 
   # ---------- GET ----------
 
@@ -37,13 +37,14 @@ defmodule ProgRadioApiWeb.ScheduleController do
 
   def create(
         conn,
-        %{"radio" => radio_code_name, "sub_radio" => sub_radio_code_name} = schedule_params
+        %{"radio" => radio_code_name, "sub_radio" => stream_code_name} = schedule_params
       ) do
     with api_user when api_user != nil <- Map.get(conn.private, :api_user),
          %Radio{} = radio <- Repo.get_by(Radio, code_name: radio_code_name),
-         %SubRadio{} = sub_radio <- Repo.get_by(SubRadio, code_name: sub_radio_code_name),
+         %Stream{} = stream <-
+           Repo.get_by(Stream, radio_stream_code_name: stream_code_name, is_sub_radio: true),
          true <- conn.private[:api_key] |> can?(add(radio)) do
-      ProgRadioApi.Schedules.add_schedule_to_queue(radio, sub_radio, schedule_params)
+      ProgRadioApi.Schedules.add_schedule_to_queue(radio, stream, schedule_params)
 
       conn
       |> put_status(:created)

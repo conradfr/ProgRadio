@@ -8,7 +8,16 @@ defmodule ProgRadioApi.Radios do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
-  alias ProgRadioApi.{Radio, SubRadio, RadioStream, Category, Collection, ApiKey, ApiKeyRadio}
+
+  alias ProgRadioApi.{
+    Radio,
+    Stream,
+    StreamSong,
+    Category,
+    Collection,
+    ApiKey,
+    ApiKeyRadio
+  }
 
   # stream retries before considering it disabled
   #  @retries_max 56
@@ -25,10 +34,10 @@ defmodule ProgRadioApi.Radios do
       from r in Radio,
         join: c in Category,
         on: r.category_id == c.id,
-        left_join: rs in RadioStream,
-        on: rs.radio_id == r.id and rs.enabled == true,
-        left_join: sr in SubRadio,
-        on: sr.id == rs.sub_radio_id and sr.enabled == true,
+        inner_join: s in Stream,
+        on: s.radio_id == r.id and s.enabled == true and is_nil(s.redirect_to),
+        left_join: ss in StreamSong,
+        on: ss.id == s.stream_song_id and ss.enabled == true,
         where: r.active == true,
         select: %{
           id: r.id,
@@ -40,22 +49,19 @@ defmodule ProgRadioApi.Radios do
           has_preroll: r.has_preroll
         },
         select_merge: %{
-          stream_code_name: rs.code_name,
-          stream_name: rs.name,
-          stream_url: rs.url,
-          stream_main: rs.main,
-          stream_current_song: rs.current_song,
-          stream_status: rs.status,
-          stream_retries: rs.retries,
-          stream_sub_radio_id: rs.sub_radio_id,
-          stream_has_logo: rs.own_logo
-        },
-        select_merge: %{
-          sub_radio_code_name: sr.code_name,
-          sub_radio_name: sr.name,
-          sub_radio_main: sr.main,
-          sub_radio_enabled: sr.enabled,
-          sub_radio_radio_stream: rs.code_name
+          stream_id: s.id,
+          stream_radio_stream_code_name: s.radio_stream_code_name,
+          stream_name: s.name,
+          stream_url: s.stream_url,
+          stream_main: s.is_main_radio,
+          stream_song_code_name: s.stream_song_code_name,
+          stream_status: true,
+          stream_retries: 0,
+          stream_is_sub_radio: s.is_sub_radio,
+          stream_has_logo: s.own_logo,
+          stream_force_hls: s.force_hls,
+          stream_force_mpd: s.force_mpd,
+          stream_force_proxy: s.force_proxy
         }
 
     query
@@ -77,8 +83,7 @@ defmodule ProgRadioApi.Radios do
               type: "radio",
               country_code: r.country_code,
               has_preroll: r.has_preroll,
-              streams: %{},
-              sub_radios: %{}
+              streams: %{}
             }
         end
 
@@ -93,33 +98,22 @@ defmodule ProgRadioApi.Radios do
 
           e ->
             stream = %{
-              code_name: e.stream_code_name,
+              id: e.stream_id,
+              code_name: e.stream_id,
               name: e.stream_name,
-              url: e.stream_url,
-              main: e.stream_main,
-              sub_radio: e.stream_sub_radio_id !== nil,
-              current_song: e.stream_current_song,
-              has_logo: e.stream_has_logo
+              stream_url: e.stream_url,
+              radio_code_name: e.code_name,
+              radio_stream_code_name: e.stream_radio_stream_code_name,
+              is_main_radio: e.stream_main,
+              is_sub_radio: e.stream_is_sub_radio,
+              current_song: e.stream_song_code_name != nil,
+              has_logo: e.stream_has_logo,
+              force_hls: e.stream_force_hls,
+              force_mpd: e.stream_force_mpd,
+              force_proxy: e.stream_force_proxy
             }
 
-            put_in(radio, [:streams, stream.code_name], stream)
-        end
-
-      radio =
-        case r do
-          e when is_nil(e.sub_radio_code_name) ->
-            radio
-
-          e ->
-            sub_radio = %{
-              code_name: e.sub_radio_code_name,
-              name: e.sub_radio_name,
-              main: e.sub_radio_main,
-              enabled: e.sub_radio_enabled,
-              radio_stream: e.sub_radio_radio_stream
-            }
-
-            put_in(radio, [:sub_radios, sub_radio.code_name], sub_radio)
+            put_in(radio, [:streams, stream.radio_stream_code_name], stream)
         end
 
       Map.put(acc, radio.code_name, radio)
@@ -203,8 +197,8 @@ defmodule ProgRadioApi.Radios do
   def list_radios_per_api_key(api_key) do
     query =
       from r in Radio,
-        join: sr in SubRadio,
-        on: sr.radio_id == r.id and sr.enabled == true,
+        join: s in Stream,
+        on: s.radio_id == r.id and s.enabled == true and s.is_sub_radio == true,
         join: c in Collection,
         on: r.collection_id == c.id,
         join: akr in ApiKeyRadio,
@@ -214,7 +208,7 @@ defmodule ProgRadioApi.Radios do
         select: %{
           collection: c.code_name,
           radios: fragment("array_agg(?)", r.code_name),
-          sub_radios: fragment("array_agg(?)", sr.code_name)
+          sub_radios: fragment("array_agg(?)", s.radio_stream_code_name)
         },
         where: ak.id == ^api_key and r.active == true,
         group_by: [c.code_name, r.code_name, c.priority],

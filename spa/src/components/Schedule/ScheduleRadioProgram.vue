@@ -59,9 +59,13 @@ import { useScheduleStore } from '@/stores/scheduleStore';
 import { usePlayerStore } from '@/stores/playerStore';
 
 import type { Radio } from '@/types/radio';
+import type { Stream } from '@/types/streams';
 import type { Program } from '@/types/program';
 
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
+import PlayerUtils from "@/utils/PlayerUtils";
+
+const MAX_RANDOM_MS = 150;
 
 export default defineComponent({
   components: { ScheduleRadioSection },
@@ -74,7 +78,6 @@ export default defineComponent({
       type: Object as PropType<Program>,
       required: true
     },
-    radioPlaying: Boolean,
     intersectionObserver: {
       type: Object as PropType<IntersectionObserver>,
       required: true
@@ -82,12 +85,16 @@ export default defineComponent({
     isIntersecting: Boolean
   },
   data(): {
+    subRadio: Stream|null,
+    channelName: string|null
     hover: boolean,
     rootRef: HTMLElement|null,
     displayModal: boolean,
     modal: any|null
   } {
     return {
+      subRadio: null,
+      channelName: null,
       hover: false,
       rootRef: null,
       displayModal: false,
@@ -95,21 +102,41 @@ export default defineComponent({
     };
   },
   mounted() {
+    this.subRadio = this.getSubRadio(this.radio.code_name);
+
     if (this.rootRef !== null) {
       this.intersectionObserver.observe(this.rootRef);
+    }
+
+    if (this.isCurrent) {
+      this.joinChannels();
     }
   },
   beforeUnmount() {
     if (this.rootRef !== null) {
       this.intersectionObserver.unobserve(this.rootRef);
     }
+
+    if (this.isCurrent) {
+      this.leaveChannels();
+    }
+  },
+  watch: {
+    isCurrent(newValue) {
+      if (newValue) {
+        this.joinChannels();
+      } else {
+        this.leaveChannels();
+      }
+    },
   },
   computed: {
-    ...mapState(usePlayerStore, ['currentSong', 'liveSong']),
+    ...mapState(usePlayerStore, ['song']),
     ...mapState(useScheduleStore, [
       'cursorTime',
       'scheduleDisplay',
-      'swipeClick'
+      'swipeClick',
+      'getSubRadio'
     ]),
     containerStyle() {
       const data = this.scheduleDisplay[this.program.hash].container;
@@ -159,14 +186,15 @@ export default defineComponent({
         return null;
       }
 
-      // current song of playing radio
-      if (this.isCurrent && this.radioPlaying && this.currentSong && this.currentSong[0]) {
-        return this.currentSong[0];
+      if (!this.channelName) {
+        this.setChannelName();
       }
 
-      // else check if live song of this radio main steam
-      const liveSongData = this.liveSong(this.radio, `${this.radio.code_name}_main`);
-      return liveSongData && liveSongData[0] ? liveSongData[0] : null;
+      if (this.song[this.channelName] && this.song[this.channelName].song) {
+        return PlayerUtils.formatSong(this.song[this.channelName].song);
+      }
+
+      return null;
     },
     isCurrent(): boolean {
       return Interval.fromDateTimes(DateTime.fromISO(this.program.start_at).setZone(TIMEZONE),
@@ -191,7 +219,11 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(useScheduleStore, [
-      'activateProgramModal'
+      'activateProgramModal',
+    ]),
+    ...mapActions(usePlayerStore, [
+      'joinChannel',
+      'leaveChannel',
     ]),
     setRootRef(el: HTMLElement) {
       if (el) {
@@ -220,7 +252,28 @@ export default defineComponent({
       });
 
       this.activateProgramModal(this.program);
-    }
+    },
+    setChannelName() {
+      this.channelName = PlayerUtils.getChannelName(this.subRadio, this.radio) || '';
+    },
+    joinChannels() {
+      if (!this.channelName) {
+        this.setChannelName();
+      }
+
+      setTimeout(() => {
+        this.joinChannel(this.channelName);
+      }, 250 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
+    },
+    leaveChannels() {
+      if (!this.channelName) {
+        this.setChannelName();
+      }
+
+      setTimeout(() => {
+        this.leaveChannel(this.channelName);
+      }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
+    },
   }
 });
 </script>

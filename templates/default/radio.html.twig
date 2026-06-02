@@ -34,9 +34,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if sub_radio.radioStream is not null %}
-        {% include('_partials/mini_player.html.twig') %}
-    {% endif %}
+    {% include('_partials/mini_player.html.twig') %}
     {{ include('_partials/adsense.html.twig') }}
 {% endblock %}
 
@@ -51,16 +49,15 @@
                 <div class="text-center mb-4">
                     <img class="radio-page-logo" alt="{{ radio.name }}" src="{{ preload(asset('img/radio/page/' ~ radio.codename ~ '.png'), {as: 'image'}) }}">
                 </div>
-                {% if sub_radio.radioStream is not null %}
                 <div class="radio-page-streams" v-scope>
                     <div class="radio-page-streams-one text-center mb-4 v-cloak">
                         <div
                             v-if="playing === PLAYER_STATE_STOPPED"
-                            @click="play('{{- sub_radio.radioStream.url -}}', '{{- radio.codename -}}')"
+                            @click="play('{{- sub_radio.streamUrl -}}', '{{- radio.codename -}}')"
                             class="radio-page-play">
                             <img alt="{{ 'page.radio.play'|trans({'%radio%': radio.name}) }}"
                                  src="{{ asset('img/play-button-inside-a-circle.svg') }}">
-                            <div>
+                            <div class="mt-1">
                                 {{ 'page.radio.play'|trans({'%radio%': sub_radio.name}) }}
                             </div>
                         </div>
@@ -70,7 +67,7 @@
                             class="radio-page-play">
                             <img alt="{{ 'page.radio.stop'|trans({'%radio%': radio.name}) }}"
                                  src="{{ asset('img/rounded-pause-button.svg') }}">
-                            <div>
+                            <div class="mt-1">
                                 {{ 'page.radio.stop'|trans({'%radio%': radio.name}) }}
                             </div>
                         </div>
@@ -91,18 +88,22 @@
                 <div class="text-center mb-4 d-none d-sm-block">
                     <a href="{{ path('radio_spa', {collection: radio.codeName }) }}"><small>{{ 'page.radio.advanced'|trans|raw }}</small> </a>
                 </div>
-                {% endif %}
                 <div class="radio-page-infos d-none d-sm-block mt-1">
                     {% if radio.website %}
                         <div class="mt-2">
                             <strong>{{ 'page.radio.website'|trans }}:</strong> <a target="_blank" href="{{ radio.website }}">{{ radio.website }}</a>
                         </div>
                     {% endif %}
-                    {% if attribute(radio, 'description' ~ app.request.locale|capitalize) is defined %}
+                    {% if attribute(radio, 'description' ~ app.request.locale|capitalize) is defined
+                      and attribute(radio, 'description' ~ app.request.locale|capitalize) != null
+                      and attribute(radio, 'description' ~ app.request.locale|capitalize) != ""
+                    %}
                         <div class="mt-2"><strong>{{ 'page.radio.summary'|trans }}:</strong></div>
                         <p class="radio-page-infos-description mt-1">{{ attribute(radio, 'description' ~ app.request.locale|capitalize) | nl2br }}</p>
                     {% endif %}
-                    {% if attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) is defined %}
+                    {% if attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) is defined
+                      and attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) != null
+                      and attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) != "" %}
                         <div class="mt-2"><a target="_blank" href="{{ attribute(radio, 'wikipedia' ~ app.request.locale|capitalize) }}">Wikipedia</a></div>
                     {% endif %}
                 </div>
@@ -116,13 +117,13 @@
                 <div class="col-md-6 col-12 schedule-page-datenav mt-2 mt-sm-0 text-center text-sm-end">
                     ←&nbsp;
                     {% if has_prev %}
-                        <a href="{{ path('radio_subradio', {'codeName': radio.codeName, subRadioCodeName: sub_radio.codeName,  'date': prev_date |date("Y-m-d") }) }}">{{ prev_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}</a>
+                        <a href="{{ path('radio_subradio', {'codeName': radio.codeName, subRadioCodeName: sub_radio.radioStreamCodeName,  'date': prev_date |date("Y-m-d") }) }}">{{ prev_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}</a>
                     {% else %}
                         {{ prev_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}
                     {% endif %} |
 
                     {% if has_next %}
-                        <a href="{{ path('radio_subradio', {'codeName': radio.codeName, subRadioCodeName: sub_radio.codeName, 'date': next_date |date('Y-m-d')}) }}">{{ next_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}</a>
+                        <a href="{{ path('radio_subradio', {'codeName': radio.codeName, subRadioCodeName: sub_radio.radioStreamCodeName, 'date': next_date |date('Y-m-d')}) }}">{{ next_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}</a>
                     {% else %}
                         {{ next_date |format_date('short', locale=app.request.locale, timezone=timezone) | capitalize }}
                     {% endif %}
@@ -135,14 +136,15 @@
                 </div>
             </div>
 
-            {% if radio.subRadios|length > 1 %}
+            {% set subRadios = radio.subRadios %}
+            {% if subRadios|length > 1 %}
                 <div class="row">
                     <div class="col-md-12 mb-4 mt-sm-0 text-center text-sm-start">
                         <ul class="nav nav-tabs">
-                            {% for subRadio in radio.subRadios %}
+                            {% for subRadio in subRadios %}
                             <li class="nav-item" >
                                 <a class="nav-link {{ subRadio.id == sub_radio.id ? ' active" aria-selected="true' : '' }}"
-                                href="{{ path('radio_subradio', {'codeName': radio.codeName, 'subRadioCodeName': subRadio.codeName, 'date': date|date("Y-m-d") }) }}">{{ subRadio.name }}</a>
+                                href="{{ path('radio_subradio', {'codeName': radio.codeName, 'subRadioCodeName': subRadio.radioStreamCodeName, 'date': date|date("Y-m-d") }) }}">{{ subRadio.name }}</a>
                             </li>
                             {% endfor %}
                         </ul>

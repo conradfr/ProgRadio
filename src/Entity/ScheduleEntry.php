@@ -6,14 +6,15 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Index;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Radio;
-use App\Entity\SubRadio;
+use App\Entity\Stream;
 
 #[ORM\Table]
 #[ORM\Index(name: 'starttime_idx', columns: ['date_time_start'])]
 #[ORM\Index(name: 'endtime_idx', columns: ['date_time_end'])]
+#[ORM\Index(name: 'idx_d7785d2c5b94add2', columns: ['radio_id'])]
+#[ORM\Index(name: 'stream_id_idx', columns: ['stream_id'])]
 #[ORM\Entity(repositoryClass: 'App\Repository\ScheduleEntryRepository')]
 class ScheduleEntry
 {
@@ -56,9 +57,9 @@ class ScheduleEntry
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $pictureUrl = null;
 
-    #[ORM\ManyToOne(targetEntity: SubRadio::class)]
-    #[ORM\JoinColumn(name: 'sub_radio_id', referencedColumnName: 'id')]
-    private ?SubRadio $subRadio = null;
+    #[ORM\ManyToOne(targetEntity: Stream::class)]
+    #[ORM\JoinColumn(name: 'stream_id', referencedColumnName: 'id')]
+    private ?stream $stream = null;
 
     public function __construct() {
         $this->sectionEntries = new ArrayCollection();
@@ -184,13 +185,13 @@ class ScheduleEntry
         return $this;
     }
 
-    public function getSubRadio(): SubRadio
+    public function getStream(): Stream
     {
-        return $this->subRadio;
+        return $this->stream;
     }
 
-    public function setSubRadio(SubRadio $subRadio): void
+    public function setStream(Stream $stream): void
     {
-        $this->subRadio = $subRadio;
+        $this->stream = $stream;
     }
 }

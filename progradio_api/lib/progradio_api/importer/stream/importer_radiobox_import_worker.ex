@@ -16,7 +16,7 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
 
     # this is a quick hack to respect the source
     # and not make too much requests
-    :timer.sleep(@sleep_ms);
+    :timer.sleep(@sleep_ms)
 
     # todo manage overloading
 
@@ -127,35 +127,35 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
           %Stream{}
           |> Stream.changeset(stream)
           |> Repo.insert(
-               on_conflict: [
-                 set: [
-                   name: stream.name,
-                   img: stream.img,
-                   original_img: stream.original_img,
-                   country_code: stream.country_code,
-                   tags: stream.tags,
-                   original_tags: stream.original_tags,
-                   website: stream.website,
-                   language: stream.language,
-                   slogan: stream.slogan,
-                   description: stream.description,
-                   stream_url: stream.stream_url,
-                   source: stream.source,
-                   external_id: stream.external_id,
-                   original_stream_url: stream.original_stream_url,
-                   enabled: stream.enabled,
-                   import_updated_at: stream.import_updated_at
-                 ]
-               ],
-               conflict_target: :id
-             )
+            on_conflict: [
+              set: [
+                name: stream.name,
+                img: stream.img,
+                original_img: stream.original_img,
+                country_code: stream.country_code,
+                tags: stream.tags,
+                original_tags: stream.original_tags,
+                website: stream.website,
+                language: stream.language,
+                slogan: stream.slogan,
+                description: stream.description,
+                stream_url: stream.stream_url,
+                source: stream.source,
+                external_id: stream.external_id,
+                original_stream_url: stream.original_stream_url,
+                enabled: stream.enabled,
+                import_updated_at: stream.import_updated_at
+              ]
+            ],
+            conflict_target: :id
+          )
       else
         Logger.info("Stream import job: RadioBox: stream already in database (#{url})")
       end
     rescue
       e ->
         Logger.error("Stream import job: RadioBox - rescue (#{Map.get(args, "url", "")})")
-#        IO.puts("#{inspect e}")
+        #        IO.puts("#{inspect e}")
     end
 
     :ok
@@ -231,7 +231,9 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
       |> Enum.flat_map(&extract_station_urls(&1, country_code))
       |> Enum.uniq()
 
-    Logger.info("Stream import: RadioBox - #{country_code}: enqueueing #{length(all_station_urls)} station(s)")
+    Logger.info(
+      "Stream import: RadioBox - #{country_code}: enqueueing #{length(all_station_urls)} station(s)"
+    )
 
     Enum.each(all_station_urls, fn url ->
       %{"url" => url}
@@ -243,9 +245,11 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
   end
 
   defp fetch_listing_pages(_base_url, 0), do: []
+
   defp fetch_listing_pages(base_url, max_page) do
     Enum.map(1..max_page, fn p ->
-      :timer.sleep(1000);
+      :timer.sleep(1000)
+
       "#{base_url}?p=#{p}"
       |> Req.get!()
       |> Map.get(:body)
@@ -261,6 +265,7 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
     |> Enum.flat_map(&Floki.attribute(&1, "href"))
     |> Enum.filter(fn href ->
       path = URI.parse(href).path || ""
+
       case String.split(path, "/", trim: true) do
         [^country_code, _slug] -> true
         _ -> false
@@ -274,10 +279,12 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
 
   defp find_existing_stream(external_id, stream_url, name, country_code) do
     from(s in Stream,
-      where: (s.external_id == ^external_id and s.source == @source_name)
-        or (s.stream_url == ^stream_url and s.country_code == ^String.upcase(country_code))
-        # there is an index for lower(name)
-        or (fragment("lower(?) = ?", s.name, ^String.downcase(name)) and s.country_code == ^String.upcase(country_code)),
+      # there is an index for lower(name)
+      where:
+        (s.external_id == ^external_id and s.source == @source_name) or
+          (s.stream_url == ^stream_url and s.country_code == ^String.upcase(country_code)) or
+          (fragment("lower(?) = ?", s.name, ^String.downcase(name)) and
+             s.country_code == ^String.upcase(country_code)),
       limit: 1,
       select: s.id
     )

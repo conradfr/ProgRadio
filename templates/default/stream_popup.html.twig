@@ -15,10 +15,6 @@
   {% if stream.radioStream.codeName is defined %}{{ stream.radioStream.codeName }}{% elseif stream.streamSong is defined and stream.streamSong is not null and stream.streamSongCodeName is defined and stream.streamSongCodeName is not null %}{{ stream.streamSong.codeName }}_{{ stream.streamSongCodeName }}{% else %}{{ stream.id }}{% endif %}
 {% endmacro %}
 
-{% macro stream_url(stream) %}
-{% if stream.radioStream is defined and stream.radioStream.url is defined %}{{ stream.radioStream.url }}{% else %}{{ stream.streamUrl }}{% endif %}
-{% endmacro %}
-
 {% macro title(stream) %}
 {% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}
 {% endmacro %}
@@ -79,7 +75,7 @@
                                     <div v-cloak>
                                         <div
                                                 v-if="playing === PLAYER_STATE_STOPPED"
-                                                @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}'})"
+                                                @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}', source: '{{- stream.source -}}'})"
                                                 class="radio-page-play">
                                             <img alt="{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}"
                                                  src="{{ asset('img/play-button-inside-a-circle.svg') }}">
@@ -106,7 +102,7 @@
                                     <div class="ps-2" v-cloak>
                                         <div
                                                 v-if="playing === PLAYER_STATE_STOPPED"
-                                                @click="play('{{- self.stream_url(stream) -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}'})"
+                                                @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', streamCodeName: '{{- self.stream_code_name(stream) -}}', source: '{{- stream.source -}}'})"
                                                 class="radio-page-play">
                                             <div class="fs-4">&nbsp;{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}</div>
                                         </div>

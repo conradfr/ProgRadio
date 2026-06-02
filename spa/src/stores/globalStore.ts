@@ -45,9 +45,9 @@ export const useGlobalStore = defineStore('global', {
       const streamsStore = useStreamsStore();
 
       if (typeUtils.isRadio(radio)) {
-        scheduleStore.sendRadiosList(/* radio.code_name */);
+        scheduleStore.sendRadiosList();
       } else {
-        streamsStore.sendStreamsList(/* radio.code_name */);
+        streamsStore.sendStreamsList();
       }
     },
     displayToast(params: { message: string, type: 'success'|'error' }) {

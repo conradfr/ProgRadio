@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ListeningSessionRepository;
-use App\Entity\RadioStream;
 use App\Entity\Stream;
 use Darsyn\IP\Version\Multi as IP;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -40,10 +39,6 @@ class ListeningSession
     private ?Uuid $id;
 
     private ?string $type = null;
-
-    #[ORM\ManyToOne(targetEntity: RadioStream::class, inversedBy: 'listeningSessions')]
-    #[ORM\JoinColumn(name: 'radio_stream_id', referencedColumnName: 'id')]
-    private ?RadioStream $radioStream = null;
 
     #[ORM\ManyToOne(targetEntity: Stream::class, inversedBy: 'listeningSessions')]
     #[ORM\JoinColumn(name: 'stream_id', referencedColumnName: 'id')]
@@ -89,16 +84,6 @@ class ListeningSession
     public function setType(string $type): void
     {
         $this->type = $type;
-    }
-
-    public function getRadioStream(): ?RadioStream
-    {
-        return $this->radioStream;
-    }
-
-    public function setRadioStream(RadioStream $radioStream): void
-    {
-        $this->radioStream = $radioStream;
     }
 
     public function getStream(): ?Stream

@@ -89,8 +89,7 @@ const toggleFavoriteRadio = async (radioCodeName: string): Promise<any | null> =
 };
 
 const sendListeningSession = async (
-  codeName: string,
-  radioStreamCodeName: string|null,
+  radioId: string,
   dateTimeStart: DateTime,
   dateTimeEnd: DateTime,
   id: string,
@@ -108,12 +107,7 @@ const sendListeningSession = async (
     postData.ending = true;
   }
 
-  // radio or stream
-  if (radioStreamCodeName !== undefined && radioStreamCodeName !== null) {
-    postData.radio_stream_code_name = radioStreamCodeName;
-  } else {
-    postData.stream_id = codeName;
-  }
+  postData.stream_id = radioId;
 
   if (id !== undefined && id !== null) {
     // @ts-expect-error apiUrl is defined on the global scope

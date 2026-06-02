@@ -1,7 +1,6 @@
 defmodule ProgRadioApi.ListeningSession do
   import Ecto.Changeset
   use Ecto.Schema
-  alias ProgRadioApi.RadioStream
   alias ProgRadioApi.Stream
 
   @time_length_minimum_seconds 15
@@ -13,7 +12,6 @@ defmodule ProgRadioApi.ListeningSession do
     field(:date_time_end, :utc_datetime)
     field(:source, :string)
     field(:ip_address, :binary)
-    belongs_to(:radio_stream, RadioStream)
     belongs_to(:stream, Stream, type: :binary_id)
   end
 

@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Blackbox do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes3
 
   @behaviour ProgRadioApi.SongProvider

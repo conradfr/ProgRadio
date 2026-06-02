@@ -25,16 +25,16 @@
           </div>
         </div>
 
-        <div v-if="hasSubRadios" class="row">
+        <div v-if="subRadios.length > 1" class="row">
           <div class="col-md-12 mt-sm-0 text-center text-sm-start">
-            <ul class="nav nav-tabs">
-              <li v-for="sub_radio in radio.sub_radios" :key="sub_radio.code_name"
+               <ul class="nav nav-tabs">
+              <li v-for="subRadio in subRadios" :key="subRadio.code_name"
                 class="nav-item">
                 <a class="nav-link" href="#"
-                  :class="{ 'active': currentSubRadioCodeName === sub_radio.code_name}"
-                  :ariaSelected="currentSubRadioCodeName === sub_radio.code_name ? 'true' : 'false'"
-                   @click="regionClick(sub_radio.code_name)">
-                  {{ sub_radio.name }}
+                  :class="{ 'active': currentSubRadioCodeName === subRadio.radio_stream_code_name }"
+                  :ariaSelected="currentSubRadioCodeName === subRadio.radio_stream_code_name ? 'true' : 'false'"
+                   @click="regionClick(subRadio.radio_stream_code_name)">
+                  {{ subRadio.name }}
                 </a>
               </li>
             </ul>
@@ -42,13 +42,13 @@
         </div>
 
         <div class="row">
-          <div class="col-md-12 mt-sm-0 text-center text-sm-start">
+          <div class="col-md-12 mt-3 text-center text-sm-start">
             <a href="#media-current">{{ $t('message.radio_page.current') }}</a>
           </div>
         </div>
 
-        <live-song v-if="radio" :stream="radio" />
-        <live-song-history v-if="radio" :stream="radio" :radioStreamCodeName="`${radio.code_name}_main`" />
+        <live-song v-if="radio && subRadio" :key="subRadio.radio_stream_code_name" :stream="subRadio" />
+        <live-song-history v-if="radio" :key="subRadio.radio_stream_code_name" :stream="subRadio" />
         <live-listeners v-if="radio" :stream="radio" />
 
         <div class="radio-page-shows mt-2">
@@ -68,10 +68,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapActions, mapState, mapStores } from 'pinia';
-// import { useI18n } from 'vue-i18n';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import { DateTime } from 'luxon';
+
+import type { Stream } from '@/types/stream';
 
 import { useGlobalStore } from '@/stores/globalStore';
 import { useScheduleStore } from '@/stores/scheduleStore';
@@ -96,6 +97,7 @@ import Adsense from './Utils/Adsense.vue';
 import LiveSong from './Live/LiveSong.vue';
 import LiveSongHistory from "./Live/LiveSongHistory.vue";
 import LiveListeners from './Live/LiveListeners.vue';
+import filter from "lodash/filter";
 
 export default defineComponent({
   components: {
@@ -132,7 +134,7 @@ export default defineComponent({
     app?.classList.add('no-background');
 
     if (this.radio !== null) {
-      document.title = this.$i18n.t(
+      document.title = this.$t(
         'message.radio_page.title',
         { radio: this.radio.name }
       );
@@ -154,19 +156,22 @@ export default defineComponent({
       useScheduleStore,
       ['radios', 'collections', 'currentCollection', 'hasSchedule', 'getSubRadio']
     ),
-    hasSubRadios(): boolean {
-      if (this.radio === null) {
-        return false;
+    subRadios() {
+      if (!this.radio) {
+        return [];
       }
 
-      return Object.keys(this.radio.sub_radios).length > 1;
+      return filter(this.radio.streams, s => s.is_sub_radio);
     },
-    currentSubRadioCodeName(): string|null {
-      if (this.radio === null) {
+    subRadio(): Stream|null {
+      if (!this.radio) {
         return null;
       }
 
-      return this.getSubRadio(this.radio.code_name).code_name;
+      return this.getSubRadio(this.radio.code_name);
+    },
+    currentSubRadioCodeName(): string|null {
+      return this.subRadio ? this.subRadio.radio_stream_code_name : null
     },
     radio(): Radio|null {
       if (this.$route.params.radio === undefined || this.$route.params.radio === null) {

@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Oxygene do
-  require Logger
   alias ProgRadioApi.SongProvider.GenericLesIndes
   alias ProgRadioApi.SongProvider
 

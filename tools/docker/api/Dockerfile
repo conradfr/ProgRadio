@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.19.5-erlang-28.4.1-ubuntu-jammy-20260217
+FROM hexpm/elixir:1.20.0-erlang-29.0.1-ubuntu-jammy-20260509
 
 EXPOSE 80
 
@@ -32,7 +32,7 @@ ARG AZURE_GPT_DEPLOYMENT=${AZURE_GPT_DEPLOYMENT}
 ARG AZURE_GPT_VERSION=${AZURE_GPT_VERSION}
 ARG AZURE_GPT_API_KEY=${AZURE_GPT_API_KEY}
 ARG API_50K_KEY=${API_50K_KEY}
-
+ARG CDN_BASE_URL=${CDN_BASE_URL}
 
 ENV DATABASE_URL=${DATABASE_URL} \
     PORT=${PORT} \
@@ -59,7 +59,8 @@ ENV DATABASE_URL=${DATABASE_URL} \
     AZURE_GPT_DEPLOYMENT=${AZURE_GPT_DEPLOYMENT} \
     AZURE_GPT_VERSION=${AZURE_GPT_VERSION} \
     AZURE_GPT_API_KEY=${AZURE_GPT_API_KEY} \
-    API_50K_KEY=${API_50K_KEY}
+    API_50K_KEY=${API_50K_KEY} \
+    CDN_BASE_URL=${CDN_BASE_URL}
 
 #RUN usermod -u 1000 root
 #USER www-data
@@ -70,6 +71,7 @@ RUN apt-get update && apt-get install --no-install-suggests -y \
     imagemagick \
     pkgconf \
     libicu-dev \
+    wget \
     jpegoptim optipng pngquant gifsicle
 
 # For temp forked dep
@@ -97,5 +99,7 @@ COPY  ./progradio_api /var/progradio_api/
 RUN mix deps.compile
 
 RUN mix release prod
+
+HEALTHCHECK CMD wget localhost:80/health || exit 1
 
 CMD ["_build/prod/rel/prod/bin/prod", "start"]

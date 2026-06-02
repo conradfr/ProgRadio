@@ -8,12 +8,15 @@ defmodule ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor do
 
   @impl true
   def init(_init_arg) do
-    children = [
-      ProgRadioApi.AutoUpdater.RadioStreams.Producer,
-      ProgRadioApi.AutoUpdater.RadioStreams.Consumer,
-      ProgRadioApi.AutoUpdater.Streams.Producer,
-      ProgRadioApi.AutoUpdater.Streams.Consumer
-    ]
+    children =
+      if Application.get_env(:progradio_api, :auto_updater, false) do
+        [
+          ProgRadioApi.AutoUpdater.Streams.Producer,
+          ProgRadioApi.AutoUpdater.Streams.Consumer
+        ]
+      else
+        []
+      end
 
     Supervisor.init(children, strategy: :one_for_one)
   end

@@ -375,8 +375,6 @@ admin:
             last: (%number% الأخيرة)
         no_schedule:
             title: محطات الراديو بدون برامج اليوم
-            shows: البرامج
-            sections: التقارير
             all_ok: جميع محطات الراديو لديها برامج معروضة.
         stream_errors:
             title: أخطاء التدفق

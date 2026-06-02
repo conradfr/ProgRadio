@@ -30,7 +30,7 @@ defmodule ProgRadioApi.Importer.Ai do
         where:
           s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
             not is_nil(s.country_code) and (is_nil(s.description) or s.description == ""),
-        order_by: [desc: s.score, desc: s.clicks_last_24h],
+        order_by: [desc: s.score],
         offset: ^offset,
         limit: ^limit
 
@@ -64,7 +64,7 @@ defmodule ProgRadioApi.Importer.Ai do
         where:
           s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
             not is_nil(s.country_code) and (is_nil(s.tags) or s.tags == ""),
-        order_by: [desc: s.score, desc: s.clicks_last_24h],
+        order_by: [desc: s.score],
         offset: ^offset,
         limit: ^limit
 

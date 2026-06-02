@@ -166,3 +166,8 @@
 #docker built images
 /*.tar
 /*.tar.gz
+
+.agents
+.agents/
+CLAUDE.md
+skills-lock.json

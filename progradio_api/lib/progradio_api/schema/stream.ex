@@ -2,7 +2,15 @@ defmodule ProgRadioApi.Stream do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ProgRadioApi.{ListeningSession, RadioStream, StreamSong, StreamOverloading, StreamAutoUpdate, User}
+  alias ProgRadioApi.{
+    ListeningSession,
+    Radio,
+    StreamSong,
+    ScheduleEntry,
+    StreamOverloading,
+    StreamAutoUpdate,
+    User
+  }
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -17,34 +25,46 @@ defmodule ProgRadioApi.Stream do
     field(:website, :string)
     field(:country_code, :string)
     field(:language, :string)
-    field(:votes, :integer, default: 0)
-    field(:clicks_last_24h, :integer, default: 0)
-    field(:score, :integer, default: 0)
-    field(:stream_song_code_name, :string)
-    field(:source, :string, default: "radio-browser")
-    field(:external_id, :string, default: nil)
-    field(:enabled, :boolean)
-    field(:banned, :boolean)
-    field(:popup, :boolean)
-    field(:checked, :boolean)
     field(:slogan, :string)
     field(:description, :string)
+
+    field(:enabled, :boolean)
+    field(:banned, :boolean)
+
+    field(:score, :integer, default: 0)
     field(:redirect_to, :binary_id)
-    field(:playing_error, :integer, default: 0)
-    field(:playing_error_reason, :string, default: nil)
+
+    field(:stream_song_code_name, :string)
+
+    field(:popup, :boolean)
     field(:force_hls, :boolean)
     field(:force_mpd, :boolean)
     field(:force_proxy, :boolean)
-    #    field(:editing_key, :string)
+
+    field(:checked, :boolean)
+    field(:playing_error, :integer, default: 0)
+    field(:playing_error_reason, :string, default: nil)
+
+    # radio related
+    field(:radio_stream_code_name, :string, default: nil)
+    field(:is_main_radio, :boolean)
+    field(:is_sub_radio, :boolean)
+    field(:own_logo, :boolean)
+
+    # import related
+    field(:source, :string, default: "radio-browser")
+    field(:external_id, :string, default: nil)
     field(:import_updated_at, :utc_datetime, default: nil)
+
     field(:last_listening_at, :utc_datetime, default: nil)
     field(:created_at, :utc_datetime)
     field(:updated_at, :utc_datetime)
 
     belongs_to(:user, User)
-    belongs_to(:radio_stream, RadioStream)
+    belongs_to(:radio, Radio)
     belongs_to(:stream_song, StreamSong)
     has_many(:listening_session, ListeningSession)
+    has_many(:schedule_entry, ScheduleEntry)
     has_one(:stream_auto_update, StreamAutoUpdate)
     has_one(:stream_overloading, StreamOverloading, foreign_key: :id)
   end
@@ -65,8 +85,6 @@ defmodule ProgRadioApi.Stream do
       :language,
       :slogan,
       :description,
-      :votes,
-      :clicks_last_24h,
       :score,
       :enabled,
       :redirect_to,

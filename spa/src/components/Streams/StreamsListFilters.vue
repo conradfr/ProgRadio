@@ -182,28 +182,28 @@ export default defineComponent({
       const options = [
         {
           value: 'name',
-          label: this.$i18n.t('message.streaming.sort.name')
+          label: this.$t('message.streaming.sort.name')
         },
         {
           value: 'popularity',
-          label: this.$i18n.t('message.streaming.sort.popularity')
+          label: this.$t('message.streaming.sort.popularity')
         },
         {
           value: 'last',
-          label: this.$i18n.t('message.streaming.sort.last')
+          label: this.$t('message.streaming.sort.last')
         }
       ];
 
       if (this.userLogged) {
         options.push({
           value: 'user_last',
-          label: this.$i18n.t('message.streaming.sort.user_last')
+          label: this.$t('message.streaming.sort.user_last')
         });
       }
 
       options.push({
         value: 'random',
-        label: this.$i18n.t('message.streaming.sort.random')
+        label: this.$t('message.streaming.sort.random')
       });
 
       return options;

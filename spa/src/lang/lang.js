@@ -124,7 +124,8 @@ export const messages = {
         play: 'Ecouter {radio}',
         stop: 'Stopper {radio}',
         title: 'Les programmes et streaming de {radio}',
-        webradios: 'Radios web'
+        webradios: 'Radios web',
+        select_region: 'Choisir comme région'
       },
       schedule: {
         no_schedule: 'Programmes non disponibles :(',
@@ -277,7 +278,8 @@ export const messages = {
         stop: 'Stop {radio}',
         no_schedule: 'Schedule not available',
         title: 'Schedule of the radio {radio}',
-        webradios: 'Webradios'
+        webradios: 'Webradios',
+        select_region: 'Choose an area'
       },
       schedule: {
         no_schedule: 'Schedule not available :(',
@@ -430,7 +432,8 @@ export const messages = {
         play: 'Escuchar {radio}',
         stop: 'Detener {radio}',
         title: 'Los programas y streaming de {radio}',
-        webradios: 'Radios web'
+        webradios: 'Radios web',
+        select_region: 'Elige una región'
       },
       schedule: {
         no_schedule: 'Programas no disponibles :(',
@@ -583,7 +586,8 @@ export const messages = {
         play: '{radio} hören',
         stop: '{radio} stoppen',
         title: 'Programme und Streaming von {radio}',
-        webradios: 'Webradios'
+        webradios: 'Webradios',
+        select_region: 'Wählen Sie eine Region aus'
       },
       schedule: {
         no_schedule: 'Programme nicht verfügbar :(',
@@ -736,7 +740,8 @@ export const messages = {
         play: 'Ouvir {radio}',
         stop: 'Parar {radio}',
         title: 'Os programas e transmissão de {radio}',
-        webradios: 'Rádios web'
+        webradios: 'Rádios web',
+        select_region: 'Escolha uma região'
       },
       schedule: {
         no_schedule: 'Programas não disponíveis :(',
@@ -889,7 +894,8 @@ export const messages = {
         play: 'Ascolta {radio}',
         stop: 'Ferma {radio}',
         title: 'I programmi e lo streaming di {radio}',
-        webradios: 'Radio web'
+        webradios: 'Radio web',
+        select_region: 'Scegli una regione'
       },
       schedule: {
         no_schedule: 'Programmi non disponibili :(',
@@ -1042,7 +1048,8 @@ export const messages = {
         play: 'Słuchaj {radio}',
         stop: 'Zatrzymaj {radio}',
         title: 'Programy i strumieniowanie {radio}',
-        webradios: 'Radia internetowe'
+        webradios: 'Radia internetowe',
+        select_region: 'Wybierz region'
       },
       schedule: {
         no_schedule: 'Programy niedostępne :(',
@@ -1195,7 +1202,8 @@ export const messages = {
         play: 'Άκουσε {radio}',
         stop: 'Σταμάτα {radio}',
         title: 'Τα προγράμματα και το streaming του {radio}',
-        webradios: 'Διαδικτυακά ραδιόφωνα'
+        webradios: 'Διαδικτυακά ραδιόφωνα',
+        select_region: 'Επιλέξτε μια περιοχή'
       },
       schedule: {
         no_schedule: 'Πρόγραμμα μη διαθέσιμο :(',
@@ -1348,7 +1356,8 @@ export const messages = {
         play: 'استمع إلى {radio}',
         stop: 'إيقاف {radio}',
         title: 'برامج وبث {radio}',
-        webradios: 'راديو الويب'
+        webradios: 'راديو الويب',
+        select_region: 'اختر منطقة'
       },
       schedule: {
         no_schedule: 'البرامج غير متوفرة :(',
@@ -1501,7 +1510,8 @@ export const messages = {
         play: 'Ascultă {radio}',
         stop: 'Oprește {radio}',
         title: 'Programul și streaming-ul {radio}',
-        webradios: 'Radio web'
+        webradios: 'Radio web',
+        select_region: 'Alegeți o regiune'
       },
       schedule: {
         no_schedule: 'Programe indisponibile :(',
@@ -1654,7 +1664,8 @@ export const messages = {
         play: 'Hallgassa a {radio}-t',
         stop: 'Állítsa le a {radio}-t',
         title: 'A {radio} műsorai és streamingje',
-        webradios: 'Webrádiók'
+        webradios: 'Webrádiók',
+        select_region: 'Válasszon egy régiót'
       },
       schedule: {
         no_schedule: 'Műsorok nem elérhetők :(',
@@ -1807,7 +1818,8 @@ export const messages = {
         play: '{radio}yu dinle',
         stop: '{radio}yu durdur',
         title: '{radio} programları ve yayını',
-        webradios: 'Web radyoları'
+        webradios: 'Web radyoları',
+        select_region: 'Bir bölge seçin'
       },
       schedule: {
         no_schedule: 'Programlar mevcut değil :(',
@@ -1960,7 +1972,8 @@ export const messages = {
         play: '{radio} beluisteren',
         stop: '{radio} stoppen',
         title: 'De programma’s en stream van {radio}',
-        webradios: 'Webradio’s'
+        webradios: 'Webradio’s',
+        select_region: 'Kies een regio'
       },
       schedule: {
         no_schedule: 'Programma’s niet beschikbaar :(',

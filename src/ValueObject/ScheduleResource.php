@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-use App\Entity\SubRadio;
+use App\Entity\Stream;
 
 class ScheduleResource
 {
@@ -22,7 +22,7 @@ class ScheduleResource
         protected \DateTime $dateTime,
         protected ?string $type=null,
         protected string|array|null $value=null,
-        protected SubRadio|null $subValue=null
+        protected Stream|null $streamValue=null
     ) {
         if ($type !== null && !in_array($type, self::TYPES)) {
             throw new \BadMethodCallException('Not allowed type');
@@ -36,7 +36,7 @@ class ScheduleResource
             throw new \BadMethodCallException('Wrong value type');
         }
 
-        if ($type !== null && $type !== self::TYPE_RADIO && $subValue !== null) {
+        if ($type !== null && $type !== self::TYPE_RADIO && $streamValue !== null) {
             throw new \BadMethodCallException('Wrong value type');
         }
     }
@@ -55,9 +55,9 @@ class ScheduleResource
     {
         return $this->value;
     }
-    public function getSubValue(): SubRadio|null
+    public function getStreamValue(): Stream|null
     {
-        return $this->subValue;
+        return $this->streamValue;
     }
 
 }

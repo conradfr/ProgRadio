@@ -66,7 +66,7 @@ export default defineComponent({
     const mobileFavoritesShortcut = document.getElementById('mobile-schedule-favorites-shortcut');
     mobileFavoritesShortcut?.classList.remove('d-none');
 
-    document.title = this.$i18n.t('message.schedule.title');
+    document.title = this.$t('message.schedule.title');
   },
   beforeUnmount() {
     const body = document.querySelector('body')!;
@@ -128,9 +128,9 @@ export default defineComponent({
 
         preTitle += `${this.playingRadio.name} - `;
 
-        document.title = `${preTitle}${this.$i18n.t('message.schedule.title')}`;
+        document.title = `${preTitle}${this.$t('message.schedule.title')}`;
       } else {
-        document.title = this.$i18n.t('message.schedule.title');
+        document.title = this.$t('message.schedule.title');
       }
     }
   }

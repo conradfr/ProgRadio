@@ -1,11 +1,11 @@
 <template>
   <div v-if="liveSongHistory && liveSongHistory.length > 0" class="mb-4">
-    <div class="mt-3 mb-3 d-flex align-items-center cursor-pointer" @click="show = !show">
+    <div class="mt-3 mb-3 d-flex align-items-center cursor-pointer" @click="showHistory = !showHistory">
       <h6 class="me-2 mb-0">{{ $t('message.streaming.history') }}</h6>
-      <i class="bi" :class="{ 'bi-caret-right-fill': !show, 'bi-caret-down-fill': show }"></i>
+      <i class="bi" :class="{ 'bi-caret-right-fill': !showHistory, 'bi-caret-down-fill': showHistory }"></i>
     </div>
     <Transition name="stream-list">
-    <div v-if="show" class="mt-3">
+    <div v-if="showHistory" class="mt-3">
       <div v-for="entry in liveSongHistory" :key="entry" class="d-flex mb-3">
         <div v-if="entry[1]" class="me-3 history-song-cover">
           <img :src="entry[1]">
@@ -25,7 +25,6 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import { mapState } from 'pinia';
 
-import type { Radio } from '@/types/radio.ts';
 import type { Stream } from '@/types/stream.ts';
 
 import { usePlayerStore } from '@/stores/playerStore.ts';
@@ -39,33 +38,26 @@ export default defineComponent({
   },
   props: {
     stream: {
-      type: Object as PropType<Radio|Stream>,
+      type: Object as PropType<Stream>,
       required: true
     },
-    radioStreamCodeName: {
-      type: String,
-      required: false,
-      default: null
-    }
   },
   data(): {
-    show: boolean,
+    showHistory: boolean,
   } {
     return {
-      show: false,
+      showHistory: false,
     };
   },
   computed: {
     ...mapState(usePlayerStore, ['songHistory']),
     liveSongHistory() {
-      const channelName = PlayerUtils.getChannelName(this.stream, this.radioStreamCodeName);
-
-      if (!channelName || this.songHistory === null || this.songHistory === undefined
-          || !Object.prototype.hasOwnProperty.call(this.songHistory, channelName)) {
+      if (!this.stream.id || this.songHistory === null || this.songHistory === undefined
+          || !Object.prototype.hasOwnProperty.call(this.songHistory, this.stream.id)) {
         return null;
       }
 
-      return this.songHistory[channelName].history.map((entry: any) => {
+      return this.songHistory[this.stream.id].history.map((entry: any) => {
         return [PlayerUtils.formatSong(entry), entry.cover_url || null]
       });
     },

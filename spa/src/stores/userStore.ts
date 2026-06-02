@@ -49,7 +49,7 @@ export const useUserStore = defineStore('user', {
     }
   ),
   getters: {
-    getSubRadioCodeName: state => (radioCodeName: string): string | null => state.subRadios[radioCodeName] || null,
+    getSubRadioCodeName: state => (radioCodeName: string): string|null => state.subRadios[radioCodeName] || null,
   },
   actions: {
     getUserData() {
