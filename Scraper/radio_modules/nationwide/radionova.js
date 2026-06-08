@@ -3,7 +3,7 @@ let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
 
 const urls = {
-  'radionova': 'https://www.nova.fr/la-grille-nova/',
+  'radionova_main': 'https://www.nova.fr/la-grille-nova/',
   'radionova_bordeaux': 'https://www.nova.fr/la-grille-nova/',
   'radionova_lyon': 'https://www.nova.fr/la-grille-nova/la-grille-2/'
 };
