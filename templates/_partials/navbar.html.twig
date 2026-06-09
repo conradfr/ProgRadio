@@ -12,7 +12,8 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app') }}{% if isProgRadioRequest == true %}schedule{% else %}streaming{% endif %}" onclick="return scrollToCursor();">
             <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="{{ domainNameRequest }}" class="d-inline-block align-text-top">{{ domainNameRequest }}</a>
-        {% if 'Android' in app.request.headers.get('User-Agent') and 'progradio' not in app.request.headers.get('User-Agent') %}
+        {% if 'Android' in app.request.headers.get('User-Agent') and
+          ('progradio' in app.request.headers.get('User-Agent') or 'radioaddict' in app.request.headers.get('User-Agent')) == false %}
             <div>
                 <a href="{{ getField('play_store', app.request) }}"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
             </div>
