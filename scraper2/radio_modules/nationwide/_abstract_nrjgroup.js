@@ -138,20 +138,20 @@ const fetch = async (dateObj, name, url) => {
     const data = $.extract({
       shows: [
         {
-          selector: `#${day} .timelineShedule`,
+          selector: `#${day} .c-timeline-emission`,
           value: {
             datetime_raw_start: {
-              selector: '.timelineShedule-header time.timelineShedule-time:nth-child(1)',
+              selector: '.c-timeline-emission__header time:nth-child(1)',
               value: 'datetime'
             },
             datetime_raw_end: {
-              selector: '.timelineShedule-header time.timelineShedule-time:nth-child(2)',
+              selector: '.c-timeline-emission__header time:nth-child(2)',
               value: 'datetime'
             },
-            title: '.timelineShedule-content h3.a-heading-3',
-            description: '.timelineShedule-content p.description',
+            title: '.c-timeline-emission__body h3.c-timeline-emission__heading',
+            description: '.c-timeline-emission__body p.c-timeline-emission__description',
             img: {
-              selector: '.timelineShedule__thumbnail source:first-of-type',
+              selector: '.c-timeline-emission__thumbnail source:first-of-type',
               value: 'srcset'
             },
           }

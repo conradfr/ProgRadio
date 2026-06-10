@@ -47,7 +47,7 @@ const setBrowser = async () => {
   return Promise.resolve(true);
 };
 
-const getDescription = async (url) => {nano
+const getDescription = async (url) => {
   try {
     logger.log('info', `fetching description ${url}`);
     let description = '';
@@ -151,7 +151,6 @@ const format = async (dateObj, name) => {
 
     if (entry.link) {
       const description = await getDescription(entry.link);
-
       if (description && description.trim() !== '') {
         newEntry.description = description.trim();
       }

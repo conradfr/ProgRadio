@@ -40,6 +40,7 @@ const setBrowser = async () => {
 const getDescription = async (url) => {
   try {
     let description = '';
+    logger.log('info', `fetching description ${url}`);
     await setBrowser();
     const page = await browser.newPage();
     await page.goto('https://www.rfi.fr' + url, {
