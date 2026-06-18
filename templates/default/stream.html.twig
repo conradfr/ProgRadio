@@ -287,7 +287,7 @@
 
                         {% if stream.website is defined and stream.website is not null %}
                             <div class="mb-3">
-                                <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a> ↗
+                                <strong>{{ 'page.stream.website'|trans }}:</strong> <a target="_blank" rel="nofollow" href="{{ stream.website }}">{{ stream.website }}</a> ↗
                             </div>
                         {% endif %}
                     {% endif %}

@@ -25,7 +25,7 @@
     "vue": "^3.5.13",
     "vue-gtag": "^2.1.2",
     "vue-i18n": "^11.1.2",
-    "vue-router": "^5.0.0",
+    "vue-router": "4.6.4",
     "vue3-slider": "^1.10.1"
   },
   "devDependencies": {
