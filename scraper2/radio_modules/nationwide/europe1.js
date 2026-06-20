@@ -1,8 +1,7 @@
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
-import puppeteer from '@zorilla/puppeteer-extra'
-import StealthPlugin from '@zorilla/puppeteer-extra-plugin-stealth'
 
 const dayFr = {
   1: 'lundi',
@@ -14,60 +13,42 @@ const dayFr = {
   7: 'dimanche'
 };
 
+let scraperConfig = {};
 let scrapedData = [];
-
 let html = null;
-
-puppeteer.use(StealthPlugin())
-let browser = null;
-
-const setBrowser = async () => {
-  if (!browser) {
-    browser = await puppeteer.launch({
-      executablePath: '/usr/bin/chromium',
-      headless: true,
-      args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
-      env: {
-        ...process.env,
-      },
-    })
-  }
-
-  return Promise.resolve(true);
-}
 
 const getDescription = async (url) => {
   let description = null;
+
+  logger.log('debug', `fetching ${url}`);
+
   try {
-    await setBrowser();
-    const page = await browser.newPage();
-    await page.goto(`https://www.europe1.fr${url}`, {
-      waitUntil: 'networkidle2',
-      timeout: 30000,
-    });
-    const pageHtml = await page.content();
+    let realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(`https://www.europe1.fr${url}`)}`
 
-    if (pageHtml) {
-      const $ = cheerio.load(pageHtml);
-      const dataPage = $.extract({
-        show: [
-          {
-            selector: `.emission-description .emission-description__content > div`,
-            value: {
-              description: 'div:not(.visually-hidden)',
-            }
-          }
-        ]
-      });
-
-      if (dataPage) {
-        description = dataPage.show?.[0]?.description;
+    const response = await axios.get(realUrl, {
+      headers: {
+        'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
       }
+    });
+
+    const $ = cheerio.load(response.data);
+    const dataPage = $.extract({
+      show: [
+        {
+          selector: `.emission-description .emission-description__content > div`,
+          value: {
+            description: 'div:not(.visually-hidden)',
+          }
+        }
+      ]
+    });
+
+    if (dataPage) {
+      description = dataPage.show?.[0]?.description;
     }
 
-    await page.close();
   } catch (error) {
-    logger.log('error fetch description', error);
+    logger.log('error fetch description');
   }
 
   return Promise.resolve(description);
@@ -145,9 +126,6 @@ const format = async dateObj => {
     return prev;
   }, []);
 
-  if (browser) {
-    await browser.close();
-  }
   return Promise.resolve(cleanedData);
 };
 
@@ -161,13 +139,14 @@ const fetch = async dateObj => {
     logger.log('info', `fetching ${url}`);
 
     if (!html) {
-      await setBrowser();
-      const page = await browser.newPage();
-      await page.goto(url, {
-       waitUntil: 'networkidle2',
-       timeout: 30000,
+      let realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(url)}`
+
+      const response = await axios.get(realUrl, {
+        headers: {
+          'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
+        }
       });
-      html = await page.content();
+      html = response.data;
     }
 
     let $ = cheerio.load(html);
@@ -200,8 +179,7 @@ const fetch = async dateObj => {
       scrapedData = scrapedData.concat(data.shows);
     }
   } catch (error) {
-    logger.log('error fetch schedule', error);
-    browser.close();
+    logger.log('error fetch schedule');
   }
 
   return Promise.resolve(true);
@@ -218,7 +196,8 @@ const fetchAll = dateObj => {
     }).catch(() => fetch(dateObj));
 };
 
-const getScrap = dateObj => {
+const getScrap = (dateObj, name, config) => {
+  scraperConfig = config;
   return fetchAll(dateObj)
     .then(() => {
       return format(dateObj);

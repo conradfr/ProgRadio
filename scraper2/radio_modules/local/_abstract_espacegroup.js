@@ -1,8 +1,7 @@
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
-import puppeteer from '@zorilla/puppeteer-extra'
-import StealthPlugin from '@zorilla/puppeteer-extra-plugin-stealth'
 
 const dayFr = {
   'lundi': 1,
@@ -14,52 +13,23 @@ const dayFr = {
   'dimanche': 7
 };
 
+let scraperConfig = {};
 let scrapedData = [];
-
-puppeteer.use(StealthPlugin())
-let browser = null;
-
-const setBrowser = async () => {
-  if (browser && browser.isConnected()) {
-    return;
-  }
-  // kill any stale reference
-  if (browser) {
-    try { await browser.close(); } catch (_) {}
-    browser = null;
-  }
-  browser = await puppeteer.launch({
-    executablePath: '/usr/bin/chromium',
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--single-process',
-    ],
-    timeout: 240000,
-    env: {
-      ...process.env,
-    },
-  });
-
-  return Promise.resolve(true);
-};
 
 const getDescription = async (url) => {
   try {
     logger.log('info', `fetching description ${url}`);
     let description = '';
-    await setBrowser();
-    const page = await browser.newPage();
-    await page.goto(url, {
-      waitUntil: 'networkidle2',
-      timeout: 120000,
-    });
-    const html = await page.content();
 
-    const $ = cheerio.load(html);
+    const realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(url)}`
+
+    const response = await axios.get(realUrl, {
+      headers: {
+        'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
+      }
+    });
+
+    const $ = cheerio.load(response.data);
     const data = $.extract({
       description: '.main-article p',
     });
@@ -70,7 +40,7 @@ const getDescription = async (url) => {
 
     return Promise.resolve(description);
   } catch (error) {
-    logger.log('error fetching description', error);
+    logger.log('error fetching description');
     return Promise.resolve(null);
   }
 };
@@ -160,7 +130,6 @@ const format = async (dateObj, name) => {
     return prev;
   }, []);
 
-  browser.close();
   return Promise.resolve(cleanedData);
 };
 
@@ -170,15 +139,15 @@ const fetch = async (dateObj, name, url) => {
   logger.log('info', `fetching ${url}`);
 
   try {
-    await setBrowser();
-    const page = await browser.newPage();
-    await page.goto(url, {
-      waitUntil: 'networkidle2',
-      timeout: 1200000,
-    });
-    const html = await page.content();
+    let realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(url)}`
 
-    const $ = cheerio.load(html);
+    const response = await axios.get(realUrl, {
+      headers: {
+        'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
+      }
+    });
+
+    const $ = cheerio.load(response.data);
     const data = $.extract({
       shows: [
         {
@@ -204,8 +173,7 @@ const fetch = async (dateObj, name, url) => {
       scrapedData[name] = data.shows;
     }
   } catch (error) {
-    logger.log('error fetching schedule', error);
-    browser.close();
+    logger.log('error fetching schedule');
   }
 
   return Promise.resolve(true);
@@ -215,7 +183,8 @@ const fetchAll = (dateObj, name, url) => {
   return fetch(dateObj, name, url);
 };
 
-const getScrap = (dateObj, name, url) => {
+const getScrap = (dateObj, name, url, config) => {
+  scraperConfig = config;
   scrapedData[name] = [];
   return fetchAll(dateObj, name, url)
     .then(async () => {

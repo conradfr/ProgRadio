@@ -2,9 +2,9 @@ import scrapAbstract from './_abstract_espacegroup.js';
 
 const name = 'alpes1_sud';
 
-const getScrap = dateObj => {
+const getScrap = (dateObj, _subRadio, config) => {
   const url = 'https://alpesdusud.alpes1.com/radio/grille-programme';
-  return scrapAbstract.getScrap(dateObj, name, url);
+  return scrapAbstract.getScrap(dateObj, name, url, config);
 };
 
 export default {

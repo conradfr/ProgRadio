@@ -1,43 +1,12 @@
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import utils from '../../lib/utils.js';
 import logger from '../../lib/logger.js';
-import puppeteer from '@zorilla/puppeteer-extra'
-import StealthPlugin from '@zorilla/puppeteer-extra-plugin-stealth'
 
+let scraperConfig = {};
 const scrapedData = {};
 const cleanedData = {};
-
-puppeteer.use(StealthPlugin())
-let browser = null;
-
-const setBrowser = async () => {
-  if (browser && browser.isConnected()) {
-    return;
-  }
-  // kill any stale reference
-  if (browser) {
-    try { await browser.close(); } catch (_) {}
-    browser = null;
-  }
-  browser = await puppeteer.launch({
-    executablePath: '/usr/bin/chromium',
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--single-process',
-    ],
-    timeout: 240000,
-    env: {
-      ...process.env,
-    },
-  });
-
-  return Promise.resolve(true);
-};
 
 const format = async (dateObj, name) => {
 // we use reduce instead of map to act as a map+filter in one pass
@@ -105,7 +74,6 @@ const format = async (dateObj, name) => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title.trim(),
-      // 'img': `${process.env.PROXY_URL}nostalgie.jpg?key=${process.env.PROXY_KEY}&url=${img}`,
       'img': curr.img || null,
       'description': curr.description.trim()
     };
@@ -113,8 +81,6 @@ const format = async (dateObj, name) => {
     prev.push(newEntry);
     return prev;
   }, []);
-
-  browser.close();
 
   return Promise.resolve(cleanedData[name]);
 };
@@ -124,17 +90,15 @@ const fetch = async (dateObj, name, url) => {
   const day = utils.upperCaseWords(dateObj.format('dddd'));
   logger.log('info', `fetching ${url}`);
 
-  try {
-    await setBrowser();
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(120000);
-    await page.goto(url, {
-      waitUntil: 'networkidle2',
-      timeout: 120000,
-    });
-    const html = await page.content();
+  let realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(url)}`
 
-    const $ = cheerio.load(html);
+  try {
+    const response = await axios.get(realUrl, {
+      headers: {
+        'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
+      }
+    });
+    const $ = cheerio.load(response.data);
     const data = $.extract({
       shows: [
         {
@@ -164,7 +128,6 @@ const fetch = async (dateObj, name, url) => {
     }
   } catch (error) {
     logger.log('error fetch schedule: ' + error);
-    browser.close();
   }
 
   return Promise.resolve(true);
@@ -185,9 +148,10 @@ const fetchAll = (dateObj, name, url) => {
     });
 };
 
-const getScrap = (dateObj, name, url) => {
+const getScrap = (dateObj, name, url, config) => {
+  scraperConfig = config;
   scrapedData[name] = [];
-  return fetchAll(dateObj, name, url)
+  return fetchAll(dateObj, name, url, config)
     .then(async () => {
       return await format(dateObj, name);
     });

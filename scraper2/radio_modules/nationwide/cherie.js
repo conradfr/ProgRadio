@@ -2,9 +2,9 @@ import scrapAbstract from './_abstract_nrjgroup.js';
 
 const name = 'cherie';
 
-const getScrap = dateObj => {
+const getScrap = (dateObj, _subRadio, config) => {
   const url = 'https://www.cheriefm.fr/grille-emissions';
-  return scrapAbstract.getScrap(dateObj, name, url)
+  return scrapAbstract.getScrap(dateObj, name, url, config)
 };
 
 export default {

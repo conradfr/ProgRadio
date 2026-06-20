@@ -1,55 +1,25 @@
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
-import puppeteer from '@zorilla/puppeteer-extra'
-import StealthPlugin from '@zorilla/puppeteer-extra-plugin-stealth'
 
+let scraperConfig = {};
 let scrapedData = [];
 
-puppeteer.use(StealthPlugin())
-let browser = null;
-
-const setBrowser = async () => {
-  if (browser && browser.isConnected()) {
-    return;
-  }
-  // kill any stale reference
-  if (browser) {
-    try { await browser.close(); } catch (_) {}
-    browser = null;
-  }
-  browser = await puppeteer.launch({
-    executablePath: '/usr/bin/chromium',
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--single-process',
-    ],
-    timeout: 240000,
-    env: {
-      ...process.env,
-    },
-  });
-
-  return Promise.resolve(true);
-};
-
 const getDescription = async (url) => {
-  try {
-    let description = '';
-    logger.log('info', `fetching description ${url}`);
-    await setBrowser();
-    const page = await browser.newPage();
-    await page.goto('https://www.rfi.fr' + url, {
-      waitUntil: 'networkidle2',
-      timeout: 120000,
-    });
-    const html = await page.content();
+  logger.log('debug', `fetching ${url}`);
+  let description = '';
 
-    const $ = cheerio.load(html);
+  try {
+    let realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(`https://www.rfi.fr${url}`)}`
+
+    const response = await axios.get(realUrl, {
+      headers: {
+        'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
+      }
+    });
+
+    const $ = cheerio.load(response.data);
     const data = $.extract({
       description: '.o-podcast-about__chapo p',
       description2: '.o-podcast-about__description p',
@@ -68,7 +38,7 @@ const getDescription = async (url) => {
 
     return Promise.resolve(description);
   } catch (error) {
-    logger.log('error fetching description', error);
+    logger.log('error fetching description');
     return Promise.resolve(null);
   }
 };
@@ -105,7 +75,6 @@ const format = async (dateObj, name) => {
     return prev;
   }, []);
 
-  browser.close();
   return Promise.resolve(cleanedData);
 };
 
@@ -114,17 +83,16 @@ const fetch = async (dateObj, name, url) => {
 
   logger.log('info', `fetching ${url}`);
 
-  try {
-    await setBrowser();
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(120000);
-    await page.goto(url, {
-      waitUntil: 'networkidle2',
-      timeout: 120000,
-    });
-    const html = await page.content();
+  let realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(url)}`
 
-    const $ = cheerio.load(html);
+  try {
+    const response = await axios.get(realUrl, {
+      headers: {
+        'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
+      }
+    });
+
+    const $ = cheerio.load(response.data);
     const data = $.extract({
       shows: [
         {
@@ -154,7 +122,6 @@ const fetch = async (dateObj, name, url) => {
     }
   } catch (error) {
     logger.log('error fetch schedule: ' + error);
-    browser.close();
   }
 
   return Promise.resolve(true);
@@ -164,7 +131,8 @@ const fetchAll = (dateObj, name, url) => {
   return fetch(dateObj, name, url);
 };
 
-const getScrap = (dateObj, name, url) => {
+const getScrap = (dateObj, name, url, config) => {
+  scraperConfig = config;
   scrapedData[name] = [];
   return fetchAll(dateObj, name, url)
     .then(async () => {

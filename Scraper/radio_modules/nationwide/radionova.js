@@ -113,6 +113,11 @@ const fetchAll = (dateObj, subRadio) => {
 };
 
 const getScrap = (dateObj, subRadio) => {
+  // quick fix
+  if (!subRadio || subRadio === 'radionova') {
+    subRadio = 'radionova_main';
+  }
+
   return fetchAll(dateObj, subRadio)
     .then(() => {
       return format(dateObj, subRadio);

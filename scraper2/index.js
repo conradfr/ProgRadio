@@ -67,7 +67,7 @@ const getResults = async (radios, radiosList) => {
     dateObj.tz('Europe/Paris');
 
     const all2 = await radio.sub_radios.map(async function (sub_radio) {
-      return await radio_module.default.getScrap(dateObj, sub_radio)
+      return await radio_module.default.getScrap(dateObj, sub_radio, config)
         .then(async function (data) {
           const dateFormat = 'DD-MM-YYYY';
           logger.log('info', `${radio_module.default.getName} (${sub_radio}) - items found: ${data.length}`);
