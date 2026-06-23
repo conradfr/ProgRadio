@@ -15,6 +15,11 @@ const fetchDesc = async (url) => {
         'description': ['p']
       })
       .data(function(listing) {
+        // osmosis can emit repeated entries for a `['p']` array selector when
+        // paragraphs nest/overlap — dedupe before they get joined downstream.
+        if (Array.isArray(listing.description)) {
+          listing.description = [...new Set(listing.description)];
+        }
         data = listing;
       })
       .done(function () {
@@ -177,6 +182,7 @@ const format = async (dateObj, name, description_prefix, hosts) => {
     return prev;
   }, []);
 
+  console.log(cleanedData);
   return await Promise.resolve(cleanedData);
 };
 

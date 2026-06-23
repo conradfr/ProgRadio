@@ -69,6 +69,8 @@ const fetch = dateObj => {
 
   logger.log('info', `fetching ${url}`);
 
+  const seen = new Set();
+
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
@@ -78,6 +80,13 @@ const fetch = dateObj => {
         'title': 'td[2]'
       })
       .data(function (listing) {
+        // the source page serves duplicate rows — dedupe identical slots here.
+        const key = `${listing.time_raw}|${listing.title}`;
+        if (seen.has(key)) {
+          return;
+        }
+        seen.add(key);
+
         listing.dateObj = dateObj;
         scrapedData.push(listing);
       })

@@ -89,6 +89,8 @@ const fetch = dateObj => {
 
   logger.log('info', `fetching ${url}`);
 
+  const seen = new Set();
+
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
@@ -118,6 +120,14 @@ const fetch = dateObj => {
           })
       )
       .data(function (listing) {
+        // osmosis emits one event per array-selector element when combined with
+        // a .follow() sub-request — dedupe identical program items here.
+        const key = `${listing.title}|${listing.img}|${listing.host}`;
+        if (seen.has(key)) {
+          return;
+        }
+        seen.add(key);
+
         if (listing.subs && listing.subs.length > 0 && typeof listing.subs[0] === 'string' ) {
           delete listing.subs
         }

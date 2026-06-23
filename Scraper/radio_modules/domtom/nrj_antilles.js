@@ -376,6 +376,8 @@ const fetch = dateObj => {
 
   logger.log('info', `fetching ${url}`);
 
+  const seen = new Set();
+
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(url)
@@ -392,6 +394,14 @@ const fetch = dateObj => {
           })
       )
       .data(function (listing) {
+        // osmosis emits one event per `description` element when combined with
+        // a .follow() sub-request — dedupe identical items here.
+        const key = `${listing.title}|${listing.description_short}`;
+        if (seen.has(key)) {
+          return;
+        }
+        seen.add(key);
+
         listing.dateObj = dateObj;
         scrapedData.push(listing);
       })
@@ -402,13 +412,7 @@ const fetch = dateObj => {
 };
 
 const fetchAll = dateObj => {
-  const otherDayObj = moment(dateObj) ;
-  otherDayObj.subtract(1, 'days');
-
-  return fetch(otherDayObj)
-    .then(() => {
-      return fetch(dateObj);
-    });
+  return fetch(dateObj);
 };
 
 const getScrap = dateObj => {

@@ -70,12 +70,12 @@ const format = (dateObj, name) => {
 
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
-      'img': curr.img !== undefined ? `https:${curr.img}` : null,
-      'title': curr.title,
-      'description': description
+      'img': curr.img,
+      'title': curr.title && curr.title !== '' ? curr.title : 'Programme inconnu',
+      'description': description && description !== '' ? description : null
     };
 
-    if (curr.host !== undefined) {
+    if (curr.host && curr.host !== '') {
       newEntry.host = curr.host;
     }
 
@@ -87,6 +87,7 @@ const format = (dateObj, name) => {
 };
 
 const fetch = (url, name, dateObj) => {
+  const seen = new Set();
   const day = dateObj.format('YYYY-MM-DD');
   const day_url = `${url}?date=${day}`;
 
@@ -95,13 +96,13 @@ const fetch = (url, name, dateObj) => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(day_url)
-      .find('.rts-modules-programme-list article')
+      .select('.rts-modules-programme-list article')
       .set({
-          'img': 'img.photo@data-src',
+          'img': 'img.photo@src',
           'datetime_raw': 'span.time',
           'title': 'h2',
           'host': 'p.animators',
-          'sections': ['.channel-bulletcolor li']
+          'sections': ['.sequences__list li']
         }
       )
       .do(
@@ -112,10 +113,20 @@ const fetch = (url, name, dateObj) => {
           })
       )
       .data(function (listing) {
-        if (listing.datetime_raw !== undefined) {
-          listing.dateObj = dateObj;
-          scrapedData[name].push(listing);
+        if (listing.datetime_raw === undefined) {
+          return;
         }
+
+        // osmosis emits one event per `sections` element when combined with
+        // a .follow() sub-request — dedupe identical articles here.
+        const key = `${listing.datetime_raw}|${listing.title}`;
+        if (seen.has(key)) {
+          return;
+        }
+        seen.add(key);
+
+        listing.dateObj = dateObj;
+        scrapedData[name].push(listing);
       })
       .done(function () {
         resolve(true);
