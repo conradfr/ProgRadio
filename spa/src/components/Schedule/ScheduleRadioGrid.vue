@@ -93,13 +93,18 @@ export default defineComponent({
         return {};
       }
 
-      const subRadioCodeName = this.getSubRadio(radioCodeName).radio_stream_code_name;
-      if (!this.schedule[radioCodeName][subRadioCodeName]) {
+      try {
+        const subRadioCodeName = this.getSubRadio(radioCodeName).radio_stream_code_name;
+
+        if (!this.schedule[radioCodeName][subRadioCodeName]) {
+          return {};
+        }
+
+        // @ts-ignore
+        return this.schedule[radioCodeName][subRadioCodeName];
+      } catch (_e) {
         return {};
       }
-
-      // @ts-ignore
-      return this.schedule[radioCodeName][subRadioCodeName];
     },
     hasSchedule(radioCodeName: string): boolean {
       return Object.keys(this.getSchedule(radioCodeName)).length > 0;

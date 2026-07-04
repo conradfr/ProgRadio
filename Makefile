@@ -54,7 +54,9 @@ test: ## Start tests with phpunit, pass the parameter "c=" to add options to php
 ## —— DB ———————————————————————————————————————————————————————————————
 
 db-import:
-	@$(DB_CONT) psql -d progradio -U postgres < /var/tmp/sql/sql
+	@$(DB_CONT) psql -d postgres -U postgres -c "DROP DATABASE IF EXISTS progradio;"
+	@$(DB_CONT) psql -d postgres -U postgres -c "CREATE DATABASE progradio;"
+	@$(DB_CONT) sh -c 'cat /var/tmp/sql/* | psql -d progradio -U postgres'
 
 ## —— API ———————————————————————————————————————————————————————————————
 

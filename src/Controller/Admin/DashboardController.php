@@ -19,7 +19,7 @@ class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
     {
-        return $this->redirectToRoute('easy_admin_radio_stream_index');
+        return $this->redirectToRoute('easy_admin_radio_index');
     }
 
     public function configureDashboard(): Dashboard

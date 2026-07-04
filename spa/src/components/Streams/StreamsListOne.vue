@@ -187,7 +187,7 @@ export default defineComponent({
     ...mapState(useStreamsStore, ['selectedCountry', 'favorites']),
     ...mapState(useUserStore, { userLogged: 'logged', userIsAdmin: 'isAdmin' }),
     isFavorite() {
-      return this.favorites.indexOf(this.stream.code_name) !== -1;
+      return this.favorites && Array.isArray(this.favorites) && this.favorites.indexOf(this.stream.code_name) !== -1;
     },
     hasErrors() {
       return this.stream.playing_error && this.stream.playing_error >= config.ERROR_DISPLAY_THRESHOLD;
