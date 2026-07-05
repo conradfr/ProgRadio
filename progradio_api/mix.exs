@@ -80,7 +80,7 @@ defmodule ProgRadioApi.MixProject do
       {:ex_cldr, "~> 2.43"},
       {:ex_cldr_territories, "~> 2.11.0"},
       {:ex_cldr_collation, "~> 0.7.5"},
-      {:req, "~> 0.5.0"},
+      {:req, "~> 0.6.0"},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:ecto_psql_extras, "~> 0.8"},
       {:hls, "~> 0.1.0"},

@@ -15,6 +15,17 @@ defmodule ProgRadioApi.ListeningSessions do
   #  @cache_prefix "listening_session_"
   #  @cache_ttl 90_000
 
+  # Legacy: kept because not everyone will have the page refreshed with the new code
+  # TODO remove after some time
+  def get_listening_session!(id, %{"radio_stream_code_name" => radio_stream_code_name} = _attrs) do
+    stream = Repo.get_by(Stream, radio_stream_code_name: radio_stream_code_name)
+
+    case stream do
+      nil -> nil
+      _ -> Repo.get_by(ListeningSession, id: id, stream_id: stream.id)
+    end
+  end
+
   # Legacy: kept for old mobile apps for now
   # TODO remove after some time
   def get_listening_session!(id, %{"code_name" => stream_id} = _attrs) do
@@ -36,6 +47,21 @@ defmodule ProgRadioApi.ListeningSessions do
     else
       _ -> nil
     end
+  end
+
+  # Legacy: kept because not everyone will have the page refreshed with the new code
+  # TODO remove after some time
+  def create_listening_session(
+        %{"radio_stream_code_name" => radio_stream_code_name} = attrs,
+        remote_ip
+      )
+      when is_map_key(attrs, "radio_stream_code_name") do
+    ip_binary = get_ip_as_binary(remote_ip)
+
+    Repo.get_by(Stream, radio_stream_code_name: radio_stream_code_name)
+    |> Ecto.build_assoc(:listening_session, %ListeningSession{ip_address: ip_binary})
+    |> ListeningSession.changeset(attrs)
+    |> Repo.insert()
   end
 
   # Legacy: kept for old mobile apps for now

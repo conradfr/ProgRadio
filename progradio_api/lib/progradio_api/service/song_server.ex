@@ -507,6 +507,9 @@ defmodule ProgRadioApi.SongServer do
   defp update_song_history(song, song_history, new_song)
 
   # no song to add
+  defp update_song_history(:indecisive, song_history, _new_song), do: song_history
+
+  # no song to add
   defp update_song_history(nil, song_history, _new_song), do: song_history
 
   # no song to add

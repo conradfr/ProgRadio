@@ -16,8 +16,8 @@
 {% block title %}{{ 'page.top.page_title'|trans({'%country%': country}) }}{% endblock %}
 {% block description %}{{ 'page.top.description'|trans({'%country%': country}) }}{% endblock %}
 
-{% macro picture(stream) %}{%- if stream.radioStream.id is defined and stream.radioStream.id is not null %}
-img/radio/page/{{ stream.radioStream.radio.codeName }}.png
+{% macro picture(stream) %}{%- if stream.radio is defined and stream.radio.id is not null %}
+img/radio/page/{{ stream.radio.codeName }}.png
 {%- elseif stream.img_alt is defined and stream.img_alt is not null %}
 img/radio/page/{{ stream.img_alt }}.png
 {%- elseif stream.img is not null and stream.img != '' %}
@@ -62,7 +62,7 @@ img/stream-placeholder.png
     }">
                             <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
                                  v-if="playing === PLAYER_STATE_STOPPED || radioId !== '{{- stream.code_name -}}'"
-                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}'})"
+                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, force_proxy: {{- stream.force_proxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}'})"
                             >
                                 <div class="streams-one-img-play"></div>
                             </div>

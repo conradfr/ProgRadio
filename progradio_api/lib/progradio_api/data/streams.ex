@@ -304,6 +304,9 @@ defmodule ProgRadioApi.Streams do
     Repo.all(query)
   end
 
+  # todo find why
+  def img_to_full_url(nil), do: nil
+
   def img_to_full_url(%{} = stream) do
     img_url =
       cond do

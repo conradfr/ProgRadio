@@ -60,11 +60,11 @@ class ScheduleEntryRepository extends EntityRepository
                 $export[$collectionCodeName] = [];
             }
 
-
             // add show if not already there
             if (!isset($export[$collectionCodeName][$codeName])) {
                 $radioData = [
                     'codeName' => $codeName,
+                    'id' => $row['radio_id'],
                     'name' => $row['radio_stream_name'],
                     'share' => $row['radio_share'],
                     'streamingUrl' => $row['streaming_url']
@@ -226,7 +226,7 @@ EOT;
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
-            ->addSelect('r.name as radio_name, r.share as radio_share, s.name as radio_stream_name, s.streamUrl as streaming_url, c.codeName as collectionCodeName')
+            ->addSelect('r.name as radio_name, r.share as radio_share, s.name as radio_stream_name, s.id as radio_id, s.streamUrl as streaming_url, c.codeName as collectionCodeName')
             ->from(ScheduleEntry::class, 'se')
             ->innerJoin('se.radio', 'r')
             ->innerJoin('se.stream', 's')

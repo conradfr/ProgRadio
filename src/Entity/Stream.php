@@ -641,22 +641,22 @@ class Stream implements NormalizableInterface
         $this->isMainRadio = $isMainRadio;
     }
 
-    public function getRadioStreamCodeName(): string
+    public function getRadioStreamCodeName(): ?string
     {
         return $this->radioStreamCodeName;
     }
 
-    public function setRadioStreamCodeName(string $radioStreamCodeName): void
+    public function setRadioStreamCodeName(?string $radioStreamCodeName = null): void
     {
         $this->radioStreamCodeName = $radioStreamCodeName;
     }
 
-    public function getRadio(): Radio
+    public function getRadio(): ?Radio
     {
         return $this->radio;
     }
 
-    public function setRadio(Radio $radio): void
+    public function setRadio(?Radio $radio = null): void
     {
         $this->radio = $radio;
     }

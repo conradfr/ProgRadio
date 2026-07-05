@@ -182,7 +182,6 @@ const format = async (dateObj, name, description_prefix, hosts) => {
     return prev;
   }, []);
 
-  console.log(cleanedData);
   return await Promise.resolve(cleanedData);
 };
 

@@ -153,19 +153,18 @@ class ListeningSessionRepository extends ServiceEntityRepository
             select ls.source,
                     COALESCE(SUM(ls.total_radios), 0) as total_radios,
                     COALESCE(SUM(ls.total_streams), 0) as total_streams,
-                    COALESCE(json_agg(json_build_object('radio', ls.code_name, 'total', ls.total_radios))
-                        FILTER (WHERE ls.code_name IS NOT NULL), '[]') as list_radios,
+                    COALESCE(json_agg(json_build_object('radio', ls.radio_stream_code_name, 'total', ls.total_radios))
+                        FILTER (WHERE ls.radio_stream_code_name IS NOT NULL), '[]') as list_radios,
                     COALESCE(json_agg(json_build_object('stream', ls.stream_id, 'total', ls.total_streams))
-                        FILTER (WHERE ls.stream_id IS NOT NULL), '[]') as list_streams
+                        FILTER (WHERE ls.radio_stream_code_name IS NULL AND ls.stream_id IS NOT NULL), '[]') as list_streams
             FROM (
-                    select ls.source, rs.code_name, count(r.id) as total_radios, s.id as stream_id, count(s.id) as total_streams
+                    select ls.source, s.radio_stream_code_name, count(r.id) as total_radios, s.id as stream_id, count(s.id) as total_streams
                     from listening_session ls
-                    left join radio_stream rs on ls.radio_stream_id = rs.id
-                    left join radio r on rs.radio_id = r.id
                     left join stream s on ls.stream_id = s.id
+                    left join radio r on s.radio_id = r.id
                      WHERE ls.date_time_end > (now() at time zone 'utc' - interval '32 second')
                        AND ls.date_time_end < (now() at time zone 'utc' + interval '32 second')
-                     GROUP BY ls.source, rs.code_name, s.id
+                     GROUP BY ls.source, s.radio_stream_code_name, s.id
             ) ls
             GROUP BY ls.source
         ";
