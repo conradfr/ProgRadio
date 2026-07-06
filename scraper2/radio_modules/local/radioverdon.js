@@ -193,6 +193,7 @@ const getScrap = dateObj => {
             return format(dateObj);
         });
 };
+
 export default {
     getName: 'radioverdon',
     supportTomorrow: true,
