@@ -1,0 +1,22 @@
+defmodule ProgRadioApi.SongProvider.RadioCamargue do
+  alias ProgRadioApi.SongProvider.GenericLesIndes3
+
+  @behaviour ProgRadioApi.SongProvider
+
+  @url "https://www.radio-camargue.com/api/TitleDiffusions"
+  @url_id "2801437326486537143"
+
+  @impl true
+  defdelegate has_custom_refresh(name), to: GenericLesIndes3
+
+  @impl true
+  defdelegate get_refresh(name, data, default_refresh), to: GenericLesIndes3
+
+  @impl true
+  def get_data(name, _last_data) do
+    GenericLesIndes3.get_data(@url, name, @url_id)
+  end
+
+  @impl true
+  defdelegate get_song(name, data, last_song), to: GenericLesIndes3
+end

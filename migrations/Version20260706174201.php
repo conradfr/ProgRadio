@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260706152957 extends AbstractMigration
+final class Version20260706174201 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,16 +21,16 @@ final class Version20260706152957 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
 
-        $prefix = 'impactfm';
-        $radioId = 157;
-        $subRadioId = 319;
-        $streamSongId = 126;
-        $website = 'https://www.impactfm.fr/';
+        $prefix = 'radio_camargue';
+        $radioId = 158;
+        $subRadioId = 320;
+        $streamSongId = 127;
+        $website = 'https://www.radio-camargue.com';
 
         $radios = [
             [
                 'code_name' => $prefix,
-                'name' => 'Impact FM',
+                'name' => 'Radio Camargue',
                 'category' => 2,
                 'collection' => 7,
                 'share' => 0,
@@ -42,11 +42,11 @@ final class Version20260706152957 extends AbstractMigration
         $subRadios = [
             [
                 'code_name' => 'main',
-                'name' => 'Impact FM',
+                'name' => 'Radio Camargue',
                 'main' => 'true',
                 'radio_id' => $radioId,
-                'url' => 'https://impactfm.ice.infomaniak.ch/impactfm-64.aac',
-                'id' => '960959e6-0601-11e8-ae97-52543be04c81'
+                'url' => 'https://ice.creacast.com/radio-camargue',
+                'id' => '961b215f-0601-11e8-ae97-52543be04c81'
             ],
         ];
 

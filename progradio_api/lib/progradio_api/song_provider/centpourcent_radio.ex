@@ -31,8 +31,6 @@ defmodule ProgRadioApi.SongProvider.CentpourcentRadio do
 
   @impl true
   def get_data(name, _last_data) do
-    IO.puts("###################################")
-    IO.puts("#{inspect name}")
     GenericLesIndes3.get_data(@url, name, @stream_id)
   end
 
