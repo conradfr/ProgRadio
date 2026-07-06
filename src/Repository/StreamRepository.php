@@ -95,7 +95,7 @@ class StreamRepository extends ServiceEntityRepository
     protected function getMoreStreamQuery(Uuid $id, int $limit) {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id as code_name, s.name as name, s.img, COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.website')
+        $qb->select('s.id as code_name, s.name as name, s.img, COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img, s.website')
             ->from(Stream::class, 's')
             ->leftJoin('s.radio', 'r')
             ->where("s.img is not null")
@@ -122,7 +122,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,s.playingError as playing_error,"
-            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt,'
+            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE s.radioStreamCodeName END as radio_stream_code_name')
             ->from(Stream::class, 's')
@@ -228,7 +228,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
-            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt,'
+            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE s.radioStreamCodeName END as radio_stream_code_name')
             ->from(Stream::class, 's')
@@ -320,7 +320,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
-            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt,'
+            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and s.streamSongCodeName IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', s.streamSongCodeName) ELSE s.radioStreamCodeName END as radio_stream_code_name')
             ->from(Stream::class, 's')

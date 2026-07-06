@@ -103,6 +103,9 @@ class Stream implements NormalizableInterface
     private ?bool $ownLogo = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private ?bool $internalUseImg = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isMainRadio = false;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
@@ -629,6 +632,16 @@ class Stream implements NormalizableInterface
         $this->ownLogo = $ownLogo;
 
         return $this;
+    }
+
+    public function getInternalUseImg(): ?bool
+    {
+        return $this->internalUseImg;
+    }
+
+    public function setInternalUseImg(?bool $internalUseImg): void
+    {
+        $this->internalUseImg = $internalUseImg;
     }
 
     public function isIsMainRadio(): bool

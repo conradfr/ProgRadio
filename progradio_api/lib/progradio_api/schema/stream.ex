@@ -50,6 +50,8 @@ defmodule ProgRadioApi.Stream do
     field(:is_main_radio, :boolean)
     field(:is_sub_radio, :boolean)
     field(:own_logo, :boolean)
+    # a sub radio still use the stream image
+    field(:internal_use_img, :boolean)
 
     # import related
     field(:source, :string, default: "radio-browser")

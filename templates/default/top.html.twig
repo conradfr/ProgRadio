@@ -16,7 +16,9 @@
 {% block title %}{{ 'page.top.page_title'|trans({'%country%': country}) }}{% endblock %}
 {% block description %}{{ 'page.top.description'|trans({'%country%': country}) }}{% endblock %}
 
-{% macro picture(stream) %}{%- if stream.radio is defined and stream.radio.id is not null %}
+{% macro picture(stream) %}{%- if stream.internal_use_img is defined and stream.internal_use_img == true and stream.img is not null %}
+media/stream/{{ stream.img }}
+{%- elseif stream.ownLogo is defined and stream.ownLogo == true and stream.radioStreamCodeName is not null %}
 img/radio/page/{{ stream.radio.codeName }}.png
 {%- elseif stream.img_alt is defined and stream.img_alt is not null %}
 img/radio/page/{{ stream.img_alt }}.png
