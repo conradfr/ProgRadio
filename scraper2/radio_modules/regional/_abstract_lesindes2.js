@@ -1,49 +1,48 @@
-const osmosis = require('osmosis');
-let moment = require('moment-timezone');
-const logger = require('../../lib/logger.js');
-const utils = require('../../lib/utils');
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import moment from 'moment-timezone';
+import logger from '../../lib/logger.js';
+import utils from '../../lib/utils.js';
 
 let scrapedData = {};
 
+const fetchHtml = async (url) => {
+  const response = await axios.get(url);
+  return cheerio.load(response.data);
+};
+
 const fetchDesc = async (url) => {
-  let data = null;
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .select('div:not(.Aside) > div[id*=paragraphe]')
-      .set({
-        'description': ['p']
-      })
-      .data(function(listing) {
-        // osmosis can emit repeated entries for a `['p']` array selector when
-        // paragraphs nest/overlap — dedupe before they get joined downstream.
-        if (Array.isArray(listing.description)) {
-          listing.description = [...new Set(listing.description)];
-        }
-        data = listing;
-      })
-      .done(function () {
-        resolve(data);
-      });
-  });
+  try {
+    const $ = await fetchHtml(url);
+    const data = $.extract({
+      description: ['div:not(.Aside) > div[id*=paragraphe] p'],
+    });
+
+    if (Array.isArray(data.description)) {
+      // paragraphs can nest/overlap and yield repeated entries — dedupe
+      // before they get joined downstream.
+      data.description = [...new Set(data.description)];
+    }
+
+    return data;
+  } catch (error) {
+    logger.log('error fetching description');
+    return null;
+  }
 };
 
 const fetchDescAlt = async (url) => {
-  let data = null;
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      // .select('div:not(.Aside)')
-      .set({
-        'description': '#emissionProgrammation'
-      })
-      .data(function(listing) {
-        data = listing;
-      })
-      .done(function () {
-        resolve(data);
-      });
-  });
+  try {
+    const $ = await fetchHtml(url);
+    const data = $.extract({
+      description: '#emissionProgrammation',
+    });
+
+    return data;
+  } catch (error) {
+    logger.log('error fetching alt description');
+    return null;
+  }
 };
 
 const format = async (dateObj, name, description_prefix, hosts) => {
@@ -97,6 +96,7 @@ const format = async (dateObj, name, description_prefix, hosts) => {
     }
 
     let description = curr.chapo || '';
+
     let descriptionSupp = await fetchDesc(`${description_prefix}${curr.slug}`);
 
     if (utils.checkNested(descriptionSupp, 'description') === true && descriptionSupp.description.length > 0) {
@@ -107,8 +107,8 @@ const format = async (dateObj, name, description_prefix, hosts) => {
     }
 
     try {
-      if (descriptionSupp === undefined || descriptionSupp === null || descriptionSupp === ''
-        || (utils.checkNested(descriptionSupp, 'description') === false || descriptionSupp.description.length === 0)) {
+      if (!descriptionSupp || descriptionSupp === ''
+      || (utils.checkNested(descriptionSupp, 'description') === false || descriptionSupp.description.length === 0)) {
         descriptionSupp = await fetchDescAlt(`${description_prefix}${curr.slug}`);
         if (descriptionSupp && typeof descriptionSupp === 'object') {
           description += descriptionSupp.description || '';
@@ -143,7 +143,7 @@ const format = async (dateObj, name, description_prefix, hosts) => {
       }
     }
 
-    newEntry = {
+    const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,
@@ -185,41 +185,38 @@ const format = async (dateObj, name, description_prefix, hosts) => {
   return await Promise.resolve(cleanedData);
 };
 
-const fetch = (url, name, dateObj) => {
+const fetch = async (url, name) => {
   logger.log('info', `fetching ${url}`);
 
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      .set({
-        'json': 'script#__NEXT_DATA__'
-      })
-      .data(function (listing) {
-        scrapedData[name].push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
-  });
+  try {
+    const $ = await fetchHtml(url);
+    const json = $('script#__NEXT_DATA__').first().html();
+
+    if (json) {
+      scrapedData[name].push({ json });
+    }
+  } catch (error) {
+    logger.log('error fetching schedule');
+  }
+
+  return Promise.resolve(true);
 };
 
-const fetchAll = (url, name, dateObj) => {
-  return fetch(url, name, dateObj);
+const fetchAll = (url, name) => {
+  return fetch(url, name);
 };
 
 const getScrap = (dateObj, url, name, description_prefix, hosts) => {
   dateObj = moment(dateObj);
   dateObj.locale('fr');
   scrapedData[name] = [];
-  return fetchAll(url, name, dateObj)
+  return fetchAll(url, name)
     .then(() => {
       return format(dateObj, name, description_prefix, hosts);
     });
 };
 
-const scrapModuleAbstract = {
+export default {
   getScrap,
   supportTomorrow: true,
 };
-
-module.exports = scrapModuleAbstract;
