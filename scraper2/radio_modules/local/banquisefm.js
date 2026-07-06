@@ -134,7 +134,7 @@ const format = async dateObj => {
     return prev;
   }, []);
 
-  return Promise.resolve(cleanedData);
+  return await Promise.resolve(cleanedData);
 };
 const fetch = async dateObj => {
   dateObj.locale('fr');

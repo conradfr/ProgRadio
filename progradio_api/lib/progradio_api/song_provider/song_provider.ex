@@ -37,6 +37,7 @@ defmodule ProgRadioApi.SongProvider do
     "Unknown - Unknown",
     " - ",
     "-",
+    "AD",
     "DJ Mike Llama - Llama Whippin' Intro",
     "Stream not found",
     "Now Playing info goes here",
