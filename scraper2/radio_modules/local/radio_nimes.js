@@ -1,10 +1,7 @@
-const osmosis = require('osmosis');
-let moment = require('moment-timezone');
-const logger = require('../../lib/logger.js');
-const utils = require('../../lib/utils.js');
-
-let scrapedData = {};
-let  cleanedData = {};
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import moment from 'moment-timezone';
+import logger from '../../lib/logger.js';
 
 const dayFr = {
   'Lundi': 1,
@@ -16,23 +13,44 @@ const dayFr = {
   'Dimanche': 7
 };
 
-const dayNameFr = {
-  'Lundi': 1,
-  'Mardi': 2,
-  'Mercredi': 3,
-  'Jeudi': 4,
-  'Vendredi': 5,
-  'Samedi': 6,
-  'Dimanche': 7
+const dayFrInv = {
+  1: 'lundi',
+  2: 'mardi',
+  3: 'mercredi',
+  4: 'jeudi',
+  5: 'vendredi',
+  6: 'samedi',
+  7: 'dimanche'
 };
 
-const format = (dateObj, subRadio) => {
+let scrapedData = [];
+
+const getHost = async (url) => {
+  logger.log('info', `fetching ${url}`);
+  const hosts = [];
+
+
+  const response = await axios.get(url);
+  const html = response.data;
+  const $ = cheerio.load(html);
+  $('.anim-row:not(.podcast-row) a > h4').each((i, el) => {
+    hosts.push($(el).text().trim());
+  });
+
+  if (hosts.length > 0) {
+    return Promise.resolve(hosts);
+  }
+
+  return Promise.resolve(null);
+};
+
+const format = async dateObj => {
   dateObj.tz('Europe/Paris');
   dateObj.locale('fr');
 
-  cleanedData[subRadio] = scrapedData[subRadio].reduce(function (prev, entry) {
-    // this show is more a section that is not correctly listed, remove it for now
-    if (entry.title === 'La Story') {
+  const cleanedData = scrapedData.reduce(async function (prevP, entry) {
+    const prev = await prevP;
+    if (!entry.datetime_raw) {
       return prev;
     }
 
@@ -84,27 +102,27 @@ const format = (dateObj, subRadio) => {
 
     // maybe it's just one day
     if (match === null) {
-      regexp = new RegExp(/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)(.*), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+      regexp = new RegExp(/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
       match = entry.datetime_raw.match(regexp);
 
       if (match === null) {
         return prev;
       }
 
-      const dayName = utils.upperCaseWords(dateObj.format('dddd'));
-      if (match[0].indexOf(dayName) !== -1) {
+      const dayNum = dateObj.isoWeekday();
+      if (dayNum !==  dayFr[match[1]]) {
         return prev;
       }
 
-      time = [match[3], match[4], match[5], match[6]];
+      time = [match[2], match[3], match[4], match[5]];
     }
 
-    let startDateTime = moment(dateObj);
+    const startDateTime = moment(dateObj);
     startDateTime.hour(time[0]);
     startDateTime.minute(time[1]);
     startDateTime.second(0);
 
-    endDateTime = moment(dateObj);
+    const endDateTime = moment(dateObj);
     endDateTime.hour(time[2]);
     endDateTime.minute(time[3]);
     endDateTime.second(0);
@@ -117,76 +135,72 @@ const format = (dateObj, subRadio) => {
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'img': `https://www.radiooxygene.fr${entry.img}`,
-      'title': entry.title,
-      'host': entry.host.join(', '),
-      'description': entry.description.join(' '),
+      'img': `https://www.banquisefm.com${entry.img}`,
+      'title': entry.title.trim(),
+      'description': entry.description.trim(),
     };
+
+    if (entry.link) {
+      const host = await getHost(entry.link);
+      if (host) {
+        newEntry.host = host.join(', ');
+      }
+    }
 
     prev.push(newEntry);
     return prev;
   }, []);
 
-  return Promise.resolve(cleanedData[subRadio]);
+  return await Promise.resolve(cleanedData);
 };
-
-const fetch = (dateObj, subRadio) => {
-  const url = 'https://www.radiooxygene.fr/emissions';
+const fetch = async dateObj => {
+  dateObj.locale('fr');
+  const day = dayFrInv[dateObj.isoWeekday()];
+  const url = 'https://www.radionimes.fr/emissions';
 
   logger.log('info', `fetching ${url}`);
 
-  return new Promise(function (resolve, reject) {
-    return osmosis
-      .get(url)
-      // for some reason the website return a 500
-      .config({
-        ignore_http_errors: true
-      })
-      .select('.list_element')
-      .set({
-        'img': 'img.list-img-thumb@src',
-        'title': 'h4',
-        'datetime_raw': '.program-date'
-      })
-      .do(
-        osmosis.follow('a.title-link@href')
-          .config({
-            ignore_http_errors: true
-          })
-          .select('.article')
-          .set({
-            'description': ['p'],
-            'host': ['h4']
-          })
-      )
-      .data(function (listing) {
-        scrapedData[subRadio].push(listing);
-      })
-      .done(function () {
-        resolve(true);
-      })
+  const response = await axios.get(url);
+  const html = response.data;
+  const $ = cheerio.load(html);
+  const data = $.extract({
+    shows: [
+      {
+        selector: `div.m-t-30 .${day}`,
+        value: {
+          datetime_raw: '.program-date',
+          title: 'h4',
+          description: 'span.list_text',
+          img: {
+            selector: '.list-img-thumb',
+            value: 'src'
+          },
+          link: {
+            selector: 'a.img-link',
+            value: 'href'
+          },
+        }
+      }
+    ]
   });
+
+  scrapedData = data.shows;
+
+  return Promise.resolve(true);
 };
 
-const fetchAll = (dateObj, subRadio) => {
-  return fetch(dateObj, subRadio);
+const fetchAll = dateObj => {
+    return fetch(dateObj);
 };
 
-const getScrap = (dateObj, subRadio) => {
-  if (!scrapedData[subRadio]) {
-    scrapedData[subRadio] = [];
-  }
-
-  return fetchAll(dateObj, subRadio)
-    .then(() => {
-      return format(dateObj, subRadio);
-    });
+const getScrap = dateObj => {
+    return fetchAll(dateObj)
+        .then(() => {
+            return format(dateObj);
+        });
 };
-
-const scrapModule = {
-  getName: 'oxygene',
-  supportTomorrow: true,
-  getScrap
+export default {
+    getName: 'radio_nimes',
+    supportTomorrow: true,
+    getScrap
 };
-
-module.exports = scrapModule;

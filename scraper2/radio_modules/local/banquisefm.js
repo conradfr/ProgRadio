@@ -83,6 +83,23 @@ const format = async dateObj => {
       time = [match[3], match[4], match[5], match[6]];
     }
 
+    // maybe it's a list of days, e.g. "Lundi, Mardi, Jeudi et Dimanche, de 16:00 à 17:00"
+    if (match === null) {
+      regexp = new RegExp(/^((?:Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)(?:(?:,\s|\set\s)(?:Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche))+),\sde\s([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+      match = entry.datetime_raw.match(regexp);
+
+      if (match !== null) {
+        // not one of the listed days ?
+        const dayNum = dateObj.isoWeekday();
+        const days = match[1].split(/,\s|\set\s/).map(d => dayFr[d]);
+        if (!days.includes(dayNum)) {
+          return prev;
+        }
+
+        time = [match[2], match[3], match[4], match[5]];
+      }
+    }
+
     // maybe it's just one day
     if (match === null) {
       regexp = new RegExp(/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
