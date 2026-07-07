@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Impactfm do
 
   # todo add webradios
   @stream_ids %{
-    "impactfm_main" => 61,
+    "impactfm_main" => 61
   }
 
   @url "https://api.impactfm.fr/player/getOnAir.php?stream="

@@ -80,6 +80,9 @@ $program-inner-fade-2-hover: rgba(247,251,255,0.88);
 $program-inner-fade-3-hover: rgba(247,251,255,1);
 $program-current-border-l: mix($program-border-color, $timeline-cursor-color, 85%);
 
+$program-unknown-bg-color: mix($white, $background-color, 20%);;
+$program-unknown-border-color: darken($background-color, 5%);
+
 $program-section: darken($background-color, 20%);
 $program-section-hover: lighten($primary, 10%);
 

@@ -12,4 +12,5 @@ export interface Program {
   start_at: string
   start_overflow: 0|1
   title: string
+  unknown: boolean|null
 }

@@ -8,10 +8,19 @@ defmodule ProgRadioApi.Schedule do
   alias ProgRadioApi.Repo
 
   alias ProgRadioApi.Cache
+  alias ProgRadioApi.Utils.ScheduleUtils
   alias ProgRadioApi.{Radio, Collection, ScheduleEntry, SectionEntry}
   alias ProgRadioApi.Stream, as: ProgRadioStream
 
   @timezone "Europe/Paris"
+
+  # todo internationalize text
+  @unknown_show_text "Programme inconnu"
+  @unknown_schedule_text "Programmes inconnus"
+  @unknown_show_picture_url "/img/stream-placeholder.png"
+
+  # only fill schedule gaps that are at least 30 minutes long
+  @no_show_min_gap_seconds 1800
 
   @cache_prefix_schedule "schedule_"
   # 1 hour
@@ -88,7 +97,7 @@ defmodule ProgRadioApi.Schedule do
             |> query(now)
             |> where([se, r, sc], r.code_name in ^(radio_code_names_not_cached ++ cached_nil))
             |> Repo.all()
-            |> format()
+            |> format(day, now)
 
           result
           |> Enum.each(fn {k, e} when is_nil(e) == false and is_map(e) and map_size(e) > 0 ->
@@ -211,7 +220,7 @@ defmodule ProgRadioApi.Schedule do
     end
   end
 
-  defp format(data) do
+  defp format(data, day, now) do
     radio_schedule =
       data
       |> Stream.map(fn e -> {e.code_name, e.stream_code_name} end)
@@ -244,7 +253,8 @@ defmodule ProgRadioApi.Schedule do
               description: e.description,
               picture_url: e.picture_url,
               duration: e.duration,
-              sections: []
+              sections: [],
+              unknown: false
             }
 
             put_in(acc, [e.code_name, e.stream_code_name, e.hash], schedule_entry)
@@ -254,9 +264,12 @@ defmodule ProgRadioApi.Schedule do
         end
       end)
 
+    radio_schedule_with_empty_filled =
+      fill_empty_timeslots(radio_schedule_with_shows, day, now)
+
     data
     |> Stream.filter(fn e -> e.section_title != nil end)
-    |> Enum.reduce(radio_schedule_with_shows, fn e, acc ->
+    |> Enum.reduce(radio_schedule_with_empty_filled, fn e, acc ->
       section_entry = %{
         hash: e.section_hash,
         title: e.section_title,
@@ -269,6 +282,87 @@ defmodule ProgRadioApi.Schedule do
       (acc[e.code_name][e.stream_code_name][e.hash].sections ++ [section_entry])
       |> (&put_in(acc, [e.code_name, e.stream_code_name, e.hash, :sections], &1)).()
     end)
+  end
+
+  # We skip filling for "now" queries
+  defp fill_empty_timeslots(radio_schedule, _day, true), do: radio_schedule
+
+  defp fill_empty_timeslots(radio_schedule, day, _now) do
+    day_start =
+      (day <> " 00:00:00")
+      |> NaiveDateTime.from_iso8601!()
+      |> DateTime.from_naive!(@timezone)
+      |> DateTime.shift_zone!("Etc/UTC")
+
+    day_end = DateTime.add(day_start, 86400)
+
+    radio_schedule
+    |> Map.new(fn {radio_code_name, streams} ->
+      streams =
+        Map.new(streams, fn {stream_code_name, shows} ->
+          {stream_code_name,
+           fill_schedule_gaps(shows, radio_code_name, stream_code_name, day_start, day_end)}
+        end)
+
+      {radio_code_name, streams}
+    end)
+  end
+
+  defp fill_schedule_gaps(shows, radio_code_name, stream_code_name, day_start, day_end) do
+    sorted =
+      shows
+      |> Map.values()
+      |> Enum.sort_by(& &1.start_at, DateTime)
+
+    {gaps, cursor} =
+      Enum.reduce(sorted, {[], day_start}, fn show, {gaps, cursor} ->
+        gaps =
+          if DateTime.diff(show.start_at, cursor) >= @no_show_min_gap_seconds do
+            [build_unknown_show(radio_code_name, stream_code_name, cursor, show.start_at) | gaps]
+          else
+            gaps
+          end
+
+        cursor =
+          if DateTime.compare(show.end_at, cursor) == :gt, do: show.end_at, else: cursor
+
+        {gaps, cursor}
+      end)
+
+    # trailing gap until midnight next day
+    gaps =
+      if DateTime.diff(day_end, cursor) >= @no_show_min_gap_seconds do
+        [build_unknown_show(radio_code_name, stream_code_name, cursor, day_end) | gaps]
+      else
+        gaps
+      end
+
+    Enum.reduce(gaps, shows, fn gap, acc -> Map.put(acc, gap.hash, gap) end)
+  end
+
+  defp build_unknown_show(radio_code_name, stream_code_name, start_at, end_at) do
+    hash =
+      :crypto.hash(
+        :md5,
+        radio_code_name <> stream_code_name <> DateTime.to_string(start_at)
+      )
+      |> Base.encode16(case: :lower)
+
+    %{
+      hash: hash,
+      start_at: ScheduleUtils.with_microseconds(start_at),
+      start_overflow: 0,
+      end_at: ScheduleUtils.with_microseconds(end_at),
+      end_overflow: 0,
+      title: @unknown_show_text,
+      host: nil,
+      description: nil,
+      picture_url:
+        Application.get_env(:progradio_api, :cdn_base_url) <> @unknown_show_picture_url,
+      duration: DateTime.diff(end_at, start_at) / 60,
+      sections: [],
+      unknown: true
+    }
   end
 
   @spec radio_code_names_cached_or_not_for_day(list(), String.t(), boolean) :: tuple()

@@ -70,6 +70,11 @@ $program-height: 60px;
         transition: box-shadow 20ms ease-in-out;
         user-select: none;
 
+        &.program-unknown {
+          background-color: var(--progradio-program-unknown-bg-color);
+          border-left: 3px solid var(--program-unknown-border-color);
+        }
+
         &.program-current {
           background-color: var(--progradio-program-hover-color);
           border-left: 3px solid var(--progradio-program-current-border-l);

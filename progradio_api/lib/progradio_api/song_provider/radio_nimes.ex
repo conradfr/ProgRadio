@@ -19,4 +19,3 @@ defmodule ProgRadioApi.SongProvider.RadioNimes do
   @impl true
   defdelegate get_song(name, data, last_song), to: GenericLesIndes
 end
-

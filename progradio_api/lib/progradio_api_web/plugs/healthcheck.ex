@@ -8,7 +8,8 @@ defmodule ProgRadioApiWeb.Plug.HealthCheck do
   def call(conn = %Plug.Conn{request_path: "/health"}, _opts) do
     conn
     |> send_resp(200, "")
-    |> halt()  # Halts further processing of the request.
+    # Halts further processing of the request.
+    |> halt()
   end
 
   # If the request path is anything else, we pass the connection along.

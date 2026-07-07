@@ -310,8 +310,8 @@ defmodule ProgRadioApi.Streams do
   def img_to_full_url(%{} = stream) do
     img_url =
       cond do
-        is_map_key(stream, :internal_use_img) and stream.internal_use_img == true
-          and is_map_key(stream, :img) and not is_nil(stream.img) ->
+        is_map_key(stream, :internal_use_img) and stream.internal_use_img == true and
+          is_map_key(stream, :img) and not is_nil(stream.img) ->
           @thumbnail_stream_path <> stream.img
 
         is_map_key(stream, :img_alt) and not is_nil(stream.img_alt) ->

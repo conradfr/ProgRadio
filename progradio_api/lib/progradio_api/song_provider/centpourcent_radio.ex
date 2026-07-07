@@ -20,7 +20,7 @@ defmodule ProgRadioApi.SongProvider.CentpourcentRadio do
     "centpourcent_radio_payscatalan" => "2174544699860189189",
     "centpourcent_radio_stgaudens" => "2174544699860189189",
     "centpourcent_radio_tarbes" => "2174544699860189189",
-    "centpourcent_radio_toulouse" => "2174544699860189189",
+    "centpourcent_radio_toulouse" => "2174544699860189189"
   }
 
   @impl true

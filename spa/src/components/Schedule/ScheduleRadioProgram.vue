@@ -6,7 +6,7 @@
      :style="containerStyle"
      @click.stop="detailClick">
     <div v-if="isIntersecting === true" class="program"
-      :class="{ 'program-current': isCurrent, 'long-enough': isLongEnough }"
+      :class="{ 'program-unknown': isUnknown, 'program-current': isCurrent, 'long-enough': isLongEnough }"
       @mouseover.once="hover = !hover">
       <div class="program-inner" :title="title">
         <div v-if="program.picture_url && (hover || isCurrent)" class="program-img">
@@ -50,6 +50,7 @@ import {
   TIMEZONE,
   THUMBNAIL_PROGRAM_PATH,
   PROGRAM_LONG_ENOUGH,
+  THUMBNAIL_PAGE_PROGRAM_PATH,
   GTAG_ACTION_PROGRAM_DETAIL,
   GTAG_ACTION_PROGRAM_DETAIL_VALUE,
   GTAG_CATEGORY_SCHEDULE
@@ -196,6 +197,10 @@ export default defineComponent({
 
       return null;
     },
+    isUnknown(): boolean {
+      console.log(this.program.title + ' ' + this.program.unknown);
+      return this.program.unknown;
+    },
     isCurrent(): boolean {
       return Interval.fromDateTimes(DateTime.fromISO(this.program.start_at).setZone(TIMEZONE),
         DateTime.fromISO(this.program.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
@@ -212,9 +217,10 @@ export default defineComponent({
       // return this.$store.state.schedule.scheduleDisplay[this.program.hash].container.nextDayOverflow;
     },
     picturePath(): string {
-      // @ts-expect-error defined on global scope
-      // eslint-disable-next-line no-undef
-      return `${this.$CDN_BASE_URL}${THUMBNAIL_PROGRAM_PATH}${this.program.picture_url}`;
+      return this.program.picture_url.startsWith('http') ? this.program.picture_url
+        // @ts-expect-error defined on global scope
+        // eslint-disable-next-line no-undef
+        :`${this.$CDN_BASE_URL}${THUMBNAIL_PAGE_PROGRAM_PATH}${this.program.picture_url}`;
     }
   },
   methods: {
