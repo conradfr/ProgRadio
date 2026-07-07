@@ -1,4 +1,4 @@
-import scrapAbstract from './_abstract_espacegroup.js';
+import scrapAbstract from '../_abstract/_abstract_espacegroup.js';
 
 const name = 'alpes1_sud';
 

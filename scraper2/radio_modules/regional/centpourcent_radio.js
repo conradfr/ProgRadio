@@ -1,4 +1,4 @@
-import scrapAbstract from './_abstract_lesindes2.js';
+import scrapAbstract from '../_abstract/_abstract_lesindes2.js';
 
 const name = 'centpourcent_radio';
 

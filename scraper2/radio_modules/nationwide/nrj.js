@@ -1,4 +1,4 @@
-import scrapAbstract from './_abstract_nrjgroup.js';
+import scrapAbstract from '../_abstract/_abstract_nrjgroup.js';
 
 const name = 'nrj';
 

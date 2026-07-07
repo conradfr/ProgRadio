@@ -72,7 +72,7 @@ defmodule ProgRadioApi.SongProvider do
   def post(url, body) do
     Req.post!(
       url,
-      body: body,
+      json: body,
       headers: [{"Cache-Control", "no-cache"}],
       redirect: false,
       connect_options: [timeout: 15_000]

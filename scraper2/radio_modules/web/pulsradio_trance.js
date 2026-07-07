@@ -1,4 +1,4 @@
-import scrapAbstract from './_abstract_pulsradio.js';
+import scrapAbstract from '../_abstract/_abstract_pulsradio.js';
 
 const name = 'pulsradio_trance';
 const flux = 'Trance';

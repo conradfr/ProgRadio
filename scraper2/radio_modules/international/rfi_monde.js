@@ -1,4 +1,4 @@
-import scrapAbstract from './_abstract_rfi.js';
+import scrapAbstract from '../_abstract/_abstract_rfi.js';
 
 const name = 'rfi_monde';
 
