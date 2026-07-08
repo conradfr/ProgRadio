@@ -104,16 +104,28 @@ const format = async (dateObj, name) => {
       regexp = new RegExp(/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
       match = entry.datetime_raw.match(regexp);
 
-      if (match === null) {
-        return prev;
-      }
+      if (match !== null) {
+        const dayNum = dateObj.isoWeekday();
+        if (dayNum !== dayFr[match[1]]) {
+          return prev;
+        }
 
-      const dayNum = dateObj.isoWeekday();
-      if (dayNum !==  dayFr[match[1]]) {
-        return prev;
+        time = [match[2], match[3], match[4], match[5]];
       }
+    }
 
-      time = [match[2], match[3], match[4], match[5]];
+    // maybe it's just one day
+    if (match === null) {
+      regexp = new RegExp(/^(Toute la semaine), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+      match = entry.datetime_raw.match(regexp);
+
+      if (match !== null) {
+        time = [match[2], match[3], match[4], match[5]];
+      }
+    }
+
+    if (match === null) {
+      return prev;
     }
 
     const startDateTime = moment(dateObj);
