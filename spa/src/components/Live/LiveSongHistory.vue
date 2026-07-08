@@ -44,20 +44,25 @@ export default defineComponent({
   },
   data(): {
     showHistory: boolean,
+    channelName: string|null
   } {
     return {
       showHistory: false,
+      channelName: null
     };
+  },
+  mounted() {
+    this.channelName = PlayerUtils.getChannelName(this.stream);
   },
   computed: {
     ...mapState(usePlayerStore, ['songHistory']),
     liveSongHistory() {
-      if (!this.stream.id || this.songHistory === null || this.songHistory === undefined
-          || !Object.prototype.hasOwnProperty.call(this.songHistory, this.stream.id)) {
+      if (!this.channelName || !this.songHistory
+          || !Object.prototype.hasOwnProperty.call(this.songHistory, this.channelName)) {
         return null;
       }
 
-      return this.songHistory[this.stream.id].history.map((entry: any) => {
+      return this.songHistory[this.channelName].history.map((entry: any) => {
         return [PlayerUtils.formatSong(entry), entry.cover_url || null]
       });
     },
