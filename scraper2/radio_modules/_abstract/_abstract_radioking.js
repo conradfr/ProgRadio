@@ -148,7 +148,7 @@ const format = async (dateObj, name) => {
       'date_time_end': endDateTime.toISOString(),
       'img': `https://www.banquisefm.com${entry.img}`,
       'title': entry.title.trim(),
-      'description': entry.description.trim(),
+      'description': entry.description ? entry.description.trim() : null,
     };
 
     if (entry.link) {

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260708074747 extends AbstractMigration
+final class Version20260709095427 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,16 +21,16 @@ final class Version20260708074747 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
 
-        $prefix = 'radio_caroline';
-        $radioId = 163;
-        $subRadioId = 326;
-        $streamSongId = 133;
-        $website = 'https://www.radiocaroline.bzh';
+        $prefix = 'fusionfm';
+        $radioId = 167;
+        $subRadioId = 330;
+        $streamSongId = 137;
+        $website = 'https://www.fusionfm.fr';
 
         $radios = [
             [
                 'code_name' => $prefix,
-                'name' => 'Radio Caroline',
+                'name' => 'Fusion FM',
                 'category' => 2,
                 'collection' => 3,
                 'share' => 0,
@@ -41,46 +41,101 @@ final class Version20260708074747 extends AbstractMigration
 
         $subRadios = [
             [
-                'code_name' => 'main',
-                'name' => 'Radio Caroline',
+                'code_name' => 'moulins',
+                'name' => 'Fusion FM Moulins',
                 'main' => 'true',
                 'radio_id' => $radioId,
                 'sub_radio' => true,
-                'url' => 'https://radiocaroline.ice.infomaniak.ch/radiocaroline-128.mp3',
-                'id' => '5a75479f-b796-45ef-b001-2a90fa6d1f47'
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfm-128.aac',
+                'id' => '96059fa8-0601-11e8-ae97-52543be04c81'
             ],
             [
-                'code_name' => 'carocelt',
-                'name' => 'Carocelt',
+                'code_name' => 'cluny',
+                'name' => 'Fusion FM Cluny',
                 'main' => 'false',
                 'radio_id' => $radioId,
-                'sub_radio' => false,
-                'url' => 'https://carocelt.ice.infomaniak.ch/carocelt-128.mp3',
-                'id' => '23e305df-a0c4-468a-bc5c-b577950568c6'
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfmcluny-128.aac',
             ],
             [
-                'code_name' => 'carogold',
-                'name' => 'Carogold',
+                'code_name' => 'lapalisse',
+                'name' => 'Fusion FM Lapalisse',
                 'main' => 'false',
                 'radio_id' => $radioId,
-                'sub_radio' => false,
-                'url' => 'https://carocelt.ice.infomaniak.ch/carocelt-128.mp3',
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfm-128.aac',
             ],
             [
-                'code_name' => 'carocool',
-                'name' => 'Carocool',
+                'code_name' => 'st_gervais',
+                'name' => 'Fusion FM St Gervais',
                 'main' => 'false',
                 'radio_id' => $radioId,
-                'sub_radio' => false,
-                'url' => 'https://carocool.ice.infomaniak.ch/carocool-128.mp3',
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfm-192.mp3',
             ],
             [
-                'code_name' => 'carorock',
-                'name' => 'Carorock',
+                'code_name' => 'dompierre',
+                'name' => 'Fusion FM Dompierre',
                 'main' => 'false',
                 'radio_id' => $radioId,
-                'sub_radio' => false,
-                'url' => 'https://carorock.ice.infomaniak.ch/carorock-128.mp3',
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfm-64.aac',
+            ],
+            [
+                'code_name' => 'clermont',
+                'name' => 'Fusion FM Clermont',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfmdabclermont-128.aac',
+            ],
+            [
+                'code_name' => 'vichy',
+                'name' => 'Fusion FM Vichy',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfm-192.mp3',
+            ],
+            [
+                'code_name' => 'luzy',
+                'name' => 'Fusion FM Luzy',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfmbourgogne-128.aac',
+            ],
+            [
+                'code_name' => 'montlucon',
+                'name' => 'Fusion FM Montlucon',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfm-192.mp3',
+            ],
+            [
+                'code_name' => 'gueugnon',
+                'name' => 'Fusion FM Gueugnon',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfmbourgogne-128.aac',
+            ],
+            [
+                'code_name' => 'thiers',
+                'name' => 'Fusion FM Thiers',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfmthiers-128.aac',
+            ],
+            [
+                'code_name' => 'le_creusot',
+                'name' => 'Fusion FM Le Creusot',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://fusionfm.ice.infomaniak.ch/fusionfmbourgogne-128.aac',
             ],
         ];
 
@@ -114,7 +169,7 @@ final class Version20260708074747 extends AbstractMigration
 
                 $this->connection->executeQuery(
                     "INSERT INTO stream (id, name, country_code, language, own_logo, stream_url, original_stream_url, internal_use_img, radio_id, is_main_radio, is_sub_radio, sub_radio_id, radio_stream_code_name, stream_song_id, stream_song_code_name) VALUES ('"
-                    . $streamId . "','" . $mainSubRadios[$i]['name'] . "','FR','french',FALSE,'" . $mainSubRadios[$i]['url'] . "','" . $mainSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $mainSubRadios[$i]['main'] . ", FALSE, null, '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] . "'," . $streamSongId . ",'" . $mainSubRadios[$i]['code_name'] . "');"
+                    . $streamId . "','" . $mainSubRadios[$i]['name'] . "','FR','french',FALSE,'" . $mainSubRadios[$i]['url'] . "','" . $mainSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $mainSubRadios[$i]['main'] . ", TRUE, " . ($i + $subRadioId) . ", '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] . "'," . $streamSongId . ",'" . $mainSubRadios[$i]['code_name'] . "');"
                 );
             }
         }
