@@ -386,7 +386,9 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   defp get_base_url(url) when is_binary(url) do
     parsed = URI.parse(url)
-    parsed.scheme <> "://" <> parsed.host <> ":" <> Integer.to_string(parsed.port)
+    scheme = parsed.scheme || "http"
+    port = if is_integer(parsed.port), do: ":" <> Integer.to_string(parsed.port), else: ""
+    "#{scheme}://#{parsed.host}#{port}"
   end
 
   defp parse_metadata_string(name, data) do

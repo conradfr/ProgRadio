@@ -278,7 +278,7 @@ defmodule ProgRadioApi.Streams do
     date_time =
       DateTime.utc_now()
       # 30mn
-      |> DateTime.add(-1802)
+      |> DateTime.add(-1800)
 
     query =
       from so in StreamOverloading,
@@ -504,6 +504,14 @@ defmodule ProgRadioApi.Streams do
 
   defp add_sort(query, _) do
     query
+    |> group_by([s, r, ss], [
+      s.id,
+      r.code_name,
+      ss.code_name,
+      ss.enabled,
+      s.radio_stream_code_name,
+      s.stream_url
+    ])
   end
 
   defp add_text(query, %{:text => text}) when is_binary(text) do

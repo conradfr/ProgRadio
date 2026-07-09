@@ -221,6 +221,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> Enum.filter(fn s -> s.name !== nil and String.trim(s.name) !== "" end)
   end
 
+  def format_from_stream(nil), do: nil
+
   def format_from_stream(%Stream{} = stream) do
     overloading =
       case Repo.get(StreamOverloading, stream.id) do
