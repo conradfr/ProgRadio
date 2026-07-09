@@ -197,6 +197,8 @@ const fetch = async (dateObj, name, url) => {
 
   scrapedData[name] = data.shows;
 
+  console.log(data.shows);
+
   return Promise.resolve(true);
 };
 
