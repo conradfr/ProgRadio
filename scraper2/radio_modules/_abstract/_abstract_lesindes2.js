@@ -154,7 +154,7 @@ const format = async (dateObj, name, description_prefix, hosts) => {
     };
 
     // should work be data differs from scrapped ? @todo check
-    if (curr.chronicles !== undefined && curr.chronicles !== null && curr.chronicles.length > 0) {
+    if (curr.chronicles && curr.chronicles.length > 0) {
       curr.chronicles.forEach(function (chronicle) {
         const startDateTime = moment(dateObj);
 
