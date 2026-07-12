@@ -1,0 +1,31 @@
+.player-xl {
+  .player-listeners-xl {
+    // it's currently showed/hidden by Vue
+    //display: none;
+
+    position: absolute;
+    top: calc($player-xl-height - $player-xl-padding - 0.538rem);
+    left: calc($player-xl-height - $player-xl-padding - 0.077rem);
+
+    /*
+    @include media-breakpoint-down(sm) {
+      display: none !important;
+    } */
+
+    opacity: 0.45;
+    transition: opacity 150ms;
+
+    font-size: 0.769rem;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  /*
+  &:hover {
+    .player-listeners-xl {
+      display: block;
+    }
+  } */
+}

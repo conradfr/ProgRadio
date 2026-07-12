@@ -533,7 +533,7 @@ export const usePlayerStore = defineStore('player', {
 
       this.connectSocket();
 
-      /* TEMP
+      /* TODO
         No subscribing for mpd streams as we don't support it
         This will not catch "forced" mpd streams but there are not a lot so this is acceptable
       */
@@ -543,7 +543,7 @@ export const usePlayerStore = defineStore('player', {
       }
 
       // Increment refCounter
-      // Used because multiple component may want to join and leave the same channel and one would then leave for all
+      // Used because multiple component may want to join and leave the same channel, so we prevent one leaving for all
 
       let refCount = 1;
       if (Object.prototype.hasOwnProperty.call(this.channelsRefCount, topicName)) {

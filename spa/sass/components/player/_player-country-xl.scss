@@ -1,0 +1,27 @@
+.player-xl {
+  .player-country-xl {
+    display: none;
+
+    position: absolute;
+    top: -0.615rem;
+    //left: calc($player-xl-height - $player-xl-padding - 0.077rem);
+    left: -0.231rem;
+
+    .vueflag--nano {
+      height: 14px !important;
+    }
+
+    opacity: 0.85;
+    transition: opacity 150ms;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    .player-country-xl {
+      display: block;
+    }
+  }
+}

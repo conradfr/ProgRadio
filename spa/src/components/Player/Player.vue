@@ -1,7 +1,10 @@
 <template>
   <!-- PLAYER XL -->
   <Transition name="player">
-    <div v-if="!reducedPlayer" class="progradio-player player-xl">
+    <div v-if="!reducedPlayer" class="progradio-player player-xl"
+      @mouseover="hover = true"
+      @mouseleave="hover = false"
+    >
       <div class="player-expand d-none d-md-block cursor-pointer" @click="toggleReducedPLayer()">
         <i class="bi bi-arrows-angle-contract"></i>
       </div>
@@ -14,6 +17,8 @@
       </Transition>
       <div class="h-100 d-flex justify-content-between align-items-center">
         <div class="player-header-xl d-flex align-items-center">
+          <PlayerCountryXL />
+          <PlayerListenersXL v-if="hover" />
           <PlayerImageXL />
           <PlayerPlayPause :stream="stream" :playing="playing" @togglePlay="() => togglePlay()" />
           <PlayerInfoXL v-if="stream" />
@@ -104,7 +109,6 @@ import AndroidApi from '@/api/AndroidApi';
 import PlayerUtils from '@/utils/PlayerUtils';
 import tooltip from '@/utils/tooltip';
 import cookies from '@/utils/cookies';
-import typeUtils from '@/utils/typeUtils';
 import type Hls from '../../../../public/js/hls.js';
 
 import PlayerFavorite from './Common/PlayerFavorite.vue';
@@ -120,6 +124,8 @@ import PlayerImageXL from './XL/PlayerImageXL.vue';
 import PlayerInfoXL from './XL/PlayerInfoXL.vue';
 import PlayerSongXL from './XL/PlayerSongXL.vue';
 import PlayerVolumeXL from './XL/PlayerVolumeXL.vue';
+import PlayerListenersXL from './XL/PlayerListenersXL.vue';
+import PlayerCountryXL from './XL/PlayerCountryXL.vue';
 
 /* we load the hls script dynamically once, reducing initial app load */
 const loadHls = () => {
@@ -185,6 +191,8 @@ export default defineComponent({
     PlayerInfoXL,
     PlayerSongXL,
     PlayerVolumeXL,
+    PlayerListenersXL,
+    PlayerCountryXL,
     PlayerFavorite,
     PlayerSaveSong,
     Timer,
@@ -193,6 +201,7 @@ export default defineComponent({
   },
   data(): {
     PlayerStatus: any,
+    hover: boolean,
     audio: PlayerAudio,
     hls: Hls|null,
     debounce: boolean,
@@ -205,6 +214,7 @@ export default defineComponent({
   } {
     return {
       PlayerStatus,
+      hover: false,
       audio: {
         current: null,
         player1: {
