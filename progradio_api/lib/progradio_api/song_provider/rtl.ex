@@ -7,7 +7,7 @@ defmodule ProgRadioApi.SongProvider.Rtl do
 
   @stream_ids %{
     "rtl_main" => "",
-    "rtl_grosses_tetes" => "",
+    "rtl_grosses_tetes" => "627e43fbe049842bf97384cc",
     "rtl_100_france" => "62826c29203b6e223e9d98e7",
     "rtl_100_hits" => "62826c07ffe16b07d248f18b",
     "rtl_collection_georges_lang" => "66165d554e34a01a336c767f",

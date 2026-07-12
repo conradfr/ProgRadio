@@ -1,5 +1,5 @@
 defmodule ProgRadioApiWeb.UserSocket do
-  use Phoenix.Socket
+  use Phoenix.Socket, max_channels_per_transport: 5000
 
   alias ProgRadioApiWeb.{SongChannel, ListenersChannel}
 

@@ -45,8 +45,9 @@
       v-if="userLogged && userIsAdmin"
       class="streams-one-admin-info cursor-pointer"
       style="margin-top: 2px"
-      data-bs-html="true" :title="adminInfoTooltip"
-      v-tooltip>
+      data-bs-html="true"
+      v-tooltip
+      :title="adminInfoTooltip">
       <i class="bi bi-info-circle"></i>
     </div>
     <div
@@ -105,14 +106,14 @@ import * as config from '@/config/config';
 const MAX_RANDOM_MS = 750;
 
 export default defineComponent({
+  directives: {
+    tooltip
+  },
   props: {
     stream: {
       type: Object as PropType<Stream>,
       required: true
     }
-  },
-  directives: {
-    tooltip
   },
   data(): {
     PlayerStatus: any,

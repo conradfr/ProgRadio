@@ -48,7 +48,6 @@ import { mapState, mapActions } from 'pinia';
 import { DateTime, Interval } from 'luxon';
 import {
   TIMEZONE,
-  THUMBNAIL_PROGRAM_PATH,
   PROGRAM_LONG_ENOUGH,
   THUMBNAIL_PAGE_PROGRAM_PATH,
   GTAG_ACTION_PROGRAM_DETAIL,

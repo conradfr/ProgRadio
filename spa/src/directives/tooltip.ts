@@ -6,6 +6,7 @@ export const tooltip = {
   },
   beforeUnmount: (el: any) => {
     // @ts-ignore bootstrap should be from global imported script, no-undef
+    // eslint-disable-next-line no-undef
     const bsTooltip = bootstrap.Tooltip.getInstance(el)
     if (bsTooltip) {
       bsTooltip.dispose()

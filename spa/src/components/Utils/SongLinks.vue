@@ -26,8 +26,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import PlayerUtils from '@/utils/PlayerUtils.ts';
-
 export default defineComponent({
   props: {
     title: {
