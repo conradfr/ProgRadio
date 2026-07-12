@@ -28,13 +28,13 @@
         <div v-if="subRadios.length > 1" class="row">
           <div class="col-md-12 mt-sm-0 text-center text-sm-start">
                <ul class="nav nav-tabs">
-              <li v-for="subRadio in subRadios" :key="subRadio.code_name"
+              <li v-for="subRadioLoop in subRadios" :key="subRadioLoop.code_name"
                 class="nav-item">
                 <a class="nav-link" href="#"
-                  :class="{ 'active': currentSubRadioCodeName === subRadio.radio_stream_code_name }"
-                  :ariaSelected="currentSubRadioCodeName === subRadio.radio_stream_code_name ? 'true' : 'false'"
-                   @click="regionClick(subRadio.radio_stream_code_name)">
-                  {{ subRadio.name }}
+                  :class="{ 'active': currentSubRadioCodeName === subRadioLoop.radio_stream_code_name }"
+                  :ariaSelected="currentSubRadioCodeName === subRadioLoop.radio_stream_code_name ? 'true' : 'false'"
+                   @click="regionClick(subRadioLoop.radio_stream_code_name)">
+                  {{ subRadioLoop.name }}
                 </a>
               </li>
             </ul>

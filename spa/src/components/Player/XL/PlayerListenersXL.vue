@@ -32,7 +32,7 @@ export default defineComponent({
     this.leaveChannel();
   },
   watch: {
-    channelTopic(newValue, oldValue) {
+    channelTopic(_newValue, oldValue) {
       if (oldValue && this.lastChannelTopic) {
         this.leaveChannel(true);
       }
@@ -45,7 +45,7 @@ export default defineComponent({
     channelTopic() {
       // radio, all sub radios count
       if (this.stream && this.stream.is_sub_radio && this.radio && this.radio.code_name) {
-        this.radio.code_name;
+        return this.radio.code_name;
       }
 
       if (this.stream) {

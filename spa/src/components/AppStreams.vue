@@ -1,5 +1,5 @@
 <template>
-  <div class="app-streams" >
+  <div class="app-streams">
     <div class="container">
       <loading></loading>
       <div class="row">

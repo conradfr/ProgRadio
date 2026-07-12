@@ -18,14 +18,11 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
-import type { Radio } from '@/types/radio.ts';
 import type { Stream } from '@/types/stream.ts';
 
 import { usePlayerStore } from '@/stores/playerStore.ts';
 import { useUserStore } from '@/stores/userStore.ts';
-import { useScheduleStore } from '@/stores/scheduleStore';
 
-import typeUtils from '@/utils/typeUtils.ts';
 import PlayerUtils from '@/utils/PlayerUtils';
 
 import PlayerSaveSong from '../Player/Common/PlayerSaveSong.vue';

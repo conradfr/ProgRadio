@@ -198,7 +198,6 @@ export default defineComponent({
       return null;
     },
     isUnknown(): boolean {
-      console.log(this.program.title + ' ' + this.program.unknown);
       return this.program.unknown;
     },
     isCurrent(): boolean {
@@ -219,7 +218,6 @@ export default defineComponent({
     picturePath(): string {
       return this.program.picture_url.startsWith('http') ? this.program.picture_url
         // @ts-expect-error defined on global scope
-        // eslint-disable-next-line no-undef
         :`${this.$CDN_BASE_URL}${THUMBNAIL_PAGE_PROGRAM_PATH}${this.program.picture_url}`;
     }
   },

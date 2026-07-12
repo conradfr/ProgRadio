@@ -67,7 +67,6 @@ export default {
 
     if (!hasAndroid) { return; }
     const showTitle = currentShow === null ? null : currentShow.title;
-    const radioCodeName = radio ? radio.code_name : stream.code_name;
 
     if (this.getVersion() < ANDROID_SONG_MIN_VERSION) {
       // @ts-expect-error Android is defined by the device

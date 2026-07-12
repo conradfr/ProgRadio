@@ -109,12 +109,12 @@ export const usePlayerStore = defineStore('player', {
     radioPlayingCodeName: state => (state.stream !== null ? state.stream.code_name : null),
     displayVolume: state => state.focus.icon || state.focus.fader || false,
     timerIsActive: state => state.timer !== undefined && state.timer !== null && state.timer !== 0,
-    streamUrl: (state) => state.stream ? state.stream.stream_url : null,
+    streamUrl: state => state.stream ? state.stream.stream_url : null,
     liveSong: state => (
       stream: Stream,
       radio: Radio | null = null
     ): [string|null, string|null] | null => {
-      if (!stream || (radio && !(radio as Radio).streaming_enabled)) {
+      if (!stream || (radio && !radio.streaming_enabled)) {
         return null;
       }
 

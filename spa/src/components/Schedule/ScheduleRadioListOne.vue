@@ -42,9 +42,11 @@
         <div class="radio-submenu-entry-secondary-logo" :style="styleObjectRadioStream(entry.radio_stream_code_name)">
           <div class="radio-logo-play"
             :class="{
-              'radio-logo-play-active': (playingStream && entry.radio_stream_code_name === playingStream.radio_stream_code_name),
-              'radio-logo-play-paused': (playingStream && entry.radio_stream_code_name === playingStream.radio_stream_code_name
-                && playing === PlayerStatus.Stopped),
+              'radio-logo-play-active':
+                (playingStream && entry.radio_stream_code_name === playingStream.radio_stream_code_name),
+              'radio-logo-play-paused':
+                (playingStream && entry.radio_stream_code_name === playingStream.radio_stream_code_name
+                  && playing === PlayerStatus.Stopped),
               'radio-logo-play-hide': (radio.streaming_enabled === false)
             }">
           </div>
@@ -99,8 +101,6 @@ import {
   GTAG_ACTION_REGION_CLICK,
   GTAG_ACTION_REGION_VALUE,
 } from '@/config/config';
-
-import PlayerUtils from '@/utils/PlayerUtils';
 
 const MAX_RANDOM_MS = 150;
 
@@ -268,7 +268,7 @@ export default defineComponent({
           });
         }
 
-        this.playRadio({ radio: this.radio, stream: stream });
+        this.playRadio({ radio: this.radio, stream });
       }
     },
     toggleFavorite() {
