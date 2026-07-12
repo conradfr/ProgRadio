@@ -303,7 +303,7 @@ createApp({
               window.audio.play().then(() => {
                 this.playingStarted(
                   options.topic ? options.topic.trim() : null,
-                  options.streamCodeName ? options.streamCodeName.trim() : null,
+                  options.radioOrStreamId ? options.radioOrStreamId.trim() : null,
                   options.source ? options.source.trim() : null,
                 );
               });
@@ -328,7 +328,7 @@ createApp({
           window.audio.play().then(() => {
             this.playingStarted(
               options.topic ? options.topic.trim() : null,
-              options.streamCodeName ? options.streamCodeName.trim() : null,
+              options.radioOrStreamId ? options.radioOrStreamId.trim() : null,
               options.source ? options.source.trim() : null,
             );
           });
@@ -368,7 +368,7 @@ createApp({
       window.audio.play().then(() => {
         this.playingStarted(
           options.topic ? options.topic.trim() : null,
-          options.streamCodeName ? options.streamCodeName.trim() : null,
+          options.radioOrStreamId ? options.radioOrStreamId.trim() : null,
           options.source ? options.source.trim() : null,
         );
       });
@@ -413,7 +413,7 @@ createApp({
     this.cover = null;
     this.leaveChannels();
   },
-  playingStarted(topic, streamCodeName, source) {
+  playingStarted(topic, radioOrStreamId, source) {
     this.playing = PLAYER_STATE_PLAYING;
     this.lastUpdated = new Date();
     this.playingStart = new Date();
@@ -458,8 +458,8 @@ createApp({
         this.joinChannel(topic.trim());
       }
 
-      if (streamCodeName && streamCodeName.trim() !== '') {
-        this.joinChannel(`listeners:${streamCodeName.trim()}`);
+      if (radioOrStreamId && radioOrStreamId.trim() !== '') {
+        this.joinChannel(`listeners:${radioOrStreamId.trim()}`);
       }
     }, 1000);
   },
@@ -543,32 +543,32 @@ createApp({
       this.leaveChannel(topicName);
     }
   },
-  leaveChannel(topic) {
-    if (!this.channels[topic]) {
+  leaveChannel(channelTopic) {
+    if (!this.channels[channelTopic]) {
       return;
     }
 
-    this.channels[topic].leave();
-    delete this.channels[topic];
+    this.channels[channelTopic].leave();
+    delete this.channels[channelTopic];
     this.listeners = null;
 
     if (Object.keys(this.channels).length === 0) {
       this.disconnectSocket();
     }
   },
-  joinChannel(topic) {
+  joinChannel(channelTopic) {
     if (!this.options.webSocket) {
       return;
     }
 
-    // optimize listeners channel sub has many people will not have the tab running in the background
-    if (topic.trim().startsWith('listeners:') && !this.visibilityListeners[topic]) {
-      this.visibilityListeners[topic] = true;
+    // optimize listeners channel sub has many people will have the tab running in the background
+    if (channelTopic.trim().startsWith('listeners:') && !this.visibilityListeners[channelTopic]) {
+      this.visibilityListeners[channelTopic] = true;
       document.addEventListener('visibilitychange', () => {
-        if (this.channels[topic] && document.hidden) {
-          this.leaveChannel(topic);
+        if (this.channels[channelTopic] && document.hidden) {
+          this.leaveChannel(channelTopic);
         } else {
-          this.joinChannel(topic);
+          this.joinChannel(channelTopic);
         }
       });
     }
@@ -576,15 +576,15 @@ createApp({
     this.connectSocket();
 
     // Channel already exists?
-    if (Object.prototype.hasOwnProperty.call(this.channels, topic)) {
+    if (Object.prototype.hasOwnProperty.call(this.channels, channelTopic)) {
       return;
     }
 
-    this.channels[topic] = this.socket.channel(topic, {});
+    this.channels[channelTopic] = this.socket.channel(channelTopic, {});
 
-    this.channels[topic].join()
+    this.channels[channelTopic].join()
       .receive('error', (_resp) => {
-        if (topic.startsWith('listeners:')) {
+        if (channelTopic.startsWith('listeners:')) {
           this.listeners = null;
         } else {
           this.song = null;
@@ -595,7 +595,7 @@ createApp({
         // this.channels[topic] = null;
       })
       .receive('timeout', () => {
-        if (topic.startsWith('listeners:')) {
+        if (channelTopic.startsWith('listeners:')) {
           this.listeners = null;
         } else {
           this.song = null;
@@ -606,21 +606,21 @@ createApp({
         // this.channels[topic] = null;
       });
 
-    this.channels[topic].on('playing', (songData) => {
+    this.channels[channelTopic].on('playing', (songData) => {
       this.formatSong(songData);
       setTitle(this.song);
     });
 
-    this.channels[topic].on('counter_update', (counterData) => {
+    this.channels[channelTopic].on('counter_update', (counterData) => {
       this.formatListeners(counterData);
     });
 
-    this.channels[topic].on('quit', () => {
+    this.channels[channelTopic].on('quit', () => {
       this.song = null;
       this.cover = null;
       this.listeners = null;
-      this.channels[topic] = null;
-      delete this.channels[topic];
+      this.channels[channelTopic] = null;
+      delete this.channels[channelTopic];
       setTitle(null);
     });
   },

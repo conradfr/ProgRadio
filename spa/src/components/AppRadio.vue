@@ -42,7 +42,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-12 mt-3 text-center text-sm-start">
+          <div class="col-md-12 mt-2 mb-2 text-center text-sm-start">
             <a href="#media-current">{{ $t('message.radio_page.current') }}</a>
           </div>
         </div>

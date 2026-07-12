@@ -2,13 +2,13 @@
 
 {% import _self as self %}
 
-{% macro is_current(date_start, date_end) %}
+{% macro isCurrent(date_start, date_end) %}
     {% if date(date_start) < date() and date(date_end) > date() %}
         media-current
     {% endif %}
 {% endmacro %}
 
-{% macro is_current_anchor(date_start, date_end) %}
+{% macro isCurrentAnchor(date_start, date_end) %}
     {% if date(date_start) < date() and date(date_end) > date() %}
         <a class="anchor" id="media-current"></a>
     {% endif %}
@@ -182,8 +182,8 @@
 
             <div class="radio-page-shows">
             {% for show in schedule %}
-                {{ self.is_current_anchor(show.start_at, show.end_at) }}
-                <div class="d-flex align-items-stretch{{ self.is_current(show.start_at, show.end_at) }}">
+                {{ self.isCurrentAnchor(show.start_at, show.end_at) }}
+                <div class="d-flex align-items-stretch{{ self.isCurrent(show.start_at, show.end_at) }}">
                     <div class="flex-shrink-0 media-timeline">
                         .
                     </div>
