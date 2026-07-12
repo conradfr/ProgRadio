@@ -86,10 +86,14 @@ export default defineComponent({
         });
       }
 
-      this.playerStore.playRadio({
-        radio: this.radio,
-        stream: this.stream
-      });
+      if (this.stream.is_sub_radio) {
+        this.playerStore.playRadio({
+          radio: this.radio,
+          stream: this.stream
+        });
+      } else {
+        this.playerStore.playStream(this.stream);
+      }
     },
     stop() {
       if (this.playerStore.externalPlayer === false) {

@@ -11,7 +11,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
+import type { PropType } from 'vue';
 import { DateTime } from 'luxon';
+
+import type { Stream } from '@/types/stream';
+import type { Radio } from '@/types/radio';
+import type { Show } from '@/types/show';
 
 import { TIMEZONE } from '@/config/config';
 
@@ -23,10 +28,22 @@ export default defineComponent({
       type: String,
       required: false,
       default: null
-    }
+    },
+    stream: {
+      type: Object as PropType<Stream>,
+      required: true
+    },
+    radio: {
+      type: Object as PropType<Radio>,
+      required: false
+    },
+    show: {
+      type: Object as PropType<Show>,
+      required: false
+    },
   },
   computed: {
-    ...mapState(usePlayerStore, ['stream', 'radio', 'show', 'currentSong']),
+    ...mapState(usePlayerStore, ['currentSong']),
     infosUlStyle(): object {
       let animationCount = 1;
 

@@ -6,9 +6,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState } from 'pinia';
+import type { PropType } from 'vue';
 
-import { usePlayerStore } from '@/stores/playerStore';
+import type { Stream } from '@/types/stream';
 
 import {
   GTAG_STREAMING_ACTION_FILTER_COUNTRY,
@@ -17,8 +17,11 @@ import {
 } from '@/config/config';
 
 export default defineComponent({
-  computed: {
-    ...mapState(usePlayerStore, ['stream']),
+  props: {
+    stream: {
+      type: Object as PropType<Stream>,
+      required: true
+    },
   },
   methods: {
     flagClick() {

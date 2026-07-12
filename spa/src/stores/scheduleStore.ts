@@ -135,8 +135,8 @@ export const useScheduleStore = defineStore('schedule', {
         const subRadio = this.getSubRadio(radioCodeName);
         let currentShow = null;
 
-        if (state.schedule[radioCodeName] && state.schedule[radioCodeName][subRadio.code_name]) {
-          currentShow = find(state.schedule[radioCodeName][subRadio.code_name], (show) => Interval
+        if (state.schedule[radioCodeName] && state.schedule[radioCodeName][subRadio.radio_stream_code_name]) {
+          currentShow = find(state.schedule[radioCodeName][subRadio.radio_stream_code_name], (show) => Interval
             .fromDateTimes(DateTime.fromISO(show.start_at).setZone(config.TIMEZONE),
               DateTime.fromISO(show.end_at).setZone(config.TIMEZONE)).contains(state.cursorTime));
         }

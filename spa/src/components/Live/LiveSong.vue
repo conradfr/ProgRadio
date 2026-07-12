@@ -28,7 +28,6 @@ import PlayerUtils from '@/utils/PlayerUtils';
 import PlayerSaveSong from '../Player/Common/PlayerSaveSong.vue';
 import SongLinks from '../Utils/SongLinks.vue';
 
-
 export default defineComponent({
   components: {
     PlayerSaveSong,
@@ -43,14 +42,14 @@ export default defineComponent({
   mounted() {
     setTimeout(() => {
       if (this.stream && this.channelName) {
-        this.joinChannel(this.channelName);
+        this.joinSongChannel(this.channelName);
       }
     }, 150);
   },
   beforeUnmount() {
     setTimeout(() => {
       if (this.stream && this.channelName) {
-        this.leaveChannel(this.channelName);
+        this.leaveSongChannel(this.channelName);
       }
     }, 1000);
   },
@@ -72,8 +71,8 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(usePlayerStore, [
-      'joinChannel',
-      'leaveChannel',
+      'joinSongChannel',
+      'leaveSongChannel',
     ]),
   }
 });

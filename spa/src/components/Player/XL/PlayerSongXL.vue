@@ -1,38 +1,90 @@
 <template>
-  <div class="player-song-xl flex-grow-1 d-flex justify-content-start align-items-center cursor-pointer"
+  <div v-if="liveSongTitle"
+    class="player-song-xl flex-grow-1 d-flex justify-content-start align-items-center cursor-pointer"
     @click="gotoRadio">
-    <div v-if="currentSongCover" class="player-logo-xl me-3">
-      <img :src="currentSongCover" />
+    <div v-if="liveSongCover" class="player-logo-xl me-3">
+      <img :src="liveSongCover" />
     </div>
-    <div>♫  {{ currentSongTitle }}</div>
+    <div>♫  {{ liveSongTitle }}</div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState } from 'pinia';
+import type { PropType } from 'vue';
+import { mapState, mapActions } from 'pinia';
+
+import type { Stream } from '@/types/stream';
 
 import { usePlayerStore } from '@/stores/playerStore';
 
+import PlayerUtils from '@/utils/PlayerUtils';
+
 export default defineComponent({
-  computed: {
-    ...mapState(usePlayerStore, ['stream', 'currentSong']),
-    currentSongTitle() {
-      if (!this.currentSong || !this.currentSong[0]) {
-        return null;
-      }
-
-      return this.currentSong[0];
+  props: {
+    stream: {
+      type: Object as PropType<Stream>,
+      required: true
     },
-    currentSongCover() {
-      if (!this.currentSong || !this.currentSong[1]) {
-        return null;
-      }
-
-      return this.currentSong[1];
+  },
+  beforeMount() {
+    this.joinChannel();
+  },
+  beforeUnmount() {
+    this.leaveChannel();
+  },
+  data(): {
+    lastChannelTopic: string|null,
+  } {
+    return {
+      lastChannelTopic: null
     }
   },
+  watch: {
+    stream(_newValue, oldValue) {
+      if (oldValue && this.lastChannelTopic) {
+        this.leaveChannel(this.lastChannelTopic);
+      }
+
+      this.joinChannel();
+    },
+  },
+  computed: {
+    ...mapState(usePlayerStore, ['liveSong']),
+    channelTopic() {
+      return PlayerUtils.getChannelName(this.stream);
+    },
+    liveSongData() {
+      return this.liveSong(this.stream);
+    },
+    liveSongTitle() {
+      return this.liveSongData && this.liveSongData[0] ? this.liveSongData[0] : null;
+    },
+    liveSongCover() {
+      return this.liveSongData && this.liveSongData[1] ? this.liveSongData[1] : null;
+    },
+  },
   methods: {
+    ...mapActions(usePlayerStore, [
+      'joinSongChannel',
+      'leaveSongChannel',
+    ]),
+    joinChannel() {
+      setTimeout(() => {
+        if (this.channelTopic) {
+          this.joinSongChannel(this.channelTopic);
+          this.lastChannelTopic = this.channelTopic;
+        }
+      }, 500);
+    },
+    leaveChannel(channelTopic: string|null = null) {
+      setTimeout(() => {
+        if (channelTopic || this.lastChannelTopic) {
+          this.leaveSongChannel(channelTopic || this.lastChannelTopic);
+          this.lastChannelTopic = null;
+        }
+      }, channelTopic ? 5 : 1000);
+    },
     gotoRadio() {
       if (!this.stream) {
         return;

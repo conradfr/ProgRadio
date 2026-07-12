@@ -7,16 +7,31 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState } from 'pinia';
+import type { PropType } from 'vue';
 import { DateTime } from 'luxon';
+
+import type { Stream } from '@/types/stream';
+import type { Radio } from '@/types/radio';
+import type { Show } from '@/types/show';
 
 import { TIMEZONE } from '@/config/config';
 
-import { usePlayerStore } from '@/stores/playerStore';
-
 export default defineComponent({
+  props: {
+    stream: {
+      type: Object as PropType<Stream>,
+      required: true
+    },
+    radio: {
+      type: Object as PropType<Radio>,
+      required: false
+    },
+    show: {
+      type: Object as PropType<Show>,
+      required: false
+    },
+  },
   computed: {
-    ...mapState(usePlayerStore, ['stream', 'radio', 'show']),
     streamName(): string {
       if (!this.stream) {
         return '';

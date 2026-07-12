@@ -225,8 +225,8 @@ export default defineComponent({
       'activateProgramModal',
     ]),
     ...mapActions(usePlayerStore, [
-      'joinChannel',
-      'leaveChannel',
+      'joinSongChannel',
+      'leaveSongChannel',
     ]),
     setRootRef(el: HTMLElement) {
       if (el) {
@@ -265,7 +265,7 @@ export default defineComponent({
       }
 
       setTimeout(() => {
-        this.joinChannel(this.channelName);
+        this.joinSongChannel(this.channelName);
       }, 250 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
     leaveChannels() {
@@ -274,7 +274,7 @@ export default defineComponent({
       }
 
       setTimeout(() => {
-        this.leaveChannel(this.channelName);
+        this.leaveSongChannel(this.channelName);
       }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
   }

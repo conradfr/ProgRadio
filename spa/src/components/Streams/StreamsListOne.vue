@@ -230,8 +230,8 @@ export default defineComponent({
     ...mapActions(useGlobalStore, ['displayToast']),
     ...mapActions(useUserStore, ['toggleStreamFavorite']),
     ...mapActions(usePlayerStore, [
-      'joinChannel',
-      'leaveChannel',
+      'joinSongChannel',
+      'leaveSongChannel',
       'joinListenersChannel',
       'leaveListenersChannel',
       'stop',
@@ -254,7 +254,7 @@ export default defineComponent({
     joinChannels() {
       const randomJoinMs = Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50;
       setTimeout(() => {
-        this.joinChannel(this.channelName);
+        this.joinSongChannel(this.channelName);
       }, 250 + randomJoinMs);
 
       setTimeout(() => {
@@ -263,7 +263,7 @@ export default defineComponent({
     },
     leaveChannels() {
       setTimeout(() => {
-        this.leaveChannel(this.channelName);
+        this.leaveSongChannel(this.channelName);
         this.leaveListenersChannel(this.stream.id);
       }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },

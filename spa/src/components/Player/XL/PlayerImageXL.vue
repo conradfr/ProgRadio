@@ -6,21 +6,28 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState } from 'pinia';
+import type { PropType } from 'vue';
+
+import type { Stream } from '@/types/stream';
+import type { Radio } from '@/types/radio';
 
 import StreamsUtils from '@/utils/StreamsUtils';
 
-import { usePlayerStore } from '@/stores/playerStore';
-
 export default defineComponent({
+  props: {
+    stream: {
+      type: Object as PropType<Stream>,
+      required: true
+    },
+    radio: {
+      type: Object as PropType<Radio>,
+      required: false
+    },
+  },
   computed: {
-    ...mapState(usePlayerStore, ['stream', 'radio']),
     imgSrc() {
       return StreamsUtils.getPictureUrl(this.stream, this.radio);
     }
   },
-  methods: {
-
-  }
 });
 </script>

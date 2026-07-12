@@ -9,11 +9,25 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
 import { mapState, mapActions } from 'pinia';
+
+import type { Stream } from '@/types/stream';
+import type { Radio } from '@/types/radio';
 
 import { usePlayerStore } from '@/stores/playerStore';
 
 export default defineComponent({
+  props: {
+    stream: {
+      type: Object as PropType<Stream>,
+      required: true
+    },
+    radio: {
+      type: Object as PropType<Radio>,
+      required: false
+    },
+  },
   data(): {
     lastChannelTopic: string|null,
   } {
@@ -32,16 +46,16 @@ export default defineComponent({
     this.leaveChannel();
   },
   watch: {
-    channelTopic(_newValue, oldValue) {
+    stream(_newValue, oldValue) {
       if (oldValue && this.lastChannelTopic) {
-        this.leaveChannel(true);
+        this.leaveChannel(this.lastChannelTopic);
       }
 
       this.joinChannel();
     },
   },
   computed: {
-    ...mapState(usePlayerStore, ['stream', 'radio', 'listeners']),
+    ...mapState(usePlayerStore, ['listeners']),
     channelTopic() {
       // radio, all sub radios count
       if (this.stream && this.stream.is_sub_radio && this.radio && this.radio.code_name) {
@@ -79,13 +93,13 @@ export default defineComponent({
         }
       }, 500);
     },
-    leaveChannel(now: boolean = false) {
+    leaveChannel(channelTopic: string|null = null) {
       setTimeout(() => {
-        if (this.lastChannelTopic) {
-          this.leaveListenersChannel(this.lastChannelTopic);
+        if (channelTopic || this.lastChannelTopic) {
+          this.leaveListenersChannel(channelTopic || this.lastChannelTopic);
           this.lastChannelTopic = null;
         }
-      }, now ? 5 : 1000);
+      }, channelTopic ? 5 : 1000);
     },
   }
 });

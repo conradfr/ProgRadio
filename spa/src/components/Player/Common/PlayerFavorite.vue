@@ -4,10 +4,10 @@
        :class="{ 'player-favorite-added': isFavorite }"
        @click="$emit('favoriteToggle');">
     <i class="bi"
-       :class="{
+      :class="{
         'bi-heart-fill': isFavorite,
         'bi-heart': !isFavorite
-        }"></i>
+      }"></i>
   </div>
 </template>
 

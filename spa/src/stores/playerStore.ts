@@ -44,9 +44,9 @@ interface State {
   externalPlayerVersion: number|null
   stream: Stream|null
   radio: Radio|null
+  show: Program|null
   prevStream: Stream|null
   prevRadio: Radio|null
-  show: Program|null
   song: Songs
   songHistory: SongHistory
   listeners: Listeners
@@ -153,7 +153,7 @@ export const usePlayerStore = defineStore('player', {
 
       const { radio, stream } = params;
 
-      if (radio === undefined || !radio.streaming_enabled || !stream) {
+      if (!radio || !radio.streaming_enabled || !stream) {
         return;
       }
 
@@ -437,14 +437,12 @@ export const usePlayerStore = defineStore('player', {
     updateShow() {
       const scheduleStore = useScheduleStore();
 
-      if (!this.radio) {
+      if (!this.stream || !this.stream.is_sub_radio) {
         return;
       }
 
-      const stream = ScheduleUtils.getStreamFromCodeName(this.radioStreamCodeName, this.radio);
-
       // secondary streams have no schedule
-      this.show = stream !== null && stream.main === true
+      this.show = this.stream && this.stream.is_sub_radio
         ? scheduleStore.currentShowOnRadio(this.radio.code_name) : null;
     },
     connectSocket() {
@@ -524,6 +522,12 @@ export const usePlayerStore = defineStore('player', {
     },
     leaveListenersChannel(topicName: string) {
       this.leaveChannel(`listeners:${topicName}`, topicName);
+    },
+    joinSongChannel(topicName: string) {
+      this.joinChannel(topicName);
+    },
+    leaveSongChannel(topicName: string) {
+      this.leaveChannel(topicName);
     },
     joinChannel(topicName: string, innerName: string|null = null) {
       // should not happen but...

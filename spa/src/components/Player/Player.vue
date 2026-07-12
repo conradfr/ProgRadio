@@ -17,17 +17,17 @@
       </Transition>
       <div class="h-100 d-flex justify-content-between align-items-center">
         <div class="player-header-xl d-flex align-items-center">
-          <PlayerCountryXL />
-          <PlayerListenersXL v-if="hover" />
-          <PlayerImageXL />
+          <PlayerCountryXL v-if="stream" :stream="stream" />
+          <PlayerListenersXL v-if="stream && hover" :stream="stream" :radio="radio" />
+          <PlayerImageXL v-if="stream" :stream="stream" :radio="radio" />
           <PlayerPlayPause :stream="stream" :playing="playing" @togglePlay="() => togglePlay()" />
-          <PlayerInfoXL v-if="stream" />
-          <PlayerInfoRolling v-if="stream" />
+          <PlayerInfoXL v-if="stream" :stream="stream" :radio="radio" :show="show" />
+          <PlayerInfoRolling v-if="stream" :stream="stream" :radio="radio" :show="show" />
           <div v-if="!stream" class="player-name player-name-help">
             {{ $t('message.player.placeholder') }}
           </div>
         </div>
-        <PlayerSongXL v-if="stream && currentSong" />
+        <PlayerSongXL v-if="stream" :stream="stream" />
         <div class="player-actions-xl d-flex justify-content-end">
           <PlayerVolumeXL v-if="!externalPlayer" :muted="muted" @toggleMute="() => toggleMute()" />
           <PlayerSaveSong />
@@ -35,7 +35,7 @@
             @favoriteToggle="() => favoriteToggle()" />
           <timer></timer>
           <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId" :asIcon="true"
-          @changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
+            @changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
           />
         </div>
       </div>
@@ -448,7 +448,7 @@ export default defineComponent({
       playPreviousDispatch: 'playPrevious',
       stopDispatch: 'stop',
       volumeFocusDispatch: 'volumeFocus',
-      joinChannel: 'joinChannel',
+      // joinChannel: 'joinChannel',
       updateFlux: 'updateFlux',
       playError: 'playError',
       setPlayerStatus: 'setPlayerStatus',
