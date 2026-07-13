@@ -15,7 +15,7 @@
             <button v-for="sub_radio in subRadiosSorted" v-once :key="sub_radio.radio_stream_code_name"
               type="button" class="btn m-2"
               :class="{ 'btn-primary': currentSubRadioCodeName === sub_radio.radio_stream_code_name,
-                'btn-secondary': currentSubRadioCodeName === sub_radio.radio_stream_code_name }"
+                'btn-secondary': currentSubRadioCodeName !== sub_radio.radio_stream_code_name }"
               @click="regionClick(sub_radio.radio_stream_code_name)">
               {{ sub_radio.name }}
             </button>
@@ -41,13 +41,21 @@ import {
   GTAG_CATEGORY_SCHEDULE
 } from '@/config/config';
 
+import PlayerStatus from '@/types/player_status';
+
 import { useScheduleStore } from '@/stores/scheduleStore';
+import { usePlayerStore } from '@/stores/playerStore';
 import { useUserStore } from '@/stores/userStore';
 
 export default defineComponent({
   computed: {
     ...mapState(useScheduleStore, ['radios', 'getSubRadio']),
     ...mapState(useScheduleStore, { radio: 'radioForRegionModal' }),
+    ...mapState(usePlayerStore, {
+      playingStream: 'stream',
+      playingRadio: 'radio',
+      playing: 'playing'
+    }),
     subRadiosSorted() {
       if (!this.radio || !this.radio.streams) {
         return [];
@@ -70,18 +78,19 @@ export default defineComponent({
       );
     },
     currentSubRadioCodeName() {
-      if (this.radio === null) {
+      if (!this.radio) {
         return null;
       }
 
-      return this.getSubRadio(this.radio.code_name).code_name;
+      return this.getSubRadio(this.radio.code_name).radio_stream_code_name;
     },
   },
   // computed: mapState(usePlayerStore, ['timer']),
   methods: {
     ...mapActions(useUserStore, ['setSubRadio']),
+    ...mapActions(usePlayerStore, ['playRadio']),
     regionClick(subRadioStreamCodeName: string) {
-      if (this.radio === null) {
+      if (this.radio === null || this.currentSubRadioCodeName === subRadioStreamCodeName) {
         return;
       }
 
@@ -101,6 +110,11 @@ export default defineComponent({
       });
 
       this.setSubRadio(this.radio.code_name, subRadioStreamCodeName);
+
+      // if currently playing, change sub radio if same radio
+      if (this.playing !== PlayerStatus.Stopped && this.playingRadio.code_name === this.radio.code_name) {
+        this.playRadio({ radio: this.radio, stream: this.getSubRadio(this.radio.code_name) });
+      }
     }
   }
 });

@@ -18,9 +18,7 @@
       @mouseover.stop="">
       <i class="bi bi-geo-alt"></i>
     </div>
-    <div class="radio-submenu"
-      _class="{ 'radio-submenu': hover }"
-      :style="subMenuStyleObject">
+    <div class="radio-submenu" :style="subMenuStyleObject">
       <div class="radio-submenu-entry radio-submenu-entry-favorites" @click="toggleFavorite">
         <img v-if="isFavorite" :src="`${$CDN_BASE_URL}img/favorite_heart.svg`" class="filter-fav" />
         <p v-if="isFavorite">{{ $t('message.player.favorites.remove') }}</p>
@@ -43,8 +41,7 @@
         <p>{{ $t('message.schedule.radio_list.pick_region_title') }}</p>
       </div>
     </div>
-    <div class="radio-submenu radio-submenu-streams" :style="subMenuStyleObjectStreams"
-      _class="{ 'radio-submenu': hover }">
+    <div class="radio-submenu radio-submenu-streams" :style="subMenuStyleObjectStreams">
       <div v-for="entry in secondaryStreams" :key="entry.code_name"
         class="radio-submenu-entry radio-submenu-entry-secondary"
         :title="entry.name"

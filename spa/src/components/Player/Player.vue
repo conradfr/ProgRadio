@@ -73,7 +73,7 @@
         <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId"
           @changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
         />
-        <PlayerInfoRolling v-if="stream" />
+        <PlayerInfoRolling v-if="stream" :stream="stream" :radio="radio" :show="show" />
         <Transition name="timer-fade" mode="out-in">
           <PlayerSaveSong v-if="userLogged && currentSong && currentSong[0]" />
         </Transition>
