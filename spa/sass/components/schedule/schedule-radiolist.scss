@@ -238,7 +238,7 @@
       opacity: 0;
       transition: opacity 200ms ease-in-out 500ms;
 
-      img {
+      img, svg {
         height: 28px;
         width: 28px;
 
@@ -263,7 +263,7 @@
       &:hover {
         padding-top: 4px;
 
-        img {
+        img, svg {
           height: 30px;
           width: 30px;
         }

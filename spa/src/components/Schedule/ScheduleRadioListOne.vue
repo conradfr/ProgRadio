@@ -19,7 +19,7 @@
       <i class="bi bi-geo-alt"></i>
     </div>
     <div class="radio-submenu"
-      :class="{ 'radio-submenu': hover }"
+      _class="{ 'radio-submenu': hover }"
       :style="subMenuStyleObject">
       <div class="radio-submenu-entry radio-submenu-entry-favorites" @click="toggleFavorite">
         <img v-if="isFavorite" :src="`${$CDN_BASE_URL}img/favorite_heart.svg`" class="filter-fav" />
@@ -29,12 +29,22 @@
       </div>
       <router-link class="radio-submenu-entry radio-submenu-entry-radiopage"
         :to="'/' + locale + '/radio/' + radio.code_name">
-        <img :src="`${$CDN_BASE_URL}img/list.svg`" class="filter-page" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16">
+          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+          <path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5"/>
+        </svg>
         <p>{{ $t('message.schedule.radio_list.page') }}</p>
       </router-link>
+      <div v-if="hasSubRadios" class="radio-submenu-entry radio-submenu-entry-region" @click="regionClick">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pin-map-fill" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"/>
+          <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
+        </svg>
+        <p>{{ $t('message.schedule.radio_list.pick_region_title') }}</p>
+      </div>
     </div>
     <div class="radio-submenu radio-submenu-streams" :style="subMenuStyleObjectStreams"
-      :class="{ 'radio-submenu': hover }">
+      _class="{ 'radio-submenu': hover }">
       <div v-for="entry in secondaryStreams" :key="entry.code_name"
         class="radio-submenu-entry radio-submenu-entry-secondary"
         :title="entry.name"
@@ -155,23 +165,23 @@ export default defineComponent({
       return this.getSubRadio(this.radio.code_name);
     },
     subMenuStyleObject() {
+      const nbOfItems = this.hasSubRadios ? 3 : 2;
       return {
-        width: `${RADIO_MENU_WIDTH * 2}px`,
+        width: `${RADIO_MENU_WIDTH * nbOfItems}px`,
         left: this.hover ? `${RADIO_MENU_WIDTH}px`
-          : `${this.hover ? '' : '-'}${RADIO_MENU_WIDTH * 2}px`
+          : `${this.hover ? '' : '-'}${RADIO_MENU_WIDTH * nbOfItems}px`
       };
     },
     subMenuStyleObjectStreams() {
+      const nbOfItems = this.hasSubRadios ? 3 : 2;
       let howManyStreams: any = filter(this.radio.streams,
         s => s.main === true || !s.is_sub_radio);
       howManyStreams = Object.keys(howManyStreams).length;
 
-      const howMany = howManyStreams > 0
-        ? howManyStreams - 1 : 0;
       return {
-        width: `${RADIO_MENU_WIDTH * howMany}px`,
-        left: this.hover ? `${3 * RADIO_MENU_WIDTH}px`
-          : `${this.hover ? '' : '-'}${RADIO_MENU_WIDTH * (2 + howMany)}px`
+        width: `${RADIO_MENU_WIDTH * howManyStreams}px`,
+        left: this.hover ? `${(nbOfItems + 1) * RADIO_MENU_WIDTH}px`
+          : `${this.hover ? '' : '-'}${RADIO_MENU_WIDTH * (nbOfItems + howManyStreams)}px`
       };
     },
     secondaryStreams() {
