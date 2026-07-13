@@ -3,6 +3,7 @@ defmodule ProgRadioApi.SongServer do
   require Logger
   alias ProgRadioApiWeb.Presence
   alias ProgRadioApi.StreamSong
+  alias ProgRadioApi.SongManager
   alias ProgRadioApi.SongProvider
   alias ProgRadioApi.TaskSupervisor
 
@@ -337,10 +338,23 @@ defmodule ProgRadioApi.SongServer do
 
     case how_many_connected do
       0 ->
-        broadcast_song(name, nil)
-        Logger.info("Data provider - #{name}: no client connected, exiting")
-        kill_push_process_if_any(state.push_pid)
-        {:stop, :normal, nil}
+        # most popular streams are pre-warmed and must stay alive without clients
+        if SongManager.persistent_topic?(name) do
+          Logger.debug("Data provider - #{name}: no client connected but persistent, staying alive")
+
+          Process.send_after(
+            self(),
+            :presence,
+            @refresh_presence_interval + Enum.random(-3000..3000)
+          )
+
+          {:noreply, state}
+        else
+          broadcast_song(name, nil)
+          Logger.info("Data provider - #{name}: no client connected, exiting")
+          kill_push_process_if_any(state.push_pid)
+          {:stop, :normal, nil}
+        end
 
       _ ->
         Logger.debug("Data provider - #{name}: #{how_many_connected} clients connected")

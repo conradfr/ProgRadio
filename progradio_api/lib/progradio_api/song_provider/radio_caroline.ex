@@ -6,10 +6,14 @@ defmodule ProgRadioApi.SongProvider.RadioCaroline do
 
   @stream_ids %{
     "radio_caroline_main" => "https://www.radiocaroline.bzh/cache/titreplayer2174546520932614580",
-    "radio_caroline_carocelt" => "https://www.radiocaroline.bzh/cache/titreplayer3554890196675807369",
-    "radio_caroline_carogold" => "https://www.radiocaroline.bzh/cache/titreplayer3289937280548165099",
-    "radio_caroline_carocool" => "https://www.radiocaroline.bzh/cache/titreplayer3554890196675807371",
-    "radio_caroline_carorock" => "https://www.radiocaroline.bzh/cache/titreplayer3554890196675807372"
+    "radio_caroline_carocelt" =>
+      "https://www.radiocaroline.bzh/cache/titreplayer3554890196675807369",
+    "radio_caroline_carogold" =>
+      "https://www.radiocaroline.bzh/cache/titreplayer3289937280548165099",
+    "radio_caroline_carocool" =>
+      "https://www.radiocaroline.bzh/cache/titreplayer3554890196675807371",
+    "radio_caroline_carorock" =>
+      "https://www.radiocaroline.bzh/cache/titreplayer3554890196675807372"
   }
 
   @impl true

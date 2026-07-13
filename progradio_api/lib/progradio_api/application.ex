@@ -63,6 +63,15 @@ defmodule ProgRadioApi.Application do
       ProgRadioApiWeb.Endpoint
     ]
 
+    children =
+      children ++
+        if Application.get_env(:progradio_api, :env) == :prod do
+          # pre-warm the song servers of the most popular streams (prod only)
+          [{Task, &ProgRadioApi.SongManager.launch_most_popular_streams_song_server/0}]
+        else
+          []
+        end
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ProgRadioApi.Supervisor]

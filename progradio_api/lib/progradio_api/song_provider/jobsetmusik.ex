@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Jobsetmusik do
 
   @stream_ids %{
     "jobsetmusik_main" => "https://www.jobsetmusik.com/cache/titreplayer13",
-    "jobsetmusik_hits" => "https://www.banquisefm.com/cache/titreplayer4",
+    "jobsetmusik_hits" => "https://www.banquisefm.com/cache/titreplayer4"
   }
 
   @impl true

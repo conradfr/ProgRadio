@@ -49,6 +49,10 @@ config :progradio_api, ProgRadioApi.Scheduler,
       schedule: "40 01 */1 * *",
       task: {ProgRadioApi.Streams, :update_stats, []}
     ],
+    persistent_song_servers: [
+      schedule: "40 02 */1 * *",
+      task: {ProgRadioApi.SongManager, :launch_most_popular_streams_song_server, []}
+    ],
     search_term_switch: [
       schedule: "12 0 */1 * *",
       task: {ProgRadioApi.Streams, :switch_search_terms_day, []}
@@ -154,6 +158,10 @@ config :progradio_api, Oban,
     import_stream_radiobox: 2
   ],
   repo: ProgRadioApi.Repo
+
+# Make the current environment available at runtime (e.g. to pre-warm song
+# servers only in prod).
+config :progradio_api, env: config_env()
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
