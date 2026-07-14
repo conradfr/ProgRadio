@@ -58,6 +58,25 @@ defmodule ProgRadioApi.SongProvider do
     |> Map.get(:body)
   end
 
+  def get_json_with_fetcher(url) do
+    fetcher_url = Application.get_env(:progradio_api, :fetcher_url)
+    fetcher_token = Application.get_env(:progradio_api, :fetcher_token)
+
+    Req.get!(
+      "#{fetcher_url}/fetch-json",
+      params: [url: url],
+      headers: [
+        {"Authorization", "Bearer #{fetcher_token}"},
+        {"Cache-Control", "no-cache"},
+        {"Pragma", "no-cache"}
+      ],
+      redirect: true,
+      connect_options: [timeout: @timeout],
+      receive_timeout: @timeout
+    )
+    |> Map.get(:body)
+  end
+
   # for when we have url that may be audio streams and won't return on a normal get
   def get_maybe_stream(url) do
     Req.get!(

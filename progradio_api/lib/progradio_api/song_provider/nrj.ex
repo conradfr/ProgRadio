@@ -52,8 +52,7 @@ defmodule ProgRadioApi.SongProvider.Nrj do
     try do
       item =
         @url
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json_with_fetcher()
         |> Enum.find(fn e -> Map.get(e, "id", 0) == id end)
         |> Map.get("playlist", %{})
         |> Enum.filter(fn e ->
