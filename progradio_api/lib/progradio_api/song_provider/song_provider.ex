@@ -84,6 +84,29 @@ defmodule ProgRadioApi.SongProvider do
     Enum.join(rest, ":")
   end
 
+  @doc """
+  Removes the "type=http" query parameter from a URL, cleaning up any
+  leftover "?" / "&" separators.
+  This is for shoutcast/icecast non-ssl urls
+  """
+  @spec remove_type_http(String.t()) :: String.t()
+  def remove_type_http(url) do
+    case String.split(url, "?", parts: 2) do
+      [base] ->
+        base
+
+      [base, query] ->
+        query
+        |> String.split("&")
+        |> Enum.reject(&(&1 == "type=http"))
+        |> Enum.join("&")
+        |> case do
+          "" -> base
+          new_query -> base <> "?" <> new_query
+        end
+    end
+  end
+
   @spec now_unix(System.time_unit()) :: integer()
   def now_unix(unit \\ :second) do
     System.os_time(unit)

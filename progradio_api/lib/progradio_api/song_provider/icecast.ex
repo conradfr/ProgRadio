@@ -149,7 +149,10 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   # this will be invoked on the first run
   @impl true
   def get_data(name, _last_data) do
-    url = SongProvider.get_stream_code_name_from_channel(name)
+    url =
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.remove_type_http()
 
     # try shoutcast and icecast or use default
     case try_shoutcast_and_icecast(url, name) do
