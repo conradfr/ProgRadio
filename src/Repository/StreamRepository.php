@@ -236,7 +236,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
-            ->groupBy('s.id, s.streamUrl, r.codeName, s.streamCodeName, ss.codeName, ss.enabled')
+            ->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled')
             //->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
             ->setParameter('text', '%' . $text . '%')

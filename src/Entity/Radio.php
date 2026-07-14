@@ -68,8 +68,15 @@ class Radio
     #[ORM\OneToMany(targetEntity: Stream::class, mappedBy: 'radio', fetch: 'EXTRA_LAZY')]
     private ?DoctrineCollection $streams;
 
+    /**
+     * @var SubRadio[]
+     */
+    #[ORM\OneToMany(targetEntity: SubRadio::class, mappedBy: 'radio')]
+    private DoctrineCollection $subRadios;
+
     public function __construct() {
         $this->streams = new ArrayCollection();
+        $this->subRadios = new ArrayCollection();
     }
 
     public function getId(): int
