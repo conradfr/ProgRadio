@@ -6,6 +6,7 @@ const utils = require('../../lib/utils');
 const logger = require('../../lib/logger.js');
 
 const subCities = {
+  'radio_scoop_main': 'Ly',
   'radio_scoop_lyon': 'Ly',
   'radio_scoop_vienne': 'Vi',
   'radio_scoop_tarare': 'Ta',
