@@ -2,19 +2,19 @@
 
 {% import _self as self %}
 
-{% macro picture(stream) %}{%- if stream.internalUseImg is defined and stream.internalUseImg == true and stream.img is not null %}
+{% macro picture(stream) %}{%- if stream.internalUseImg is defined and stream.internalUseImg == true and stream.img is not null -%}
 media/stream/{{ stream.img }}
-{%- elseif stream.ownLogo is defined and stream.ownLogo == true and stream.radioStreamCodeName is not null %}
+{%- elseif stream.ownLogo is defined and stream.ownLogo == true and stream.radioStreamCodeName is not null -%}
 img/radio/page/{{ stream.radioStreamCodeName }}.png
-{%- elseif stream.radio is defined and stream.radio is not null %}
+{%- elseif stream.radio is defined and stream.radio is not null -%}
 img/radio/page/{{ stream.radio.codeName }}.png
-{%- elseif stream.img_alt is defined and stream.img_alt is not null %}
+{%- elseif stream.img_alt is defined and stream.img_alt is not null -%}
 img/radio/page/{{ stream.img_alt }}.png
-{%- elseif stream.img is not null and stream.img != '' %}
+{%- elseif stream.img is not null and stream.img != '' -%}
 media/stream/{{ stream.img }}
-{%- else %}
+{%- else -%}
 img/stream-placeholder.png
-{% endif -%}{% endmacro %}
+{%- endif -%}{% endmacro %}
 
 {% macro topic(stream) %}
 {% if stream.streamSong is not null and stream.streamSongCodeName is not null %}song:{{ stream.streamSong.codeName }}_{{ stream.streamSongCodeName }}{% else %}url:{{ stream.streamUrl }}{% endif %}
