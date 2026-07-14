@@ -619,12 +619,9 @@ defmodule ProgRadioApi.Streams do
         )
 
         from(s in Stream,
-          left_join: r in Radio,
-          on: r.id == s.radio_id,
           where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
           select: %{
-            id: s.id,
-            code_name: fragment("COALESCE(?,  ?::text)", s.radio_stream_code_name, s.id)
+            id: s.id
           }
         )
         |> Repo.all()
@@ -634,7 +631,7 @@ defmodule ProgRadioApi.Streams do
             |> Enum.map(fn x ->
               unless x.has_data == false do
                 count =
-                  Redix.command!(:redix, ["ZMSCORE", x.redis_key, e.code_name])
+                  Redix.command!(:redix, ["ZMSCORE", x.redis_key, e.id])
                   |> hd()
 
                 unless count == nil, do: String.to_integer(count), else: 0

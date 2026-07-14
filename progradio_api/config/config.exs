@@ -38,7 +38,7 @@ config :progradio_api, ProgRadioApi.Scheduler,
       task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import, []}
     ],
     import_lautfm: [
-      schedule: "10 04 */10 * *",
+      schedule: "22 04 */10 * *",
       task: {ProgRadioApi.Importer.StreamsImporter.Lautfm, :import, []}
     ],
     #    import_api50k: [
@@ -46,11 +46,11 @@ config :progradio_api, ProgRadioApi.Scheduler,
     #      task: {ProgRadioApi.Importer.StreamsImporter.Api50k, :import, []}
     #    ],
     stats: [
-      schedule: "40 01 */1 * *",
+      schedule: "40 03 */1 * *",
       task: {ProgRadioApi.Streams, :update_stats, []}
     ],
     persistent_song_servers: [
-      schedule: "40 02 */1 * *",
+      schedule: "40 04 */1 * *",
       task: {ProgRadioApi.SongManager, :launch_most_popular_streams_song_server, []}
     ],
     search_term_switch: [
