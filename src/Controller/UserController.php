@@ -260,6 +260,7 @@ class UserController extends AbstractBaseController
 
                 if (!empty($stream->getOriginalImg())) {
                   $apiClient->importStreamImage($stream->getId()->toString());
+                  sleep(1);
                   $stream = $em->getRepository(Stream::class)->find($stream->getId());
                 }
             } else {

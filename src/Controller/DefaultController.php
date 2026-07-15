@@ -9,7 +9,6 @@ use App\Service\Favorites;
 use App\Service\Host;
 use App\Service\ScheduleManager;
 use App\Entity\Radio;
-use App\Entity\Category;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
 use App\Entity\User;
@@ -733,7 +732,7 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/radios/favorite/{codeName}', name: 'favorite_toggle')]
     #[IsGranted('ROLE_USER')]
-    public function toggleFavorite(string $codeName, EntityManagerInterface $em): Response
+    public function toggleFavorite(string $codeName, Request $request, EntityManagerInterface $em): Response
     {
         $radio = $em->getRepository(Radio::class)->findOneBy(['codeName' => $codeName]);
 
@@ -759,7 +758,7 @@ class DefaultController extends AbstractBaseController
         } else {
             $user->addFavoriteRadio($radio);
 
-            $stream =  $em->getRepository(Stream::class)->getBestStreamForRadio($radio);
+            $stream =  $em->getRepository(Stream::class)->getBestStreamForRadio($radio, Favorites::getFavoriteSubRadios($request));
 
             if ($stream !== null) {
                 $user->addFavoriteStream($stream);
