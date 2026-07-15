@@ -35,6 +35,19 @@ defmodule ProgRadioApi.Streams do
 
   @error_random_cutoff 3
 
+  # ---------- SCORE ----------
+  # Score = weighted sum of listening sessions over a recent window, where each
+  # session is valued by its duration (favoring longer listens, capped) and
+  # decayed by recency (exponential, defined by a half-life).
+
+  @score_window_days 7
+  # a session's recency weight halves every this many days
+  @score_half_life_days 7
+  # duration is capped at this length to avoid very long sessions outliers
+  @score_duration_cap_seconds 7200
+  # session duration is divided by this to convert seconds into duration points
+  @score_duration_divisor 300
+
   # 5mn
   @cache_ttl_stream 300_000
   # 15s
@@ -596,59 +609,46 @@ defmodule ProgRadioApi.Streams do
     Redix.command!(:redix, ["EXPIRE", redis_key, @redis_ttl, "NX"])
   end
 
-  # Update score of streams by averaging listens from the past three days
+  # Update score of streams based on their listening sessions over a recent window.
+  # Each session is weighted by its (capped) duration and decayed by recency, so
+  # streams that hold listeners longer and more recently rank higher.
+  # TODO put back per ip mitigation?
   def update_stats() do
-    days =
-      1..3
-      |> Enum.map(fn x ->
-        date_string = Date.utc_today() |> Date.add(-1 * x) |> Date.to_iso8601()
-        redis_key = "#{date_string}-listens"
-
-        %{
-          redis_key: redis_key,
-          has_data: Redix.command!(:redix, ["EXISTS", redis_key]) == 1
-        }
-      end)
-
     Repo.transaction(
       fn ->
+        # reset all scores (as the next query only updates streams w/ listening session in the last n days
         Ecto.Adapters.SQL.query!(
           Repo,
           "UPDATE stream SET score = 0 where score > 0",
           []
         )
 
-        from(s in Stream,
-          where: s.enabled == true and is_nil(s.redirect_to) and s.banned == false,
-          select: %{
-            id: s.id
-          }
+        Ecto.Adapters.SQL.query!(
+          Repo,
+          """
+          UPDATE stream s
+          SET score = COALESCE(sub.score, 0)
+          FROM (
+            SELECT
+              stream_id,
+              ROUND(SUM(
+                POWER(0.5, GREATEST(EXTRACT(EPOCH FROM (now() - date_time_end)), 0) / 86400.0 / $1)
+                * (1 + LEAST(EXTRACT(EPOCH FROM (date_time_end - date_time_start)), $2) / $3)
+              ))::int AS score
+            FROM listening_session
+            WHERE date_time_end >= now() - make_interval(days => $4)
+            GROUP BY stream_id
+          ) sub
+          WHERE s.id = sub.stream_id
+            AND s.enabled = true AND s.redirect_to IS NULL AND s.banned = false
+          """,
+          [
+            @score_half_life_days,
+            @score_duration_cap_seconds,
+            @score_duration_divisor,
+            @score_window_days
+          ]
         )
-        |> Repo.all()
-        |> Enum.each(fn e ->
-          score =
-            days
-            |> Enum.map(fn x ->
-              unless x.has_data == false do
-                count =
-                  Redix.command!(:redix, ["ZMSCORE", x.redis_key, e.id])
-                  |> hd()
-
-                unless count == nil, do: String.to_integer(count), else: 0
-              else
-                0
-              end
-            end)
-            |> Enum.sum()
-            |> Kernel./(3)
-            |> round()
-
-          Ecto.Adapters.SQL.query!(
-            Repo,
-            "UPDATE stream SET score = $1 where id = $2",
-            [score, Ecto.UUID.dump!(e.id)]
-          )
-        end)
       end,
       timeout: :infinity
     )

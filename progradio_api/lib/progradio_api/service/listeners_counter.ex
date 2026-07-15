@@ -20,10 +20,6 @@ defmodule ProgRadioApi.ListenersCounter do
   # 1d
   @cache_ttl_channel_name_ms 86_400_000
 
-  @redis_ttl 432_000
-  @redis_ip_ttl 7_200
-  @redis_ip_ttl_ms 7_200_000
-
   # state:
   # %{
   #   counter: %{channel_name => count}
@@ -139,22 +135,6 @@ defmodule ProgRadioApi.ListenersCounter do
     unless is_update == true do
       Process.send(self(), {:refresh_counter, stream_id}, [])
       if radio_code_name != nil, do: Process.send(self(), {:refresh_counter, radio_code_name}, [])
-
-      # We store sessions in redis for popularity sort (consolidated per day)
-      # We restrict to one combo ip/radio per 2h
-      # Initially it was 24h but since we have trouble getting the real ip when its ipv6 with CapRover and
-      # multiple users are considered the same ip, we mitigate
-      date_string = Date.utc_today() |> Date.to_iso8601()
-      ip_key = "#{date_string}-#{stream_id}-#{listening_session.ip_address}"
-
-      # TODO use set instead ?
-      if Cache.has_key?(ip_key) == false or Redix.command!(:redix, ["GET", ip_key]) == nil do
-        Redix.command!(:redix, ["SET", ip_key, "1", "EX", @redis_ip_ttl])
-        Cache.put(ip_key, "1", ttl: @redis_ip_ttl_ms)
-
-        Redix.command!(:redix, ["ZINCRBY", "#{date_string}-listens", 1, stream_id])
-        Redix.command!(:redix, ["EXPIRE", "#{date_string}-listens", @redis_ttl, "NX"])
-      end
     end
 
     {:noreply, updated_state}
