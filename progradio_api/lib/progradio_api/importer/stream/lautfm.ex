@@ -89,9 +89,12 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
 
       website =
         stream
-        |> Map.get("page_url")
+        |> Map.get("third_parties", %{})
+        |> Map.get("website", %{})
+        |> Map.get("url",  Map.get(stream, "page_url"))
         |> ImporterUtils.replace_value_maybe(@source, existing_stream, :website)
         |> (&(Map.get(overloading, :website) || &1)).()
+        |> IO.inspect()
 
       enabled =
         stream
@@ -154,7 +157,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
   defp store(streams) do
     multi_upsert =
       Multi.new()
-      |> upsert_streams(streams)
+#      |> upsert_streams(streams)
 
     Logger.debug("Lautfm import upsert: #{Kernel.length(multi_upsert.operations)}")
 
