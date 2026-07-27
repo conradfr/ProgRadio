@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Rcast do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 7500
+  @refresh_auto_interval 15000
 
   @rcast_status "https://status.rcast.net/"
 
@@ -28,7 +28,7 @@ defmodule ProgRadioApi.SongProvider.Rcast do
 
         [_url, id] ->
           (@rcast_status <> id)
-          |> SongProvider.get()
+          |> SongProvider.get_with_fetcher()
       end
     rescue
       _ ->
@@ -40,7 +40,15 @@ defmodule ProgRadioApi.SongProvider.Rcast do
   @impl true
   def get_song(name, data, _last_song) do
     try do
-      case data do
+      {:ok, html} = Floki.parse_document(data)
+
+      content =
+        html
+        |> Floki.find("pre")
+        |> Floki.text()
+        |> String.trim()
+
+      case content do
         nil ->
           Logger.info("Data provider - #{name} (rcast): error fetching song data or empty")
           %{}

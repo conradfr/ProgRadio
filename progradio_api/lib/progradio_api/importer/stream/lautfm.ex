@@ -157,7 +157,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
   defp store(streams) do
     multi_upsert =
       Multi.new()
-#      |> upsert_streams(streams)
+      |> upsert_streams(streams)
 
     Logger.debug("Lautfm import upsert: #{Kernel.length(multi_upsert.operations)}")
 
