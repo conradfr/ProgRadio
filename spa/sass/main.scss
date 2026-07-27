@@ -192,10 +192,10 @@ body {
 
 /* global view */
 
-/*.viewfade-leave-active,*/ .viewfade-enter-active {
-  transition: all .17s;
+.viewfade-leave-active, .viewfade-enter-active {
+  transition: all .23s;
 }
 
-/* .viewfade-leave-to,*/ .viewfade-enter-from {
+.viewfade-leave-to, .viewfade-enter-from {
   opacity: 0;
 }

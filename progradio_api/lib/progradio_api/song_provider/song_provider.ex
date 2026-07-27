@@ -58,13 +58,13 @@ defmodule ProgRadioApi.SongProvider do
     |> Map.get(:body)
   end
 
-  def get_with_fetcher(url) do
+  def get_with_fetcher(url, keepTimeSeconds \\ 30) do
     fetcher_url = Application.get_env(:progradio_api, :fetcher_url)
     fetcher_token = Application.get_env(:progradio_api, :fetcher_token)
 
     Req.get!(
-      "#{fetcher_url}/fetch-html",
-      params: [url: url],
+      "#{fetcher_url}/fetch-html2",
+      params: [url: url, keep: keepTimeSeconds],
       headers: [
         {"Authorization", "Bearer #{fetcher_token}"},
         {"Cache-Control", "no-cache"},
@@ -77,13 +77,13 @@ defmodule ProgRadioApi.SongProvider do
     |> Map.get(:body)
   end
 
-  def get_json_with_fetcher(url) do
+  def get_json_with_fetcher(url, keepTimeSeconds \\ 30) do
     fetcher_url = Application.get_env(:progradio_api, :fetcher_url)
     fetcher_token = Application.get_env(:progradio_api, :fetcher_token)
 
     Req.get!(
-      "#{fetcher_url}/fetch-json",
-      params: [url: url],
+      "#{fetcher_url}/fetch-json2",
+      params: [url: url, keep: keepTimeSeconds],
       headers: [
         {"Authorization", "Bearer #{fetcher_token}"},
         {"Cache-Control", "no-cache"},

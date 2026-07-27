@@ -53,6 +53,10 @@ const format = async (dateObj, name) => {
         endDateTime.minute(match2[2]);
         endDateTime.second(0);
 
+        if (startDateTime.hour() > endDateTime.hour()) {
+          endDateTime.add(1, 'days');
+        }
+
         const newEntry = {
           'date_time_start': startDateTime.toISOString(),
           'date_time_end': endDateTime.toISOString(),
