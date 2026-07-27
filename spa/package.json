@@ -19,7 +19,7 @@
     "@vueuse/core": "^14.0.0",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.21",
-    "luxon": "^3.6.0",
+    "luxon": "^3.7.0",
     "object-hash": "^3.0.0",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@types/lodash": "^4.17.16",
-    "@types/luxon": "^3.4.2",
+    "@types/luxon": "^3.7.2",
     "@types/node": "^22.13.13",
     "@types/wicg-mediasession": "^1.1.8",
     "@typescript/lib-dom": "npm:@types/web@0.0.63",
