@@ -155,7 +155,6 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
     rescue
       e ->
         Logger.error("Stream import job: RadioBox - rescue (#{Map.get(args, "url", "")})")
-        #        IO.puts("#{inspect e}")
     end
 
     :ok

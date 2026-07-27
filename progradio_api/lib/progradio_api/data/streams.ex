@@ -491,7 +491,7 @@ defmodule ProgRadioApi.Streams do
 
       "random" ->
         query
-        |> where([s], s.playing_error < @error_random_cutoff)
+        |> where([s], s.playing_error < @error_random_cutoff and s.popup == false)
         |> order_by(fragment("RANDOM()"))
         |> group_by([s, r, ss], [
           s.id,
