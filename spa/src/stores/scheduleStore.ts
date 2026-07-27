@@ -315,7 +315,7 @@ export const useScheduleStore = defineStore('schedule', {
       const player = usePlayerStore();
       const now = DateTime.local().setZone(config.TIMEZONE);
 
-      if (now.hour === 0 && now.minute < 2) {
+      if ((now.hour === 0 && now.minute < 2) || !now.hasSame(this.cursorTime, 'day')) {
         this.getSchedule();
       }
 

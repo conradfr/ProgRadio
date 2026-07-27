@@ -35,10 +35,12 @@ export default defineComponent({
     },
     radio: {
       type: Object as PropType<Radio>,
+      default: null,
       required: false
     },
     show: {
       type: Object as PropType<Show>,
+      default: null,
       required: false
     },
   },

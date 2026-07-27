@@ -27,18 +27,18 @@ export default defineComponent({
       required: true
     },
   },
-  beforeMount() {
-    this.joinChannel();
-  },
-  beforeUnmount() {
-    this.leaveChannel();
-  },
   data(): {
     lastChannelTopic: string|null,
   } {
     return {
       lastChannelTopic: null
     }
+  },
+  beforeMount() {
+    this.joinChannel();
+  },
+  beforeUnmount() {
+    this.leaveChannel();
   },
   watch: {
     stream(_newValue, oldValue) {
