@@ -5,7 +5,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
 
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Utils.ImporterUtils
-  alias ProgRadioApi.Stream
+  alias ProgRadioApi.{Stream, StreamOverloading}
 
   @source_name "weloveradio"
 
@@ -13,9 +13,20 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
   def perform(%Oban.Job{args: args}) do
     Logger.debug("Stream import job: WeLoveRadio")
 
-    # todo manage overloading
-
     try do
+      existing = find_existing_stream(args)
+      id = existing || Ecto.UUID.bingenerate() |> Ecto.UUID.cast!()
+
+      overloading =
+        if existing != nil do
+          case Repo.get(StreamOverloading, id) do
+            nil -> %{}
+            overload_data -> overload_data
+          end
+        else
+          %{}
+        end
+
       import_updated_at =
         NaiveDateTime.utc_now()
         |> NaiveDateTime.truncate(:second)
@@ -29,6 +40,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
             val -> val
           end
         end)
+        |> (&(Map.get(overloading, :website) || &1)).()
 
       stream_url =
         ["high", "standard", "low"]
@@ -39,11 +51,13 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
             val -> val
           end
         end)
+        |> (&(Map.get(overloading, :stream_url) || &1)).()
 
       tags =
         Map.get(args, "genres", [])
         |> Enum.map(&String.downcase(&1["name"]))
         |> Enum.join(",")
+        |> (&(Map.get(overloading, :tags) || &1)).()
 
       tags =
         case tags do
@@ -51,14 +65,13 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
           value -> value
         end
 
-      id = find_existing_stream(args) || Ecto.UUID.bingenerate() |> Ecto.UUID.cast!()
-
       slogan =
         case Map.get(args, "slogan") do
           "null" -> nil
           "" -> nil
           value -> value
         end
+        |> (&(Map.get(overloading, :slogan) || &1)).()
 
       description =
         case Map.get(args, "description") do
@@ -66,6 +79,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
           "" -> nil
           value -> value
         end
+        |> (&(Map.get(overloading, :description) || &1)).()
 
       stream =
         %{
@@ -74,7 +88,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
           external_id: Integer.to_string(args["radio_id"]),
           source: @source_name,
           name: args["name"],
-          img_url: args["logo"],
+          img_url:  Map.get(overloading, :original_img) || args["logo"],
           original_img: args["logo"],
           img: nil,
           website: website,
@@ -86,8 +100,8 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
           slogan: slogan,
           description: description,
           language: Map.get(args, "lang"),
-          enabled: true,
-          redirect_to: nil,
+          enabled: Map.get(overloading, :enabled) || true,
+          redirect_to: Map.get(existing || %{}, :redirect_to) || nil,
           import_updated_at: import_updated_at
         }
 
