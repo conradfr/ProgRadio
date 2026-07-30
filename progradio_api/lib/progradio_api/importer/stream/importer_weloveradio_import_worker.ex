@@ -88,7 +88,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
           external_id: Integer.to_string(args["radio_id"]),
           source: @source_name,
           name: args["name"],
-          img_url:  Map.get(overloading, :original_img) || args["logo"],
+          img_url: Map.get(overloading, :img) || args["logo"],
           original_img: args["logo"],
           img: nil,
           website: website,

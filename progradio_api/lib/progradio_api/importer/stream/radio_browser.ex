@@ -148,7 +148,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         stream
         |> Map.get("favicon")
         |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :original_img) || &1)).()
-        |> (&(Map.get(overloading, :original_img) || &1)).()
+        |> (&(Map.get(overloading, :img) || &1)).()
 
       country_code =
         stream
