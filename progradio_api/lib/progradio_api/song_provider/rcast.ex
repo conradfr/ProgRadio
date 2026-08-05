@@ -38,15 +38,32 @@ defmodule ProgRadioApi.SongProvider.Rcast do
   end
 
   @impl true
+  def get_song(_name, nil, _last_song), do: nil
+
+  @impl true
+  def get_song(_name, :error, _last_song), do: nil
+
+  @impl true
   def get_song(name, data, _last_song) do
     try do
       {:ok, html} = Floki.parse_document(data)
 
       content =
-        html
-        |> Floki.find("pre")
-        |> Floki.text()
-        |> String.trim()
+        case html do
+          [first] ->
+            [first]
+            |> Floki.text()
+            |> String.trim()
+
+          list when is_list(list) ->
+            list
+            |> Floki.find("pre")
+            |> Floki.text()
+            |> String.trim()
+
+          _ ->
+            nil
+        end
 
       case content do
         nil ->
