@@ -4,8 +4,6 @@ defmodule ProgRadioApi.SongProvider.Crooner do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @url "https://www.croonerradio.fr/datas/live/titles.json"
-
   @impl true
   def has_custom_refresh(_name), do: false
 
@@ -15,9 +13,14 @@ defmodule ProgRadioApi.SongProvider.Crooner do
   @impl true
   def get_data(name, _last_data) do
     try do
-      id = SongProvider.get_stream_code_name_from_channel(name)
+      now_unix = SongProvider.now_unix()
+      id =
+        case SongProvider.get_stream_code_name_from_channel(name) do
+          "crooner_main" -> "crooner"
+          id -> id
+        end
 
-      @url
+      "https://www.croonerradio.fr/datas/live/titles.json?t=#{now_unix}"
       |> SongProvider.get()
       |> JSON.decode!()
       |> Map.get(id, [])
