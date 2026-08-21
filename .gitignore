@@ -167,6 +167,8 @@
 /*.tar
 /*.tar.gz
 
+.claude
+.claude/
 .agents
 .agents/
 CLAUDE.md

@@ -21,6 +21,7 @@ export default defineComponent({
     },
     radio: {
       type: Object as PropType<Radio>,
+      default: null,
       required: false
     },
   },
