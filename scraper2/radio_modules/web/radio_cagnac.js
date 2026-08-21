@@ -72,8 +72,6 @@ const fetch = async dateObj => {
     },
   )
 
-
-
   return Promise.resolve(true);
 };
 
