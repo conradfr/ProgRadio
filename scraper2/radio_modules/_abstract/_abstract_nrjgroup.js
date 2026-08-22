@@ -115,7 +115,7 @@ const fetch = async (dateObj, name, url) => {
             title: '.c-timeline-emission__body h3.c-timeline-emission__heading',
             description: '.c-timeline-emission__body p.c-timeline-emission__description',
             img: {
-              selector: '.c-timeline-emission__thumbnail source:first-of-type',
+              selector: '.c-timeline-emission__thumbnail source:last-of-type',
               value: 'srcset'
             },
           }

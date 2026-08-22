@@ -24,9 +24,9 @@ export const DEFAULT_TIMER_MINUTES = 20;
 
 export const MOBILE_MENU_TIMER_CLASSNAME = 'nav-link-timer';
 
-export const DEFAULT_COLLECTION = 'nationwide';
+export const DEFAULT_COLLECTION = 'all';
 export const COLLECTION_FAVORITES = 'favorites';
-export const COLLECTION_EXCLUDED_FROM_ALL = ['favorites'];
+export const COLLECTION_EXCLUDED_FROM_ALL = ['belgium', 'switzerland', 'international', 'favorites'];
 export const COLLECTION_ALL = 'all';
 
 export const RADIO_LIST_IGNORE_COUNTRY = 'FR';
