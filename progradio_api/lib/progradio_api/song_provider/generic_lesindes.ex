@@ -46,7 +46,7 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
   def get_song(name, data, _last_song) do
     try do
       artist = SongProvider.recase(data["artist"])
-      title = SongProvider.recase(data["title"])
+      title = SongProvider.recase(data["title"]) || SongProvider.recase(data["track"])
       # sometimes the url is partial (no http & domain)
       cover =
         case Map.get(data, "image") do

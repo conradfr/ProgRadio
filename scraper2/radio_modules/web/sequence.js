@@ -1,9 +1,9 @@
 import scrapAbstract from '../_abstract/_abstract_proradio.js';
 
-const name = 'radio_goodlife';
+const name = 'sequence';
 
 const getScrap = (dateObj, subRadio, config) => {
-  const url = 'https://radiogoodlife.com/shows-schedule/';
+  const url = 'https://sequenceradio.com/grille-des-programmes/';
   return scrapAbstract.getScrap(dateObj, name, subRadio, url, config)
 };
 

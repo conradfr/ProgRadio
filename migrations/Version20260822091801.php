@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260821094036 extends AbstractMigration
+final class Version20260822091801 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,17 +20,18 @@ final class Version20260821094036 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $prefix = 'radio_cagnac';
-        $radioId = 169;
-        $subRadioId = 343;
-        $website = 'https://radiocagnac.fr';
+        $prefix = 'rtf_limoges';
+        $radioId = 172;
+        $subRadioId = 350;
+        $streamSongId = 146;
+        $website = 'https://www.rtflimoges.com';
 
         $radios = [
             [
                 'code_name' => $prefix,
-                'name' => 'Radio Cagnac',
+                'name' => 'Radio RTF Limoges',
                 'category' => 2,
-                'collection' => 9,
+                'collection' => 7,
                 'share' => 0,
                 'country' => 'FR',
                 'timezone' => 'Europe/Paris'
@@ -40,14 +41,19 @@ final class Version20260821094036 extends AbstractMigration
         $subRadios = [
             [
                 'code_name' => 'main',
-                'name' => 'Radio Cagnac',
+                'name' => 'Radio RTF Limoges',
                 'main' => 'true',
                 'radio_id' => $radioId,
                 'sub_radio' => true,
-                'url' => 'https://go.2stream.net/cagnac_sd.mp3',
-                'id' => '961bce7a-0601-11e8-ae97-52543be04c81'
+                'url' => 'https://hosting.studioradiomedia.fr:2145/stream',
+                'id' => '96140bbc-0601-11e8-ae97-52543be04c81'
             ],
         ];
+
+        // song
+        $this->connection->executeQuery(
+            'INSERT INTO stream_song (id, code_name, enabled) VALUES (' . $streamSongId . ",'" . $prefix . "', true);"
+        );
 
         for ($i = 0; $i < count($radios); $i++) {
             $this->connection->executeQuery(
@@ -67,14 +73,14 @@ final class Version20260821094036 extends AbstractMigration
 
             if (!empty($mainSubRadios[$i]['id'])) {
                 $this->connection->executeQuery(
-                    "UPDATE stream SET internal_use_img = false, radio_id = " . $radioId . ", is_main_radio = " . $mainSubRadios[$i]['main'] . ", is_sub_radio = TRUE, sub_radio_id = " . ($i + $subRadioId) . ", radio_stream_code_name = '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] ."', own_logo = " . ($mainSubRadios[$i]['main'] ? 'FALSE' : 'TRUE') . ", stream_song_id = NULL, stream_song_code_name = NULL WHERE id = '" . $mainSubRadios[$i]['id'] . "';"
+                    "UPDATE stream SET name = '"  . $mainSubRadios[$i]['name'] . "', stream_url = '" . $mainSubRadios[$i]['url'] . "', internal_use_img = false, radio_id = " . $radioId . ", is_main_radio = " . $mainSubRadios[$i]['main'] . ", is_sub_radio = TRUE, sub_radio_id = " . ($i + $subRadioId) . ", radio_stream_code_name = '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] ."', own_logo = " . ($mainSubRadios[$i]['main'] ? 'FALSE' : 'TRUE') . ", stream_song_id = " . $streamSongId . ", stream_song_code_name = '"  . $mainSubRadios[$i]['code_name'] . "' WHERE id = '" . $mainSubRadios[$i]['id'] . "';"
                 );
             } else {
                 $streamId = \Symfony\Component\Uid\Uuid::v4()->toRfc4122();
 
                 $this->connection->executeQuery(
                     "INSERT INTO stream (id, name, country_code, language, own_logo, stream_url, original_stream_url, internal_use_img, radio_id, is_main_radio, is_sub_radio, sub_radio_id, radio_stream_code_name, stream_song_id, stream_song_code_name) VALUES ('"
-                    . $streamId . "','" . $mainSubRadios[$i]['name'] . "','FR','french',FALSE,'" . $mainSubRadios[$i]['url'] . "','" . $mainSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $mainSubRadios[$i]['main'] . ", TRUE, " . ($i + $subRadioId) . ", '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] . "',NULL, NULL);"
+                    . $streamId . "','" . $mainSubRadios[$i]['name'] . "','FR','french',FALSE,'" . $mainSubRadios[$i]['url'] . "','" . $mainSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $mainSubRadios[$i]['main'] . ", TRUE, " . ($i + $subRadioId) . ", '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] . "'," . $streamSongId . ",'" . $mainSubRadios[$i]['code_name'] . "');"
                 );
             }
         }
@@ -82,14 +88,14 @@ final class Version20260821094036 extends AbstractMigration
         for ($i = 0; $i < count($otherSubRadios); $i++) {
             if (!empty($otherSubRadios[$i]['id'])) {
                 $this->connection->executeQuery(
-                    "UPDATE stream SET internal_use_img = false, radio_id = " . $radioId . ", is_main_radio = " . $otherSubRadios[$i]['main'] . ", is_sub_radio = FALSE, sub_radio_id = NULL, radio_stream_code_name = '" . $prefix . '_' . $otherSubRadios[$i]['code_name'] ."', own_logo = TRUE, stream_song_id = NULL, stream_song_code_name = NULL WHERE id = '" . $otherSubRadios[$i]['id'] . "';"
+                    "UPDATE stream SET name = '"  . $mainSubRadios[$i]['name'] . "', stream_url = '" . $mainSubRadios[$i]['url'] . "', internal_use_img = false, radio_id = " . $radioId . ", is_main_radio = " . $otherSubRadios[$i]['main'] . ", is_sub_radio = FALSE, sub_radio_id = NULL, radio_stream_code_name = '" . $prefix . '_' . $otherSubRadios[$i]['code_name'] ."', own_logo = TRUE, stream_song_id = " . $streamSongId . ", stream_song_code_name = '"  . $mainSubRadios[$i]['code_name'] . "' WHERE id = '" . $otherSubRadios[$i]['id'] . "';"
                 );
             } else {
                 $streamId = \Symfony\Component\Uid\Uuid::v4()->toRfc4122();
 
                 $this->connection->executeQuery(
                     "INSERT INTO stream (id, name, country_code, language, own_logo, stream_url, original_stream_url, internal_use_img, radio_id, is_main_radio, is_sub_radio, sub_radio_id, radio_stream_code_name, stream_song_id, stream_song_code_name) VALUES ('"
-                    . $streamId . "','" . $otherSubRadios[$i]['name'] . "','FR','french',TRUE,'" . $otherSubRadios[$i]['url'] . "','" . $otherSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $otherSubRadios[$i]['main'] . ", FALSE, null, '" . $prefix . '_' . $otherSubRadios[$i]['code_name'] . "', NULL,NULL);"
+                    . $streamId . "','" . $otherSubRadios[$i]['name'] . "','FR','french',TRUE,'" . $otherSubRadios[$i]['url'] . "','" . $otherSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $otherSubRadios[$i]['main'] . ", FALSE, null, '" . $prefix . '_' . $otherSubRadios[$i]['code_name'] . "'," . $streamSongId . ",'" . $otherSubRadios[$i]['code_name'] . "');"
                 );
             }
         }

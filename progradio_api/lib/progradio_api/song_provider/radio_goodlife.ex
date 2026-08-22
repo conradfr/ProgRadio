@@ -4,9 +4,6 @@ defmodule ProgRadioApi.SongProvider.RadioGoodlife do
 
   @behaviour ProgRadioApi.SongProvider
 
-  # 5mn
-  @max_length_seconds 300
-
   @impl true
   def has_custom_refresh(_name), do: false
 

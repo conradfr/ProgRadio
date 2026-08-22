@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260821094036 extends AbstractMigration
+final class Version20260822084507 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,15 +20,15 @@ final class Version20260821094036 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $prefix = 'radio_cagnac';
-        $radioId = 169;
-        $subRadioId = 343;
-        $website = 'https://radiocagnac.fr';
+        $prefix = 'sequence';
+        $radioId = 171;
+        $subRadioId = 345;
+        $website = 'https://sequenceradio.com';
 
         $radios = [
             [
                 'code_name' => $prefix,
-                'name' => 'Radio Cagnac',
+                'name' => 'Séquence Radio',
                 'category' => 2,
                 'collection' => 9,
                 'share' => 0,
@@ -39,13 +39,46 @@ final class Version20260821094036 extends AbstractMigration
 
         $subRadios = [
             [
-                'code_name' => 'main',
-                'name' => 'Radio Cagnac',
+                'code_name' => 'paris',
+                'name' => 'Séquence France (Paris)',
                 'main' => 'true',
                 'radio_id' => $radioId,
                 'sub_radio' => true,
-                'url' => 'https://go.2stream.net/cagnac_sd.mp3',
-                'id' => '961bce7a-0601-11e8-ae97-52543be04c81'
+                'url' => 'https://sequenceparis.ice.infomaniak.ch/sequenceparis-128.mp3',
+                'id' => 'eabc4529-c2a6-11e9-8502-52543be04c81'
+            ],
+            [
+                'code_name' => 'lyon',
+                'name' => 'Séquence Lyon',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://sequencelyon.ice.infomaniak.ch/sequencelyon-128.mp3',
+            ],
+            [
+                'code_name' => 'annecy',
+                'name' => 'Séquence Annecy',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://sequenceannecy.ice.infomaniak.ch/sequenceannecy-128.mp3',
+                'id' => 'affbd1aa-14a3-40eb-a632-1aa80c4d067d'
+            ],
+            [
+                'code_name' => 'chambery',
+                'name' => 'Séquence Chambéry',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://sequencechambery.ice.infomaniak.ch/sequencechambery-128.mp3',
+            ],
+            [
+                'code_name' => 'nice',
+                'name' => 'Séquence Nice',
+                'main' => 'false',
+                'radio_id' => $radioId,
+                'sub_radio' => true,
+                'url' => 'https://sequencenice.ice.infomaniak.ch/sequencenice-128.mp3',
             ],
         ];
 
@@ -67,7 +100,7 @@ final class Version20260821094036 extends AbstractMigration
 
             if (!empty($mainSubRadios[$i]['id'])) {
                 $this->connection->executeQuery(
-                    "UPDATE stream SET internal_use_img = false, radio_id = " . $radioId . ", is_main_radio = " . $mainSubRadios[$i]['main'] . ", is_sub_radio = TRUE, sub_radio_id = " . ($i + $subRadioId) . ", radio_stream_code_name = '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] ."', own_logo = " . ($mainSubRadios[$i]['main'] ? 'FALSE' : 'TRUE') . ", stream_song_id = NULL, stream_song_code_name = NULL WHERE id = '" . $mainSubRadios[$i]['id'] . "';"
+                    "UPDATE stream SET name = '"  . $mainSubRadios[$i]['name'] . "', stream_url = '" . $mainSubRadios[$i]['url'] . "', internal_use_img = false, radio_id = " . $radioId . ", is_main_radio = " . $mainSubRadios[$i]['main'] . ", is_sub_radio = TRUE, sub_radio_id = " . ($i + $subRadioId) . ", radio_stream_code_name = '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] ."', own_logo = " . ($mainSubRadios[$i]['main'] ? 'FALSE' : 'TRUE') . ", stream_song_id = NULL, stream_song_code_name = NULL WHERE id = '" . $mainSubRadios[$i]['id'] . "';"
                 );
             } else {
                 $streamId = \Symfony\Component\Uid\Uuid::v4()->toRfc4122();
@@ -82,7 +115,7 @@ final class Version20260821094036 extends AbstractMigration
         for ($i = 0; $i < count($otherSubRadios); $i++) {
             if (!empty($otherSubRadios[$i]['id'])) {
                 $this->connection->executeQuery(
-                    "UPDATE stream SET internal_use_img = false, radio_id = " . $radioId . ", is_main_radio = " . $otherSubRadios[$i]['main'] . ", is_sub_radio = FALSE, sub_radio_id = NULL, radio_stream_code_name = '" . $prefix . '_' . $otherSubRadios[$i]['code_name'] ."', own_logo = TRUE, stream_song_id = NULL, stream_song_code_name = NULL WHERE id = '" . $otherSubRadios[$i]['id'] . "';"
+                    "UPDATE stream SET name = '"  . $mainSubRadios[$i]['name'] . "', stream_url = '" . $mainSubRadios[$i]['url'] . "', internal_use_img = false, radio_id = " . $radioId . ", is_main_radio = " . $otherSubRadios[$i]['main'] . ", is_sub_radio = FALSE, sub_radio_id = NULL, radio_stream_code_name = '" . $prefix . '_' . $otherSubRadios[$i]['code_name'] ."', own_logo = TRUE, stream_song_id = NULL, stream_song_code_name = NULL WHERE id = '" . $otherSubRadios[$i]['id'] . "';"
                 );
             } else {
                 $streamId = \Symfony\Component\Uid\Uuid::v4()->toRfc4122();

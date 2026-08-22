@@ -13,31 +13,13 @@ const dayFrInv = {
   7: 'Dimanche'
 };
 
-let scrapedData = [];
+let scrapedData = {};
 
-const getHost = async (url) => {
-  logger.log('info', `fetching ${url}`);
-  const hosts = [];
-
-  const response = await axios.get(url);
-  const html = response.data;
-  const $ = cheerio.load(html);
-  $('.anim-row:not(.podcast-row) a > h4').each((i, el) => {
-    hosts.push($(el).text().trim());
-  });
-
-  if (hosts.length > 0) {
-    return Promise.resolve(hosts);
-  }
-
-  return Promise.resolve(null);
-};
-
-const format = async (dateObj, name) => {
+const format = async (dateObj, name, subRadio) => {
   dateObj.tz('Europe/Paris');
   dateObj.locale('fr');
 
-  const cleanedData = scrapedData[name].reduce(async function (prevP, entry) {
+  const cleanedData = scrapedData[name][subRadio].reduce(async function (prevP, entry) {
     const prev = await prevP;
     if (!entry.datetime_raw) {
       return prev;
@@ -80,7 +62,7 @@ const format = async (dateObj, name) => {
   return await Promise.resolve(cleanedData);
 };
 
-const fetch = async (dateObj, name, url) => {
+const fetch = async (dateObj, name, subRadio, url) => {
   dateObj.locale('fr');
   const day = dayFrInv[dateObj.isoWeekday()];
 
@@ -110,20 +92,22 @@ const fetch = async (dateObj, name, url) => {
     ]
   });
 
-  scrapedData[name] = data.shows;
+  scrapedData[name][subRadio] = data.shows;
 
   return Promise.resolve(true);
 };
 
-const fetchAll = (dateObj, name, url) => {
-  return fetch(dateObj, name, url);
+const fetchAll = (dateObj, name, subRadio, url) => {
+  return fetch(dateObj, name, subRadio, url);
 };
 
-const getScrap = (dateObj, name, url, config) => {
-  scrapedData[name] = [];
-  return fetchAll(dateObj, name, url)
+const getScrap = (dateObj, name, subRadio, url, config) => {
+  scrapedData[name] = {};
+  scrapedData[name][subRadio] = [];
+
+  return fetchAll(dateObj, name, subRadio, url)
     .then(() => {
-      return format(dateObj, name);
+      return format(dateObj, name, subRadio);
     });
 };
 
