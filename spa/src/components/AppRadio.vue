@@ -18,8 +18,10 @@
 
         <div class="row">
           <div class="col-md-12 mb-2 mt-2 mt-sm-0 text-center text-sm-start">
-            <router-link v-if="collection"
-                         :to="'/' + locale + '/schedule/' + collection.code_name">
+            <router-link v-if="collection" :to="'/' + locale + '/schedule/' + collection.code_name">
+              {{ $t('message.radio_page.back') }}
+            </router-link>
+            <router-link v-else :to="'/' + locale + '/schedule/'">
               {{ $t('message.radio_page.back') }}
             </router-link>
           </div>
@@ -27,7 +29,7 @@
 
         <div v-if="subRadios.length > 1" class="row">
           <div class="col-md-12 mt-sm-0 text-center text-sm-start">
-               <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs">
               <li v-for="subRadioLoop in subRadios" :key="subRadioLoop.code_name"
                 class="nav-item">
                 <a class="nav-link" href="#"
