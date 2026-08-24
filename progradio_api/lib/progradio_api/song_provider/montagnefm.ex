@@ -26,7 +26,7 @@ defmodule ProgRadioApi.SongProvider.Montagnefm do
   def get_song(name, data, _last_song) do
     try do
       case data do
-        content when is_binary(data) ->
+        _content when is_binary(data) ->
           %{
             artist: data,
             title: nil
