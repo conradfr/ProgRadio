@@ -42,6 +42,20 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
     "radiobob_gothic" => 235,
     "radiobob_rockabilly" => 104,
     "radiobob_christmas" => 76,
+    "radiobob_emo" => 644,
+    "radiobob_queen" => 132,
+    "radiobob_motorhead" => 670,
+    "radiobob_festival" => 105,
+    "radiobob_electrorock" => 744,
+    "radiobob_gaming" => 842,
+    "radiobob_women" => 746,
+    "radiobob_southern" => 267,
+    "radiobob_donots" => 615,
+    "radiobob_hair" => 790,
+    "radiobob_kuschel" => 106,
+    "radiobob_newcomer" => 492,
+    "radiobob_singer" => 100,
+    "radiobob_woodstock" => 786,
     "radiobob_unplugged" => 73
   }
 

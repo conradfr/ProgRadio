@@ -91,7 +91,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
         stream
         |> Map.get("third_parties", %{})
         |> Map.get("website", %{})
-        |> Map.get("url",  Map.get(stream, "page_url"))
+        |> Map.get("url", Map.get(stream, "page_url"))
         |> ImporterUtils.replace_value_maybe(@source, existing_stream, :website)
         |> (&(Map.get(overloading, :website) || &1)).()
 

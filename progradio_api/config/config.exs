@@ -53,10 +53,10 @@ config :progradio_api, ProgRadioApi.Scheduler,
       schedule: "40 04 */1 * *",
       task: {ProgRadioApi.SongManager, :launch_most_popular_streams_song_server, []}
     ],
-#    search_term_switch: [
-#      schedule: "12 0 */1 * *",
-#      task: {ProgRadioApi.Streams, :switch_search_terms_day, []}
-#    ],
+    #    search_term_switch: [
+    #      schedule: "12 0 */1 * *",
+    #      task: {ProgRadioApi.Streams, :switch_search_terms_day, []}
+    #    ],
     search_index: [
       schedule: "51 * * * *",
       task: {ProgRadioApi.Search, :index_all, []}

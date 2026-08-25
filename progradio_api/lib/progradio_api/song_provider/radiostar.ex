@@ -16,7 +16,7 @@ defmodule ProgRadioApi.SongProvider.Radiostar do
     "radiostar_nouveautes" => "3220136225736629261",
     "radiostar_planete" => "3220136225736629344",
     "radiostar_france" => "3220136225736629282",
-    "radiostar_tactic" => "3220136225736629402",
+    "radiostar_tactic" => "3220136225736629402"
   }
 
   @impl true

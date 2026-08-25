@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.RtfLimoges do
   @behaviour ProgRadioApi.SongProvider
 
   @stream_ids %{
-    "rtf_limoges_main" => "https://www.rtflimoges.com/wp-json/api/current-track",
+    "rtf_limoges_main" => "https://www.rtflimoges.com/wp-json/api/current-track"
   }
 
   @impl true

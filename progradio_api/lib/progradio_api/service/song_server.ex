@@ -80,7 +80,8 @@ defmodule ProgRadioApi.SongServer do
 
     # There is two types of module, one supporting push events and the other retrieving the data itself w/ refreshes
     updated_state =
-      case Kernel.function_exported?(state.module, :get_push_client_pid, 1) do
+      case Code.ensure_loaded?(state.module) and
+             Kernel.function_exported?(state.module, :get_push_client_pid, 1) do
         true ->
           {:ok, pid} = apply(state.module, :get_push_client_pid, [state.name])
           %{state | push_pid: pid}
@@ -340,7 +341,9 @@ defmodule ProgRadioApi.SongServer do
       0 ->
         # most popular streams are pre-warmed and must stay alive without clients
         if SongManager.persistent_topic?(name) do
-          Logger.debug("Data provider - #{name}: no client connected but persistent, staying alive")
+          Logger.debug(
+            "Data provider - #{name}: no client connected but persistent, staying alive"
+          )
 
           Process.send_after(
             self(),

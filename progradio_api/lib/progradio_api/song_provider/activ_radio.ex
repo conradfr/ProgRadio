@@ -11,7 +11,7 @@ defmodule ProgRadioApi.SongProvider.ActivRadio do
     "activ_radio_saintetienne" => "2174546520932614159",
     "activ_radio_roanne" => "2174546520932614159",
     "activ_radio_supporters" => "1016390682520981576",
-    "activ_radio_before" => "4631180576815055312",
+    "activ_radio_before" => "4631180576815055312"
   }
 
   @impl true

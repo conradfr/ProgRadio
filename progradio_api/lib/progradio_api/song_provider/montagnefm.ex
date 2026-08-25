@@ -32,7 +32,8 @@ defmodule ProgRadioApi.SongProvider.Montagnefm do
             title: nil
           }
 
-        _ -> %{}
+        _ ->
+          %{}
       end
     rescue
       _ ->

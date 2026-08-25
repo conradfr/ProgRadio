@@ -10,7 +10,7 @@ defmodule ProgRadioApi.SongProvider.Arl do
     "arl_main" => "2174546520932614182",
     "arl_70s" => "1016793015844838166",
     "arl_80s" => "1016793017762041371",
-    "arl_party" => "1016793024013984422",
+    "arl_party" => "1016793024013984422"
   }
 
   @impl true

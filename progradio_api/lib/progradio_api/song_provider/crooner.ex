@@ -14,6 +14,7 @@ defmodule ProgRadioApi.SongProvider.Crooner do
   def get_data(name, _last_data) do
     try do
       now_unix = SongProvider.now_unix()
+
       id =
         case SongProvider.get_stream_code_name_from_channel(name) do
           "crooner_main" -> "crooner"
