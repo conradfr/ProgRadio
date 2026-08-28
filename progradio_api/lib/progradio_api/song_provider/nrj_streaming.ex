@@ -141,8 +141,7 @@ defmodule ProgRadioApi.SongProvider.Nrjstreaming do
       false ->
         data =
           url
-          |> SongProvider.get()
-          |> JSON.decode!()
+          |> SongProvider.get_json()
 
         Cache.put(@cache_key_onair_prefix <> radio_id, data, ttl: @cache_key_onair_ttl)
         data

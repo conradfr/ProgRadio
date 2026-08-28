@@ -20,8 +20,7 @@ defmodule ProgRadioApi.SongProvider.Somafm do
 
     try do
       "https://somafm.com/songs/#{code_name}.json"
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
       |> Map.get("songs", [])
       |> List.first()
     rescue

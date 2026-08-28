@@ -61,8 +61,7 @@ defmodule ProgRadioApi.SongProvider.Sanef1077 do
     try do
       data =
         "https://radiovis.radio-screen.com/radioscreen-sync/data/#{id}_now_playing.json"
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json()
         |> Map.get("nowplaying", [])
         |> List.first()
 

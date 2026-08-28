@@ -23,8 +23,7 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes3 do
 
     try do
       full_url
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
       |> Enum.find(nil, fn e ->
         try do
           {:ok, time_start, _} =

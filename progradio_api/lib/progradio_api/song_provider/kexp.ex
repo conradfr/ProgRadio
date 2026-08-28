@@ -24,8 +24,7 @@ defmodule ProgRadioApi.SongProvider.Kexp do
 
       results =
         "https://api.kexp.org/v2/plays/?format=json&limit=1&ordering=-airdate&airdate_before=#{date_before}&playlist_location=3"
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json()
         |> Map.get("results", [])
 
       case length(results) do

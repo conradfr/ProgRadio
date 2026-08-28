@@ -14,8 +14,7 @@ defmodule ProgRadioApi.SongProvider.Ihaveadream do
   def get_data(_name, _last_data) do
     try do
       "https://www.radio-ihaveadream.com/info-radio-live"
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
       |> List.first()
     rescue
       _ -> :error

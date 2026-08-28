@@ -55,8 +55,7 @@ defmodule ProgRadioApi.SongProvider.Rouge do
 
       data =
         "https://www.mediaone-digital.ch/cache/#{id}.json"
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json()
         |> Map.get("live", [])
 
       case length(data) do

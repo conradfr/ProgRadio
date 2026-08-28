@@ -30,8 +30,7 @@ defmodule ProgRadioApi.SongProvider.Radiojar do
           now_unix = SongProvider.now_unix()
 
           "https://proxy.radiojar.com/api/stations/#{id}/now_playing/?t=#{now_unix}"
-          |> SongProvider.get()
-          |> JSON.decode!()
+          |> SongProvider.get_json()
       end
     rescue
       _ ->

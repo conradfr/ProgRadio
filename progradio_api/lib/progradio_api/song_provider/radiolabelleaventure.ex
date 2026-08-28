@@ -38,8 +38,7 @@ defmodule ProgRadioApi.SongProvider.Radiolabelleaventure do
     try do
       data =
         @url
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json()
         |> Map.get("now_playing", %{})
 
       now_unix = SongProvider.now_unix()

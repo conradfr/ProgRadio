@@ -51,8 +51,7 @@ defmodule ProgRadioApi.SongProvider.Lautfm do
 
         _ ->
           "https://api.laut.fm/station/#{id}/current_song"
-          |> SongProvider.get()
-          |> JSON.decode!()
+          |> SongProvider.get_json()
       end
     rescue
       _ ->

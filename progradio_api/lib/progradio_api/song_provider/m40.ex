@@ -14,8 +14,7 @@ defmodule ProgRadioApi.SongProvider.M40 do
   def get_data(_name, _last_data) do
     try do
       "https://m40radio.fr/wp-json/pmr/v1/now-playing"
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
     rescue
       _ ->
         nil

@@ -32,8 +32,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtbs do
       # &rand= is not part of "official" api but it seems to solve their cache problem...
       data =
         "https://www.rtbf.be/radio/liveradio/api/threads.php?key=#{id}&_limit=1&rand=#{:rand.uniform(99)}"
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json()
         |> Map.get("data")
         |> Kernel.hd()
 

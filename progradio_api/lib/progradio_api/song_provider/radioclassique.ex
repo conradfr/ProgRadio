@@ -16,8 +16,7 @@ defmodule ProgRadioApi.SongProvider.Radioclassique do
   def get_data(name, _last_data) do
     try do
       @url
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
     rescue
       _ ->
         Logger.debug("Data provider - #{name}: data error rescue")

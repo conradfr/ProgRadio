@@ -54,8 +54,7 @@ defmodule ProgRadioApi.SongProvider.AirtimePro do
 
         _ ->
           "https://#{id}.airtime.pro/api/live-info"
-          |> SongProvider.get()
-          |> JSON.decode!()
+          |> SongProvider.get_json()
           |> Map.get("current")
       end
     rescue

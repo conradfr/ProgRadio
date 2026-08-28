@@ -61,8 +61,7 @@ defmodule ProgRadioApi.SongProvider.Impactfm do
     try do
       data =
         "#{@url}#{id}"
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json()
         |> Map.get("result")
         |> Enum.filter(fn r -> Map.get(r, "status") == "playing" end)
 

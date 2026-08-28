@@ -47,15 +47,23 @@ defmodule ProgRadioApi.SongProvider do
   @timeout 5_000
 
   def get(url) do
-    HTTPoison.get!(
+    Req.get!(
       url,
-      [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
-      hackney: [:insecure],
-      timeout: @timeout,
-      recv_timeout: @timeout,
-      follow_redirect: true
+      headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
+      redirect: true,
+      retry: false,
+      decode_body: false,
+      connect_options: [timeout: @timeout, transport_opts: [verify: :verify_none]],
+      receive_timeout: @timeout
     )
     |> Map.get(:body)
+  end
+
+  # todo revisit when Req 0.8 is out w/ native json support
+  def get_json(url) do
+    url
+    |> get()
+    |> JSON.decode!()
   end
 
   def get_with_fetcher(url, keepTimeSeconds \\ 30) do

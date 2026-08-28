@@ -29,8 +29,7 @@ defmodule ProgRadioApi.SongProvider.Rfm do
         |> (&Map.get(@stream_ids, &1)).()
 
       (@url <> id)
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
       |> Map.get("current", %{})
     rescue
       _ -> :error

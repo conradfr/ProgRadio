@@ -36,8 +36,7 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
 
     try do
       @url
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
       |> Map.get("schedule", [])
       |> Enum.find(nil, fn e ->
         time_start =

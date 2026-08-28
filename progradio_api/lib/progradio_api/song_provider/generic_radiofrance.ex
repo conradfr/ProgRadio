@@ -19,8 +19,7 @@ defmodule ProgRadioApi.SongProvider.GenericRadioFrance do
   def get_data(url, name, _last_data) do
     try do
       url
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
       |> Map.get("now")
     rescue
       _ ->

@@ -21,8 +21,7 @@ defmodule ProgRadioApi.SongProvider.RadioFuego do
       now_unix = SongProvider.now_unix()
 
       "https://radio-fuego-sse.radiofuegoweb-0c6.workers.dev/api/current?t=#{now_unix}"
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
       |> Map.get("currentTrack")
     rescue
       _ ->

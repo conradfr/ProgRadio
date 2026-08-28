@@ -15,8 +15,7 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
     try do
       data =
         url
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json()
         |> convert_time_key()
 
       last_time =

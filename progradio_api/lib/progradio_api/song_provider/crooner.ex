@@ -22,8 +22,7 @@ defmodule ProgRadioApi.SongProvider.Crooner do
         end
 
       "https://www.croonerradio.fr/datas/live/titles.json?t=#{now_unix}"
-      |> SongProvider.get()
-      |> JSON.decode!()
+      |> SongProvider.get_json()
       |> Map.get(id, [])
       |> Enum.find(nil, fn e ->
         Map.get(e, "isCurrent") == true

@@ -67,8 +67,7 @@ defmodule ProgRadioApi.SongProvider.Virgin do
     try do
       data =
         "https://direct-radio.rfm.fr/playout?radio=#{id}&limit=1"
-        |> SongProvider.get()
-        |> JSON.decode!()
+        |> SongProvider.get_json()
         |> Map.get("nowplaying", [])
         |> List.first()
 
