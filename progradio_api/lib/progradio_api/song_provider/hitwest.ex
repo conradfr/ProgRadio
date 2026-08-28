@@ -49,7 +49,8 @@ defmodule ProgRadioApi.SongProvider.Hitwest do
   def get_data(name, _last_data) do
     try do
       id =
-        SongProvider.get_stream_code_name_from_channel(name)
+        name
+        |> SongProvider.get_stream_code_name_from_channel()
         |> (&Map.get(@stream_ids, &1)).()
 
       GenericLesIndes3.get_data(@url, name, id)

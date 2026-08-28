@@ -1,10 +1,25 @@
 defmodule ProgRadioApi.SongProvider.Topmusic do
   alias ProgRadioApi.SongProvider.GenericLesIndes3
+  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
   @url "https://www.topmusic.fr/api/TitleDiffusions"
-  @radio_id "2174546520932614807"
+
+  @stream_ids %{
+    "topmusic_main" => "2174546520932614807",
+    "topmusic_saintmarieauxmines" => "2174546520932614807",
+    "topmusic_schirmeck" => "2174546520932614807",
+    "topmusic_selestat" => "2174546520932614807",
+    "topmusic_colmar" => "2174546520932614807",
+    "topmusic_mulhouse" => "2174546520932614807",
+    "topmusic_sarrebourg" => "2174546520932614807",
+    "topmusic_strasbourg" => "2174546520932614807",
+    "topmusic_saverne" => "2174546520932614807",
+    "topmusic_top80" => "1016693677289767126",
+    "topmusic_topfitness" => "1017785770928129122",
+    "topmusic_toplove" => "1016693676195413678",
+  }
 
   @impl true
   defdelegate has_custom_refresh(name), to: GenericLesIndes3
@@ -14,7 +29,16 @@ defmodule ProgRadioApi.SongProvider.Topmusic do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @radio_id)
+    try do
+      id =
+        name
+        |> SongProvider.get_stream_code_name_from_channel()
+        |> (&Map.get(@stream_ids, &1)).()
+
+      GenericLesIndes3.get_data(@url, name, id)
+    rescue
+      _ -> :error
+    end
   end
 
   @impl true
