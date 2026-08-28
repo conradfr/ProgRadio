@@ -39,7 +39,7 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
     id =
       name
       |> SongProvider.get_stream_code_name_from_channel()
-      |> (&Map.get(@stream_ids, &1)).()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     try do
       "https://www.jazzradio.fr/winradio/prog#{id}.xml?=#{now_unix}"

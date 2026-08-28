@@ -21,7 +21,7 @@ defmodule ProgRadioApi.SongProvider.Banquisefm do
     url =
       name
       |> SongProvider.get_stream_code_name_from_channel()
-      |> (&Map.get(@stream_ids, &1)).()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     GenericLesIndes.get_data(url, name, last_data)
   end

@@ -7,12 +7,10 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @stream_referer %{
-    "funkyradio_main" => "https://funkyradio.streamingmedia.it/play.mp3",
-    "funkyradio_disco" => "https://discofunk.streamingmedia.it/play"
+  @stream_ids %{
+    "funkyradio_main" => "https://metadata.streamingmedia.it/title/funky-radio.json",
+    "funkyradio_disco" => "https://metadata.streamingmedia.it/title/disco-funk.json"
   }
-
-  @url "https://funky.radio/wp-content/plugins/lu-radioplayer/js/stream-icy-meta.php"
 
   @impl true
   def has_custom_refresh(_name), do: false
@@ -23,20 +21,13 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
   @impl true
   def get_data(name, _last_data) do
     try do
-      channel = SongProvider.get_stream_code_name_from_channel(name)
-      referer = @stream_referer[channel]
-      body_post = URI.encode_query(%{"url" => referer})
+      now_unix = SongProvider.now_unix()
+      url =
+        name
+        |> SongProvider.get_stream_code_name_from_channel()
+        |> SongProvider.get_id_from_list(@stream_ids)
 
-      case HTTPoison.post(@url, body_post, %{
-             "Content-Type" => "application/x-www-form-urlencoded",
-             "Cache-Control" => "no-cache"
-           }) do
-        {:ok, %HTTPoison.Response{body: body}} ->
-          body
-
-        _ ->
-          nil
-      end
+      SongProvider.get_json("#{url}?rand=#{:rand.uniform(1000)}&_=#{now_unix}")
     rescue
       _ -> :error
     end
@@ -45,16 +36,16 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
   @impl true
   def get_song(name, data, _last_song) do
     try do
-      Logger.debug("Data provider - #{name}: data - #{data}")
+      Logger.debug("Data provider - #{name}")
 
-      # we discard empty or suspicious/incomplete entries
-      unless data === "" or String.contains?(data, " - ") === false do
-        %{
-          artist: data,
-          title: nil
-        }
-      else
-        %{}
+      case data do
+        %{"title" => title} ->
+          %{
+            artist: title,
+            title: nil
+          }
+
+        _ -> nil
       end
     rescue
       _ ->

@@ -26,7 +26,7 @@ defmodule ProgRadioApi.SongProvider.Rfm do
       id =
         name
         |> SongProvider.get_stream_code_name_from_channel()
-        |> (&Map.get(@stream_ids, &1)).()
+        |> SongProvider.get_id_from_list(@stream_ids)
 
       (@url <> id)
       |> SongProvider.get_json()

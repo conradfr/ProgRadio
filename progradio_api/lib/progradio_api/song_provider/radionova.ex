@@ -4,7 +4,7 @@ defmodule ProgRadioApi.SongProvider.Radionova do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @stream_name %{
+  @stream_ids %{
     "radionova_main" => "radio-nova",
     "radionova_danse" => "nova-danse",
     "radionova_hiphop" => "nova-hip-hop",
@@ -59,8 +59,9 @@ defmodule ProgRadioApi.SongProvider.Radionova do
   def get_data(name, _last_data) do
     try do
       name =
-        SongProvider.get_stream_code_name_from_channel(name)
-        |> (&Map.get(@stream_name, &1)).()
+        name
+        |> SongProvider.get_stream_code_name_from_channel()
+        |> SongProvider.get_id_from_list(@stream_ids)
 
       radio =
         "https://www.nova.fr/radios-data/www.nova.fr/all.json"

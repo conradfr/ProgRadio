@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Toulousefm do
   #  @url "https://apib.toulouse.fm/graphql"
   @url "https://www.toulousefm.fr/api/TitleDiffusions"
 
-  @stream_id %{
+  @stream_ids %{
     "toulousefm_main" => "2174546520932614821",
     "toulousefm_bodega" => "3120757949245428885",
     "toulousefm_no_french" => "1016450085188641387"
@@ -20,7 +20,7 @@ defmodule ProgRadioApi.SongProvider.Toulousefm do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @stream_id)
+    GenericLesIndes3.get_data(@url, name, @stream_ids)
   end
 
   @impl true

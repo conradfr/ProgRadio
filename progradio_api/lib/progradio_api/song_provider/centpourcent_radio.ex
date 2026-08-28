@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.CentpourcentRadio do
 
   @url "https://www.centpourcent.com/api/TitleDiffusions"
 
-  @stream_id %{
+  @stream_ids %{
     "centpourcent_radio_pau" => "2174544699860189189",
     "centpourcent_radio_albi" => "2174544699860189189",
     "centpourcent_radio_auch" => "2174544699860189189",
@@ -31,7 +31,7 @@ defmodule ProgRadioApi.SongProvider.CentpourcentRadio do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @stream_id)
+    GenericLesIndes3.get_data(@url, name, @stream_ids)
   end
 
   @impl true

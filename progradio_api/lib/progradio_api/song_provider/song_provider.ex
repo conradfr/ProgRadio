@@ -130,6 +130,10 @@ defmodule ProgRadioApi.SongProvider do
     Enum.join(rest, ":")
   end
 
+  def get_id_from_list(stream_code_name, list) when is_binary(stream_code_name) and is_map(list) do
+    Map.get(list, stream_code_name)
+  end
+
   @doc """
   Removes the "type=http" query parameter from a URL, cleaning up any
   leftover "?" / "&" separators.

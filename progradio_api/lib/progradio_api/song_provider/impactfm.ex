@@ -18,7 +18,7 @@ defmodule ProgRadioApi.SongProvider.Impactfm do
   def get_refresh(_name, nil, default_refresh), do: default_refresh
 
   @impl true
-  def get_refresh(_name, data, default_refresh) do
+  def get_refresh(_name, %{} = data, default_refresh) do
     try do
       now_unix = SongProvider.now_unix()
 
@@ -55,8 +55,9 @@ defmodule ProgRadioApi.SongProvider.Impactfm do
   @impl true
   def get_data(name, _last_data) do
     id =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     try do
       data =

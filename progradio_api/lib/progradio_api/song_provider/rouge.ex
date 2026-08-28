@@ -50,7 +50,7 @@ defmodule ProgRadioApi.SongProvider.Rouge do
       id =
         name
         |> SongProvider.get_stream_code_name_from_channel()
-        |> (&Map.get(@stream_ids, &1)).()
+        |> SongProvider.get_id_from_list(@stream_ids)
         |> Integer.to_string()
 
       data =

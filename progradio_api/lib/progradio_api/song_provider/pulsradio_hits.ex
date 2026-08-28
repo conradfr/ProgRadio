@@ -24,7 +24,7 @@ defmodule ProgRadioApi.SongProvider.PulsradioHits do
     id =
       name
       |> SongProvider.get_stream_code_name_from_channel()
-      |> (&Map.get(@stream_ids, &1)).()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     GenericPulsradio.get_data(id, name, last_data)
   end

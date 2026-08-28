@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Chantefrance do
   #  @url "https://api.chantefrance.com/graphql"
   @url "https://www.chantefrance.com/api/TitleDiffusions"
 
-  @stream_id %{
+  @stream_ids %{
     "chantefrance_main" => "2174546520932614220",
     "chantefrance_80s" => "3120757949245428885",
     "chantefrance_70s" => "3120757949245428849",
@@ -23,7 +23,7 @@ defmodule ProgRadioApi.SongProvider.Chantefrance do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @stream_id)
+    GenericLesIndes3.get_data(@url, name, @stream_ids)
   end
 
   @impl true

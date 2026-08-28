@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
 
   @url "https://www.radiorecord.ru/api/stations/now/"
 
-  @genre %{
+  @stream_ids %{
     "radiorecord_none" => 15016,
     "radiorecord_ambient" => 42650,
     "radiorecord_beachparty" => 44331,
@@ -81,8 +81,9 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
   @impl true
   def get_data(name, _last_data) do
     channel =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@genre, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     try do
       @url

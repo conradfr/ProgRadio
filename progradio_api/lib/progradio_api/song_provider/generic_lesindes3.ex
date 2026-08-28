@@ -9,10 +9,11 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes3 do
 
   def get_refresh(_name, _data, _default_refresh), do: nil
 
-  def get_data(url, name, %{} = radio_id) do
+  def get_data(url, name, %{} = radio_ids) do
     radio_id =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(radio_id, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(radio_ids)
 
     get_data(url, name, radio_id)
   end

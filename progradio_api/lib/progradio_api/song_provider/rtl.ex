@@ -20,8 +20,9 @@ defmodule ProgRadioApi.SongProvider.Rtl do
   @impl true
   def has_custom_refresh(name) do
     key =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     key != ""
   end
@@ -29,8 +30,9 @@ defmodule ProgRadioApi.SongProvider.Rtl do
   @impl true
   def get_refresh(name, data, default_refresh) do
     key =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     if key != "" do
       GenericRtlgroup2.get_refresh(name, data, default_refresh)
@@ -42,8 +44,9 @@ defmodule ProgRadioApi.SongProvider.Rtl do
   @impl true
   def get_data(name, last_data) do
     key =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     if key != "" do
       GenericRtlgroup2.get_data(key, name, last_data)
@@ -55,8 +58,9 @@ defmodule ProgRadioApi.SongProvider.Rtl do
   @impl true
   def get_song(name, data, last_song) do
     key =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     if key != "" do
       GenericRtlgroup2.get_song(name, data, last_song)

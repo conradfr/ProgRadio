@@ -38,7 +38,6 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
     "radiobob_roadtrip" => 688,
     "radiobob_folk" => 687,
     "radiobob_country" => 567,
-    "radiobob_festival" => 105,
     "radiobob_gothic" => 235,
     "radiobob_rockabilly" => 104,
     "radiobob_christmas" => 76,
@@ -68,8 +67,9 @@ defmodule ProgRadioApi.SongProvider.Radiobob do
   @impl true
   def get_data(name, _last_data) do
     id =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     GenericLoveradio.get_data("bob", id)
   end

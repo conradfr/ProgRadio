@@ -5,7 +5,7 @@ defmodule ProgRadioApi.SongProvider.Forever do
 
   @url "https://www.foreverlaradio.fr/api/TitleDiffusions"
 
-  @stream_id %{
+  @stream_ids %{
     "forever_main" => "1016621215563433018",
     "forever_evreux" => "1016621215563433018",
     "forever_chartres" => "1016621215563433018",
@@ -23,7 +23,7 @@ defmodule ProgRadioApi.SongProvider.Forever do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @stream_id)
+    GenericLesIndes3.get_data(@url, name, @stream_ids)
   end
 
   @impl true

@@ -39,8 +39,9 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
   @impl true
   def get_data(name, _last_data) do
     id =
-      SongProvider.get_stream_code_name_from_channel(name)
-      |> (&Map.get(@stream_ids, &1)).()
+      name
+      |> SongProvider.get_stream_code_name_from_channel()
+      |> SongProvider.get_id_from_list(@stream_ids)
 
     url = "https://www.africaradio.com/ajax/refresh-radio-title.php?radio=#{id}"
 

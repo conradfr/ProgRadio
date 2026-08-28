@@ -16,7 +16,6 @@ defmodule ProgRadioApi.Schedule do
 
   # todo internationalize text
   @unknown_show_text "Programme inconnu"
-  @unknown_schedule_text "Programmes inconnus"
   @unknown_show_picture_url "/img/stream-placeholder.png"
 
   # only fill schedule gaps that are at least 30 minutes long

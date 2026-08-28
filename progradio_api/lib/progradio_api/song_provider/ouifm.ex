@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
   #  @url "https://api.mycontact.fr/graphql"
   @url "https://www.ouifm.fr/api/TitleDiffusions"
 
-  @stream_id %{
+  @stream_ids %{
     "ouifm_main" => "2174546520932614531",
     "ouifm_bringthenoise" => "4004502594738215513",
     "ouifm_classicrock" => "3134161803443976427",
@@ -22,7 +22,7 @@ defmodule ProgRadioApi.SongProvider.Ouifm do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @stream_id)
+    GenericLesIndes3.get_data(@url, name, @stream_ids)
   end
 
   @impl true

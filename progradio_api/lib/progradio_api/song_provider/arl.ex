@@ -1,6 +1,5 @@
 defmodule ProgRadioApi.SongProvider.Arl do
   alias ProgRadioApi.SongProvider.GenericLesIndes2
-  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -22,12 +21,7 @@ defmodule ProgRadioApi.SongProvider.Arl do
   @impl true
   def get_data(name, _last_data) do
     try do
-      id =
-        name
-        |> SongProvider.get_stream_code_name_from_channel()
-        |> (&Map.get(@stream_ids, &1)).()
-
-      GenericLesIndes2.get_data(@url, name, id)
+      GenericLesIndes2.get_data(@url, name, @stream_ids)
     rescue
       _ -> :error
     end

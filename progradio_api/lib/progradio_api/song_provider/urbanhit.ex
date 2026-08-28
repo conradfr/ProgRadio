@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Urbanhit do
   #  @url "https://api.urbanhit.fr/graphql"
   @url "https://www.urbanhit.fr/api/TitleDiffusions"
 
-  @stream_id %{
+  @stream_ids %{
     "urbanhit_main" => "2174546520932614835",
     "urbanhit_nouveaute" => "4744031335849395977",
     "urbanhit_alancienne" => "3130341601832862929",
@@ -21,7 +21,7 @@ defmodule ProgRadioApi.SongProvider.Urbanhit do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @stream_id)
+    GenericLesIndes3.get_data(@url, name, @stream_ids)
   end
 
   @impl true

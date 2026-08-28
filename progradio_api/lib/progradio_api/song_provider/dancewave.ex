@@ -27,14 +27,17 @@ defmodule ProgRadioApi.SongProvider.Dancewave do
       url =
         "https://dancewave.online/api/playlist.cgi?user=dw8080&streamid=1&mount=/#{id}.ogg&num=1&excludestring=Dance%20Wave&out=json&_=#{now_unix}"
 
-      case HTTPoison.get(url, %{
-             "Host" => "dancewave.online",
-             "Referer" => referer,
-             #             "Content-Type" => "application/json",
-             "Cache-Control" => "no-cache",
-             "Pragma" => "no-cache"
-           }) do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+      case Req.get(url,
+             headers: [
+               {"Host", "dancewave.online"},
+               {"Referer", referer},
+               {"Cache-Control", "no-cache"},
+               {"Pragma", "no-cache"}
+             ],
+             retry: false,
+             decode_body: false
+           ) do
+        {:ok, %Req.Response{status: 200, body: body}} ->
           current_song =
             Enum.join(for <<c::utf8 <- body>>, do: <<c::utf8>>)
             |> JSON.decode!()
