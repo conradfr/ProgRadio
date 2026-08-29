@@ -17,6 +17,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     {result, _} =
       get_one_random_server()
       |> get_radios()
+      |> filter()
       |> format()
       |> ImporterUtils.import_images()
       |> delete_images_from_removed_stations()
@@ -110,6 +111,22 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     else
       new_acc
     end
+  end
+
+  # removes stations already existing as a stream attached to a radio stream
+  # this prevent rewriting data as they do not have a corresponding overloading
+  defp filter(data) do
+    attached_stream_ids =
+      from(s in Stream,
+        where: not is_nil(s.radio_stream_code_name),
+        select: s.id
+      )
+      |> Repo.all()
+      |> MapSet.new()
+
+    Enum.reject(data, fn stream ->
+      MapSet.member?(attached_stream_ids, Map.get(stream, "stationuuid"))
+    end)
   end
 
   defp format(data) do
