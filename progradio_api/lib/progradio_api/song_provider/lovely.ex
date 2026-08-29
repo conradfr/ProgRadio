@@ -8,6 +8,12 @@ defmodule ProgRadioApi.SongProvider.Lovely do
 
   @radio_id "2174546520932614275"
 
+  @stream_ids %{
+    "lovely_main" => "2174546520932614275",
+    "lovely_lovely80" => "1017743633724507886",
+    "lovely_lovelyslow" => "1017800472195136427",
+  }
+
   @impl true
   defdelegate has_custom_refresh(name), to: GenericLesIndes3
 
@@ -16,7 +22,7 @@ defmodule ProgRadioApi.SongProvider.Lovely do
 
   @impl true
   def get_data(name, _last_data) do
-    GenericLesIndes3.get_data(@url, name, @radio_id)
+    GenericLesIndes3.get_data(@url, name, @stream_ids)
   end
 
   @impl true
