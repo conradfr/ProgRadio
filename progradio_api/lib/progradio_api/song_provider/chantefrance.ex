@@ -8,11 +8,14 @@ defmodule ProgRadioApi.SongProvider.Chantefrance do
 
   @stream_ids %{
     "chantefrance_main" => "2174546520932614220",
+    "chantefrance_paris" => "2174546520932614220",
     "chantefrance_80s" => "3120757949245428885",
     "chantefrance_70s" => "3120757949245428849",
     "chantefrance_60s" => "3120757949245428808",
     "chantefrance_emotion" => "3120757949245428980",
-    "chantefrance_nouveautes" => "3120757949245428941"
+    "chantefrance_nouveautes" => "3120757949245428941",
+    "chantefrance_party" => "1016788087318572584",
+    "chantefrance_902000s" => "1016788088369086415"
   }
 
   @impl true
