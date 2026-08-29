@@ -20,7 +20,7 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes do
 
       last_time =
         unless last_data == nil do
-          Map.get(last_data, "time", now_unix)
+          Map.get(last_data, "time") || Map.get(last_data, "mtime") || now_unix
         else
           now_unix
         end
