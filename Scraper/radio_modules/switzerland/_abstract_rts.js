@@ -25,38 +25,6 @@ const format = (dateObj, name) => {
     startDateTime.minute(match[2]);
     startDateTime.second(0);
 
-    let prevMatch = null;
-    // keep only relevant time from previous day page
-    if (startDateTime.isBefore(dateObj, 'day')) {
-      if (index === 0) {
-        return prev;
-      }
-
-      prevMatch = array[0].datetime_raw.match(regexp);
-      array[0].dateObj.hour(prevMatch[1]);
-
-      if (array[0].dateObj.isBefore(startDateTime)) {
-        return prev;
-      }
-
-      // update day
-      startDateTime.add(1, 'days');
-    }
-    // remove next day schedule from day page
-    else {
-      if (index !== 0 && curr.dateObj !== array[index - 1].dateObj) {
-        referenceIndex = index;
-      } else if (index !== 0) {
-        prevMatch = array[referenceIndex].datetime_raw.match(regexp);
-        let prevDate = moment(array[referenceIndex].dateObj);
-        prevDate.hour(prevMatch[1]);
-
-        if (prevDate.isAfter(startDateTime)) {
-          return prev;
-        }
-      }
-    }
-
     let description = '';
 
     if (curr.sections.length > 0) {
@@ -96,7 +64,7 @@ const fetch = (url, name, dateObj) => {
   return new Promise(function (resolve, reject) {
     return osmosis
       .get(day_url)
-      .select('.rts-modules-programme-list article')
+      .select('.rts-modules-programme-list article.programme-item')
       .set({
           'img': 'img.photo@src',
           'datetime_raw': 'span.time',
@@ -135,21 +103,10 @@ const fetch = (url, name, dateObj) => {
 };
 
 const fetchAll = (url, name, dateObj) => {
-  /* radio schedule page has the format 6am -> 6am,
- so we get the previous day as well to get the full day and the filter the list later  */
-  const previousDay = moment(dateObj);
-
-  previousDay.locale('fr');
-  previousDay.tz('Europe/Zurich');
-  previousDay.subtract(1, 'days');
-
   dateObj.locale('fr');
   dateObj.tz('Europe/Zurich');
 
-  return fetch(url, name, previousDay)
-    .then(() => {
-      return fetch(url, name, dateObj);
-    });
+  return fetch(url, name, dateObj);
 };
 
 const getScrap = (dateObj, url, name) => {

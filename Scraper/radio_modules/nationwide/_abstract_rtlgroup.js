@@ -15,6 +15,17 @@ const format = (dateObj, name, cutOffHour) => {
       return prev;
     }
 
+
+
+    if (curr.title.indexOf('Bruno sur Fun Radio') !== -1 && curr.title.indexOf('before') === -1) {
+      console.log(curr.title);
+      console.log(curr.datetime_raw);
+      console.log(curr.datetime_raw_alt);
+      console.log(curr.dateObj);
+      console.log('-----');
+    }
+
+
     // live show at the time of scraping as different markup
     if (!curr.datetime_raw) {
       curr.datetime_raw = curr.datetime_raw_alt;
@@ -45,6 +56,12 @@ const format = (dateObj, name, cutOffHour) => {
       //   return prev;
       // }
 
+      if (curr.title.indexOf('Bruno sur Fun Radio') !== -1 && curr.title.indexOf('before') === -1) {
+        console.log(curr.title);
+        console.log(startDateTime.hour());
+        console.log('///');
+      }
+
       // cutoff jour is an hour limit to avoid false positive (due to osmosis random sort)
       if (startDateTime.hour() > cutOffHour) {
         return prev;
@@ -56,7 +73,7 @@ const format = (dateObj, name, cutOffHour) => {
     }
     // remove next day schedule from day page
     else {
-      if (startDateTime.hour() < cutOffHour) {
+      if (startDateTime.hour() <= cutOffHour) {
         return prev;
       }
 
@@ -161,6 +178,7 @@ const format = (dateObj, name, cutOffHour) => {
     return prev;
   }, []);
 
+  console.log(cleanedData[name]);
   return Promise.resolve(cleanedData[name]);
 };
 

@@ -16,13 +16,13 @@ const format = (name, dateObj) => {
       return prev;
     }
 
-    const startDateTime = moment(curr.dateObj);
+    const startDateTime = moment(dateObj);
 
     startDateTime.hour(match[1]);
     startDateTime.minute(match[2]);
     startDateTime.second(0);
 
-    newEntry = {
+    const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'title': curr.title,
       'description': curr.description_alt || curr.description,

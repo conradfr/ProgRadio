@@ -92,6 +92,12 @@ const format = async (dateObj, name, description_prefix, hosts) => {
     endDateTime.minute(parseInt(curr.endMinutes));
     endDateTime.second(0);
 
+    // sometimes the same show is duplicated
+    if (prev.length > 0 && prev[prev.length -1].date_time_start === startDateTime.toISOString()
+      && prev[prev.length -1].title === curr.title) {
+      return prev;
+    }
+
     if (startDateTime.hour() > endDateTime.hour()) {
       endDateTime.add(1, 'days');
     }
