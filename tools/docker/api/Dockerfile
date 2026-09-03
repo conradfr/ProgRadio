@@ -94,7 +94,20 @@ WORKDIR /var/progradio_api/
 #RUN rm -Rf _build && \
 RUN mix local.hex --force
 RUN mix local.rebar --force
-RUN mix deps.get --only prod
+
+# GitHub rate-limits unauthenticated clones, which breaks the forked git deps in
+# mix.exs. Those repos are public, so a token with NO scopes at all is enough.
+# Deliberately not promoted to ENV: it is only needed by deps.get, never at
+# runtime. Set it as a CapRover build argument.
+# Note: GitHub silently ignores an invalid token for public reads, so a bad or
+# expired one does not fail the build, it just makes you anonymous again.
+ARG GITHUB_TOKEN
+RUN if [ -n "$GITHUB_TOKEN" ]; then \
+      export GIT_CONFIG_COUNT=1 \
+             GIT_CONFIG_KEY_0="url.https://x-access-token:${GITHUB_TOKEN}@github.com/.insteadOf" \
+             GIT_CONFIG_VALUE_0="https://github.com/"; \
+    fi; \
+    mix deps.get --only prod
 
 RUN mix deps.compile --skip-local-deps
 

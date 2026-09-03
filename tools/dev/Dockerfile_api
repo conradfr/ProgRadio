@@ -31,8 +31,19 @@ COPY ./progradio_api /app/progradio_api/
 
 WORKDIR /app/progradio_api
 
-# Install dependencies
-RUN mix deps.get
+# Install dependencies.
+# GitHub rate-limits unauthenticated clones, which breaks the forked git deps in
+# mix.exs. Unlike the deploy image (built by CapRover's classic builder, where a
+# build arg is the only option), local builds go through BuildKit, so the token
+# is passed as a secret and never lands in a layer.
+# The repos are public: a token with NO scopes at all is enough.
+RUN --mount=type=secret,id=github_token \
+    if [ -s /run/secrets/github_token ]; then \
+      export GIT_CONFIG_COUNT=1 \
+             GIT_CONFIG_KEY_0="url.https://x-access-token:$(cat /run/secrets/github_token)@github.com/.insteadOf" \
+             GIT_CONFIG_VALUE_0="https://github.com/"; \
+    fi; \
+    mix deps.get
 
 # Compile the project
 RUN mix do compile

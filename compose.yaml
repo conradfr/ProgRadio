@@ -47,6 +47,8 @@ services:
     build:
       context: ./
       dockerfile: ./tools/dev/Dockerfile_api
+      secrets:
+        - github_token
     hostname: api
     ports:
       - '4000:4000'
@@ -137,3 +139,9 @@ volumes:
 ###> meilisearch/search-bundle ###
   meilisearch_data:
 ###< meilisearch/search-bundle ###
+
+# Build-time only. Export GITHUB_TOKEN in your shell before `make build`.
+# Do NOT put it in .env: that file is tracked in git.
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN

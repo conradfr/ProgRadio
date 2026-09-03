@@ -6,8 +6,6 @@ defmodule ProgRadioApi.SongProvider.Lovely do
   #  @url "https://api.radiolovely.fr/graphql"
   @url "https://www.radiolovely.fr/api/TitleDiffusions"
 
-  @radio_id "2174546520932614275"
-
   @stream_ids %{
     "lovely_main" => "2174546520932614275",
     "lovely_lovely80" => "1017743633724507886",
