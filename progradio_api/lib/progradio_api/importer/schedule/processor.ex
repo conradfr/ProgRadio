@@ -1,10 +1,7 @@
 defmodule ProgRadioApi.Importer.ScheduleImporter.Processor do
-  use Timex
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Radio, Stream}
   alias ProgRadioApi.Importer.ScheduleImporter.{Builder, Store}
-
-  @date_format "{0D}-{0M}-{YYYY}"
 
   @spec process(String.t()) :: atom
   def process(key) do
@@ -25,8 +22,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Processor do
          %Radio{} = radio <- Repo.get_by(Radio, code_name: payload["radio"]),
          %Stream{} = stream <-
            Repo.get_by(Stream, radio_stream_code_name: payload["sub_radio"], is_sub_radio: true),
-         date when not is_nil(date) <-
-           Timex.parse!(payload["date"], @date_format) |> Timex.to_date() do
+         date when not is_nil(date) <- parse_date(payload["date"]) do
       shows = Builder.build(payload["items"], radio, stream)
 
       Store.persist(shows, radio, stream, date)
@@ -36,4 +32,17 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Processor do
       _ -> raise("Error")
     end
   end
+
+  # Expects a zero-padded DD-MM-YYYY date
+  @spec parse_date(String.t() | any) :: Date.t() | nil
+  defp parse_date(date_string)
+
+  defp parse_date(<<day::binary-2, "-", month::binary-2, "-", year::binary-4>>) do
+    case Date.from_iso8601(year <> "-" <> month <> "-" <> day) do
+      {:ok, date} -> date
+      {:error, _} -> nil
+    end
+  end
+
+  defp parse_date(_date_string), do: nil
 end

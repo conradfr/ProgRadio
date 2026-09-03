@@ -1,5 +1,4 @@
 defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
-  use Timex
   require Logger
   alias ProgRadioApi.Importer.ImageImporter
 
@@ -93,10 +92,10 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
       case head["date_time_end"] do
         nil ->
           head["date_time_start"]
-          |> Timex.Timezone.convert("Europe/Paris")
-          |> Timex.shift(days: 1)
-          |> Timex.beginning_of_day()
-          |> Timex.Timezone.convert("UTC")
+          |> DateTime.shift_zone!("Europe/Paris")
+          |> DateTime.shift(day: 1)
+          |> beginning_of_day()
+          |> DateTime.shift_zone!("Etc/UTC")
           |> (&Map.put(head, "date_time_end", &1)).()
 
         _ ->
@@ -121,6 +120,11 @@ defmodule ProgRadioApi.Importer.ScheduleImporter.Builder do
 
     acc = acc ++ [item]
     build_schedule_end(tail, acc)
+  end
+
+  @spec beginning_of_day(DateTime.t()) :: DateTime.t()
+  defp beginning_of_day(%DateTime{} = date_time) do
+    DateTime.new!(DateTime.to_date(date_time), ~T[00:00:00], date_time.time_zone)
   end
 
   # Importing image

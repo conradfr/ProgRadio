@@ -6,7 +6,6 @@ defmodule ProgRadioApi.Importer.ScheduleCache do
   """
 
   require Logger
-  use Timex
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Radio
 
@@ -58,7 +57,7 @@ defmodule ProgRadioApi.Importer.ScheduleCache do
   defp get_key(date, suffix \\ nil)
 
   defp get_key(date, suffix) when suffix == nil or suffix == "" do
-    @cache_schedule_prefix <> Timex.format!(date, @cache_schedule_day_format, :strftime)
+    @cache_schedule_prefix <> Calendar.strftime(date, @cache_schedule_day_format)
   end
 
   defp get_key(date, suffix) do

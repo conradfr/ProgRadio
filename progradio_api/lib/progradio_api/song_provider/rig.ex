@@ -28,6 +28,7 @@ defmodule ProgRadioApi.SongProvider.Rig do
     try do
       artist = Map.get(data, "artist")
       title = Map.get(data, "title")
+
       cover_url =
         case Map.get(data, "cover") do
           nil -> nil

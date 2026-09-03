@@ -17,7 +17,7 @@ defmodule ProgRadioApi.SongProvider.Topmusic do
     "topmusic_saverne" => "2174546520932614807",
     "topmusic_top80" => "1016693677289767126",
     "topmusic_topfitness" => "1017785770928129122",
-    "topmusic_toplove" => "1016693676195413678",
+    "topmusic_toplove" => "1016693676195413678"
   }
 
   @impl true

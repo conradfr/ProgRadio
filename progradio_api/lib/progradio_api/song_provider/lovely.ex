@@ -9,7 +9,7 @@ defmodule ProgRadioApi.SongProvider.Lovely do
   @stream_ids %{
     "lovely_main" => "2174546520932614275",
     "lovely_lovely80" => "1017743633724507886",
-    "lovely_lovelyslow" => "1017800472195136427",
+    "lovely_lovelyslow" => "1017800472195136427"
   }
 
   @impl true

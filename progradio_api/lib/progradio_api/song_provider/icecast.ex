@@ -111,7 +111,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   @impl true
   def get_data(name, {:default, url, _last_data}) do
     try do
-      case Shoutcast.read_meta(url, follow_redirect: true, insecure: true, pool: false) do
+      case Shoutcast.read_meta(url, [follow_redirect: true]) do
         {:error, _e} ->
           {:default, url, nil}
 
@@ -124,7 +124,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
           end
       end
     rescue
-      _e ->
+      _ ->
         Logger.debug(
           "Data provider - #{name} (generic shoutcast/icecast): default data error rescue"
         )

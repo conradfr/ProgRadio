@@ -22,6 +22,7 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
   def get_data(name, _last_data) do
     try do
       now_unix = SongProvider.now_unix()
+
       url =
         name
         |> SongProvider.get_stream_code_name_from_channel()
@@ -45,7 +46,8 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
             title: nil
           }
 
-        _ -> nil
+        _ ->
+          nil
       end
     rescue
       _ ->

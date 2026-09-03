@@ -35,7 +35,7 @@ defmodule ProgRadioApi.SongProvider.Hitwest do
     "hitwest_hitsdumoment" => "1017646916377205479",
     "hitwest_hit80" => "3217165268006472620",
     "hitwest_hit90" => "1016956441011284427",
-    "hitwest_hit2000" => "1017079151606906691",
+    "hitwest_hit2000" => "1017079151606906691"
   }
 
   @impl true

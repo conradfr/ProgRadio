@@ -2,7 +2,7 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
   require Logger
   alias ProgRadioApi.SongProvider
 
-  @date_format "{0D}-{0M}-{YYYY}"
+  @date_format "%d-%m-%Y"
   @minutes_max_delta 4
 
   def has_custom_refresh(_name), do: false
@@ -12,8 +12,8 @@ defmodule ProgRadioApi.SongProvider.GenericRtlgroup do
   def get_data(url) do
     try do
       date_string =
-        Timex.now()
-        |> Timex.format!(@date_format)
+        DateTime.utc_now()
+        |> Calendar.strftime(@date_format)
 
       # /songs?hour=19&minute=6
       (url <> date_string)

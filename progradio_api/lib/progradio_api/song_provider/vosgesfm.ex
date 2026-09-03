@@ -10,7 +10,7 @@ defmodule ProgRadioApi.SongProvider.Vosgesfm do
     "vosgesfm_bruyeres" => "10",
     "vosgesfm_remiremont" => "11",
     "vosgesfm_epinal" => "12",
-    "vosgesfm_cornimont" => "14",
+    "vosgesfm_cornimont" => "14"
   }
 
   @impl true
