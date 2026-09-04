@@ -111,11 +111,11 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   @impl true
   def get_data(name, {:default, url, _last_data}) do
     try do
-      case Shoutcast.read_meta(url, [follow_redirect: true]) do
+      case Icecast.read_meta(url, [follow_redirect: true]) do
         {:error, _e} ->
           {:default, url, nil}
 
-        {:ok, %Shoutcast.Meta{data: data, string: string, location: final_location}} ->
+        {:ok, %Icecast.Meta{data: data, string: string, location: final_location}} ->
           # the shoutcast library doesn't handle all weird icy metadata. If so we'll try to do it ourselves later
           cond do
             is_map(data) and map_size(data) > 0 -> {:default, final_location, data}
@@ -209,7 +209,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
     Enum.find_value(steps, fn {type, step_url} ->
       case get_data(name, {type, step_url, nil}) do
-        {_, _, :error} -> nil
+        {_, _, data} when data in [nil, :error] -> nil
         result -> result
       end
     end)
