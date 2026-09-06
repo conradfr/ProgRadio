@@ -111,7 +111,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   @impl true
   def get_data(name, {:default, url, _last_data}) do
     try do
-      case Icecast.read_meta(url, [follow_redirect: true]) do
+      case Icecast.read_meta(url) do
         {:error, _e} ->
           {:default, url, nil}
 
