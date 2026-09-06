@@ -84,8 +84,9 @@ defmodule ProgRadioApi.SongProvider.Securenetsystems do
   def get_data(name, _last_data) do
     try do
       %{"id" => station_id} = Regex.named_captures(@regex, name)
+      url = SongProvider.get_stream_code_name_from_channel(name)
 
-      Enum.reduce_while(@server_numbers, {:not_found}, fn server_number, acc ->
+      Enum.reduce_while(@server_numbers, {:not_found, url, nil}, fn server_number, acc ->
         case get_playlist(station_id, server_number) do
           nil ->
             {:cont, acc}
@@ -98,8 +99,7 @@ defmodule ProgRadioApi.SongProvider.Securenetsystems do
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (securenetsystems): data error rescue")
-        url = SongProvider.get_stream_code_name_from_channel(name)
-        {:not_found, url, nil}
+        :error
     catch
       :exit, _ ->
         :error

@@ -6,22 +6,54 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream
 
+  # The consumer only asks for more events once enough of its children have
+  # terminated (`min_demand`), so when the query returns less streams than
+  # asked the pipeline would stall forever. We keep the unfulfilled demand and
+  # poll again after this delay to keep it alive.
+  @poll_interval 300_000
+
   def start_link(_arg) do
     GenStage.start_link(__MODULE__, :ok, name: __MODULE__)
-  end
-
-  def sync_notify(event, timeout \\ 360_000) do
-    GenStage.call(__MODULE__, {:notify, event}, timeout)
   end
 
   ## Callbacks
 
   def init(:ok) do
-    {:producer, nil}
+    {:producer, %{pending_demand: 0, timer: nil}}
+  end
+
+  def handle_demand(demand, state) when demand > 0 do
+    state
+    |> cancel_timer()
+    |> Map.update!(:pending_demand, &(&1 + demand))
+    |> dispatch()
+  end
+
+  def handle_info(:poll, state) do
+    dispatch(%{state | timer: nil})
+  end
+
+  def handle_info(_message, state) do
+    {:noreply, [], state}
+  end
+
+  ## Internals
+
+  defp dispatch(%{pending_demand: 0} = state), do: {:noreply, [], state}
+
+  defp dispatch(%{pending_demand: demand} = state) do
+    streams = get_streams(demand)
+    found = length(streams)
+
+    Logger.info("Streams Error Check - Producer: handling demand #{demand}, found: #{found}")
+
+    state = %{state | pending_demand: demand - found}
+
+    {:noreply, streams, maybe_schedule_poll(state)}
   end
 
   # we take <demand> random streams with errors
-  def handle_demand(demand, _state) when demand > 0 do
+  defp get_streams(demand) do
     # ignoring dash and forced hls for now
     query =
       from s in Stream,
@@ -34,12 +66,22 @@ defmodule ProgRadioApi.Checker.Streams.Producer do
         order_by: fragment("RANDOM()"),
         limit: ^demand
 
-    results = Repo.all(query)
+    Repo.all(query)
+  end
 
-    Logger.info(
-      "Streams Error Check - Producer: handling demand #{demand}, found: #{length(results)}"
-    )
+  # demand fully satisfied: the consumer will ask again by itself
+  defp maybe_schedule_poll(%{pending_demand: 0} = state), do: state
 
-    {:noreply, Repo.all(query), nil}
+  defp maybe_schedule_poll(%{timer: timer} = state) when is_reference(timer), do: state
+
+  defp maybe_schedule_poll(state) do
+    %{state | timer: Process.send_after(self(), :poll, @poll_interval)}
+  end
+
+  defp cancel_timer(%{timer: nil} = state), do: state
+
+  defp cancel_timer(%{timer: timer} = state) do
+    Process.cancel_timer(timer)
+    %{state | timer: nil}
   end
 end

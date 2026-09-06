@@ -3,8 +3,8 @@ defmodule ProgRadioApi.Checker.Streams.Consumer do
   alias ProgRadioApi.Checker.Streams.Producer
   alias ProgRadioApi.Checker.Streams.StreamTask
 
-  @max_demand 5
-  @max_restart 1000
+  @max_demand 10
+  @max_restart 10000
 
   def start_link(_opts) do
     ConsumerSupervisor.start_link(__MODULE__, :ok)
