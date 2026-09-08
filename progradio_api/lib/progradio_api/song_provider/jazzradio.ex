@@ -1,8 +1,9 @@
 defmodule ProgRadioApi.SongProvider.Jazzradio do
-  require Logger
-  alias ProgRadioApi.SongProvider
+  alias ProgRadioApi.SongProvider.GenericWinradio
 
   @behaviour ProgRadioApi.SongProvider
+
+  @url "https://www.jazzradio.fr/winradio/prog"
 
   @stream_ids %{
     "jazzradio_main" => "",
@@ -24,69 +25,21 @@ defmodule ProgRadioApi.SongProvider.Jazzradio do
     "jazzradio_jazzcinema" => 26
   }
 
-  @max_duration_minutes 10
-
   @impl true
-  def has_custom_refresh(_name), do: false
+  defdelegate has_custom_refresh(name), to: GenericWinradio
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(name, _last_data) do
-    now_unix = SongProvider.now_unix()
-
-    id =
-      name
-      |> SongProvider.get_stream_code_name_from_channel()
-      |> SongProvider.get_id_from_list(@stream_ids)
-
+  def get_data(name, last_data) do
     try do
-      "https://www.jazzradio.fr/winradio/prog#{id}.xml?=#{now_unix}"
-      |> SongProvider.get()
-      |> XmlToMap.naive_map()
-      |> Map.get("prog", %{})
-      |> Map.get("morceau", [])
-      |> Enum.find(nil, fn e ->
-        try do
-          time_start =
-            e
-            |> Map.get("#content", %{})
-            |> Map.get("date_prog")
-            |> NaiveDateTime.from_iso8601!()
-            |> DateTime.from_naive!("Europe/Paris")
-            |> DateTime.to_unix()
-
-          # we don't know the duration ...
-          time_end = time_start + @max_duration_minutes * 60
-          now_unix >= time_start and now_unix <= time_end
-        rescue
-          _ -> nil
-        end
-      end)
+      GenericWinradio.get_data(@url, name, @stream_ids, last_data)
     rescue
       _ -> :error
-    catch
-      :error, _reason ->
-        :error
-
-      :exit, _ ->
-        [:error, nil]
     end
   end
 
   @impl true
-  def get_song(name, data, _last_song) do
-    try do
-      %{
-        artist: SongProvider.recase(data["#content"]["chanteur"]),
-        title: SongProvider.recase(data["#content"]["chanson"]),
-        cover_url: data["#content"]["pochette"] || nil
-      }
-    rescue
-      _ ->
-        Logger.error("Data provider - #{name}: song error rescue")
-        :error
-    end
-  end
+  defdelegate get_song(name, data, last_song), to: GenericWinradio
 end
