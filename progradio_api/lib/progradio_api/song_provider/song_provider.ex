@@ -53,6 +53,7 @@ defmodule ProgRadioApi.SongProvider do
       redirect: true,
       retry: false,
       decode_body: false,
+      compressed: true,
       connect_options: [timeout: @timeout, transport_opts: [verify: :verify_none]],
       receive_timeout: @timeout
     )
