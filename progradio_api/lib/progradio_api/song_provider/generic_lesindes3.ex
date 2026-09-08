@@ -48,10 +48,12 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes3 do
 
   def get_song(name, data, _last_song) do
     try do
+      content = Map.get(data, "title", %{})
+
       %{
-        artist: SongProvider.recase(data["title"]["artist"] || nil),
-        title: SongProvider.recase(data["title"]["title"] || nil),
-        cover_url: data["title"]["coverUrl"] || nil
+        artist: SongProvider.recase(content["artist"] || nil),
+        title: SongProvider.recase(content["title"] || nil),
+        cover_url: Map.get(content, "coverUrl")
       }
     rescue
       _ ->

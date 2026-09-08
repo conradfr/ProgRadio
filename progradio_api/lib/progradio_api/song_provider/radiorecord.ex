@@ -95,8 +95,7 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
       |> Map.get("result")
       |> Enum.find(fn e -> e["id"] == channel end)
     rescue
-      e ->
-        IO.puts("#{inspect e}")
+      _ ->
         Logger.error("Data provider - #{name} (radiorecord): data error rescue")
         :error
     end

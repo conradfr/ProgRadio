@@ -67,7 +67,8 @@ defmodule ProgRadioApi.SongProvider.Infomaniak do
         else
           %{
             artist: String.replace(title, "  -  ", " - "),
-            title: nil
+            title: nil,
+            cover_url: Map.get(data, "cover")
           }
         end
       else

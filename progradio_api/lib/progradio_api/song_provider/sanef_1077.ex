@@ -102,7 +102,11 @@ defmodule ProgRadioApi.SongProvider.Sanef1077 do
   @impl true
   def get_song(name, data, _last_song) do
     try do
-      %{artist: SongProvider.recase(data["artist"]), title: SongProvider.recase(data["title"])}
+      %{
+        artist: SongProvider.recase(data["artist"]),
+        title: SongProvider.recase(data["title"]),
+        cover_url: Map.get(data, "imageUrl")
+      }
     rescue
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")

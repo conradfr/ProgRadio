@@ -67,7 +67,8 @@ defmodule ProgRadioApi.SongProvider.Lautfm do
 
       %{
         artist: SongProvider.recase(data["artist"]["name"] || nil),
-        title: SongProvider.recase(data["title"] || nil)
+        title: SongProvider.recase(data["title"] || nil),
+        cover_url: data["artist"]["image"] || nil
       }
     rescue
       _ ->

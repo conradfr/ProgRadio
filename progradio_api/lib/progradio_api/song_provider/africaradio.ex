@@ -59,8 +59,13 @@ defmodule ProgRadioApi.SongProvider.Africaradio do
     try do
       artist = Map.get(data, "artiste")
       title = Map.get(data, "titre")
+      cover_url = Map.get(data, "pochette")
 
-      %{artist: artist, title: title}
+      %{
+        artist: artist,
+        title: title,
+        cover_url: cover_url
+      }
     rescue
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")

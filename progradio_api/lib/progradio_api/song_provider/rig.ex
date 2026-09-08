@@ -35,7 +35,11 @@ defmodule ProgRadioApi.SongProvider.Rig do
           cover -> @cover_prefix <> cover
         end
 
-      %{artist: artist, title: title, cover_url: cover_url}
+      %{
+        artist: artist,
+        title: title,
+        cover_url: cover_url
+      }
     rescue
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")

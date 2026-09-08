@@ -51,7 +51,7 @@ defmodule ProgRadioApi.SongProvider.RadioScoop do
 
       next_time =
         time_start
-        |> NaiveDateTime.add(duration_seconds, :second)
+        |> DateTime.add(duration_seconds, :second)
         |> DateTime.to_unix()
 
       next = next_time - now_unix

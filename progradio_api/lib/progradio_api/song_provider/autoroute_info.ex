@@ -37,7 +37,11 @@ defmodule ProgRadioApi.SongProvider.AutorouteInfo do
   @impl true
   def get_song(name, data, _last_song) do
     try do
-      %{artist: Map.get(data, "artist"), title: Map.get(data, "title")}
+      %{
+        artist: Map.get(data, "artist"),
+        title: Map.get(data, "title"),
+        cover_url: Map.get(data, "image")
+      }
     rescue
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")

@@ -27,20 +27,6 @@ defmodule ProgRadioApi.SongProvider.Bideetmusique do
     try do
       {:ok, html} = Floki.parse_document(data)
 
-      title =
-        try do
-          html
-          |> Floki.find(".titre-song > a")
-          |> Floki.text()
-          |> :unicode.characters_to_binary(:latin1)
-          |> String.trim()
-          |> tap(fn e ->
-            if e === "", do: nil, else: e
-          end)
-        rescue
-          _ -> nil
-        end
-
       artist =
         try do
           html
@@ -55,10 +41,46 @@ defmodule ProgRadioApi.SongProvider.Bideetmusique do
           _ -> nil
         end
 
+      title =
+        try do
+          html
+          |> Floki.find(".titre-song > a")
+          |> Floki.text()
+          |> :unicode.characters_to_binary(:latin1)
+          |> String.trim()
+          |> tap(fn e ->
+            if e === "", do: nil, else: e
+          end)
+        rescue
+          _ -> nil
+        end
+
+      cover_url =
+        try do
+          html
+          |> Floki.find("#pochette img")
+          |> Floki.attribute("src")
+          |> :unicode.characters_to_binary(:latin1)
+          |> String.trim()
+          |> tap(fn e ->
+            if e === "", do: nil, else: e
+          end)
+        rescue
+          _ -> nil
+        end
+
+      cover_url =
+        if !is_nil(cover_url) do
+          "https://www.bide-et-musique.com" <> cover_url
+        else
+          nil
+        end
+
       unless artist === nil and title === nil do
         %{
           artist: artist,
-          title: title
+          title: title,
+          cover_url: cover_url
         }
       else
         %{}

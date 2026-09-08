@@ -102,9 +102,12 @@ defmodule ProgRadioApi.SongProvider.Generations do
   @impl true
   def get_song(name, data, _last_song) do
     try do
+      content = Map.get(data, "#content")
+
       %{
-        artist: SongProvider.recase(data["#content"]["chanteur"]),
-        title: SongProvider.recase(data["#content"]["chanson"])
+        artist: SongProvider.recase(content["chanteur"]),
+        title: SongProvider.recase(content["chanson"]),
+        cover_url: Map.get(content, "pochette")
       }
     rescue
       _ ->
