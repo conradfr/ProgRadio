@@ -52,7 +52,7 @@ defmodule ProgRadioApi.SongProvider.Rireetchansons do
     try do
       item =
         @url
-        |> SongProvider.get_json()
+        |> SongProvider.get_json_with_fetcher()
         |> Enum.find(fn e -> Map.get(e, "id", 0) == id end)
         |> Map.get("playlist", %{})
         |> Enum.filter(fn e ->

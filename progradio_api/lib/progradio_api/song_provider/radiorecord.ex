@@ -6,6 +6,10 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
 
   @url "https://www.radiorecord.ru/api/stations/now/"
 
+  # the endpoint returns the data of every Radio Record stream at once
+  # and rate limits us, so we share one call between all of them
+  @cache_ttl_seconds 7
+
   @stream_ids %{
     "radiorecord_none" => 15016,
     "radiorecord_ambient" => 42650,
@@ -87,11 +91,12 @@ defmodule ProgRadioApi.SongProvider.Radiorecord do
 
     try do
       @url
-      |> SongProvider.get_json()
+      |> SongProvider.get_json_cached(@cache_ttl_seconds)
       |> Map.get("result")
       |> Enum.find(fn e -> e["id"] == channel end)
     rescue
-      _ ->
+      e ->
+        IO.puts("#{inspect e}")
         Logger.error("Data provider - #{name} (radiorecord): data error rescue")
         :error
     end

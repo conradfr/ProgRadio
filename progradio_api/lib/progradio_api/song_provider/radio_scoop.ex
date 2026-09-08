@@ -36,7 +36,7 @@ defmodule ProgRadioApi.SongProvider.RadioScoop do
     try do
       now_unix = SongProvider.now_unix()
 
-      {:ok, time_start} =
+      {:ok, time_start, _} =
         data
         |> Map.get("time")
         |> DateTime.from_iso8601()
