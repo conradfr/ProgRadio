@@ -8,6 +8,7 @@ let scrapedData = [];
 
 const fetchDesc = async (url) => {
   try {
+    console.log(`fetching https://radiofuego.fr${url}`);
     const realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(`https://radiofuego.fr${url}`)}`
     const response = await axios.get(realUrl, {
       headers: {
@@ -17,7 +18,7 @@ const fetchDesc = async (url) => {
     const html = response.data;
     const $ = cheerio.load(html);
     const data = $.extract({
-      description: 'h2 + div',
+      description: '.week-board__description',
     });
 
     return data.description;
@@ -30,8 +31,8 @@ const fetchDesc = async (url) => {
 const format = async dateObj => {
   const cleanedData = scrapedData.reduce(async function (prevP, entry) {
     const prev = await prevP;
-    let regexp = new RegExp(/([0-9]{1,2})[:]([0-9]{2})\s-\s([0-9]{1,2})[:]([0-9]{2})/);
-    let match = entry.datetime_raw.trim().match(regexp);
+    const regexp = new RegExp(/([0-9]{1,2})[:]([0-9]{2})/);
+    let match = entry.datetime_start_raw.trim().match(regexp);
 
     if (!match) {
       return prev;
@@ -43,15 +44,23 @@ const format = async dateObj => {
     startDateTime.hour(match[1]);
     startDateTime.minute(match[2]);
     startDateTime.second(0);
-    endDateTime.hour(match[3]);
-    endDateTime.minute(match[4]);
+
+    match = entry.datetime_end_raw.trim().match(regexp);
+
+    if (!match) {
+      return prev;
+    }
+
+    endDateTime.hour(match[1]);
+    endDateTime.minute(match[2]);
     endDateTime.second(0);
 
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': entry.title.trim(),
-      'img': entry.img || null,
+      'host': entry.host ? entry.host.trim() : null,
+      // 'img': entry.img || null,
     };
 
     if (entry.host) {
@@ -78,8 +87,6 @@ const fetch = async dateObj => {
 
   logger.log('info', `fetching ${url}`);
 
-  const isoDate = dateObj.format('YYYY-MM-DD');
-
   const response = await axios.get(realUrl, {
     headers: {
       'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
@@ -91,17 +98,14 @@ const fetch = async dateObj => {
   const data = $.extract({
     shows: [
       {
-        selector: `div[data-date^="${isoDate}"] article.group`,
+        selector: `.programme-columns-view section.programme-column-day.is-today .programme-column-card`,
         value: {
-          datetime_raw: 'div.text-2xl.font-bold.mb-1',
-          title: 'h3',
-          host: 'div.text-lg.text-text',
-          img: {
-            selector: 'img',
-            value: 'src'
-          },
+          datetime_start_raw: 'time',
+          datetime_end_raw: '.programme-column-end',
+          title: '.programme-column-copy strong',
+          host: '.programme-column-copy small',
           link: {
-            selector: 'a',
+            selector: ':scope',
             value: 'href'
           }
         }
@@ -128,6 +132,7 @@ const getScrap = (dateObj, _sub_radio, config) => {
 };
 export default {
   getName: 'radio_fuego',
-  supportTomorrow: true,
+  // potentially does, but can't find a good selector
+  supportTomorrow: false,
   getScrap
 };
