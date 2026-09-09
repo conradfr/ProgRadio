@@ -129,11 +129,11 @@ const format = async (dateObj, name, description_prefix, hosts) => {
 
     try {
       img = curr.imagePrincipale.medias.find(element => element.format === '16by9');
-      if (img !== undefined) {
+      if (img) {
         img = curr.imagePrincipale.medias.find(element => element.format === '16by9').url;
       }
 
-      if (img === undefined && curr.imagePrincipale.medias.length > 0) {
+      if (!img && curr.imagePrincipale.medias.length > 0) {
         img = curr.imagePrincipale.medias[curr.imagePrincipale.medias.length - 1].url;
       }
     } catch (error) {
