@@ -20,6 +20,15 @@ img/stream-placeholder.png
 {% if stream.streamSong is not null and stream.streamSongCodeName is not null %}song:{{ stream.streamSong.codeName }}_{{ stream.streamSongCodeName }}{% else %}url:{{ stream.streamUrl }}{% endif %}
 {% endmacro %}
 
+{% macro languages(languages) %}
+{#- two letter entries are iso 639-1 codes and get expanded, anything else is kept as is -#}
+{{- languages|split(',')
+    |map(language => language|trim)
+    |filter(language => language != '')
+    |map(language => language|length == 2 ? language|language_name(language) : language)
+    |join(', ') -}}
+{% endmacro %}
+
 {% macro radioOrStreamId(stream) %}
 {% if stream.radio is defined and stream.radio is not null %}{{ stream.radio.codeName }}{% else %}{{ stream.id }}{% endif %}
 {% endmacro %}
@@ -108,7 +117,7 @@ img/stream-placeholder.png
     <div class="row">
         <div class="col-sm-2 col-12">
             <div class="radio-page-side sticky">
-                <div class="text-center mb-4">
+                <div class="text-center mb-3">
                     <img class="radio-page-logo" alt="{{ stream.name }}" src="{{ preload(asset(self.picture(stream)), {as: 'image'}) }}">
                 </div>
 
@@ -340,7 +349,7 @@ img/stream-placeholder.png
 
                         {% if stream.language is defined and stream.language is not null and stream.language != '' %}
                             <div class="mb-3">
-                                <strong>{{ 'page.stream.languages'|trans }}:</strong> {{ stream.language|replace({',': ', '}) }}
+                                <strong>{{ 'page.stream.languages'|trans }}:</strong> {{ self.languages(stream.language) }}
                             </div>
                         {% endif %}
 
