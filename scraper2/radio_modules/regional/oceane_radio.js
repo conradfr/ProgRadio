@@ -1,4 +1,4 @@
-const scrapAbstract = require('./_abstract_lesindes2.js');
+import scrapAbstract from '../_abstract/_abstract_lesindes2.js';
 
 const name = 'oceane_radio';
 
@@ -8,10 +8,8 @@ const getScrap = (dateObj, subRadio) => {
   return scrapAbstract.getScrap(dateObj, url, subRadio, description_prefix);
 };
 
-const scrapModule = {
+export default {
   getName: name,
   supportTomorrow: scrapAbstract.supportTomorrow,
   getScrap
 };
-
-module.exports = scrapModule;
