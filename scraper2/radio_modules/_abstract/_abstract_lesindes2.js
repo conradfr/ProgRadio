@@ -1,14 +1,14 @@
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
 import utils from '../../lib/utils.js';
+import cache from '../../lib/cache.js';
 
 let scrapedData = {};
 
 const fetchHtml = async (url) => {
-  const response = await axios.get(url);
-  return cheerio.load(response.data);
+  const html = await cache.fetchUrl(url);
+  return cheerio.load(html);
 };
 
 const fetchDesc = async (url) => {

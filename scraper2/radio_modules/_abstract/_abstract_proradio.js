@@ -1,7 +1,7 @@
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
+import cache from '../../lib/cache.js';
 
 const dayFrInv = {
   1: 'Lundi',
@@ -68,8 +68,7 @@ const fetch = async (dateObj, name, subRadio, url) => {
 
   logger.log('info', `fetching ${url}`);
 
-  const response = await axios.get(url);
-  const html = response.data;
+  const html = await cache.fetchUrl(url);
   const $ = cheerio.load(html);
   const data = $.extract({
     shows: [
