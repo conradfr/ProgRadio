@@ -367,9 +367,12 @@ class UserController extends AbstractBaseController
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
-        // un-index user streams
+        // we keep the user stream but remove them from it
         foreach ($user->getStreams() as $stream) {
             $searchService->remove($em, $stream);
+
+            $stream->setUser(null);
+            $em->persist($stream);
         }
 
         $em->remove($user);

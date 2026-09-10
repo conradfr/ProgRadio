@@ -161,7 +161,6 @@ const format = (dateObj, name, cutOffHour) => {
     return prev;
   }, []);
 
-  console.log(cleanedData[name]);
   return Promise.resolve(cleanedData[name]);
 };
 
