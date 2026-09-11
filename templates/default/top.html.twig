@@ -79,7 +79,7 @@ img/stream-placeholder.png
                                 <a class="streams-one-name-detail" href="{{ path('streams_one_short', {'shortId': stream.code_name|shortid, 'codename': stream.name|slug}) }}">{{ stream.name }}</a>
                                 <div class="streams-one-song" v-if="radioId === '{{ stream.code_name }}' && playing !== PLAYER_STATE_STOPPED && song !== null">
                                     {% verbatim %}
-                                        ♫ {{ song }}
+                                        <span class="note-title">♫</span>&nbsp;{{ song }}
                                     {% endverbatim %}
                                 </div>
                                 {% if stream.tags != null %}

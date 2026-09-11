@@ -12,6 +12,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
+    <meta name="theme-color" content="{% if isDarkModeRequest %}#1c486a{% else %}#2196F3{% endif %}" />
+
     <title>{% block title %}{{ getField('title_key', app.request)|trans }}{% endblock %}</title>
     <meta name="description" content="{% block description %}{{ 'general.main_description'|trans }}{% endblock %}">
 

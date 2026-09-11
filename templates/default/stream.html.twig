@@ -260,7 +260,7 @@ img/stream-placeholder.png
                                 </div>
                                 <div class="flex-grow-1 align-self-center">
                                     <div class="mb-3">
-                                        {% verbatim %}♫ {{ song }}{% endverbatim %}
+                                        {% verbatim %}<span class="note-title">♫</span>&nbsp;{{ song }}{% endverbatim %}
                                     </div>
                                     <div class="stream-page-live-search" v-if="song !== undefined && song !== null && song.trim() !== ''">
                                         <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"

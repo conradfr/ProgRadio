@@ -5,7 +5,7 @@
     <div v-if="liveSongCover" class="player-logo-xl me-3">
       <img :src="liveSongCover" />
     </div>
-    <div>♫  {{ liveSongTitle }}</div>
+    <div><span class="note-title">♫</span>&nbsp;{{ liveSongTitle }}</div>
   </div>
 </template>
 

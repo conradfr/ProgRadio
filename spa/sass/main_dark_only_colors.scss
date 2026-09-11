@@ -228,12 +228,14 @@
   // maybe a bug as -rgb is new to 5.3
   --bs-primary-rgb: rgb(55, 90, 127);
   .navbar.bg-primary {
-    background-color: #375A7FFF !important;
+    //background-color: #375A7FFF !important;
+    background-color: #1c486a !important;
   }
 
   // because of the color not generated above the global rule fail in dark mode so we redo it here
   .navbar {
-    border-top: calc(0px + var(--safe-area-inset-top)) solid #375A7FFF !important;
+    //border-top: calc(0px + var(--safe-area-inset-top)) solid #375A7FFF !important;
+    border-top: calc(0px + var(--safe-area-inset-top)) solid #1c486a !important;
   }
 
   .badge.text-bg-secondary {

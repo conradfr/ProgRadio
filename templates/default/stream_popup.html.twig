@@ -142,7 +142,7 @@ img/stream-placeholder.png
                     <div class="mb-3" v-if="song !== null">
                         <div>
                             <strong>{{ 'page.stream.playing'|trans }}:&nbsp;&nbsp;</strong>
-                            {% verbatim %}♫ {{ song }}{% endverbatim %}
+                            {% verbatim %}<span class="note-title">♫</span>&nbsp;{{ song }}{% endverbatim %}
                         </div>
                         <div class="mt-3" v-if="song !== undefined && song !== null && song.trim() !== ''">
                             <strong>{{ 'page.stream.find'|trans }}:</strong>&nbsp;&nbsp;

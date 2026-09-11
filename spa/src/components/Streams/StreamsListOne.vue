@@ -14,7 +14,7 @@
       @click="nameClick(stream.code_name)">
       <span v-once class="streams-one-name-detail">{{ stream.name }}</span>
       <div v-if="!hover && currentSong" class="streams-one-song">
-        ♫ {{ currentSong }}
+        <span class="note-title">♫</span>&nbsp;{{ currentSong }}
       </div>
       <div v-else-if="stream.tags" v-once class="streams-one-tags">
         <span v-for="tag in tags" :key="tag"

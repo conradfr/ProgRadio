@@ -76,9 +76,16 @@
   };
 
   const updateColorSchemeUI = () => {
+    const isDark = themeDataName in document.getElementsByTagName('html')[0].dataset
+      && document.getElementsByTagName('html')[0].dataset[themeDataName] === darkThemeName;
+
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeColorMeta !== null) {
+      themeColorMeta.setAttribute('content', isDark ? '#1c486a' : '#2196F3');
+    }
+
     // it's now dark mode
-    if (themeDataName in document.getElementsByTagName('html')[0].dataset
-      && document.getElementsByTagName('html')[0].dataset[themeDataName] === darkThemeName) {
+    if (isDark) {
       const darkElems = document.getElementsByClassName(navDarkClassName);
       Array.prototype.forEach.call(darkElems, element => {
         element.classList.add(hiddenClassName);
