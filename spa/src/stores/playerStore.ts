@@ -196,12 +196,14 @@ export const usePlayerStore = defineStore('player', {
 
       this.setPrevious({ stream });
 
+      console.log('lol');
+
       // update last listened if user is logged and is stream
       // not set in interval below to no send it at each update, may change later
       setTimeout(() => {
         // todo move to api when support for auth users
         if (typeUtils.isStream(stream) && userStore.logged && userStore.storeHistory
-          && this.radio !== null && this.radio.code_name === stream.code_name) {
+          && this.stream !== null && this.stream.code_name === stream.code_name) {
           StreamsApi.updateLastListened(stream);
         }
       }, (config.LISTENING_SESSION_MIN_SECONDS + 5) * 1000);
