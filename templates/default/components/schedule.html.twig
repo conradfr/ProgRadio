@@ -1,0 +1,102 @@
+{% macro isBeforeClass(date_end) %}
+  {% if date(date_end) <= date() %}
+    media-before d-none
+  {% endif %}
+{% endmacro %}
+
+{% macro isCurrentClass(date_start, date_end) %}
+  {% if date(date_start) < date() and date(date_end) > date() %}
+    media-current
+  {% endif %}
+{% endmacro %}
+
+<div class="radio-page-shows mb-4">
+{% for show in schedule %}
+  {#  Current show? #}
+  {% if date|date("mdY") == "now"|date("mdY") and date(show.start_at) < date() and date(show.end_at) > date() %}
+    {% if loop.first == false %}
+    <div class="see-previous-shows d-flex align-items-stretch mb-3">
+      <div class="flex-shrink-0 text-center" style="width: 50px">
+        <i class="bi bi-chevron-double-up"></i>
+      </div>
+      <div class="flex-shrink-0">
+        <a href="#">
+          {{ 'page.radio.see_previous'|trans }}
+        </a>
+      </div>
+    </div>
+    {% endif %}
+    <a class="anchor" id="media-current"></a>
+  {% endif %}
+  <div class="d-flex align-items-stretch{{ _self.isCurrentClass(show.start_at, show.end_at) }}{{ _self.isBeforeClass(show.end_at) }}">
+    <div class="flex-shrink-0 media-timeline">
+      .
+    </div>
+    {% if show.picture_url %}
+      <div class="flex-shrink-0">
+        <img alt="" class="img-fluid img-show mb-2"
+             src="{{ asset('media/cache/page_thumb/media/program/' ~ show.picture_url) }}">
+      </div>
+    {% endif %}
+    <div class="flex-fill ps-3 mb-3">
+      <h6 class="fw-bold mb-0">{{ show.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }}-{{ show.end_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ show.title }}</h6>
+      {% if show.host %}
+        <div>{{ show.host }}</div>
+      {% endif %}
+      {% if show.description %}
+        <p class="fw-light mt-2">{{ show.description | nl2br }}</p>
+      {% endif %}
+
+      {% if show.sections is defined %}
+        <div class="mt-3">
+          {% for section in show.sections %}
+            <div class="d-flex mb-2 align-items-stretch">
+              {% if section.picture_url %}
+                <div class="flex-shrink-0">
+                  <img alt="" class="img-fluid" style="max-width: 48px; max-height: 48px"
+                       src="{{ asset('media/cache/page_thumb/media/program/' ~ section.picture_url) }}">
+                </div>
+              {% endif %}
+              <div class="flex-fill ps-3 mb-3">
+                <h6 class="mt-0">{{ section.start_at | format_time('short', locale=app.request.locale, timezone=timezone) | capitalize }} - {{ section.title }}</h6>
+                {% if section.presenter %}
+                  <div><i>{{ section.presenter }}</i></div>
+                {% endif %}
+                {% if section.description %}
+                  <div class="mt-1">{{ section.description }}</div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% else %}
+  <div class="alert alert-warning" role="alert">{{ 'page.radio.no_schedule'|trans }}</div>
+{% endfor %}
+</div>
+
+<script type="text/javascript">
+  const hiddenShowsClassName = 'd-none';
+  const previousShowClassName = 'media-before';
+  const seePreviousShowsClassName = 'see-previous-shows';
+
+  const showPreviousShows = (event) => {
+    event.preventDefault();
+
+    const shows = event.target.closest('.radio-page-shows');
+    if (shows === null) {
+      return;
+    }
+
+    shows.querySelectorAll(`.${previousShowClassName}.${hiddenShowsClassName}`)
+      .forEach((show) => show.classList.remove(hiddenShowsClassName));
+
+    shows.querySelectorAll(`.${seePreviousShowsClassName}`)
+      .forEach((link) => link.classList.add(hiddenShowsClassName));
+  };
+
+  document.querySelectorAll(`.${seePreviousShowsClassName} a`)
+    .forEach((link) => link.addEventListener('click', showPreviousShows));
+</script>

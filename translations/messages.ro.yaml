@@ -141,6 +141,7 @@ page:
         description: 'Programele radioului %radio% și ascultare online'
         goto_today: Vezi programele de astăzi
         goto_schedule: Vezi grila programelor
+        see_previous: Vezi programele anterioare
         more_radios: 'Mai multe radiouri'
         no_schedule: 'Programe indisponibile.'
         not_today: Consulți programele pentru o altă zi decât cea de astăzi

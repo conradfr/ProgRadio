@@ -141,6 +141,7 @@ page:
         description: 'Os programas da rádio %radio% e escuta online'
         goto_today: Ver os programas de hoje
         goto_schedule: Ver a grade de programas
+        see_previous: Ver os programas anteriores
         more_radios: 'Mais rádios'
         no_schedule: 'Programas não disponíveis.'
         not_today: Você está consultando os programas de um dia diferente de hoje

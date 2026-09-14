@@ -141,6 +141,7 @@ page:
         description: 'Day schedule of radio %radio% !'
         goto_today: Check today schedule
         goto_schedule: Check radio schedule
+        see_previous: See previous shows
         more_radios: 'More radios'
         no_schedule: 'Schedule not available'
         not_today: You're browsing another day schedule

@@ -133,6 +133,7 @@ page:
         description: 'De programma’s van de radio %radio% & online luisteren'
         goto_today: Bekijk de programma’s van vandaag
         goto_schedule: Bekijk het programmarooster
+        see_previous: Bekijk de vorige programma’s
         more_radios: 'Meer radiozenders'
         no_schedule: 'Programma’s niet beschikbaar.'
         not_today: U bekijkt de programma’s van een andere dag dan vandaag

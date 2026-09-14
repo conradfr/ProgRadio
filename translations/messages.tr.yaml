@@ -141,6 +141,7 @@ page:
         description: "%radio% radyosunun programları ve çevrimiçi dinleme"
         goto_today: "Bugünkü programları görüntüle"
         goto_schedule: "Program çizelgesini görüntüle"
+        see_previous: "Önceki programları görüntüle"
         more_radios: "Daha fazla radyo"
         no_schedule: "Programlar mevcut değil."
         not_today: "Bugün dışında bir günün programlarını görüntülüyorsunuz"

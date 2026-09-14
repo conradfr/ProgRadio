@@ -141,6 +141,7 @@ page:
         description: 'برامج راديو %radio% والاستماع عبر الإنترنت'
         goto_today: عرض برامج اليوم
         goto_schedule: عرض جدول البرامج
+        see_previous: عرض البرامج السابقة
         more_radios: 'مزيد من محطات الراديو'
         no_schedule: 'البرامج غير متاحة.'
         not_today: أنت تتصفح برامج يوم آخر غير اليوم

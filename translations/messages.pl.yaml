@@ -141,6 +141,7 @@ page:
         description: 'Programy stacji radiowej %radio% i słuchanie online'
         goto_today: Zobacz dzisiejsze programy
         goto_schedule: Zobacz siatkę programów
+        see_previous: Zobacz poprzednie programy
         more_radios: 'Więcej stacji radiowych'
         no_schedule: 'Programy niedostępne.'
         not_today: Przeglądasz programy z innego dnia niż dzisiaj

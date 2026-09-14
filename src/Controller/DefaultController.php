@@ -482,7 +482,15 @@ class DefaultController extends AbstractBaseController
         )
     ]
     #[Cache(maxage: 60, public: true, mustRevalidate: true)]
-    public function oneShort(string $shortId, string $codename, RouterInterface $router, Host $host, EntityManagerInterface $em, Request $request): Response
+    public function oneShort(
+        string $shortId,
+        string $codename,
+        RouterInterface $router,
+        ScheduleManager $scheduleManager,
+        EntityManagerInterface $em,
+        Request $request,
+        Host $host
+    ): Response
     {
         // !!! NOTE !!! could not find in the doc how to do a custom ParamConverter in Symfony 6.3 like with ExtraBundle before
         // So we do it manually here, oh well...
@@ -533,8 +541,18 @@ class DefaultController extends AbstractBaseController
 
         $moreStreams = $em->getRepository(Stream::class)->getMoreStreams($stream);
 
+        // schedule
+        $schedule = null;
+        if ($stream->getRadio() && $stream->isSubRadio() && $stream->getRadioStreamCodeName()) {
+            $schedule = $scheduleManager->getDayScheduleOfRadio(new \DateTime('now'), $stream->getRadio()->getCodeName(), $stream);
+            if (!empty($schedule[$stream->getRadio()->getCodeName()])) {
+                $schedule = $schedule[$stream->getRadio()->getCodeName()];
+            }
+        }
+
         return $this->render('default/stream.html.twig', [
             'stream' => $stream,
+            'schedule' => $schedule,
             'more_streams' => $moreStreams
         ]);
     }

@@ -141,6 +141,7 @@ page:
         description: 'A %radio% rádió műsora és online hallgatás'
         goto_today: Ma műsorok megtekintése
         goto_schedule: Műsorrend megtekintése
+        see_previous: Korábbi műsorok megtekintése
         more_radios: 'Több rádió'
         no_schedule: 'Programok nem elérhetők.'
         not_today: Más nap műsoraival foglalkozol, mint a mai

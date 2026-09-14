@@ -15,6 +15,9 @@ const AppSongs = () => import('../components/AppSongs.vue');
 const AppSchedule = () => import('../components/AppSchedule.vue');
 const AppStreams = () => import('../components/AppStreams.vue');
 
+const SCROLL_TO_HASH_TIMEOUT_MS = 3000;
+const SCROLL_TO_HASH_INTERVAL_MS = 50;
+
 const routes = [
   {
     path: '/:lang/streaming/:countryOrCategoryOrUuid/:page?',
@@ -70,7 +73,44 @@ const routes = [
   }
 ];
 
+// Pages such as the radio one render their content only once the schedule has
+// been fetched, so an anchor target does not exist yet when the navigation
+// settles. Wait for it rather than scrolling to nothing, but give up eventually.
+const waitForElement = (selector: string): Promise<Element|null> => new Promise((resolve) => {
+  const startedAt = Date.now();
+
+  const check = () => {
+    const element = document.querySelector(selector);
+
+    if (element !== null) {
+      resolve(element);
+      return;
+    }
+
+    if (Date.now() - startedAt >= SCROLL_TO_HASH_TIMEOUT_MS) {
+      resolve(null);
+      return;
+    }
+
+    setTimeout(check, SCROLL_TO_HASH_INTERVAL_MS);
+  };
+
+  check();
+});
+
 export default createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, _from, savedPosition) {
+    if (to.hash) {
+      return waitForElement(to.hash)
+        .then(element => (element === null ? false : { el: to.hash, behavior: 'smooth' as const }));
+    }
+
+    if (savedPosition) {
+      return savedPosition;
+    }
+
+    return { top: 0 };
+  }
 });
