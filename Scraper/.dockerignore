@@ -1,0 +1,2 @@
+# Built inside the image by yarn install; never copy the host build.
+node_modules

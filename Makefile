@@ -18,7 +18,7 @@ NPM	= $(SPA_CONT) npm
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh composer vendor sf cc test
+.PHONY        : help build up start rebuild down logs sh composer vendor sf cc test
 
 ## —— 🎵 🐳 The Symfony Docker Makefile 🐳 🎵 ——————————————————————————————————
 help: ## Outputs this help screen
@@ -32,6 +32,14 @@ up: ## Start the docker hub in detached mode (no logs)
 	@$(DOCKER_COMP) up --detach
 
 start: build up ## Build and start the containers
+
+rebuild: ## Stop, rebuild and restart a single service, pass the parameter "s=" with the service name, and "c=" to add build options, example: make rebuild s=scraper c=--no-cache
+	@$(eval s ?=)
+	@$(eval c ?=)
+	@test -n "$(s)" || (echo 'Missing service name. Example: make rebuild s=scraper'; exit 1)
+	@$(DOCKER_COMP) stop $(s)
+	@$(DOCKER_COMP) build $(c) $(s)
+	@$(DOCKER_COMP) up --detach --force-recreate $(s)
 
 down: ## Stop the docker hub
 	@$(DOCKER_COMP) down --remove-orphans

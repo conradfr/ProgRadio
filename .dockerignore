@@ -1,0 +1,14 @@
+# Native modules and installed deps must be built inside the image,
+# never copied in from the host (wrong libc / Node ABI).
+**/node_modules
+
+# Elixir build artifacts. `mix deps.get` / `deps.compile` regenerate these in the
+# builder stage; copying the host's would overwrite them, bust the layer cache on
+# every build, and drop macOS-compiled NIFs into a Linux image.
+progradio_api/_build
+progradio_api/deps
+
+# Composer dependencies. `composer install` builds these in the image; the host's
+# copy carries dev-only packages (--no-dev is not honoured retroactively) and in
+# www it lands on top of the production vendor/ via `COPY ./ /app/`.
+vendor

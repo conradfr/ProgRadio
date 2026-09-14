@@ -1,0 +1,2 @@
+# Built inside the image by npm install; never copy the host build.
+node_modules

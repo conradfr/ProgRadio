@@ -39,8 +39,6 @@ RUN crontab /etc/cron.d/scraper-cron
 
 RUN touch /var/log/cron.log
 
-RUN printenv | sed 's/^\(.*\)$/export \1/g' > /root/project_env.sh
-
 WORKDIR /home/node/app
 
 # Copy existing application directory
@@ -50,5 +48,8 @@ COPY ./tools/docker/scraper/scraper_parameters.yml .
 # Install dependencies
 RUN yarn install
 
-CMD cron && tail -f /var/log/cron.log
+# cron does not inherit the container environment, so snapshot it at runtime
+# into a file the crontab sources. `export -p` quotes values properly, unlike
+# `printenv`, which breaks on spaces and quotes.
+CMD export -p > /root/project_env.sh && cron && tail -f /var/log/cron.log
 # CMD ["cron"]

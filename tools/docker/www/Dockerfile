@@ -82,8 +82,6 @@ RUN touch /var/log/cron.log
 RUN mkdir -p /var/log/caddy/
 RUN touch /var/log/caddy/access.log
 
-RUN printenv | sed 's/^\(.*\)$/export \1/g' > /root/project_env.sh
-
 # Install extensions
 RUN pecl install apcu igbinary \
  && docker-php-ext-install intl pdo_pgsql pgsql \
@@ -115,6 +113,22 @@ RUN cat /usr/local/etc/php/conf.d/local.ini
 
 # Expose port 80
 EXPOSE 80
+
+# Caddy
+COPY ./tools/docker/www/Caddyfile /etc/caddy/Caddyfile
+COPY ./tools/docker/www/worker.Caddyfile /etc/caddy/worker.Caddyfile
+
+# Copy vendors
+COPY --chown=www-data:www-data ./composer.json /app/composer.json
+COPY --chown=www-data:www-data ./composer.lock /app/composer.lock
+COPY --chown=www-data:www-data ./symfony.lock /app/symfony.lock
+
+# Set working directory
+WORKDIR /app
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --prefer-dist --no-scripts --no-dev --no-interaction --no-autoloader && rm -rf /root/.composer
 
 ARG APP_ENV=${APP_ENV}
 ARG DEFAULT_URI=${DEFAULT_URI}
@@ -176,22 +190,6 @@ ENV APP_ENV=${APP_ENV} \
   SERVER_NAME=:80 \
   FRANKENPHP_CONFIG="worker /app/public/index.php" \
   APP_RUNTIME=Runtime\\FrankenPhpSymfony\\Runtime
-
-# Caddy
-COPY ./tools/docker/www/Caddyfile /etc/caddy/Caddyfile
-COPY ./tools/docker/www/worker.Caddyfile /etc/caddy/worker.Caddyfile
-
-# Copy vendors
-COPY --chown=www-data:www-data ./composer.json /app/composer.json
-COPY --chown=www-data:www-data ./composer.lock /app/composer.lock
-COPY --chown=www-data:www-data ./symfony.lock /app/symfony.lock
-
-# Set working directory
-WORKDIR /app
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --prefer-dist --no-scripts --no-dev --no-interaction --no-autoloader && rm -rf /root/.composer
 
 # Copy existing application directory
 COPY --chown=www-data:www-data ./ /app/

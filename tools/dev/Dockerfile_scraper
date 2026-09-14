@@ -1,6 +1,8 @@
-FROM node:16-alpine
+FROM node:16-bookworm
 
-RUN apk add bash git g++ make py3-pip yarn
+RUN apt-get update \
+    && apt-get -y install \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /usr/app

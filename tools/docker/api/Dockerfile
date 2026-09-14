@@ -1,10 +1,91 @@
-FROM hexpm/elixir:1.20.4-erlang-29.0.6-ubuntu-jammy-20260810
+# --------------- BUILD ---------------
+
+FROM hexpm/elixir:1.20.4-erlang-29.0.6-ubuntu-jammy-20260810 AS builder
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Build-time toolchain only. libicu-dev is needed to compile the ex_cldr_collation
+# NIF; the runtime stage carries the matching shared library instead.
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
+    build-essential make \
+    pkgconf \
+    libicu-dev \
+    git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pkg-config --libs icu-uc icu-io
+
+# config/config.exs is evaluated while compiling and reads these, and runtime.exs
+# does not override them, so they have to be set before `mix release`. Every other
+# variable is read from runtime.exs at boot and lives in the runtime stage, where
+# changing it cannot invalidate the dependency compile.
+ARG MIX_ENV=${MIX_ENV}
+ARG CDN_BASE_URL=${CDN_BASE_URL}
+ARG CORS=${CORS}
+
+ENV MIX_ENV=${MIX_ENV} \
+    CDN_BASE_URL=${CDN_BASE_URL} \
+    CORS=${CORS}
+
+RUN mkdir -p /var/progradio_api
+
+WORKDIR /var/progradio_api/
+
+COPY  ./progradio_api/mix.* /var/progradio_api/
+
+RUN mix local.hex --force
+RUN mix local.rebar --force
+
+# GitHub rate-limits unauthenticated clones, which breaks the forked git deps in
+# mix.exs. Those repos are public, so a token with NO scopes at all is enough.
+# Deliberately not promoted to ENV: it is only needed by deps.get, never at
+# runtime. Set it as a CapRover build argument.
+# Note: GitHub silently ignores an invalid token for public reads, so a bad or
+# expired one does not fail the build, it just makes you anonymous again.
+ARG GITHUB_TOKEN
+RUN if [ -n "$GITHUB_TOKEN" ]; then \
+      export GIT_CONFIG_COUNT=1 \
+             GIT_CONFIG_KEY_0="url.https://x-access-token:${GITHUB_TOKEN}@github.com/.insteadOf" \
+             GIT_CONFIG_VALUE_0="https://github.com/"; \
+    fi; \
+    mix deps.get --only prod
+
+# deps.get does not read config, so the config copy sits below it: editing config
+# then costs a recompile, not a re-download.
+COPY  ./progradio_api/config /var/progradio_api/config/
+
+RUN mix deps.compile --skip-local-deps
+
+COPY  ./progradio_api /var/progradio_api/
+
+RUN mix deps.compile
+
+RUN mix release prod
+
+# --------------- RUNTIME ---------------
+
+FROM ubuntu:jammy
 
 EXPOSE 80
 
-RUN ulimit -n 65536
-
 ARG DEBIAN_FRONTEND=noninteractive
+
+# libicu70 backs the ex_cldr_collation NIF compiled in the builder stage.
+# imagemagick backs mogrify. The release bundles its own ERTS, so no Erlang or
+# Elixir toolchain is needed here.
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
+    tzdata \
+    ca-certificates \
+    libicu70 \
+    libssl3 \
+    imagemagick \
+    wget \
+    jpegoptim optipng pngquant gifsicle \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/progradio_api/
+
+COPY --from=builder /var/progradio_api/_build/prod/rel/prod /var/progradio_api/_build/prod/rel/prod
 
 ARG DATABASE_URL=${DATABASE_URL}
 ARG PORT=${PORT}
@@ -68,54 +149,6 @@ ENV DATABASE_URL=${DATABASE_URL} \
 
 #RUN usermod -u 1000 root
 #USER www-data
-
-RUN apt-get update && apt-get install --no-install-suggests -y \
-    tzdata \
-    build-essential make \
-    imagemagick \
-    pkgconf \
-    libicu-dev \
-    wget \
-    jpegoptim optipng pngquant gifsicle
-
-# For temp forked dep
-RUN apt-get install --no-install-recommends --no-install-suggests -y git ca-certificates
-
-RUN pkg-config --libs icu-uc icu-io
-
-RUN mkdir -p /var/progradio_api
-# RUN mkdir -p /var/www
-
-COPY  ./progradio_api/mix.* /var/progradio_api/
-COPY  ./progradio_api/config /var/progradio_api/config/
-
-WORKDIR /var/progradio_api/
-
-#RUN rm -Rf _build && \
-RUN mix local.hex --force
-RUN mix local.rebar --force
-
-# GitHub rate-limits unauthenticated clones, which breaks the forked git deps in
-# mix.exs. Those repos are public, so a token with NO scopes at all is enough.
-# Deliberately not promoted to ENV: it is only needed by deps.get, never at
-# runtime. Set it as a CapRover build argument.
-# Note: GitHub silently ignores an invalid token for public reads, so a bad or
-# expired one does not fail the build, it just makes you anonymous again.
-ARG GITHUB_TOKEN
-RUN if [ -n "$GITHUB_TOKEN" ]; then \
-      export GIT_CONFIG_COUNT=1 \
-             GIT_CONFIG_KEY_0="url.https://x-access-token:${GITHUB_TOKEN}@github.com/.insteadOf" \
-             GIT_CONFIG_VALUE_0="https://github.com/"; \
-    fi; \
-    mix deps.get --only prod
-
-RUN mix deps.compile --skip-local-deps
-
-COPY  ./progradio_api /var/progradio_api/
-
-RUN mix deps.compile
-
-RUN mix release prod
 
 HEALTHCHECK CMD wget localhost:80/health || exit 1
 
