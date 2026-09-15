@@ -103,6 +103,15 @@ img/stream-placeholder.png
       // fallback
     }
   });
+
+  const shareEmbed = document.querySelector('.share-embed');
+
+  if (shareEmbed !== null) {
+    const selectShareEmbed = () => shareEmbed.select();
+
+    shareEmbed.addEventListener('focus', selectShareEmbed);
+    shareEmbed.addEventListener('click', selectShareEmbed);
+  }
 </script>
 {% endblock %}
 
@@ -392,6 +401,28 @@ img/stream-placeholder.png
                             <a class="more-link" href="{{ path('streaming_spa') }}/{{ stream.countryCode|default('') }}">{{ 'page.stream.discover'|trans }}</a>
                         </div>
                     </div>
+
+                  <div class="mt-5">
+                    <div class="text-center mb-3"><h5>{{ 'page.stream.share'|trans }}</h5></div>
+                    <div class="mb-3 text-center">
+                      <a target="_blank" href="{{ absolute_url(path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug})) }}">
+                        {% if isProgRadioRequest %}
+                          <img src="{{ preload(asset('img/progradio-share-logo.png'), {as: 'image'}) }}" />
+                        {% else %}
+                          <img src="{{ preload(asset('img/radio-addict-share-logo.png'), {as: 'image'}) }}" />
+                        {% endif %}
+                      </a>
+                    </div>
+                    <div class="text-center">
+                      <textarea class="share-embed" readonly style="margin: auto" rows="5" cols="40"><a target="_blank" href="{{ absolute_url(path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug})) }}">
+{% if isProgRadioRequest %}
+<img src="{{ preload(asset('img/progradio-share-logo.png'), {as: 'image'}) }}" />
+{% else %}
+<img src="{{ preload(asset('img/radio-addict-share-logo.png'), {as: 'image'}) }}" />
+{% endif %}
+</a></textarea>
+                    </div>
+                  </div>
 
 {#                    <div class="pt-3 d-block d-sm-none">#}
 {#                        {% if app.environment == 'prod' %}#}
