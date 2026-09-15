@@ -52,6 +52,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: 256 }
 
+    App\EventListener\UserActivityListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
     App\Middleware\DatabaseTimezoneConnectionMiddleware:
         arguments:
             - "%timezone%"

@@ -82,6 +82,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private \DateTime $updatedAt;
 
+    #[ORM\Column(name: 'last_connected_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTime $lastConnectedAt = null;
+
     #[ORM\Column(type: 'string', length: 100)]
     private ?string $passwordResetToken = null;
 
@@ -359,6 +362,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatisticsEmail(bool $statisticsEmail): static
     {
         $this->statisticsEmail = $statisticsEmail;
+
+        return $this;
+    }
+
+    public function getLastConnectedAt(): ?\DateTime
+    {
+        return $this->lastConnectedAt;
+    }
+
+    public function setLastConnectedAt(?\DateTime $lastConnectedAt): static
+    {
+        $this->lastConnectedAt = $lastConnectedAt;
 
         return $this;
     }
