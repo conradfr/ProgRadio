@@ -79,7 +79,8 @@ defmodule ProgRadioApiWeb.SongChannel do
         on: ss.id == s.stream_song_id,
         select: %{
           radio_code_name: ss.code_name,
-          radio_stream_code_name: s.stream_song_code_name,
+          radio_stream_code_name:
+            fragment("COALESCE(?, ?)", s.stream_song_code_name, s.stream_url),
           id: ss.id,
           type: "stream_song"
         },
