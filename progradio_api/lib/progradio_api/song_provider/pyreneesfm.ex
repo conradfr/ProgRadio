@@ -31,7 +31,7 @@ defmodule ProgRadioApi.SongProvider.Pyreneesfm do
         artist: SongProvider.recase(data["artist"]),
         title: SongProvider.recase(data["title"]),
         cover_url: data["artwork"] || nil
-     }
+      }
     rescue
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")
