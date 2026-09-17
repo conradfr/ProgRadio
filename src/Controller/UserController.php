@@ -17,6 +17,7 @@ use App\Service\Host;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Meilisearch\Bundle\SearchService;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -354,7 +355,8 @@ class UserController extends AbstractBaseController
     public function deleteConfirm(
         string $token,
         EntityManagerInterface $em,
-        SearchService $searchService
+        SearchService $searchService,
+        Security $security
     ): Response
     {
         $session = $this->requestStack->getSession();
@@ -378,8 +380,9 @@ class UserController extends AbstractBaseController
         $em->remove($user);
         $em->flush();
 
-        $session->clear();
-        $session->invalidate();
+        // Clear the token (and session/remember-me cookie), otherwise the next request
+        // tries to refresh a user whose id is now null.
+        $security->logout(false);
 
         return $this->redirectToRoute('user_deleted');
     }
