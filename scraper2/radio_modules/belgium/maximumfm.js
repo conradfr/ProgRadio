@@ -137,6 +137,7 @@ const getScrap = dateObj => {
       return format(dateObj);
     });
 };
+
 export default {
   getName: 'maximumfm',
   supportTomorrow: true,
