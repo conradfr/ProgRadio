@@ -9,8 +9,10 @@
             <h3 class="mb-4">{{ 'page.account.delete.page_title'|trans }}</h3>
             <div class="alert alert-success" role="alert">{{ 'page.account.delete_confirm.success'|trans }}</div>
             <p>
+              {% if isProgRadioRequest == true %}
                 <strong>{{ 'page.registered.what_now_question'|trans }}</strong><br>
                 <a href="{{ path('app') }}schedule">{{ 'page.registered.what_now_choice2'|trans }}</a><br>
+              {% endif %}
                 <a href="{{ path('app') }}streaming">{{ 'page.registered.what_now_choice3'|trans }}</a>
             </p>
         </div>
