@@ -228,7 +228,7 @@ createApp({
     webSocket: typeof appWebSocket !== 'undefined' ? appWebSocket : true,
     sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
   },
-  init() {
+  init(options) {
     const slider = document.getElementById('volume-slider');
     if (slider) {
       const volume = cookies.get(COOKIE_VOLUME, 10)
@@ -247,6 +247,17 @@ createApp({
         cookies.set(COOKIE_VOLUME, newVolume);
         setAudioVolume(newVolume);
       });
+    }
+    if (options) {
+      setTimeout(() => {
+        if (options.topic && options.topic.trim() !== '') {
+          this.joinChannel(options.topic.trim());
+        }
+
+        if (options.radioOrStreamId && options.radioOrStreamId.trim() !== '') {
+          this.joinChannel(`listeners:${options.radioOrStreamId.trim()}`);
+        }
+      }, 1000);
     }
   },
   play(streamingUrl, codeName, options) {
@@ -409,6 +420,7 @@ createApp({
     this.listeningInterval = null;
     this.sessionId = null;
     this.playingStart = null;
+    // TODO Allow to keep live song when stopped
     this.song = null;
     this.cover = null;
     this.leaveChannels();
@@ -461,7 +473,7 @@ createApp({
       if (radioOrStreamId && radioOrStreamId.trim() !== '') {
         this.joinChannel(`listeners:${radioOrStreamId.trim()}`);
       }
-    }, 1000);
+    }, 500);
   },
   playingError(codeName, errorText) {
     // the delay prevents sending an error when the user just click a link and goes to another page...

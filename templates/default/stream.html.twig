@@ -200,7 +200,7 @@ img/stream-placeholder.png
                             {{ self.extractDailymotionIdAndProvideiFrame(stream.streamUrl) }}
                         {% else %}
                             <div class="radio-page-streams-one mb-4 d-flex align-items-center justify-content-center justify-content-sm-start"
-                                style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init()">
+                                style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init({ topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}' })">
                                 <div v-cloak>
                                     <div
                                         v-if="playing === PLAYER_STATE_STOPPED"

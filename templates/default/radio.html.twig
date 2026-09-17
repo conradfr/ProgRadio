@@ -1,5 +1,11 @@
 {% extends 'base_site.html.twig' %}
 
+{% import _self as self %}
+
+{% macro topic(sub_radio) %}
+{% if sub_radio.streamSong is not null and sub_radio.radioStreamCodeName is not null %}song:{{- sub_radio.radioStreamCodeName -}}{% else %}url:{{- sub_radio.streamUrl -}}{% endif %}
+{% endmacro %}
+
 {% block head_supp %}
     {{ parent() }}
 
@@ -39,7 +45,7 @@
                     <div class="radio-page-streams-one text-center mb-4 v-cloak">
                         <div
                             v-if="playing === PLAYER_STATE_STOPPED"
-                            @click="play('{{- sub_radio.streamUrl -}}', '{{- sub_radio.id -}}')"
+                            @click="play('{{- sub_radio.streamUrl -}}', '{{- sub_radio.id -}}', { topic: '{{- self.topic(sub_radio) -}}', radioOrStreamId: '{{- radio.codeName -}}' })"
                             class="radio-page-play">
                             <img alt="{{ 'page.radio.play'|trans({'%radio%': radio.name}) }}"
                                  src="{{ asset('img/play-button-inside-a-circle.svg') }}">
@@ -137,6 +143,37 @@
                     </div>
                 </div>
             {% endif %}
+
+            <div class="p-3 mb-4 stream-page-live" v-if="song !== null" v-scope v-cloak>
+              <div class="d-flex">
+                <div v-if="cover" class="me-3 live-song-cover text-start">
+                  <img class="mx-auto" :src="cover">
+                </div>
+                <div class="flex-grow-1 align-self-center">
+                  <div class="mb-3">
+                    {% verbatim %}<span class="note-title">♫</span>&nbsp;{{ song }}{% endverbatim %}
+                  </div>
+                  <div class="stream-page-live-search" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
+                       :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
+                      <i class="bi bi-youtube"></i><span> YouTube</span>
+                    </a>&nbsp;&nbsp;
+                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
+                       :href="encodeURI(`https://open.spotify.com/search/${song}`)">
+                      <i class="bi bi-spotify"></i><span> Spotify</span>
+                    </a>&nbsp;&nbsp;
+                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
+                       :href="encodeURI(`https://www.deezer.com/search/${song}`)">
+                      <img src="{{ asset('img/deezericon.png') }}" alt="{{ 'page.stream.find_deezer'|trans }}"><span> Deezer</span>
+                    </a>&nbsp;&nbsp;
+                    <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_amazon'|trans }}"
+                       :href="encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${song}`)">
+                      <i class="bi bi-amazon"></i><span> Amazon</span>
+                    </a>&nbsp;&nbsp;
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {% set is_today = date|date("mdY") == "now"|date("mdY") %}
 
