@@ -1,6 +1,6 @@
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
+import cache from '../../lib/cache.js';
 import logger from '../../lib/logger.js';
 
 const dayFr = {
@@ -29,8 +29,7 @@ const getHost = async (url) => {
   logger.log('info', `fetching ${url}`);
   const hosts = [];
 
-  const response = await axios.get(url);
-  const html = response.data;
+  const html = await cache.fetchUrl(url);
   const $ = cheerio.load(html);
   $('.anim-row:not(.podcast-row) a > h4').each((i, el) => {
     hosts.push($(el).text().trim());
@@ -166,18 +165,29 @@ const format = async (dateObj, name) => {
 };
 
 const fetch = async (dateObj, name, url) => {
+  scrapedData[name] = [];
+  const urls = Array.isArray(url) ? url : [url];
+
+  for (const u of urls) {
+    const shows = await fetchOne(dateObj, u);
+    scrapedData[name] = scrapedData[name].concat(shows);
+  }
+
+  return Promise.resolve(true);
+};
+
+const fetchOne = async (dateObj, url) => {
   dateObj.locale('fr');
   const day = dayFrInv[dateObj.isoWeekday()];
 
   logger.log('info', `fetching ${url}`);
 
-  const response = await axios.get(url);
-  const html = response.data;
+  const html = await cache.fetchUrl(url);
   const $ = cheerio.load(html);
   const data = $.extract({
     shows: [
       {
-        selector: `div.m-t-30 .${day}`,
+        selector: `div .${day}`,
         value: {
           datetime_raw: '.program-date',
           title: 'h4',
@@ -195,9 +205,7 @@ const fetch = async (dateObj, name, url) => {
     ]
   });
 
-  scrapedData[name] = data.shows;
-
-  return Promise.resolve(true);
+  return data.shows;
 };
 
 const fetchAll = (dateObj, name, url) => {
