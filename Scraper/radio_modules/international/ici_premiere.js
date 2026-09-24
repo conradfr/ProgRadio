@@ -63,8 +63,7 @@ const format = async dateObj => {
 const fetch = dateObj => {
   dateObj.locale('fr');
   const format = 'YYYY-MM-DD';
-
-  const url = `https://services.radio-canada.ca/bff/audio/graphql?opname=broadcastSchedule&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%229c91936aea5a25108578e5887fb1a377575d38d55fb30448208bf858e10024b3%22%7D%7D&variables=%7B%22params%22%3A%7B%22broadcastingNetworkId%22%3A3%2C%22device%22%3A%22Web%22%2C%22date%22%3A%22${dateObj.format(format)}%22%2C%22liveSchedule%22%3Afalse%2C%22regionId%22%3A8%7D%7D`;
+  const url = `https://services.radio-canada.ca/bff/audio/graphql?opname=broadcastSchedule&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22cef0db57324d40839c3ac433a07def21242776d58b96a9cd3cc8e45611d23d2c%22%7D%7D&variables=%7B%22params%22%3A%7B%22broadcastingNetworkId%22%3A3%2C%22device%22%3A%22Web%22%2C%22date%22%3A%22${dateObj.format(format)}%22%2C%22liveSchedule%22%3Afalse%2C%22regionId%22%3A8%7D%7D`;
 
   logger.log('info', `fetching ${url}`);
 
