@@ -802,7 +802,7 @@ export default defineComponent({
           value: config.GTAG_ACTION_FAVORITE_TOGGLE_VALUE
         });
 
-        this.toggleFavorite(this.radio);
+        this.toggleFavorite(this.radio || this.stream);
       }
     },
     volumeFocus(status: boolean) {
