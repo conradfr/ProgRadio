@@ -1,7 +1,7 @@
 # This is the evolution of the SongChannel
 # with progressive rollout
 defmodule ProgRadioApiWeb.SongNextChannel do
-  import Ecto.Query, only: [from: 2, dynamic: 2]
+  import Ecto.Query, only: [from: 2]
   use Phoenix.Channel
   use Nebulex.Caching
 
@@ -19,8 +19,15 @@ defmodule ProgRadioApiWeb.SongNextChannel do
       nil ->
         {:error, "not available"}
 
-      data when not is_nil(data.stream_song_code_name) and not is_nil(data.stream_song_stream_code_name) ->
-        send(self(), {:after_join, "song:#{data.stream_song_code_name}_#{data.stream_song_stream_code_name}", data})
+      data
+      when not is_nil(data.stream_song_code_name) and
+             not is_nil(data.stream_song_stream_code_name) ->
+        send(
+          self(),
+          {:after_join, "song:#{data.stream_song_code_name}_#{data.stream_song_stream_code_name}",
+           data}
+        )
+
         {:ok, socket}
 
       data ->
@@ -73,7 +80,7 @@ defmodule ProgRadioApiWeb.SongNextChannel do
 
           # compat layer
           # TODO remove once transition done
-          radio_code_name: ss.code_name,
+          radio_code_name: ss.code_name
         },
         where: s.banned != true and s.id == ^stream_id,
         limit: 1

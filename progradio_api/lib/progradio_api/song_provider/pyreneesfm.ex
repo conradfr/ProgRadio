@@ -13,12 +13,11 @@ defmodule ProgRadioApi.SongProvider.Pyreneesfm do
   def get_refresh(_name, _data, default_refresh), do: default_refresh
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(_name, _last_data) do
     try do
-      data =
-        @url
-        |> SongProvider.get_json()
-        |> Map.get("nowPlaying", nil)
+      @url
+      |> SongProvider.get_json()
+      |> Map.get("nowPlaying", nil)
     rescue
       _ -> :error
     end

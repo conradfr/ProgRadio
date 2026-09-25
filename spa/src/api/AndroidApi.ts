@@ -10,7 +10,6 @@ import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 import type { Program } from '@/types/program';
 
-import PlayerUtils from '@/utils/PlayerUtils';
 import StreamsUtils from '@/utils/StreamsUtils';
 
 /* eslint-disable no-undef */
@@ -47,7 +46,7 @@ const formatRadios = (streams: Record<string, Stream>): Array<object> => {
       };
 
       if (getVersion() >= ANDROID_CHANNEL_IN_LIST_MIN_VERSION) {
-        radioToExport.channelName = PlayerUtils.getChannelName(stream);
+        radioToExport.channelName = `song_next:${stream.id}`
       }
 
       streamsExport.push(radioToExport);

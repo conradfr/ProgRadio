@@ -21,7 +21,8 @@ defmodule ProgRadioApi.SongManager do
           ProgRadioApi.SongDynamicSupervisor,
           %{
             id: song_topic,
-            start: {ProgRadioApi.SongServer, :start_link, [{"url:" <> song_topic, nil, stream_data}]},
+            start:
+              {ProgRadioApi.SongServer, :start_link, [{"url:" <> song_topic, nil, stream_data}]},
             restart: :temporary
           }
         )

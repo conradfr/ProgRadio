@@ -11,7 +11,7 @@ defmodule ProgRadioApi.SongProvider.Radcap do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, _last_data) do
     try do
       name
       |> status_url()

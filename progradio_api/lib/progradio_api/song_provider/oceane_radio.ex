@@ -1,6 +1,5 @@
 defmodule ProgRadioApi.SongProvider.OceaneRadio do
   alias ProgRadioApi.SongProvider.GenericLesIndes3
-  alias ProgRadioApi.SongProvider
 
   @behaviour ProgRadioApi.SongProvider
 

@@ -49,7 +49,6 @@ defmodule ProgRadioApi.SongProvider.Forum do
     "forum_discofever" => "1017710003521351682",
     "forum_francais" => "3554890196675908298",
     "forum_legends" => "1016696278192869584",
-    "forum_love" => "3328710072053287872",
     "forum_love" => "3328710072053287872"
   }
 

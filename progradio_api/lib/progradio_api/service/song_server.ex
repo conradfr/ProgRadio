@@ -107,6 +107,7 @@ defmodule ProgRadioApi.SongServer do
       song: state.song,
       stream_id: Map.get(state.db_data || %{}, :stream_id)
     }
+
     send(pid, {:push_song, "playing", data})
     {:noreply, state}
   end
@@ -168,7 +169,14 @@ defmodule ProgRadioApi.SongServer do
          false <- song == :error do
       broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_id))
       updated_song_history = update_song_history(last_song, song_history, song)
-      broadcast_song_history_if_needed(name, updated_song_history, song_history, Map.get(db_data || %{}, :stream_id))
+
+      broadcast_song_history_if_needed(
+        name,
+        updated_song_history,
+        song_history,
+        Map.get(db_data || %{}, :stream_id)
+      )
+
       update_status(song, db_data)
 
       next_refresh =
@@ -260,7 +268,14 @@ defmodule ProgRadioApi.SongServer do
          false <- song == :error do
       broadcast_song(name, song, Map.get(db_data || %{}, :stream_id))
       updated_song_history = update_song_history(last_song, song_history, song)
-      broadcast_song_history_if_needed(name, updated_song_history, song_history, Map.get(db_data || %{}, :stream_id))
+
+      broadcast_song_history_if_needed(
+        name,
+        updated_song_history,
+        song_history,
+        Map.get(db_data || %{}, :stream_id)
+      )
+
       update_status(song, db_data)
 
       # the if is for :indecisive special case that triggers one refresh
@@ -311,32 +326,39 @@ defmodule ProgRadioApi.SongServer do
 
   # messages from the push client
   @impl true
-  def handle_info(%EventsourceEx.Message{} = push_event, %{name: name, song: last_song, db_data: db_data} = state) do
-    case apply(state.module, :get_data, [name, push_event, state.last_data]) do
-      nil ->
-        {:noreply, state}
+  def handle_info(
+        %EventsourceEx.Message{} = push_event,
+        %{name: name, song: last_song, db_data: db_data} = state
+      ) do
+    {data, song} =
+      case apply(state.module, :get_data, [name, push_event, state.last_data]) do
+        nil ->
+          {nil, nil}
 
-      :error ->
-        {:noreply, state}
+        :error ->
+          {:error, nil}
 
-      data ->
-        case apply(state.module, :get_song, [name, data, last_song]) do
-          nil ->
-            {:noreply, state}
+        data ->
+          case apply(state.module, :get_song, [name, data, last_song]) do
+            song when is_nil(song) or song == :error -> {data, nil}
+            song -> {data, song}
+          end
+      end
 
-          :error ->
-            {:noreply, state}
+    broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_id))
+    updated_song_history = update_song_history(last_song, state.song_history, song)
 
-          song ->
-            broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_id))
-            updated_song_history = update_song_history(last_song, state.song_history, song)
-            broadcast_song_history_if_needed(name, updated_song_history, state.song_history, Map.get(db_data || %{}, :stream_id))
-            update_status(song, state.db_data)
+    broadcast_song_history_if_needed(
+      name,
+      updated_song_history,
+      state.song_history,
+      Map.get(db_data || %{}, :stream_id)
+    )
 
-            {:noreply, %{state | song: song, last_data: data, song_history: updated_song_history},
-             :hibernate}
-        end
-    end
+    update_status(song, state.db_data)
+
+    {:noreply, %{state | song: song, last_data: data, song_history: updated_song_history},
+     :hibernate}
   end
 
   @impl true
@@ -386,7 +408,8 @@ defmodule ProgRadioApi.SongServer do
 
   # ----- Internal -----
 
-  defp broadcast_song_if_needed(name, %{} = song, %{} = last_song, stream_id) when song !== last_song do
+  defp broadcast_song_if_needed(name, %{} = song, %{} = last_song, stream_id)
+       when song !== last_song do
     broadcast_song(name, song, stream_id)
   end
 

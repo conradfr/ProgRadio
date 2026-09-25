@@ -100,18 +100,6 @@ const getNextStream = (currentStream: Stream, streams: Stream[], way: 'backward'
   return streams[newIndex];
 };
 
-const getChannelName = (stream: Stream, radio: Radio|null): string => {
-  if (radio && !radio.streaming_enabled) {
-    return '';
-  }
-
-  if (stream && stream.current_song && stream.radio_stream_code_name) {
-    return `song:${stream.radio_stream_code_name}`;
-  }
-
-  return `url:${stream.stream_url}`;
-};
-
 const formatSong = (songData: Song): string|null => {
   if ((songData.artist === undefined || songData.artist === null
     || songData.artist === '')
@@ -410,7 +398,6 @@ export default {
   getPictureUrl,
   getNextRadio,
   getNextStream,
-  getChannelName,
   isVideoLink,
   getVideoId,
   formatSong,
