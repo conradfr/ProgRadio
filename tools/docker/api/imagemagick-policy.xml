@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policymap [
+  <!ELEMENT policymap (policy)*>
+  <!ATTLIST policymap xmlns CDATA #FIXED ''>
+  <!ELEMENT policy EMPTY>
+  <!ATTLIST policy xmlns CDATA #FIXED '' domain NMTOKEN #REQUIRED
+    name NMTOKEN #IMPLIED pattern CDATA #IMPLIED rights NMTOKEN #IMPLIED
+    stealth NMTOKEN #IMPLIED value CDATA #IMPLIED>
+]>
+<!--
+  Ubuntu jammy /etc/ImageMagick-6/policy.xml (imagemagick 6.9.11) + the
+  "progradio" block at the end. Copied over the stock file in the api images.
+-->
+<policymap>
+  <policy domain="resource" name="memory" value="256MiB"/>
+  <policy domain="resource" name="map" value="512MiB"/>
+  <policy domain="resource" name="width" value="16KP"/>
+  <policy domain="resource" name="height" value="16KP"/>
+  <policy domain="resource" name="area" value="128MP"/>
+  <policy domain="resource" name="disk" value="1GiB"/>
+  <!-- use curl -->
+  <policy domain="delegate" rights="none" pattern="URL" />
+  <policy domain="delegate" rights="none" pattern="HTTPS" />
+  <policy domain="delegate" rights="none" pattern="HTTP" />
+  <!-- in order to avoid to get image with password text -->
+  <policy domain="path" rights="none" pattern="@*"/>
+  <!-- disable ghostscript format types -->
+  <policy domain="coder" rights="none" pattern="PS" />
+  <policy domain="coder" rights="none" pattern="PS2" />
+  <policy domain="coder" rights="none" pattern="PS3" />
+  <policy domain="coder" rights="none" pattern="EPS" />
+  <policy domain="coder" rights="none" pattern="PDF" />
+  <policy domain="coder" rights="none" pattern="XPS" />
+
+  <!-- progradio: images are downloaded from untrusted urls.
+       SVG is rasterised by rsvg-convert (librsvg2-bin) before reaching ImageMagick,
+       whose own SVG renderer (SVG/MSVG -> MVG) must never see remote content.
+       The other coders can read local files or urls from inside an image. -->
+  <policy domain="coder" rights="none" pattern="{SVG,SVGZ,MSVG,MVG,MSL,TEXT,LABEL,URL,HTTP,HTTPS,FTP,EPHEMERAL}" />
+</policymap>

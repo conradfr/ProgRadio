@@ -71,17 +71,22 @@ EXPOSE 80
 ARG DEBIAN_FRONTEND=noninteractive
 
 # libicu70 backs the ex_cldr_collation NIF compiled in the builder stage.
-# imagemagick backs mogrify. The release bundles its own ERTS, so no Erlang or
-# Elixir toolchain is needed here.
+# imagemagick backs mogrify. librsvg2-bin (rsvg-convert) rasterises svg stream logos:
+# Ubuntu's imagemagick is built --without-rsvg and only has its own renderer.
+# The release bundles its own ERTS, so no Erlang or Elixir toolchain is needed here.
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
     tzdata \
     ca-certificates \
     libicu70 \
     libssl3 \
     imagemagick \
+    librsvg2-bin \
     wget \
     jpegoptim optipng pngquant gifsicle \
     && rm -rf /var/lib/apt/lists/*
+
+# Stock policy + no svg/mvg/url coders (remote images are untrusted)
+COPY ./tools/docker/api/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
 
 WORKDIR /var/progradio_api/
 

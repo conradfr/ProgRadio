@@ -14,9 +14,13 @@ RUN apt-get update && apt-get install --no-install-suggests -y \
     tzdata \
     build-essential make \
     imagemagick \
+    librsvg2-bin \
     pkgconf \
     libicu-dev \
     jpegoptim optipng pngquant gifsicle
+
+# Same ImageMagick policy as the deploy image (tools/docker/api/Dockerfile)
+COPY ./tools/docker/api/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
 
 # For temp forked dep
 RUN apt-get install --no-install-recommends --no-install-suggests -y git ca-certificates

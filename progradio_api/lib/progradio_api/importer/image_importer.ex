@@ -13,6 +13,8 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   @ls_cache_ttl 21_600_000
 
   @stream_size 125
+  # seconds
+  @rsvg_timeout 10
 
   @spec import(String.t(), map, struct) :: tuple
   def import(filename_or_base64, show, radio)
@@ -27,6 +29,8 @@ defmodule ProgRadioApi.Importer.ImageImporter do
            "#{Application.get_env(:progradio_api, :image_path)}#{@image_folder}/#{filename}" do
       unless ImageCache.is_cached(full_path) do
         Logger.debug("Importing base64: #{filename} to #{full_path}")
+
+        File.mkdir_p(Path.dirname(full_path))
 
         case File.write(full_path, Base.decode64!(base64_data["data"]), [:binary]) do
           :ok -> {:ok, filename}
@@ -79,6 +83,8 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       unless ImageCache.is_cached(full_path) do
         Logger.debug("Importing base64: #{filename} to #{full_path}")
 
+        File.mkdir_p(Path.dirname(full_path_temp))
+
         case File.write(full_path_temp, Base.decode64!(base64_data["data"]), [:binary]) do
           :ok ->
             case process(full_path_temp, full_path) do
@@ -102,6 +108,47 @@ defmodule ProgRadioApi.Importer.ImageImporter do
 
   def import_stream(url, radio) do
     filename = get_name(url, radio)
+
+    case svg?(filename) do
+      true -> import_stream_svg(url, filename)
+      false -> import_stream_raster(url, filename)
+    end
+  end
+
+  # svg are rasterised to png by rsvg-convert, imagemagick is not allowed to read svg (see policy.xml)
+  defp import_stream_svg(url, svg_filename) do
+    filename = Path.rootname(svg_filename) <> ".png"
+    full_path = "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{filename}"
+
+    full_path_temp_svg =
+      "#{Application.get_env(:progradio_api, :image_path)}#{@temp_folder}/#{svg_filename}"
+
+    full_path_temp =
+      "#{Application.get_env(:progradio_api, :image_path)}#{@temp_folder}/#{filename}"
+
+    unless ImageCache.is_cached(full_path, false) do
+      full_url = full_url(url)
+      Logger.debug("Importing svg: #{full_url}")
+
+      try do
+        with {:ok, _} <- download(full_url, full_path_temp_svg),
+             {:ok, _} <- rasterize_svg(full_path_temp_svg, full_path_temp),
+             {:ok, _} <- process(full_path_temp, full_path) do
+          {:ok, filename}
+        else
+          _ -> {:error, nil}
+        end
+      after
+        File.rm(full_path_temp_svg)
+        File.rm(full_path_temp)
+      end
+    else
+      Logger.debug("Stream image #{filename} was cached")
+      {:ok, filename}
+    end
+  end
+
+  defp import_stream_raster(url, filename) do
     full_path = "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{filename}"
 
     full_path_temp =
@@ -170,6 +217,50 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       :desc
     )
     |> List.first()
+  end
+
+  defp svg?(filename), do: filename |> Path.extname() |> String.downcase() == ".svg"
+
+  # rsvg-convert with -w/-h/-a covers the box instead of fitting in it, process/2 resizes it afterwards.
+  # it does not load external resources (file:// or http) referenced in the svg.
+  @spec rasterize_svg(String.t(), String.t()) :: tuple
+  defp rasterize_svg(svg_path, dest_path) do
+    size = Integer.to_string(@stream_size)
+
+    # timeout (coreutils) kills rsvg-convert on a svg that takes forever to render
+    case System.cmd(
+           "timeout",
+           [
+             Integer.to_string(@rsvg_timeout),
+             "rsvg-convert",
+             "-w",
+             size,
+             "-h",
+             size,
+             "-a",
+             "-f",
+             "png",
+             "-o",
+             dest_path,
+             svg_path
+           ],
+           stderr_to_stdout: true
+         ) do
+      {_, 0} ->
+        {:ok, dest_path}
+
+      {output, exit_code} ->
+        Logger.warning(
+          "Error rasterizing svg (#{exit_code}): #{svg_path} - #{String.slice(output, 0, 200)}"
+        )
+
+        {:error, nil}
+    end
+  rescue
+    # missing executable
+    e ->
+      Logger.warning("Error rasterizing svg: #{svg_path} - #{Exception.message(e)}")
+      {:error, nil}
   end
 
   defp process(image_path, dest_path) do
@@ -249,6 +340,9 @@ defmodule ProgRadioApi.Importer.ImageImporter do
 
       case http_task_reply do
         {:ok, %Req.Response{status: 200, body: body}} ->
+          # media sub folders may not exist yet (fresh checkout / volume)
+          File.mkdir_p(Path.dirname(dest_path))
+
           case File.write(dest_path, body) do
             :ok ->
               {:ok, url}
