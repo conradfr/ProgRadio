@@ -67,19 +67,20 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
           Logger.info("50k import: no cache - #{url}")
 
           result =
-            HTTPoison.get!(
+            Req.get!(
               url,
-              [
+              headers: [
                 {"x-rapidapi-key",
                  Application.get_env(:progradio_api, :stream_import_api_50k_key)},
                 {"x-rapidapi-host", "50k-radio-stations.p.rapidapi.com"},
                 {"content-type", "application/json"}
               ],
-              timeout: @timeout,
-              recv_timeout: @timeout
+              connect_options: [timeout: @timeout],
+              receive_timeout: @timeout,
+              # paying api, each retry is billed
+              retry: false
             )
             |> Map.get(:body)
-            |> Jason.decode!()
             |> Map.get("data", [])
 
           Redix.command!(:redix, ["SETEX", cache_key, @cache_ttl, Jason.encode!(result)])

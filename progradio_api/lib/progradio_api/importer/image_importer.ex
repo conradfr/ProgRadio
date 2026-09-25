@@ -3,6 +3,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   require Logger
   alias ProgRadioApi.Cache
   alias ProgRadioApi.ImageCache
+  alias ProgRadioApi.Utils.ReqUtils
 
   @image_folder "program"
   @stream_folder "stream"
@@ -204,15 +205,16 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       http_task =
         Task.async(fn ->
           try do
-            HTTPoison.get(
+            Req.get(
               url_encoded,
-              [],
-              # testing disabling pool for now
-              # hackney: [pool: :image_pool],
-              # we have ssl errors that do not happen in a browser ...
-              hackney: [:insecure],
-              follow_redirect: true,
-              recv_timeout: 7500
+              # verify_none in default options: we have ssl errors that do not happen in a browser ...
+              ReqUtils.get_options(
+                receive_timeout: 7500,
+                # the task timeout below would kill retries anyway
+                retry: false,
+                # keep the raw image bytes
+                decode_body: false
+              )
             )
           rescue
             _ ->
@@ -230,14 +232,6 @@ defmodule ProgRadioApi.Importer.ImageImporter do
           {:ok, result} ->
             result
 
-          {:error, %HTTPoison.Error{reason: :checkout_timeout}} ->
-            Logger.warning(
-              "Error importing image, checkout_timeout: #{url} - restarting pool ..."
-            )
-
-            :hackney_pool.stop_pool(:image_pool)
-            nil
-
           {:exit, reason} ->
             Logger.warning("Error importing image, task exited: #{url} / #{reason}")
             nil
@@ -248,7 +242,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
         end
 
       case http_task_reply do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, %Req.Response{status: 200, body: body}} ->
           case File.write(dest_path, body) do
             :ok ->
               {:ok, url}
@@ -258,16 +252,16 @@ defmodule ProgRadioApi.Importer.ImageImporter do
               {:error, nil}
           end
 
-        {:ok, %HTTPoison.Response{status_code: status_code}} ->
+        {:ok, %Req.Response{status: status}} ->
           Logger.warning(
-            "Error importing image, wrong response: #{status_code} / #{url} / #{dest_path}"
+            "Error importing image, wrong response: #{status} / #{url} / #{dest_path}"
           )
 
           {:error, nil}
 
-        {:error, %HTTPoison.Error{reason: reason}} when is_atom(reason) ->
+        {:error, exception} when is_exception(exception) ->
           Logger.warning(
-            "Error importing image, wrong response: #{Atom.to_string(reason)} #{url} / #{dest_path}"
+            "Error importing image, wrong response: #{Exception.message(exception)} #{url} / #{dest_path}"
           )
 
           {:error, nil}

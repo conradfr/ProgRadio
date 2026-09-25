@@ -47,12 +47,11 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
     Logger.info("Lautfm import: fetching offset=#{offset}, limit=#{@page_size}")
 
     results =
-      HTTPoison.get!(
+      Req.get!(
         url,
-        [{"User-Agent", "radio-addict.com"}]
+        headers: [{"User-Agent", "radio-addict.com"}]
       )
       |> Map.get(:body)
-      |> Jason.decode!()
       |> Map.get("items", [])
 
     new_acc = acc ++ results
