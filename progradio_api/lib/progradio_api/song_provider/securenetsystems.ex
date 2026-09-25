@@ -1,6 +1,7 @@
 defmodule ProgRadioApi.SongProvider.Securenetsystems do
   require Logger
   alias ProgRadioApi.SongProvider
+  alias ProgRadioApi.Utils.ReqUtils
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -188,12 +189,12 @@ defmodule ProgRadioApi.SongProvider.Securenetsystems do
   defp request(url) do
     Req.get!(
       url,
-      headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
-      redirect: true,
-      retry: false,
-      decode_body: false,
-      connect_options: [timeout: @timeout, transport_opts: [verify: :verify_none]],
-      receive_timeout: @timeout
+      ReqUtils.get_options_for(url,
+        retry: false,
+        decode_body: false,
+        connect_options: [timeout: @timeout],
+        receive_timeout: @timeout
+      )
     )
   end
 end

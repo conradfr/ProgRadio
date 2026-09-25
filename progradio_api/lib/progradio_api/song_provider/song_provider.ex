@@ -1,5 +1,6 @@
 defmodule ProgRadioApi.SongProvider do
   alias ProgRadioApi.Cache
+  alias ProgRadioApi.Utils.ReqUtils
 
   @doc """
     Get next song refresh in seconds
@@ -54,13 +55,13 @@ defmodule ProgRadioApi.SongProvider do
   def get(url) do
     Req.get!(
       url,
-      headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
-      redirect: true,
-      retry: false,
-      decode_body: false,
-      compressed: true,
-      connect_options: [timeout: @timeout, transport_opts: [verify: :verify_none]],
-      receive_timeout: @timeout
+      ReqUtils.get_options_for(url,
+        retry: false,
+        decode_body: false,
+        compressed: true,
+        connect_options: [timeout: @timeout],
+        receive_timeout: @timeout
+      )
     )
     |> Map.get(:body)
   end

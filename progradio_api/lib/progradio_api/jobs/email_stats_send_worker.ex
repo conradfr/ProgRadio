@@ -5,6 +5,7 @@ defmodule ProgRadioApi.EmailStatsSendWorker do
 
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, ListeningSession}
+  alias ProgRadioApi.Utils.ReqUtils
 
   @sleep_ms 500
 
@@ -21,24 +22,22 @@ defmodule ProgRadioApi.EmailStatsSendWorker do
       |> format_stats()
 
     # For now we use the main app to send mail
+    webhook_url = Application.fetch_env!(:progradio_api, :webhook_url)
+
     Req.post!(
-      Application.fetch_env!(:progradio_api, :webhook_url),
-      json: %{
-        event: "send_user_stream_stats",
-        event_id: System.os_time(:microsecond) |> Integer.to_string(),
-        user_id: args["user_id"],
-        stats: stats
-      },
-      headers: [
-        {"x-secret", Application.fetch_env!(:progradio_api, :webhook_secret)},
-        {"content-type", "application/json"}
-      ],
-      connect_options: [
-        transport_opts: [
-          middlebox_comp_mode: false,
-          verify: :verify_none
+      webhook_url,
+      ReqUtils.get_options_for(webhook_url,
+        json: %{
+          event: "send_user_stream_stats",
+          event_id: System.os_time(:microsecond) |> Integer.to_string(),
+          user_id: args["user_id"],
+          stats: stats
+        },
+        headers: [
+          {"x-secret", Application.fetch_env!(:progradio_api, :webhook_secret)},
+          {"content-type", "application/json"}
         ]
-      ]
+      )
     )
 
     :ok

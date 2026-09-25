@@ -159,9 +159,13 @@ defmodule ProgRadioApi.Importer.ImageImporter do
     filenames
     |> Enum.sort_by(
       fn f ->
-        "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{f}"
-        |> File.lstat!([{:time, :posix}])
-        |> Map.get(:mtime)
+        path = "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{f}"
+
+        # file may be gone since the ls cache was built, or have a mis-encoded name
+        case File.lstat(path, [{:time, :posix}]) do
+          {:ok, %File.Stat{mtime: mtime}} -> mtime
+          _ -> 0
+        end
       end,
       :desc
     )
@@ -207,8 +211,9 @@ defmodule ProgRadioApi.Importer.ImageImporter do
           try do
             Req.get(
               url_encoded,
-              # verify_none in default options: we have ssl errors that do not happen in a browser ...
-              ReqUtils.get_options(
+              # verify_none in default options for https: we have ssl errors that do not happen in a browser ...
+              ReqUtils.get_options_for(
+                url_encoded,
                 receive_timeout: 7500,
                 # the task timeout below would kill retries anyway
                 retry: false,
@@ -221,7 +226,8 @@ defmodule ProgRadioApi.Importer.ImageImporter do
               Logger.warning("Error downloading image (rescue): #{url} to #{dest_path}")
               {:error, nil}
           catch
-            _ ->
+            # finch/mint can exit (e.g. :badarg from :gen_tcp), an exit would also kill the caller via the task link
+            _kind, _ ->
               Logger.warning("Error downloading image (catch): #{url} to #{dest_path}")
               {:error, nil}
           end

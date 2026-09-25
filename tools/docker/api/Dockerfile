@@ -85,6 +85,12 @@ RUN apt-get update && apt-get install --no-install-recommends --no-install-sugge
 
 WORKDIR /var/progradio_api/
 
+# Without a UTF-8 locale the BEAM falls back to latin1 file name encoding, so
+# File.ls returns mojibake for non-ASCII names (e.g. "rádio" -> "rÃ¡dio") that
+# File.stat then cannot find. C.UTF-8 ships with the base image.
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
 COPY --from=builder /var/progradio_api/_build/prod/rel/prod /var/progradio_api/_build/prod/rel/prod
 
 ARG DATABASE_URL=${DATABASE_URL}

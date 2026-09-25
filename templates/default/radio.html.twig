@@ -206,7 +206,7 @@
           {% endif %}
         </div>
 
-        <div class="offset-1 offset-md-0 col-md-3 col-10">
+        <div class="offset-1 offset-md-0 col-md-3 col-10 d-none d-sm-block">
             {% if app.environment == 'prod' %}
                 <div class="sticky-md-top" style="top: 60px">
                 {{ include('_partials/adblock.html.twig', {style: random(['vertical', 'vertical2']), class: 'd-none d-sm-block'}) }}
@@ -221,8 +221,8 @@
 
 {#    {% if app.environment == 'prod' %}#}
     <div class="row">
-        <div class="col-12 pt-5 mt-5 mb-5 d-sm-none">
-            {{ include('_partials/adblock.html.twig', {'no_affil': true, style: 'horizontal', class: ''}) }}
+        <div class="col-12 pt-5 mt-5 mb-5">
+            {{ include('_partials/adblock.html.twig', {'no_affil': true, style: 'horizontal', class: 'd-block d-sm-none'}) }}
         </div>
     </div>
 {#    {% endif %}#}

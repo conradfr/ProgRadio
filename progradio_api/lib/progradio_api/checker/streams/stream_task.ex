@@ -2,6 +2,7 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
   require Logger
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream
+  alias ProgRadioApi.Utils.ReqUtils
 
   @max_redirects 5
 
@@ -93,21 +94,15 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
     try do
       case Req.get!(
              stream_url,
-             headers: [{"Cache-Control", "no-cache"}, {"Pragma", "no-cache"}],
-             redirect: true,
-             max_redirects: @max_redirects,
-             connect_options: [
-               #          timeout: @req_timeout,
-               transport_opts: [
-                 middlebox_comp_mode: false,
-                 verify: :verify_none
-               ]
-             ],
-             #        receive_timeout: @req_timeout,
-             retry: false,
-             into: fn {:data, _data}, {req, resp} ->
-               {:halt, {req, resp}}
-             end
+             ReqUtils.get_options_for(stream_url,
+               max_redirects: @max_redirects,
+               #        connect_options: [timeout: @req_timeout],
+               #        receive_timeout: @req_timeout,
+               retry: false,
+               into: fn {:data, _data}, {req, resp} ->
+                 {:halt, {req, resp}}
+               end
+             )
            ) do
         %Req.Response{status: 200, headers: %{"content-type" => ["audio/" <> _mime]}} =
             _resp ->
