@@ -12,7 +12,7 @@ defmodule ProgRadioApi.SongManager do
   @spec join(String.t(), map(), pid() | nil) :: any()
   def join(song_topic, radio_stream_data, caller_pid \\ nil)
 
-  def join("url:" <> song_topic, _params, caller_pid) do
+  def join("url:" <> song_topic, stream_data, caller_pid) do
     case Registry.lookup(SongProviderRegistry, "url:" <> song_topic) do
       [] ->
         Logger.debug("server for url #{song_topic} created")
@@ -21,7 +21,7 @@ defmodule ProgRadioApi.SongManager do
           ProgRadioApi.SongDynamicSupervisor,
           %{
             id: song_topic,
-            start: {ProgRadioApi.SongServer, :start_link, [{"url:" <> song_topic, nil, nil}]},
+            start: {ProgRadioApi.SongServer, :start_link, [{"url:" <> song_topic, nil, stream_data}]},
             restart: :temporary
           }
         )
@@ -88,6 +88,7 @@ defmodule ProgRadioApi.SongManager do
         order_by: [desc: s.score],
         limit: @most_popular_number_of_server,
         select: %{
+          stream_id: s.id,
           stream_url: s.stream_url,
           stream_song_code_name: s.stream_song_code_name,
           song_enabled: ss.enabled,
@@ -103,6 +104,7 @@ defmodule ProgRadioApi.SongManager do
   defp build_topic_and_data(%{
          song_enabled: true,
          song_code_name: song_code_name,
+         stream_id: stream_id,
          stream_song_code_name: stream_song_code_name,
          song_id: song_id
        })
@@ -110,6 +112,7 @@ defmodule ProgRadioApi.SongManager do
     topic = "song:" <> song_code_name <> "_" <> stream_song_code_name
 
     data = %{
+      stream_id: stream_id,
       radio_code_name: song_code_name,
       radio_stream_code_name: stream_song_code_name,
       id: song_id,
@@ -120,8 +123,8 @@ defmodule ProgRadioApi.SongManager do
   end
 
   # Fallback -> "url:" topic (reads the stream metadata directly)
-  defp build_topic_and_data(%{stream_url: stream_url}) when is_binary(stream_url) do
-    {"url:" <> stream_url, nil}
+  defp build_topic_and_data(%{stream_url: stream_url} = data) when is_binary(stream_url) do
+    {"url:" <> stream_url, data}
   end
 
   defp build_topic_and_data(_), do: nil

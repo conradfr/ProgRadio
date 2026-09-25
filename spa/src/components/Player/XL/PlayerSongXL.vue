@@ -28,10 +28,10 @@ export default defineComponent({
     },
   },
   data(): {
-    lastChannelTopic: string|null,
+    lastStreamId: string|null,
   } {
     return {
-      lastChannelTopic: null
+      lastStreamId: null
     }
   },
   beforeMount() {
@@ -42,8 +42,8 @@ export default defineComponent({
   },
   watch: {
     stream(_newValue, oldValue) {
-      if (oldValue && this.lastChannelTopic) {
-        this.leaveChannel(this.lastChannelTopic);
+      if (oldValue && this.lastStreamId) {
+        this.leaveChannel(this.lastStreamId);
       }
 
       this.joinChannel();
@@ -51,9 +51,6 @@ export default defineComponent({
   },
   computed: {
     ...mapState(usePlayerStore, ['liveSong']),
-    channelTopic() {
-      return PlayerUtils.getChannelName(this.stream);
-    },
     liveSongData() {
       return this.liveSong(this.stream);
     },
@@ -71,19 +68,19 @@ export default defineComponent({
     ]),
     joinChannel() {
       setTimeout(() => {
-        if (this.channelTopic) {
-          this.joinSongChannel(this.channelTopic);
-          this.lastChannelTopic = this.channelTopic;
+        if (this.stream.id) {
+          this.joinSongChannel(this.stream.id);
+          this.lastStreamId = this.stream.id;
         }
       }, 500);
     },
-    leaveChannel(channelTopic: string|null = null) {
+    leaveChannel(lastStreamId = null) {
       setTimeout(() => {
-        if (channelTopic || this.lastChannelTopic) {
-          this.leaveSongChannel(channelTopic || this.lastChannelTopic);
-          this.lastChannelTopic = null;
+        if (lastStreamId || this.lastStreamId) {
+          this.leaveSongChannel(lastStreamId || this.stream.id || this.lastStreamId);
+          this.lastStreamId = null;
         }
-      }, channelTopic ? 5 : 1000);
+      }, lastStreamId ? 5 : 1000);
     },
     gotoRadio() {
       if (!this.stream) {

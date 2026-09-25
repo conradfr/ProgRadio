@@ -86,7 +86,6 @@ export default defineComponent({
   },
   data(): {
     subRadio: Stream|null,
-    channelName: string|null
     hover: boolean,
     rootRef: HTMLElement|null,
     displayModal: boolean,
@@ -94,7 +93,6 @@ export default defineComponent({
   } {
     return {
       subRadio: null,
-      channelName: null,
       hover: false,
       rootRef: null,
       displayModal: false,
@@ -182,16 +180,12 @@ export default defineComponent({
       return `${start}-${end}`;
     },
     liveSongText(): string|null {
-      if (!this.radio.streaming_enabled) {
+      if (!this.radio.streaming_enabled || !this.subRadio) {
         return null;
       }
 
-      if (!this.channelName) {
-        this.setChannelName();
-      }
-
-      if (this.song[this.channelName] && this.song[this.channelName].song) {
-        return PlayerUtils.formatSong(this.song[this.channelName].song);
+      if (this.song[this.subRadio.id] && this.song[this.subRadio.id].song) {
+        return PlayerUtils.formatSong(this.song[this.subRadio.id].song);
       }
 
       return null;
@@ -256,25 +250,14 @@ export default defineComponent({
 
       this.activateProgramModal(this.program);
     },
-    setChannelName() {
-      this.channelName = PlayerUtils.getChannelName(this.subRadio, this.radio) || '';
-    },
     joinChannels() {
-      if (!this.channelName) {
-        this.setChannelName();
-      }
-
       setTimeout(() => {
-        this.joinSongChannel(this.channelName);
+        this.joinSongChannel(this.subRadio.id);
       }, 250 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
     leaveChannels() {
-      if (!this.channelName) {
-        this.setChannelName();
-      }
-
       setTimeout(() => {
-        this.leaveSongChannel(this.channelName);
+        this.leaveSongChannel(this.subRadio.id);
       }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
   }

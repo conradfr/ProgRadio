@@ -85,7 +85,7 @@ export default {
         stream.stream_url,
         showTitle,
         getPictureUrl(stream, radio, currentShow),
-        PlayerUtils.getChannelName(stream, radio)
+        `song_next:${stream.id}`
       );
     }
   },

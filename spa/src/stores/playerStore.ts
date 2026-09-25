@@ -118,24 +118,18 @@ export const usePlayerStore = defineStore('player', {
         return null;
       }
 
-      const channelName = PlayerUtils.getChannelName(toRaw(stream), radio ? toRaw(radio) : null);
-      // @todo find bug from app
-      if (!channelName || channelName === '') {
-        return null;
-      }
-
       if (state.song === null || state.song === undefined
-        || !Object.prototype.hasOwnProperty.call(state.song, channelName)) {
+        || !Object.prototype.hasOwnProperty.call(state.song, stream.id)) {
         return null;
       }
 
-      const formattedSong = PlayerUtils.formatSong(state.song[channelName].song);
+      const formattedSong = PlayerUtils.formatSong(state.song[stream.id].song);
 
       if (!formattedSong) {
         return null;
       }
 
-      return [PlayerUtils.formatSong(state.song[channelName].song), state.song[channelName].song.cover_url || null];
+      return [PlayerUtils.formatSong(state.song[stream.id].song), state.song[stream.id].song.cover_url || null];
     },
     currentSong(state): [string|null, string|null] | null {
       if (!state.stream) {
@@ -195,8 +189,6 @@ export const usePlayerStore = defineStore('player', {
       cache.setCache(config.LAST_RADIO_PLAYED, null);
 
       this.setPrevious({ stream });
-
-      console.log('lol');
 
       // update last listened if user is logged and is stream
       // not set in interval below to no send it at each update, may change later
@@ -525,11 +517,11 @@ export const usePlayerStore = defineStore('player', {
     leaveListenersChannel(topicName: string) {
       this.leaveChannel(`listeners:${topicName}`, topicName);
     },
-    joinSongChannel(topicName: string) {
-      this.joinChannel(topicName);
+    joinSongChannel(streamId: string) {
+      this.joinChannel(`song_next:${streamId}`);
     },
-    leaveSongChannel(topicName: string) {
-      this.leaveChannel(topicName);
+    leaveSongChannel(streamId: string) {
+      this.leaveChannel(`song_next:${streamId}`);
     },
     joinChannel(topicName: string, innerName: string|null = null) {
       // should not happen but...
@@ -669,18 +661,18 @@ export const usePlayerStore = defineStore('player', {
         return;
       }
 
-      const { topic, song } = songData;
+      const { topic, song, stream_id } = songData;
 
       if (song === null) {
-        if (topic) {
-          delete this.song[topic];
+        if (stream_id || topic) {
+          delete this.song[stream_id || topic];
         }
         return;
       }
 
       this.song = {
         ...this.song,
-        [topic]: markRaw({ topic, song })
+        [stream_id || topic]: markRaw({ topic, song })
       };
     },
     setSongHistory(songHistoryData?: any|null) {
@@ -689,18 +681,18 @@ export const usePlayerStore = defineStore('player', {
         return;
       }
 
-      const { topic, history } = songHistoryData;
+      const { topic, history, stream_id } = songHistoryData;
 
       if (!history) {
-        if (topic) {
-          delete this.song[topic];
+        if (stream_id || topic) {
+          delete this.songHistory[stream_id || topic];
         }
         return;
       }
 
       this.songHistory = {
         ...this.songHistory,
-        [topic]: markRaw({ topic, history })
+        [stream_id || topic]: markRaw({ topic, history })
       };
     },
     setListeners(songData: any|null) {

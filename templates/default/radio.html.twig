@@ -2,9 +2,7 @@
 
 {% import _self as self %}
 
-{% macro topic(sub_radio) %}
-{% if sub_radio.streamSong is not null and sub_radio.radioStreamCodeName is not null %}song:{{- sub_radio.radioStreamCodeName -}}{% else %}url:{{- sub_radio.streamUrl -}}{% endif %}
-{% endmacro %}
+{% macro topic(sub_radio) %}song_next:{{ sub_radio.id }}{% endmacro %}
 
 {% block head_supp %}
     {{ parent() }}

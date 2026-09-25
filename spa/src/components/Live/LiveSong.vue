@@ -23,8 +23,6 @@ import type { Stream } from '@/types/stream.ts';
 import { usePlayerStore } from '@/stores/playerStore.ts';
 import { useUserStore } from '@/stores/userStore.ts';
 
-import PlayerUtils from '@/utils/PlayerUtils';
-
 import PlayerSaveSong from '../Player/Common/PlayerSaveSong.vue';
 import SongLinks from '../Utils/SongLinks.vue';
 
@@ -41,24 +39,21 @@ export default defineComponent({
   },
   mounted() {
     setTimeout(() => {
-      if (this.stream && this.channelName) {
-        this.joinSongChannel(this.channelName);
+      if (this.stream) {
+        this.joinSongChannel(this.stream.id);
       }
     }, 150);
   },
   beforeUnmount() {
     setTimeout(() => {
-      if (this.stream && this.channelName) {
-        this.leaveSongChannel(this.channelName);
+      if (this.stream) {
+        this.leaveSongChannel(this.stream.id);
       }
     }, 1000);
   },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged' }),
     ...mapState(usePlayerStore, ['liveSong']),
-    channelName() {
-      return PlayerUtils.getChannelName(this.stream);
-    },
     liveSongData() {
       return this.liveSong(this.stream);
     },

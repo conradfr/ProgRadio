@@ -117,7 +117,6 @@ export default defineComponent({
   },
   data(): {
     PlayerStatus: any,
-    channelName: string,
     currentSong: string|null,
     hover: boolean,
     code_all: string,
@@ -130,11 +129,6 @@ export default defineComponent({
 
     return {
       PlayerStatus,
-      // @dodo fix null mobile app
-      channelName: PlayerUtils.getChannelName(
-          this.stream,
-          this.radio
-      ) || '',
       currentSong: null,
       hover: false,
       code_all: config.STREAMING_CATEGORY_ALL,
@@ -147,8 +141,8 @@ export default defineComponent({
     };
   },
   beforeMount() {
-    if (this.song[this.channelName] && this.song[this.channelName].song) {
-      this.currentSong = PlayerUtils.formatSong(this.song[this.channelName].song);
+    if (this.song[this.stream.id] && this.song[this.stream.id].song) {
+      this.currentSong = PlayerUtils.formatSong(this.song[this.stream.id].song);
     }
 
     this.joinChannels();
@@ -194,11 +188,11 @@ export default defineComponent({
       return this.stream.playing_error && this.stream.playing_error >= config.ERROR_DISPLAY_THRESHOLD;
     },
     liveSong() {
-      if (!Object.prototype.hasOwnProperty.call(this.song, this.channelName)) {
+      if (!Object.prototype.hasOwnProperty.call(this.song, this.stream.id)) {
         return null;
       }
 
-      return this.song[this.channelName];
+      return this.song[this.stream.id];
     },
     liveListenersCount() {
       if (!Object.prototype.hasOwnProperty.call(this.listeners, this.stream.id)) {
@@ -254,7 +248,7 @@ export default defineComponent({
     joinChannels() {
       const randomJoinMs = Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50;
       setTimeout(() => {
-        this.joinSongChannel(this.channelName);
+        this.joinSongChannel(this.stream.id);
       }, 250 + randomJoinMs);
 
       setTimeout(() => {
@@ -263,7 +257,7 @@ export default defineComponent({
     },
     leaveChannels() {
       setTimeout(() => {
-        this.leaveSongChannel(this.channelName);
+        this.leaveSongChannel(this.stream.id);
         this.leaveListenersChannel(this.stream.id);
       }, 1000 + Math.floor(Math.random() * (MAX_RANDOM_MS - 50 + 1)) + 50);
     },
