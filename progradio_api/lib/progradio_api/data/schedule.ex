@@ -100,9 +100,9 @@ defmodule ProgRadioApi.Schedule do
 
           result
           |> Enum.each(fn {k, e} when is_nil(e) == false and is_map(e) and map_size(e) > 0 ->
-#            if now == false do
-              Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
-#            end
+            #            if now == false do
+            Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
+            #            end
 
             fn {_k, _e} ->
               nil

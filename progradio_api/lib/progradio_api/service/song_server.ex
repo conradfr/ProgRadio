@@ -10,6 +10,14 @@ defmodule ProgRadioApi.SongServer do
   @max_song_history 10
   @history_ttl 60
 
+  # JSON keys restored from Redis => song map keys
+  @song_keys %{
+    "artist" => :artist,
+    "title" => :title,
+    "cover_url" => :cover_url,
+    "detected_at" => :detected_at
+  }
+
   @refresh_song_interval 10000
   @refresh_song_interval_long 20000
   @refresh_song_retries_increment 10000
@@ -182,6 +190,7 @@ defmodule ProgRadioApi.SongServer do
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error or match?({_, _, :error}, data),
          false <- song == :error do
+      song = stamp_song(song, last_song)
       broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_ids))
       updated_song_history = update_song_history(last_song, song_history, song)
 
@@ -284,7 +293,8 @@ defmodule ProgRadioApi.SongServer do
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error,
          false <- song == :error do
-      broadcast_song(name, song, Map.get(db_data || %{}, :stream_ids))
+      song = stamp_song(song, last_song)
+      broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_ids))
       updated_song_history = update_song_history(last_song, song_history, song)
 
       broadcast_song_history_if_needed(
@@ -363,6 +373,7 @@ defmodule ProgRadioApi.SongServer do
           end
       end
 
+    song = stamp_song(song, last_song)
     broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_ids))
     updated_song_history = update_song_history(last_song, state.song_history, song)
 
@@ -390,7 +401,8 @@ defmodule ProgRadioApi.SongServer do
           uniq: true,
           do: stream_id
 
-    state = put_in(state, [:db_data], Map.put(state.db_data || %{}, :stream_ids, active_stream_ids))
+    state =
+      put_in(state, [:db_data], Map.put(state.db_data || %{}, :stream_ids, active_stream_ids))
 
     case map_size(presences) do
       0 ->
@@ -434,6 +446,11 @@ defmodule ProgRadioApi.SongServer do
   end
 
   # ----- Internal -----
+
+  # never push internal markers (:indecisive, :error) to clients
+  defp broadcast_song_if_needed(_name, song, _last_song, _stream_ids)
+       when not is_map(song) and not is_nil(song),
+       do: :ok
 
   defp broadcast_song_if_needed(name, %{} = song, %{} = last_song, stream_ids)
        when song !== last_song do
@@ -596,6 +613,25 @@ defmodule ProgRadioApi.SongServer do
     Logger.debug("Updating status, no match: #{inspect(song)} - #{inspect(db_data)}")
   end
 
+  # ---------- SONG DETECTION TIME ----------
+
+  # ISO 8601 string (so live songs equal songs restored from Redis JSON)
+  @spec stamp_song(map() | atom() | nil, map() | atom() | nil) :: map() | atom() | nil
+  defp stamp_song(song, last_song)
+
+  # same song as before (ignoring the timestamp): keep its original detection time
+  defp stamp_song(%{} = song, %{} = last_song) when map_size(song) > 0 do
+    if Map.delete(song, :detected_at) == Map.delete(last_song, :detected_at),
+      do: Map.put(song, :detected_at, Map.get(last_song, :detected_at)),
+      else: Map.put(song, :detected_at, DateTime.utc_now() |> DateTime.to_iso8601())
+  end
+
+  defp stamp_song(%{} = song, _last_song) when map_size(song) > 0,
+    do: Map.put(song, :detected_at, DateTime.utc_now() |> DateTime.to_iso8601())
+
+  # nil, :error, :indecisive, %{}
+  defp stamp_song(song, _last_song), do: song
+
   # ---------- SONG HISTORY ----------
 
   @spec update_song_history(map() | nil, list, map() | nil) :: list
@@ -629,11 +665,23 @@ defmodule ProgRadioApi.SongServer do
   end
 
   defp restore_history(name) do
-    case Redix.command(:redix, ["GET", "history_" <> name]) do
-      {:ok, nil} -> []
-      {:ok, history} -> JSON.decode!(history)
+    with {:ok, history} when is_binary(history) <-
+           Redix.command(:redix, ["GET", "history_" <> name]),
+         {:ok, songs} when is_list(songs) <- JSON.decode(history) do
+      songs
+      |> Enum.filter(&is_map/1)
+      |> Enum.map(&restore_song/1)
+    else
       _ -> []
     end
+  end
+
+  # atom keys like live songs, only known keys (no atom creation from external data)
+  defp restore_song(song) do
+    for {json_key, key} <- @song_keys,
+        Map.has_key?(song, json_key),
+        into: %{},
+        do: {key, song[json_key]}
   end
 
   defp increment_interval(_base_refresh, retries) when retries >= @refresh_song_retries_max,

@@ -7,11 +7,14 @@
     <Transition name="stream-list">
     <div v-if="showHistory" class="mt-3">
       <div v-for="entry in liveSongHistory" :key="entry" class="d-flex mb-3">
-        <div v-if="entry[1]" class="me-3 history-song-cover">
+        <div class="me-3 history-song-cover">
           <img :src="entry[1]">
         </div>
         <div class="d-flex flex-column justify-content-center">
-          <div class="mb-1">{{ entry[0] }}</div>
+          <div class="mb-1">
+            <span v-if="entry[2]" class="text-muted">{{ entry[2] }}&nbsp;-</span>
+            {{ entry[0] }}
+          </div>
           <song-links :title="entry[0]" />
         </div>
       </div>
@@ -24,8 +27,11 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import { mapState } from 'pinia';
+import { DateTime } from 'luxon';
 
 import type { Stream } from '@/types/stream.ts';
+
+import { THUMBNAIL_STREAM_PLACEHOLDER } from '@/config/config';
 
 import { usePlayerStore } from '@/stores/playerStore.ts';
 
@@ -57,7 +63,11 @@ export default defineComponent({
       }
 
       return this.songHistory[this.stream.id].history.map((entry: any) => {
-        return [PlayerUtils.formatSong(entry), entry.cover_url || null]
+        const detectedAt = entry.detected_at ? DateTime.fromISO(entry.detected_at).toLocal() : null;
+        const detectedAtTime = detectedAt?.isValid ? detectedAt.toFormat('HH:mm') : null;
+        const cover = entry.cover_url || `${this.$CDN_BASE_URL}${THUMBNAIL_STREAM_PLACEHOLDER}`;
+
+        return [PlayerUtils.formatSong(entry), cover, detectedAtTime]
       });
     },
   }

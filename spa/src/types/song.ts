@@ -15,4 +15,5 @@ export interface Song {
   artist?: string|null
   title?: string|null
   cover_url?: string|null
+  detected_at?: string|null
 }
