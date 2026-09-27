@@ -98,3 +98,16 @@
 .note-title {
   font-family: sans-serif;
 }
+
+// For collapse component link
+
+.collapsed.cursor-pointer, [aria-expanded="true"].cursor-pointer {
+  &:hover {
+    color: $primary;
+  }
+}
+.toggle-icon {
+  display: inline-block;
+  transition: transform .2s ease;
+}
+[aria-expanded="true"] .toggle-icon { transform: rotate(90deg); }
