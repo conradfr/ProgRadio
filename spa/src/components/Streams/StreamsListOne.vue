@@ -294,7 +294,10 @@ export default defineComponent({
         value: config.GTAG_STREAMING_FILTER_VALUE
       });
 
-      this.countrySelection(this.stream.country_code);
+      this.$router.push({
+        name: 'streaming',
+        params: { countryOrCategoryOrUuid:this.stream.country_code, page: '1' }
+      });
     },
     tagClick(tag: string) {
       this.$gtag.event(config.GTAG_STREAMING_ACTION_TAG, {
