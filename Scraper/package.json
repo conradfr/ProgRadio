@@ -30,7 +30,8 @@
   },
   "resolutions": {
     "needle": "2.9.0",
-    "libxmljs-dom": "master"
+    "libxmljs-dom": "master",
+    "minimist": "1.2.6"
   },
   "engines": {
     "node": ">= 14.0.0",
