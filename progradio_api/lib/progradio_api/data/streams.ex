@@ -375,6 +375,7 @@ defmodule ProgRadioApi.Streams do
         force_proxy: s.force_proxy,
         tags: s.tags,
         country_code: s.country_code,
+        language: s.language,
         website: s.website,
         description: s.description,
         score: s.score,

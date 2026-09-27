@@ -178,6 +178,7 @@ export const messages = {
         random: 'Jouer une radio au hasard',
         search_placeholder: 'Chercher par nom, style, contenu ...',
         stop: 'Stopper',
+        stream_page_title: 'Écouter {radio} en direct et gratuit',
         sort: {
           name: 'Par ordre alphabétique',
           popularity: 'Par popularité',
@@ -332,6 +333,7 @@ export const messages = {
         random: 'Play a random radio',
         search_placeholder: 'Search by name, style, content ...',
         stop: 'Stop',
+        stream_page_title: '{radio} - Listen to live free streaming',
         sort: {
           name: 'By alphabetical order',
           popularity: 'By popularity',
@@ -486,6 +488,7 @@ export const messages = {
         random: 'Reproducir una radio al azar',
         search_placeholder: 'Buscar por nombre, estilo, contenido...',
         stop: 'Detener',
+        stream_page_title: '{radio} en directo y gratis',
         sort: {
           name: 'Por orden alfabético',
           popularity: 'Por popularidad',
@@ -640,6 +643,7 @@ export const messages = {
         random: 'Zufälliges Radio abspielen',
         search_placeholder: 'Nach Name, Stil, Inhalt suchen...',
         stop: 'Stoppen',
+        stream_page_title: '{radio} hören Sie live und kostenlos',
         sort: {
           name: 'Alphabetisch',
           popularity: 'Nach Beliebtheit',
@@ -794,6 +798,7 @@ export const messages = {
         random: 'Reproduzir uma rádio aleatória',
         search_placeholder: 'Procurar por nome, estilo, conteúdo...',
         stop: 'Parar',
+        stream_page_title: 'Ouça {radio} ao vivo e gratuitamente',
         sort: {
           name: 'Por ordem alfabética',
           popularity: 'Por popularidade',
@@ -948,6 +953,7 @@ export const messages = {
         random: 'Riproduci una radio casuale',
         search_placeholder: 'Cerca per nome, stile, contenuto...',
         stop: 'Ferma',
+        stream_page_title: 'Ascolta {radio} in diretta e gratuitamente',
         sort: {
           name: 'In ordine alfabetico',
           popularity: 'Per popolarità',
@@ -1102,6 +1108,7 @@ export const messages = {
         random: 'Odtwórz losowe radio',
         search_placeholder: 'Szukaj po nazwie, stylu, treści...',
         stop: 'Zatrzymaj',
+        stream_page_title: 'Słuchaj {radio} na żywo i za darmo',
         sort: {
           name: 'W porządku alfabetycznym',
           popularity: 'Wg popularności',
@@ -1256,6 +1263,7 @@ export const messages = {
         random: 'Αναπαραγωγή τυχαίου ραδιοφώνου',
         search_placeholder: 'Αναζήτηση με όνομα, στυλ, περιεχόμενο...',
         stop: 'Σταμάτα',
+        stream_page_title: 'Ακούστε {radio} ζωντανά και δωρεάν',
         sort: {
           name: 'Κατά αλφαβητική σειρά',
           popularity: 'Κατά δημοτικότητα',
@@ -1410,6 +1418,7 @@ export const messages = {
         random: 'تشغيل محطة عشوائية',
         search_placeholder: 'البحث بالاسم أو النوع أو المحتوى...',
         stop: 'إيقاف',
+        stream_page_title: 'استمع إلى {radio} مباشرة',
         sort: {
           name: 'بالترتيب الأبجدي',
           popularity: 'بالشعبية',
@@ -1564,6 +1573,7 @@ export const messages = {
         random: 'Redă un radio aleatoriu',
         search_placeholder: 'Caută după nume, stil, conținut...',
         stop: 'Oprește',
+        stream_page_title: 'Ascultă {radio} live și gratuit',
         sort: {
           name: 'În ordine alfabetică',
           popularity: 'După popularitate',
@@ -1718,6 +1728,7 @@ export const messages = {
         random: 'Véletlenszerű rádió lejátszása',
         search_placeholder: 'Keresés név, stílus, tartalom szerint...',
         stop: 'Leállítás',
+        stream_page_title: '{radio} élő hallgatása és ingyen',
         sort: {
           name: 'ABC sorrendben',
           popularity: 'Népszerűség szerint',
@@ -1872,6 +1883,7 @@ export const messages = {
         random: 'Rastgele bir radyo oynat',
         search_placeholder: 'İsim, stil, içerik ile ara...',
         stop: 'Durdur',
+        stream_page_title: '{radio} canlı ve ücretsiz dinleyin.',
         sort: {
           name: 'Alfabetik sıraya göre',
           popularity: 'Popülerliğe göre',
@@ -2026,6 +2038,7 @@ export const messages = {
         random: 'Speel een willekeurige radio af',
         search_placeholder: 'Zoeken op naam, stijl, inhoud...',
         stop: 'Stoppen',
+        stream_page_title: '{radio} luister live en gratis.',
         sort: {
           name: 'Op alfabetische volgorde',
           popularity: 'Op populariteit',

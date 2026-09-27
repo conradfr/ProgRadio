@@ -87,10 +87,13 @@
                     {% set canonical_locale = 'ro' %}
                 {% elseif 'hungarian' in stream.language %}
                     {% set canonical_locale = 'hu' %}
-                {% elseif 'turskish' in stream.language %}
+                {% elseif 'turkish' in stream.language %}
                     {% set canonical_locale = 'tr' %}
                 {% elseif 'dutch' in stream.language %}
                     {% set canonical_locale = 'nl' %}
+                {% elseif (stream.language|length == 2 or (stream.language|length > 2 and stream.language|slice(2, 1) == ','))
+                    and stream.language|slice(0, 2) in locales %}
+                    {% set canonical_locale = stream.language|slice(0, 2) %}
                 {% endif %}
             {% endif %}
 

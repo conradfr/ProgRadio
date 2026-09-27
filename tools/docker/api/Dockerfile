@@ -68,6 +68,8 @@ FROM ubuntu:jammy
 
 EXPOSE 80
 
+RUN ulimit -n 65536
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 # libicu70 backs the ex_cldr_collation NIF compiled in the builder stage.
