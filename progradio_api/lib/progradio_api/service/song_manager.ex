@@ -13,6 +13,7 @@ defmodule ProgRadioApi.SongManager do
   def join(song_topic, radio_stream_data, caller_pid \\ nil)
 
   def join("url:" <> song_topic, stream_data, caller_pid) do
+    # check if process already exist
     case Registry.lookup(SongProviderRegistry, "url:" <> song_topic) do
       [] ->
         Logger.debug("server for url #{song_topic} created")
@@ -26,14 +27,16 @@ defmodule ProgRadioApi.SongManager do
             restart: :temporary
           }
         )
+        |> join_if_already_started(stream_data, caller_pid)
 
       [{pid, _value}] ->
         Logger.debug("server for url #{song_topic} already exists")
-        if caller_pid != nil, do: GenServer.cast(pid, {:send_last_song_to, caller_pid})
+        join_existing_server(pid, stream_data, caller_pid)
     end
   end
 
   def join(song_topic, radio_stream_data, caller_pid) do
+    # check if process already exist
     case Registry.lookup(SongProviderRegistry, song_topic) do
       [] ->
         Logger.debug("server for topic #{song_topic} created")
@@ -43,11 +46,32 @@ defmodule ProgRadioApi.SongManager do
           {ProgRadioApi.SongServer,
            {song_topic, radio_stream_data.radio_code_name, radio_stream_data}}
         )
+        |> join_if_already_started(radio_stream_data, caller_pid)
 
       [{pid, _value}] ->
         Logger.debug("server for topic #{song_topic} already exists")
-        if caller_pid != nil, do: GenServer.cast(pid, {:send_last_song_to, caller_pid})
+        join_existing_server(pid, radio_stream_data, caller_pid)
     end
+  end
+
+  # another join started the server between the registry lookup and start_child
+  defp join_if_already_started({:error, {:already_started, pid}}, stream_data, caller_pid),
+    do: join_existing_server(pid, stream_data, caller_pid)
+
+  defp join_if_already_started(result, _stream_data, _caller_pid), do: result
+
+  # stream data is nil for the old "url:" channel
+  @spec join_existing_server(pid(), map() | nil, pid() | nil) :: :ok
+  defp join_existing_server(pid, stream_data, caller_pid) do
+    stream_ids = (stream_data || %{}) |> Map.get(:stream_ids) |> List.wrap()
+
+    # the server may have been started by another stream sharing the same topic
+    Enum.each(stream_ids, &GenServer.cast(pid, {:add_stream_id, &1}))
+
+    if caller_pid != nil,
+      do: GenServer.cast(pid, {:send_last_song_to, caller_pid, List.first(stream_ids)})
+
+    :ok
   end
 
   # Pre-warms the SongServer for the most popular streams
@@ -89,7 +113,7 @@ defmodule ProgRadioApi.SongManager do
         order_by: [desc: s.score],
         limit: @most_popular_number_of_server,
         select: %{
-          stream_id: s.id,
+          stream_ids: [s.id],
           stream_url: s.stream_url,
           stream_song_code_name: s.stream_song_code_name,
           song_enabled: ss.enabled,
@@ -105,7 +129,7 @@ defmodule ProgRadioApi.SongManager do
   defp build_topic_and_data(%{
          song_enabled: true,
          song_code_name: song_code_name,
-         stream_id: stream_id,
+         stream_ids: stream_ids,
          stream_song_code_name: stream_song_code_name,
          song_id: song_id
        })
@@ -113,7 +137,7 @@ defmodule ProgRadioApi.SongManager do
     topic = "song:" <> song_code_name <> "_" <> stream_song_code_name
 
     data = %{
-      stream_id: stream_id,
+      stream_ids: stream_ids,
       radio_code_name: song_code_name,
       radio_stream_code_name: stream_song_code_name,
       id: song_id,

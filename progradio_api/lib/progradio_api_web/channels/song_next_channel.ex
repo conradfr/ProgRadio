@@ -39,6 +39,7 @@ defmodule ProgRadioApiWeb.SongNextChannel do
   def handle_info({:after_join, song_topic, stream_data}, socket) do
     {:ok, _} =
       Presence.track(self(), song_topic, :rand.uniform(), %{
+        stream_id: List.first(stream_data.stream_ids),
         online_at: inspect(System.system_time(:second))
       })
 
@@ -73,7 +74,7 @@ defmodule ProgRadioApiWeb.SongNextChannel do
         left_join: ss in StreamSong,
         on: ss.id == s.stream_song_id and ss.enabled == true,
         select: %{
-          stream_id: s.id,
+          stream_ids: [s.id],
           stream_url: s.stream_url,
           stream_song_code_name: ss.code_name,
           stream_song_stream_code_name: s.stream_song_code_name,

@@ -100,16 +100,31 @@ defmodule ProgRadioApi.SongServer do
   end
 
   @impl true
-  def handle_cast({:send_last_song_to, pid}, state) do
+  def handle_cast({:send_last_song_to, pid, stream_id}, state) do
+    name = if !is_nil(stream_id), do: "song_next:" <> stream_id, else: state.name
+
     data = %{
       topic: state.name,
-      name: state.name,
+      name: name,
       song: state.song,
-      stream_id: Map.get(state.db_data || %{}, :stream_id)
+      stream_id: stream_id
     }
 
     send(pid, {:push_song, "playing", data})
     {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:add_stream_id, stream_id}, state) do
+    db_data = state.db_data || %{}
+
+    # List.wrap: nil -> [], single id -> [id]
+    stream_ids = db_data |> Map.get(:stream_ids) |> List.wrap()
+
+    stream_ids =
+      if stream_id in stream_ids, do: stream_ids, else: stream_ids ++ [stream_id]
+
+    {:noreply, %{state | db_data: Map.put(db_data, :stream_ids, stream_ids)}}
   end
 
   # auto refresh
@@ -167,14 +182,14 @@ defmodule ProgRadioApi.SongServer do
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error or match?({_, _, :error}, data),
          false <- song == :error do
-      broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_id))
+      broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_ids))
       updated_song_history = update_song_history(last_song, song_history, song)
 
       broadcast_song_history_if_needed(
         name,
         updated_song_history,
         song_history,
-        Map.get(db_data || %{}, :stream_id)
+        Map.get(db_data || %{}, :stream_ids)
       )
 
       update_status(song, db_data)
@@ -193,7 +208,10 @@ defmodule ProgRadioApi.SongServer do
         |> Kernel.+(Enum.random(-5000..5000))
         |> increment_interval(updated_retries)
 
-      how_many_connected = how_many_connected(name)
+      how_many_connected =
+        name
+        |> Presence.list()
+        |> map_size()
 
       Logger.debug(
         "Data provider - #{name}: song updated (timer, next: #{trunc(next_refresh / 1000)}s, retries: #{updated_retries}) - #{how_many_connected} clients connected"
@@ -230,7 +248,7 @@ defmodule ProgRadioApi.SongServer do
        }, :hibernate}
     else
       _ ->
-        broadcast_song(name, nil, Map.get(db_data || %{}, :stream_id))
+        broadcast_song(name, nil, Map.get(db_data || %{}, :stream_ids))
 
         # quitting if delay reached since last successful attempt
         if SongProvider.now_unix() - last_timestamp > @max_seconds_errors_before_quitting do
@@ -266,14 +284,14 @@ defmodule ProgRadioApi.SongServer do
          updated_retries <- get_updated_retries(name, song, retries),
          false <- data == :error,
          false <- song == :error do
-      broadcast_song(name, song, Map.get(db_data || %{}, :stream_id))
+      broadcast_song(name, song, Map.get(db_data || %{}, :stream_ids))
       updated_song_history = update_song_history(last_song, song_history, song)
 
       broadcast_song_history_if_needed(
         name,
         updated_song_history,
         song_history,
-        Map.get(db_data || %{}, :stream_id)
+        Map.get(db_data || %{}, :stream_ids)
       )
 
       update_status(song, db_data)
@@ -345,14 +363,14 @@ defmodule ProgRadioApi.SongServer do
           end
       end
 
-    broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_id))
+    broadcast_song_if_needed(name, song, last_song, Map.get(db_data || %{}, :stream_ids))
     updated_song_history = update_song_history(last_song, state.song_history, song)
 
     broadcast_song_history_if_needed(
       name,
       updated_song_history,
       state.song_history,
-      Map.get(db_data || %{}, :stream_id)
+      Map.get(db_data || %{}, :stream_ids)
     )
 
     update_status(song, state.db_data)
@@ -363,9 +381,18 @@ defmodule ProgRadioApi.SongServer do
 
   @impl true
   def handle_info(:presence, %{name: name} = state) do
-    how_many_connected = how_many_connected(name)
+    presences = Presence.list(name)
 
-    case how_many_connected do
+    active_stream_ids =
+      for {_key, %{metas: metas}} <- presences,
+          %{stream_id: stream_id} <- metas,
+          not is_nil(stream_id),
+          uniq: true,
+          do: stream_id
+
+    state = put_in(state, [:db_data], Map.put(state.db_data || %{}, :stream_ids, active_stream_ids))
+
+    case map_size(presences) do
       0 ->
         # most popular streams are pre-warmed and must stay alive without clients
         if SongManager.persistent_topic?(name) do
@@ -381,13 +408,13 @@ defmodule ProgRadioApi.SongServer do
 
           {:noreply, state}
         else
-          broadcast_song(name, nil, Map.get(state.db_data || %{}, :stream_id))
+          broadcast_song(name, nil, Map.get(state.db_data || %{}, :stream_ids))
           Logger.info("Data provider - #{name}: no client connected, exiting")
           kill_push_process_if_any(state.push_pid)
           {:stop, :normal, nil}
         end
 
-      _ ->
+      how_many_connected ->
         Logger.debug("Data provider - #{name}: #{how_many_connected} clients connected")
 
         Process.send_after(
@@ -408,54 +435,57 @@ defmodule ProgRadioApi.SongServer do
 
   # ----- Internal -----
 
-  defp broadcast_song_if_needed(name, %{} = song, %{} = last_song, stream_id)
+  defp broadcast_song_if_needed(name, %{} = song, %{} = last_song, stream_ids)
        when song !== last_song do
-    broadcast_song(name, song, stream_id)
+    broadcast_song(name, song, stream_ids)
   end
 
-  defp broadcast_song_if_needed(name, song, _last_song, stream_id) do
+  defp broadcast_song_if_needed(name, song, _last_song, stream_ids) do
     # as safety, still broadcast % of the time
-    if :rand.uniform(10) > 7, do: broadcast_song(name, song, stream_id)
+    if :rand.uniform(10) > 7, do: broadcast_song(name, song, stream_ids)
 
     Logger.debug("Data provider - #{name}: song updated, no broadcast")
   end
 
-  @spec broadcast_song(String.t(), map() | nil, map() | nil) :: none()
-  defp broadcast_song(name, song, stream_id) do
-    data = %{topic: name, name: name, song: song, stream_id: stream_id}
+  @spec broadcast_song(String.t(), map() | nil, [String.t()] | nil) :: none()
+  defp broadcast_song(name, song, stream_ids) do
+    data = %{topic: name, name: name, song: song}
 
     # compat for old & new song channel
-    name =
-      if !is_nil(stream_id) do
-        "song_next:" <> stream_id
-      else
-        name
-      end
-
-    ProgRadioApiWeb.Endpoint.broadcast!(
-      name,
-      "playing",
-      data
-    )
+    if !is_nil(stream_ids) and is_list(stream_ids) and stream_ids != [] do
+      Enum.each(stream_ids, fn stream_id ->
+        ProgRadioApiWeb.Endpoint.broadcast!(
+          "song_next:" <> stream_id,
+          "playing",
+          Map.put(data, :stream_id, stream_id)
+        )
+      end)
+    else
+      ProgRadioApiWeb.Endpoint.broadcast!(
+        name,
+        "playing",
+        data
+      )
+    end
   end
 
-  defp broadcast_song_history_if_needed(name, song_history, _last_song_history, stream_id)
+  defp broadcast_song_history_if_needed(name, song_history, _last_song_history, stream_ids)
        when length(song_history) < @max_song_history do
-    broadcast_song_history(name, song_history, stream_id)
+    broadcast_song_history(name, song_history, stream_ids)
   end
 
-  defp broadcast_song_history_if_needed(name, song_history, last_song_history, stream_id) do
+  defp broadcast_song_history_if_needed(name, song_history, last_song_history, stream_ids) do
     case song_history -- last_song_history do
       [] ->
         Logger.debug("Data provider - #{name}: song history updated, no broadcast")
 
       _ ->
-        broadcast_song_history(name, song_history, stream_id)
+        broadcast_song_history(name, song_history, stream_ids)
     end
   end
 
-  @spec broadcast_song_history(String.t(), list, String.t() | nil) :: none()
-  defp broadcast_song_history(name, song_history, stream_id) do
+  @spec broadcast_song_history(String.t(), list, [String.t()] | nil) :: none()
+  defp broadcast_song_history(name, song_history, stream_ids) do
     Redix.command!(:redix, [
       "SET",
       "history_" <> name,
@@ -464,21 +494,24 @@ defmodule ProgRadioApi.SongServer do
       @history_ttl
     ])
 
+    data = %{name: name, history: song_history, topic: name}
+
     # compat for old & new song channel
-    name =
-      if !is_nil(stream_id) do
-        "song_next:" <> stream_id
-      else
-        name
-      end
-
-    data = %{name: name, history: song_history, topic: name, stream_id: stream_id}
-
-    ProgRadioApiWeb.Endpoint.broadcast!(
-      name,
-      "song_history",
-      data
-    )
+    if !is_nil(stream_ids) and is_list(stream_ids) and stream_ids != [] do
+      Enum.each(stream_ids, fn stream_id ->
+        ProgRadioApiWeb.Endpoint.broadcast!(
+          "song_next:" <> stream_id,
+          "song_history",
+          Map.put(data, :stream_id, stream_id)
+        )
+      end)
+    else
+      ProgRadioApiWeb.Endpoint.broadcast!(
+        name,
+        "song_history",
+        data
+      )
+    end
   end
 
   @spec get_data_song_task(atom(), String.t(), atom(), map() | nil, map() | nil) :: tuple()
@@ -601,15 +634,6 @@ defmodule ProgRadioApi.SongServer do
       {:ok, history} -> JSON.decode!(history)
       _ -> []
     end
-  end
-
-  # ---------- CONNECTED ----------
-
-  defp how_many_connected(topic), do: how_many_connected_stream(topic)
-
-  defp how_many_connected_stream(topic) do
-    Presence.list(topic)
-    |> Kernel.map_size()
   end
 
   defp increment_interval(_base_refresh, retries) when retries >= @refresh_song_retries_max,

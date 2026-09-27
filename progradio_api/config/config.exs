@@ -33,10 +33,10 @@ config :progradio_api, ProgRadioApi.Scheduler,
       schedule: "12 */1 * * *",
       task: {ProgRadioApi.AutoUpdater.Streams, :auto_update, []}
     ],
-#    import_radiobrowser: [
-#      schedule: "10 02 */10 * *",
-#      task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import, []}
-#    ],
+    #    import_radiobrowser: [
+    #      schedule: "10 02 */10 * *",
+    #      task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import, []}
+    #    ],
     import_lautfm: [
       schedule: "22 04 */10 * *",
       task: {ProgRadioApi.Importer.StreamsImporter.Lautfm, :import, []}
