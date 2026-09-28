@@ -182,18 +182,21 @@ export const useUserStore = defineStore('user', {
       this.subRadios[radioCodeName] = subRadioCodeName;
       cookies.set(COOKIE_SUBRADIOS, this.subRadios);
     },
-    async addSong(song: string) {
+    async addSong(song: string, streamId: string) {
       const globalStore = useGlobalStore();
 
-      const savedSong = await UserApi.saveSong(song);
+      const savedSong = await UserApi.saveSong(song, streamId);
 
-      if (savedSong !== null && savedSong.status === 'OK') {
+      // TODO better handle duplicates
+      if (savedSong !== null) {
         globalStore.displayToast({
           message: i18n.global.t('message.player.song_saved'),
           type: 'success'
         });
 
-        this.songs[savedSong.id] = song;
+        if (savedSong.status === 'OK') {
+          this.songs[savedSong.id] = savedSong.song;
+        }
       } else {
         globalStore.displayToast({
           message: i18n.global.t('message.generic.error'),

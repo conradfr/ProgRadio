@@ -14,7 +14,7 @@
         </div>
         <div class="d-flex flex-column justify-content-center">
           <div class="mb-1">
-            <span v-if="entry[2]" class="text-muted">{{ entry[2] }}&nbsp;-</span>
+            <span v-if="entry[2]" class="text-muted">{{ formatTime(entry[2]) }}&nbsp;-</span>
             {{ entry[0] }}
           </div>
           <song-links :title="entry[0]" />
@@ -28,11 +28,12 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import { mapState } from 'pinia';
-import { DateTime } from 'luxon';
 
 import type { Stream } from '@/types/stream.ts';
 
 import { THUMBNAIL_STREAM_PLACEHOLDER } from '@/config/config';
+
+import formatDateTimeMixin from '@/mixins/formatDateTimeMixin'
 
 import { usePlayerStore } from '@/stores/playerStore.ts';
 
@@ -49,6 +50,7 @@ export default defineComponent({
       required: true
     },
   },
+  mixins: [formatDateTimeMixin],
   computed: {
     ...mapState(usePlayerStore, ['songHistory']),
     liveSongHistory() {
@@ -57,11 +59,8 @@ export default defineComponent({
       }
 
       return this.songHistory[this.stream.id].history.map((entry: any) => {
-        const detectedAt = entry.detected_at ? DateTime.fromISO(entry.detected_at).toLocal() : null;
-        const detectedAtTime = detectedAt?.isValid ? detectedAt.toFormat('HH:mm') : null;
         const cover = entry.cover_url || `${this.$CDN_BASE_URL}${THUMBNAIL_STREAM_PLACEHOLDER}`;
-
-        return [PlayerUtils.formatSong(entry), cover, detectedAtTime]
+        return [PlayerUtils.formatSong(entry), cover, entry.detected_at];
       });
     },
   }

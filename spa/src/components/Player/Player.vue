@@ -30,7 +30,7 @@
         <PlayerSongXL v-if="stream" :stream="stream" />
         <div class="player-actions-xl d-flex justify-content-end">
           <PlayerVolumeXL v-if="!externalPlayer" :muted="muted" @toggleMute="() => toggleMute()" />
-          <PlayerSaveSong />
+          <PlayerSaveSong :stream="stream" />
           <PlayerFavorite v-if="stream" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
             @favoriteToggle="() => favoriteToggle()" />
           <timer></timer>
@@ -75,7 +75,7 @@
         />
         <PlayerInfoRolling v-if="stream" :stream="stream" :radio="radio" :show="show" />
         <Transition name="timer-fade" mode="out-in">
-          <PlayerSaveSong v-if="userLogged && currentSong && currentSong[0]" />
+          <PlayerSaveSong v-if="userLogged && currentSong && currentSong[0]" :stream="stream" />
         </Transition>
         <div v-if="!stream" class="player-name player-name-help">
           {{ $t('message.player.placeholder') }}

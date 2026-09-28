@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Intl\Countries;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -791,23 +792,44 @@ class DefaultController extends AbstractBaseController
         ]);
     }
 
-    #[Route('/user/song/add/{song}', name: 'user_add_song')]
+    #[Route('/user/song/add/{song}/{stream}', name: 'user_add_song', requirements: ['stream' => Requirement::UUID], methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function addSong(string $song, EntityManagerInterface $em): Response
+    public function addSong(string $song, EntityManagerInterface $em, ?Stream $stream = null): Response
     {
         /** @var User $user */
         $user = $this->getUser();
+
+        $existingUserSong = $em->getRepository(UserSong::class)->findOneBy(['user' => $user, 'song' => $song]);
+
+        if ($existingUserSong !== null) {
+            return $this->jsonResponse([
+                'status' => 'DUPLICATE',
+                'id' => 's' . $existingUserSong->getId()
+            ]);
+        }
 
         $userSong = new UserSong();
         $userSong->setUser($user);
         $userSong->setSong($song);
 
+        if ($stream !== null) {
+            $userSong->setStream($stream);
+        }
+
         $em->persist($userSong);
         $em->flush();
 
+        $userSongExport = [
+            'title' => $userSong->getSong(),
+            'stream_id' => $userSong?->getStream()?->getId(),
+            'stream_name' => $userSong?->getStream()?->getName(),
+            'added_at' => $userSong->getCreatedAt()->format(\DateTime::ATOM),
+        ];
+
         return $this->jsonResponse([
             'status' => 'OK',
-            'id' => 's' . $userSong->getId()
+            'id' => 's' . $userSong->getId(),
+            'song' => $userSongExport
         ]);
     }
 

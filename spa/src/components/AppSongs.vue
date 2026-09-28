@@ -7,16 +7,24 @@
         <table v-if="Object.keys(songs).length > 0" class="table table-striped table-songs">
           <tbody>
             <tr v-for="(song, index) in songs" :key="index">
-              <td class="ps-3" style="width: 60%;">{{ song }}</td>
+              <td class="ps-3" style="width: 40%;">{{ song.title }}</td>
+              <td style="width: 13%;" class="text-center">
+                {{ formatDate(song.added_at) }}
+              </td>
+              <td style="width: 20%;" class="text-center">
+                <a v-if="song.stream_id" class="cursor-pointer" @click="streamClick(song.stream_id)">
+                  {{ song.stream_name }}
+                </a>
+              </td>
               <td style="width: 25%;">
-                <song-links :title="song" additional-class="d-flex justify-content-center streaming-services" />
+                <SongLinks :title="song.title" additional-class="d-flex justify-content-center streaming-services" />
               </td>
               <td class="text-end pe-3" style="width: 13%;">
-                <a class="link-no-to-bold" @click="removeSong(index)">
-                  <i class="bi bi-trash3-fill"></i>&nbsp;&nbsp;
-                  <span class="d-none d-sm-inline">
-                    {{ $t('message.generic.delete') }}
-                  </span>
+                <a class="link-no-to-bold" @click="removeSong(index)" :title="$t('message.generic.delete')">
+                  <i class="bi bi-trash3-fill link-danger"></i>&nbsp;&nbsp;
+<!--                  <span class="d-none d-sm-inline">-->
+<!--                    {{ $t('message.generic.delete') }}-->
+<!--                  </span>-->
                 </a>
               </td>
             </tr>
@@ -40,6 +48,8 @@
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
+import formatDateTimeMixin from '@/mixins/formatDateTimeMixin';
+
 import { useUserStore } from '@/stores/userStore';
 
 import SongLinks from './Utils/SongLinks.vue';
@@ -54,6 +64,7 @@ export default defineComponent({
   components: {
     SongLinks
   },
+  mixins: [formatDateTimeMixin],
   mounted() {
     document.title = this.$t('message.songs_page.title');
   },
@@ -62,6 +73,12 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(useUserStore, ['deleteSong']),
+    streamClick(streamId: string) {
+      this.$router.push({
+        name: 'streaming',
+        params: { countryOrCategoryOrUuid: streamId, page: null }
+      });
+    },
     removeSong(songId: number) {
       this.deleteSong(songId);
 

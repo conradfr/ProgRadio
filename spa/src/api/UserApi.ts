@@ -13,8 +13,8 @@ const getUserData = async (): Promise<GetUserResponse | null> => {
   return null;
 };
 
-const saveSong = async (song: string): Promise<any | null> => {
-  const response = await fetch(`/user/song/add/${song}`);
+const saveSong = async (song: string, streamId: string): Promise<any | null> => {
+  const response = await fetch(`/user/song/add/${song}/${streamId}`);
 
   apiUtils.checkLogged(response);
 

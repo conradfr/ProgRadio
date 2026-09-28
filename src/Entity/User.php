@@ -286,8 +286,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $songs = [];
         /** @var UserSong $usersong */
-        foreach ($this->userSongs->toArray() as $usersong) {
-            $songs['s' . ((string) $usersong->getId())] = $usersong->getSong();
+        foreach ($this->userSongs->toArray() as $userSong) {
+            $songs['s' . ((string) $userSong->getId())] = [
+                'title' => $userSong->getSong(),
+                'stream_id' => $userSong?->getStream()?->getId(),
+                'stream_name' => $userSong?->getStream()?->getName(),
+                'added_at' => $userSong->getCreatedAt()->format(\DateTime::ATOM),
+            ];
         }
 
         return $songs;

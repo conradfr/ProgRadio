@@ -18,8 +18,6 @@ import type { Stream } from '@/types/stream';
 
 import { usePlayerStore } from '@/stores/playerStore';
 
-import PlayerUtils from '@/utils/PlayerUtils';
-
 export default defineComponent({
   props: {
     stream: {

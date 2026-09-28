@@ -59,7 +59,7 @@ class ScheduleEntry
 
     #[ORM\ManyToOne(targetEntity: Stream::class)]
     #[ORM\JoinColumn(name: 'stream_id', referencedColumnName: 'id')]
-    private ?stream $stream = null;
+    private ?Stream $stream = null;
 
     public function __construct() {
         $this->sectionEntries = new ArrayCollection();

@@ -6,7 +6,7 @@
     <div class="d-flex flex-column justify-content-center flex-grow-1">
       <div class="mb-3 d-flex">
         <strong>{{ $t('message.streaming.playing') }}:</strong>&nbsp;&nbsp;<span class="note-title">♫</span>&nbsp;{{ liveSongTitle }}&nbsp;&nbsp;
-        <player-save-song v-if="userLogged" />
+        <PlayerSaveSong v-if="userLogged" :stream="stream" />
       </div>
       <song-links :title="liveSongTitle" />
     </div>

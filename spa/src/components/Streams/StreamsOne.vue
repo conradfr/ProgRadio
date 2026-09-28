@@ -166,6 +166,35 @@ export default defineComponent({
   beforeUnmount() {
     this.headCleanup?.();
   },
+  watch: {
+    // stream changes on codeName change (component reused) and once stream data is loaded
+    stream: {
+      handler(stream: Stream|null) {
+        this.headCleanup?.();
+        this.headCleanup = null;
+
+        if (!stream) {
+          return;
+        }
+
+        const tags = [
+          ...canonicalHeadTags(stream.language),
+          { tag: 'meta', attrs: {
+              property: 'og:title',
+              content: this.$t('message.streaming.stream_page_title', { radio: stream.name })
+            } },
+          { tag: 'meta', attrs: { property: 'og:url', content: window.location.href } },
+        ] as Parameters<typeof setHeadTags>[0];
+
+        if (this.img) {
+          tags.push({ tag: 'meta', attrs: { property: 'og:image', content: this.img } });
+        }
+
+        this.headCleanup = setHeadTags(tags);
+      },
+      immediate: true
+    }
+  },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged', userIsAdmin: 'isAdmin' }),
     ...mapState(useStreamsStore, ['selectedCountry', 'getOneStream', 'getCountryName', 'page']),
@@ -188,35 +217,6 @@ export default defineComponent({
     },
     pauseImage() {
       return `${this.$CDN_BASE_URL}img/rounded-pause-button.svg`;
-    }
-  },
-  watch: {
-    // stream changes on codeName change (component reused) and once stream data is loaded
-    stream: {
-      handler(stream: Stream|null) {
-        this.headCleanup?.();
-        this.headCleanup = null;
-
-        if (!stream) {
-          return;
-        }
-
-        const tags = [
-          ...canonicalHeadTags(stream.language),
-          { tag: 'meta', attrs: {
-            property: 'og:title',
-            content: this.$t('message.streaming.stream_page_title', { radio: stream.name })
-          } },
-          { tag: 'meta', attrs: { property: 'og:url', content: window.location.href } },
-        ] as Parameters<typeof setHeadTags>[0];
-
-        if (this.img) {
-          tags.push({ tag: 'meta', attrs: { property: 'og:image', content: this.img } });
-        }
-
-        this.headCleanup = setHeadTags(tags);
-      },
-      immediate: true
     }
   },
   methods: {

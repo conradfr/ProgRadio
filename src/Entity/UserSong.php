@@ -26,6 +26,10 @@ class UserSong
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private User $user;
 
+    #[ORM\ManyToOne(targetEntity: Stream::class)]
+    #[ORM\JoinColumn(name: 'stream_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Stream $stream = null;
+
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $createdAt = null;
@@ -47,6 +51,16 @@ class UserSong
     public function setUser($user): void
     {
         $this->user = $user;
+    }
+
+    public function getStream(): ?Stream
+    {
+        return $this->stream;
+    }
+
+    public function setStream(?Stream $stream): void
+    {
+        $this->stream = $stream;
     }
 
     public function getCreatedAt(): \DateTime
