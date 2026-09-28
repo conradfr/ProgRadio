@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import cache from '../../lib/cache.js';
 import logger from '../../lib/logger.js';
+import utils from '../../lib/utils.js';
 
 const dayFr = {
   'Lundi': 1,
@@ -145,8 +146,8 @@ const format = async (dateObj, name) => {
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'img': `https://www.banquisefm.com${entry.img}`,
-      'title': entry.title.trim(),
+      'img': entry.img,
+      'title': utils.upperCaseWords(entry.title.trim()),
       'description': entry.description ? entry.description.trim() : null,
     };
 
