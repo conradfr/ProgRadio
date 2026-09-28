@@ -1,65 +1,115 @@
 const osmosis = require('osmosis');
 let moment = require('moment-timezone');
 const logger = require('../../lib/logger.js');
-const utils = require('../../lib/utils');
 
 let scrapedData = [];
 
-// Radio was renamed Europe2 on 01/01/2023
-// Keeping old code_name for now
+const dayFr = {
+  'Lundi': 1,
+  'Mardi': 2,
+  'Mercredi': 3,
+  'Jeudi': 4,
+  'Vendredi': 5,
+  'Samedi': 6,
+  'Dimanche': 7
+};
 
 const format = dateObj => {
-  // we use reduce instead of map to act as a map+filter in one pass
-  const cleanedData = scrapedData.reduce(function (prev, curr, index, array) {
+  dateObj.tz('Europe/Paris');
+  dateObj.locale('fr');
 
-    // Time
-    regexp = new RegExp(/([0-9]{1,2})[h|H]([0-9]{0,2})\s[à|–]\s([0-9]{1,2})[h|H]([0-9]{0,2})/);
-    let match_time = curr.datetime_raw.match(regexp);
-
-    // no time, exit
-    if (match_time === null) {
+  const cleanedData = scrapedData.reduce(function (prev, entry) {
+    // this show is more a section that is not correctly listed, remove it for now
+    if (entry.title === 'La Story') {
       return prev;
     }
 
-    const startDateTime = moment(curr.dateObj);
-    const endDateTime = moment(curr.dateObj);
+    let time = [];
 
-    // Should not have next day end by let's ignore if any
-    if (match_time[1] > match_time[3]) {
+    let regexp = new RegExp(/^Du\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)\sau\s(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+    let match = entry.datetime_raw.match(regexp);
+
+    if (match === null) {
+      // maybe it's weekend
+      regexp = new RegExp(/^Le week-end, de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+      match = entry.datetime_raw.match(regexp);
+
+      if (match !== null) {
+        // not week-end ?
+        const dayNum = dateObj.isoWeekday();
+        if (dayNum !== 6 && dayNum !== 7) {
+          return prev;
+        }
+
+        time = [match[1], match[2], match[3], match[4]];
+      }
+    } else {
+      // not in day interval
+      const dayNum = dateObj.isoWeekday();
+      if (dayNum < dayFr[match[1]] || dayNum > dayFr[match[2]]) {
+        return prev;
+      }
+
+      time = [match[3], match[4], match[5], match[6]];
+    }
+
+    // maybe it's a list of days, e.g. "Lundi, Mardi, Jeudi et Dimanche, de 16:00 à 17:00"
+    if (match === null) {
+      regexp = new RegExp(/^((?:Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)(?:(?:,\s|\set\s)(?:Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche))+),\sde\s([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+      match = entry.datetime_raw.match(regexp);
+
+      if (match !== null) {
+        // not one of the listed days ?
+        const dayNum = dateObj.isoWeekday();
+        const days = match[1].split(/,\s|\set\s/).map(d => dayFr[d]);
+        if (!days.includes(dayNum)) {
+          return prev;
+        }
+
+        time = [match[2], match[3], match[4], match[5]];
+      }
+    }
+
+    // maybe it's just one day
+    if (match === null) {
+      regexp = new RegExp(/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche), de ([0-9]{1,2})[:]([0-9]{2})\sà\s([0-9]{1,2})[:]([0-9]{2})/);
+      match = entry.datetime_raw.match(regexp);
+
+      if (match === null) {
+        return prev;
+      }
+
+      const dayNum = dateObj.isoWeekday();
+      if (dayNum !==  dayFr[match[1]]) {
+        return prev;
+      }
+
+      time = [match[2], match[3], match[4], match[5]];
+    }
+
+    let startDateTime = moment(dateObj);
+    startDateTime.hour(time[0]);
+    startDateTime.minute(time[1]);
+    startDateTime.second(0);
+
+    endDateTime = moment(dateObj);
+    endDateTime.hour(time[2]);
+    endDateTime.minute(time[3]);
+    endDateTime.second(0);
+
+    // end at midnight etc
+    if (time[2] < time[0]) {
       endDateTime.add(1, 'days');
     }
 
-    startDateTime.hour(match_time[1]);
-    if (match_time[2] !== '') {
-      startDateTime.minute(match_time[2]);
-    } else {
-      startDateTime.minute(0);
-    }
-
-    endDateTime.hour(match_time[3]);
-    if (match_time[4] !== '') {
-      endDateTime.minute(match_time[4]);
-    } else {
-      endDateTime.minute(0);
-    }
-
-    startDateTime.second(0);
-    endDateTime.second(0);
-
-    newEntry = {
+    const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'img': curr.img,
-      'title': curr.title
+      'img': `http://lessentielradio.lu${entry.img}`,
+      'title': entry.title,
+      'host': entry.host.join(', '),
+      'description': entry.description.join(' '),
     };
-
-    if (curr.host.length > 11) {
-      newEntry.host = curr.host.substr(11)
-        .replace(/ , /g, ', ')
-        .replace(' sur Virgin Radio', '')
-        .replace(' - Virgin Tonic', '')
-        .trim();
-    }
 
     prev.push(newEntry);
     return prev;
@@ -69,32 +119,41 @@ const format = dateObj => {
 };
 
 const fetch = dateObj => {
-    dateObj.locale('fr');
-    const day = utils.upperCaseWords(dateObj.format('dddd'));
+  const url = 'https://www.europe2.fr/programmes';
 
-    let url = 'https://www.europe2.fr/programmes';
+  logger.log('info', `fetching ${url}`);
 
-    logger.log('info', `fetching ${url} (${day})`);
-
-    return new Promise(function (resolve, reject) {
-      return osmosis
-        .get(url)
-        .find(`#${day}`)
-        .select('.row.podcasts-single')
-        .set({
-          'datetime_raw': '.podcasts-single-term-date',
-          'img': 'img.podcasts-single-term-infos-thumb@src',
-          'title': '.podcasts-single-term-title > a',
-          'host': '.podcasts-single-term-infos-content > p'
-        })
-        .data(function (listing) {
-          listing.dateObj = dateObj;
-          scrapedData.push(listing);
-        })
-        .done(function () {
-          resolve(true);
-        })
-    });
+  return new Promise(function (resolve, reject) {
+    return osmosis
+      .get(url)
+      // for some reason the website return a 500
+      .config({
+        ignore_http_errors: true
+      })
+      .select('.list_element')
+      .set({
+        'img': 'img.list-img-thumb@src',
+        'title': 'h4',
+        'datetime_raw': '.program-date'
+      })
+      .do(
+        osmosis.follow('a.title-link@href')
+          .config({
+            ignore_http_errors: true
+          })
+          .select('.article')
+          .set({
+            'description': ['p'],
+            'host': ['h4']
+          })
+      )
+      .data(function (listing) {
+        scrapedData.push(listing);
+      })
+      .done(function () {
+        resolve(true);
+      })
+  });
 };
 
 const fetchAll = dateObj => {
