@@ -4,7 +4,7 @@ const name = 'banquisefm';
 
 const getScrap = (dateObj, _subRadio, config) => {
   const url = 'https://www.banquisefm.com/emissions';
-  return scrapAbstract.getScrap(dateObj, name, url, config);
+  return scrapAbstract.getScrap(dateObj, name, url, 'https://www.banquisefm.com', config);
 };
 
 export default {

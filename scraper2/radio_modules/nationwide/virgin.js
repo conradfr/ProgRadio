@@ -5,7 +5,7 @@ const name = 'virgin';
 
 const getScrap = (dateObj, _subRadio, config) => {
   const url = ['https://www.europe2.fr/programmes', 'https://www.europe2.fr/programmes-2'];
-  return scrapAbstract.getScrap(dateObj, name, url, config);
+  return scrapAbstract.getScrap(dateObj, name, url, '', config);
 };
 
 export default {

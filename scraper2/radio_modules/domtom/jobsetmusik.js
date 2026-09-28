@@ -4,7 +4,7 @@ const name = 'jobsetmusik';
 
 const getScrap = (dateObj, _subRadio, config) => {
   const url = 'https://www.jobsetmusik.com/emissions';
-  return scrapAbstract.getScrap(dateObj, name, url, config);
+  return scrapAbstract.getScrap(dateObj, name, url, 'https://www.jobsetmusik.com', config);
 };
 
 export default {

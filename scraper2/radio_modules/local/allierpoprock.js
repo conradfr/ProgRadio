@@ -4,7 +4,7 @@ const name = 'allierpoprock';
 
 const getScrap = (dateObj, _subRadio, config) => {
   const url = 'https://www.allierpoprock.fr/emissions';
-  return scrapAbstract.getScrap(dateObj, name, url, config);
+  return scrapAbstract.getScrap(dateObj, name, url, 'https://www.allierpoprock.fr', config);
 };
 
 export default {

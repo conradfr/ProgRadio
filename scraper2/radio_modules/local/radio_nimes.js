@@ -4,7 +4,7 @@ const name = 'radio_nimes';
 
 const getScrap = (dateObj, _subRadio, config) => {
   const url = 'https://www.radionimes.fr/emissions';
-  return scrapAbstract.getScrap(dateObj, name, url, config);
+  return scrapAbstract.getScrap(dateObj, name, url, 'https://www.radionimes.fr', config);
 };
 
 export default {

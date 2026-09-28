@@ -43,7 +43,7 @@ const getHost = async (url) => {
   return Promise.resolve(null);
 };
 
-const format = async (dateObj, name) => {
+const format = async (dateObj, name, imgPrefix) => {
   dateObj.tz('Europe/Paris');
   dateObj.locale('fr');
 
@@ -146,7 +146,7 @@ const format = async (dateObj, name) => {
     const newEntry = {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
-      'img': entry.img,
+      'img': `${imgPrefix}${entry.img}`,
       'title': utils.upperCaseWords(entry.title.trim()),
       'description': entry.description ? entry.description.trim() : null,
     };
@@ -213,11 +213,11 @@ const fetchAll = (dateObj, name, url) => {
   return fetch(dateObj, name, url);
 };
 
-const getScrap = (dateObj, name, url, config) => {
+const getScrap = (dateObj, name, url, imgPrefix, config) => {
   scrapedData[name] = [];
   return fetchAll(dateObj, name, url)
     .then(() => {
-      return format(dateObj, name);
+      return format(dateObj, name, imgPrefix);
     });
 };
 

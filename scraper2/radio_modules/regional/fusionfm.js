@@ -4,7 +4,7 @@ const name = 'fusionfm';
 
 const getScrap = (dateObj, _subRadio, config) => {
   const url = 'https://www.fusionfm.fr/emissions';
-  return scrapAbstract.getScrap(dateObj, name, url, config);
+  return scrapAbstract.getScrap(dateObj, name, url, 'https://www.fusionfm.fr', config);
 };
 
 export default {

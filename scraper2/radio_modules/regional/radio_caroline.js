@@ -4,7 +4,7 @@ const name = 'radio_caroline';
 
 const getScrap = (dateObj, _subRadio, config) => {
   const url = 'https://www.radiocaroline.bzh/emissions';
-  return scrapAbstract.getScrap(dateObj, name, url, config);
+  return scrapAbstract.getScrap(dateObj, name, url, 'https://www.radiocaroline.bzh', config);
 };
 
 export default {

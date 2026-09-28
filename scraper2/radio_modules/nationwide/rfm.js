@@ -4,7 +4,7 @@ const name = 'rfm';
 
 const getScrap = (dateObj, _subRadio, config) => {
   const url = ['https://www.rfm.fr/programmes', 'https://www.rfm.fr/programmes-2'];
-  return scrapAbstract.getScrap(dateObj, name, url, config);
+  return scrapAbstract.getScrap(dateObj, name, url, '', config);
 };
 
 export default {
