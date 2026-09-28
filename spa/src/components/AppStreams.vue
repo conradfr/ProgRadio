@@ -21,6 +21,8 @@ import { useGlobalStore } from '@/stores/globalStore';
 import { useStreamsStore } from '@/stores/streamsStore';
 import { usePlayerStore } from '@/stores/playerStore';
 
+import { canonicalHeadTags, setHeadTags, removeUrlAnchor } from '@/utils/headTags';
+
 import PlayerStatus from '@/types/player_status';
 
 import { PLAYER_TYPE_STREAM } from '@/config/config';
@@ -39,6 +41,7 @@ export default defineComponent({
   },
   data() {
     return {
+      headCleanup: null as (() => void)|null,
       PlayerStatus,
     };
   },
@@ -56,11 +59,17 @@ export default defineComponent({
     body?.classList.add('body-app');
     document.title = this.$t('message.streaming.title');
 
+    if (!this.solo) {
+      this.applyHead();
+    }
+
     // favorites shortcut
     const mobileFavoritesShortcut = document.getElementById('mobile-streaming-favorites-shortcut');
     mobileFavoritesShortcut?.classList.remove('d-none');
   },
   beforeUnmount() {
+    this.clearHead();
+
     const body = document.querySelector('body');
     body?.classList.remove('body-app');
 
@@ -111,6 +120,31 @@ export default defineComponent({
     }
   },
   watch: {
+    // StreamsOne manages the head tags of a single stream page
+    solo(solo) {
+      if (solo) {
+        // before StreamsOne mounts and sets its own tags
+        this.clearHead();
+        return;
+      }
+
+      // after StreamsOne unmounted and restored the tags
+      this.$nextTick(() => {
+        if (!this.solo) {
+          this.applyHead();
+        }
+      });
+    },
+    // country / page change on the list
+    // post: when leaving a stream page, runs after StreamsOne unmounted and restored the tags
+    '$route.fullPath': {
+      handler() {
+        if (!this.solo) {
+          this.applyHead();
+        }
+      },
+      flush: 'post'
+    },
     playing() {
       this.updateTitle();
     },
@@ -134,6 +168,18 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(useStreamsStore, ['getConfig', 'getCountries']),
+    applyHead() {
+      this.clearHead();
+      this.headCleanup = setHeadTags([
+        ...canonicalHeadTags(),
+        { tag: 'meta', attrs: { property: 'og:title', content: this.$t('message.streaming.title') } },
+        { tag: 'meta', attrs: { property: 'og:url', content: removeUrlAnchor() } },
+      ]);
+    },
+    clearHead() {
+      this.headCleanup?.();
+      this.headCleanup = null;
+    },
     updateTitle() {
       if (this.playing === PlayerStatus.Playing && this.playingRadio
           && this.playingRadio.type === PLAYER_TYPE_STREAM) {

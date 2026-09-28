@@ -23,6 +23,7 @@ import PlayerStatus from '@/types/player_status';
 import { COLLECTION_FAVORITES } from '@/config/config';
 
 import typeUtils from '@/utils/typeUtils';
+import { canonicalHeadTags, setHeadTags, removeUrlAnchor } from '@/utils/headTags';
 
 import CollectionSwitcher from './Schedule/CollectionSwitcher.vue';
 import Timeline from './Schedule/Timeline.vue';
@@ -42,11 +43,13 @@ export default defineComponent({
   },
   data(): {
     PlayerStatus: any,
-    containerRef: HTMLElement|null
+    containerRef: HTMLElement|null,
+    headCleanup: (() => void)|null
   } {
     return {
       PlayerStatus,
-      containerRef: null
+      containerRef: null,
+      headCleanup: null
     };
   },
   /* created() {
@@ -69,6 +72,8 @@ export default defineComponent({
     document.title = this.$t('message.schedule.title');
   },
   beforeUnmount() {
+    this.headCleanup?.();
+
     const body = document.querySelector('body')!;
     body.classList.remove('body-app');
     body.classList.remove('body-app-schedule');
@@ -78,6 +83,18 @@ export default defineComponent({
     mobileFavoritesShortcut?.classList.add('d-none');
   },
   watch: {
+    // collection change reuses the component
+    '$route.fullPath': {
+      handler() {
+        this.headCleanup?.();
+        this.headCleanup = setHeadTags([
+          ...canonicalHeadTags(),
+          { tag: 'meta', attrs: { property: 'og:title', content: this.$t('message.schedule.title') } },
+          { tag: 'meta', attrs: { property: 'og:url', content: removeUrlAnchor() } },
+        ]);
+      },
+      immediate: true
+    },
     playing() {
       this.updateTitle();
     },
