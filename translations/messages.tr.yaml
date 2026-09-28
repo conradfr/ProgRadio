@@ -171,6 +171,7 @@ page:
         find_deezer: "Deezer'da ara"
         find_spotify: "Spotify'da ara"
         find_youtube: "YouTube'da ara"
+        history: 'Son şarkılar'
         listeners: "Dinleyiciler"
         play: "Dinle"
         playing: "Başlık"

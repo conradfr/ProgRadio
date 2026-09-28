@@ -224,11 +224,13 @@ createApp({
   playingStart: null,
   sessionId: null,
   listeningInterval: null,
+  initOptions: null,
   options: {
     webSocket: typeof appWebSocket !== 'undefined' ? appWebSocket : true,
     sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
   },
   init(options) {
+    this.initOptions = options;
     const slider = document.getElementById('volume-slider');
     if (slider) {
       const volume = cookies.get(COOKIE_VOLUME, 10)
@@ -621,6 +623,55 @@ createApp({
     this.channels[channelTopic].on('playing', (songData) => {
       this.formatSong(songData);
       setTitle(this.song);
+    });
+
+    // This is not really optimized as we received the song history
+    // but only use the event to re-fetch it on PHP the backend,
+    // but it avoids building a third song history (after spa & php)
+    // TODO revisit later
+    this.channels[channelTopic].on('song_history', () => {
+      if (!this.initOptions || !this.initOptions.historyUrl) {
+        return;
+      }
+
+      const historyElem = document.getElementById('song-history');
+      if (!historyElem) {
+        return;
+      }
+
+      fetch(this.initOptions.historyUrl)
+        .then((response) => {
+          if (response.status !== 200) {
+            return null;
+          }
+          return response.text();
+        })
+        .then((html) => {
+          if (html === null) {
+            return;
+          }
+
+          // keep the list open if the user expanded it
+          const wasExpanded = historyElem.querySelector('#historyDetails.show') !== null;
+
+          historyElem.innerHTML = html;
+
+          if (wasExpanded) {
+            historyElem.querySelector('#historyDetails')?.classList.add('show');
+            historyElem.querySelector('[data-bs-target="#historyDetails"]')?.setAttribute('aria-expanded', 'true');
+            historyElem.querySelector('[data-bs-target="#historyDetails"]')?.classList.remove('collapsed');
+          }
+
+          // times are rendered in server timezone, display them in the visitor's one
+          const timeFormat = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+          historyElem.querySelectorAll('.song-history-time').forEach((el) => {
+            const date = new Date(el.getAttribute('datetime'));
+            if (!isNaN(date)) {
+              el.textContent = timeFormat.format(date);
+            }
+          });
+        })
+        .catch(() => {});
     });
 
     this.channels[channelTopic].on('counter_update', (counterData) => {

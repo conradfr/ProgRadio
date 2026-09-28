@@ -171,6 +171,7 @@ page:
         find_deezer: Buscar no Deezer
         find_spotify: Buscar no Spotify
         find_youtube: Buscar no Youtube
+        history: 'Últimas faixas'
         listeners: Ouvintes
         play: 'Ouvir'
         playing: Título

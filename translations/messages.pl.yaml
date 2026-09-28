@@ -171,6 +171,7 @@ page:
         find_deezer: Szukaj na Deezer
         find_spotify: Szukaj na Spotify
         find_youtube: Szukaj na Youtube
+        history: 'Ostatnie utwory'
         listeners: Słuchacze
         play: 'Słuchaj'
         playing: Tytuł

@@ -171,6 +171,7 @@ page:
         find_deezer: Keresés a Deezeren
         find_spotify: Keresés a Spotifyon
         find_youtube: Keresés a YouTube-on
+        history: 'Utolsó dalok'
         listeners: Hallgatók
         play: 'Hallgatás'
         playing: Cím

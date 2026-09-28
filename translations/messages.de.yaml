@@ -171,6 +171,7 @@ page:
         find_deezer: Auf Deezer suchen
         find_spotify: Auf Spotify suchen
         find_youtube: Auf YouTube suchen
+        history: 'Letzte Titel'
         listeners: Hörer
         play: 'Hören'
         playing: Titel

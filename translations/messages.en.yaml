@@ -171,6 +171,7 @@ page:
         find_deezer: Find on Deezer
         find_spotify: Find on Spotify
         find_youtube: Find on Youtube
+        history: 'Last songs'
         listeners: Listeners
         play: 'Listen'
         playing: Playing

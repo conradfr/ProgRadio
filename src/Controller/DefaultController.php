@@ -8,6 +8,7 @@ use App\Form\StreamSuggestionType;
 use App\Service\Favorites;
 use App\Service\Host;
 use App\Service\ScheduleManager;
+use App\Service\SongHistory;
 use App\Entity\Radio;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
@@ -488,6 +489,7 @@ class DefaultController extends AbstractBaseController
         string $codename,
         RouterInterface $router,
         ScheduleManager $scheduleManager,
+        SongHistory $songHistory,
         EntityManagerInterface $em,
         Request $request,
         Host $host
@@ -551,10 +553,27 @@ class DefaultController extends AbstractBaseController
             }
         }
 
+        $history = $songHistory->getHistory($stream);
+
         return $this->render('default/stream.html.twig', [
             'stream' => $stream,
             'schedule' => $schedule,
-            'more_streams' => $moreStreams
+            'more_streams' => $moreStreams,
+            'song_history' => $history
+        ]);
+    }
+
+    #[Route('/{_locale}/song_history/{stream}', name: 'song_history', methods: ['GET'])]
+    #[Cache(maxage: 5, public: true, mustRevalidate: true)]
+    public function songHistory(
+        Stream $stream,
+        SongHistory $songHistory,
+    ): Response
+    {
+        $history = $songHistory->getHistory($stream);
+
+        return $this->render('default/song_history.html.twig', [
+            'song_history' => $history
         ]);
     }
 

@@ -106,6 +106,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->streams = new ArrayCollection();
     }
 
+    /**
+     * Only keep what the security token needs in the session: the user is refreshed from db on each request.
+     * Otherwise loaded collections (favorites, songs...) end up serialized with it.
+     * Keys are mangled like the default serialization to stay compatible with existing sessions.
+     */
+    public function __serialize(): array
+    {
+        $data = (array) $this;
+
+        return array_intersect_key($data, array_flip(array_map(
+            fn(string $property) => "\0" . self::class . "\0" . $property,
+            ['id', 'email', 'password', 'roles']
+        )));
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->__construct();
+
+        $this->id = $data["\0" . self::class . "\0id"] ?? null;
+        $this->email = $data["\0" . self::class . "\0email"] ?? null;
+        $this->password = $data["\0" . self::class . "\0password"] ?? null;
+        $this->roles = $data["\0" . self::class . "\0roles"] ?? [];
+    }
+
     public function getId(): ?int
     {
         return $this->id;

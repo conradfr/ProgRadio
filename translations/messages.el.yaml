@@ -171,6 +171,7 @@ page:
         find_deezer: Αναζήτηση στο Deezer
         find_spotify: Αναζήτηση στο Spotify
         find_youtube: Αναζήτηση στο YouTube
+        history: 'Τελευταία τραγούδια'
         listeners: Ακροατές
         play: 'Ακούστε'
         playing: Τίτλος

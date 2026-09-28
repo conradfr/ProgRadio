@@ -8,7 +8,7 @@ defmodule ProgRadioApi.SongServer do
   alias ProgRadioApi.TaskSupervisor
 
   @max_song_history 10
-  @history_ttl 60
+  @history_ttl 600
 
   # JSON keys restored from Redis => song map keys
   @song_keys %{
@@ -119,6 +119,16 @@ defmodule ProgRadioApi.SongServer do
     }
 
     send(pid, {:push_song, "playing", data})
+
+    data = %{
+      name: name,
+      history: state.song_history,
+      topic: name,
+      stream_id: stream_id
+    }
+
+    send(pid, {:push_song, "song_history", data})
+
     {:noreply, state}
   end
 
@@ -486,10 +496,10 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
-  defp broadcast_song_history_if_needed(name, song_history, _last_song_history, stream_ids)
-       when length(song_history) < @max_song_history do
-    broadcast_song_history(name, song_history, stream_ids)
-  end
+#  defp broadcast_song_history_if_needed(name, song_history, _last_song_history, stream_ids)
+#       when length(song_history) < @max_song_history do
+#    broadcast_song_history(name, song_history, stream_ids)
+#  end
 
   defp broadcast_song_history_if_needed(name, song_history, last_song_history, stream_ids) do
     case song_history -- last_song_history do

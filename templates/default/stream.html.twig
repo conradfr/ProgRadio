@@ -110,6 +110,15 @@ img/stream-placeholder.png
     shareEmbed.addEventListener('focus', selectShareEmbed);
     shareEmbed.addEventListener('click', selectShareEmbed);
   }
+
+  // song history times are rendered in server timezone, display them in the visitor's one (same as spa formatTime)
+  const songHistoryTimeFormat = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  document.querySelectorAll('.song-history-time').forEach((el) => {
+    const date = new Date(el.getAttribute('datetime'));
+    if (!isNaN(date)) {
+      el.textContent = songHistoryTimeFormat.format(date);
+    }
+  });
 </script>
 {% endblock %}
 
@@ -198,7 +207,7 @@ img/stream-placeholder.png
                             {{ self.extractDailymotionIdAndProvideiFrame(stream.streamUrl) }}
                         {% else %}
                             <div class="radio-page-streams-one mb-4 d-flex align-items-center justify-content-center justify-content-sm-start"
-                                style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init({ topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}' })">
+                                style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init({ topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', historyUrl: '{{- url('song_history', {'_locale': app.request.locale, 'stream': stream.id}) -}}'  })">
                                 <div v-cloak>
                                     <div
                                         v-if="playing === PLAYER_STATE_STOPPED"
@@ -282,6 +291,10 @@ img/stream-placeholder.png
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div id="song-history">
+                          {{ include('default/song_history.html.twig') }}
                         </div>
 
                         <div class="mb-3 text-start" v-if="listeners !== null" v-cloak>

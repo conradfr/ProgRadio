@@ -171,6 +171,7 @@ page:
         find_deezer: بحث في ديزر
         find_spotify: بحث في سبوتيفاي
         find_youtube: بحث في اليوتيوب
+        history: 'آخر الأغاني'
         listeners: المستمعون
         play: 'استمع'
         playing: العنوان

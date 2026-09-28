@@ -171,6 +171,7 @@ page:
         find_deezer: Caută pe Deezer
         find_spotify: Caută pe Spotify
         find_youtube: Caută pe Youtube
+        history: 'Ultimele piese'
         listeners: Ascultători
         play: 'Ascultă'
         playing: Titlu
