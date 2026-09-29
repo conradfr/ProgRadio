@@ -75,14 +75,16 @@ class StreamRepository extends ServiceEntityRepository
         // popular country
 
         $resultCountry = $this->getStreams($limitFourth + 1, 0, $stream->getCountryCode(), 'popularity');
+        $excludedIds = array_column($resultCountry, 'id');
 
         // last country
 
-        $resultCountryLast = $this->getStreams($limitFourth, 0, $stream->getCountryCode(), 'last');
+        $resultCountryLast = $this->getStreams($limitFourth, 0, $stream->getCountryCode(), 'last', excludedIds: $excludedIds);
+        $excludedIds = array_merge($excludedIds, array_column($resultCountryLast, 'id'));
 
         // last all
 
-        $resultLast = $this->getStreams($limitFourth, 0, null, 'last');
+        $resultLast = $this->getStreams($limitFourth, 0, null, 'last', excludedIds: $excludedIds);
 
         // random
 
@@ -116,7 +118,8 @@ class StreamRepository extends ServiceEntityRepository
         ?int $offset = null,
         ?string $countryOrCategory = null,
         ?string $sort = null,
-        array $favoritesFromCookies = []
+        array $favoritesFromCookies = [],
+        ?array $excludedIds = null
     ): array {
         $user = $this->security->getUser();
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -136,6 +139,14 @@ class StreamRepository extends ServiceEntityRepository
 
         if ($offset !== null) {
             $qb->setFirstResult($offset);
+        }
+
+        if (!empty($excludedIds)) {
+            $qb->andWhere('s.id NOT IN (:excludedIds)')
+                ->setParameter('excludedIds', array_map(
+                    fn($id) => $id instanceof Uuid ? $id->toRfc4122() : (string) $id,
+                    $excludedIds
+                ));
         }
 
         if ($countryOrCategory !== null) {
