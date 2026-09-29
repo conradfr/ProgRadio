@@ -172,6 +172,7 @@ page:
         find_spotify: "Spotify'da ara"
         find_youtube: "YouTube'da ara"
         history: 'Son şarkılar'
+        more_information: 'Daha fazla bilgi'
         listeners: "Dinleyiciler"
         play: "Dinle"
         playing: "Başlık"
