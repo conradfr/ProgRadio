@@ -186,7 +186,7 @@ export const messages = {
           last: 'Par dernière écoute (monde)',
           user_last: 'Par dernière écoute (moi)'
         },
-        suggest: 'Suggérer une modification',
+        suggest: 'Suggérer une mise à jour',
         title: 'Les radios du monde entier en streaming',
         website: 'Site web'
       },
@@ -341,7 +341,7 @@ export const messages = {
           last: 'By last played (world)',
           user_last: 'By last played (me)'
         },
-        suggest: 'Suggest a modification',
+        suggest: 'Suggest an update',
         title: 'Stream radios from all over the world!',
         website: 'Website'
       },
@@ -496,7 +496,7 @@ export const messages = {
           last: 'Por última escucha (mundo)',
           user_last: 'Por última escucha (yo)'
         },
-        suggest: 'Sugerir una modificación',
+        suggest: 'Sugerir una actualización',
         title: 'Las radios de todo el mundo en streaming',
         website: 'Sitio web'
       },
@@ -651,7 +651,7 @@ export const messages = {
           last: 'Nach letztem Hören (Welt)',
           user_last: 'Nach letztem Hören (ich)'
         },
-        suggest: 'Änderung vorschlagen',
+        suggest: 'Aktualisierung vorschlagen',
         title: 'Radios aus aller Welt im Streaming',
         website: 'Website'
       },
@@ -806,7 +806,7 @@ export const messages = {
           last: 'Por última audição (mundo)',
           user_last: 'Por última audição (eu)'
         },
-        suggest: 'Sugerir uma alteração',
+        suggest: 'Sugerir uma atualização',
         title: 'As rádios de todo o mundo em streaming',
         website: 'Site'
       },
@@ -961,7 +961,7 @@ export const messages = {
           last: 'Per ultimo ascolto (mondo)',
           user_last: 'Per ultimo ascolto (io)'
         },
-        suggest: 'Suggerisci una modifica',
+        suggest: 'Suggerisci un aggiornamento',
         title: 'Le radio di tutto il mondo in streaming',
         website: 'Sito web'
       },
@@ -1116,7 +1116,7 @@ export const messages = {
           last: 'Wg ostatniego odsłuchu (świat)',
           user_last: 'Wg ostatniego odsłuchu (ja)'
         },
-        suggest: 'Zasugeruj zmianę',
+        suggest: 'Zasugeruj aktualizację',
         title: 'Radia z całego świata w strumieniu',
         website: 'Strona internetowa'
       },
@@ -1271,7 +1271,7 @@ export const messages = {
           last: 'Κατά τελευταία ακρόαση (κόσμος)',
           user_last: 'Κατά τελευταία ακρόαση (εγώ)'
         },
-        suggest: 'Προτείνετε μια αλλαγή',
+        suggest: 'Προτείνετε μια ενημέρωση',
         title: 'Τα ραδιόφωνα από όλο τον κόσμο σε streaming',
         website: 'Ιστοσελίδα'
       },
@@ -1426,7 +1426,7 @@ export const messages = {
           last: 'بالاستماع الأخير (العالم)',
           user_last: 'بالاستماع الأخير (أنا)'
         },
-        suggest: 'اقترح تعديل',
+        suggest: 'اقترح تحديثًا',
         title: 'محطات الراديو من جميع أنحاء العالم بث مباشر',
         website: 'الموقع الإلكتروني'
       },
@@ -1581,7 +1581,7 @@ export const messages = {
           last: 'După ultima ascultare (lume)',
           user_last: 'După ultima ascultare (eu)'
         },
-        suggest: 'Sugerează o modificare',
+        suggest: 'Sugerează o actualizare',
         title: 'Radiourile din întreaga lume în streaming',
         website: 'Site web'
       },
@@ -1736,7 +1736,7 @@ export const messages = {
           last: 'Utolsó hallgatás szerint (világ)',
           user_last: 'Utolsó hallgatás szerint (én)'
         },
-        suggest: 'Javasoljon egy módosítást',
+        suggest: 'Javasoljon egy frissítést',
         title: 'A világ rádiói streamingben',
         website: 'Weboldal'
       },
@@ -1891,7 +1891,7 @@ export const messages = {
           last: 'Son dinlemeye göre (dünya)',
           user_last: 'Son dinlemeye göre (ben)'
         },
-        suggest: 'Bir değişiklik öner',
+        suggest: 'Bir güncelleme öner',
         title: 'Dünyanın radyoları yayında',
         website: 'Web sitesi'
       },
@@ -2046,7 +2046,7 @@ export const messages = {
           last: 'Op laatste beluistering (wereldwijd)',
           user_last: 'Op laatste beluistering (ik)'
         },
-        suggest: 'Suggereer een wijziging',
+        suggest: 'Suggereer een update',
         title: 'Radiozenders over de hele wereld in streaming',
         website: 'Website'
       },

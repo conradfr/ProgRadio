@@ -189,7 +189,7 @@ page:
             radio: Radio
             stream_url: Stream URL
             success: Bedankt voor uw suggesties. Ze zijn opgeslagen en zullen spoedig worden beoordeeld.
-            suggest: Suggereer een wijziging
+            suggest: Suggereer een update
             website: Website
             submit: Verzenden
         submission:

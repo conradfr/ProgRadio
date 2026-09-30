@@ -200,7 +200,7 @@ page:
             radio: Radio
             stream_url: URL strumienia
             success: Dziękujemy za sugestie. Zostały zapisane i zostaną przeanalizowane w najbliższym czasie.
-            suggest: Zaproponuj modyfikację
+            suggest: Zaproponuj aktualizację
             website: Strona internetowa
             submit: Prześlij
 

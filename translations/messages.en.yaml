@@ -200,7 +200,7 @@ page:
             radio: Radio
             stream_url: Stream url
             success: Thank you for your suggestion. It has been recorded and will be reviewed shortly.
-            suggest: Suggest a modification
+            suggest: Suggest an update
             website: Website
             submit: Submit
 

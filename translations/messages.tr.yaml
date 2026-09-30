@@ -200,7 +200,7 @@ page:
             radio: "Radyo"
             stream_url: "Akış URL'si"
             success: "Önerileriniz için teşekkür ederiz. Kaydedildiler ve yakında incelenecekler."
-            suggest: "Bir değişiklik öner"
+            suggest: "Bir güncelleme öner"
             website: "Web sitesi"
             submit: "Gönder"
 
