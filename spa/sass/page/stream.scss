@@ -18,6 +18,14 @@
     }
   }
 
+  .stream-page-live-search {
+    .badge span {
+      @include media-breakpoint-down(sm) {
+        display: none !important;
+      }
+    }
+  }
+
   .stream-page-live {
     background-color: var(--progradio-live-song-background-color);
     border-radius: 5px;
@@ -31,13 +39,6 @@
     }
   }
 
-  .stream-one-tags {
-    span.badge {
-      padding: 6px 8px;
-      border-radius: 4px;
-    }
-  }
-
   .more-streams {
     .streams-one-more {
       width: 100px;
@@ -45,6 +46,9 @@
 
       font-size: 0.769rem;
       color: var(--progradio-more-stream-text-color);
+
+      background: none;
+      border: 0;
 
       border: 0;
 
@@ -97,6 +101,13 @@
     background-color: lighten($primary, 40%) !important;
     box-shadow: none !important;
     border: none;
+  }
+}
+
+.stream-page-live-search {
+  span.badge {
+    padding: 6px 8px;
+    border-radius: 999px;
   }
 }
 

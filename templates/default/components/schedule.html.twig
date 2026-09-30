@@ -13,7 +13,7 @@
 <div class="radio-page-shows mb-4">
 {% for show in schedule %}
   {#  Current show? #}
-  {% if date|date("mdY") == "now"|date("mdY") and date(show.start_at) < date() and date(show.end_at) > date() %}
+  {% if (date ?? 'now')|date("mdY") == "now"|date("mdY") and date(show.start_at) < date() and date(show.end_at) > date() %}
     {% if loop.first == false %}
     <div class="see-previous-shows d-flex align-items-stretch mb-3">
       <div class="flex-shrink-0 text-center" style="width: 50px">

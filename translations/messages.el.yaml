@@ -172,6 +172,7 @@ page:
         find_spotify: Αναζήτηση στο Spotify
         find_youtube: Αναζήτηση στο YouTube
         history: 'Τελευταία τραγούδια'
+        about: 'Σχετικά με τον σταθμό'
         more_information: 'Περισσότερες πληροφορίες'
         listeners: Ακροατές
         play: 'Ακούστε'

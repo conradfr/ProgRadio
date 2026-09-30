@@ -422,10 +422,13 @@ createApp({
     this.listeningInterval = null;
     this.sessionId = null;
     this.playingStart = null;
-    // TODO Allow to keep live song when stopped
-    this.song = null;
-    this.cover = null;
-    this.leaveChannels();
+
+    if (!this.initOptions || !this.initOptions.topic || this.initOptions.topic.trim() === '') {
+      this.song = null;
+      this.cover = null;
+
+      this.leaveChannels();
+    }
   },
   playingStarted(topic, radioOrStreamId, source) {
     this.playing = PLAYER_STATE_PLAYING;

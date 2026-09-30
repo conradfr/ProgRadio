@@ -37,6 +37,7 @@
 @import "page/faq";
 @import "page/streams";
 @import "page/stream";
+@import "page/stream-next";
 @import "page/admin";
 @import "page/now";
 @import "page/songs";
@@ -144,6 +145,8 @@
   --progradio-stream-badge-color: #{$stream-badge-color};
   --progradio-stream-badge-color-hover: #{$stream-badge-color-hover};
 
+  --progradio-stream-block-background-color: #{$stream-block-background-color};
+
   --progradio-now-border-color: #{$now-border-color};
   --progradio-live-song-background-color: #{$live-song-background-color};
   --progradio-radio-page-more-one-hover-background: #{$radio-page-more-one-hover-background};
@@ -201,4 +204,8 @@ body {
 
 .viewfade-leave-to, .viewfade-enter-from {
   opacity: 0;
+}
+
+.badge {
+  background-image: none !important;
 }

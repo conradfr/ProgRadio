@@ -172,6 +172,7 @@ page:
         find_spotify: Find on Spotify
         find_youtube: Find on Youtube
         history: 'Last songs'
+        about: About the radio
         more_information: More information
         listeners: Listeners
         play: 'Listen'

@@ -172,6 +172,8 @@ page:
         find_spotify: Rechercher sur Spotify
         find_youtube: Rechercher sur Youtube
         history: 'Derniers titres'
+        about: À propos de la radio
+        schedule: Programmes
         more_information: Plus d'informations
         listeners: Auditeurs
         play: 'Écouter'

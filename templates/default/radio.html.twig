@@ -154,20 +154,28 @@
                   <div class="stream-page-live-search" v-if="song !== undefined && song !== null && song.trim() !== ''">
                     <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
                        :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
-                      <i class="bi bi-youtube"></i><span> YouTube</span>
-                    </a>&nbsp;&nbsp;
+                  <span class="badge badge-inverse badge-link my-0">
+                    <i class="bi bi-youtube"></i><span>&nbsp;&nbsp;YouTube</span>
+                  </span>
+                    </a>&nbsp;
                     <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
                        :href="encodeURI(`https://open.spotify.com/search/${song}`)">
-                      <i class="bi bi-spotify"></i><span> Spotify</span>
-                    </a>&nbsp;&nbsp;
+                  <span class="badge badge-inverse badge-link my-0">
+                    <i class="bi bi-spotify"></i><span>&nbsp;&nbsp;Spotify</span>
+                  </span>
+                    </a>
                     <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
                        :href="encodeURI(`https://www.deezer.com/search/${song}`)">
-                      <img src="{{ asset('img/deezericon.png') }}" alt="{{ 'page.stream.find_deezer'|trans }}"><span> Deezer</span>
-                    </a>&nbsp;&nbsp;
+                  <span class="badge badge-inverse badge-link my-0">
+                    <i class="bi bi-boombox"></i><span>&nbsp;&nbsp;Deezer</span>
+                  </span>
+                    </a>
                     <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_amazon'|trans }}"
                        :href="encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${song}`)">
-                      <i class="bi bi-amazon"></i><span> Amazon</span>
-                    </a>&nbsp;&nbsp;
+                  <span class="badge badge-inverse badge-link my-0">
+                    <i class="bi bi-amazon"></i><span>&nbsp;&nbsp;Amazon</span>
+                  </span>
+                    </a>
                   </div>
                 </div>
               </div>

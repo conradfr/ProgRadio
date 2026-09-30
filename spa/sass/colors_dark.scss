@@ -43,9 +43,9 @@ $pagination-bg:                     $primary !default;
 $pagination-hover-bg:               lighten($primary, 10%) !default;
 $pagination-disabled-bg:            darken($primary, 15%) !default;
 
-$radio-stream: #4d6a82;
+$radio-stream: #527491;
 $radio-stream-hover: $primary-source;
-$radio-stream-filter: invert(40%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(91%) contrast(89%);
+$radio-stream-filter: invert(41%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(100%) contrast(89%);
 $radio-stream-filter-hover: invert(41%) sepia(98%) saturate(1173%) hue-rotate(185deg) brightness(99%) contrast(92%);
 
 $player-color: $white;
@@ -117,6 +117,8 @@ $stream-select-search: $white;
 $stream-select-pointed: darken($stream-select-background-hover, 5%);
 
 $streams-one-border: darken($background-color, 20%);
+
+$stream-block-background-color: $program-bg-color;
 
 $badge-color: $gray-500;
 $badge-color-hover: $white;

@@ -172,6 +172,7 @@ page:
         find_spotify: Buscar en Spotify
         find_youtube: Buscar en Youtube
         history: 'Últimos títulos'
+        about: 'Acerca de la radio'
         more_information: 'Más información'
         listeners: Oyentes
         play: 'Escuchar'

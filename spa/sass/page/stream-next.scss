@@ -1,0 +1,40 @@
+.stream-next {
+  h1 {
+    font-size: 1.846rem;
+
+    @include media-breakpoint-down(sm) {
+      font-size: 1.462rem;
+    }
+  }
+
+  .radio-page-logo {
+    min-width: 75px;
+    max-width: 140px;
+
+    @include media-breakpoint-down(sm) {
+      max-width: 110px;
+      max-height: 100px;
+    }
+  }
+
+  .stream-block {
+    background-color: var(--progradio-stream-block-background-color);
+  }
+
+  .live-song-dot {
+    width: .5rem;
+    height: .5rem;
+    border-radius: 50%;
+    background: #e53935;
+    animation: progradio-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes progradio-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+  @media (prefers-reduced-motion: reduce) { .live-song-dot { animation: none; } }
+
+  dl.info {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: .5rem 1.25rem;
+  }
+}
