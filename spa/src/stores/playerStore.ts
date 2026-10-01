@@ -389,11 +389,9 @@ export const usePlayerStore = defineStore('player', {
       if (this.stream && stream.id !== this.stream.id) {
         cache.setCache(config.PREV_STREAM_PLAYED, this.stream);
         this.prevStream = this.stream;
-      }
 
-      if ((!radio && this.radio) || (this.radio && radio && radio.code_name !== this.radio.code_name)) {
-        cache.setCache(config.PREV_RADIO_PLAYED, this.radio);
-        this.prevRadio = this.radio;
+        cache.setCache(config.PREV_RADIO_PLAYED, this.radio || null);
+        this.prevRadio = this.radio || null;
       }
     },
     startListeningSession() {

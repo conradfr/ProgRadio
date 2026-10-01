@@ -9,8 +9,8 @@
         <i class="bi bi-arrows-angle-contract"></i>
       </div>
       <Transition name="play-prev-fade" mode="out-in">
-        <div v-if="prevRadio" class="player-radio-previous"
-          :title="$t('message.player.previous', { radio: prevRadio.name })"
+        <div v-if="prevStream" class="player-radio-previous"
+          :title="$t('message.player.previous', { radio: prevStream.name })"
           @click="togglePrevious">
           <i class="bi-arrow-left-right"></i>
         </div>
@@ -49,8 +49,8 @@
         <i class="bi bi-arrows-angle-expand"></i>
       </div>
       <Transition name="play-prev-fade" mode="out-in">
-        <div v-if="prevRadio" class="player-radio-previous"
-         :title="$t('message.player.previous', { radio: prevRadio.name })"
+        <div v-if="prevStream" class="player-radio-previous"
+         :title="$t('message.player.previous', { radio: prevStream.name })"
          @click="togglePrevious">
           <i class="bi-arrow-left-right"></i>
         </div>
@@ -395,7 +395,7 @@ export default defineComponent({
       'stream',
       'radio',
       'show',
-      'prevRadio',
+      'prevStream',
       'externalPlayer',
       'playing',
       'muted',
@@ -820,13 +820,13 @@ export default defineComponent({
       );
     },
     togglePrevious() {
-      if (!this.prevRadio) {
+      if (!this.prevStream) {
         return;
       }
 
       this.$gtag.event(config.GTAG_ACTION_TOGGLE_PREVIOUS, {
         event_category: config.GTAG_CATEGORY_PLAYER,
-        event_label: this.prevRadio.id,
+        event_label: this.prevStream.id,
         value: config.GTAG_ACTION_TOGGLE_PREVIOUS_VALUE
       });
 
