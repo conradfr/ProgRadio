@@ -215,7 +215,7 @@ export const usePlayerStore = defineStore('player', {
         if (stream.popup) {
           // @ts-expect-error popupUrl is defined on the global scope
           // eslint-disable-next-line no-undef
-          window.open(popupUrl.replace(config.POPUP_URL_WILDCARD, stream.code_name), '', config.POPUP_SETTINGS);
+          window.open(popupUrl.replace(config.POPUP_URL_WILDCARD, stream.code_name), 'radiopopup', config.POPUP_SETTINGS);
           return;
         }
 

@@ -285,7 +285,7 @@ createApp({
     }
 
     if (options.popup && options.popup === true) {
-      window.open(popupUrl.replace(POPUP_URL_WILDCARD, codeName), '', POPUP_SETTINGS);
+      window.open(popupUrl.replace(POPUP_URL_WILDCARD, codeName), 'radiopopup', POPUP_SETTINGS);
       return;
     }
 
