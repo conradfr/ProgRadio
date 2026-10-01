@@ -516,6 +516,10 @@ export default defineComponent({
       let startPlayPromise;
       this.setNextPlayer(url);
 
+      // the player of this call: handlers below ignore it once replaced or stopped
+      // (currentPlayer is computed from audio.current, so it can't be compared to it)
+      const player = this.currentPlayer;
+
       if (this.currentPlayer.timer !== null) {
         clearTimeout(this.currentPlayer.timer);
         this.currentPlayer.timer = null;
@@ -549,7 +553,7 @@ export default defineComponent({
 
             // @ts-ignore
             this.currentPlayer.hls.on(Hls.Events.ERROR, (_event, data) => {
-              if (this.currentPlayer.id !== this.audio.current) {
+              if (player.id !== this.audio.current || player.url !== url) {
                 return;
               }
 
@@ -608,7 +612,7 @@ export default defineComponent({
           this.currentPlayer.dash.initialize(this.currentPlayer.element, url, false);
 
           this.currentPlayer.dash.on('error', () => {
-            if (this.currentPlayer.id !== this.audio.current) {
+            if (player.id !== this.audio.current || player.url !== url) {
               return;
             }
 
@@ -627,7 +631,7 @@ export default defineComponent({
           });
 
           this.currentPlayer.dash.on('canPlay', () => {
-            if (this.currentPlayer.id !== this.audio.current) {
+            if (player.id !== this.audio.current || player.url !== url) {
               this.currentPlayer.element.muted = this.muted;
               this.currentPlayer.element.volume = (this.volume * 0.1);
             }
@@ -665,7 +669,8 @@ export default defineComponent({
         startPlayPromise.then(() => {
           this.playingStarted(this.currentPlayer);
         }).catch((error: any) => {
-          if (this.currentPlayer.id !== this.audio.current) {
+          // replaced or stopped on purpose: stopping a pending play() rejects it with an AbortError
+          if (player.id !== this.audio.current || player.url !== url || error.name === 'AbortError') {
             return;
           }
 
@@ -732,7 +737,9 @@ export default defineComponent({
 
       if (this.currentPlayer.element !== undefined && this.currentPlayer.element !== null) {
         this.currentPlayer.element.pause();
-        this.currentPlayer.element.src = '';
+        // not src = '' which is an invalid url for the browser
+        this.currentPlayer.element.removeAttribute('src');
+        this.currentPlayer.element.load();
       }
 
       if (this.currentPlayer.timer !== null) {
@@ -766,7 +773,8 @@ export default defineComponent({
 
       if (player.element !== undefined && player.element !== null) {
         player.element.pause();
-        player.element.src = '';
+        player.element.removeAttribute('src');
+        player.element.load();
       }
 
       if (player.timer !== null) {
