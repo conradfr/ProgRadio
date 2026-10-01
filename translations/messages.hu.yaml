@@ -225,6 +225,7 @@ page:
             country: Ország
             language: Nyelv
             tags: Címkék (kisbetűvel, vesszővel elválasztva)
+            genres: Zenei műfajok (kisbetűvel, vesszővel elválasztva)
             submit: Elküld
             delete: Törlés
             delete_confirm: Biztosan törölni szeretnéd ezt a rádiót? Ez a művelet visszavonhatatlan.

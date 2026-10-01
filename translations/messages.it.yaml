@@ -225,6 +225,7 @@ page:
             country: Paese
             language: Lingua
             tags: Tag (in minuscolo, separati da una virgola)
+            genres: Generi musicali (in minuscolo, separati da una virgola)
             submit: Invia
             delete: Elimina
             delete_confirm: Sei sicuro di voler eliminare questa radio? Questa operazione è irreversibile.

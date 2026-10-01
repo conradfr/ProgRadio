@@ -225,6 +225,7 @@ page:
             country: "Ülke"
             language: "Dil"
             tags: "Etiketler (küçük harflerle, virgülle ayrılmış)"
+            genres: "Müzik türleri (küçük harflerle, virgülle ayrılmış)"
             submit: "Gönder"
             delete: "Sil"
             delete_confirm: "Bu radyoyu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."

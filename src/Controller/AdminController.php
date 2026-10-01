@@ -235,6 +235,13 @@ class AdminController extends AbstractBaseController
                 $stream->setSlogan($streamOverloading->getSlogan());
             }
 
+            if ($streamOverloading->getGenres() !== null) {
+                $genres = $streamOverloading->getGenres();
+                $genres = strtolower($genres);
+                $genres = str_replace(', ', ',', $genres);
+                $stream->setGenres($genres);
+            }
+
             if ($streamOverloading->getTags() !== null) {
                 $tags = $streamOverloading->getTags();
                 $tags = strtolower($tags);

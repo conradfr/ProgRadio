@@ -21,6 +21,7 @@ defmodule ProgRadioApi.Stream do
     field(:stream_url, :string)
     field(:original_stream_url, :string)
     field(:tags, :string)
+    field(:genres, :string)
     field(:original_tags, :string)
     field(:website, :string)
     field(:country_code, :string)
@@ -82,6 +83,7 @@ defmodule ProgRadioApi.Stream do
       :stream_url,
       :original_stream_url,
       :tags,
+      :genres,
       :original_tags,
       :country_code,
       :language,

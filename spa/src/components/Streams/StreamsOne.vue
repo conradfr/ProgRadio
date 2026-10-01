@@ -86,14 +86,20 @@
               {{ stream.description }}
             </div>
 
-            <div v-if="stream.tags" class="row">
+            <div v-if="tags || genres" class="row">
               <div class="col-12 col-sm-9">
                 <div class="stream-one-tags">
                   <div class="d-flex flex-wrap">
-                    <span v-for="tag in (stream.tags.split(','))" :key="tag"
+                    <span v-for="genre in genres" :key="genre"
+                          class="badge badge-inverse"
+                          @click="tagClick(genre)">
+                      <i class="bi bi-music-note"></i>&nbsp;{{ genre }}
+                    </span>
+
+                    <span v-for="tag in tags" :key="tag"
                       class="badge badge-inverse"
                       @click="tagClick(tag)">
-                      {{ tag }}
+                      #{{ tag }}
                     </span>
                   </div>
                 </div>
@@ -211,6 +217,20 @@ export default defineComponent({
     },
     country() {
       return this.getCountryName(this.stream!.country_code);
+    },
+    genres() {
+      if (!this.stream.genres || typeof this.stream.genres !== 'string') {
+        return [];
+      }
+
+      return [...new Set(this.stream.genres.split(','))];
+    },
+    tags() {
+      if (!this.stream.tags || typeof this.stream.tags !== 'string') {
+        return [];
+      }
+
+      return [...new Set(this.stream.tags.split(','))];
     },
     playImage() {
       return `${this.$CDN_BASE_URL}img/play-button-inside-a-circle.svg`;

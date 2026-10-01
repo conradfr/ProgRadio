@@ -5,6 +5,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Utils.ImporterUtils
+  alias ProgRadioApi.Importer.Classifiers.TagsClassifier
 
   @base_url "https://api.laut.fm"
   @page_size 250
@@ -109,9 +110,15 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
         NaiveDateTime.utc_now()
         |> NaiveDateTime.truncate(:second)
 
-      tags =
-        Map.get(overloading, :tags) ||
-          Map.get(stream, "genres", []) |> Enum.join(",") |> String.downcase()
+      {genres, tags} =
+        stream
+        |> Map.get("genres", [])
+        |> Enum.join(",")
+        |> String.downcase()
+        |> TagsClassifier.classify()
+
+      tags = Map.get(overloading, :tags) || tags
+      genres = Map.get(overloading, :genres) || genres
 
       stream_url =
         stream
@@ -134,6 +141,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
         stream_url: stream_url,
         original_stream_url: Map.get(stream, "stream_url"),
         tags: tags,
+        genres: genres,
         original_tags: Map.get(stream, "tags"),
         country_code: country_code,
         language:
@@ -176,6 +184,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Lautfm do
             original_img: s.original_img,
             country_code: s.country_code,
             tags: s.tags,
+            genres: s.genres,
             description: s.description,
             original_tags: s.original_tags,
             website: s.website,

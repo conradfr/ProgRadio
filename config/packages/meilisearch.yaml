@@ -12,5 +12,5 @@ meilisearch:
           class: App\Entity\Stream
           index_if: isIndexable
           settings:
-              displayedAttributes: [ 'id', 'name', 'tags' ]
-              searchableAttributes: [ 'name', 'tags' ]
+              displayedAttributes: [ 'id', 'name', 'tags', 'genres' ]
+              searchableAttributes: [ 'name', 'tags', 'genres', 'slogan' ]

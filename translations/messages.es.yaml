@@ -225,6 +225,7 @@ page:
             country: País
             language: Idioma
             tags: Etiquetas (en minúscula, separadas por una coma)
+            genres: Géneros musicales (en minúscula, separados por una coma)
             submit: Enviar
             delete: Eliminar
             delete_confirm: ¿Estás seguro de que deseas eliminar esta radio? Esta operación es irreversible.

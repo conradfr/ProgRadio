@@ -225,6 +225,7 @@ page:
             country: Kraj
             language: Język
             tags: Tagi (małymi literami, oddzielone przecinkiem)
+            genres: Gatunki muzyczne (małymi literami, oddzielone przecinkiem)
             submit: Prześlij
             delete: Usuń
             delete_confirm: Czy na pewno chcesz usunąć tę stację radiową? Ta operacja jest nieodwracalna.

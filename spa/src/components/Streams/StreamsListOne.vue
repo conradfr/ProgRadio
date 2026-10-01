@@ -16,11 +16,17 @@
       <div v-if="!hover && currentSong" class="streams-one-song">
         <span class="note-title">♫</span>&nbsp;{{ currentSong }}
       </div>
-      <div v-else-if="stream.tags" v-once class="streams-one-tags">
+      <div v-else-if="tags || genres" v-once class="streams-one-tags">
+        <span v-for="genre in genres" :key="genre"
+              class="badge badge-inverse"
+              @click.stop="tagClick(genre)">
+          {{ genre }}
+        </span>
+
         <span v-for="tag in tags" :key="tag"
           class="badge badge-inverse"
           @click.stop="tagClick(tag)">
-          {{ tag }}
+          #{{ tag }}
         </span>
       </div>
     </div>
@@ -204,6 +210,13 @@ export default defineComponent({
       }
 
       return this.listeners[this.stream.id];
+    },
+    genres() {
+      if (!this.stream.genres || typeof this.stream.genres !== 'string') {
+        return [];
+      }
+
+      return [...new Set(this.stream.genres.split(','))];
     },
     tags() {
       if (!this.stream.tags || typeof this.stream.tags !== 'string') {

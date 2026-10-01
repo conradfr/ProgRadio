@@ -374,10 +374,12 @@ defmodule ProgRadioApi.Streams do
         force_mpd: s.force_mpd,
         force_proxy: s.force_proxy,
         tags: s.tags,
+        genres: s.genres,
         country_code: s.country_code,
         language: s.language,
         website: s.website,
         description: s.description,
+        slogan: s.slogan,
         score: s.score,
         source: s.source,
         popup: s.popup,
@@ -545,14 +547,18 @@ defmodule ProgRadioApi.Streams do
     |> where(
       [s],
       fragment(
-        "? % ? or ? % ? or lower(?) LIKE ? or lower(?) LIKE ?",
+        "? % ? or ? % ? or ? % ? or lower(?) LIKE ? or lower(?) LIKE ? or lower(?) LIKE ?",
         s.name,
         ^text_search,
         s.tags,
+        ^text_search,
+        s.genres,
         ^text_search,
         s.name,
         ^text_search_like,
         s.tags,
+        ^text_search_like,
+        s.genres,
         ^text_search_like
       )
     )
@@ -935,5 +941,74 @@ defmodule ProgRadioApi.Streams do
     stream_check
     |> StreamCheck.changeset(params)
     |> Repo.insert_or_update()
+  end
+
+  # ---------- TAGS CLASSIFICATION ----------
+
+  @doc """
+  Splits the tags of every stream into its genres and its other tags, dropping the
+  useless ones (see ProgRadioApi.Importer.Classifiers.TagsClassifier). Run manually:
+
+      ProgRadioApi.Streams.classify_all_tags()
+
+  Re-runnable: the current genres are classified again along with the tags, so a
+  second run does not lose them. Returns the number of updated streams.
+  """
+  def classify_all_tags(batch_size \\ 1000) do
+    classify_tags_batch(nil, batch_size, 0)
+  end
+
+  defp classify_tags_batch(last_id, batch_size, count) do
+    query =
+      from(s in Stream,
+        select: {s.id, s.tags, s.genres},
+        order_by: s.id,
+        limit: ^batch_size
+      )
+
+    query = if last_id, do: where(query, [s], s.id > ^last_id), else: query
+
+    case Repo.all(query) do
+      [] ->
+        Logger.info("Tags classification done, #{count} streams updated")
+        count
+
+      rows ->
+        changes =
+          rows
+          |> Enum.map(fn {id, tags, genres} ->
+            {new_genres, new_tags} =
+              [genres, tags]
+              |> Enum.reject(&is_nil/1)
+              |> Enum.join(",")
+              |> ProgRadioApi.Importer.Classifiers.TagsClassifier.classify()
+
+            {id, tags, genres, new_tags, new_genres}
+          end)
+          |> Enum.reject(fn {_id, tags, genres, new_tags, new_genres} ->
+            tags == new_tags and genres == new_genres
+          end)
+
+        if changes != [] do
+          Repo.query!(
+            """
+            UPDATE stream AS s SET tags = v.tags, genres = v.genres
+            FROM unnest($1::uuid[], $2::text[], $3::text[]) AS v(id, tags, genres)
+            WHERE s.id = v.id
+            """,
+            [
+              Enum.map(changes, fn {id, _, _, _, _} -> Ecto.UUID.dump!(id) end),
+              Enum.map(changes, fn {_, _, _, new_tags, _} -> new_tags end),
+              Enum.map(changes, fn {_, _, _, _, new_genres} -> new_genres end)
+            ]
+          )
+        end
+
+        count = count + length(changes)
+        Logger.info("Tags classification: #{count} streams updated so far")
+
+        {last_id, _tags, _genres} = List.last(rows)
+        classify_tags_batch(last_id, batch_size, count)
+    end
   end
 end

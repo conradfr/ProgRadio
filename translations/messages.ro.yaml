@@ -225,6 +225,7 @@ page:
             country: Țară
             language: Limbă
             tags: Etichete (cu litere mici, separate prin virgulă)
+            genres: Genuri muzicale (cu litere mici, separate prin virgulă)
             submit: Trimite
             delete: Șterge
             delete_confirm: Ești sigur că dorești să ștergi acest radio? Această operațiune este ireversibilă.

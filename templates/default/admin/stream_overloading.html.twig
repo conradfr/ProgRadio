@@ -24,6 +24,9 @@
         document.getElementById('stream_overloading_tags').value = '{{ stream.tags }}';
       };
 
+      document.getElementById('genres').onclick = () => {
+        document.getElementById('stream_overloading_genres').value = '{{ stream.genres}}';
+      };
     </script>
 {% endblock %}
 
@@ -72,11 +75,11 @@
                     <div class="flex-fill">{{ form_row(form.popup) }}</div>
                 </div>
 
-                {{ form_row(form.countryCode) }}
                 {{ form_row(form.website) }}
                 {{ form_row(form.redirect) }}
 
                 <div class="d-flex justify-content-between mt-4 mb-1">
+                    <div>{{ form_row(form.countryCode) }}</div>
                     <div>{{ form_row(form.enabled) }}</div>
                     <div>{{ form_row(form.banned) }}</div>
                 </div>
@@ -84,6 +87,10 @@
                 {{ form_row(form.description) }}
                 {{ form_row(form.slogan) }}
 
+                <div class="d-flex justify-content-between mt-4">
+                  <div class="flex-fill">{{ form_row(form.tags) }}</div>
+                  <div class="flex-fill">{{ form_row(form.genres) }}</div>
+                </div>
             {{ form_end(form) }}
         </div>
         <div class="col-12 col-md-5 offset-md-1">
@@ -94,6 +101,8 @@
             {% if stream.originalStreamUrl is defined and stream.originalStreamUrl is not empty %}
                 <div class="mb-1"><strong>Original stream url:</strong> <a target="_blank" href="{{ stream.originalStreamUrl }}">{{ stream.originalStreamUrl }}</a></div>
             {% endif %}
+
+            <div class="mb-1"><strong>Genres:</strong> <span id="genres">{{ stream.genres }}</span></div>
 
             <div class="mb-1"><strong>Tags:</strong> <span id="tags">{{ stream.tags }}</span></div>
 

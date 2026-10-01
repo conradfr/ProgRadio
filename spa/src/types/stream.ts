@@ -14,6 +14,8 @@ export interface Stream {
   force_proxy: boolean
   website: string
   tags: string
+  genres: string
+  slogan: string
   popup: boolean
   playing_error: number
   source: string

@@ -124,7 +124,7 @@ class StreamRepository extends ServiceEntityRepository
         $user = $this->security->getUser();
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.language, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,s.playingError as playing_error,"
+        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.genres, s.language, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,s.playingError as playing_error,"
             . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and COALESCE(s.streamSongCodeName, s.streamUrl) IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', COALESCE(s.streamSongCodeName, s.streamUrl)) ELSE s.radioStreamCodeName END as radio_stream_code_name')
@@ -238,7 +238,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.language, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
+        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.genres, s.language, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
             . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and COALESCE(s.streamSongCodeName, s.streamUrl) IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', COALESCE(s.streamSongCodeName, s.streamUrl)) ELSE s.radioStreamCodeName END as radio_stream_code_name')
@@ -246,7 +246,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
-            ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
+            ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true or ILIKE(s.genres, :text) = true)')
             ->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled')
             //->orWhere('ILIKE(s.tags, :text) = true')
             ->setMaxResults($limit)
@@ -330,7 +330,7 @@ class StreamRepository extends ServiceEntityRepository
     ): ?array {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.language, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
+        $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.genres, s.language, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,"
             . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and COALESCE(s.streamSongCodeName, s.streamUrl) IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', COALESCE(s.streamSongCodeName, s.streamUrl)) ELSE s.radioStreamCodeName END as radio_stream_code_name')
@@ -416,7 +416,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb->select('count(s.id)')
             ->from(Stream::class, 's')
             ->where('s.enabled = true and s.banned = false')
-            ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true)')
+            ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true or ILIKE(s.genres, :text) = true)')
             ->setParameter('text', '%' . $text . '%');
 
         if ($countryOrCategory !== null) {

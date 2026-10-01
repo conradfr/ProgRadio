@@ -5,6 +5,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
 
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Utils.ImporterUtils
+  alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.{Stream, StreamOverloading}
 
   @source_name "weloveradio"
@@ -53,17 +54,16 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
         end)
         |> (&(Map.get(overloading, :stream_url) || &1)).()
 
-      tags =
-        Map.get(args, "genres", [])
+      {genres, tags} =
+        args
+        |> Map.get("genres", [])
         |> Enum.map(&String.downcase(&1["name"]))
         |> Enum.join(",")
-        |> (&(Map.get(overloading, :tags) || &1)).()
+        |> String.downcase()
+        |> TagsClassifier.classify()
 
-      tags =
-        case tags do
-          "" -> nil
-          value -> value
-        end
+      tags = (Map.get(overloading, :tags) || tags)
+      genres = (Map.get(overloading, :genres) || genres)
 
       slogan =
         case Map.get(args, "slogan") do
@@ -95,6 +95,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
           stream_url: stream_url,
           original_stream_url: stream_url,
           tags: tags,
+          genres: genres,
           original_tags: tags,
           country_code: Map.get(args, "country"),
           slogan: slogan,
@@ -123,6 +124,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
               original_img: stream.original_img,
               country_code: stream.country_code,
               tags: stream.tags,
+              genres: stream.genres,
               original_tags: stream.original_tags,
               website: stream.website,
               language: stream.language,

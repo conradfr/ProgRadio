@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(name: 'score_idx', columns: ['score'])]
 #[ORM\Index(name: 'countrycode_idx', columns: ['country_code'])]
 #[ORM\Index(name: 'stream_tags_idx', columns: ['tags'])]
+#[ORM\Index(name: 'stream_genres_idx', columns: ['genres'])]
 #[ORM\Index(name: 'stream_playing_error_index', columns: ['playing_error'])]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamRepository')]
 class Stream implements NormalizableInterface
@@ -64,6 +65,9 @@ class Stream implements NormalizableInterface
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $tags = null;
+
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    private ?string $genres = null;
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $originalTags = null;
@@ -242,6 +246,18 @@ class Stream implements NormalizableInterface
         $tags = str_replace(', ', ',', $tags);
         $tags = mb_strtolower($tags);
         $this->tags = $tags;
+    }
+
+    public function getGenres(): ?string
+    {
+        return $this->genres;
+    }
+
+    public function setGenres(?string $genres = null): void
+    {
+        $genres = str_replace(', ', ',', $genres);
+        $genres = mb_strtolower($genres);
+        $this->genres = $genres;
     }
 
     public function getOriginalTags(): ?string
@@ -563,6 +579,8 @@ class Stream implements NormalizableInterface
                 'objectID' => $this->getId()->toString(),
                 'name' => $this->getName(),
                 'tags' => $this->getTags(),
+                'genres' => $this->getGenres(),
+                'slogan' => $this->getSlogan(),
                 'score' => $this->getScore(),
                 'country_code' => $this->getCountryCode(),
                 'language' => $this->getLanguage(),

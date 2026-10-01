@@ -225,6 +225,7 @@ page:
             country: Land
             language: Sprache
             tags: Tags (in Kleinbuchstaben, durch Komma getrennt)
+            genres: Musikgenres (in Kleinbuchstaben, durch Komma getrennt)
             submit: Absenden
             delete: Löschen
             delete_confirm: Sind Sie sicher, dass Sie diesen Radiosender löschen möchten? Dieser Vorgang ist irreversibel.

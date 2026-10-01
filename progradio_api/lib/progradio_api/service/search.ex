@@ -13,6 +13,8 @@ defmodule ProgRadioApi.Search do
           objectID: s.id,
           name: s.name,
           tags: s.tags,
+          genres: s.genres,
+          slogan: s.slogan,
           language: s.language,
           country_code: s.country_code,
           playing_error: s.playing_error,
@@ -35,6 +37,8 @@ defmodule ProgRadioApi.Search do
     Meilisearch.Settings.SearchableAttributes.update(client, new_index, [
       "name",
       "tags",
+      "genres",
+      "slogan",
       "language"
     ])
 
@@ -74,6 +78,8 @@ defmodule ProgRadioApi.Search do
         objectID: stream.id,
         name: stream.name,
         tags: stream.tags,
+        genres: stream.genres,
+        slogan: stream.slogan,
         language: stream.language,
         country_code: stream.country_code,
         score: stream.score

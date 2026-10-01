@@ -37,8 +37,11 @@ class StreamOverloading
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: 'string', length: 2, nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $tags = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $genres = null;
 
     #[ORM\Column(type: 'boolean')]
     private ?bool $enabled = null;
@@ -157,6 +160,16 @@ class StreamOverloading
     public function setTags(?string $tags): void
     {
         $this->tags = $tags;
+    }
+
+    public function getGenres(): ?string
+    {
+        return $this->genres;
+    }
+
+    public function setGenres(?string $genres): void
+    {
+        $this->genres = $genres;
     }
 
     /**

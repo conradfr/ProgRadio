@@ -379,11 +379,19 @@
             {% endif %}
           {% endif %}
 
-          {% if stream.tags is not null and stream.tags != '' %}
+          {% if (stream.tags is not null and stream.tags != '') or (stream.genres is not null and stream.genres != '') %}
             <div class="mb-3">
               <div class="stream-one-tags">
                 <div class="d-flex flex-wrap align-items-center">
                   {#                                        <div class="me-2"><strong>{{ 'page.stream.tags'|trans }}:</strong></div>#}
+                  {% for genre in stream.genres|split(',') %}
+                    <a href="{{ path('streaming_spa') }}/all?s={{ genre }}">
+                    <span class="badge badge-inverse badge-link">
+                        <i class="bi bi-music-note"></i>&nbsp;&nbsp;{{ genre }}
+                    </span>
+                    </a>
+                  {% endfor %}
+
                   {% for tag in stream.tags|split(',') %}
                     <a href="{{ path('streaming_spa') }}/all?s={{ tag }}">
                     <span class="badge badge-inverse badge-link">

@@ -80,15 +80,27 @@ img/stream-placeholder.png
                                         <span class="note-title">♫</span>&nbsp;{{ song }}
                                     {% endverbatim %}
                                 </div>
-                                {% if stream.tags != null %}
+                                {% if stream.tags != null or stream.genres != null %}
                                 <div class="streams-one-tags" v-if="radioId !== '{{ stream.code_name }}' || playing === PLAYER_STATE_STOPPED || song === null">
-                                        {% for tag in stream.tags|split(',') %}
-                                            <a style="text-decoration: none" href="{{ path('streaming_spa') }}/all?s={{ tag }}">
-                                            <span class="badge badge-inverse" >
-                                                {{ tag }}
-                                            </span>
-                                            </a>
-                                        {% endfor %}
+                                    {% if stream.genres != null %}
+                                      {% for genre in stream.genres|split(',') %}
+                                        <a style="text-decoration: none" href="{{ path('streaming_spa') }}/all?s={{ genre }}">
+                                          <span class="badge badge-inverse" >
+                                              {{ genre }}
+                                          </span>
+                                        </a>
+                                      {% endfor %}
+                                    {% endif %}
+
+                                    {% if stream.tags != null %}
+                                      {% for tag in stream.tags|split(',') %}
+                                          <a style="text-decoration: none" href="{{ path('streaming_spa') }}/all?s={{ tag }}">
+                                          <span class="badge badge-inverse" >
+                                              #{{ tag }}
+                                          </span>
+                                          </a>
+                                      {% endfor %}
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>

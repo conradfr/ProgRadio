@@ -213,6 +213,7 @@ page:
             country: Land
             language: Taal
             tags: Tags (in kleine letters, gescheiden door komma's)
+            genres: Muziekgenres (in kleine letters, gescheiden door komma's)
             submit: Verzenden
             delete: Verwijderen
             delete_confirm: Weet u zeker dat u deze radiozender wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.

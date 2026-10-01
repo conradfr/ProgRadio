@@ -28,6 +28,7 @@ class StreamOverloadingType extends AbstractType
             ->add('countryCode', TextType::class, ['label' => 'Country Code', 'required' => false])
             ->add('website', TextType::class, ['label' => 'Website', 'required' => false])
             ->add('tags', TextType::class, ['label' => 'Tags', 'required' => false])
+            ->add('genres', TextType::class, ['label' => 'Genres', 'required' => false])
             ->add('redirect', TextType::class, ['label' => 'Redirect', 'required' => false, 'mapped' => false])
             ->add('enabled', CheckboxType::class, ['label' => 'Enabled', 'required' => false])
             ->add('banned', CheckboxType::class, ['label' => 'Banned', 'required' => false])

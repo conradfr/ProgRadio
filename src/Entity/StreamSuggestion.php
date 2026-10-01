@@ -34,6 +34,9 @@ class StreamSuggestion
     private ?string $website = null;
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    private ?string $genres = null;
+
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $tags = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
@@ -101,6 +104,16 @@ class StreamSuggestion
     public function getWebsite(): ?string
     {
         return $this->website;
+    }
+
+    public function getGenres(): ?string
+    {
+        return $this->genres;
+    }
+
+    public function setGenres(?string $genres): void
+    {
+        $this->genres = $genres;
     }
 
     public function getTags(): ?string

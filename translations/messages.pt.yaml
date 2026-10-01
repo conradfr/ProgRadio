@@ -225,6 +225,7 @@ page:
             country: País
             language: Idioma
             tags: Tags (em minúsculo, separados por vírgula)
+            genres: Gêneros musicais (em minúsculo, separados por vírgula)
             submit: Enviar
             delete: Excluir
             delete_confirm: Tem certeza de que deseja excluir esta rádio? Esta operação é irreversível.

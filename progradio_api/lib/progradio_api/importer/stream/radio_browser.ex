@@ -6,6 +6,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Streams
   alias ProgRadioApi.Importer.ImageImporter
+  alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.Utils.ImporterUtils
 
   @servers_dns "all.api.radio-browser.info"
@@ -188,6 +189,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         end
         |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :tags) || &1)).()
 
+      {genres, tags} = TagsClassifier.IO.puts(tags)
+
       import_updated_at =
         NaiveDateTime.utc_now()
         |> NaiveDateTime.truncate(:second)
@@ -223,6 +226,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         stream_url: stream_url,
         original_stream_url: stream_url,
         tags: Map.get(overloading, :tags) || tags,
+        genres: Map.get(overloading, :genres) || genres,
         original_tags: Map.get(stream, "tags"),
         country_code: country_code,
         language:
@@ -270,6 +274,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         |> ImporterUtils.stream_url_transformer(),
       original_stream_url: stream.original_stream_url,
       tags: stream.tags,
+      genres: stream.genres,
       original_tags: stream.original_tags,
       country_code: Map.get(overloading, :country_code) || stream.country_code,
       language: stream.language,
@@ -348,6 +353,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             original_img: s.original_img,
             country_code: s.country_code,
             tags: s.tags,
+            genres: s.genres,
             original_tags: s.original_tags,
             website: s.website,
             language: s.language,
@@ -398,6 +404,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
           id: s.id,
           code_name: s.id,
           tags: s.tags,
+          genres: s.genres,
           original_tags: s.original_tags,
           language: s.language,
           name: fragment("COALESCE(?, ?)", so.name, s.name),
