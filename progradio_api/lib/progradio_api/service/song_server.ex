@@ -8,6 +8,8 @@ defmodule ProgRadioApi.SongServer do
   alias ProgRadioApi.TaskSupervisor
 
   @max_song_history 10
+  # songs of the history checked against a new entry before broadcasting it
+  @recent_song_history 3
   @history_ttl 600
 
   # JSON keys restored from Redis => song map keys
@@ -502,13 +504,26 @@ defmodule ProgRadioApi.SongServer do
 #  end
 
   defp broadcast_song_history_if_needed(name, song_history, last_song_history, stream_ids) do
-    case song_history -- last_song_history do
-      [] ->
+    cond do
+      song_history -- last_song_history == [] ->
         Logger.debug("Data provider - #{name}: song history updated, no broadcast")
 
-      _ ->
+      # near the end of a song, some streams metadata alternate between the current
+      # song and the next one: a song coming back that quickly is not a new entry
+      recent_song?(hd(song_history), last_song_history) ->
+        Logger.debug("Data provider - #{name}: song already in recent history, no broadcast")
+
+      true ->
         broadcast_song_history(name, song_history, stream_ids)
     end
+  end
+
+  defp recent_song?(song, song_history) do
+    song = Map.delete(song, :detected_at)
+
+    song_history
+    |> Enum.take(@recent_song_history)
+    |> Enum.any?(&(Map.delete(&1, :detected_at) == song))
   end
 
   @spec broadcast_song_history(String.t(), list, [String.t()] | nil) :: none()
