@@ -49,6 +49,34 @@ defmodule ProgRadioApi.ListeningSessions do
     end
   end
 
+  # find a session already created for the same stream / start / ip
+  # (client sent a create while the previous create response was not received yet)
+  def find_existing_listening_session(
+        %{"stream_id" => stream_id, "date_time_start" => date_time_start},
+        remote_ip
+      )
+      when is_binary(stream_id) and is_binary(date_time_start) do
+    with {:ok, stream_uuid} <- Ecto.UUID.cast(stream_id),
+         {:ok, date_time_start, _} <- DateTime.from_iso8601(date_time_start) do
+      date_time_start = DateTime.truncate(date_time_start, :second)
+      ip_binary = get_ip_as_binary(remote_ip)
+
+      ListeningSession
+      |> where(
+        [ls],
+        ls.stream_id == ^stream_uuid and ls.date_time_start == ^date_time_start and
+          ls.ip_address == ^ip_binary
+      )
+      |> order_by([ls], desc: ls.date_time_end)
+      |> limit(1)
+      |> Repo.one()
+    else
+      _ -> nil
+    end
+  end
+
+  def find_existing_listening_session(_attrs, _remote_ip), do: nil
+
   # Legacy: kept because not everyone will have the page refreshed with the new code
   # TODO remove after some time
   def create_listening_session(
@@ -139,53 +167,6 @@ defmodule ProgRadioApi.ListeningSessions do
         |> Repo.update()
     end
   end
-
-  #  @doc """
-  #  Updates a listening_session.
-  #
-  #  ## Examples
-  #
-  #      iex> update_listening_session(listening_session, %{field: new_value})
-  #      {:ok, %ListeningSession{}}
-  #
-  #      iex> update_listening_session(listening_session, %{field: bad_value})
-  #      {:error, %Ecto.Changeset{}}
-  #
-  #  """
-  #  def update_listening_session(%ListeningSession{} = listening_session, attrs) do
-  #    listening_session
-  #    |> ListeningSession.changeset(attrs)
-  #    |> Repo.update()
-  #  end
-
-  #  @doc """
-  #  Deletes a listening_session.
-  #
-  #  ## Examples
-  #
-  #      iex> delete_listening_session(listening_session)
-  #      {:ok, %ListeningSession{}}
-  #
-  #      iex> delete_listening_session(listening_session)
-  #      {:error, %Ecto.Changeset{}}
-  #
-  #  """
-  #  def delete_listening_session(%ListeningSession{} = listening_session) do
-  #    Repo.delete(listening_session)
-  #  end
-
-  #  @doc """
-  #  Returns an `%Ecto.Changeset{}` for tracking listening_session changes.
-  #
-  #  ## Examples
-  #
-  #      iex> change_listening_session(listening_session)
-  #      %Ecto.Changeset{data: %ListeningSession{}}
-  #
-  #  """
-  #  def change_listening_session(%ListeningSession{} = listening_session, attrs \\ %{}) do
-  #    ListeningSession.changeset(listening_session, attrs)
-  #  end
 
   defp get_ip_as_binary(remote_ip) do
     remote_ip

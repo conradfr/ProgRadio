@@ -304,6 +304,7 @@ createApp({
 
           this.hls.on(Hls.Events.ERROR, (_event, data) => {
             if (data.fatal) {
+              this.stop();
               this.playingError(codeName, data.details);
             }
           });
@@ -332,6 +333,7 @@ createApp({
         this.dash.initialize(window.audio, streamingUrl, false);
 
         this.dash.on('error', () => {
+          this.stop();
           this.playingError(codeName);
         });
 
@@ -364,9 +366,10 @@ createApp({
       setAudioVolume();
 
       window.audio.onerror = (error) => {
+        this.stop();
+
         // if stream failed and is http we try to switch to our https proxy
         if (streamingUrl.trim().substring(0, 5) !== 'https') {
-          this.stop();
           this.play(
             streamingUrl,
             codeName,
@@ -445,6 +448,12 @@ createApp({
           }
         });
       }, LISTENING_MIN_INTERVAL);
+
+      // to be sure
+      if (this.listeningInterval !== null) {
+        clearInterval(this.listeningInterval);
+        this.listeningInterval = null;
+      }
 
       this.listeningInterval = setInterval(() => {
         updateListeningSession(this.radioId, this.playingStart, this.sessionId)?.then((data) => {
@@ -670,6 +679,7 @@ createApp({
           historyElem.querySelectorAll('.song-history-time').forEach((el) => {
             const date = new Date(el.getAttribute('datetime'));
             if (!isNaN(date)) {
+              // eslint-disable-next-line no-param-reassign
               el.textContent = timeFormat.format(date);
             }
           });

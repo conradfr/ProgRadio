@@ -158,7 +158,8 @@ class ListeningSessionRepository extends ServiceEntityRepository
                     COALESCE(json_agg(json_build_object('stream', ls.stream_id, 'total', ls.total_streams))
                         FILTER (WHERE ls.radio_stream_code_name IS NULL AND ls.stream_id IS NOT NULL), '[]') as list_streams
             FROM (
-                    select ls.source, s.radio_stream_code_name, count(r.id) as total_radios, s.id as stream_id, count(s.id) as total_streams
+                    select ls.source, s.radio_stream_code_name, count(r.id) as total_radios, s.id as stream_id,
+                        count(s.id) FILTER (WHERE s.radio_stream_code_name IS NULL) as total_streams
                     from listening_session ls
                     left join stream s on ls.stream_id = s.id
                     left join radio r on s.radio_id = r.id

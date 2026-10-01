@@ -406,6 +406,11 @@ export const usePlayerStore = defineStore('player', {
         );
       }, config.LISTENING_SESSION_MIN_SECONDS * 1000);
 
+      if (this.sessionInterval !== null) {
+        clearInterval(this.sessionInterval);
+        this.sessionInterval = null;
+      }
+
       this.sessionInterval = setInterval(() => {
         PlayerUtils.sendListeningSession(
           this.playing,

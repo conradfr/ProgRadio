@@ -7,6 +7,19 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
   alias ProgRadioApi.Streams
 
   def create(conn, listening_session_params) do
+    case ListeningSessions.find_existing_listening_session(
+           listening_session_params,
+           conn.remote_ip
+         ) do
+      nil ->
+        do_create(conn, listening_session_params)
+
+      existing_listening_session ->
+        update(conn, Map.put(listening_session_params, "id", existing_listening_session.id))
+    end
+  end
+
+  defp do_create(conn, listening_session_params) do
     with false <-
            (conn.remote_ip |> Tuple.to_list() |> Enum.join(".")) in Application.get_env(
              :progradio_api,

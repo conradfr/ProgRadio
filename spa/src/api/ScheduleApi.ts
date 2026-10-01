@@ -109,7 +109,7 @@ const sendListeningSession = async (
 
   postData.stream_id = radioId;
 
-  if (id !== undefined && id !== null) {
+  if (id) {
     // @ts-expect-error apiUrl is defined on the global scope
     // eslint-disable-next-line no-undef
     const response = await fetch(`https://${apiUrl}/listening_session/${id}`, {
@@ -122,7 +122,7 @@ const sendListeningSession = async (
 
     const data = await response.json();
 
-    if (data && data.id !== id) {
+    if (data && data.id && data.id !== id) {
       /* eslint-disable object-shorthand */
       document.getElementById('app')!
         // @ts-ignore

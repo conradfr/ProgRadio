@@ -559,6 +559,8 @@ export default defineComponent({
                   type: 'error'
                 });
 
+                this.setPlayerStatus(PlayerStatus.Stopped);
+                this.stop();
                 this.playError();
 
                 if (this.stream) {
@@ -615,6 +617,8 @@ export default defineComponent({
               type: 'error'
             });
 
+            this.setPlayerStatus(PlayerStatus.Stopped);
+            this.stop();
             this.playError();
 
             if (this.stream) {
