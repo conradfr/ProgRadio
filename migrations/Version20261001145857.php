@@ -22,6 +22,7 @@ final class Version20261001145857 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE stream ADD genres TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE stream_overloading ADD genres TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE stream_suggestion ADD genres TEXT DEFAULT NULL');
         $this->addSql('CREATE INDEX stream_genres_idx ON stream (lower(genres))');
     }
 

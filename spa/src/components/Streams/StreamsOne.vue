@@ -91,8 +91,8 @@
                 <div class="stream-one-tags">
                   <div class="d-flex flex-wrap">
                     <span v-for="genre in genres" :key="genre"
-                          class="badge badge-inverse"
-                          @click="tagClick(genre)">
+                      class="badge badge-inverse"
+                      @click="tagClick(genre)">
                       <i class="bi bi-music-note"></i>&nbsp;{{ genre }}
                     </span>
 
