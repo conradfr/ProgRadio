@@ -160,6 +160,14 @@ defmodule ProgRadioApi.Stream do
     |> validate_required([:tags])
   end
 
+  def changeset_genres(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :genres
+    ])
+    |> validate_required([:genres])
+  end
+
   def changeset_redirect_to(stream, params \\ %{}) do
     stream
     |> cast(params, [

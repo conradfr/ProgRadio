@@ -11,6 +11,7 @@ defmodule ProgRadioApi.Importer.Ai do
 
   # ProgRadioApi.Importer.Ai.update_description(1000)
   # ProgRadioApi.Importer.Ai.update_tags(1000)
+  # ProgRadioApi.Importer.Ai.update_genres(1000)
 
   # ---------- PUBLIC ----------
 
@@ -82,6 +83,40 @@ defmodule ProgRadioApi.Importer.Ai do
     )
   end
 
+  def update_genres(limit \\ 1, offset \\ 0, batch_size \\ @default_batch_size) do
+    openai =
+      OpenaiEx._for_azure(
+        System.fetch_env!("AZURE_GPT_API_KEY"),
+        System.fetch_env!("AZURE_GPT_BASE_URL"),
+        System.fetch_env!("AZURE_GPT_DEPLOYMENT"),
+        System.fetch_env!("AZURE_GPT_VERSION")
+      )
+
+    query =
+      from s in ProgRadioStream,
+        select: s,
+        #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
+        where:
+          s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
+            not is_nil(s.country_code) and (is_nil(s.genres) or s.genres == ""),
+        order_by: [desc: s.score],
+        offset: ^offset,
+        limit: ^limit
+
+    Repo.transaction(
+      fn ->
+        query
+        |> Repo.stream(max_rows: 100)
+        |> Stream.chunk_every(batch_size)
+        |> Stream.each(fn batch ->
+          process_genres_batch(batch, openai)
+        end)
+        |> Stream.run()
+      end,
+      timeout: :infinity
+    )
+  end
+
   # ---------- PRIVATE ----------
 
   defp process_description_batch(batch, openai) do
@@ -106,7 +141,7 @@ defmodule ProgRadioApi.Importer.Ai do
 
   defp fetch_description(e, openai) do
     prompt =
-      "Describe in three sentences maximum the radio whose name is given by the chat input. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer an empty string if you don't find information (not that you didn't find information). Your answer must be in the most appropriate language for the country code given in the chat input, taking also into account the language given in the input chat (if any), Translate it if you need."
+      "Describe in three sentences maximum the radio whose name is given by the chat input. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer an empty string if you don't find information (and absolutely not that you didn't find information). Your answer must be in the most appropriate language for the country code given in the chat input, taking also into account the language given in the input chat (if any), Translate it if you need."
 
     params = """
     radio: #{e.name}
@@ -126,8 +161,8 @@ defmodule ProgRadioApi.Importer.Ai do
 
     case Chat.Completions.create(openai, chat_req) do
       {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
-      when is_binary(content) and content != "" ->
-        Logger.info("Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..10)}")
+      when is_binary(content) and content != "" and content != "\"\"" ->
+        Logger.info("Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..25)}")
 
         content
 
@@ -159,7 +194,7 @@ defmodule ProgRadioApi.Importer.Ai do
 
   defp fetch_tags(e, openai) do
     prompt =
-      "Find five tags maximum that resume the radio whose name is given by the chat input. Focus on the type of radio (music, news, talk etc...) and if it's a music station focus also on the most relevant music style. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer an empty string if you don't find something. Tags must be in English. Return them as one line, each tag in lowercase and separated by a comma, no blank space around the commas."
+      "Find three tags maximum that resume the radio whose name is given by the chat input. Focus on the type of radio (music, news, talk etc...), DO NOT use music genres (it's stored in a separate field). If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer an empty string if you don't find something. Tags must be in English. Return them as one line, each tag in lowercase and separated by a comma, no blank space around the commas."
 
     params = """
     radio: #{e.name}
@@ -178,7 +213,61 @@ defmodule ProgRadioApi.Importer.Ai do
 
     case Chat.Completions.create(openai, chat_req) do
       {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
-      when is_binary(content) and content != "" ->
+      when is_binary(content) and content != "" and content != "\"\"" ->
+        Logger.info(
+          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..100)} (...)"
+        )
+
+        content
+
+      _ ->
+        Logger.info("No result for radio #{e.name}- #{e.id}")
+        nil
+    end
+  end
+
+  defp process_genres_batch(batch, openai) do
+    changesets =
+      batch
+      |> Enum.map(fn stream_record ->
+        {stream_record, fetch_genres(stream_record, openai)}
+      end)
+      |> Enum.filter(fn {_record, genres} -> genres != nil end)
+      |> Enum.map(fn {record, genres} ->
+        ProgRadioStream.changeset_genres(record, %{genres: genres})
+      end)
+
+    case update_batch(changesets) do
+      {:ok, count} ->
+        Logger.info("Successfully updated #{count} records in batch")
+
+      {:error, reason} ->
+        Logger.error("Failed to update batch: #{inspect(reason)}")
+    end
+  end
+
+  defp fetch_genres(e, openai) do
+    prompt =
+      "Find three music genres maximum (but if you find only one or two it's absolutely fine, don't invent to fill the three limit) that are mainly played by the radio whose name is given by the chat input. Only use music genres (rock, jazz, pop etc...), DO NOT use the type of radio (music, news, talk etc...) as it's stored in a separate field. If not sure about the correct radio, use the country code given in the chat input to select the correct one. You can use its website if it's given in the chat input, Wikipedia and then web search if needed (prioritized in that order). Answer an empty string if you don't find something or if the radio does not play music. Genres must be in English. Return them as one line, each genre in lowercase and separated by a comma, no blank space around the commas."
+
+    params = """
+    radio: #{e.name}
+    website: #{if not is_nil(e.website), do: e.website, else: "none"}
+    country code: #{e.country_code}
+    """
+
+    chat_req =
+      Chat.Completions.new(
+        model: "gpt-4.1-mini",
+        messages: [
+          ChatMessage.system(prompt),
+          ChatMessage.user(params)
+        ]
+      )
+
+    case Chat.Completions.create(openai, chat_req) do
+      {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
+      when is_binary(content) and content != "" and content != "\"\"" ->
         Logger.info(
           "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..100)} (...)"
         )
