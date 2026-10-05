@@ -215,7 +215,7 @@ defmodule ProgRadioApi.Importer.Ai do
       {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
       when is_binary(content) and content != "" and content != "\"\"" ->
         Logger.info(
-          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..100)} (...)"
+          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..100)}"
         )
 
         content
@@ -269,7 +269,7 @@ defmodule ProgRadioApi.Importer.Ai do
       {:ok, %{"choices" => [%{"message" => %{"content" => content}} | _]}}
       when is_binary(content) and content != "" and content != "\"\"" ->
         Logger.info(
-          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..100)} (...)"
+          "Result found for radio #{e.name} - #{e.id}: #{String.slice(content, 0..100)}"
         )
 
         content

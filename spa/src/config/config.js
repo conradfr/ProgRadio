@@ -146,6 +146,9 @@ export const PLAYER_STATE = [
 export const PROGRADIO_AGENT = 'programmes-radio.com';
 export const RADIOADDICT_AGENT = 'radio-addict.com';
 
+// user agent of the ios app webview, where ads are not displayed
+export const IOS_APP_USER_AGENT = 'Mobile/15E148 radioaddict';
+
 // ----- GTAG -----
 
 // cross

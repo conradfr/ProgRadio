@@ -1,4 +1,6 @@
-{% if app.environment == 'prod' %}
+{% set user_agent = app.request ? app.request.headers.get('User-Agent')|default('') : '' %}
+{# no ads in ios app #}
+{% if app.environment == 'prod' and 'Mobile/15E148 radioaddict' not in user_agent %}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_key }}"
             crossorigin="anonymous"></script>
     <script type="text/javascript">(adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;</script>

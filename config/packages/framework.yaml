@@ -13,8 +13,9 @@ framework:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
         cookie_secure: auto
         cookie_samesite: lax
+        gc_maxlifetime: 604800 # 7 days
 
-    #esi: true
+  #esi: true
     #fragments: true
 
     trusted_proxies: '127.0.0.1,REMOTE_ADDR'

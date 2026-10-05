@@ -1,5 +1,5 @@
 <template>
-  <div :ref="setRef" style="margin:auto;" class="mb-3 w-100">
+  <div v-if="!disabled" :ref="setRef" style="margin:auto;" class="mb-3 w-100">
     <ins v-if="mode === 'auto'" class="adsbygoogle"
       style="display:block; margin:auto;width: 195px;"
       :data-ad-client="adsense_key"
@@ -24,6 +24,8 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
+import { IOS_APP_USER_AGENT } from '@/config/config';
+
 export default defineComponent({
   props: {
     mode: {
@@ -37,8 +39,11 @@ export default defineComponent({
     adsense_tag_vert_key: string,
     adsense_tag_horiz_fix_key: string,
     tagRef: HTMLElement|null,
+    disabled: boolean,
   } {
     return {
+      // no ads in ios app
+      disabled: navigator.userAgent.includes(IOS_APP_USER_AGENT),
       // @ts-expect-error defined on global scope
       // eslint-disable-next-line no-undef
       adsense_key,
@@ -54,7 +59,7 @@ export default defineComponent({
   mounted() {
     // @ts-expect-error defined on global scope
     // eslint-disable-next-line no-undef
-    if (appEnv !== 'prod') {
+    if (appEnv !== 'prod' || this.disabled) {
       return;
     }
 
