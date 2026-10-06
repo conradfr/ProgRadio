@@ -281,7 +281,7 @@ class StreamRepository extends ServiceEntityRepository
             }
         }
 
-        if ((strtoupper($countryOrCategory) === Stream::HISTORY || strtoupper($countryOrCategory) === Stream::USER_LISTENED)
+        if (is_string($countryOrCategory) && (strtoupper($countryOrCategory) === Stream::HISTORY || strtoupper($countryOrCategory) === Stream::USER_LISTENED)
             && $user !== null) {
             $qb->addGroupBy('sh.lastListenedAt');
 
