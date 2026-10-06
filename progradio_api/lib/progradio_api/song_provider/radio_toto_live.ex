@@ -25,9 +25,15 @@ defmodule ProgRadioApi.SongProvider.RadioTotoLive do
   @impl true
   def get_song(name, data, _last_song) do
     try do
+      {artist, title} =
+        case Map.get(data, "artist") do
+          nil -> {Map.get(data, "title"), nil}
+          artist -> {artist, Map.get(data, "title")}
+        end
+
       %{
-        artist: Map.get(data, "title"),
-        title: nil,
+        artist: artist,
+        title: title,
         cover_url: data |> Map.get("cover") |> cover_url()
       }
     rescue

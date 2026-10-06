@@ -14,7 +14,6 @@ services:
       - php-fpm
 
   php-fpm:
-    image: php:8-fpm
     build:
       context: ./
       dockerfile: ./tools/dev/Dockerfile_php
@@ -25,7 +24,6 @@ services:
       - ./:/var/www
 
   spa:
-    image: node:lts-alpine
     build:
       context: .
       dockerfile: ./tools/dev/Dockerfile_spa
