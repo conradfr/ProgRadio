@@ -19,13 +19,15 @@ import {
   COOKIE_VOLUME,
   SOURCE_INCREMENT_COUNT,
   PROGRADIO_AGENT,
-  RADIOADDICT_AGENT
+  RADIOADDICT_AGENT,
+  YOUTUBE_START_TIMEOUT_SECONDS
 } from './config/config.js';
 
 /* eslint-disable no-undef */
 
 const LISTENING_MIN_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
 const LISTENING_INTERVAL = LISTENING_SESSION_INTERVAL_SECONDS * 1000;
+const YOUTUBE_START_TIMEOUT = YOUTUBE_START_TIMEOUT_SECONDS * 1000;
 
 // todo now that we removed the dynamic video tag, refactor the window.audio = elem.
 
@@ -46,6 +48,39 @@ const loadHls = () => {
     hlsScript.onerror = reject;
     document.body.appendChild(hlsScript);
   });
+};
+
+/* we load the YouTube iframe api script dynamically once */
+let youtubeApiPromise = null;
+const loadYoutubeApi = () => {
+  if (youtubeApiPromise !== null) {
+    return youtubeApiPromise;
+  }
+
+  youtubeApiPromise = new Promise((resolve, reject) => {
+    if (window.YT && window.YT.Player) {
+      resolve();
+      return;
+    }
+
+    // called by the YouTube script once the api is usable
+    const previousCallback = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (typeof previousCallback === 'function') {
+        previousCallback();
+      }
+      resolve();
+    };
+
+    const youtubeScript = document.createElement('script');
+    youtubeScript.type = 'text/javascript';
+    youtubeScript.id = 'youtube-script';
+    youtubeScript.src = 'https://www.youtube.com/iframe_api';
+    youtubeScript.onerror = reject;
+    document.body.appendChild(youtubeScript);
+  });
+
+  return youtubeApiPromise;
 };
 
 /* we load the dash script dynamically once, reducing initial app load */
@@ -488,6 +523,80 @@ createApp({
         this.joinChannel(`listeners:${radioOrStreamId.trim()}`);
       }
     }, 500);
+  },
+  initYoutube(el, streamId) {
+    loadYoutubeApi().then(() => {
+      let errorSent = false;
+      let hasPlayed = false;
+      let startTimer = null;
+
+      const clearStartTimer = () => {
+        if (startTimer !== null) {
+          clearTimeout(startTimer);
+          startTimer = null;
+        }
+      };
+
+      const sendError = (errorText) => {
+        clearStartTimer();
+
+        if (errorSent) {
+          return;
+        }
+
+        errorSent = true;
+
+        if (this.options.sendStatistics) {
+          sendPlayingError(streamId, errorText);
+        }
+      };
+
+      new YT.Player(el, {
+        events: {
+          // an unavailable video can fail before we are listening to the player, so onError is never sent:
+          // we check the (undocumented) video data once the player is ready
+          onReady: (event) => {
+            const videoData = typeof event.target.getVideoData === 'function' ? event.target.getVideoData() : null;
+
+            if (videoData && (videoData.isPlayable === false || videoData.errorCode)) {
+              sendError(`YouTube video unavailable${videoData.errorCode ? ` (${videoData.errorCode})` : ''}`);
+            }
+          },
+          // removed, private or not embeddable video
+          onError: (event) => {
+            sendError(`YouTube error ${event.data}`);
+          },
+          // offline live videos usually do not trigger an error, they just never start
+          onStateChange: (event) => {
+            if (event.data === YT.PlayerState.PLAYING) {
+              hasPlayed = true;
+              clearStartTimer();
+              return;
+            }
+
+            // "unstarted" can also be sent without any user action, so it counts only if the player has been clicked
+            const isStarting = event.data === YT.PlayerState.BUFFERING
+              || (event.data === YT.PlayerState.UNSTARTED && document.activeElement === el);
+
+            if (!isStarting) {
+              clearStartTimer();
+              return;
+            }
+
+            if (hasPlayed || errorSent || startTimer !== null) {
+              return;
+            }
+
+            startTimer = setTimeout(() => {
+              startTimer = null;
+              sendError('YouTube video not starting');
+            }, YOUTUBE_START_TIMEOUT);
+          }
+        }
+      });
+    }).catch(() => {
+      // api script blocked or unreachable: nothing to report
+    });
   },
   playingError(codeName, errorText) {
     // the delay prevents sending an error when the user just click a link and goes to another page...

@@ -41,13 +41,16 @@
   {% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}{% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %} - {{ stream.slogan }}{% endif %}
 {% endmacro %}
 
-{% macro extractYouTubeIdAndProvideiFrame(url) %}
+{% macro extractYouTubeIdAndProvideiFrame(url, stream_id) %}
   {% set youtube_id = url | replace({
     'https://youtu.be/': '',
     'https://www.youtube.com/live/': '',
     'https://www.youtube.com/watch?v=': ''
   }) | split('?') | first %}
-  <iframe width="325" height="183" src="https://www.youtube.com/embed/{{ youtube_id }}" title="YouTube video player" frameborder="0"
+  {# enablejsapi + initYoutube: reports to the api when the video is not working #}
+  <iframe id="youtube-player" width="325" height="183" title="YouTube video player" frameborder="0"
+          src="https://www.youtube.com/embed/{{ youtube_id }}?enablejsapi=1&origin={{ app.request.schemeAndHttpHost|url_encode }}"
+          @vue:mounted="initYoutube($el, '{{- stream_id -}}')"
           sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-presentation"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -219,7 +222,7 @@
                   {% if stream.banned == true %}
                     <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
                   {% elseif 'youtu.be' in stream.streamUrl or 'youtube.com' in stream.streamUrl %}
-                    {{ self.extractYouTubeIdAndProvideiFrame(stream.streamUrl) }}
+                    {{ self.extractYouTubeIdAndProvideiFrame(stream.streamUrl, stream.id) }}
                   {% elseif 'dailymotion' in stream.streamUrl %}
                     {{ self.extractDailymotionIdAndProvideiFrame(stream.streamUrl) }}
                   {% else %}

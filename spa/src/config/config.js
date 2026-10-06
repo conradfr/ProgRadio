@@ -98,6 +98,9 @@ export const LISTENING_SESSION_INTERVAL_SECONDS = 30;
 export const LISTENING_SESSION_SOURCE = 'web';
 export const LISTENING_SESSION_SOURCE_SSR = 'seo';
 
+// delay for a started YouTube video to reach the playing state before we consider it is not working
+export const YOUTUBE_START_TIMEOUT_SECONDS = 15;
+
 export const STREAMS_DEFAULT_PER_PAGE = 48;
 // export const STREAMS_MAX_PAGES_DISPLAY = 9;
 
