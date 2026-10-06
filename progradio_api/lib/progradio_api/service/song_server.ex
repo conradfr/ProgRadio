@@ -498,10 +498,10 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
-#  defp broadcast_song_history_if_needed(name, song_history, _last_song_history, stream_ids)
-#       when length(song_history) < @max_song_history do
-#    broadcast_song_history(name, song_history, stream_ids)
-#  end
+  #  defp broadcast_song_history_if_needed(name, song_history, _last_song_history, stream_ids)
+  #       when length(song_history) < @max_song_history do
+  #    broadcast_song_history(name, song_history, stream_ids)
+  #  end
 
   defp broadcast_song_history_if_needed(name, song_history, last_song_history, stream_ids) do
     cond do

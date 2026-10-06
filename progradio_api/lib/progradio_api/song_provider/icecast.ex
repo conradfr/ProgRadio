@@ -428,17 +428,11 @@ defmodule ProgRadioApi.SongProvider.Icecast do
         end
 
       nil ->
-        case data do
-          data when is_binary(data) ->
-            %{
-              artist: data,
-              title: nil,
-              cover_url: nil
-            }
-
-          _ ->
-            nil
-        end
+        %{
+          artist: data,
+          title: nil,
+          cover_url: nil
+        }
     end
   end
 

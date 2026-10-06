@@ -153,7 +153,7 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
         Logger.info("Stream import job: RadioBox: stream already in database (#{url})")
       end
     rescue
-      e ->
+      _e ->
         Logger.error("Stream import job: RadioBox - rescue (#{Map.get(args, "url", "")})")
     end
 

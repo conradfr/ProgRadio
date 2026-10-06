@@ -189,7 +189,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         end
         |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :tags) || &1)).()
 
-      {genres, tags} = TagsClassifier.IO.puts(tags)
+      {genres, tags} = TagsClassifier.classify(tags)
 
       import_updated_at =
         NaiveDateTime.utc_now()

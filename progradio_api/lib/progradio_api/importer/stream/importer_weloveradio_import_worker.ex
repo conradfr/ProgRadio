@@ -62,8 +62,8 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
         |> String.downcase()
         |> TagsClassifier.classify()
 
-      tags = (Map.get(overloading, :tags) || tags)
-      genres = (Map.get(overloading, :genres) || genres)
+      tags = Map.get(overloading, :tags) || tags
+      genres = Map.get(overloading, :genres) || genres
 
       slogan =
         case Map.get(args, "slogan") do

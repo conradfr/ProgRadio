@@ -54,18 +54,23 @@ defmodule ProgRadioApi.SongProvider.Metropolys do
           nil
 
         data when is_map(data) ->
-            cover_url =
-              case Map.get(data, "coverId") do
-                nil -> nil
-                cover_id when is_binary(cover_id) -> "https://www.lesindesradios.fr/servicesimb/images?version=6&iid=#{cover_id}&width=200"
-                _ -> nil
-              end
+          cover_url =
+            case Map.get(data, "coverId") do
+              nil ->
+                nil
 
-            %{
-              artist: Map.get(data, "artist"),
-              title: Map.get(data, "title"),
-              cover_url: cover_url
-            }
+              cover_id when is_binary(cover_id) ->
+                "https://www.lesindesradios.fr/servicesimb/images?version=6&iid=#{cover_id}&width=200"
+
+              _ ->
+                nil
+            end
+
+          %{
+            artist: Map.get(data, "artist"),
+            title: Map.get(data, "title"),
+            cover_url: cover_url
+          }
 
         _ ->
           nil

@@ -30,7 +30,7 @@ config :progradio_api, ProgRadioApi.Scheduler,
   jobs: [
     # todo change pattern once list grows, this is just POC that copies (now removed) radio_streams_update
     streams_auto_update: [
-      schedule: "12 */1 * * *",
+      schedule: "12,42 */1 * * *",
       task: {ProgRadioApi.AutoUpdater.Streams, :auto_update, []}
     ],
     #    import_radiobrowser: [

@@ -77,6 +77,8 @@ defmodule ProgRadioApi.ListeningSessions do
 
   def find_existing_listening_session(_attrs, _remote_ip), do: nil
 
+  def create_listening_session(attrs, remote_ip \\ nil)
+
   # Legacy: kept because not everyone will have the page refreshed with the new code
   # TODO remove after some time
   def create_listening_session(
@@ -119,7 +121,7 @@ defmodule ProgRadioApi.ListeningSessions do
   end
 
   # listening session for streams
-  def create_listening_session(%{"stream_id" => stream_id} = attrs \\ %{}, remote_ip \\ nil)
+  def create_listening_session(%{"stream_id" => stream_id} = attrs, remote_ip)
       when is_map_key(attrs, "stream_id") do
     with %{} = stream <- Repo.get(Stream, stream_id) do
       params = %{
