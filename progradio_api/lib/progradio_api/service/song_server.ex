@@ -229,14 +229,15 @@ defmodule ProgRadioApi.SongServer do
         |> Kernel.+(Enum.random(-5000..5000))
         |> increment_interval(updated_retries)
 
-      how_many_connected =
-        name
-        |> Presence.list()
-        |> map_size()
+      # as a function so the presence lookup is only done when the debug level is enabled
+      Logger.debug(fn ->
+        how_many_connected =
+          name
+          |> Presence.list()
+          |> map_size()
 
-      Logger.debug(
         "Data provider - #{name}: song updated (timer, next: #{trunc(next_refresh / 1000)}s, retries: #{updated_retries}) - #{how_many_connected} clients connected"
-      )
+      end)
 
       Process.send_after(self(), {:refresh, :auto}, next_refresh)
 
@@ -759,6 +760,9 @@ defmodule ProgRadioApi.SongServer do
 
       String.contains?(song_topic, "streaming.nrjaudio.fm") ->
         ProgRadioApi.SongProvider.Nrjstreaming
+
+      String.contains?(song_topic, ".surfernetwork.com/") ->
+        ProgRadioApi.SongProvider.Zeno
 
       String.contains?(song_topic, ".mexside.net") ->
         ProgRadioApi.SongProvider.Mexside

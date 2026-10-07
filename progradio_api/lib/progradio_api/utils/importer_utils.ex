@@ -37,6 +37,8 @@ defmodule ProgRadioApi.Utils.ImporterUtils do
   def stream_url_transformer(stream_url) do
     {_, updated_stream_url} =
       {:continue, stream_url}
+      |> StreamTransformers.autopost()
+      |> StreamTransformers.provider_params()
       |> StreamTransformers.streamtheworld()
       |> StreamTransformers.streamtheworld_url()
       |> StreamTransformers.infomaniak()
