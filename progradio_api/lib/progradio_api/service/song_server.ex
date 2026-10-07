@@ -761,8 +761,12 @@ defmodule ProgRadioApi.SongServer do
       #      String.contains?(song_topic, ".creacast.com/") ->
       #        ProgRadioApi.SongProvider.Creacast
 
-      String.contains?(song_topic, "sonicpanel") and
-      String.match?(song_topic, ~r/^url:https?:\/\/[^\/]+\/\d{4,5}\/(?:stream|;|live|$)/) ->
+      # known sonicpanel hosts, proxied (host/{port}/stream) or direct (host:{port}/) streams
+      String.contains?(song_topic, ["sonicpanel", "sonic.host-live.com"]) and
+          String.match?(
+            song_topic,
+            ~r/^url:https?:\/\/[^\/]+(?::\d{4}\/|\/\d{4,5}\/(?:stream|;|live|$))/
+          ) ->
         ProgRadioApi.SongProvider.Sonicpanel
 
       String.contains?(song_topic, "streaming.nrjaudio.fm") ->
@@ -780,6 +784,9 @@ defmodule ProgRadioApi.SongServer do
 
       String.match?(song_topic, ~r/myradio24\.(?:com|org)(?::\d+)?\/\d+(?:[_?\/]|$)/) ->
         ProgRadioApi.SongProvider.Myradio24
+
+      String.match?(song_topic, ~r/[\/.]2stream\.net(?::\d+)?\/[^\/?]+/) ->
+        ProgRadioApi.SongProvider.Twostream
 
       String.contains?(song_topic, ".mexside.net") ->
         ProgRadioApi.SongProvider.Mexside

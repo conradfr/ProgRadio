@@ -369,7 +369,9 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     end)
   end
 
-  defp get_song_from_icecast(%{"yp_currently_playing" => artist_title} = _data, _url)
+  # "title" (metadata of the source) is preferred as "yp_currently_playing" (sent to the directory) can be outdated
+  # no title: only the directory one is usable
+  defp get_song_from_icecast(%{"title" => "", "yp_currently_playing" => artist_title} = _data, _url)
        when is_binary(artist_title),
        do: %{artist: artist_title, title: nil, cover_url: nil}
 
@@ -382,6 +384,10 @@ defmodule ProgRadioApi.SongProvider.Icecast do
        do: %{artist: artist, title: title, cover_url: nil}
 
   defp get_song_from_icecast(%{"title" => artist_title} = _data, _url)
+       when is_binary(artist_title),
+       do: %{artist: artist_title, title: nil, cover_url: nil}
+
+  defp get_song_from_icecast(%{"yp_currently_playing" => artist_title} = _data, _url)
        when is_binary(artist_title),
        do: %{artist: artist_title, title: nil, cover_url: nil}
 

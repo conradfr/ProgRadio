@@ -6,6 +6,7 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
   @behaviour ProgRadioApi.SongProvider
 
   @refresh_auto_interval 7500
+  @offline_text "station offline"
   # the "refresh on song end" loop has no use when we fall back to the stream metadata
   @refresh_fallback_interval 600_000
 
@@ -113,7 +114,7 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
         |> Map.get("song", %{})
         |> Map.get("art")
 
-      if artist != nil or title != nil do
+      if (artist != nil or title != nil) and not offline?(artist) and not offline?(title) do
         %{
           artist: artist,
           title: title,
@@ -128,4 +129,10 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
         :error
     end
   end
+
+  # placeholder sent by azuracast when the station is not broadcasting (even if sometimes it does)
+  defp offline?(value) when is_binary(value),
+    do: value |> String.trim() |> String.downcase() == @offline_text
+
+  defp offline?(_value), do: false
 end

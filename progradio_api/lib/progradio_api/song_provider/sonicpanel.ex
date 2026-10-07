@@ -5,9 +5,10 @@ defmodule ProgRadioApi.SongProvider.Sonicpanel do
 
   @behaviour ProgRadioApi.SongProvider
 
-  # SonicPanel streams are proxied as https://host/{port}/stream
+  # SonicPanel streams are either proxied as https://host/{port}/stream or direct as http(s)://host:{port}/stream
   # and the panel has a public json endpoint ("Json output (PHP - API)"): https://host/cp/get_info.php?p={port}
-  @regex ~r/^url:(https?:\/\/[^\/]+)\/(\d{4,5})(?:\/|$)/
+  @regex_proxied ~r/^url:(https?:\/\/[^\/]+)\/(\d{4,5})(?:\/|$)/
+  @regex_direct ~r/^url:https?:\/\/([^\/:]+):(\d{4})\//
 
   # the url shape is not specific to SonicPanel: the state of icecast.ex when we had to fall back to it
   @icecast_types [:shoutcast, :icecast, :default]
@@ -29,9 +30,7 @@ defmodule ProgRadioApi.SongProvider.Sonicpanel do
 
   def get_data(name, _last_data) do
     try do
-      [_, base_url, port] = Regex.run(@regex, name)
-
-      case get_info("#{base_url}/cp/get_info.php?p=#{port}") do
+      case name |> get_info_url() |> get_info() do
         %{"title" => _} = data ->
           data
 
@@ -58,7 +57,7 @@ defmodule ProgRadioApi.SongProvider.Sonicpanel do
     try do
       song =
         case Map.get(data, "title") do
-          title when is_binary(title) -> String.trim(title)
+          title when is_binary(title) -> title |> decode_entities() |> String.trim()
           _ -> ""
         end
 
@@ -79,6 +78,18 @@ defmodule ProgRadioApi.SongProvider.Sonicpanel do
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")
         :error
+    end
+  end
+
+  defp get_info_url(name) do
+    case Regex.run(@regex_proxied, name) do
+      [_, base_url, port] ->
+        "#{base_url}/cp/get_info.php?p=#{port}"
+
+      nil ->
+        # the panel is on the default https port, whatever the stream one
+        [_, host, port] = Regex.run(@regex_direct, name)
+        "https://#{host}/cp/get_info.php?p=#{port}"
     end
   end
 
@@ -103,6 +114,16 @@ defmodule ProgRadioApi.SongProvider.Sonicpanel do
         Req.cancel_async_response(resp)
         nil
     end
+  end
+
+  # the titles are html escaped, ex: "Stayin&apos; Alive"
+  defp decode_entities(text) do
+    text
+    |> String.replace(["&apos;", "&#039;", "&#39;"], "'")
+    |> String.replace("&quot;", "\"")
+    |> String.replace("&lt;", "<")
+    |> String.replace("&gt;", ">")
+    |> String.replace("&amp;", "&")
   end
 
   # placeholder image when the panel has no cover
