@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongProvider.Zeno do
   @impl true
   def get_push_client_pid(name) do
     try do
-      regex = ~r/\.(?:zeno\.fm|surfernetwork\.com)\/([a-z0-9]+)/
+      regex = ~r/\.(?:zeno\.fm|zenolive\.com|surfernetwork\.com)\/([a-z0-9]+)/
       [_, id] = Regex.run(regex, name)
 
       EventsourceEx.new("https://api.zeno.fm/mounts/metadata/subscribe/" <> id, stream_to: self())

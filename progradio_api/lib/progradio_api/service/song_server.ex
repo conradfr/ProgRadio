@@ -728,6 +728,9 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, "ice.infomaniak.ch") ->
         ProgRadioApi.SongProvider.Infomaniak
 
+      String.match?(song_topic, ~r/live365[^\/]*\/a\d+/) ->
+        ProgRadioApi.SongProvider.Live365
+
       String.contains?(song_topic, ".laut.fm") ->
         ProgRadioApi.SongProvider.Lautfm
 
@@ -758,11 +761,25 @@ defmodule ProgRadioApi.SongServer do
       #      String.contains?(song_topic, ".creacast.com/") ->
       #        ProgRadioApi.SongProvider.Creacast
 
+      String.contains?(song_topic, "sonicpanel") and
+      String.match?(song_topic, ~r/^url:https?:\/\/[^\/]+\/\d{4,5}\/(?:stream|;|live|$)/) ->
+        ProgRadioApi.SongProvider.Sonicpanel
+
       String.contains?(song_topic, "streaming.nrjaudio.fm") ->
         ProgRadioApi.SongProvider.Nrjstreaming
 
       String.contains?(song_topic, ".surfernetwork.com/") ->
         ProgRadioApi.SongProvider.Zeno
+
+      # legacy zeno domain, same mount ids
+      String.contains?(song_topic, ".zenolive.com/") ->
+        ProgRadioApi.SongProvider.Zeno
+
+      String.contains?(song_topic, ".radioboss.fm") ->
+        ProgRadioApi.SongProvider.Radioboss
+
+      String.match?(song_topic, ~r/myradio24\.(?:com|org)(?::\d+)?\/\d+(?:[_?\/]|$)/) ->
+        ProgRadioApi.SongProvider.Myradio24
 
       String.contains?(song_topic, ".mexside.net") ->
         ProgRadioApi.SongProvider.Mexside
@@ -776,6 +793,14 @@ defmodule ProgRadioApi.SongServer do
 
       String.contains?(song_topic, ".m3u8") ->
         ProgRadioApi.SongProvider.Hls
+
+      # azuracast on any host (/listen/{station}/{file}), the module falls back to the stream metadata if it is not one
+      String.match?(song_topic, ~r/\/listen\/[^\/?]+\/[^\/?]+/) ->
+        ProgRadioApi.SongProvider.Azuracast
+
+      # centova cast proxied streams (https://host/proxy/{username}), the module falls back to icecast if it is not one
+      String.match?(song_topic, ~r/^url:https?:\/\/[^\/]+\/+proxy\/[^\/?]+/) ->
+        ProgRadioApi.SongProvider.Centova
 
       true ->
         ProgRadioApi.SongProvider.Icecast
