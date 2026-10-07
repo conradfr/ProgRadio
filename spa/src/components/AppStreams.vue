@@ -25,8 +25,6 @@ import { canonicalHeadTags, setHeadTags, removeUrlAnchor } from '@/utils/headTag
 
 import PlayerStatus from '@/types/player_status';
 
-import { PLAYER_TYPE_STREAM } from '@/config/config';
-
 import StreamsListFilters from './Streams/StreamsListFilters.vue';
 import StreamsList from './Streams/StreamsList.vue';
 import StreamsOne from './Streams/StreamsOne.vue';
@@ -151,6 +149,9 @@ export default defineComponent({
     playingRadio() {
       this.updateTitle();
     },
+    playingStream() {
+      this.updateTitle();
+    },
     currentSong() {
       this.updateTitle();
     },
@@ -163,6 +164,7 @@ export default defineComponent({
     ...mapState(usePlayerStore, {
       playing: 'playing',
       playingRadio: 'radio',
+      playingStream: 'stream',
       currentSong: 'currentSong'
     })
   },
@@ -181,15 +183,15 @@ export default defineComponent({
       this.headCleanup = null;
     },
     updateTitle() {
-      if (this.playing === PlayerStatus.Playing && this.playingRadio
-          && this.playingRadio.type === PLAYER_TYPE_STREAM) {
+      // a stream played on its own has no radio attached
+      if (this.playing === PlayerStatus.Playing && this.playingStream && !this.playingRadio) {
         let preTitle = '♫ ';
 
         if (this.currentSong && this.currentSong[0]) {
           preTitle += `${this.currentSong[0]} - `;
         }
 
-        preTitle += `${this.playingRadio.name} - `;
+        preTitle += `${this.playingStream.name} - `;
 
         document.title = `${preTitle}${this.$t('message.streaming.title')}`;
       } else {
