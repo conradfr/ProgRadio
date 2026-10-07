@@ -28,40 +28,47 @@ defmodule ProgRadioApi.Application do
        name: :redix},
 
       # Start the Finch HTTP client for sending emails
-      {Finch, name: ProgRadioApi.Finch},
-      ProgRadioApi.Repo,
-      ProgRadioApiWeb.Telemetry,
-      {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
-
-      # Broadway
-      {ProgRadioApi.Importer.ScheduleImporter, []},
-
-      # Start the PubSub system
-      {Phoenix.PubSub, name: ProgRadioApi.PubSub},
-      ProgRadioApiWeb.Presence,
-      {Registry, [keys: :unique, name: SongProviderRegistry]},
-      {DynamicSupervisor,
-       strategy: :one_for_one,
-       max_restarts: 20,
-       max_seconds: 1,
-       name: ProgRadioApi.SongDynamicSupervisor},
-      ProgRadioApi.ListenersCounter,
-      {Meilisearch,
-       name: :search,
-       endpoint: Application.get_env(:progradio_api, :meilisearch_url),
-       key: Application.get_env(:progradio_api, :meilisearch_api_key),
-       finch: ProgRadioApi.Finch},
-      # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
-      # {ProgRadioApi.Worker, arg}
-      # Start to serve requests, typically the last entry
-
-      # cron tasks
-      ProgRadioApi.Scheduler,
-      {Oban, Application.fetch_env!(:progradio_api, Oban)},
-      ProgRadioApi.Checker.CheckerSupervisor,
-      ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor,
-      ProgRadioApiWeb.Endpoint
+      {Finch, name: ProgRadioApi.Finch}
     ]
+
+    # http pools of the frequent requests (live songs)
+    children =
+      children ++
+        ProgRadioApi.Utils.ReqUtils.pool_child_specs() ++
+        [
+          ProgRadioApi.Repo,
+          ProgRadioApiWeb.Telemetry,
+          {Task.Supervisor, name: ProgRadioApi.TaskSupervisor},
+
+          # Broadway
+          {ProgRadioApi.Importer.ScheduleImporter, []},
+
+          # Start the PubSub system
+          {Phoenix.PubSub, name: ProgRadioApi.PubSub},
+          ProgRadioApiWeb.Presence,
+          {Registry, [keys: :unique, name: SongProviderRegistry]},
+          {DynamicSupervisor,
+           strategy: :one_for_one,
+           max_restarts: 20,
+           max_seconds: 1,
+           name: ProgRadioApi.SongDynamicSupervisor},
+          ProgRadioApi.ListenersCounter,
+          {Meilisearch,
+           name: :search,
+           endpoint: Application.get_env(:progradio_api, :meilisearch_url),
+           key: Application.get_env(:progradio_api, :meilisearch_api_key),
+           finch: ProgRadioApi.Finch},
+          # Start a worker by calling: ProgRadioApi.Worker.start_link(arg)
+          # {ProgRadioApi.Worker, arg}
+          # Start to serve requests, typically the last entry
+
+          # cron tasks
+          ProgRadioApi.Scheduler,
+          {Oban, Application.fetch_env!(:progradio_api, Oban)},
+          ProgRadioApi.Checker.CheckerSupervisor,
+          ProgRadioApi.AutoUpdater.AutoUpdaterSupervisor,
+          ProgRadioApiWeb.Endpoint
+        ]
 
     children =
       children ++

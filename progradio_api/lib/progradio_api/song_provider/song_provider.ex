@@ -55,11 +55,11 @@ defmodule ProgRadioApi.SongProvider do
   def get(url) do
     Req.get!(
       url,
-      ReqUtils.get_options_for(url,
+      # connect timeout: the one of the pool
+      ReqUtils.get_song_options_for(url,
         retry: false,
         decode_body: false,
         compressed: true,
-        connect_options: [timeout: @timeout],
         receive_timeout: @timeout
       )
     )

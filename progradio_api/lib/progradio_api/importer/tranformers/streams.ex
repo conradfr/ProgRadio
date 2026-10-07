@@ -20,7 +20,8 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   # query parameters identifying the player/distributor: we replace the value of some other providers with ours
   # e.g. https://example.com/stream.mp3?dist=onlineradiobox&source=radiobox&player_id=streema
   def provider_params({:continue, stream_url}) do
-    pattern = ~r/([?&](?:player_id|source|dist)=)(?:streema|radiobox|onlineradiobox|tunein)(?=[&#]|$)/i
+    pattern =
+      ~r/([?&](?:player_id|source|dist)=)(?:streema|radiobox|onlineradiobox|tunein)(?=[&#]|$)/i
 
     {:continue, Regex.replace(pattern, stream_url, "\\1radioaddict")}
   end

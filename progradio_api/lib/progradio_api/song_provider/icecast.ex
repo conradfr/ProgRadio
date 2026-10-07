@@ -1,6 +1,7 @@
 defmodule ProgRadioApi.SongProvider.Icecast do
   require Logger
   alias ProgRadioApi.SongProvider
+  alias ProgRadioApi.Utils.ReqUtils
 
   @behaviour ProgRadioApi.SongProvider
 
@@ -111,7 +112,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   @impl true
   def get_data(name, {:default, url, _last_data}) do
     try do
-      case Icecast.read_meta(url) do
+      case read_meta(url) do
         {:error, _e} ->
           {:default, url, nil}
 
@@ -184,6 +185,17 @@ defmodule ProgRadioApi.SongProvider.Icecast do
       _ ->
         Logger.error("Data provider - #{name}: song error rescue")
         :error
+    end
+  end
+
+  # Req adapter (set as default in config) with our own pools: cheaper than hackney for our volume
+  defp read_meta(url) do
+    try do
+      Icecast.read_meta(url, finch: ReqUtils.get_icecast_finch_for(url))
+    catch
+      # https url redirected to http: the https pool can't open the http connection (tls options), Finch exits
+      # the hackney adapter follows it and gives us the http url, used directly on the next runs
+      :exit, :badarg -> Icecast.read_meta(url, [], Icecast.Adapter.Hackney)
     end
   end
 
@@ -371,7 +383,10 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   # "title" (metadata of the source) is preferred as "yp_currently_playing" (sent to the directory) can be outdated
   # no title: only the directory one is usable
-  defp get_song_from_icecast(%{"title" => "", "yp_currently_playing" => artist_title} = _data, _url)
+  defp get_song_from_icecast(
+         %{"title" => "", "yp_currently_playing" => artist_title} = _data,
+         _url
+       )
        when is_binary(artist_title),
        do: %{artist: artist_title, title: nil, cover_url: nil}
 

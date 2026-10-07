@@ -124,6 +124,9 @@ config :progradio_api,
 
 config :hackney, use_default_pool: false
 
+# stream metadata reader: Req adapter as default (the Finch pool is given at call time)
+config :icecast, adapter: Icecast.Adapter.Req
+
 config :progradio_api, ProgRadioApiWeb.Gettext,
   default_locale: "en",
   locales: ~w(fr en es de pt it el pl ar hu tr)

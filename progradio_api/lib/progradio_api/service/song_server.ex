@@ -788,6 +788,9 @@ defmodule ProgRadioApi.SongServer do
       String.match?(song_topic, ~r/[\/.]2stream\.net(?::\d+)?\/[^\/?]+/) ->
         ProgRadioApi.SongProvider.Twostream
 
+      String.contains?(song_topic, ".radioca.st") ->
+        ProgRadioApi.SongProvider.Radiocast
+
       String.contains?(song_topic, ".mexside.net") ->
         ProgRadioApi.SongProvider.Mexside
 
