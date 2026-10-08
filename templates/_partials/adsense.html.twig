@@ -8,11 +8,14 @@
       window.addEventListener('load', () => {
         // ensure this loads as there is conflict w/ the responsive grid
         window.setTimeout(() => {
-          try {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          } catch (error) {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          }
+          // one push per empty slot, a hidden slot (mobile/desktop) throws and must not prevent the next one
+          document.querySelectorAll('ins.adsbygoogle:not([data-adsbygoogle-status])').forEach(() => {
+            try {
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (error) {
+              console.warn(error);
+            }
+          });
         }, 2000);
 
         (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;

@@ -1,8 +1,8 @@
 {% import "utils/menu.html.twig" as menu %}
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasExampleLabel">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-label="Mobile menu">
     <div class="offcanvas-body">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" role="navigation">
             <!-- account -->
             {% if is_logged == true %}
                 <li class="nav-item mt-0">

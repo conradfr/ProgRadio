@@ -5,7 +5,7 @@
 
     {% block body %}{% endblock %}
 
-    <footer class="footer mt-auto">
+    <footer class="footer mt-auto" role="contentinfo">
         <div class="container text-center">
             {% block footer %}
                 ©2017-{{ "now"|date("Y") }} <a href="https://www.funkybits.fr">FunkyBits</a> - <a href="{{ path('legal') }}">{{ 'legal'|trans }}</a> -

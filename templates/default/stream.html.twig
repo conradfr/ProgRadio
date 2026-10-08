@@ -140,7 +140,7 @@
 {% block description %}{{ 'page.stream.description'|trans({'%radio%': stream.name}) }}{% endblock %}
 
 {% block body %}
-  <div class="container stream-page stream-title stream-next" data-title="{{ self.title(stream) }}">
+  <div class="container stream-page stream-title stream-next" role="main" data-title="{{ self.title(stream) }}">
     <div class="row">
       <div class="col-12 col-sm-9">
 
@@ -297,8 +297,8 @@
 
         <!-- LIVE SONG -->
 
-        <div class="stream-block mb-2 mb-sm-3 p-3 rounded border" v-if="song !== null" v-scope v-cloak>
-          <div class="d-flex align-items-stretch">
+        <div class="stream-block mb-2 mb-sm-3 p-3 rounded border" {% if song_history is not defined or song_history is empty %}v-if="song !== null"{% endif %}  v-scope v-cloak>
+          <div class="d-flex align-items-stretch" v-if="song !== null">
             <div  class="me-3 live-song-cover text-start">
               <img class="mx-auto" :src="cover || '/img/stream-placeholder.png'">
             </div>
@@ -411,10 +411,10 @@
           {% endif %}
 
           <div class="d-flex align-items-center border-top pt-4">
-            <h6 class="me-2 mb-0 collapsed cursor-pointer" data-bs-toggle="collapse" data-bs-target="#streamDetails" aria-expanded="false" aria-controls="streamDetails">
+            <div class="fs-6 me-2 mb-0 collapsed cursor-pointer fw-bold" data-bs-toggle="collapse" data-bs-target="#streamDetails" aria-expanded="false" aria-controls="streamDetails">
               {{ 'page.stream.more_information'|trans }}
               <i class="bi bi-caret-right-fill toggle-icon"></i>
-            </h6>
+            </div>
           </div>
           <div class="collapse mt-3" id="streamDetails">
             <dl class="info mb-0">
@@ -468,10 +468,10 @@
             {% for entry in more_streams %}
               <div class="streams-one streams-one-more streams-one-play-hide {% if loop.last == true %}d-none{% endif %} d-sm-block">
                 <a href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">
-                  <div class="streams-one-img m-auto" style="background-image: url('{{ asset(self.picture(entry)) }}')"></div>
+                  <div class="streams-one-img m-auto" style="background-image: url('{{ asset(self.picture(entry)) }}')" aria-label="{{ entry.name }}"></div>
                 </a>
 
-                <div class="streams-one-name" title="{{ entry.name }}">
+                <div class="streams-one-name mt-2" title="{{ entry.name }}">
                   <a class="streams-one-name-detail" href="{{ path('streams_one_short', {'shortId': entry.code_name|shortid, 'codename': entry.name|slug}) }}">{{ entry.name }}</a>
                 </div>
               </div>
@@ -488,14 +488,14 @@
           <div class="mb-3 text-center">
             <a target="_blank" href="{{ absolute_url(path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug})) }}">
               {% if isProgRadioRequest %}
-                <img src="{{ preload(asset('img/progradio-share-logo.png'), {as: 'image'}) }}" />
+                <img src="{{ preload(asset('img/progradio-share-logo.png'), {as: 'image'}) }}" alt="{{ 'page.stream.share'|trans }}"/>
               {% else %}
-                <img src="{{ preload(asset('img/radio-addict-share-logo.png'), {as: 'image'}) }}" />
+                <img src="{{ preload(asset('img/radio-addict-share-logo.png'), {as: 'image'}) }}" alt="{{ 'page.stream.share'|trans }}"/>
               {% endif %}
             </a>
           </div>
           <div class="text-center">
-        <textarea class="share-embed" readonly style="margin: auto" rows="5" cols="40"><a target="_blank" href="{{ absolute_url(path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug})) }}">
+        <textarea class="share-embed" readonly style="margin: auto" rows="5" cols="40" aria-label="Share"><a target="_blank" href="{{ absolute_url(path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug})) }}">
 {% if isProgRadioRequest %}
   <img src="{{ preload(asset('img/progradio-share-logo.png'), {as: 'image'}) }}" />
 {% else %}

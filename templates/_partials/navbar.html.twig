@@ -8,16 +8,10 @@
 
 {% include '_partials/mobilemenu.html.twig' with {'collections_menu': collections_menu} %}
 
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" style="direction:ltr/*rtl:ignore*/;">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" role="navigation" style="direction:ltr/*rtl:ignore*/;">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app') }}{% if isProgRadioRequest == true %}schedule{% else %}streaming{% endif %}" onclick="return scrollToCursor();">
             <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="{{ domainNameRequest }}" class="d-inline-block align-text-top">{{ domainNameRequest }}</a>
-        {% if 'Android' in app.request.headers.get('User-Agent') and
-          ('progradio' in app.request.headers.get('User-Agent') or 'radioaddict' in app.request.headers.get('User-Agent')) == false %}
-            <div>
-                <a href="{{ getField('play_store', app.request) }}"><img src="{{ asset('img/icon-googleplay.png') }}" alt="{{ 'menu.app'|trans }}"></a>
-            </div>
-        {% endif %}
 
         {# Favorites #}
         <div id="mobile-schedule-favorites-shortcut" class="d-block d-sm-none d-none">
@@ -33,7 +27,7 @@
             <a title="{{ 'menu.mode.dark'|trans }}" class="nav-top-icon nav-link-darkmode{% if isDarkModeRequest %} d-none{% endif %}" href="#" onclick="toggleColorSchemeMode(); return false;"><i class="bi bi-moon-stars-fill"></i></a>
         </div>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu" aria-label="Mobile menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
