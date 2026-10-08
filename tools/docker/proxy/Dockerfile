@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:24-alpine
 
 RUN mkdir -p /scripts
 COPY ./tools/docker/proxy/docker-entry.sh /scripts
@@ -13,8 +13,8 @@ COPY ./streams-proxy /home/node/app
 # Set working directory
 WORKDIR /home/node/app
 
-# Install dependencies
-RUN npm install
+# Install dependencies, build, then remove the dev dependencies
+RUN npm ci && npm run build && npm prune --omit=dev
 
 # Expose port 80
 EXPOSE 80

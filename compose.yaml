@@ -90,6 +90,21 @@ services:
     links:
       - api
 
+  streams-proxy:
+    image: node:24-alpine
+    working_dir: /usr/app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./streams-proxy:/usr/app
+      # keep the container's own node_modules, the host ones are built for another platform
+      - /usr/app/node_modules
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: ${REDIS_URL}
+
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-17}-alpine
