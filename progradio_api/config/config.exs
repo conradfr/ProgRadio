@@ -37,10 +37,6 @@ config :progradio_api, ProgRadioApi.Scheduler,
     #      schedule: "10 02 */10 * *",
     #      task: {ProgRadioApi.Importer.StreamsImporter.RadioBrowser, :import, []}
     #    ],
-    import_lautfm: [
-      schedule: "22 04 */10 * *",
-      task: {ProgRadioApi.Importer.StreamsImporter.Lautfm, :import, []}
-    ],
     #    import_api50k: [
     #      schedule: "10 3 1 * *",
     #      task: {ProgRadioApi.Importer.StreamsImporter.Api50k, :import, []}
@@ -158,6 +154,7 @@ config :progradio_api, Oban,
     email_stats: 1,
     cron: 1,
     import_stream_weloveradio: 1,
+    import_stream_lautfm: 2,
     import_stream_radiobox: 2
   ],
   repo: ProgRadioApi.Repo

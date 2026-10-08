@@ -19,6 +19,7 @@ config :progradio_api, Oban,
     {Oban.Plugins.Cron,
      crontab: [
        {"0 4 2 * *", ProgRadioApi.EmailStatsCronWorker, queue: :cron, max_attempts: 2},
-       {"* * * * *", ProgRadioApi.ImporterWeLoveRadioCronWorker, queue: :cron, max_attempts: 2}
+       {"* * * * *", ProgRadioApi.ImporterWeLoveRadioCronWorker, queue: :cron, max_attempts: 2},
+       {"22 4 */10 * *", ProgRadioApi.ImporterLautfmCronWorker, queue: :cron, max_attempts: 2}
      ]}
   ]
