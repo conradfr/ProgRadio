@@ -15,6 +15,25 @@ defmodule ProgRadioApi.AutoUpdater.Streams do
     :ok
   end
 
+  # util
+  def auto_update_stream(stream_id) when is_binary(stream_id) do
+    query =
+      from(s in Stream,
+        where: s.id == ^stream_id,
+        preload: [:stream_auto_update]
+      )
+
+    radio12345_streams = Repo.all(query)
+
+    query
+    |> Repo.all()
+    |> Enum.each(fn stream ->
+      ProgRadioApi.AutoUpdater.Streams.Producer.sync_notify(stream)
+    end)
+
+    :ok
+  end
+
   defp get_streams() do
     # todo set columns
     query =

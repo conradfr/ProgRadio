@@ -1,7 +1,8 @@
 defmodule ProgRadioApi.AutoUpdater.Streams.StreamTask do
   require Logger
+  import Ecto.Query, only: [from: 2]
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.{Stream, StreamAutoUpdate}
+  alias ProgRadioApi.{Stream, StreamAutoUpdate, StreamOverloading}
 
   def start_link(%Stream{} = stream) do
     Task.start_link(fn ->
@@ -113,6 +114,13 @@ defmodule ProgRadioApi.AutoUpdater.Streams.StreamTask do
       |> Stream.changeset_url(%{stream_url: new_stream_url})
       |> Repo.update()
     end
+
+    # keep the overloading in sync (if there is one), otherwise the importers would restore the old url
+    from(so in StreamOverloading,
+      where: so.id == ^stream.id,
+      where: is_nil(so.stream_url) or so.stream_url != ^new_stream_url
+    )
+    |> Repo.update_all(set: [stream_url: new_stream_url])
 
     if stream.stream_auto_update != nil do
       stream.stream_auto_update
