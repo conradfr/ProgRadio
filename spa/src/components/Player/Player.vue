@@ -383,8 +383,12 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useScheduleStore, { isRadioFavorite: 'isFavorite', collection: 'collections' }),
-    ...mapState(useStreamsStore, { streamFavorites: 'favorites' }),
     ...mapState(useUserStore, { userLogged: 'logged' }),
+    ...mapState(useStreamsStore, {
+      streamFavorites: 'favorites',
+      streamsProxyUrl: 'streamsProxyUrl',
+      streamsProxyKey: 'streamsProxyKey'
+    }),
     ...mapState(usePlayerStore, [
       'flux',
       'focus',
@@ -641,14 +645,10 @@ export default defineComponent({
           });
         });
       } else if (options && options.force_proxy) {
-        // @ts-expect-error apiUrl is defined on the global scope
-        // eslint-disable-next-line no-undef
-        this.play(`${streamsProxy}?k=${streamsProxyKey}&stream=${url}`);
+        this.play(`${this.streamsProxyUrl}?k=${this.streamsProxyKey}&stream=${url}`);
       } else {
         // const streamUrl = (url.substring(0, 5) !== 'https')
-        // _eslint-disable-next-line no-undef
-        // _@ts-expect-error apiUrl is defined on the global scope
-        // ? `${streamsProxy}?k=${streamsProxyKey}&stream=${url}` : url;
+        // ? `${this.streamsProxyUrl}?k=${this.streamsProxyKey}&stream=${url}` : url;
 
         const streamUrl = url;
         this.currentPlayer.element = document.getElementById(this.currentPlayer.elementId);

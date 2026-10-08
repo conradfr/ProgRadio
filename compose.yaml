@@ -64,18 +64,18 @@ services:
       DATABASE_URL: database
       REDIS_HOST: redis
 
-  scraper:
-    build:
-      context: ./Scraper
-      dockerfile: ../tools/dev/Dockerfile_scraper
-    container_name: scraper
-    working_dir: /usr/app
-#    depends_on:
+#  scraper:
+#    build:
+#      context: ./Scraper
+#      dockerfile: ../tools/dev/Dockerfile_scraper
+#    container_name: scraper
+#    working_dir: /usr/app
+##    depends_on:
+##      - api
+#    volumes:
+#      - ./Scraper:/usr/app
+#    links:
 #      - api
-    volumes:
-      - ./Scraper:/usr/app
-    links:
-      - api
 
   scraper2:
     build:
@@ -90,20 +90,20 @@ services:
     links:
       - api
 
-  streams-proxy:
-    image: node:24-alpine
-    working_dir: /usr/app
-    command: sh -c "npm install && npm run dev"
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./streams-proxy:/usr/app
-      # keep the container's own node_modules, the host ones are built for another platform
-      - /usr/app/node_modules
-    depends_on:
-      - redis
-    environment:
-      REDIS_URL: ${REDIS_URL}
+#  streams-proxy:
+#    image: node:24-alpine
+#    working_dir: /usr/app
+#    command: sh -c "npm install && npm run dev"
+#    ports:
+#      - '3000:3000'
+#    volumes:
+#      - ./streams-proxy:/usr/app
+#      # keep the container's own node_modules, the host ones are built for another platform
+#      - /usr/app/node_modules
+#    depends_on:
+#      - redis
+#    environment:
+#      REDIS_URL: ${REDIS_URL}
 
 ###> doctrine/doctrine-bundle ###
   database:

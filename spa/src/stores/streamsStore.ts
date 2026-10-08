@@ -35,7 +35,9 @@ interface State {
   streamRadios: Array<Stream>
   soloExtended: string|null
   selectedSortBy: string
-  radioBrowserApi: string
+  radioBrowserApi: string|null
+  streamsProxyUrl: string|null
+  streamsProxyKey: string|null
   searchActive: boolean
   searchText: string|null
   searchLastTimestamp: number
@@ -54,6 +56,8 @@ export const useStreamsStore = defineStore('streams', {
     soloExtended: null,
     selectedSortBy: cookies.get(config.COOKIE_STREAM_SORT, config.STREAMING_DEFAULT_SORT),
     radioBrowserApi: cookies.get(config.COOKIE_STREAM_RADIOBROWSER_API),
+    streamsProxyUrl: null,
+    streamsProxyKey: null,
     searchActive: false,
     searchText: null,
     searchLastTimestamp: 0,
@@ -112,9 +116,11 @@ export const useStreamsStore = defineStore('streams', {
   },
   actions: {
     async getConfig() {
-      const { radio_browser_url } = await StreamsApi.getConfig();
+      const { radio_browser_url, streams_proxy_url, streams_proxy_key } = await StreamsApi.getConfig();
       cookies.set(config.COOKIE_STREAM_RADIOBROWSER_API, radio_browser_url);
       this.radioBrowserApi = radio_browser_url;
+      this.streamsProxyUrl =  streams_proxy_url;
+      this.streamsProxyKey = streams_proxy_key;
     },
     getCountries() {
       const globalStore = useGlobalStore();
