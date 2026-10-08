@@ -148,5 +148,6 @@ if config_env() == :prod do
     auto_updater: true,
     stream_import_api_50k_key: System.get_env("API_50K_KEY"),
     fetcher_url: System.get_env("FETCHER_URL"),
-    fetcher_token: System.get_env("FETCHER_TOKEN")
+    fetcher_token: System.get_env("FETCHER_TOKEN"),
+    streams_proxy_url: System.get_env("STREAMS_PROXY_URL")
 end

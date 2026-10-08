@@ -109,7 +109,8 @@ config :progradio_api,
   redis_host: System.get_env("REDIS_HOST") || "127.0.0.1",
   redis_db: "0",
   streams_checker: false,
-  auto_updater: false
+  auto_updater: false,
+  streams_proxy_url: System.get_env("STREAMS_PROXY_URL") || "http://localhost:3000"
 
 # Configure meilisearch
 config :progradio_api,

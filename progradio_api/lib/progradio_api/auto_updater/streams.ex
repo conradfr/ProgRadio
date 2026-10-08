@@ -23,8 +23,6 @@ defmodule ProgRadioApi.AutoUpdater.Streams do
         preload: [:stream_auto_update]
       )
 
-    radio12345_streams = Repo.all(query)
-
     query
     |> Repo.all()
     |> Enum.each(fn stream ->

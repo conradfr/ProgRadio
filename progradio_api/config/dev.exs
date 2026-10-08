@@ -81,9 +81,9 @@ config :progradio_api, Oban,
   plugins: [
     {Oban.Plugins.Pruner, max_age: 300},
     {Oban.Plugins.Cron,
-      crontab: [
-        {"36 3 * * *", ProgRadioApi.ApiKeyCronWorker, queue: :cron, max_attempts: 2},
-      ]}
+     crontab: [
+       {"36 3 * * *", ProgRadioApi.ApiKeyCronWorker, queue: :cron, max_attempts: 2}
+     ]}
   ]
 
 import_config "dev.secret.exs"
