@@ -155,6 +155,7 @@ config :progradio_api, Oban,
     email_stats: 1,
     cron: 1,
     import_stream_weloveradio: 1,
+    import_stream_streema: 1,
     import_stream_lautfm: 2,
     import_stream_radiobox: 2
   ],

@@ -28,8 +28,10 @@ defmodule ProgRadioApi.Stream do
     field(:language, :string)
     field(:slogan, :string)
     field(:description, :string)
+    field(:location, :string)
 
     field(:enabled, :boolean)
+    field(:closed, :boolean)
     field(:banned, :boolean)
 
     field(:score, :integer, default: 0)
@@ -87,6 +89,7 @@ defmodule ProgRadioApi.Stream do
       :original_tags,
       :country_code,
       :language,
+      :location,
       :slogan,
       :description,
       :score,
@@ -117,6 +120,14 @@ defmodule ProgRadioApi.Stream do
       :enabled
     ])
     |> validate_required([:id, :enabled])
+  end
+
+  def changeset_closed(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :closed
+    ])
+    |> validate_required([:id, :closed])
   end
 
   def changeset_last_listening_at(stream, params \\ %{}) do

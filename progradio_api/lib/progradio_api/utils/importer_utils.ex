@@ -9,9 +9,11 @@ defmodule ProgRadioApi.Utils.ImporterUtils do
     nil => 0,
     "radio-browser" => 1,
     "api50k" => 2,
-    "weloveradio" => 3,
-    "lautfm" => 4,
-    "progradio" => 5
+    "streema" => 3,
+    "weloveradio" => 4,
+    "lautfm" => 5,
+    "progradio" => 6,
+    "internal" => 7,
   }
 
   def replace_value_maybe(value, source_caller, existing_stream, existing_key \\ nil)
