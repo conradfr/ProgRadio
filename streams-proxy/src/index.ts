@@ -1,14 +1,14 @@
 // Inspired from https://gist.github.com/sixertoy/6b5433220a45aa754354287ff54a1e2a
 // This has been converted to Hono / Typescript from the previous Express / Javascript version
 
-// Shoutcast servers will not work as they respond with "ICY 200 OK"
-// Couldn't find a simple way to override parsing of different http clients
-// todo: fork?
+// Shoutcast v1 servers respond with "ICY 200 OK" instead of "HTTP/1.0 200 OK", which no http client parses
+// (browsers do): the status line is rewritten on the socket before it reaches the parser, see acceptIcyResponse()
 
 import os from 'node:os'
 import dns from 'node:dns'
 import http from 'node:http'
 import https from 'node:https'
+import type net from 'node:net'
 import { Readable } from 'node:stream'
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
@@ -23,8 +23,26 @@ const skippedHeaders = ['connection', 'content-length', 'keep-alive', 'transfer-
 
 const maxRedirects = 5
 
+const icyStatusLine = Buffer.from('ICY ')
+const httpStatusLine = Buffer.from('HTTP/1.0 ')
+
 const app = new Hono()
 const hostname = os.hostname()
+
+// replaces the "ICY" of the status line by a http version in the first chunk received from the stream server
+function acceptIcyResponse(socket: net.Socket): void {
+  const push = socket.push
+
+  socket.push = function (chunk: unknown, encoding?: BufferEncoding): boolean {
+    socket.push = push
+
+    if (Buffer.isBuffer(chunk) && chunk.subarray(0, icyStatusLine.length).equals(icyStatusLine)) {
+      chunk = Buffer.concat([httpStatusLine, chunk.subarray(icyStatusLine.length)])
+    }
+
+    return push.call(socket, chunk, encoding)
+  }
+}
 
 // fetch can't be used to get the stream: its http parser is strict and has no lenient mode,
 // and a lot of old stream servers send malformed responses (e.g. a status line ending with LF instead of CRLF)
@@ -50,7 +68,7 @@ function requestStream(url: string, signal: AbortSignal, redirects = 0): Promise
       }
 
       resolve(res)
-    }).on('error', reject)
+    }).on('socket', acceptIcyResponse).on('error', reject)
   })
 }
 
