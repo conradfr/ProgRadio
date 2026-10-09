@@ -7,6 +7,9 @@
 
 import os from 'node:os'
 import dns from 'node:dns'
+import http from 'node:http'
+import https from 'node:https'
+import { Readable } from 'node:stream'
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
@@ -15,11 +18,41 @@ import { connectRedis, isValidKey } from './keys.js'
 
 const serverPort = Number(process.env.PORT || process.env.PROXY_PORT || 3000)
 
-// headers that no longer apply once the upstream response has been decoded and re-streamed
-const skippedHeaders = ['connection', 'content-encoding', 'content-length', 'keep-alive', 'transfer-encoding']
+// headers that no longer apply once the upstream response has been re-streamed
+const skippedHeaders = ['connection', 'content-length', 'keep-alive', 'transfer-encoding']
+
+const maxRedirects = 5
 
 const app = new Hono()
 const hostname = os.hostname()
+
+// fetch can't be used to get the stream: its http parser is strict and has no lenient mode,
+// and a lot of old stream servers send malformed responses (e.g. a status line ending with LF instead of CRLF)
+function requestStream(url: string, signal: AbortSignal, redirects = 0): Promise<http.IncomingMessage> {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith('https://') ? https : http
+    const options = { insecureHTTPParser: true, signal, headers: { 'user-agent': 'node' } }
+
+    client.get(url, options, (res) => {
+      const status = res.statusCode || 0
+      const location = res.headers.location
+
+      if (status >= 300 && status < 400 && location) {
+        res.destroy()
+
+        if (redirects >= maxRedirects) {
+          reject(new Error('Too many redirects'))
+          return
+        }
+
+        resolve(requestStream(new URL(location, url).href, signal, redirects + 1))
+        return
+      }
+
+      resolve(res)
+    }).on('error', reject)
+  })
+}
 
 app.use('/', cors({
   origin: (process.env.PROXY_CORS || '').split(','),
@@ -68,26 +101,40 @@ app.get('/', async (c) => {
   })
 
   try {
-    const upstream = await fetch(streamUrl)
+    const upstream = await requestStream(streamUrl, c.req.raw.signal)
+    const status = upstream.statusCode || 0
 
-    if (!upstream.ok) {
-      await upstream.body?.cancel()
-      process.stdout.write(`Error: ${stream} (status: ${upstream.status})\n`)
+    if (status < 200 || status > 299) {
+      upstream.destroy()
+      process.stdout.write(`Error: ${stream} (status: ${status})\n`)
       return c.text('Error', 500)
     }
 
-    const headers = new Headers(upstream.headers)
-    skippedHeaders.forEach((header) => headers.delete(header))
+    const headers = new Headers()
 
-    if (c.req.method === 'HEAD') {
-      await upstream.body?.cancel()
-      return new Response(null, { status: upstream.status, headers })
+    for (let i = 0; i < upstream.rawHeaders.length; i += 2) {
+      const name = upstream.rawHeaders[i]
+
+      if (skippedHeaders.includes(name.toLowerCase())) {
+        continue
+      }
+
+      try {
+        headers.append(name, upstream.rawHeaders[i + 1])
+      } catch {
+        // the lenient parser lets invalid headers through, those are not forwarded
+      }
     }
 
-    return new Response(upstream.body, { status: upstream.status, headers })
+    if (c.req.method === 'HEAD') {
+      upstream.destroy()
+      return new Response(null, { status, headers })
+    }
+
+    return new Response(Readable.toWeb(upstream) as ReadableStream, { status, headers })
   } catch (error) {
     process.stdout.write(`Error: ${stream}\n`)
-    return c.text('Error', 500)
+    return c.text('Error' + error, 500)
   }
 })
 
