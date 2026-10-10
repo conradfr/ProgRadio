@@ -1,5 +1,5 @@
 <template>
-  <div class="streams-one"
+  <div class="streams-one rounded-1 border"
     :class="{
      'streams-one-play-active': (playingStream && stream.code_name === playingStream.code_name),
      'streams-one-play-paused': (playingStream && stream.code_name === playingStream.code_name

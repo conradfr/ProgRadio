@@ -12,10 +12,14 @@ defmodule ProgRadioApi.Importer.Deduper do
       does not read it: `http://host:8000/;stream.mp3` is `http://host:8000/;`.
       On streamtheworld a station has a mount per codec and per protocol, they are all
       the same url: `XHFOFM.mp3` is `XHFOFMAAC.aac`, `XHFOFM_SC` and `XHFOFMAAC_SC`.
+      On laut.fm a station has two urls, and a playlist: `stream.laut.fm/kids_radio` is
+      `kidsradio.stream.laut.fm/kids_radio` and `stream.laut.fm/kids_radio.m3u`.
     * duplicate: very close name and same country. Only the frequency and the band are
       ignored, wherever they are in the name: `103.2 FM La radio` is `La radio 103.2 FM`.
     * duplicate: same website, same country and same name once written in one word.
       `Atlantica Breda` is `Atlanticabreda` when both are on `atlanticabreda.nl`.
+      The `Radio` a name ends with is left out: `Suffolk Sound` is `Suffolk Sound Radio`
+      when both are on `suffolksound.com`.
     * duplicate, in the United States, Canada and Mexico only: same call sign, same
       frequency and same website. `Cool 100.1 - CHCQ` is `CHCQ-FM 100.1 "Cool 100"
       Belleville, ON` when both are on `cool100.ca`.
@@ -53,7 +57,9 @@ defmodule ProgRadioApi.Importer.Deduper do
   can have it - `Rádio 93FM` and `Rádio 93 FM` are two stations, each with its website.
   The website is compared as for a call sign: the host or the domain name, and not when
   it is the website of more than `@max_same_website` streams. The name must also be of
-  `@min_joined_name_length` letters and digits at least.
+  `@min_joined_name_length` letters and digits at least. When the names only differ by
+  the `Radio` one of them ends with, `@min_name_length` is enough for what is left of it:
+  `m2o` is `m2o Radio`, the way the name is split is then not what makes them the same.
 
   A duplicate is only searched among the streams that can be listened to: enabled, not
   banned and not redirected. The same stream is returned whatever its state.
@@ -139,8 +145,8 @@ defmodule ProgRadioApi.Importer.Deduper do
         cond do
           same_query != nil -> same_query
           candidates == [] -> nil
-          # on streamtheworld the station is the mount, never the query
-          streamtheworld_keys(url_key(url)) != [] -> List.first(candidates)
+          # on streamtheworld and on laut.fm the station is in the path, never in the query
+          station_keys(url_key(url)) != [] -> List.first(candidates)
           query_identifies_station?(variants) -> nil
           true -> List.first(candidates)
         end
@@ -227,10 +233,13 @@ defmodule ProgRadioApi.Importer.Deduper do
 
   defp find_duplicate_by_website(%{name: name, country_code: country_code, website: website})
        when is_binary(name) and is_binary(country_code) and is_binary(website) do
-    joined = join_name(name)
     host = website_host(website)
 
-    if host != nil and String.length(joined) >= @min_joined_name_length do
+    comparable? =
+      String.length(join_name(name)) >= @min_joined_name_length or
+        String.length(station_name(name)) >= @min_name_length
+
+    if host != nil and comparable? do
       # there is a trigram index for the website
       duplicates =
         from(s in eligible(country_code),
@@ -239,7 +248,7 @@ defmodule ProgRadioApi.Importer.Deduper do
         )
         |> Repo.all()
         |> Enum.filter(fn stream ->
-          join_name(stream.name) == joined and
+          same_joined_name?(name, stream.name) and
             shared_website(host, website_host(stream.website)) != nil
         end)
 
@@ -254,6 +263,29 @@ defmodule ProgRadioApi.Importer.Deduper do
   end
 
   defp find_duplicate_by_website(_attrs), do: nil
+
+  # The names are the same in one word, or they are once the "Radio" one of them ends
+  # with is left out: "Suffolk Sound" and "Suffolk Sound Radio".
+  defp same_joined_name?(name, other_name) do
+    joined = join_name(name)
+
+    if joined == join_name(other_name) do
+      String.length(joined) >= @min_joined_name_length
+    else
+      station = station_name(name)
+
+      station == station_name(other_name) and String.length(station) >= @min_name_length
+    end
+  end
+
+  # the name in one word without the "Radio" it ends with: "Suffolk Sound Radio" -> "suffolksound"
+  defp station_name(name) do
+    name
+    |> String.downcase()
+    |> unaccent()
+    |> String.replace(~r/[^\p{L}\p{N}+]+radio[^\p{L}\p{N}+]*$/u, "")
+    |> join_name()
+  end
 
   # The name in one word, whatever the way it is split and punctuated:
   # "Atlantica Breda", "Atlantica-Breda", "Atlanticabreda" -> "atlanticabreda"
@@ -471,7 +503,7 @@ defmodule ProgRadioApi.Importer.Deduper do
 
       key ->
         variants =
-          for key <- [key | streamtheworld_keys(key)],
+          for key <- [key | station_keys(key)],
               scheme <- ["http://", "https://"],
               www <- ["", "www."] do
             scheme <> www <> key
@@ -492,6 +524,9 @@ defmodule ProgRadioApi.Importer.Deduper do
       [host] -> String.downcase(host)
     end
   end
+
+  # the other urls of the station, on the platforms where a station has several
+  defp station_keys(key), do: streamtheworld_keys(key) ++ lautfm_keys(key)
 
   # The mounts of a station on streamtheworld. They are named after the station, then
   # "AAC" when it is not the mp3 one, "_SC" for the shoutcast protocol and an extension:
@@ -517,6 +552,40 @@ defmodule ProgRadioApi.Importer.Deduper do
     else
       _ -> []
     end
+  end
+
+  # The urls of a station on laut.fm: "stream.laut.fm/kids_radio" and, on a host named
+  # after the station, "kidsradio.stream.laut.fm/kids_radio". The first one is also given
+  # as a playlist, "stream.laut.fm/kids_radio.m3u".
+  defp lautfm_keys(key) do
+    station =
+      case String.split(key, "/") do
+        ["stream.laut.fm", path] ->
+          path |> String.downcase() |> String.replace(~r/\.m3u$/, "")
+
+        [host, path] ->
+          path = String.downcase(path)
+
+          if host == lautfm_host(path), do: path
+
+        _ ->
+          nil
+      end
+
+    if station in [nil, ""] do
+      []
+    else
+      [
+        "stream.laut.fm/" <> station,
+        "stream.laut.fm/" <> station <> ".m3u",
+        lautfm_host(station) <> "/" <> station
+      ]
+    end
+  end
+
+  # "kids_radio" -> "kidsradio.stream.laut.fm", "-dj_19" -> "dj19.stream.laut.fm"
+  defp lautfm_host(station) do
+    (station |> String.replace("_", "") |> String.trim("-")) <> ".stream.laut.fm"
   end
 
   # The url without what does not select the stream, and its query:

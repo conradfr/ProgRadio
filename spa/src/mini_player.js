@@ -266,6 +266,23 @@ createApp({
   },
   init(options) {
     this.initOptions = options;
+
+    if (options) {
+      setTimeout(() => {
+        if (options.song) {
+          this.formatSong({ song: options.song });
+        }
+
+        if (options.topic && options.topic.trim() !== '') {
+          this.joinChannel(options.topic.trim());
+        }
+
+        if (options.radioOrStreamId && options.radioOrStreamId.trim() !== '') {
+          this.joinChannel(`listeners:${options.radioOrStreamId.trim()}`);
+        }
+      }, 50);
+    }
+
     const slider = document.getElementById('volume-slider');
     if (slider) {
       const volume = cookies.get(COOKIE_VOLUME, 10)
@@ -284,17 +301,6 @@ createApp({
         cookies.set(COOKIE_VOLUME, newVolume);
         setAudioVolume(newVolume);
       });
-    }
-    if (options) {
-      setTimeout(() => {
-        if (options.topic && options.topic.trim() !== '') {
-          this.joinChannel(options.topic.trim());
-        }
-
-        if (options.radioOrStreamId && options.radioOrStreamId.trim() !== '') {
-          this.joinChannel(`listeners:${options.radioOrStreamId.trim()}`);
-        }
-      }, 1000);
     }
   },
   play(streamingUrl, codeName, options) {

@@ -11,6 +11,7 @@ defmodule ProgRadioApi.SongServer do
   # songs of the history checked against a new entry before broadcasting it
   @recent_song_history 3
   @history_ttl 600
+  @song_ttl 60
 
   # JSON keys restored from Redis => song map keys
   @song_keys %{
@@ -489,6 +490,14 @@ defmodule ProgRadioApi.SongServer do
           "playing",
           Map.put(data, :stream_id, stream_id)
         )
+
+        Redix.command!(:redix, [
+          "SET",
+          "song_" <> stream_id,
+          Jason.encode!(song),
+          "EX",
+          @song_ttl
+        ])
       end)
     else
       ProgRadioApiWeb.Endpoint.broadcast!(
@@ -547,6 +556,14 @@ defmodule ProgRadioApi.SongServer do
           "song_history",
           Map.put(data, :stream_id, stream_id)
         )
+
+        Redix.command!(:redix, [
+          "SET",
+          "history_" <> stream_id,
+          Jason.encode!(song_history),
+          "EX",
+          @history_ttl
+        ])
       end)
     else
       ProgRadioApiWeb.Endpoint.broadcast!(

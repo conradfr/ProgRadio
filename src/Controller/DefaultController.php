@@ -8,7 +8,7 @@ use App\Form\StreamSuggestionType;
 use App\Service\Favorites;
 use App\Service\Host;
 use App\Service\ScheduleManager;
-use App\Service\SongHistory;
+use App\Service\LiveData;
 use App\Entity\Radio;
 use App\Entity\Collection;
 use App\Entity\ScheduleEntry;
@@ -485,14 +485,14 @@ class DefaultController extends AbstractBaseController
     ]
     #[Cache(maxage: 60, public: true, mustRevalidate: true)]
     public function oneShort(
-        string $shortId,
-        string $codename,
-        RouterInterface $router,
-        ScheduleManager $scheduleManager,
-        SongHistory $songHistory,
+        string                 $shortId,
+        string                 $codename,
+        RouterInterface        $router,
+        ScheduleManager        $scheduleManager,
+        LiveData               $liveData,
         EntityManagerInterface $em,
-        Request $request,
-        Host $host
+        Request                $request,
+        Host                   $host
     ): Response
     {
         // !!! NOTE !!! could not find in the doc how to do a custom ParamConverter in Symfony 6.3 like with ExtraBundle before
@@ -553,12 +553,14 @@ class DefaultController extends AbstractBaseController
             }
         }
 
-        $history = $songHistory->getHistory($stream);
+        $song = $liveData->getCurrentSong($stream);
+        $history = $liveData->getHistory($stream);
 
         return $this->render('default/stream.html.twig', [
             'stream' => $stream,
             'schedule' => $schedule,
             'more_streams' => $moreStreams,
+            'song' => $song,
             'song_history' => $history
         ]);
     }
@@ -588,14 +590,14 @@ class DefaultController extends AbstractBaseController
         )
     ]
     public function oneShort2(
-        string $shortId,
-        string $codename,
-        RouterInterface $router,
-        ScheduleManager $scheduleManager,
-        SongHistory $songHistory,
+        string                 $shortId,
+        string                 $codename,
+        RouterInterface        $router,
+        ScheduleManager        $scheduleManager,
+        LiveData               $liveData,
         EntityManagerInterface $em,
-        Request $request,
-        Host $host
+        Request                $request,
+        Host                   $host
     ): Response
     {
         // !!! NOTE !!! could not find in the doc how to do a custom ParamConverter in Symfony 6.3 like with ExtraBundle before
@@ -656,7 +658,7 @@ class DefaultController extends AbstractBaseController
             }
         }
 
-        $history = $songHistory->getHistory($stream);
+        $history = $liveData->getHistory($stream);
 
         return $this->render('default/stream2.html.twig', [
             'stream' => $stream,
@@ -669,11 +671,11 @@ class DefaultController extends AbstractBaseController
     #[Route('/{_locale}/song_history/{stream}', name: 'song_history', methods: ['GET'])]
     #[Cache(maxage: 5, public: true, mustRevalidate: true)]
     public function songHistory(
-        Stream $stream,
-        SongHistory $songHistory,
+        Stream   $stream,
+        LiveData $liveData,
     ): Response
     {
-        $history = $songHistory->getHistory($stream);
+        $history = $liveData->getHistory($stream);
 
         return $this->render('default/song_history.html.twig', [
             'song_history' => $history
