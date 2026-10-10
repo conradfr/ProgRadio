@@ -7,7 +7,7 @@ defmodule ProgRadioApi.Search do
   def index_all() do
     query =
       from s in Stream,
-        where: is_nil(s.redirect_to) == true and s.enabled == true and s.banned == false,
+        where: is_nil(s.redirect_to) == true and s.enabled == true and s.banned == false and s.closed == false,
         select: %{
           id: s.id,
           objectID: s.id,

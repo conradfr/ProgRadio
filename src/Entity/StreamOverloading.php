@@ -50,6 +50,9 @@ class StreamOverloading
     private ?bool $banned = null;
 
     #[ORM\Column(type: 'boolean')]
+    private ?bool $closed = null;
+
+    #[ORM\Column(type: 'boolean')]
     private ?bool $forceHls = null;
 
     #[ORM\Column(type: 'boolean')]
@@ -150,6 +153,16 @@ class StreamOverloading
     public function setBanned(?bool $banned): void
     {
         $this->banned = $banned;
+    }
+
+    public function getClosed(): ?bool
+    {
+        return $this->closed;
+    }
+
+    public function setClosed(?bool $closed): void
+    {
+        $this->closed = $closed;
     }
 
     public function getTags(): ?string

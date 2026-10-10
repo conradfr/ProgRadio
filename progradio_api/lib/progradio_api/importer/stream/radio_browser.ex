@@ -450,7 +450,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         where:
           fragment("LOWER(?) = ?", s.name, ^String.downcase(stream_data.name)) and
             s.country_code == ^stream_data.country_code and s.enabled == true and
-            s.banned == false and is_nil(s.redirect_to) and
+            s.banned == false and s.closed == false and is_nil(s.redirect_to) and
             s.stream_url == ^stream_data.stream_url,
         order_by: [desc: s.score],
         limit: 1,

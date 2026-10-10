@@ -186,6 +186,7 @@ page:
         title_country: '%radio% - Ascolta in diretta e gratuitamente'
         website: Sito web
         banned: Questa radio è bannata.
+        closed: Questa radio è chiusa.
         desc: 'Descrizione'
         tagline: 'Slogan'
         updated: 'Aggiornato'

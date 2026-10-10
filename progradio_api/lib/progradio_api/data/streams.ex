@@ -362,7 +362,7 @@ defmodule ProgRadioApi.Streams do
       on: r.id == s.radio_id,
       left_join: ss in StreamSong,
       on: ss.id == s.stream_song_id,
-      where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
+      where: s.enabled == true and s.banned == false and s.closed == false and s.closed == false and is_nil(s.redirect_to),
       limit: @default_limit,
       select: %{
         id: s.id,
@@ -417,7 +417,7 @@ defmodule ProgRadioApi.Streams do
 
   defp base_count_query() do
     from s in Stream,
-      where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
+      where: s.enabled == true and s.banned == false and s.closed == false and s.closed == false and is_nil(s.redirect_to),
       select: count()
   end
 
@@ -649,7 +649,7 @@ defmodule ProgRadioApi.Streams do
             GROUP BY stream_id
           ) sub
           WHERE s.id = sub.stream_id
-            AND s.enabled = true AND s.redirect_to IS NULL AND s.banned = false
+            AND s.enabled = true AND s.redirect_to IS NULL AND s.banned = false and s.closed == false
           """,
           [
             @score_half_life_days,
@@ -695,7 +695,7 @@ defmodule ProgRadioApi.Streams do
     query =
       from s in Stream,
         select: s,
-        where: is_nil(s.redirect_to) and s.enabled == false and s.banned == false
+        where: is_nil(s.redirect_to) and s.enabled == false and s.banned == false and s.closed == false
 
     Repo.transaction(
       fn ->
@@ -795,7 +795,7 @@ defmodule ProgRadioApi.Streams do
         on: so.id == s.id,
         # where: is_nil(so.id) and s.enabled == true and s.banned == false and is_nil(s.redirect_to),
         where:
-          (is_nil(so.enabled) or so.enabled != false) and s.banned == false and
+          (is_nil(so.enabled) or so.enabled != false) and s.banned == false and s.closed == false and
             is_nil(s.redirect_to),
         #        where: s.enabled == true and s.banned == false and is_nil(s.redirect_to),
         order_by: [desc: s.score],
@@ -813,7 +813,7 @@ defmodule ProgRadioApi.Streams do
         on: so.id == s.id,
         #        where: is_nil(so.id) and s.enabled == true and s.banned == false and is_nil(s.redirect_to)
         where:
-          (is_nil(so.enabled) or so.enabled != false) and s.banned == false and
+          (is_nil(so.enabled) or so.enabled != false) and s.banned == false and s.closed == false and
             is_nil(s.redirect_to)
 
     Repo.one(query)

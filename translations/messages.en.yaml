@@ -186,6 +186,7 @@ page:
         title_country: '%radio% - Listen live for free'
         website: Website
         banned: This radio is banned.
+        closed: This radio is closed.
         desc: 'Description'
         tagline: 'slogan'
         updated: 'Updated'

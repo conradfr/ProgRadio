@@ -219,6 +219,10 @@
                 <div class="d-sm-none" style="width: 50px">&nbsp;</div>
 
                 <div>
+                  {% if stream.closed == true %}
+                    <div class="alert alert-info">{{ 'page.stream.closed'|trans }}</div>
+                  {% endif %}
+
                   {% if stream.banned == true %}
                     <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
                   {% elseif 'youtu.be' in stream.streamUrl or 'youtube.com' in stream.streamUrl %}

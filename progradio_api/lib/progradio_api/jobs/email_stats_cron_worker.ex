@@ -16,6 +16,7 @@ defmodule ProgRadioApi.EmailStatsCronWorker do
       on: u.id == s.user_id,
       where: s.enabled == true,
       where: s.banned == false,
+      where: s.closed == false,
       where: is_nil(s.redirect_to),
       where: u.statistics_email == true,
       group_by: [u.id],

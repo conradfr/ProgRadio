@@ -186,6 +186,7 @@ page:
         title_country: "%radio% - Canlı ve ücretsiz dinleyin."
         website: "Web sitesi"
         banned: "Bu radyo yasaklı."
+        closed: "Bu radyo kapandı."
         desc: "Açıklama"
         tagline: "Slogan"
         updated: "Güncellendi"

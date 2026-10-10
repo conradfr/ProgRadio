@@ -186,6 +186,7 @@ page:
         title_country: '%radio% - Słuchaj na żywo i za darmo'
         website: Strona internetowa
         banned: Ta stacja radiowa jest zbanowana.
+        closed: Ta stacja radiowa została zamknięta.
         desc: 'Opis'
         tagline: 'Slogan'
         updated: 'Zaktualizowano'

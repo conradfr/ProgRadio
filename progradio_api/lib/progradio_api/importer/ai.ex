@@ -29,7 +29,7 @@ defmodule ProgRadioApi.Importer.Ai do
         select: s,
         #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
         where:
-          s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
+          s.enabled == true and s.banned == false and s.closed == false and is_nil(s.redirect_to) and
             not is_nil(s.country_code) and (is_nil(s.description) or s.description == ""),
         order_by: [desc: s.score],
         offset: ^offset,
@@ -63,7 +63,7 @@ defmodule ProgRadioApi.Importer.Ai do
         select: s,
         #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
         where:
-          s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
+          s.enabled == true and s.banned == false and s.closed == false and is_nil(s.redirect_to) and
             not is_nil(s.country_code) and (is_nil(s.tags) or s.tags == ""),
         order_by: [desc: s.score],
         offset: ^offset,
@@ -97,7 +97,7 @@ defmodule ProgRadioApi.Importer.Ai do
         select: s,
         #            fragment("? not ilike '%.m3u8%'", s.stream_url) and
         where:
-          s.enabled == true and s.banned == false and is_nil(s.redirect_to) and
+          s.enabled == true and s.banned == false and s.closed == false and is_nil(s.redirect_to) and
             not is_nil(s.country_code) and (is_nil(s.genres) or s.genres == ""),
         order_by: [desc: s.score],
         offset: ^offset,

@@ -186,6 +186,7 @@ page:
         title_country: '%radio% - Escucha en directo y gratis'
         website: Sitio web
         banned: Esta radio está prohibida.
+        closed: Esta radio está cerrada.
         desc: 'Descripción'
         tagline: 'Eslogan'
         updated: 'Actualizado'

@@ -186,6 +186,7 @@ page:
         title_country: '%radio% - %country% - الاستماع مباشرة'
         website: الموقع الإلكتروني
         banned: هذا الراديو محظور.
+        closed: هذا الراديو مغلق.
         desc: 'الوصف'
         tagline: 'الشعار'
         updated: 'تم التحديث'

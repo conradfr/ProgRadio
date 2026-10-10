@@ -20,8 +20,10 @@ final class Version20261009063113 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE stream ADD closed BOOLEAN DEFAULT NULL');
+        $this->addSql('ALTER TABLE stream ADD closed BOOLEAN DEFAULT FALSE');
         $this->addSql('ALTER TABLE stream ADD location TEXT DEFAULT NULL');
+
+        $this->addSql('ALTER TABLE stream_overloading ADD closed BOOLEAN DEFAULT FALSE');
     }
 
     public function down(Schema $schema): void

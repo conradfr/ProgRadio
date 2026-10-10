@@ -443,7 +443,7 @@ defmodule ProgRadioApi.Importer.Deduper do
     from(s in Stream,
       where:
         s.country_code == ^String.upcase(country_code) and s.enabled == true and
-          s.banned == false and is_nil(s.redirect_to)
+          s.banned == false and s.closed == false and is_nil(s.redirect_to)
     )
   end
 

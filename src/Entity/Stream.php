@@ -99,6 +99,9 @@ class Stream implements NormalizableInterface
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private ?bool $banned = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private ?bool $closed = null;
+
     #[ORM\Column(type: 'boolean')]
     private ?bool $noAds = null;
 
@@ -524,6 +527,11 @@ class Stream implements NormalizableInterface
         return $this->banned;
     }
 
+    public function isClosed(): ?bool
+    {
+        return $this->closed;
+    }
+
     public function isPopup(): ?bool
     {
         return $this->popup;
@@ -539,6 +547,11 @@ class Stream implements NormalizableInterface
     public function setBanned(?bool $banned): void
     {
         $this->banned = $banned;
+    }
+
+    public function setClosed(?bool $closed): void
+    {
+        $this->closed = $closed;
     }
 
     public function getCreatedAt(): \DateTime

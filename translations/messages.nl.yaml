@@ -176,6 +176,7 @@ page:
         title_country: '%radio% - Luister live en gratis.'
         website: Website
         banned: Deze radio is verboden.
+        closed: Deze radio is gestopt.
         desc: 'Beschrijving'
         tagline: 'Slogan'
         updated: 'Bijgewerkt'

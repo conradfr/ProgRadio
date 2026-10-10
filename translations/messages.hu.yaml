@@ -186,6 +186,7 @@ page:
         title_country: '%radio% - Hallgasd élőben és ingyen'
         website: Weboldal
         banned: Ez a rádió tiltott.
+        closed: Ez a rádió megszűnt.
         desc: 'Leírás'
         tagline: 'Szlogen'
         updated: 'Frissítve'

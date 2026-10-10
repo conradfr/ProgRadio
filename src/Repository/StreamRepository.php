@@ -103,7 +103,7 @@ class StreamRepository extends ServiceEntityRepository
             ->where("s.img is not null")
             ->andWhere("RANDOM() < 0.01")
             ->andWhere('s.id != :id')
-            ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
+            ->andWhere('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL')
             ->groupBy('s.id, r.codeName, s.radioStreamCodeName')
             ->setMaxResults($limit)
             ->setParameter('null', null);
@@ -131,7 +131,7 @@ class StreamRepository extends ServiceEntityRepository
             ->from(Stream::class, 's')
             ->leftJoin('s.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
+            ->where('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL')
             ->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled')
             ->setMaxResults($limit)
             // needed as using NULL directly was not working, neither were hacks like NULLIF(1,1) or omitting the ELSE
@@ -245,7 +245,7 @@ class StreamRepository extends ServiceEntityRepository
             ->from(Stream::class, 's')
             ->leftJoin('s.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
-            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
+            ->where('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true or ILIKE(s.genres, :text) = true)')
             ->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled')
             //->orWhere('ILIKE(s.tags, :text) = true')
@@ -338,7 +338,7 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.id = :id')
-            ->andWhere('s.enabled = true and s.banned = false')
+            ->andWhere('s.enabled = true and s.banned = false and s.closed = false')
             ->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled')
             ->setMaxResults(1)
             ->setParameter('null', null);
@@ -362,7 +362,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb->select('count(s.id)')
             ->from(Stream::class, 's')
-            ->where('s.enabled = true and s.banned = false and s.redirectToStream IS NULL');
+            ->where('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL');
 
         if ($countryOrCategory !== null) {
             if (strtoupper($countryOrCategory) === Stream::FAVORITES) {
@@ -415,7 +415,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb->select('count(s.id)')
             ->from(Stream::class, 's')
-            ->where('s.enabled = true and s.banned = false')
+            ->where('s.enabled = true and s.banned = false and s.closed = false')
             ->andWhere('(ILIKE(s.name, :text) = true or ILIKE(s.tags, :text) = true or ILIKE(s.genres, :text) = true)')
             ->setParameter('text', '%' . $text . '%');
 
@@ -466,7 +466,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb->select('DISTINCT UPPER(s.countryCode) as countryCode')
             ->from(Stream::class, 's')
             ->where('s.countryCode IS NOT NULL')
-            ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL')
+            ->andWhere('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL')
             ->andWhere('s.countryCode <> \'\'')
             ->orderBy('countryCode', 'ASC');
 
@@ -488,7 +488,7 @@ class StreamRepository extends ServiceEntityRepository
                 ->from(Stream::class, 's')
                 ->innerJoin('s.radio', 'r')
                 ->where('r.id = :radioId')
-                ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL and s.radioStreamCodeName = :radioStreamCodeName')
+                ->andWhere('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL and s.radioStreamCodeName = :radioStreamCodeName')
                 ->setFirstResult(0)
                 ->setMaxResults(1)
                 ->setParameter('radioId', $radio->getId())
@@ -507,7 +507,7 @@ class StreamRepository extends ServiceEntityRepository
                 ->from(Stream::class, 's')
                 ->innerJoin('s.radio', 'r')
                 ->where('r.id = :radioId')
-                ->andWhere('s.enabled = true and s.banned = false and s.redirectToStream IS NULL and s.isMainRadio = TRUE')
+                ->andWhere('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL and s.isMainRadio = TRUE')
                 ->setFirstResult(0)
                 ->setMaxResults(1)
                 ->setParameter('radioId', $radio->getId());

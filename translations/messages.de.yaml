@@ -186,6 +186,7 @@ page:
         title_country: '%radio% - Hören Sie live und kostenlos'
         website: Website
         banned: Dieser Radiosender ist gesperrt.
+        closed: Dieser Radiosender wurde eingestellt.
         desc: 'Beschreibung'
         tagline: 'Slogan'
         updated: 'Aktualisiert'
