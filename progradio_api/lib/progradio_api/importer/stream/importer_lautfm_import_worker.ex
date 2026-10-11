@@ -8,6 +8,7 @@ defmodule ProgRadioApi.ImporterLautfmImportWorker do
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.Importer.Tools.Images
+  alias ProgRadioApi.Importer.Deduper
 
   @source "lautfm"
 
@@ -97,6 +98,26 @@ defmodule ProgRadioApi.ImporterLautfmImportWorker do
       |> (&(Map.get(overloading, :stream_url) || &1)).()
       |> ImporterUtils.stream_url_transformer()
 
+    # we try to avoid new duplicates by finding already existing identical stream
+    redirect_to =
+      if Map.get(existing_stream, :id) == nil do
+        case Deduper.find_existing_stream(%{
+               name: name,
+               stream_url: stream_url,
+               country_code: country_code,
+               website: website
+             }) do
+          {:duplicate, %Stream{id: redirect_to_id}} ->
+            redirect_to_id
+
+          _ ->
+            nil
+        end
+      else
+        nil
+      end
+      |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :redirect_to) || &1)).()
+
     %{
       id: id,
       code_name: id,
@@ -122,6 +143,7 @@ defmodule ProgRadioApi.ImporterLautfmImportWorker do
         Map.get(stream, "description")
         |> ImporterUtils.replace_value_maybe(@source, existing_stream, :description),
       import_updated_at: import_updated_at,
+      redirect_to: redirect_to,
       source: ImporterUtils.replace_value_maybe(@source, @source, existing_stream, :source)
     }
   end
@@ -148,6 +170,7 @@ defmodule ProgRadioApi.ImporterLautfmImportWorker do
           enabled: s.enabled,
           import_updated_at: s.import_updated_at,
           source: s.source,
+          redirect_to: s.redirect_to,
           external_id: s.external_id
         ]
       ],

@@ -7,6 +7,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.Streams
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
+  alias ProgRadioApi.Importer.Deduper
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Tools.Images
 
@@ -29,6 +30,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
     overload_disabled()
     Images.reattach_image_of_stream_with_no_image()
+
     :ok
   end
 
@@ -198,18 +200,18 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
 
       # we try to avoid new duplicates by finding already existing identical stream
       redirect_to =
-        if Repo.exists?(from s in Stream, where: s.id == ^id) == false do
-          case find_redirect_stream(%{
-                 id: id,
+        if Map.get(existing_stream, :id) == nil do
+          case Deduper.find_existing_stream(%{
                  name: name,
                  stream_url: stream_url,
-                 country_code: country_code
+                 country_code: country_code,
+                 website: website
                }) do
-            nil ->
-              nil
-
-            {_id, redirect_to_id} ->
+            {:duplicate, %Stream{id: redirect_to_id}} ->
               redirect_to_id
+
+            _ ->
+              nil
           end
         else
           nil
@@ -443,25 +445,5 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   defp get_servers() do
     {:ok, dns} = DNS.query(@servers_dns)
     Map.get(dns, :anlist)
-  end
-
-  defp find_redirect_stream(%{} = stream_data) do
-    redirect_stream_id =
-      from(s in Stream,
-        where:
-          fragment("LOWER(?) = ?", s.name, ^String.downcase(stream_data.name)) and
-            s.country_code == ^stream_data.country_code and s.enabled == true and
-            s.banned == false and s.closed == false and is_nil(s.redirect_to) and
-            s.stream_url == ^stream_data.stream_url,
-        order_by: [desc: s.score],
-        limit: 1,
-        select: s.id
-      )
-      |> Repo.one()
-
-    case redirect_stream_id do
-      nil -> nil
-      _ -> {stream_data.id, redirect_stream_id}
-    end
   end
 end

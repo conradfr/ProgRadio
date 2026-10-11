@@ -12,9 +12,9 @@ defmodule ProgRadioApi.Importer.Tools.Images do
   def import_images(streams) do
     streams
     |> Task.async_stream(fn s -> import_image(s) end,
-         timeout: @task_timeout,
-         max_concurrency: @max_concurrency
-       )
+      timeout: @task_timeout,
+      max_concurrency: @max_concurrency
+    )
     |> Enum.reduce([], fn {:ok, s}, acc -> acc ++ [s] end)
   end
 
@@ -67,7 +67,7 @@ defmodule ProgRadioApi.Importer.Tools.Images do
   defp update_stream_with_image({stream_id, filename}) do
     query =
       from s in Stream,
-           where: s.id == ^stream_id
+        where: s.id == ^stream_id
 
     Repo.update_all(query, set: [img: filename])
   end

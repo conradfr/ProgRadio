@@ -362,7 +362,9 @@ defmodule ProgRadioApi.Streams do
       on: r.id == s.radio_id,
       left_join: ss in StreamSong,
       on: ss.id == s.stream_song_id,
-      where: s.enabled == true and s.banned == false and s.closed == false and s.closed == false and is_nil(s.redirect_to),
+      where:
+        s.enabled == true and s.banned == false and s.closed == false and s.closed == false and
+          is_nil(s.redirect_to),
       limit: @default_limit,
       select: %{
         id: s.id,
@@ -417,7 +419,9 @@ defmodule ProgRadioApi.Streams do
 
   defp base_count_query() do
     from s in Stream,
-      where: s.enabled == true and s.banned == false and s.closed == false and s.closed == false and is_nil(s.redirect_to),
+      where:
+        s.enabled == true and s.banned == false and s.closed == false and s.closed == false and
+          is_nil(s.redirect_to),
       select: count()
   end
 
@@ -698,7 +702,8 @@ defmodule ProgRadioApi.Streams do
     query =
       from s in Stream,
         select: s,
-        where: is_nil(s.redirect_to) and s.enabled == false and s.banned == false and s.closed == false
+        where:
+          is_nil(s.redirect_to) and s.enabled == false and s.banned == false and s.closed == false
 
     Repo.transaction(
       fn ->

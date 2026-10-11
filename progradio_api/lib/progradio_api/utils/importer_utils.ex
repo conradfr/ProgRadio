@@ -14,7 +14,7 @@ defmodule ProgRadioApi.Utils.ImporterUtils do
     "weloveradio" => 4,
     "lautfm" => 5,
     "progradio" => 6,
-    "internal" => 7,
+    "internal" => 7
   }
 
   def replace_value_maybe(value, source_caller, existing_stream, existing_key \\ nil)

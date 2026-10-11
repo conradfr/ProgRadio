@@ -109,7 +109,8 @@ defmodule ProgRadioApi.SongManager do
       from(s in Stream,
         left_join: ss in StreamSong,
         on: ss.id == s.stream_song_id,
-        where: s.enabled == true and s.banned == false and s.closed == false and is_nil(s.redirect_to),
+        where:
+          s.enabled == true and s.banned == false and s.closed == false and is_nil(s.redirect_to),
         order_by: [desc: s.score],
         limit: @most_popular_number_of_server,
         select: %{

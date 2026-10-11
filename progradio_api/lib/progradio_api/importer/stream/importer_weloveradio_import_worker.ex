@@ -8,6 +8,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Importer.Tools.Images
+  alias ProgRadioApi.Importer.Deduper
 
   @source_name "weloveradio"
 
@@ -17,7 +18,13 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
 
     try do
       existing = find_existing_stream(args)
-      id = existing || Ecto.UUID.bingenerate() |> Ecto.UUID.cast!()
+
+      id =
+        if existing != nil do
+          existing.id
+        else
+          Ecto.UUID.bingenerate() |> Ecto.UUID.cast!()
+        end
 
       overloading =
         if existing != nil do
@@ -103,7 +110,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
           description: description,
           language: Map.get(args, "lang"),
           enabled: Map.get(overloading, :enabled) || true,
-          redirect_to: Map.get(existing || %{}, :redirect_to) || nil,
+          redirect_to: Map.get(existing || %{}, :redirect_to),
           import_updated_at: import_updated_at
         }
 
@@ -144,22 +151,39 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
 
       # if we find a duplicate we use the weloveradio as the reference as the data is probably better
       # so we redirect the other one to it and rewrite any user favorite to the new one
-      # todo manage if more than one?
-      case find_duplicate_stream(args) do
-        nil ->
-          Logger.debug("no duplicate found")
+      # nothing is redirected to a stream that is itself redirected
+      duplicate =
+        if stream.redirect_to == nil do
+          Deduper.find_existing_stream(%{
+            name: stream.name,
+            stream_url: stream.stream_url,
+            country_code: stream.country_code,
+            website: stream.website,
+            # the stream is already stored, it must not be found as its own duplicate
+            except_source: @source_name
+          })
+        end
 
-        duplicated_stream ->
+      case duplicate do
+        {:duplicate, duplicated_stream} ->
           {:ok, new_stream_id} = Ecto.UUID.dump(stream.id)
 
           duplicated_stream
           |> Stream.changeset_redirect_to(%{redirect_to: stream.id})
           |> Repo.update!()
 
+          # the streams that were redirected to the duplicate follow it, a redirection is
+          # only followed once
+          from(s in Stream, where: s.redirect_to == ^duplicated_stream.id)
+          |> Repo.update_all(set: [redirect_to: stream.id])
+
           from(us in "users_streams",
             where: us.stream_id == type(^duplicated_stream.id, :binary_id)
           )
           |> Repo.update_all(set: [stream_id: new_stream_id])
+
+        _ ->
+          Logger.debug("no duplicate found")
       end
     rescue
       _ ->
@@ -172,20 +196,6 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
   defp find_existing_stream(%{} = data) do
     from(s in Stream,
       where: s.external_id == ^Integer.to_string(data["radio_id"]) and s.source == @source_name,
-      limit: 1,
-      select: s.id
-    )
-    |> Repo.one()
-  end
-
-  # we try to find an existing stream from other source with the same name and country code
-  defp find_duplicate_stream(%{} = data) do
-    from(s in Stream,
-      where:
-        fragment("LOWER(?) = ?", s.name, ^String.downcase(data["name"])) and
-          s.country_code == ^data["country"] and s.enabled == true and
-          s.banned == false and s.closed == false and is_nil(s.redirect_to) and s.source != @source_name,
-      order_by: [desc: s.score],
       limit: 1
     )
     |> Repo.one()

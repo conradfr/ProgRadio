@@ -95,6 +95,10 @@ defmodule ProgRadioApi.Importer.Deduper do
   So can `:frequency` and `:band` (`"97.5"` and `"FM"`), when the source has them
   apart from the name.
 
+  With `:except_source` the streams of that source are left out of the search. It is for
+  a source that looks for its duplicates once its stream is stored: the stream would be
+  found as its own duplicate, and two streams of the source redirected to each other.
+
   Returns `{:same, stream}`, `{:duplicate, stream}` or `nil`.
   """
   def find_existing_stream(%{} = attrs) do
@@ -120,12 +124,12 @@ defmodule ProgRadioApi.Importer.Deduper do
     [stream_url, Map.get(attrs, :original_stream_url)]
     |> Enum.filter(&is_binary/1)
     |> Enum.uniq()
-    |> Enum.find_value(&find_duplicate_with_url(&1, country_code))
+    |> Enum.find_value(&find_duplicate_with_url(&1, attrs))
   end
 
   defp find_duplicate_by_url(_attrs), do: nil
 
-  defp find_duplicate_with_url(url, country_code) do
+  defp find_duplicate_with_url(url, attrs) do
     case url_variants(url) do
       [] ->
         nil
@@ -134,7 +138,7 @@ defmodule ProgRadioApi.Importer.Deduper do
         {_url, query} = split_url(url)
 
         candidates =
-          from(s in with_url(eligible(country_code), variants),
+          from(s in with_url(candidates(attrs), variants),
             order_by: [desc: s.score],
             limit: @url_candidates_limit
           )
@@ -197,14 +201,14 @@ defmodule ProgRadioApi.Importer.Deduper do
     |> Kernel.>(@max_same_url)
   end
 
-  defp find_duplicate_by_name(%{name: name, country_code: country_code})
+  defp find_duplicate_by_name(%{name: name, country_code: country_code} = attrs)
        when is_binary(name) and is_binary(country_code) do
     incoming = parse_name(name)
 
     if String.length(incoming.core) >= @min_name_length do
       same_name =
         incoming
-        |> name_candidates(country_code)
+        |> name_candidates(attrs)
         |> Enum.map(&Map.put(&1, :parsed, parse_name(&1.name)))
         |> Enum.filter(&(&1.parsed.core == incoming.core))
 
@@ -231,7 +235,9 @@ defmodule ProgRadioApi.Importer.Deduper do
 
   defp find_duplicate_by_name(_attrs), do: nil
 
-  defp find_duplicate_by_website(%{name: name, country_code: country_code, website: website})
+  defp find_duplicate_by_website(
+         %{name: name, country_code: country_code, website: website} = attrs
+       )
        when is_binary(name) and is_binary(country_code) and is_binary(website) do
     host = website_host(website)
 
@@ -242,7 +248,7 @@ defmodule ProgRadioApi.Importer.Deduper do
     if host != nil and comparable? do
       # there is a trigram index for the website
       duplicates =
-        from(s in eligible(country_code),
+        from(s in candidates(attrs),
           where: ilike(s.website, ^"%#{website_domain(host) || host}%"),
           limit: @website_candidates_limit
         )
@@ -311,7 +317,7 @@ defmodule ProgRadioApi.Importer.Deduper do
       |> Enum.find_value(fn call_sign ->
         # there is a trigram index for the name
         carriers =
-          from(s in eligible(country_code),
+          from(s in candidates(attrs),
             where: like(s.name, ^"%#{call_sign}%"),
             limit: @name_candidates_limit
           )
@@ -447,7 +453,7 @@ defmodule ProgRadioApi.Importer.Deduper do
 
   # The streams of the country whose name has every word of the incoming name. This is
   # only a first selection, the names are then compared once parsed.
-  defp name_candidates(%{core: core}, country_code) do
+  defp name_candidates(%{core: core}, attrs) do
     patterns =
       core
       |> String.split(~r/[^\p{L}\p{N}]+/u, trim: true)
@@ -459,7 +465,7 @@ defmodule ProgRadioApi.Importer.Deduper do
     if patterns == [] do
       []
     else
-      from(s in eligible(country_code),
+      from(s in candidates(attrs),
         where:
           fragment("unaccent(lower(?)) LIKE ALL(?)", s.name, type(^patterns, {:array, :string})),
         where: fragment("char_length(?)", s.name) <= ^max_length,
@@ -468,6 +474,17 @@ defmodule ProgRadioApi.Importer.Deduper do
         select: %{id: s.id, name: s.name, score: s.score}
       )
       |> Repo.all()
+    end
+  end
+
+  # the streams a duplicate is searched among
+  defp candidates(%{country_code: country_code} = attrs) do
+    case Map.get(attrs, :except_source) do
+      source when is_binary(source) ->
+        from(s in eligible(country_code), where: is_nil(s.source) or s.source != ^source)
+
+      _ ->
+        eligible(country_code)
     end
   end
 

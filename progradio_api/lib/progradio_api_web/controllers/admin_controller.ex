@@ -6,7 +6,7 @@ defmodule ProgRadioApiWeb.AdminController do
 
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Cache, Search}
-  alias ProgRadioApi.Utils.ImporterUtils
+  alias ProgRadioApi.Importer.Tools.Images
   alias ProgRadioApi.Stream
 
   def empty_cache_stream(conn, _params) do
@@ -56,7 +56,7 @@ defmodule ProgRadioApiWeb.AdminController do
             img_url: stream.original_img
           }
         ]
-        |> ImporterUtils.import_images()
+        |> Images.import_images()
         |> List.first()
 
       if Map.get(stream_data, :img) != nil do

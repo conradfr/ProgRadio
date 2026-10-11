@@ -69,7 +69,9 @@ defmodule ProgRadioApi.ImporterStreemaImportWorker do
 
         # streema sometimes gives the website of the radio as its stream
         website?(stream_url, Map.get(api_data, "website")) ->
-          Logger.debug("Stream import job: Streema - the stream url is the website, skipped (#{slug})")
+          Logger.debug(
+            "Stream import job: Streema - the stream url is the website, skipped (#{slug})"
+          )
 
         true ->
           api_data = Map.put(api_data, "country_code", country_code(api_data))
