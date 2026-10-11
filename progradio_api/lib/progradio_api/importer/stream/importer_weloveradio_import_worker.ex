@@ -7,6 +7,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.{Stream, StreamOverloading}
+  alias ProgRadioApi.Importer.Tools.Images
 
   @source_name "weloveradio"
 
@@ -108,7 +109,7 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
 
       stream =
         [stream]
-        |> ImporterUtils.import_images()
+        |> Images.import_images()
         |> List.first()
 
       Logger.debug("Stream import job: WeLoveRadio: #{stream.name}")

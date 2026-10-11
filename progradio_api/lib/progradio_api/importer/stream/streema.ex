@@ -1,6 +1,5 @@
 defmodule ProgRadioApi.Importer.StreamsImporter.Streema do
   require Logger
-
   alias ProgRadioApi.ImporterStreemaImportWorker
 
   # the pages downloaded by streema_scrap.js

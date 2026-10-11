@@ -6,6 +6,7 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Stream
+  alias ProgRadioApi.Importer.Tools.Images
 
   @source_name "radiobox"
   @sleep_ms 500
@@ -118,7 +119,7 @@ defmodule ProgRadioApi.ImporterRadioBoxImportWorker do
 
         stream =
           [stream]
-          |> ImporterUtils.import_images()
+          |> Images.import_images()
           |> List.first()
 
         Logger.info("Stream import job: RadioBox: #{stream.name}")

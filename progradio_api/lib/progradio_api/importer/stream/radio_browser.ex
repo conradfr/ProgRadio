@@ -8,6 +8,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.Utils.ImporterUtils
+  alias ProgRadioApi.Importer.Tools.Images
 
   @servers_dns "all.api.radio-browser.info"
   @api_all_radios "stations"
@@ -20,14 +21,14 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> get_radios()
       |> filter()
       |> format()
-      |> ImporterUtils.import_images()
+      |> Images.import_images()
       |> delete_images_from_removed_stations()
       |> store()
 
     Logger.info("Streams import: Radio-browser #{result}")
 
     overload_disabled()
-    reattach_image_of_stream_with_no_image()
+    Images.reattach_image_of_stream_with_no_image()
     :ok
   end
 
@@ -38,7 +39,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> Enum.each(fn stream_id when is_binary(stream_id) ->
       Repo.get(Stream, stream_id)
       |> __MODULE__.format_from_stream()
-      |> ImporterUtils.import_image()
+      |> Images.import_image()
       |> store_one()
     end)
   end
@@ -49,7 +50,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
     |> Enum.each(fn stream_id when is_binary(stream_id) ->
       Repo.get(Stream, stream_id)
       |> __MODULE__.format_from_stream()
-      |> ImporterUtils.import_image()
+      |> Images.import_image()
       |> store_one()
     end)
   end
@@ -420,7 +421,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         }
       )
       |> Repo.all()
-      |> ImporterUtils.import_images()
+      |> Images.import_images()
 
     Multi.new()
     |> upsert_streams(streams)
@@ -462,30 +463,5 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       nil -> nil
       _ -> {stream_data.id, redirect_stream_id}
     end
-  end
-
-  # If a stream has no image (usually from a dead link) we reuse the former one if any,
-  # (as we don't delete previous images)
-  defp reattach_image_of_stream_with_no_image() do
-    get_streams_with_no_image()
-    |> Enum.map(fn s -> ImageImporter.find_image_for_stream(s) end)
-    |> Enum.filter(fn {_stream_id, filename} -> filename != nil end)
-    |> Enum.each(&update_stream_with_image/1)
-  end
-
-  defp get_streams_with_no_image() do
-    from(s in Stream,
-      where: is_nil(s.img),
-      select: s.id
-    )
-    |> Repo.all()
-  end
-
-  defp update_stream_with_image({stream_id, filename}) do
-    query =
-      from s in Stream,
-        where: s.id == ^stream_id
-
-    Repo.update_all(query, set: [img: filename])
   end
 end

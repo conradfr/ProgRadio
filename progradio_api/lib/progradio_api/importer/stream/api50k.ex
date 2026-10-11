@@ -5,6 +5,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Utils.ImporterUtils
+  alias ProgRadioApi.Importer.Tools.Images
 
   @base_url "https://50k-radio-stations.p.rapidapi.com"
   @page_size 100
@@ -22,7 +23,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Api50k do
       |> Enum.reject(fn s ->
         Map.get(s, :stream_url, nil) == nil or Map.get(s, :stream_url, "") == ""
       end)
-      |> ImporterUtils.import_images()
+      |> Images.import_images()
       |> store()
 
     Logger.info("50k import: #{result}")

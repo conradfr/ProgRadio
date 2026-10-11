@@ -1,5 +1,6 @@
 defmodule ProgRadioApi.Utils.ImporterUtils do
   alias ProgRadioApi.Importer.ImageImporter
+  alias ProgRadioApi.Importer.Tools.Images
   alias ProgRadioApi.Importer.StreamsImporter.Transformers.Streams, as: StreamTransformers
 
   @max_concurrency 4
@@ -73,43 +74,5 @@ defmodule ProgRadioApi.Utils.ImporterUtils do
       |> StreamTransformers.radiosenlinea()
 
     updated_stream_url
-  end
-
-  def import_images(streams) do
-    streams
-    |> Task.async_stream(fn s -> import_image(s) end,
-      timeout: @task_timeout,
-      max_concurrency: @max_concurrency
-    )
-    |> Enum.reduce([], fn {:ok, s}, acc -> acc ++ [s] end)
-  end
-
-  @spec import_image(struct) :: struct
-  def import_image(stream, field \\ :img_url) do
-    case Map.get(stream, field) do
-      url when is_binary(url) and url !== "" ->
-        stream =
-          if field == :img_url, do: Map.delete(stream, :img_url), else: stream
-
-        try do
-          with {:ok, filename} <- ImageImporter.import_stream(url, stream) do
-            Map.put(stream, :img, filename)
-          else
-            _ -> stream
-          end
-        rescue
-          _ ->
-            stream
-        catch
-          _ ->
-            stream
-
-          :exit, _ ->
-            stream
-        end
-
-      _ ->
-        stream
-    end
   end
 end

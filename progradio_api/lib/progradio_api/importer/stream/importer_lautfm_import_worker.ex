@@ -7,6 +7,7 @@ defmodule ProgRadioApi.ImporterLautfmImportWorker do
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
+  alias ProgRadioApi.Importer.Tools.Images
 
   @source "lautfm"
 
@@ -20,7 +21,7 @@ defmodule ProgRadioApi.ImporterLautfmImportWorker do
       if stream.name !== nil and String.trim(stream.name) !== "" do
         stream =
           [stream]
-          |> ImporterUtils.import_images()
+          |> Images.import_images()
           |> List.first()
 
         Logger.debug("Stream import job: Lautfm: #{stream.name}")

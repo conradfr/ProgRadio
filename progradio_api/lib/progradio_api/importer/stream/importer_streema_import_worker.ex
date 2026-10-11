@@ -5,6 +5,7 @@ defmodule ProgRadioApi.ImporterStreemaImportWorker do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Utils.ImporterUtils
+  alias ProgRadioApi.Importer.Tools.Images
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.Importer.Deduper
 
@@ -96,7 +97,7 @@ defmodule ProgRadioApi.ImporterStreemaImportWorker do
           stream =
             existing
             |> format(api_data, stream_url)
-            |> ImporterUtils.import_image()
+            |> Images.import_image()
 
           {:ok, _saved_stream} = store(stream)
       end
