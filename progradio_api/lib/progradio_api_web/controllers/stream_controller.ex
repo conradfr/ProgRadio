@@ -54,7 +54,7 @@ defmodule ProgRadioApiWeb.StreamController do
     with {:ok, api_params} <- validate(:get, conn_params) do
       [streams, total] =
         case Streams.get(api_params) do
-          [results, count] -> [results, count]
+          {results, count} -> [results, count]
           results -> [results, Streams.count(api_params)]
         end
 

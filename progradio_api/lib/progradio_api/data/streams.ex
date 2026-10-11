@@ -34,6 +34,8 @@ defmodule ProgRadioApi.Streams do
   @source_progradio "progradio"
 
   @error_random_cutoff 3
+  # how many streams of a search the random pick is done among (the most meilisearch gives)
+  @search_random_limit 1000
 
   # ---------- SCORE ----------
   # Score = weighted sum of listening sessions over a recent window, where each
@@ -99,34 +101,32 @@ defmodule ProgRadioApi.Streams do
     |> img_to_full_url()
   end
 
-  # special case : search + random button
-  # as we need to use meilisearch but it has no random pick
-  def get(%{:sort => "random", :text => text, :limit => 1} = params) when is_binary(text) do
+  # Returns the streams, or {streams, total} when the total is already known (search).
+
+  # special case : search + random
+  # as we need to use meilisearch (same streams as the other sorts) but it has no random pick:
+  # it gives the streams of the search and the database picks randomly among them
+  def get(%{:sort => "random", :text => text} = params) when is_binary(text) do
     try do
-      # as there is no random function we do first pass to get the nb of hits
-      # and then a second one with a random pick
-      {:ok, %Meilisearch.Search{} = results} = Search.search(%{params | sort: "popularity"})
+      {:ok, %Meilisearch.Search{} = results} =
+        params
+        |> Map.delete(:sort)
+        |> Map.merge(%{offset: 0, limit: @search_random_limit})
+        |> Search.search()
 
-      case results.estimatedTotalHits do
-        0 ->
-          []
+      ids =
+        results.hits
+        |> Enum.map(fn e -> e["id"] end)
 
-        total ->
-          pick = :rand.uniform(total - 1)
+      streams =
+        base_query()
+        |> add_ids(ids)
+        |> add_limit(params)
+        |> add_sort(params)
+        |> Repo.all()
+        |> Enum.map(&img_to_full_url/1)
 
-          {:ok, %Meilisearch.Search{} = random_results} =
-            Search.search(%{params | text: text, sort: "popularity", offset: pick, limit: 1})
-
-          stream =
-            random_results.hits
-            |> List.first()
-            |> Map.get("id")
-            |> get_one()
-            |> List.wrap()
-            |> Enum.map(&img_to_full_url/1)
-
-          [stream, total]
-      end
+      {streams, results.estimatedTotalHits}
     rescue
       _ -> build_query(params) |> Enum.map(&img_to_full_url/1)
     end
@@ -164,7 +164,7 @@ defmodule ProgRadioApi.Streams do
         |> Repo.all()
         |> Enum.map(&img_to_full_url/1)
 
-      [streams, results.estimatedTotalHits]
+      {streams, results.estimatedTotalHits}
     rescue
       _ -> build_query(params) |> Enum.map(&img_to_full_url/1)
     end
@@ -496,7 +496,10 @@ defmodule ProgRadioApi.Streams do
 
       "random" ->
         query
-        |> where([s], s.playing_error < @error_random_cutoff and s.popup == false)
+        |> where(
+          [s],
+          s.playing_error < @error_random_cutoff and (is_nil(s.popup) or s.popup == false)
+        )
         |> order_by(fragment("RANDOM()"))
         |> group_by([s, r, ss], [
           s.id,
