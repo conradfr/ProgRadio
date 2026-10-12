@@ -14,14 +14,14 @@ liip_imagine:
         program_thumb:
             filters:
                 relative_resize:
-                    heighten: 58
+                    heighten: 116
             post_processors:
                 jpegoptim: { strip_all: true, quality: 85, progressive: true }
                 # optipng: { strip_all: true, level: 6 }
         page_thumb:
             filters:
                 relative_resize:
-                    widen: 64
+                    widen: 128
             post_processors:
                 jpegoptim: { strip_all: true, quality: 95, progressive: true }
                 # optipng: { strip_all: true, level: 5 }

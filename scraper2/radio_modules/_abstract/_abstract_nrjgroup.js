@@ -8,6 +8,18 @@ let scraperConfig = {};
 const scrapedData = {};
 const cleanedData = {};
 
+// sources are ordered by breakpoint and not by size, so we pick the largest one from the WxH in the url
+const largestImg = (imgs) => {
+  const area = (url) => {
+    const size = /\/(\d+)x(\d+)\//.exec(url);
+    return size ? parseInt(size[1], 10) * parseInt(size[2], 10) : 0;
+  };
+
+  return (imgs || []).reduce((best, curr) => {
+    return best === null || area(curr) > area(best) ? curr : best;
+  }, null);
+};
+
 const format = async (dateObj, name) => {
 // we use reduce instead of map to act as a map+filter in one pass
   cleanedData[name] = scrapedData[name].reduce(function (prev, curr, index, array) {
@@ -74,7 +86,7 @@ const format = async (dateObj, name) => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title.trim(),
-      'img': curr.img || null,
+      'img': largestImg(curr.imgs),
       'description': curr.description.trim()
     };
 
@@ -82,6 +94,7 @@ const format = async (dateObj, name) => {
     return prev;
   }, []);
 
+  console.log(await cleanedData[name]);
   return Promise.resolve(cleanedData[name]);
 };
 
@@ -114,10 +127,12 @@ const fetch = async (dateObj, name, url) => {
             },
             title: '.c-timeline-emission__body h3.c-timeline-emission__heading',
             description: '.c-timeline-emission__body p.c-timeline-emission__description',
-            img: {
-              selector: '.c-timeline-emission__thumbnail source:last-of-type',
-              value: 'srcset'
-            },
+            imgs: [
+              {
+                selector: '.c-timeline-emission__thumbnail source',
+                value: 'srcset'
+              }
+            ],
           }
         }
       ]

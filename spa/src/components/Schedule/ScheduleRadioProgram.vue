@@ -49,7 +49,7 @@ import { DateTime, Interval } from 'luxon';
 import {
   TIMEZONE,
   PROGRAM_LONG_ENOUGH,
-  THUMBNAIL_PAGE_PROGRAM_PATH,
+  THUMBNAIL_PROGRAM_PATH,
   GTAG_ACTION_PROGRAM_DETAIL,
   GTAG_ACTION_PROGRAM_DETAIL_VALUE,
   GTAG_CATEGORY_SCHEDULE
@@ -59,7 +59,7 @@ import { useScheduleStore } from '@/stores/scheduleStore';
 import { usePlayerStore } from '@/stores/playerStore';
 
 import type { Radio } from '@/types/radio';
-import type { Stream } from '@/types/streams';
+import type { Stream } from '@/types/stream';
 import type { Program } from '@/types/program';
 
 import ScheduleRadioSection from './ScheduleRadioSection.vue';
@@ -211,7 +211,7 @@ export default defineComponent({
     picturePath(): string {
       return this.program.picture_url.startsWith('http') ? this.program.picture_url
         // @ts-expect-error defined on global scope
-        :`${this.$CDN_BASE_URL}${THUMBNAIL_PAGE_PROGRAM_PATH}${this.program.picture_url}`;
+        :`${this.$CDN_BASE_URL}${THUMBNAIL_PROGRAM_PATH}${this.program.picture_url}`;
     }
   },
   methods: {
