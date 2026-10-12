@@ -14,6 +14,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Table]
 #[ORM\Index(name: 'ls_radio_stream_idx', columns: ['radio_stream_id'])]
 #[ORM\Index(name: 'stream_idx', columns: ['stream_id'])]
+#[ORM\Index(name: 'listening_session_stream_start_idx', columns: ['stream_id', 'date_time_start'])]
 #[ORM\Index(name: 'date_time_start_idx', columns: ['date_time_start'])]
 #[ORM\Entity(repositoryClass: ListeningSessionRepository::class)]
 class ListeningSession

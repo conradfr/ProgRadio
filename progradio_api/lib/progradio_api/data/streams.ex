@@ -274,10 +274,20 @@ defmodule ProgRadioApi.Streams do
       end
 
     with %Stream{} = stream <- stream_data,
-         true <- stream.playing_error > 0 do
-      stream_data
-      |> Stream.changeset_playing_error(%{"playing_error" => 0, "playing_error_reason" => nil})
-      |> Repo.update()
+         true <- stream.playing_error > 0,
+         {:ok, updated_stream} <-
+           stream
+           |> Stream.changeset_playing_error(%{
+             "playing_error" => 0,
+             "playing_error_reason" => nil
+           })
+           |> Repo.update() do
+      # we update the cached entry, or the reset would be done again at each call until it expires
+      Cache.put(@cache_prefix_stream <> "error_" <> stream_id, updated_stream,
+        ttl: @cache_ttl_stream_error
+      )
+
+      {:ok, updated_stream}
     else
       _ -> {:ok, nil}
     end

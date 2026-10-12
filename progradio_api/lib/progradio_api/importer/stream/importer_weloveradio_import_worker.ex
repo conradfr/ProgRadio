@@ -4,7 +4,6 @@ defmodule ProgRadioApi.ImporterWeLoveRadioImportWorker do
   require Logger
 
   alias ProgRadioApi.Repo
-  alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Importer.Tools.Images

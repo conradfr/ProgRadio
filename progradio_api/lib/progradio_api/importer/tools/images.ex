@@ -4,7 +4,6 @@ defmodule ProgRadioApi.Importer.Tools.Images do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Stream
   alias ProgRadioApi.Importer.ImageImporter
-  alias ProgRadioApi.Importer.Tools.Images
 
   @max_concurrency 4
   @task_timeout 1_000_000

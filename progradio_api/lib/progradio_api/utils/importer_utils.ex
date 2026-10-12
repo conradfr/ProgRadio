@@ -1,10 +1,5 @@
 defmodule ProgRadioApi.Utils.ImporterUtils do
-  alias ProgRadioApi.Importer.ImageImporter
-  alias ProgRadioApi.Importer.Tools.Images
   alias ProgRadioApi.Importer.StreamsImporter.Transformers.Streams, as: StreamTransformers
-
-  @max_concurrency 4
-  @task_timeout 1_000_000
 
   @source_priority %{
     nil => 0,

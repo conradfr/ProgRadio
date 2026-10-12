@@ -42,11 +42,11 @@ defmodule ProgRadioApi.ListeningSessions do
   #              opts: [ttl: @cache_ttl]
   #            )
   def get_listening_session!(id, %{"stream_id" => stream_id} = _attrs) do
-    with stream when not is_nil(stream) <- Repo.get(Stream, stream_id) do
-      Repo.get_by(ListeningSession, id: id, stream_id: stream.id)
-    else
-      _ -> nil
-    end
+    #    with stream when not is_nil(stream) <- Repo.get(Stream, stream_id) do
+    Repo.get_by(ListeningSession, id: id, stream_id: stream_id)
+    #    else
+    #      _ -> nil
+    #    end
   end
 
   # find a session already created for the same stream / start / ip
@@ -100,46 +100,29 @@ defmodule ProgRadioApi.ListeningSessions do
         %{"id" => stream_id} = attrs,
         remote_ip
       ) do
-    with %{} = stream <- Repo.get(Stream, stream_id) do
-      params = %{
-        "last_listening_at" => NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-      }
-
-      stream
-      |> Stream.changeset_last_listening_at(params)
-      |> Repo.update()
-
-      ip_binary = get_ip_as_binary(remote_ip)
-
-      stream
-      |> Ecto.build_assoc(:listening_session, %ListeningSession{ip_address: ip_binary})
-      |> ListeningSession.changeset(attrs)
-      |> Repo.insert()
-    else
-      _ -> {:error, nil}
-    end
+    create_listening_session_of_stream(stream_id, attrs, remote_ip)
   end
 
   # listening session for streams
   def create_listening_session(%{"stream_id" => stream_id} = attrs, remote_ip)
       when is_map_key(attrs, "stream_id") do
-    with %{} = stream <- Repo.get(Stream, stream_id) do
-      params = %{
-        "last_listening_at" => NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-      }
+    create_listening_session_of_stream(stream_id, attrs, remote_ip)
+  end
 
-      stream
-      |> Stream.changeset_last_listening_at(params)
-      |> Repo.update()
+  # the update of last_listening_at is also the check that the stream exists, no need to load it
+  defp create_listening_session_of_stream(stream_id, attrs, remote_ip) do
+    last_listening_at = DateTime.utc_now() |> DateTime.truncate(:second)
 
-      ip_binary = get_ip_as_binary(remote_ip)
+    query = from(s in Stream, where: s.id == ^stream_id)
 
-      stream
-      |> Ecto.build_assoc(:listening_session, %ListeningSession{ip_address: ip_binary})
-      |> ListeningSession.changeset(attrs)
-      |> Repo.insert()
-    else
-      _ -> {:error, nil}
+    case Repo.update_all(query, set: [last_listening_at: last_listening_at]) do
+      {1, _} ->
+        %ListeningSession{stream_id: stream_id, ip_address: get_ip_as_binary(remote_ip)}
+        |> ListeningSession.changeset(attrs)
+        |> Repo.insert()
+
+      _ ->
+        {:error, nil}
     end
   end
 

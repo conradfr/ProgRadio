@@ -5,7 +5,6 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Streams
-  alias ProgRadioApi.Importer.ImageImporter
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
   alias ProgRadioApi.Importer.Deduper
   alias ProgRadioApi.Utils.ImporterUtils
