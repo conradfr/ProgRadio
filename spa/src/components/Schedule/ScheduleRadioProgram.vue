@@ -5,10 +5,10 @@
      :class="{ 'prevday': startsPrevDay, 'nextday': endsNextDay }"
      :style="containerStyle"
      @click.stop="detailClick">
-    <div v-if="isIntersecting === true" class="program"
+    <div v-if="isIntersecting === true" class="program rounded-start-1"
       :class="{ 'program-unknown': isUnknown, 'program-current': isCurrent, 'long-enough': isLongEnough }"
       @mouseover.once="hover = !hover">
-      <div class="program-inner" :title="title">
+      <div class="program-inner rounded-end-1" :title="title">
         <div v-if="program.picture_url && (hover || isCurrent)" class="program-img">
           <img v-once :src="picturePath" alt="" @mousedown.prevent="">
         </div>

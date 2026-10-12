@@ -255,15 +255,15 @@ class UserController extends AbstractBaseController
             // So let's do it manually
             // (lost too many hours on this)
 
+            if (!empty($stream->getOriginalImg())) {
+                $apiClient->importStreamImage($stream->getId()->toString());
+                sleep(1);
+                $stream = $em->getRepository(Stream::class)->find($stream->getId());
+            }
+
             if ($edit === true) {
                 $em->persist($stream);
                 $em->flush();
-
-                if (!empty($stream->getOriginalImg())) {
-                  $apiClient->importStreamImage($stream->getId()->toString());
-                  sleep(1);
-                  $stream = $em->getRepository(Stream::class)->find($stream->getId());
-                }
             } else {
                 $em->getRepository(Stream::class)->insertNewStream($stream);
             }
