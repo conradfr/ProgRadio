@@ -2,6 +2,7 @@ import { createApp } from './utils/petite-vue.es.js';
 import cookies from './utils/cookies';
 import { Socket } from '../js/phoenix';
 import noUiSlider from 'nouislider';
+import ITunesApi from './api/ITunesApi';
 
 // from config
 import {
@@ -841,6 +842,35 @@ createApp({
 
     this.song = song === '' ? null : song;
     this.cover = songData.song.cover_url ? songData.song.cover_url : null;
+
+    this.fetchItunesCover();
+  },
+  // when the song has no cover we try to get one from iTunes
+  fetchItunesCover() {
+    // not when the tab is in the background, the cover is fetched when it is visible again
+    if (!this.visibilityListeners.itunesCover) {
+      this.visibilityListeners.itunesCover = true;
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          this.fetchItunesCover();
+        }
+      });
+    }
+
+    if (document.hidden || this.song === null || this.cover !== null) {
+      return;
+    }
+
+    const currentSong = this.song;
+
+    ITunesApi.getCoverUrl(currentSong)
+      .then((cover) => {
+        // the song may have changed while we were waiting
+        if (this.song === currentSong && this.cover === null) {
+          this.cover = cover;
+        }
+      })
+      .catch(() => {});
   },
   formatListeners(listenersData) {
     if (!listenersData || !listenersData.listeners || !listenersData.listeners === 0) {

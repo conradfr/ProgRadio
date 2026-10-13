@@ -16,6 +16,8 @@ import { mapState, mapActions } from 'pinia';
 
 import type { Stream } from '@/types/stream';
 
+import ITunesApi from '@/api/ITunesApi';
+
 import { usePlayerStore } from '@/stores/playerStore';
 
 export default defineComponent({
@@ -27,16 +29,20 @@ export default defineComponent({
   },
   data(): {
     lastStreamId: string|null,
+    iTunesCover: string|null,
   } {
     return {
-      lastStreamId: null
+      lastStreamId: null,
+      iTunesCover: null
     }
   },
   beforeMount() {
     this.joinChannel();
+    document.addEventListener('visibilitychange', this.visibilityChanged);
   },
   beforeUnmount() {
     this.leaveChannel();
+    document.removeEventListener('visibilitychange', this.visibilityChanged);
   },
   watch: {
     stream(_newValue, oldValue) {
@@ -45,6 +51,14 @@ export default defineComponent({
       }
 
       this.joinChannel();
+    },
+    // when the song has no cover we try to get one from iTunes
+    liveSongTitle: {
+      immediate: true,
+      handler() {
+        this.iTunesCover = null;
+        this.fetchITunesCover();
+      }
     },
   },
   computed: {
@@ -56,7 +70,7 @@ export default defineComponent({
       return this.liveSongData && this.liveSongData[0] ? this.liveSongData[0] : null;
     },
     liveSongCover() {
-      return this.liveSongData && this.liveSongData[1] ? this.liveSongData[1] : null;
+      return this.liveSongData && this.liveSongData[1] ? this.liveSongData[1] : this.iTunesCover;
     },
   },
   methods: {
@@ -64,6 +78,30 @@ export default defineComponent({
       'joinSongChannel',
       'leaveSongChannel',
     ]),
+    async fetchITunesCover() {
+      const title = this.liveSongTitle;
+
+      // not when the tab is in the background, the cover is fetched when it is visible again
+      if (document.hidden || !title || (this.liveSongData && this.liveSongData[1])) {
+        return;
+      }
+
+      try {
+        const cover = await ITunesApi.getCoverUrl(title);
+
+        // the song may have changed while we were waiting
+        if (this.liveSongTitle === title) {
+          this.iTunesCover = cover;
+        }
+      } catch (_e) {
+        // no cover
+      }
+    },
+    visibilityChanged() {
+      if (!document.hidden && !this.liveSongCover) {
+        this.fetchITunesCover();
+      }
+    },
     joinChannel() {
       setTimeout(() => {
         if (this.stream.id) {

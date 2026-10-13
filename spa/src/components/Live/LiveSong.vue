@@ -20,6 +20,8 @@ import { mapState, mapActions } from 'pinia';
 
 import type { Stream } from '@/types/stream.ts';
 
+import ITunesApi from '@/api/ITunesApi';
+
 import { usePlayerStore } from '@/stores/playerStore.ts';
 import { useUserStore } from '@/stores/userStore.ts';
 
@@ -37,7 +39,26 @@ export default defineComponent({
       required: true
     }
   },
+  data(): {
+    iTunesCover: string|null,
+  } {
+    return {
+      iTunesCover: null
+    }
+  },
+  watch: {
+    // when the song has no cover we try to get one from iTunes
+    liveSongTitle: {
+      immediate: true,
+      handler() {
+        this.iTunesCover = null;
+        this.fetchITunesCover();
+      }
+    },
+  },
   mounted() {
+    document.addEventListener('visibilitychange', this.visibilityChanged);
+
     setTimeout(() => {
       if (this.stream) {
         this.joinSongChannel(this.stream.id);
@@ -45,6 +66,8 @@ export default defineComponent({
     }, 150);
   },
   beforeUnmount() {
+    document.removeEventListener('visibilitychange', this.visibilityChanged);
+
     setTimeout(() => {
       if (this.stream) {
         this.leaveSongChannel(this.stream.id);
@@ -61,7 +84,7 @@ export default defineComponent({
       return this.liveSongData && this.liveSongData[0] ? this.liveSongData[0] : null;
     },
     liveSongCover() {
-      return this.liveSongData && this.liveSongData[1] ? this.liveSongData[1] : null;
+      return this.liveSongData && this.liveSongData[1] ? this.liveSongData[1] : this.iTunesCover;
     },
   },
   methods: {
@@ -69,6 +92,30 @@ export default defineComponent({
       'joinSongChannel',
       'leaveSongChannel',
     ]),
+    async fetchITunesCover() {
+      const title = this.liveSongTitle;
+
+      // not when the tab is in the background, the cover is fetched when it is visible again
+      if (document.hidden || !title || (this.liveSongData && this.liveSongData[1])) {
+        return;
+      }
+
+      try {
+        const cover = await ITunesApi.getCoverUrl(title);
+
+        // the song may have changed while we were waiting
+        if (this.liveSongTitle === title) {
+          this.iTunesCover = cover;
+        }
+      } catch (_e) {
+        // no cover
+      }
+    },
+    visibilityChanged() {
+      if (!document.hidden && !this.liveSongCover) {
+        this.fetchITunesCover();
+      }
+    },
   }
 });
 </script>

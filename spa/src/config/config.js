@@ -40,6 +40,7 @@ export const CACHE_KEY_CATEGORIES = 'categories';
 export const CACHE_KEY_RADIO_FAVORITES = 'radio_favorites';
 export const CACHE_KEY_STREAM_FAVORITES = 'stream_favorites';
 export const CACHE_KEY_STREAM_COUNTRIES = 'stream_countries';
+export const CACHE_KEY_ITUNES_PREFIX = 'cover';
 
 export const LAST_STREAM_PLAYED = 'last_stream_played';
 export const LAST_RADIO_PLAYED = 'last_played_radio';
