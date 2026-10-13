@@ -101,7 +101,7 @@ const hasSessionCache = (key: string): boolean => {
 
 const getSessionCache = (key: string) => JSON.parse(sessionStorage.getItem(key)!);
 
-const setSessionCache = (key: string, data: any) => {
+const setSessionCache = (key: string, data: any, retry = true) => {
   if (!isSessionStorageEnabled()) {
     return;
   }
@@ -110,8 +110,13 @@ const setSessionCache = (key: string, data: any) => {
 
   try {
     sessionStorage.setItem(key, JSON.stringify(data));
-  } catch (_e) {
-    // return;
+  } catch (e) {
+    if (retry) {
+      if (isLocalStorageFull(e)) {
+        sessionStorage.clear();
+        setSessionCache(key, data, false);
+      }
+    }
   }
 };
 
