@@ -690,6 +690,12 @@ class DefaultController extends AbstractBaseController
     ]
     public function onePopupShort(Stream $stream): Response
     {
+        if ($stream->getRedirectToStream() !== null) {
+            return $this->redirectToRoute('streams_one_popup_short', [
+                'stream' => $stream->getRedirectToStream()->getId()->toRfc4122()
+            ], 301);
+        }
+
         return $this->render('default/stream_popup.html.twig', [
             'stream' => $stream,
         ]);
