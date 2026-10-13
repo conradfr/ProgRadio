@@ -1,7 +1,7 @@
 // ---------- LOCAL STORAGE ----------
 
 // http://crocodillon.com/blog/always-catch-localstorage-security-and-quota-exceeded-errors
-const isLocalStorageFull = (e: any) => {
+const isStorageFull = (e: any) => {
   let quotaExceeded = false;
   if (e) {
     if (e.code) {
@@ -64,7 +64,7 @@ const setCache = (key: string, data: any, retry = true) => {
     localStorage.setItem(key, JSON.stringify(data));
   } catch (e) {
     if (retry) {
-      if (isLocalStorageFull(e)) {
+      if (isStorageFull(e)) {
         localStorage.clear();
         setCache(key, data, false);
       }
@@ -101,7 +101,7 @@ const hasSessionCache = (key: string): boolean => {
 
 const getSessionCache = (key: string) => JSON.parse(sessionStorage.getItem(key)!);
 
-const setSessionCache = (key: string, data: any) => {
+const setSessionCache = (key: string, data: any, retry = true) => {
   if (!isSessionStorageEnabled()) {
     return;
   }
@@ -110,8 +110,13 @@ const setSessionCache = (key: string, data: any) => {
 
   try {
     sessionStorage.setItem(key, JSON.stringify(data));
-  } catch (_e) {
-    // return;
+  } catch (e) {
+    if (retry) {
+      if (isStorageFull(e)) {
+        sessionStorage.clear();
+        setSessionCache(key, data, false);
+      }
+    }
   }
 };
 

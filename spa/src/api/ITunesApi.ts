@@ -4,7 +4,13 @@ import {
   CACHE_KEY_ITUNES_PREFIX
 } from '@/config/config';
 
-type ITunesResult = Record<string, any>;
+// we only keep what we use, to not fill the session storage
+type ITunesResult = {
+  artworkUrl100: string|null,
+  artworkUrl60: string|null,
+  artworkUrl30: string|null,
+  trackViewUrl: string|null
+};
 
 // searches in progress, so asking the cover and the link of a song at the same time does only one call
 const pending: Record<string, Promise<ITunesResult|null>> = {};
@@ -13,7 +19,15 @@ const fetchSong = async (song: string, cacheKey: string): Promise<ITunesResult|n
   const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(song)}&entity=song&limit=1`);
   const data = await response.json();
 
-  const result = data && data.resultCount && data.resultCount > 0 ? data.results[0] : null;
+  let result: ITunesResult|null = null;
+  if (data && data.resultCount && data.resultCount > 0) {
+    result = {
+      artworkUrl100: data.results[0].artworkUrl100 || null,
+      artworkUrl60: data.results[0].artworkUrl60 || null,
+      artworkUrl30: data.results[0].artworkUrl30 || null,
+      trackViewUrl: data.results[0].trackViewUrl || null
+    };
+  }
 
   // songs not found are cached too (as null), to not search them again
   cache.setSessionCache(cacheKey, result);
