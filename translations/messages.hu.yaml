@@ -237,7 +237,7 @@ page:
             email_toggle: Havonta küldött statisztikai e-mailek fogadása
 
     top:
-        page_title: Top rádiók %country%-ban
+        page_title: A legnépszerűbb rádiók %country%-ban
         description: 'Hallgasd a legjobb rádiókat %country%-ban'
         more: Több top rádió megtekintése %country%-ban
 

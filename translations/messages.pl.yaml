@@ -237,7 +237,7 @@ page:
             email_toggle: Odbieraj miesięczne statystyki e-mailem
 
     top:
-        page_title: Top stacji radiowych w %country%
+        page_title: Najpopularniejsze stacje radiowe w %country%
         description: 'Słuchaj najlepszych stacji radiowych w %country%'
         more: Zobacz więcej topowych stacji radiowych w %country%
 

@@ -237,7 +237,7 @@ page:
             email_toggle: Ricevi email con statistiche mensili
 
     top:
-        page_title: Top delle radio in %country%
+        page_title: Le radio più popolari in %country%
         description: 'Ascolta le migliori radio di %country%'
         more: Vedi altre radio top in %country%
 

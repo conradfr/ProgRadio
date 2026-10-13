@@ -237,7 +237,7 @@ page:
             email_toggle: Aylık istatistik e-postaları al
 
     top:
-        page_title: "%country%'deki en iyi radyolar"
+        page_title: "%country%'deki en popüler radyolar"
         description: "%country%'deki en iyi radyoları dinleyin"
         more: "%country%'deki daha fazla en iyi radyo görüntüle"
 

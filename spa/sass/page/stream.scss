@@ -133,3 +133,9 @@
     max-width: 3.846rem;
   }
 }
+
+.mobile-ads {
+  @include media-breakpoint-down(sm) {
+    min-height: 280px;
+  }
+}

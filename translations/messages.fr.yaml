@@ -237,13 +237,13 @@ page:
             stats_last_month: "%sessions% sessions d'écoute pour un total de %time% le mois dernier."
             email_toggle: Recevoir des statistiques mensuelles d'écoute par email
     top:
-        page_title: Top des radios en %country%
-        description: 'Ecoutez les meilleurs radio de %country%'
+        page_title: Les radios les plus populaires en %country%
+        description: 'Ecoutez les meilleures radios de %country%'
         more: Voir plus de top radios en %country%
 
     last:
         page_title: Dernières radios écoutées en %country%
-        description: 'Ecoutez les meilleurs radio de %country%'
+        description: 'Ecoutez les meilleures radios de %country%'
         more: Voir plus de radios récemment écoutées en %country%
 
     user:

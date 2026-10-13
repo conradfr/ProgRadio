@@ -237,7 +237,7 @@ page:
             email_toggle: Monatliche Statistik-E-Mails erhalten
 
     top:
-        page_title: Top-Radiosender in %country%
+        page_title: Die beliebtesten Radiosender in %country%
         description: 'Hören Sie die besten Radiosender in %country%'
         more: Weitere Top-Radiosender in %country% anzeigen
 

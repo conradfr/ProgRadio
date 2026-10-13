@@ -225,7 +225,7 @@ page:
             email_toggle: Maandelijkse statistieken per e-mail ontvangen
 
     top:
-        page_title: Top radiozenders in %country%
+        page_title: De populairste radiozenders in %country%
         description: 'Luister naar de beste radiozenders van %country%'
         more: Bekijk meer top radiozenders in %country%
     last:

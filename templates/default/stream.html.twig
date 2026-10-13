@@ -174,8 +174,8 @@
             </div>
 
             <div class="text-center text-sm-start">
-              <div class="d-sm-none text-center">
-                <img class="radio-page-logo mb-3" alt="{{ stream.name }}" src="{{ preload(asset(self.picture(stream)), {as: 'image'}) }}">
+              <div class="d-sm-none text-center d-flex justify-content-center radio-page-logo-container">
+                <img class="radio-page-logo align-self-center mb-3" alt="{{ stream.name }}" src="{{ preload(asset(self.picture(stream)), {as: 'image'}) }}">
               </div>
               <h1 class="fw-bold mb-1 mb-sm-2 mb-sm-0">{{ stream.name }}</h1>
             </div>
@@ -354,7 +354,7 @@
 
         <!-- MOBILE ADS -->
 
-        <div class="pb-2 px-1 d-block d-sm-none">
+        <div class="pb-2 px-1 d-block d-sm-none mobile-ads">
           {%  if stream.noAds != true %}
             {{ include('_partials/adblock.html.twig', {style: 'horizontal', class: 'd-block d-sm-none'}) }}
           {% endif %}
@@ -418,10 +418,10 @@
           {% endif %}
 
           <div class="d-flex align-items-center border-top pt-4">
-            <div class="fs-6 me-2 mb-0 collapsed cursor-pointer fw-bold" data-bs-toggle="collapse" data-bs-target="#streamDetails" aria-expanded="false" aria-controls="streamDetails">
+            <button type="button" class="btn btn-link p-0 border-0 text-reset text-decoration-none fs-6 me-2 mb-0 collapsed fw-bold" data-bs-toggle="collapse" data-bs-target="#streamDetails" aria-expanded="false" aria-controls="streamDetails">
               {{ 'page.stream.more_information'|trans }}
               <i class="bi bi-caret-right-fill toggle-icon"></i>
-            </div>
+            </button>
           </div>
           <div class="collapse mt-3" id="streamDetails">
             <dl class="info mb-0">

@@ -237,7 +237,7 @@ page:
             email_toggle: Primește e-mail lunar cu statistici
 
     top:
-        page_title: Top radiouri în %country%
+        page_title: Cele mai populare radiouri în %country%
         description: 'Ascultă cele mai bune radiouri din %country%'
         more: Vezi mai multe radiouri top în %country%
 
