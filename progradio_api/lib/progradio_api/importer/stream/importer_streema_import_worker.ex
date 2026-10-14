@@ -7,6 +7,7 @@ defmodule ProgRadioApi.ImporterStreemaImportWorker do
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Tools.Images
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
+  alias ProgRadioApi.Importer.Classifiers.GenresNormalizer
   alias ProgRadioApi.Importer.Deduper
 
   @source "streema"
@@ -286,6 +287,7 @@ defmodule ProgRadioApi.ImporterStreemaImportWorker do
     |> Enum.join(",")
     |> String.downcase()
     |> TagsClassifier.classify()
+    |> GenresNormalizer.normalize()
   end
 
   defp original_tags(stream) do

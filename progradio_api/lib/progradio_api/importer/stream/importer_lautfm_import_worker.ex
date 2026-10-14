@@ -7,6 +7,7 @@ defmodule ProgRadioApi.ImporterLautfmImportWorker do
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
+  alias ProgRadioApi.Importer.Classifiers.GenresNormalizer
   alias ProgRadioApi.Importer.Tools.Images
   alias ProgRadioApi.Importer.Deduper
 
@@ -87,6 +88,7 @@ defmodule ProgRadioApi.ImporterLautfmImportWorker do
       |> Enum.join(",")
       |> String.downcase()
       |> TagsClassifier.classify()
+      |> GenresNormalizer.normalize()
 
     tags = Map.get(overloading, :tags) || tags
     genres = Map.get(overloading, :genres) || genres

@@ -6,6 +6,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.{Stream, StreamOverloading}
   alias ProgRadioApi.Streams
   alias ProgRadioApi.Importer.Classifiers.TagsClassifier
+  alias ProgRadioApi.Importer.Classifiers.GenresNormalizer
   alias ProgRadioApi.Importer.Deduper
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Tools.Images
@@ -191,7 +192,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
         end
         |> (&(ImporterUtils.replace_value_maybe(&1, @source, existing_stream, :tags) || &1)).()
 
-      {genres, tags} = TagsClassifier.classify(tags)
+      {genres, tags} = tags |> TagsClassifier.classify() |> GenresNormalizer.normalize()
 
       import_updated_at =
         NaiveDateTime.utc_now()
