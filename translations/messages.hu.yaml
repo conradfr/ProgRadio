@@ -161,6 +161,9 @@ page:
         what_now_choice3: Rádiók streamingje
 
     stream:
+        favorite:
+            add: 'Hozzáadás a kedvencekhez'
+            remove: 'Eltávolítás a kedvencek közül'
         country: Ország
         description: 'Hallgasd %radio%-t élőben és ingyenesen'
         disabled: 'Ez a rádió inaktívnak tűnik.'

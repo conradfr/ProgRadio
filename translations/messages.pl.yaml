@@ -161,6 +161,9 @@ page:
         what_now_choice3: Słuchaj stacji radiowych online
 
     stream:
+        favorite:
+            add: 'Dodaj do ulubionych'
+            remove: 'Usuń z ulubionych'
         country: Kraj
         description: 'Słuchaj %radio% na żywo i za darmo'
         disabled: 'Ta stacja radiowa wydaje się nieaktywna.'

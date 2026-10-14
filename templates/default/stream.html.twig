@@ -94,6 +94,10 @@
   {#    {% endif %}#}
 
   <script type="application/javascript">
+    // favorites shortcut
+    const mobileFavoritesShortcut = document.getElementById('mobile-streaming-favorites-shortcut');
+    mobileFavoritesShortcut?.classList.remove('d-none');
+
     {# todo: move to own file if reused #}
     const shareButton = document.querySelector('.share-button');
 
@@ -223,9 +227,27 @@
 
             <div class="stream-page-stream" v-scope>
               <div class="d-flex align-items-center justify-content-between">
-                <div class="d-sm-none" style="width: 50px">&nbsp;</div>
+                <div class="order-3 order-sm-2 align-self-center text-end" style="width: 60px">
+                  {% set favorite_options = {
+                    streamId: stream.id.toRfc4122,
+                    radioCodeName: stream.radio ? stream.radio.codeName : null,
+                    logged: app.user is not null,
+                    favorite: app.user is not null and app.user.favoriteStreams.contains(stream),
+                    loginUrl: path('app_login')
+                  } %}
+                  <div class="stream-favorite-container cursor-pointer" v-scope="{ hover: false }" v-cloak
+                       @vue:mounted="initFavorite({{ favorite_options|json_encode }})"
+                       @mouseenter="hover = true" @mouseleave="hover = false" @click="hover = false; toggleFavorite()">
+                    <img v-if="favorite !== hover" src="{{ asset('img/favorite_heart.svg') }}"
+                         :alt="favorite ? '{{ 'page.stream.favorite.remove'|trans|e('js') }}' : '{{ 'page.stream.favorite.add'|trans|e('js') }}'"
+                         :title="favorite ? '{{ 'page.stream.favorite.remove'|trans|e('js') }}' : '{{ 'page.stream.favorite.add'|trans|e('js') }}'">
+                    <img v-else src="{{ asset('img/favorite-empty_heart.svg') }}"
+                         :alt="favorite ? '{{ 'page.stream.favorite.remove'|trans|e('js') }}' : '{{ 'page.stream.favorite.add'|trans|e('js') }}'"
+                         :title="favorite ? '{{ 'page.stream.favorite.remove'|trans|e('js') }}' : '{{ 'page.stream.favorite.add'|trans|e('js') }}'">
+                  </div>
+                </div>
 
-                <div>
+                <div class="order-2 order-sm-1">
                   {% if stream.banned == true %}
                     <div class="alert alert-danger">{{ 'page.stream.banned'|trans }}</div>
                   {% elseif 'youtu.be' in stream.streamUrl or 'youtube.com' in stream.streamUrl %}
@@ -290,7 +312,7 @@
                   </div>
                 </div>
 
-                <div class="d-sm-none text-end" style="width: 50px" v-scope v-cloak>
+                <div class="order-1 order-sm-3 d-sm-none text-start align-self-center" style="width: 60px" v-scope v-cloak>
                   {% verbatim %}
                     <i v-if="listeners === 1" class="bi bi-person-fill"></i>
                     <i v-if="listeners > 1" class="bi bi-people-fill"></i>

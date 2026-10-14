@@ -151,6 +151,9 @@ page:
         what_now_choice2: Radioprogramma’s bekijken
         what_now_choice3: Luisteren naar radiozenders
     stream:
+        favorite:
+            add: 'Toevoegen aan favorieten'
+            remove: 'Verwijderen uit favorieten'
         country: Land
         description: 'Luister naar %radio% live en gratis'
         disabled: 'Deze radio lijkt inactief.'

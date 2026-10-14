@@ -102,6 +102,23 @@
     box-shadow: none !important;
     border: none;
   }
+
+  // FAVORITES
+
+  .stream-favorite-container {
+    img {
+      height: 30px;
+      width: 30px;
+      filter: invert(13%) sepia(84%) saturate(4375%) hue-rotate(349deg) brightness(108%) contrast(95%)
+    }
+
+    @include media-breakpoint-down(sm) {
+      img {
+        height: 27px;
+        width: 27px;
+      }
+    }
+  }
 }
 
 .stream-page-live-search {

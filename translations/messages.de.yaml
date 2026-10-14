@@ -161,6 +161,9 @@ page:
         what_now_choice3: Radiosender streamen
 
     stream:
+        favorite:
+            add: 'Zu Favoriten hinzufügen'
+            remove: 'Aus Favoriten entfernen'
         country: Land
         description: 'Hören Sie %radio% live und kostenlos'
         disabled: 'Dieser Radiosender scheint inaktiv zu sein.'

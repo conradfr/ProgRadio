@@ -84,7 +84,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.Transformers.Streams do
   def infomaniak(stream_url), do: stream_url
 
   def ssr({:continue, stream_url}) do
-    pattern = ~r/http:(.+)\.srg-ssr\.(.+)/
+    pattern = ~r/http:(.+)\.srg-miniplayer\.(.+)/
 
     case Regex.match?(pattern, stream_url) do
       true ->

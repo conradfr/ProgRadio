@@ -2,7 +2,9 @@ import { createApp } from './utils/petite-vue.es.js';
 import cookies from './utils/cookies';
 import { Socket } from '../js/phoenix';
 import noUiSlider from 'nouislider';
+
 import ITunesApi from './api/ITunesApi';
+import streamFavorite from './miniplayer/streamFavorite.js';
 
 // from config
 import {
@@ -261,6 +263,8 @@ createApp({
   sessionId: null,
   listeningInterval: null,
   initOptions: null,
+  favorite: false,
+  favoriteOptions: null,
   options: {
     webSocket: typeof appWebSocket !== 'undefined' ? appWebSocket : true,
     sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
@@ -303,6 +307,15 @@ createApp({
         setAudioVolume(newVolume);
       });
     }
+  },
+  // options: { streamId, radioCodeName, logged, favorite (logged only, rendered by the server), loginUrl }
+  initFavorite(options) {
+    this.favoriteOptions = options;
+    this.favorite = options.logged ? options.favorite : streamFavorite.isFavorite(options.streamId);
+  },
+  toggleFavorite() {
+    this.favorite = !this.favorite;
+    streamFavorite.toggle(this.favoriteOptions, this.favorite);
   },
   play(streamingUrl, codeName, options) {
     if (!options) {

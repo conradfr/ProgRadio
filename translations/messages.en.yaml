@@ -161,6 +161,9 @@ page:
         what_now_choice3: Listen to streaming radios
 
     stream:
+        favorite:
+            add: 'Add to favorites'
+            remove: 'Remove from favorites'
         country: Country
         description: 'Listen to radios from all over the world'
         disabled: 'This radio may be inactive.'

@@ -161,6 +161,9 @@ page:
         what_now_choice3: Ascultă radiouri în streaming
 
     stream:
+        favorite:
+            add: 'Adaugă la favorite'
+            remove: 'Elimină din favorite'
         country: Țară
         description: 'Ascultă %radio% în direct și gratuit'
         disabled: 'Acest radio pare inactiv.'

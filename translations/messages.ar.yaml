@@ -161,6 +161,9 @@ page:
         what_now_choice3: الاستماع إلى محطات الراديو عبر البث
 
     stream:
+        favorite:
+            add: 'إضافة إلى المفضلة'
+            remove: 'إزالة من المفضلة'
         country: البلد
         description: 'استمع إلى %radio% مباشرة وعلى الهواء مجانًا'
         disabled: 'يبدو أن هذا الراديو غير نشط.'

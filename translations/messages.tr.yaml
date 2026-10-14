@@ -161,6 +161,9 @@ page:
         what_now_choice3: "Radyoları akışla dinle"
 
     stream:
+        favorite:
+            add: 'Favorilere ekle'
+            remove: 'Favorilerden kaldır'
         country: "Ülke"
         description: "%radio% canlı ve ücretsiz dinleyin"
         disabled: "Bu radyo inaktif görünüyor."

@@ -161,6 +161,9 @@ page:
         what_now_choice3: Écouter des radios en streaming
 
     stream:
+        favorite:
+            add: 'Ajouter aux favoris'
+            remove: 'Retirer des favoris'
         country: Pays
         description: 'Écoutez %radio% en direct et gratuit'
         disabled: 'Cette radio semble inactive.'
