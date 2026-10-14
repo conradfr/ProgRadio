@@ -155,7 +155,7 @@ defmodule ProgRadioApi.ListeningSessions do
 
   defp get_ip_as_binary(remote_ip) do
     remote_ip
-    |> Tuple.to_list()
-    |> Enum.join(".")
+    |> :inet.ntoa()
+    |> to_string()
   end
 end

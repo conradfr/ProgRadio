@@ -21,7 +21,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
 
   defp do_create(conn, listening_session_params) do
     with false <-
-           (conn.remote_ip |> Tuple.to_list() |> Enum.join(".")) in Application.get_env(
+           (conn.remote_ip |> :inet.ntoa() |> to_string()) in Application.get_env(
              :progradio_api,
              :banned_ips
            ),
@@ -51,7 +51,7 @@ defmodule ProgRadioApiWeb.ListeningSessionController do
 
   def update(conn, %{"id" => id} = listening_session_params) do
     with false <-
-           (conn.remote_ip |> Tuple.to_list() |> Enum.join(".")) in Application.get_env(
+           (conn.remote_ip |> :inet.ntoa() |> to_string()) in Application.get_env(
              :progradio_api,
              :banned_ips
            ),
