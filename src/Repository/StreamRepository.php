@@ -27,6 +27,8 @@ class StreamRepository extends ServiceEntityRepository
 
     protected const int DEFAULT_MORE_LIMIT = 21;
 
+    protected const int GENRES_MIN_STREAMS = 10;
+
     protected const int CACHE_RADIOS_TTL = 604800; // week
     protected const string CACHE_RADIOS_ID = 'enabled_radios_streams';
 
@@ -606,5 +608,28 @@ class StreamRepository extends ServiceEntityRepository
         $query->enableResultCache(self::CACHE_TTL);
 
         return $query->getOneOrNullResult();
+    }
+
+    public function getGenres(): array
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('genre', 'genre');
+
+        $query = $this->getEntityManager()->createNativeQuery(
+            'SELECT genre
+             FROM stream s, unnest(string_to_array(s.genres, \',\')) AS genre
+             WHERE s.genres IS NOT NULL
+             AND s.enabled = true AND s.banned = false AND s.closed = false AND s.redirect_to IS NULL
+             GROUP BY genre
+             HAVING COUNT(*) >= :min_streams
+             ORDER BY genre ASC',
+            $rsm
+        );
+
+        $query->setParameter('min_streams', self::GENRES_MIN_STREAMS);
+
+        $query->enableResultCache(self::CACHE_TTL);
+
+        return $query->getSingleColumnResult();
     }
 }

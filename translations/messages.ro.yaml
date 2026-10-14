@@ -246,6 +246,11 @@ page:
         description: 'Ascultă cele mai bune radiouri din %country%'
         more: Vezi mai multe radiouri ascultate recent în %country%
 
+    top_genre:
+        page_title: Cele mai populare radiouri de %genre%
+        description: 'Ascultă cele mai populare radiouri de %genre%'
+        more: Mai multe radiouri de %genre%
+
     user:
         page_title: Creează un cont
 

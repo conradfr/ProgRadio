@@ -1,0 +1,119 @@
+{% extends 'base_site.html.twig' %}
+
+{% import _self as self %}
+{% import "utils/genres.html.twig" as genres %}
+
+{% block bodyclasssupp %} body-app{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include('_partials/mini_player.html.twig') %}
+{#    {% if app.request.locale != 'fr' %}#}
+        {{ include('_partials/adsense.html.twig') }}
+{#    {% endif %}#}
+{% endblock %}
+
+{% block title %}{{ 'page.top_genre.page_title'|trans({'%genre%': genre}) }}{% endblock %}
+{% block description %}{{ 'page.top_genre.description'|trans({'%genre%': genre}) }}{% endblock %}
+
+{% macro picture(stream) %}{%- if stream.internal_use_img is defined and stream.internal_use_img == true and stream.img is not null %}
+media/stream/{{ stream.img }}
+{%- elseif stream.ownLogo is defined and stream.ownLogo == true and stream.radioStreamCodeName is not null %}
+img/radio/page/{{ stream.radio.codeName }}.png
+{%- elseif stream.img_alt is defined and stream.img_alt is not null %}
+img/radio/page/{{ stream.img_alt }}.png
+{%- elseif stream.img is not null and stream.img != '' %}
+media/stream/{{ stream.img }}
+{%- else %}
+img/stream-placeholder.png
+{% endif -%}{% endmacro %}
+
+{% macro topic(stream) %}song_next:{{ stream.id }}{% endmacro %}
+
+{% block body %}
+<h2 class="my-4 text-center">{{ 'page.top_genre.page_title'|trans({'%genre%': genre}) }}</h2>
+
+<div class="app-streams" role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-8 offset-md-2">
+                <div class="mt-1 mb-4">
+                    {{ include('_partials/adblock.html.twig', {style: 'horizontal', class: ''}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="playing-alert" class="mt-4 mb-4 alert alert-danger d-none" role="alert">
+                    <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{{ 'page.stream.playing_error'|trans }}
+                </div>
+
+                <div class="streams d-flex justify-content-center">
+                    {% for stream in streams %}
+                        <div class="streams-one"
+                             :class="{
+     'streams-one-play-active': '{{- stream.code_name -}}' === radioId,
+     'streams-one-play-paused': playing === PLAYER_STATE_STOPPED && '{{- stream.code_name -}}' === radioId
+    }">
+                            <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
+                                 v-if="playing === PLAYER_STATE_STOPPED || radioId !== '{{- stream.code_name -}}'"
+                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, force_proxy: {{- stream.force_proxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}'})"
+                            >
+                                <div class="streams-one-img-play"></div>
+                            </div>
+
+                            <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
+                                 v-if="radioId === '{{- stream.code_name -}}' && playing !== PLAYER_STATE_STOPPED"
+                                 @click="stop('{{- stream.stream_url -}}', '{{- stream.code_name -}}')">
+                                <div class="streams-one-img-play"></div>
+                            </div>
+
+                            <div class="streams-one-name" title="{{ stream.name }}">
+                                <a class="streams-one-name-detail" href="{{ path('streams_one_short', {'shortId': stream.code_name|shortid, 'codename': stream.name|slug}) }}">{{ stream.name }}</a>
+                                <div class="streams-one-song" v-if="radioId === '{{ stream.code_name }}' && playing !== PLAYER_STATE_STOPPED && song !== null">
+                                    {% verbatim %}
+                                        <span class="note-title">♫</span>&nbsp;{{ song }}
+                                    {% endverbatim %}
+                                </div>
+                                {% if stream.tags != null or stream.genres != null %}
+                                <div class="streams-one-tags" v-if="radioId !== '{{ stream.code_name }}' || playing === PLAYER_STATE_STOPPED || song === null">
+                                    {% if stream.genres != null %}
+                                      {% for genre in stream.genres|split(',') %}
+                                        <a style="text-decoration: none" href="{{ path('streaming_spa') }}/all?s={{ genre }}">
+                                          <span class="badge badge-inverse" >
+                                              {{ genre }}
+                                          </span>
+                                        </a>
+                                      {% endfor %}
+                                    {% endif %}
+
+                                    {% if stream.tags != null %}
+                                      {% for tag in stream.tags|split(',') %}
+                                          <a style="text-decoration: none" href="{{ path('streaming_spa') }}/all?s={{ tag }}">
+                                          <span class="badge badge-inverse" >
+                                              #{{ tag }}
+                                          </span>
+                                          </a>
+                                      {% endfor %}
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if total > constant('App\\Controller\\StreamsController::DEFAULT_RESULTS') %}
+                    <div class="text-center mt-4 mb-5"><a href="{{ path('streaming_spa') }}/all/2?s={{ genre }}">{{ 'page.top_genre.more'|trans({'%genre%': genre}) }}</a></div>
+                {% endif %}
+                <hr class="mb-5">
+                <div class="mb-3">
+                    {{ genres.list('popularity') }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

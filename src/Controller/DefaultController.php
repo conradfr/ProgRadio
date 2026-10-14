@@ -762,7 +762,7 @@ class DefaultController extends AbstractBaseController
         requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl'],
         defaults: [
             'priority' => '0.5',
-            'changefreq' => 'weekly'
+            'changefreq' => 'daily'
         ]
     )
     ]
@@ -842,6 +842,42 @@ class DefaultController extends AbstractBaseController
             'total'   => $totalCount,
             'country' => $country,
             'country_code' => $countryCode
+        ]);
+    }
+
+    #[Route('/{_locale}/top-genre/{genre}',
+        name: 'streams_top_genre',
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl', 'genre' => '.+'],
+        defaults: [
+            'priority' => '0.5',
+            'changefreq' => 'daily'
+        ]
+    )
+    ]
+    #[Cache(maxage: ScheduleManager::CACHE_SCHEDULE_TTL, public: true, mustRevalidate: true)]
+    public function topGenre(string $genre, Host $host, RouterInterface $router, EntityManagerInterface $em, Request $request): Response
+    {
+        // redirect non-fr stream seo pages to new host
+        if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
+            $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
+            $redirectUrl = $router->generate('streams_top_genre', [
+                '_locale' => $request->getLocale(),
+                'genre' => $genre
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            return $this->redirect($redirectUrl, 301);
+        }
+
+        $howMany = StreamsController::DEFAULT_RESULTS;
+        $offset = 0;
+
+        $streams = $em->getRepository(Stream::class)->searchStreams($genre, $howMany, $offset, null, 'popularity');
+        $totalCount = $em->getRepository(Stream::class)->countSearchStreams($genre);
+
+        return $this->render('default/top_genre.html.twig', [
+            'streams' => $streams,
+            'total'   => $totalCount,
+            'genre' => $genre,
         ]);
     }
 

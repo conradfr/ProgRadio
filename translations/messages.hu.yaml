@@ -246,6 +246,11 @@ page:
         description: 'Hallgasd a legjobb rádiókat %country%-ban'
         more: Több legutóbb hallgatott rádió megtekintése %country%-ban
 
+    top_genre:
+        page_title: A legnépszerűbb %genre% rádiók
+        description: 'Hallgasd a legnépszerűbb %genre% rádiókat'
+        more: Több %genre% rádió
+
     user:
         page_title: Fiók létrehozása
 

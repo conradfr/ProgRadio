@@ -246,6 +246,11 @@ page:
         description: 'Hören Sie die besten Radiosender in %country%'
         more: Weitere kürzlich gehörte Radiosender in %country% anzeigen
 
+    top_genre:
+        page_title: Die beliebtesten Radiosender für %genre%
+        description: 'Hören Sie die beliebtesten Radiosender für %genre%'
+        more: Weitere Radiosender für %genre%
+
     user:
         page_title: Konto erstellen
 

@@ -2,6 +2,7 @@
 
 {% import _self as self %}
 {% import "utils/countries.html.twig" as countries %}
+{% import "utils/genres.html.twig" as genres %}
 
 {% block title %}{{ 'page.faq.page_title'|trans }}{% endblock %}
 {% block description %}{{ 'page.faq.page_description'|trans }}{% endblock %}
@@ -34,6 +35,12 @@
             'answer': [
                 countries.list(app.request.locale, 'top')
             ]
+        },
+        {
+          'question': "Top des radios par genre:",
+          'answer': [
+            genres.list()
+          ]
         }
     ],
     "en": [
@@ -59,6 +66,12 @@
             'question': "Top radios from around the world:",
             'answer': [
                 countries.list(app.request.locale, 'top')
+            ]
+        },
+        {
+            'question': "Top radios by genre:",
+            'answer': [
+                genres.list()
             ]
         }
     ],
@@ -86,6 +99,12 @@
             'answer': [
                 countries.list(app.request.locale, 'top')
             ]
+        },
+        {
+            'question': "Las mejores radios por género:",
+            'answer': [
+                genres.list()
+            ]
         }
     ],
     "de": [
@@ -111,6 +130,12 @@
             'question': "Top-Radios aus der ganzen Welt:",
             'answer': [
                 countries.list(app.request.locale, 'top')
+            ]
+        },
+        {
+            'question': "Top-Radios nach Genre:",
+            'answer': [
+                genres.list()
             ]
         }
     ],
@@ -138,6 +163,12 @@
             'answer': [
                 countries.list(app.request.locale, 'top')
             ]
+        },
+        {
+            'question': "As melhores rádios por gênero:",
+            'answer': [
+                genres.list()
+            ]
         }
     ],
     "pl": [
@@ -164,6 +195,12 @@
             'answer': [
                 countries.list(app.request.locale, 'top')
             ]
+        },
+        {
+            'question': "Najlepsze radia według gatunku:",
+            'answer': [
+                genres.list()
+            ]
         }
     ],
     "el": [
@@ -189,6 +226,12 @@
             'question': "Κορυφαία ραδιόφωνα από όλο τον κόσμο:",
             'answer': [
                 countries.list(app.request.locale, 'top')
+            ]
+        },
+        {
+            'question': "Κορυφαία ραδιόφωνα ανά είδος:",
+            'answer': [
+                genres.list()
             ]
         }
     ],
@@ -218,6 +261,12 @@
             'answer': [
                 countries.list(app.request.locale, 'top')
             ]
+        },
+        {
+            'question': "أفضل محطات الراديو حسب النوع:",
+            'answer': [
+                genres.list()
+            ]
         }
     ],
     "ro": [
@@ -245,6 +294,12 @@
             'question': "Radiouri de top după țară:",
             'answer': [
                 countries.list(app.request.locale, 'top')
+            ]
+        },
+        {
+            'question': "Radiouri de top după gen:",
+            'answer': [
+                genres.list()
             ]
         }
     ],
@@ -274,6 +329,12 @@
             'answer': [
                 countries.list(app.request.locale, 'top')
             ]
+        },
+        {
+            'question': "Top van radiozenders per genre:",
+            'answer': [
+                genres.list()
+            ]
         }
     ],
     "hu": [
@@ -302,6 +363,12 @@
             'answer': [
                 countries.list(app.request.locale, 'top')
             ]
+        },
+        {
+            'question': "Műfajonkénti legjobb rádióadók:",
+            'answer': [
+                genres.list()
+            ]
         }
     ],
     "tr": [
@@ -329,6 +396,12 @@
             'question': "Ülkelere göre en iyi radyo kanalları:",
             'answer': [
                 countries.list(app.request.locale, 'top')
+            ]
+        },
+        {
+            'question': "Türlere göre en iyi radyo kanalları:",
+            'answer': [
+                genres.list()
             ]
         }
     ]

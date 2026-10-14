@@ -1,0 +1,22 @@
+{% macro list() %}
+    {% set genres = genre_list() %}
+    {% set last_letter = '' %}
+
+    {% for code, genre in genres %}
+        {% if genre|slice(0,1)|lower|replace({'é':'e'}) != last_letter %}
+            {% set last_letter = genre|slice(0,1)|lower|replace({'é':'e'}) %}
+
+            {% if loop.first == false %}
+                </div>
+            {% endif %}
+
+            <h5 class="mt-3">{{ last_letter|upper }}</h5>
+            <div class="d-flex flex-row flex-wrap flags-container">
+        {% endif %}
+
+        <div class="me-2 pe-2">
+          <a href="{{ path('streams_top_genre' , {'genre': genre|lower}) }}">{{ ('page.top_genre.page_title')|trans({'%genre%': genre}) }}</a>
+        </div>
+    {% endfor %}
+        </div>
+{% endmacro %}

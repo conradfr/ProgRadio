@@ -246,6 +246,11 @@ page:
         description: "%country%'deki en iyi radyoları dinleyin"
         more: "%country%'deki son dinlenen daha fazla radyo görüntüle"
 
+    top_genre:
+        page_title: En popüler %genre% radyoları
+        description: 'En popüler %genre% radyolarını dinleyin'
+        more: Daha fazla %genre% radyosu
+
     user:
         page_title: "Hesap Oluştur"
 

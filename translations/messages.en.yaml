@@ -238,13 +238,18 @@ page:
 
     top:
         page_title: The most popular radios in %country%
-        description: 'Listen to the best radios from %country%'
-        more: More radios from %country%
+        description: 'Listen to the most popular radios from %country%'
+        more: More top radios from %country%
 
     last:
         page_title: Recently listened radios in %country%
         description: 'Listen to the best radios from %country%'
         more: More recently listened radios from %country%
+
+    top_genre:
+        page_title: The most popular %genre% radios
+        description: 'Listen to the most popular %genre% radios'
+        more: More %genre% radios
 
     user:
         page_title: Create an account

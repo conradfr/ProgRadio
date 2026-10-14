@@ -246,6 +246,11 @@ page:
         description: 'Słuchaj najlepszych stacji radiowych w %country%'
         more: Zobacz więcej ostatnio słuchanych stacji radiowych w %country%
 
+    top_genre:
+        page_title: Najpopularniejsze stacje radiowe w gatunku %genre%
+        description: 'Słuchaj najpopularniejszych stacji radiowych w gatunku %genre%'
+        more: Więcej stacji radiowych w gatunku %genre%
+
     user:
         page_title: Utwórz konto
 

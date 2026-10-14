@@ -246,6 +246,11 @@ page:
         description: 'Escucha las mejores radios de %country%'
         more: Ver más radios escuchadas recientemente en %country%
 
+    top_genre:
+        page_title: Las radios de %genre% más populares
+        description: 'Escucha las radios de %genre% más populares'
+        more: Más radios de %genre%
+
     user:
         page_title: Crear una cuenta
 

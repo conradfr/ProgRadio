@@ -71,7 +71,7 @@ export default defineComponent({
 
       const params = {
         ...this.$route.params,
-        countryOrCategoryOrUuid: this.selectedCountry,
+        countryOrCategoryOrUuid: this.selectedCountry ? this.selectedCountry.toLowerCase() : null,
         page: page.toString()
       };
 

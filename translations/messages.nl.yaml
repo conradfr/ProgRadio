@@ -232,6 +232,10 @@ page:
         page_title: Laatst beluisterde radiozenders in %country%
         description: 'Luister naar de beste radiozenders van %country%'
         more: Bekijk meer recent beluisterde radiozenders in %country%
+    top_genre:
+        page_title: De populairste %genre% radiozenders
+        description: 'Luister naar de populairste %genre% radiozenders'
+        more: Meer %genre% radiozenders
     user:
         page_title: Account aanmaken
     account:
