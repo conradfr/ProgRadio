@@ -12,7 +12,7 @@ defmodule ProgRadioApi.SongProvider.Funradio do
   defdelegate get_refresh(name, data, default_refresh), to: GenericRtlgroup
 
   @impl true
-  def get_data(_name, _last_data) do
+  def get_data(_name, _last_data, _db_song_data) do
     GenericRtlgroup.get_data(@url)
   end
 

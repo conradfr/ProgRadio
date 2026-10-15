@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.La1ere do
   defdelegate get_refresh(name, data, default_refresh), to: GenericRts
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, last_data, _db_song_data) do
     GenericRts.get_data(@url, name, last_data)
   end
 

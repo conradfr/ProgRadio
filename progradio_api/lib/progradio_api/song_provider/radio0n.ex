@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.Radio0n do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, _db_song_data) do
     Logger.debug("Data provider - #{name} (0n): data")
 
     pattern = ~r/https:\/\/([^.]+)\.radionetz/

@@ -19,7 +19,7 @@ defmodule ProgRadioApi.SongProvider.Funkyradio do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, _db_song_data) do
     try do
       now_unix = SongProvider.now_unix()
 

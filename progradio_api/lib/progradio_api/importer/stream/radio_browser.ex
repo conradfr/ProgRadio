@@ -10,6 +10,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
   alias ProgRadioApi.Importer.Deduper
   alias ProgRadioApi.Utils.ImporterUtils
   alias ProgRadioApi.Importer.Tools.Images
+  alias ProgRadioApi.Importer.StreamEnhancer
 
   @servers_dns "all.api.radio-browser.info"
   @api_all_radios "stations"
@@ -23,6 +24,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       |> filter()
       |> format()
       |> Images.import_images()
+      |> StreamEnhancer.enhance()
       |> delete_images_from_removed_stations()
       |> store()
 
@@ -237,6 +239,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
           |> ImporterUtils.replace_value_maybe(@source, existing_stream, :language),
         enabled: enabled,
         redirect_to: redirect_to,
+        song_data: Map.get(existing_stream, :song_data),
         import_updated_at: import_updated_at,
         source: ImporterUtils.replace_value_maybe(@source, @source, existing_stream, :source)
       }
@@ -282,6 +285,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
       country_code: Map.get(overloading, :country_code) || stream.country_code,
       language: stream.language,
       enabled: enabled,
+      song_data: stream.song_data,
       import_updated_at: import_updated_at,
       source: stream.source
     }
@@ -363,6 +367,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
             stream_url: s.stream_url |> ImporterUtils.stream_url_transformer(),
             original_stream_url: s.original_stream_url,
             enabled: s.enabled,
+            song_data: s.song_data,
             import_updated_at: s.import_updated_at
           ]
         ],

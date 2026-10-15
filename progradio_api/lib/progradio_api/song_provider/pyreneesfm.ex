@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.Pyreneesfm do
   def get_refresh(_name, _data, default_refresh), do: default_refresh
 
   @impl true
-  def get_data(_name, _last_data) do
+  def get_data(_name, _last_data, _db_song_data) do
     try do
       @url
       |> SongProvider.get_json()

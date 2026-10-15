@@ -12,7 +12,7 @@ defmodule ProgRadioApi.SongProvider.Rslradio do
   defdelegate get_refresh(name, data, default_refresh), to: GenericLesIndes
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, last_data, _db_song_data) do
     GenericLesIndes.get_data(@url, name, last_data)
   end
 

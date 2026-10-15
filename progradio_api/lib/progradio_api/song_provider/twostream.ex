@@ -19,7 +19,7 @@ defmodule ProgRadioApi.SongProvider.Twostream do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, last_data, db_song_data) do
     try do
       [_, mount] = Regex.run(@regex, name)
 
@@ -30,7 +30,7 @@ defmodule ProgRadioApi.SongProvider.Twostream do
         # some mounts are not in the status: we use the stream metadata (as icecast.ex)
         nil ->
           Logger.debug("Data provider - #{name} (2stream): mount not in status, using icecast")
-          Icecast.get_data(name, {:default, stream_url(name, last_data), nil})
+          Icecast.get_data(name, {:default, stream_url(name, last_data), nil}, db_song_data)
       end
     rescue
       _ ->

@@ -40,7 +40,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   # shoutcast was detected on previous run
   @impl true
-  def get_data(name, {:shoutcast, url_current_song, _last_data}) do
+  def get_data(name, {:shoutcast, url_current_song, _last_data}, _db_song_data) do
     Logger.debug("Data provider - #{name} (generic shoutcast/icecast): shoutcast data")
 
     try do
@@ -63,7 +63,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   # icecast was detected on previous run
   @impl true
-  def get_data(name, {:icecast, url_status, _last_data}) do
+  def get_data(name, {:icecast, url_status, _last_data}, _db_song_data) do
     Logger.debug("Data provider - #{name} (generic shoutcast/icecast): icecast data")
 
     try do
@@ -110,7 +110,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   # both failed on previous run
   @impl true
-  def get_data(name, {:default, url, _last_data}) do
+  def get_data(name, {:default, url, _last_data}, _db_song_data) do
     try do
       case read_meta(url) do
         {:error, _e} ->
@@ -142,26 +142,26 @@ defmodule ProgRadioApi.SongProvider.Icecast do
   end
 
   @impl true
-  def get_data(name, :indecisive) do
+  def get_data(name, :indecisive, db_song_data) do
     url = SongProvider.get_stream_code_name_from_channel(name)
-    get_data(name, {:default, url, nil})
+    get_data(name, {:default, url, nil}, db_song_data)
   end
 
   # this will be invoked on the first run
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, db_song_data) do
     url =
       name
       |> SongProvider.get_stream_code_name_from_channel()
       |> SongProvider.remove_type_http()
 
     # try shoutcast and icecast or use default
-    case try_shoutcast_and_icecast(url, name) do
+    case try_shoutcast_and_icecast(url, name, db_song_data) do
       {type, used_url, status_or_data} when status_or_data != :error ->
         {type, used_url, status_or_data}
 
       _ ->
-        get_data(name, {:default, url, nil})
+        get_data(name, {:default, url, nil}, db_song_data)
     end
   end
 
@@ -199,7 +199,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
     end
   end
 
-  defp try_shoutcast_and_icecast(url, name) do
+  defp try_shoutcast_and_icecast(url, name, db_song_data) do
     relevant_url_part = String.replace(url, ~r{^https?://}, "")
     # first trying the most common combination
     steps =
@@ -220,7 +220,7 @@ defmodule ProgRadioApi.SongProvider.Icecast do
       end
 
     Enum.find_value(steps, fn {type, step_url} ->
-      case get_data(name, {type, step_url, nil}) do
+      case get_data(name, {type, step_url, nil}, db_song_data) do
         {_, _, data} when data in [nil, :error] -> nil
         result -> result
       end

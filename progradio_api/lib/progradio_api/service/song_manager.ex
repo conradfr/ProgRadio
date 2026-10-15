@@ -6,7 +6,7 @@ defmodule ProgRadioApi.SongManager do
   alias ProgRadioApi.Cache
   alias ProgRadioApi.{Stream, StreamSong}
 
-  @most_popular_number_of_server 2500
+  @most_popular_number_of_server 5000
   @persistent_topics_cache_key "song_manager_persistent_topics"
 
   @spec join(String.t(), map(), pid() | nil) :: any()
@@ -117,6 +117,7 @@ defmodule ProgRadioApi.SongManager do
           stream_ids: [s.id],
           stream_url: s.stream_url,
           stream_song_code_name: s.stream_song_code_name,
+          song_data: s.song_data,
           song_enabled: ss.enabled,
           song_code_name: ss.code_name,
           song_id: ss.id

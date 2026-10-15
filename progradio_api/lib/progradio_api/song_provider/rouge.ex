@@ -45,7 +45,7 @@ defmodule ProgRadioApi.SongProvider.Rouge do
   #  end
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, _db_song_data) do
     try do
       id =
         name

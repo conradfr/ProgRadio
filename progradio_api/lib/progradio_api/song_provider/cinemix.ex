@@ -13,7 +13,7 @@ defmodule ProgRadioApi.SongProvider.Cinemix do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(_name, _last_data) do
+  def get_data(_name, _last_data, _db_song_data) do
     buster =
       Enum.random(0..10000)
       |> Integer.to_string()

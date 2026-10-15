@@ -12,7 +12,7 @@ defmodule ProgRadioApi.SongProvider.Generations do
   def get_refresh(_name, _data, _default_refresh), do: nil
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, last_data, _db_song_data) do
     try do
       GenericWinradio.get_data(@url, name, last_data)
     rescue

@@ -78,6 +78,7 @@ defmodule ProgRadioApiWeb.SongNextChannel do
           stream_url: s.stream_url,
           stream_song_code_name: ss.code_name,
           stream_song_stream_code_name: s.stream_song_code_name,
+          song_data: s.song_data,
 
           # compat layer
           # TODO remove once transition done

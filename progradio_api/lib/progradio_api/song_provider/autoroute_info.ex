@@ -17,7 +17,7 @@ defmodule ProgRadioApi.SongProvider.AutorouteInfo do
   def get_refresh(_name, nil, default_refresh), do: default_refresh
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, _db_song_data) do
     key =
       name
       |> SongProvider.get_stream_code_name_from_channel()

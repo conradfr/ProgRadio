@@ -45,7 +45,7 @@ defmodule ProgRadioApi.SongProvider.Radio80s80s do
   defdelegate get_refresh(name, data, default_refresh), to: GenericLoveradio
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, _db_song_data) do
     id =
       name
       |> SongProvider.get_stream_code_name_from_channel()

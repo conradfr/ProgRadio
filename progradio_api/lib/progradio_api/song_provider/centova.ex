@@ -20,12 +20,13 @@ defmodule ProgRadioApi.SongProvider.Centova do
 
   # not a Centova Cast (detected on a previous run): we let icecast.ex handle it, with its own state
   @impl true
-  def get_data(name, {type, _url, _data} = last_data) when type in @icecast_types,
-    do: Icecast.get_data(name, last_data)
+  def get_data(name, {type, _url, _data} = last_data, db_song_data) when type in @icecast_types,
+    do: Icecast.get_data(name, last_data, db_song_data)
 
-  def get_data(name, :indecisive), do: Icecast.get_data(name, :indecisive)
+  def get_data(name, :indecisive, db_song_data),
+    do: Icecast.get_data(name, :indecisive, db_song_data)
 
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, db_song_data) do
     try do
       [_, base_url, username, mount] = Regex.run(@regex, name)
 
@@ -35,7 +36,7 @@ defmodule ProgRadioApi.SongProvider.Centova do
 
         _ ->
           Logger.debug("Data provider - #{name} (centova): not centova, using icecast")
-          Icecast.get_data(name, nil)
+          Icecast.get_data(name, nil, db_song_data)
       end
     rescue
       _ ->

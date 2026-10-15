@@ -42,7 +42,7 @@ defmodule ProgRadioApi.SongProvider.Rtl do
   end
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, last_data, _db_song_data) do
     key =
       name
       |> SongProvider.get_stream_code_name_from_channel()

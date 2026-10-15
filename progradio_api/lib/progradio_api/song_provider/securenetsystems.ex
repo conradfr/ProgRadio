@@ -59,7 +59,7 @@ defmodule ProgRadioApi.SongProvider.Securenetsystems do
 
   # server found on previous run
   @impl true
-  def get_data(name, {:found, station_id, server_number, _last_data}) do
+  def get_data(name, {:found, station_id, server_number, _last_data}, _db_song_data) do
     try do
       {:found, station_id, server_number, get_playlist(station_id, server_number)}
     rescue
@@ -74,15 +74,15 @@ defmodule ProgRadioApi.SongProvider.Securenetsystems do
 
   # server not found on previous run, default to icecast
   @impl true
-  def get_data(name, {:not_found, url, last_data}) do
+  def get_data(name, {:not_found, url, last_data}, db_song_data) do
     {_type, final_url, data} =
-      ProgRadioApi.SongProvider.Icecast.get_data(name, {:default, url, last_data})
+      ProgRadioApi.SongProvider.Icecast.get_data(name, {:default, url, last_data}, db_song_data)
 
     {:not_found, final_url, data}
   end
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, _db_song_data) do
     try do
       %{"id" => station_id} = Regex.named_captures(@regex, name)
       url = SongProvider.get_stream_code_name_from_channel(name)

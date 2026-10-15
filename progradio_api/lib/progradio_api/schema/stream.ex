@@ -38,6 +38,7 @@ defmodule ProgRadioApi.Stream do
     field(:redirect_to, :binary_id)
 
     field(:stream_song_code_name, :string)
+    field(:song_data, :map)
 
     field(:popup, :boolean)
     field(:force_hls, :boolean)
@@ -92,6 +93,7 @@ defmodule ProgRadioApi.Stream do
       :location,
       :slogan,
       :description,
+      :song_data,
       :score,
       :enabled,
       :redirect_to,

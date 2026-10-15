@@ -12,7 +12,7 @@ defmodule ProgRadioApi.SongProvider.PulsradioDance do
   defdelegate get_refresh(name, data, default_refresh), to: GenericPulsradio
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, last_data, _db_song_data) do
     GenericPulsradio.get_data(@id, name, last_data)
   end
 

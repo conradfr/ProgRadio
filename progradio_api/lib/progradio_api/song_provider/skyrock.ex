@@ -31,7 +31,7 @@ defmodule ProgRadioApi.SongProvider.Skyrock do
   end
 
   @impl true
-  def get_data(_name, _last_data) do
+  def get_data(_name, _last_data, _db_song_data) do
     now_unix = SongProvider.now_unix()
 
     try do

@@ -20,7 +20,7 @@ defmodule ProgRadioApi.SongProvider.Infomaniak do
   def get_auto_refresh(), do: @refresh_auto_interval
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, _db_song_data) do
     try do
       regex =
         ~r/https:\/\/([^\/]+?)\.ice\.infomaniak\.ch/

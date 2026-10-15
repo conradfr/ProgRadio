@@ -161,7 +161,10 @@ defmodule ProgRadioApi.SongServer do
           state
       ) do
     timestamp = SongProvider.now_unix()
-    task_ref = get_data_song_task(module, name, :auto, last_data, last_song)
+
+    task_ref =
+      get_data_song_task(module, name, :auto, last_data, last_song, get_db_song_data(state))
+
     state = put_in(state.tasks[task_ref], timestamp)
     {:noreply, state}
   end
@@ -178,7 +181,10 @@ defmodule ProgRadioApi.SongServer do
         } = state
       ) do
     timestamp = SongProvider.now_unix()
-    task_ref = get_data_song_task(module, name, :custom, last_data, last_song)
+
+    task_ref =
+      get_data_song_task(module, name, :custom, last_data, last_song, get_db_song_data(state))
+
     state = put_in(state.tasks[task_ref], timestamp)
     {:noreply, state}
   end
@@ -574,12 +580,19 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
-  @spec get_data_song_task(atom(), String.t(), atom(), map() | nil, map() | nil) :: tuple()
-  defp get_data_song_task(module, name, refresh_type, last_data, last_song) do
+  @spec get_data_song_task(atom(), String.t(), atom(), map() | nil, map() | nil, map() | nil) ::
+          tuple()
+  defp get_data_song_task(module, name, refresh_type, last_data, last_song, db_song_data) do
     task =
       Task.Supervisor.async_nolink(TaskSupervisor, fn ->
         try do
-          task_data = Task.Supervisor.async(TaskSupervisor, module, :get_data, [name, last_data])
+          task_data =
+            Task.Supervisor.async(TaskSupervisor, module, :get_data, [
+              name,
+              last_data,
+              db_song_data
+            ])
+
           data = Task.await(task_data, @task_timeout)
 
           song =
@@ -616,6 +629,9 @@ defmodule ProgRadioApi.SongServer do
 
     task.ref
   end
+
+  # song_data of the stream that started the server (the "url:" topic of the old channel has no db data)
+  defp get_db_song_data(state), do: Map.get(state.db_data || %{}, :song_data)
 
   defp get_updated_retries(name, song, retries) do
     case song do
@@ -774,6 +790,12 @@ defmodule ProgRadioApi.SongServer do
         ~r/101\.ru(?::\d+)?\/stream\/(?:pro|trust|air)\/[^\/]+\/\d+\/\d+(?:[?\/]|$)/
       ) ->
         ProgRadioApi.SongProvider.Ru101
+
+      # only the townsquare stations have the station id (song data, see Importer.StreamEnhancer)
+      # before the hls one, the module falls back to it (or icecast) without the station id
+      String.contains?(song_topic, "amperwave.net") and
+          String.contains?(song_topic, "/townsquare-") ->
+        ProgRadioApi.SongProvider.Amperwave
 
       String.match?(song_topic, ~r/\/azura.*\/listen\/[a-zA-Z0-9_-]+(\/.*)?/) ->
         ProgRadioApi.SongProvider.Azuracast

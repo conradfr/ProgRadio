@@ -10,7 +10,7 @@ defmodule ProgRadioApi.SongProvider do
   @doc """
     Get source data as a map
   """
-  @callback get_data(String.t(), map() | nil) :: map() | nil
+  @callback get_data(String.t(), map() | nil, map() | nil) :: map() | nil
 
   @doc """
     Get artist and song as a map

@@ -20,7 +20,7 @@ defmodule ProgRadioApi.SongProvider.PulsradioHits do
   defdelegate get_refresh(name, data, default_refresh), to: GenericPulsradio
 
   @impl true
-  def get_data(name, last_data) do
+  def get_data(name, last_data, _db_song_data) do
     id =
       name
       |> SongProvider.get_stream_code_name_from_channel()

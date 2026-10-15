@@ -40,13 +40,13 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
   # the url looked like an azuracast one but the api did not answer as such on a previous run:
   # we use the stream metadata (as icecast.ex)
   @impl true
-  def get_data(name, {:not_azuracast, url, last_data}) do
-    {_type, final_url, data} = Icecast.get_data(name, {:default, url, last_data})
+  def get_data(name, {:not_azuracast, url, last_data}, db_song_data) do
+    {_type, final_url, data} = Icecast.get_data(name, {:default, url, last_data}, db_song_data)
 
     {:not_azuracast, final_url, data}
   end
 
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, db_song_data) do
     try do
       regex =
         ~r/^url:(.*?)\/listen\/([^\/]*)(?:\/.*)?$/
@@ -79,7 +79,8 @@ defmodule ProgRadioApi.SongProvider.Azuracast do
 
               get_data(
                 name,
-                {:not_azuracast, SongProvider.get_stream_code_name_from_channel(name), nil}
+                {:not_azuracast, SongProvider.get_stream_code_name_from_channel(name), nil},
+                db_song_data
               )
           end
       end

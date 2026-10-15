@@ -36,7 +36,7 @@ defmodule ProgRadioApi.SongProvider.Ru101 do
   end
 
   @impl true
-  def get_data(name, _last_data) do
+  def get_data(name, _last_data, _db_song_data) do
     try do
       [_, channel_id] = Regex.run(@regex, name)
 
@@ -65,8 +65,10 @@ defmodule ProgRadioApi.SongProvider.Ru101 do
   def get_song(name, data, _last_song) do
     try do
       short = Map.get(data, "short")
+
       artist =
         clean(Map.get(short, "titleExecutorFull")) || clean(Map.get(short, "titleExecutor"))
+
       title = clean(Map.get(short, "titleTrack"))
       # "artist - title" in one field
       full_title = clean(Map.get(short, "title"))
