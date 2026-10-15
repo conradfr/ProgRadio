@@ -259,12 +259,15 @@ defmodule ProgRadioApi.SongProvider.Icecast do
           text
       end)
       |> String.trim()
+      # some servers send apostrophes as backticks
+      |> String.replace("`", "'")
 
     Logger.debug("Data provider - #{name} (generic shoutcast/icecast): data (map) - #{song}")
 
-    # we discard empty or suspicious/incomplete entries
+    # we discard empty or suspicious/incomplete entries, ad breaks and leaked server responses
     if is_binary(song) and String.trim(song) != "" and
-         String.trim(song) not in @forbidden_titles do
+         String.trim(song) not in @forbidden_titles and not adswizz_ad?(data, song) and
+         not json_response?(song) do
       cover_art =
         data
         |> Map.get("StreamUrl", "")
@@ -279,6 +282,8 @@ defmodule ProgRadioApi.SongProvider.Icecast do
             text
         end)
         |> String.trim()
+        # can be prefixed, as "picture=https://..."
+        |> String.replace_prefix("picture=", "")
         |> then(fn x ->
           case String.ends_with?(x, [".jpg", ".png"]) do
             true -> x
@@ -295,6 +300,15 @@ defmodule ProgRadioApi.SongProvider.Icecast do
       %{}
     end
   end
+
+  # AdsWizz ad insertion: flagged in the metadata (adw_ad='true') or a placeholder title
+  # ("ADWTAG_122000 - THIS STATION WILL CONTINUE AFTER THIS BREAK", "ADWTAG1 - ")
+  defp adswizz_ad?(data, song),
+    do: Map.get(data, "adw_ad") == "true" or String.starts_with?(song, "ADWTAG")
+
+  # the response of an api call of the source sent as metadata
+  # ("{\"status\":1,\"message\":\"Ok\",\"result\":\"Ok\",\"errorCode\":0}\r\n0" on 101.ru)
+  defp json_response?(song), do: String.starts_with?(song, ["{\"", "[{\""])
 
   @spec get_song_from_shoutcast_or_icecast(tuple | atom() | nil, String.t(), String.t()) ::
           map | nil

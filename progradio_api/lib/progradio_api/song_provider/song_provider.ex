@@ -53,6 +53,13 @@ defmodule ProgRadioApi.SongProvider do
   @cache_ttl_default_seconds 30
 
   def get(url) do
+    url
+    |> get_response()
+    |> Map.get(:body)
+  end
+
+  # when the status is needed (body not decoded)
+  def get_response(url) do
     Req.get!(
       url,
       # connect timeout: the one of the pool
@@ -63,7 +70,6 @@ defmodule ProgRadioApi.SongProvider do
         receive_timeout: @timeout
       )
     )
-    |> Map.get(:body)
   end
 
   # todo revisit when Req 0.8 is out w/ native json support

@@ -760,6 +760,21 @@ defmodule ProgRadioApi.SongServer do
       String.contains?(song_topic, ".radioking.") ->
         ProgRadioApi.SongProvider.Radioking
 
+      # {station id}_{bitrate} mounts only (not broadcastify's (police/fire stations) or hls ones)
+      # cdnstream.com and streamon.fm are the same platform
+      String.match?(
+        song_topic,
+        ~r/\.(?:cdnstream1?\.com|streamon\.fm)\/\d+_\d+k?(?:\.aac|\.mp3)?(?:[?;]|$)/
+      ) ->
+        ProgRadioApi.SongProvider.Cdnstream1
+
+      # site channels streams (pro, trust, air), not the personal or regional ones
+      String.match?(
+        song_topic,
+        ~r/101\.ru(?::\d+)?\/stream\/(?:pro|trust|air)\/[^\/]+\/\d+\/\d+(?:[?\/]|$)/
+      ) ->
+        ProgRadioApi.SongProvider.Ru101
+
       String.match?(song_topic, ~r/\/azura.*\/listen\/[a-zA-Z0-9_-]+(\/.*)?/) ->
         ProgRadioApi.SongProvider.Azuracast
 
