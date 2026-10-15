@@ -38,9 +38,11 @@ defmodule ProgRadioApi.Streams do
   @search_random_limit 1000
 
   # ---------- SCORE ----------
-  # Score = weighted sum of listening sessions over a recent window, where each
-  # session is valued by its duration (favoring longer listens, capped) and
-  # decayed by recency (exponential, defined by a half-life).
+  # Score = sum of listeners' points over a recent window + points per user favorite.
+  # Each session is valued by its duration (favoring longer listens, capped) and
+  # decayed by recency (exponential, defined by a half-life). A listener's (ip address)
+  # sessions are summed then dampened, so many distinct listeners rank higher than
+  # a few listening a lot.
 
   @score_window_days 7
   # a session's recency weight halves every this many days
@@ -49,6 +51,12 @@ defmodule ProgRadioApi.Streams do
   @score_duration_cap_seconds 7200
   # session duration is divided by this to convert seconds into duration points
   @score_duration_divisor 300
+  # a listener's summed session points are raised to this power (< 1 = diminishing returns,
+  # 0.5: 4x the listening from the same ip only doubles its points)
+  @score_listener_exponent 0.5
+  # points added per user having the stream in their favorites
+  # (1 = same as a listener with one short session today)
+  @score_favorite_points 1
 
   # 5mn
   @cache_ttl_stream 300_000
@@ -635,44 +643,56 @@ defmodule ProgRadioApi.Streams do
     Redix.command!(:redix, ["EXPIRE", redis_key, @redis_ttl, "NX"])
   end
 
-  # Update score of streams based on their listening sessions over a recent window.
+  # Update score of streams based on their listening sessions over a recent window
+  # and their favorites count.
   # Each session is weighted by its (capped) duration and decayed by recency, so
-  # streams that hold listeners longer and more recently rank higher.
-  # TODO put back per ip mitigation?
+  # streams that hold listeners longer and more recently rank higher. Sessions are
+  # grouped per listener (ip address) with diminishing returns, so distinct listeners
+  # weigh more than repeated listens. Each user favorite adds fixed points.
   def update_stats() do
     Repo.transaction(
       fn ->
-        # reset all scores (as the next query only updates streams w/ listening session in the last n days
+        # reset all scores (as the next query only updates streams w/ listening session in the last n days or favorites)
         Ecto.Adapters.SQL.query!(
           Repo,
           "UPDATE stream SET score = 0 where score > 0",
           []
         )
 
+        # duration floored at 0 as a negative listener sum would make POWER() fail
         Ecto.Adapters.SQL.query!(
           Repo,
           """
           UPDATE stream s
-          SET score = COALESCE(sub.score, 0)
+          SET score = ROUND(sub.score)::int
           FROM (
-            SELECT
-              stream_id,
-              ROUND(SUM(
-                POWER(0.5, GREATEST(EXTRACT(EPOCH FROM (now() - date_time_end)), 0) / 86400.0 / $1)
-                * (1 + LEAST(EXTRACT(EPOCH FROM (date_time_end - date_time_start)), $2) / $3)
-              ))::int AS score
-            FROM listening_session
-            WHERE date_time_end >= now() - make_interval(days => $4)
+            SELECT stream_id, SUM(points) AS score
+            FROM (
+              SELECT
+                stream_id,
+                POWER(SUM(
+                  POWER(0.5, GREATEST(EXTRACT(EPOCH FROM (now() - date_time_end)), 0) / 86400.0 / $1)
+                  * (1 + LEAST(GREATEST(EXTRACT(EPOCH FROM (date_time_end - date_time_start)), 0), $2) / $3)
+                ), $5::float8) AS points
+              FROM listening_session
+              WHERE date_time_end >= now() - make_interval(days => $4)
+              GROUP BY stream_id, ip_address
+              UNION ALL
+              SELECT stream_id, $6::float8 AS points
+              FROM users_streams
+            ) listener_and_favorite_points
             GROUP BY stream_id
           ) sub
           WHERE s.id = sub.stream_id
-            AND s.enabled = true AND s.redirect_to IS NULL AND s.banned = false and s.closed == false
+            AND s.enabled = true AND s.redirect_to IS NULL AND s.banned = false AND s.closed = false
           """,
           [
             @score_half_life_days,
             @score_duration_cap_seconds,
             @score_duration_divisor,
-            @score_window_days
+            @score_window_days,
+            @score_listener_exponent,
+            @score_favorite_points
           ]
         )
       end,
