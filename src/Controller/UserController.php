@@ -254,18 +254,23 @@ class UserController extends AbstractBaseController
             // For some reason stream id is set to null if we flush with $em->flush() on insert;
             // So let's do it manually
             // (lost too many hours on this)
-
-            if (!empty($stream->getOriginalImg())) {
-                $apiClient->importStreamImage($stream->getId()->toString());
-                sleep(1);
-                $stream = $em->getRepository(Stream::class)->find($stream->getId());
-            }
+            //
+            // THIS MAY BE FIXED IN RECENT DOCTRINE
+            // TODO INVESTIGATE
 
             if ($edit === true) {
                 $em->persist($stream);
                 $em->flush();
             } else {
                 $em->getRepository(Stream::class)->insertNewStream($stream);
+            }
+
+            $stream = $em->getRepository(Stream::class)->find($stream->getId());
+
+            if (!empty($stream->getOriginalImg())) {
+                $apiClient->importStreamImage($stream->getId()->toString());
+                sleep(1);
+                $stream = $em->getRepository(Stream::class)->find($stream->getId());
             }
 
             // update search
