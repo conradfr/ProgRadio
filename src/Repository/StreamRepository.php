@@ -595,19 +595,31 @@ class StreamRepository extends ServiceEntityRepository
 
     public function findOneBySlug(string $slug): ?Stream
     {
-        $slugCleanedUp = '%' . str_replace('-', '%', $slug) . '%';
+        try {
+            $slugCleanedUp = '%' . str_replace('-', '%', $slug) . '%';
 
-        $qb = $this->getEntityManager()->createQueryBuilder();
+            $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s')
-            ->from(Stream::class, 's')
-            ->where('s.enabled = true AND ILIKE(s.name, :name) = true')
-            ->setParameter('name', $slugCleanedUp);
+            $qb->select('s')
+                ->from(Stream::class, 's')
+                ->where('s.enabled = true and s.redirectToStream is null and s.banned = false and s.closed = false AND ILIKE(s.name, :name) = true')
+                ->setParameter('name', $slugCleanedUp);
 
-        $query = $qb->getQuery();
-        $query->enableResultCache(self::CACHE_TTL);
+            $query = $qb->getQuery();
+            $query->enableResultCache(self::CACHE_TTL);
 
-        return $query->getOneOrNullResult();
+            return $query->getOneOrNullResult();
+        } catch (\Exception $e) {
+            $qb->select('s')
+                ->from(Stream::class, 's')
+                ->where('ILIKE(s.name, :name) = true')
+                ->setParameter('name', $slugCleanedUp);
+
+            $query = $qb->getQuery();
+            $query->enableResultCache(self::CACHE_TTL);
+
+            return $query->getOneOrNullResult();
+        }
     }
 
     public function getGenres(): array
