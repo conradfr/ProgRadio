@@ -16,17 +16,6 @@
     {{ parent() }}
 
     <script type="text/javascript">
-      const streamsSelectElement = document.getElementById('streamsSelect');
-
-      streamsSelectElement.addEventListener('change', (event) => {
-        if (event.target.value === '') {
-          return;
-        }
-
-        const url = '{{ path('user_page_streams') }}';
-        window.location = `${url}/${event.target.value}`;
-      });
-
       const emailStatToggleElement = document.getElementById('emailStatsToggle');
 
       emailStatToggleElement.addEventListener('change', function() {
@@ -37,136 +26,111 @@
 
 {% block body %}
 <div id="admin" class="container">
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <h3 class="mb-4">
-                {{ 'page.stream.submission.my_radios'|trans }}
-            </h3>
+  <div class="row">
+    <div class="col-12">
+      <h3 class="mb-4">
+        {{ 'page.stream.submission.my_radios'|trans }}
+      </h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-sm-3">
+      <a href="{{ path('user_page_streams') }}" class="btn btn-primary mb-3" tabindex="-1" role="button" aria-disabled="true">
+        {{ 'page.stream.submission.title_new'|trans }}
+      </a>
 
-            <div class="mb-5">
-                {% if app.user.streams is empty %}
-                    {{ 'page.stream.submission.no_radios'|trans }}
-                {% else %}
-                    <select class="form-select w-md-50 w-75" aria-label="Radios" name="streamsSelect" id="streamsSelect">
-                        <option value=""></option>
-                        {% for item in app.user.streams|sort((a, b) => a.name <=> b.name) %}
-                            <option value="{{ item.id }}" {% if edit == true and stream.id == item.id %}selected{% endif %}>{{ item.name }}</option>
-                        {% endfor %}
-                    </select>
+      <div class="form-check my-4">
+        <input class="form-check-input" type="checkbox" value="" id="emailStatsToggle" name="emailStatsToggle"
+               {% if app.user.isSatisticsEmail == true %}checked{% endif %}>
+        <label class="form-check-label ps-1" for="checkDefault">
+          {{ 'page.stream.submission.email_toggle'|trans }}
+        </label>
+      </div>
 
-                    <div class="form-check mt-5">
-                        <input class="form-check-input" type="checkbox" value="" id="emailStatsToggle" name="emailStatsToggle"
-                                {% if app.user.isSatisticsEmail == true %}checked{% endif %}>
-                        <label class="form-check-label ps-1" for="checkDefault">
-                            {{ 'page.stream.submission.email_toggle'|trans }}
-                        </label>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
+      <ul class="list-group">
+        {% for item in app.user.streams|sort((a, b) => a.name <=> b.name) %}
+          <a href="{{ path('user_page_streams', {'id': item.id}) }}" class="list-group-item list-group-item-action{% if edit == true and stream.id == item.id %} active" aria-current="true"{% else %}"{% endif %}>
+            {{ item.name }}
+          </a>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-12 col-sm-8">
+      <h3 class="mb-4 mt-5 mt-sm-0">
         {% if edit == true %}
-            {# Todo improve #}
-            <div class="col-12 col-md-4">
-                <h3 class="mb-4">&nbsp;</h3>
-                <a href="{{ path('user_page_streams') }}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">
-                    {{ 'page.stream.submission.title_new'|trans }}
-                </a>
-            </div>
+          {{ 'page.stream.submission.title_edit'|trans }}
+        {% else %}
+          {{ 'page.stream.submission.title_new'|trans }}
         {% endif %}
-    </div>
+      </h3>
 
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <div class="alert alert-light text-center mb-5" role="alert">
-                {% if edit == true and stream is defined and stream is not null and stream.name is not null and stream.streamUrl is not null %}
-                    {{ 'sponsor.streams_page_edit'|trans({'%name%': stream.name, '%url%': stream.streamUrl|url_encode})|raw }}
-                {% else %}
-                    {{ 'sponsor.streams_page'|trans|raw }}
-                {% endif %}
+      {% if edit == true %}
+        <h5>
+          {{ 'page.stream.modification.radio'|trans }}:
+          <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ stream.name }} <i class="bi bi-box-arrow-up-right"></i></a>
+        </h5>
 
-            </div>
-        </div>
-    </div>
+        {% if stream.redirectToStream is not null %}
+          <div class="alert alert-warning mt-3" role="alert">
+            {{ 'page.stream.submission.duplicated'|trans({'%name%': stream.redirectToStream.name, '%link%': path('streams_one_short', {'shortId': stream.redirectToStream.id|shortid, 'codename': stream.redirectToStream.name|slug })})|raw }}
+          </div>
+        {% endif %}
 
+        <div class="my-4 alert alert-light">
+          <p><strong>{{ 'page.stream.submission.stats_title'|trans }}</strong></p>
 
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <h3 class="mb-4">
-                {% if edit == true %}
-                    {{ 'page.stream.submission.title_edit'|trans }}
-                {% else %}
-                    {{ 'page.stream.submission.title_new'|trans }}
-                {% endif %}
-            </h3>
-
-            {% if edit == true %}
-                <h5>
-                    {{ 'page.stream.modification.radio'|trans }}:
-                    <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream.id|shortid, 'codename': stream.name|slug }) }}">{{ stream.name }} <i class="bi bi-box-arrow-up-right"></i></a>
-                </h5>
-
-                {% if stream.redirectToStream is not null %}
-                    <div class="alert alert-warning mt-3" role="alert">
-                        {{ 'page.stream.submission.duplicated'|trans({'%name%': stream.redirectToStream.name, '%link%': path('streams_one_short', {'shortId': stream.redirectToStream.id|shortid, 'codename': stream.redirectToStream.name|slug })})|raw }}
-                    </div>
-                {% endif %}
-
-                <div class="my-4 alert alert-light">
-                    <p><strong>{{ 'page.stream.submission.stats_title'|trans }}</strong></p>
-
-                    {% if stats is defined and stats is not null %}
-                        {% if stats.this_month is defined and stats.this_month is not null %}
-                            <p>{{ 'page.stream.submission.stats_this_month'|trans({'%sessions%': stats.this_month.total_sessions, '%time%': format.secondsToMinutes(stats.this_month.total_seconds)}) }}</p>
-                        {% endif %}
-
-                        {% if stats.last_month is defined and stats.last_month is not null %}
-                            <p>{{ 'page.stream.submission.stats_last_month'|trans({'%sessions%': stats.last_month.total_sessions, '%time%': format.secondsToMinutes(stats.last_month.total_seconds)}) }}</p>
-                        {% endif %}
-
-                        {% if stats.this_month is null and stats.last_month is null %}
-                            n/a
-                        {% endif %}
-                    {% endif %}
-                </div>
+          {% if stats is defined and stats is not null %}
+            {% if stats.this_month is defined and stats.this_month is not null %}
+              <p>{{ 'page.stream.submission.stats_this_month'|trans({'%sessions%': stats.this_month.total_sessions, '%time%': format.secondsToMinutes(stats.this_month.total_seconds)}) }}</p>
             {% endif %}
 
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
-                {% endfor %}
-            {% endfor %}
-
-            {{ form_start(form) }}
-                {{ form_errors(form) }}
-                {{ form_row(form.name) }}
-                {{ form_row(form.countryCode) }}
-                {{ form_row(form.language) }}
-                {{ form_row(form.originalImg) }}
-
-                {% if stream.img is not null %}
-                  <div class="my-2">
-                    <img style="max-height: 100px; max-width: 100px " src="/media/stream/{{ stream.img }}">
-                  </div>
-                {% endif %}
-
-                {{ form_row(form.streamUrl) }}
-                {{ form_row(form.website) }}
-                {{ form_row(form.description) }}
-                {{ form_row(form.slogan) }}
-                {{ form_row(form.genres) }}
-                {{ form_row(form.tags) }}
-
-            {{ form_end(form) }}
-
-            {% if edit == true %}
-            <div class="my-5 text-center">
-                <a class="btn btn-danger"
-                   onclick="return confirm('{{ 'page.stream.submission.delete_confirm'|trans }}')"
-                   href="{{ url('user_page_streams_delete', {'id': stream.id}) }}">{{ 'page.stream.submission.delete'|trans }}</a>
-            </div>
+            {% if stats.last_month is defined and stats.last_month is not null %}
+              <p>{{ 'page.stream.submission.stats_last_month'|trans({'%sessions%': stats.last_month.total_sessions, '%time%': format.secondsToMinutes(stats.last_month.total_seconds)}) }}</p>
             {% endif %}
+
+            {% if stats.this_month is null and stats.last_month is null %}
+              n/a
+            {% endif %}
+          {% endif %}
         </div>
+      {% endif %}
+
+      {% for label, messages in app.flashes %}
+        {% for message in messages %}
+          <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
+        {% endfor %}
+      {% endfor %}
+
+      {{ form_start(form) }}
+      {{ form_errors(form) }}
+      {{ form_row(form.name) }}
+      {{ form_row(form.countryCode) }}
+      {{ form_row(form.language) }}
+      {{ form_row(form.originalImg) }}
+
+      {% if stream.img is not null %}
+        <div class="my-2">
+          <img style="max-height: 100px; max-width: 100px " src="/media/stream/{{ stream.img }}">
+        </div>
+      {% endif %}
+
+      {{ form_row(form.streamUrl) }}
+      {{ form_row(form.website) }}
+      {{ form_row(form.description) }}
+      {{ form_row(form.slogan) }}
+      {{ form_row(form.genres) }}
+      {{ form_row(form.tags) }}
+
+      {{ form_end(form) }}
+
+      {% if edit == true %}
+        <div class="my-5 text-center">
+          <a class="btn btn-danger"
+             onclick="return confirm('{{ 'page.stream.submission.delete_confirm'|trans }}')"
+             href="{{ url('user_page_streams_delete', {'id': stream.id}) }}">{{ 'page.stream.submission.delete'|trans }}</a>
+        </div>
+      {% endif %}
     </div>
+  </div>
 </div>
 {% endblock %}
