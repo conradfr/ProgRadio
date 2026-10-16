@@ -3,8 +3,7 @@ defmodule ProgRadioApi.SongProvider.Blackbox do
 
   @behaviour ProgRadioApi.SongProvider
 
-  #  @url "https://api.latina.fr/graphql"
-  @url "https://www.latina.fr/api/TitleDiffusions"
+  @url "https://www.blackboxfm.fr/api/TitleDiffusions"
 
   @radio_id "2174546520932614196"
 

@@ -610,6 +610,8 @@ class StreamRepository extends ServiceEntityRepository
 
             return $query->getOneOrNullResult();
         } catch (\Exception $e) {
+            $qb = $this->getEntityManager()->createQueryBuilder();
+
             $qb->select('s')
                 ->from(Stream::class, 's')
                 ->where('ILIKE(s.name, :name) = true')
