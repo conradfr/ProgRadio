@@ -17,34 +17,16 @@ let scraperConfig = {};
 let scrapedData = [];
 
 const format = async dateObj => {
-  dateObj.tz('Europe/Paris');
-
-  const cleanedData = await scrapedData.reduce(async function (prevP, entry) {
-    const prev = await prevP;
-    if (!entry.datetime_raw) {
+  const cleanedData = scrapedData.reduce(function (prev, entry) {
+    if (!entry.datetime_start || !entry.datetime_end || !entry.title) {
       return prev;
     }
 
-    const startDateTime = moment(dateObj);
-    const endDateTime = moment(dateObj);
+    const startDateTime = moment(entry.datetime_start, moment.ISO_8601);
+    const endDateTime = moment(entry.datetime_end, moment.ISO_8601);
 
-    const regexp = new RegExp(/([0-9]{2}):([0-9]{2})\s-\s([0-9]{2}):([0-9]{2})/);
-    const match = entry.datetime_raw.match(regexp);
-
-    if (!match) {
+    if (!startDateTime.isValid() || !endDateTime.isValid()) {
       return prev;
-    }
-
-    startDateTime.hour(match[1]);
-    startDateTime.minute(match[2]);
-    startDateTime.second(0);
-    endDateTime.hour(match[3]);
-    endDateTime.minute(match[4]);
-    endDateTime.second(0);
-
-    // midnight etc
-    if (startDateTime.hour() > endDateTime.hour() || (endDateTime.hour() === 0 && endDateTime.minute() === 0)) {
-      endDateTime.add(1, 'days');
     }
 
     // ENTRY
@@ -53,12 +35,14 @@ const format = async dateObj => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': entry.title.trim(),
+      'img': entry.img ?  entry.img.trim() : null
     };
 
     prev.push(newEntry);
     return prev;
   }, []);
 
+  console.log(cleanedData);
   return Promise.resolve(cleanedData);
 };
 
@@ -76,15 +60,28 @@ const fetch = async dateObj => {
     const data = $.extract({
       shows: [
         {
-          selector: `#${day} > div.py-3`,
+          selector: `#${day} > ul > li`,
           value: {
-            datetime_raw: 'span.h5',
-            title: '.h4.text-primary',
+            datetime_start: {
+              selector: '.creneau__heure time:first-of-type',
+              value: 'datetime'
+            },
+            datetime_end: {
+              selector: '.creneau__heure time:last-of-type',
+              value: 'datetime'
+            },
+            title: {
+              selector: '.creneau__nom-texte',
+              value: el => $(el).contents().first().text()
+            },
+            img: {
+              selector: '.vignette-programme > img',
+              value: 'src'
+            },
           }
         }
       ]
     });
-
 
     if (data && data.shows) {
       scrapedData = data.shows;
