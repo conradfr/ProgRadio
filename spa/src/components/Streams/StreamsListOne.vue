@@ -109,7 +109,7 @@ import tooltip from '@/directives/tooltip'
 import * as config from '@/config/config';
 
 // used to space the channel joins a bit
-const MAX_RANDOM_MS = 750;
+const MAX_RANDOM_MS = 1000;
 
 export default defineComponent({
   directives: {
@@ -266,7 +266,7 @@ export default defineComponent({
 
       setTimeout(() => {
         this.joinListenersChannel(this.stream.id);
-      }, 1000 + randomJoinMs);
+      }, 1250 + randomJoinMs);
     },
     leaveChannels() {
       setTimeout(() => {
