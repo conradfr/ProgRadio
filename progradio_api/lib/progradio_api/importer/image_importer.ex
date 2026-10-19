@@ -8,6 +8,10 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   @image_folder "program"
   @stream_folder "stream"
   @temp_folder "temp"
+  # logos uploaded in the www radio submission form (UserController::submission()),
+  # original_img is then the path of the file, deleted once imported
+  @upload_folder "upload"
+  @upload_path_prefix "/media/#{@upload_folder}/"
 
   @ls_cache_key "streams_ls"
   @ls_cache_ttl 21_600_000
@@ -127,13 +131,13 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       "#{Application.get_env(:progradio_api, :image_path)}#{@temp_folder}/#{filename}"
 
     unless ImageCache.is_cached(full_path, false) do
-      full_url = full_url(url)
-      Logger.debug("Importing svg: #{full_url}")
+      Logger.debug("Importing svg: #{url}")
 
       try do
-        with {:ok, _} <- download(full_url, full_path_temp_svg),
+        with {:ok, _} <- fetch(url, full_path_temp_svg),
              {:ok, _} <- rasterize_svg(full_path_temp_svg, full_path_temp),
              {:ok, _} <- process(full_path_temp, full_path) do
+          delete_upload(url)
           {:ok, filename}
         else
           _ -> {:error, nil}
@@ -155,14 +159,17 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       "#{Application.get_env(:progradio_api, :image_path)}#{@temp_folder}/#{filename}"
 
     unless ImageCache.is_cached(full_path, false) do
-      full_url = full_url(url)
-      Logger.debug("Importing: #{full_url}")
+      Logger.debug("Importing: #{url}")
 
-      case download(full_url, full_path_temp) do
+      case fetch(url, full_path_temp) do
         {:ok, _} ->
           case process(full_path_temp, full_path) do
-            {:ok, _} -> {:ok, filename}
-            _ -> {:error, nil}
+            {:ok, _} ->
+              delete_upload(url)
+              {:ok, filename}
+
+            _ ->
+              {:error, nil}
           end
 
         _ ->
@@ -283,6 +290,46 @@ defmodule ProgRadioApi.Importer.ImageImporter do
       File.rm(image_path)
     else
       _ -> {:ok, nil}
+    end
+  end
+
+  # uploads are copied from the shared media folder, everything else is downloaded
+  defp fetch(@upload_path_prefix <> filename, dest_path) do
+    with {:ok, upload_path} <- upload_path(filename) do
+      File.mkdir_p(Path.dirname(dest_path))
+
+      case File.cp(upload_path, dest_path) do
+        :ok ->
+          {:ok, upload_path}
+
+        {:error, reason} ->
+          Logger.warning(
+            "Error importing uploaded image #{upload_path} / #{dest_path}: #{reason}"
+          )
+          {:error, nil}
+      end
+    end
+  end
+
+  defp fetch(url, dest_path), do: download(full_url(url), dest_path)
+
+  defp delete_upload(@upload_path_prefix <> filename) do
+    with {:ok, upload_path} <- upload_path(filename), do: File.rm(upload_path)
+  end
+
+  defp delete_upload(_url), do: :ok
+
+  # original_img is user input: only accept a bare file name, no other folder can be read or deleted
+  defp upload_path(filename) do
+    upload_path =
+      "#{Application.get_env(:progradio_api, :image_path)}#{@upload_folder}/#{filename}"
+
+    if Regex.match?(~r/\A[\w-]+\.\w+\z/, filename) and File.regular?(upload_path) do
+      {:ok, upload_path}
+    else
+      # already imported and deleted: the stream keeps its current image
+      Logger.debug("Uploaded image not found: #{filename}")
+      {:error, nil}
     end
   end
 

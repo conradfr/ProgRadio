@@ -203,6 +203,7 @@ page:
             title_new: Radiozender toevoegen
             title_edit: Radiozender bewerken
             img: Logo URL (.jpg, .png, .gif)
+            img_file: "Logo (.jpg, .png, .gif, .webp, max. 5 MB)"
             name: Naam
             radio: Radio
             stream_url: Stream URL

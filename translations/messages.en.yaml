@@ -215,6 +215,7 @@ page:
             title_new: Add a radio
             title_edit: Edit a radio
             img: Logo url (.jpg, .png, .gif)
+            img_file: "Logo (.jpg, .png, .gif, .webp, 5 MB max)"
             name: Name
             radio: Radio
             slogan: Slogan

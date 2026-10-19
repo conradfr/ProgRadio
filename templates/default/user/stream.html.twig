@@ -106,7 +106,12 @@
       {{ form_row(form.name) }}
       {{ form_row(form.countryCode) }}
       {{ form_row(form.language) }}
-      {{ form_row(form.originalImg) }}
+
+      {% if is_granted('ROLE_ADMIN') %}
+        {{ form_row(form.originalImg) }}
+      {% endif %}
+
+      {{ form_row(form.imgFile) }}
 
       {% if stream.img is not null %}
         <div class="my-2">

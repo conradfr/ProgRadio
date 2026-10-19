@@ -7,12 +7,14 @@ namespace App\Form;
 use App\Entity\Stream;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StreamSubmissionType extends AbstractType
@@ -24,6 +26,17 @@ class StreamSubmissionType extends AbstractType
         $builder
             ->add('name', TextType::class, ['label' => $this->translator->trans('page.stream.submission.name'), 'required' => true])
             ->add('originalImg', TextType::class, ['label' => $this->translator->trans('page.stream.submission.img'), 'required' => false])
+            ->add('imgFile', FileType::class, [
+                'label' => $this->translator->trans('page.stream.submission.img_file'),
+                'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new Image(
+                        maxSize: '5M',
+                        mimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+                    ),
+                ],
+            ])
             ->add('streamUrl', TextType::class, ['label' => $this->translator->trans('page.stream.submission.stream_url'), 'required' => true])
             ->add('website', TextType::class, ['label' => $this->translator->trans('page.stream.submission.website'), 'required' => false])
             ->add('slogan', TextType::class, ['label' => $this->translator->trans('page.stream.submission.slogan'), 'required' => false])

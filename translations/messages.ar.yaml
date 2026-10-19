@@ -215,6 +215,7 @@ page:
             title_new: إضافة محطة إذاعية
             title_edit: تعديل محطة إذاعية
             img: رابط الشعار (.jpg, .png, .gif)
+            img_file: "الشعار (.jpg, .png, .gif, .webp, بحد أقصى 5 ميغابايت)"
             name: الاسم
             radio: الراديو
             stream_url: رابط التدفق

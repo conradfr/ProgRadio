@@ -215,6 +215,7 @@ page:
             title_new: Rádió hozzáadása
             title_edit: Rádió szerkesztése
             img: Logó URL  (.jpg, .png, .gif)
+            img_file: "Logó (.jpg, .png, .gif, .webp, max. 5 MB)"
             name: Név
             radio: Rádió
             stream_url: Stream URL

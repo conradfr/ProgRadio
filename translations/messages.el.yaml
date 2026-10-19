@@ -215,6 +215,7 @@ page:
             title_new: Προσθήκη ραδιοφωνικού σταθμού
             title_edit: Επεξεργασία ραδιοφωνικού σταθμού
             img: URL λογότυπου  (.jpg, .png, .gif)
+            img_file: "Λογότυπο (.jpg, .png, .gif, .webp, έως 5 MB)"
             name: Όνομα
             radio: Ραδιόφωνο
             stream_url: URL ροής

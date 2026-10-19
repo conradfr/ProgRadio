@@ -215,6 +215,7 @@ page:
             title_new: Radiosender hinzufügen
             title_edit: Radiosender bearbeiten
             img: Logo-URL  (.jpg, .png, .gif)
+            img_file: "Logo (.jpg, .png, .gif, .webp, max. 5 MB)"
             name: Name
             radio: Radio
             stream_url: Stream-URL

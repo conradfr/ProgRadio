@@ -216,6 +216,7 @@ page:
             title_new: Ajouter une radio
             title_edit: Modifier une radio
             img: Logo url (.jpg, .png, .gif)
+            img_file: "Logo (.jpg, .png, .gif, .webp, 5 Mo max)"
             name: Nom
             radio: Radio
             stream_url: Stream url

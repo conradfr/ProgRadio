@@ -19,6 +19,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Meilisearch\Bundle\SearchService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -223,6 +225,7 @@ class UserController extends AbstractBaseController
         TranslatorInterface $translator,
         SearchService $searchService,
         ApiClient $apiClient,
+        #[Autowire('%kernel.project_dir%/public/media/upload')] string $uploadDir,
         ?Stream $stream = null
     ): Response
     {
@@ -245,6 +248,16 @@ class UserController extends AbstractBaseController
             }
 
             $stream->setSource(Stream::SOURCE_PROGRADIO);
+
+            // An uploaded logo takes precedence over the logo url,
+            // the api imports it from the shared media folder then deletes it
+            /** @var UploadedFile|null $imgFile */
+            $imgFile = $form->get('imgFile')->getData();
+            if ($imgFile !== null) {
+                $filename = Uuid::v4()->toRfc4122() . '.' . $imgFile->guessExtension();
+                $imgFile->move($uploadDir, $filename);
+                $stream->setOriginalImg('/media/upload/' . $filename);
+            }
 
             /** @var \App\Entity\User $user */
             $user = $this->getUser();

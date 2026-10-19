@@ -215,6 +215,7 @@ page:
             title_new: Adicionar uma rádio
             title_edit: Modificar uma rádio
             img: URL do logo  (.jpg, .png, .gif)
+            img_file: "Logo (.jpg, .png, .gif, .webp, máx. 5 MB)"
             name: Nome
             radio: Rádio
             stream_url: URL do stream

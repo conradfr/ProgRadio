@@ -49,9 +49,6 @@ export default typescriptEslint.config(
                 vite: {
                     viteConfig: viteConfig
                 },
-                alias: {
-                    map: [["@", "./src"]],
-                },
             },
         },
         rules: {

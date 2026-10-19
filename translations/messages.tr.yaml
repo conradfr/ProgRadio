@@ -215,6 +215,7 @@ page:
             title_new: "Radyo ekle"
             title_edit: "Radyo düzenle"
             img: "Logo URL'si  (.jpg, .png, .gif)"
+            img_file: "Logo (.jpg, .png, .gif, .webp, en fazla 5 MB)"
             name: "İsim"
             radio: "Radyo"
             stream_url: "Akış URL'si"

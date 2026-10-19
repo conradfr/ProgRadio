@@ -215,6 +215,7 @@ page:
             title_new: Dodaj stację radiową
             title_edit: Edytuj stację radiową
             img: URL logo  (.jpg, .png, .gif)
+            img_file: "Logo (.jpg, .png, .gif, .webp, maks. 5 MB)"
             name: Nazwa
             radio: Radio
             stream_url: URL strumienia

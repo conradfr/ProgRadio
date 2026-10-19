@@ -49,6 +49,7 @@
 /public/media/program/*
 /public/media/stream/*
 /public/media/temp/*
+/public/media/upload/*
 /public/media/cache/page_thumb/media/program/*
 /public/media/cache/program_thumb/media/program/*
 /public/media/cache/stream_thumb/media/program/*
@@ -57,6 +58,7 @@
 !/public/media/program/.gitkeep
 !/public/media/stream/.gitkeep
 !/public/media/temp/.gitkeep
+!/public/media/upload/.gitkeep
 !/public/media/cache/program_thumb/media/.gitkeep
 !/public/media/cache/stream_thumb/media/.gitkeep
 !/public/media/cache/program_thumb/.gitkeep
