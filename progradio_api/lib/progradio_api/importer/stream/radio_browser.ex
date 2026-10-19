@@ -424,6 +424,7 @@ defmodule ProgRadioApi.Importer.StreamsImporter.RadioBrowser do
           country_code: fragment("COALESCE(?, ?)", so.country_code, s.country_code),
           enabled: fragment("COALESCE(?, ?)", so.enabled, s.enabled),
           website: fragment("COALESCE(?, ?)", so.website, s.website),
+          song_data: s.song_data,
           import_updated_at: s.import_updated_at
         }
       )

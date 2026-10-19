@@ -181,6 +181,15 @@ defmodule ProgRadioApi.Stream do
     |> validate_required([:genres])
   end
 
+  def changeset_country_code(stream, params \\ %{}) do
+    stream
+    |> cast(params, [
+      :country_code
+    ])
+    |> validate_required([:country_code])
+    |> validate_length(:country_code, is: 2)
+  end
+
   def changeset_redirect_to(stream, params \\ %{}) do
     stream
     |> cast(params, [
