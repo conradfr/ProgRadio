@@ -6,13 +6,12 @@ defmodule ProgRadioApi.SongProvider.Amperwave do
 
   @behaviour ProgRadioApi.SongProvider
 
-  # same as icecast.ex and hls.ex, the ones used without the station id
-  @refresh_auto_interval 10000
-
   # only the start of the song is given: older means the station stopped sending them (talk, ads)
   @stale_after_seconds 900
 
   @icecast_types [:shoutcast, :icecast, :default]
+
+  @refresh_auto_interval 10000
 
   @impl true
   def has_custom_refresh(_name), do: false

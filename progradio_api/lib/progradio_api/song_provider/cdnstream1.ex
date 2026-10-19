@@ -5,8 +5,6 @@ defmodule ProgRadioApi.SongProvider.Cdnstream1 do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 10000
-
   # streams are https://{host}.cdnstream1.com/{mount}[.aac|.mp3] with mount as {station id}_{bitrate}[k]
   # (also on cdnstream.com and streamon.fm, same platform and metadata url)
   # some stations (not predictable from the url) have their metadata at
@@ -24,9 +22,6 @@ defmodule ProgRadioApi.SongProvider.Cdnstream1 do
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil
-
-  @impl true
-  def get_auto_refresh(), do: @refresh_auto_interval
 
   @impl true
   def get_data(name, {type, _url, _data} = last_data, db_song_data) when type in @icecast_types,

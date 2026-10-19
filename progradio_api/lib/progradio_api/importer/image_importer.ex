@@ -306,6 +306,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
           Logger.warning(
             "Error importing uploaded image #{upload_path} / #{dest_path}: #{reason}"
           )
+
           {:error, nil}
       end
     end

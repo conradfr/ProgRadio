@@ -6,8 +6,6 @@ defmodule ProgRadioApi.SongProvider.Hls do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 10000
-
   @req_timeout 7500
   @max_iteration 10
 
@@ -16,9 +14,6 @@ defmodule ProgRadioApi.SongProvider.Hls do
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil
-
-  @impl true
-  def get_auto_refresh(), do: @refresh_auto_interval
 
   @impl true
   def get_data(name, _last_data, _db_song_data) do

@@ -23,6 +23,7 @@ defmodule ProgRadioApi.SongServer do
 
   @refresh_song_interval 10000
   @refresh_song_interval_long 20000
+  @refresh_song_interval_persistent_no_connected 60000
   @refresh_song_retries_increment 10000
 
   @refresh_song_retries_max 10
@@ -222,8 +223,16 @@ defmodule ProgRadioApi.SongServer do
 
       update_status(song, db_data)
 
+      how_many_connected =
+        name
+        |> Presence.list()
+        |> map_size()
+
       next_refresh =
         cond do
+          SongManager.persistent_topic?(name) == true and how_many_connected == 0 ->
+            @refresh_song_interval_persistent_no_connected
+
           Kernel.function_exported?(module, :get_auto_refresh, 0) == true ->
             apply(module, :get_auto_refresh, [])
 
@@ -237,14 +246,9 @@ defmodule ProgRadioApi.SongServer do
         |> increment_interval(updated_retries)
 
       # as a function so the presence lookup is only done when the debug level is enabled
-      Logger.debug(fn ->
-        how_many_connected =
-          name
-          |> Presence.list()
-          |> map_size()
-
+      Logger.debug(
         "Data provider - #{name}: song updated (timer, next: #{trunc(next_refresh / 1000)}s, retries: #{updated_retries}) - #{how_many_connected} clients connected"
-      end)
+      )
 
       Process.send_after(self(), {:refresh, :auto}, next_refresh)
 

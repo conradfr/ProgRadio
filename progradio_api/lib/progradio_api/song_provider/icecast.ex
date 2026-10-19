@@ -5,8 +5,6 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @refresh_auto_interval 10000
-
   # duplicated in song_provider.ex
   @forbidden_titles [
     "nodesc",
@@ -28,9 +26,6 @@ defmodule ProgRadioApi.SongProvider.Icecast do
 
   @impl true
   def get_refresh(_name, _data, _default_refresh), do: nil
-
-  @impl true
-  def get_auto_refresh(), do: @refresh_auto_interval
 
   # we try to access metadata urls for shoutcast and icecast
   # and, if successful, set the state for it for repeated operations
