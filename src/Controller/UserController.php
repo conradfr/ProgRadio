@@ -321,7 +321,8 @@ class UserController extends AbstractBaseController
        EntityManagerInterface $em,
        TranslatorInterface $translator,
        SearchService $searchService,
-       Stream $stream): Response
+       Stream $stream
+    ): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -329,9 +330,22 @@ class UserController extends AbstractBaseController
         $user->removeStream($stream);
         $searchService->remove($em, $stream);
 
+        // streams redirecting to the deleted one no longer redirect
+        $redirectedStreams = $em->getRepository(Stream::class)->findBy(['redirectToStream' => $stream]);
+        foreach ($redirectedStreams as $redirectedStream) {
+            $redirectedStream->setRedirectToStream(null);
+        }
+
         $em->remove($stream);
         $em->persist($user);
         $em->flush();
+
+        // they may be indexable again
+        foreach ($redirectedStreams as $redirectedStream) {
+            if ($redirectedStream->isIndexable()) {
+                $searchService->index($em, $redirectedStream);
+            }
+        }
 
         $this->addFlash(
             'success',
