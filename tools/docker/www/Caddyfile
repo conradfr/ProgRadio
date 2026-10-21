@@ -129,6 +129,14 @@
   }
   redir @cdn_non_media https://www.{re.hostmatch.1}{uri} permanent
 
+  # Only the stream submission form (logo upload) accepts multipart bodies,
+  # keep them away from PHP's multipart parser everywhere else
+  @multipart_blocked {
+    header_regexp Content-Type (?i)multipart
+    not path_regexp ^/my-account/[^/]+/radios(/[^/]+)?$
+  }
+  respond @multipart_blocked 415
+
 	php_server {
 	  file_server off
     resolve_root_symlink false

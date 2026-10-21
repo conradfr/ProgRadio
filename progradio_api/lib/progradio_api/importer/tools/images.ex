@@ -57,7 +57,7 @@ defmodule ProgRadioApi.Importer.Tools.Images do
 
   defp get_streams_with_no_image() do
     from(s in Stream,
-      where: is_nil(s.img),
+      where: is_nil(s.img) and s.enabled == true and s.banned == false and s.closed == false and is_nil(s.redirect_to),
       select: s.id
     )
     |> Repo.all()
