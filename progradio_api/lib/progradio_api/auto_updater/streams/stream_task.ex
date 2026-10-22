@@ -54,12 +54,38 @@ defmodule ProgRadioApi.AutoUpdater.Streams.StreamTask do
   end
 
   defp get_updated_url(%Stream{} = stream)
+       when stream.stream_auto_update.type == "radio12345" do
+    try do
+      url =
+        stream.stream_auto_update.url
+        |> Req.get!()
+        |> Map.get(:body)
+        |> Floki.parse_document!()
+        |> Floki.get_by_id("urladdress")
+        |> Floki.text()
+        |> String.trim()
+
+      case url do
+        nil -> {:error, nil}
+        "" -> {:error, nil}
+        _ -> {:ok, url}
+      end
+    rescue
+      e ->
+        Logger.warning("Auto-update stream (website): #{stream.id} - error", error: e)
+        Logger.debug(e)
+        {:error, nil}
+    end
+  end
+
+  defp get_updated_url(%Stream{} = stream)
        when stream.stream_auto_update.type == "json" do
     try do
       path = String.split(stream.stream_auto_update.path, ".")
 
       url =
-        Req.get!(stream.stream_auto_update.url)
+        stream.stream_auto_update.url
+        |> Req.get!()
         |> Map.get(:body)
         |> Kernel.get_in(path)
 
@@ -76,7 +102,8 @@ defmodule ProgRadioApi.AutoUpdater.Streams.StreamTask do
        when stream.stream_auto_update.type == "mixlr_json" do
     try do
       url =
-        Req.get!(stream.stream_auto_update.url)
+        stream.stream_auto_update.url
+        |> Req.get!()
         |> Map.get(:body)
         |> Map.get("included", [])
         |> List.first(%{})
