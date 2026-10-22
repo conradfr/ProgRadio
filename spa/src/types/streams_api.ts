@@ -18,3 +18,7 @@ export type GetGeoResponse = {
   countryCode: string
   countryName: string
 };
+
+export type GetStreamUrl = {
+  stream_url: string
+};

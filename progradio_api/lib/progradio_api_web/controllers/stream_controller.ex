@@ -3,7 +3,10 @@ defmodule ProgRadioApiWeb.StreamController do
   use ProgRadioApiWeb, :controller
   use Goal
 
+  alias ProgRadioApi.Repo
+  alias ProgRadioApi.Stream
   alias ProgRadioApi.Streams
+  alias ProgRadioApi.Data.StreamUrl
 
   # ---------- GET ----------
 
@@ -62,6 +65,18 @@ defmodule ProgRadioApiWeb.StreamController do
         streams: streams,
         total: total,
         timestamp: System.os_time(:microsecond)
+      )
+    else
+      _ -> send_error(conn)
+    end
+  end
+
+  def stream_url(conn, %{"id" => id} = _params) when is_binary(id) do
+    with %Stream{} = stream when not is_nil(stream) <- Repo.get(Stream, id),
+         stream_data when not is_nil(stream_data) <- Map.get(stream, :stream_data),
+         stream_url when is_binary(stream_url) <- StreamUrl.get(stream_data) do
+      render(conn, "stream_url.json",
+        stream_url: stream_url
       )
     else
       _ -> send_error(conn)

@@ -9,6 +9,7 @@ export interface Stream {
   img: string | null
   img_alt?: string | null
   stream_url: string
+  is_stream_url_generated: boolean
   force_hls: boolean
   force_mpd: boolean
   force_proxy: boolean

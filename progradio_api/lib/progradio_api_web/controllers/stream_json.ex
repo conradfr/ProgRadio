@@ -7,6 +7,10 @@ defmodule ProgRadioApiWeb.StreamJSON do
     %{streams: streams}
   end
 
+  def stream_url(%{stream_url: stream_url}) do
+    %{stream_url: stream_url}
+  end
+
   def playing_error(_params) do
     %{status: :ok}
   end

@@ -406,6 +406,7 @@ defmodule ProgRadioApi.Streams do
         type: "stream",
         internal_use_img: s.internal_use_img,
         playing_error: s.playing_error,
+        is_stream_url_generated: not is_nil(s.stream_data),
         radio_code_name: fragment("COALESCE(?)", r.code_name),
         radio_stream_code_name:
           fragment(

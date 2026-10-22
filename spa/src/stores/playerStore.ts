@@ -140,12 +140,13 @@ export const usePlayerStore = defineStore('player', {
     },
   },
   actions: {
-    playRadio(params: any) {
+    async playRadio(params: any) {
       const global = useGlobalStore();
 
       this.stop();
 
-      const { radio, stream } = params;
+      const { radio } = params;
+      let { stream } = params;
 
       if (!radio || !radio.streaming_enabled || !stream) {
         return;
@@ -153,6 +154,14 @@ export const usePlayerStore = defineStore('player', {
 
       cache.setCache(config.LAST_STREAM_PLAYED, stream);
       cache.setCache(config.LAST_RADIO_PLAYED, radio);
+
+      if (stream.is_stream_url_generated) {
+        const stream_data = await StreamsApi.getStreamUrl(stream.id);
+        if (stream_data && stream_data.stream_url) {
+          // new object: the stream may be non-reactive (markRaw list), mutating it wouldn't trigger the getters
+          stream = { ...stream, stream_url: stream_data.stream_url };
+        }
+      }
 
       this.setPrevious({ stream, radio });
 
@@ -173,7 +182,7 @@ export const usePlayerStore = defineStore('player', {
         this.updateShow();
       });
     },
-    playStream(stream: Stream) {
+    async playStream(stream: Stream) {
       const streamsStore = useStreamsStore();
       const userStore = useUserStore();
 
@@ -187,6 +196,14 @@ export const usePlayerStore = defineStore('player', {
 
       cache.setCache(config.LAST_STREAM_PLAYED, stream);
       cache.setCache(config.LAST_RADIO_PLAYED, null);
+
+      if (stream.is_stream_url_generated) {
+        const stream_data = await StreamsApi.getStreamUrl(stream.id);
+        if (stream_data && stream_data.stream_url) {
+          // new object: the stream may be non-reactive (markRaw list), mutating it wouldn't trigger the getters
+          stream = { ...stream, stream_url: stream_data.stream_url };
+        }
+      }
 
       this.setPrevious({ stream });
 

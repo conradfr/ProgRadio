@@ -69,7 +69,7 @@ db-import:
 ## —— API ———————————————————————————————————————————————————————————————
 
 api-dev:
-	@$(API_CONT) iex -S mix phx.server
+	@$(API_CONT) iex --sname api --cookie progradio -S mix phx.server
 
 ## —— JS FRONT ———————————————————————————————————————————————————————————————
 

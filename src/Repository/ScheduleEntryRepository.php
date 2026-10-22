@@ -67,7 +67,8 @@ class ScheduleEntryRepository extends EntityRepository
                     'id' => $row['radio_id'],
                     'name' => $row['radio_stream_name'],
                     'share' => $row['radio_share'],
-                    'streamingUrl' => $row['streaming_url']
+                    'streamingUrl' => $row['streaming_url'],
+                    'is_stream_url_generated' => $row['is_stream_url_generated']
                 ];
 
                 unset($row['codeName'], $row['radio_name'], $row['radio_share']);
@@ -226,7 +227,8 @@ EOT;
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select($this->getScheduleSelectString())
-            ->addSelect('r.name as radio_name, r.share as radio_share, s.name as radio_stream_name, s.id as radio_id, s.streamUrl as streaming_url, c.codeName as collectionCodeName')
+            ->addSelect('r.name as radio_name, r.share as radio_share, s.name as radio_stream_name, s.id as radio_id, s.streamUrl as streaming_url, c.codeName as collectionCodeName,'
+                . 'CASE WHEN(s.streamData IS NOT NULL) THEN TRUE ELSE FALSE END as is_stream_url_generated')
             ->from(ScheduleEntry::class, 'se')
             ->innerJoin('se.radio', 'r')
             ->innerJoin('se.stream', 's')

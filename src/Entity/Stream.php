@@ -120,6 +120,9 @@ class Stream implements NormalizableInterface
     #[ORM\Column(type: 'string', length: 100)]
     private ?string $radioStreamCodeName = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?array $streamData = null;
+
     #[ORM\ManyToOne(targetEntity: Radio::class, inversedBy: 'streams')]
     #[ORM\JoinColumn(name: 'radio_id', referencedColumnName: 'id')]
     private ?Radio $radio = null;
@@ -712,5 +715,23 @@ class Stream implements NormalizableInterface
     public function setIsSubRadio(bool $isSubRadio): void
     {
         $this->isSubRadio = $isSubRadio;
+    }
+
+    public function getStreamData(): ?array
+    {
+        return $this->streamData;
+    }
+
+    public function setStreamData(?array $streamData): static
+    {
+        $this->streamData = $streamData;
+
+        return $this;
+    }
+
+    // compatibility w/ repository functions
+    public function is_stream_url_generated(): bool
+    {
+        return $this->streamData !== null;
     }
 }

@@ -256,21 +256,21 @@
                     {{ self.extractDailymotionIdAndProvideiFrame(stream.streamUrl) }}
                   {% else %}
                     <div class="radio-page-streams-one mb-1 mb-sm-2 d-flex align-items-center justify-content-center justify-content-sm-start"
-                         style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init({ topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}',{% if song is defined and song is not null %} song: {{ song|json_encode }},{% endif %} historyUrl: '{{- url('song_history', {'_locale': app.request.locale, 'stream': stream.id}) -}}'})">
+                      style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init({ topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}',{% if song is defined and song is not null %} song: {{ song|json_encode }},{% endif %} historyUrl: '{{- url('song_history', {'_locale': app.request.locale, 'stream': stream.id}) -}}'})">
                       <div v-cloak>
                         <div
                           v-if="playing === PLAYER_STATE_STOPPED"
-                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
+                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
                           class="radio-page-play">
                           <img alt="{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}"
-                               src="{{ asset('img/play-button-inside-a-circle.svg') }}">
+                            src="{{ asset('img/play-button-inside-a-circle.svg') }}">
                         </div>
                         <div
                           v-if="playing === PLAYER_STATE_PLAYING"
                           @click="stop('{{ stream.id }}')"
                           class="radio-page-play">
                           <img alt="{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}"
-                               src="{{ asset('img/rounded-pause-button.svg') }}">
+                            src="{{ asset('img/rounded-pause-button.svg') }}">
                         </div>
                         <div
                           v-if="playing === PLAYER_STATE_LOADING"
@@ -286,7 +286,7 @@
                       <div class="ps-2" v-cloak>
                         <div
                           v-if="playing === PLAYER_STATE_STOPPED"
-                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
+                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
                           class="radio-page-play">
                           <div class="fs-2">&nbsp;{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}</div>
                         </div>

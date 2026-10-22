@@ -50,7 +50,7 @@
                                             @vue:mounted="$el.classList.remove('d-none')">
                                             <div
                                                 v-if="radioId !== '{{ entry.radio.id }}' || playing === PLAYER_STATE_STOPPED"
-                                                @click="play('{{ entry.radio.streamingUrl }}', '{{ entry.radio.id }}')"
+                                                @click="play('{{ entry.radio.streamingUrl }}', '{{ entry.radio.id }}', {is_stream_url_generated: {{- entry.radio.is_stream_url_generated ? 'true' : 'false' -}}})"
                                                 class="radio-page-play">
                                                 <img alt="{{ 'page.radio.play'|trans({'%radio%': entry.radio.name}) }}"
                                                     src="{{ asset('img/play-button-inside-a-circle.svg') }}">

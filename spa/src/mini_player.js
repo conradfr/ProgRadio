@@ -25,6 +25,7 @@ import {
   RADIOADDICT_AGENT,
   YOUTUBE_START_TIMEOUT_SECONDS
 } from './config/config.js';
+import StreamsApi from "@/api/StreamsApi.js";
 
 /* eslint-disable no-undef */
 
@@ -103,6 +104,19 @@ const loadDash = () => {
     dashScript.onerror = reject;
     document.body.appendChild(dashScript);
   });
+};
+
+const getStreamUrl = async (id) => {
+  const url = `https://${apiUrl}/stream_url/${id}`;
+
+  return fetch(url)
+    .then(response => response.json())
+    .then((json) => {
+      if (typeof json.stream_url !== 'undefined') {
+        return json.stream_url;
+      }
+      return null;
+    });
 };
 
 const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
@@ -317,7 +331,7 @@ createApp({
     this.favorite = !this.favorite;
     streamFavorite.toggle(this.favoriteOptions, this.favorite);
   },
-  play(streamingUrl, codeName, options) {
+  async play(streamingUrl, codeName, options) {
     if (!options) {
       // eslint-disable-next-line no-param-reassign
       options = {};
@@ -348,6 +362,10 @@ createApp({
     this.radioId = codeName;
     this.sessionId = null;
     this.playerStart = new Date();
+
+    if (options && options.is_stream_url_generated) {
+      streamingUrl = await getStreamUrl(codeName) || streamingUrl;
+    }
 
     if (streamingUrl.indexOf('.m3u8') !== -1 || (options.force_hls && options.force_hls === true)) {
       loadHls().then(() => {

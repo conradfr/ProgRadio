@@ -28,8 +28,8 @@ defmodule ProgRadioApiWeb.Router do
   scope "/", ProgRadioApiWeb do
     pipe_through :api
 
-    resources "/schedule/:day", ScheduleController
-    resources "/stream", StreamController
+    resources "/schedule/:day", ScheduleController, only: [:index]
+    resources "/stream", StreamController, only: [:index]
     resources "/schedule", ScheduleController, only: [:create]
     resources "/radios", RadioController, only: [:index]
     resources "/listening_session", ListeningSessionController, only: [:create, :update]
@@ -37,6 +37,8 @@ defmodule ProgRadioApiWeb.Router do
     get "/config", ConfigController, :index
     get "/radios/list", RadioController, :list
     get "/countries", CountryController, :list
+
+    get "/stream_url/:id", StreamController, :stream_url
 
     post "/stream_error/:id", StreamController, :playing_error
     post "/search_term", StreamController, :search_term

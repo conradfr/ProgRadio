@@ -16,7 +16,8 @@ import type { Countries } from '@/types/countries';
 import type {
   GetConfigResponse,
   GetStreamsResponse,
-  GetGeoResponse
+  GetGeoResponse,
+  GetStreamUrl
 } from '@/types/streams_api';
 
 /* eslint-disable no-undef */
@@ -111,6 +112,11 @@ const searchStreams = async (
   }
 
   const response = await fetch(`${baseUrl}?${queryParamsList.join('&')}`);
+  return await response.json();
+};
+
+const getStreamUrl = async (stream_id: string): Promise<GetStreamUrl|null> => {
+  const response = await fetch(`https://${apiUrl}/stream_url/${stream_id}`);
   return await response.json();
 };
 
@@ -238,6 +244,7 @@ export default {
   getCountries,
   getBestFromRadio,
   searchStreams,
+  getStreamUrl,
   addStreamPlayingError,
   incrementPlayCount,
   toggleFavoriteStream,

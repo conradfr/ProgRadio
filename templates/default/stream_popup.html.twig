@@ -141,7 +141,7 @@
                       <div v-cloak>
                         <div
                           v-if="playing === PLAYER_STATE_STOPPED"
-                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
+                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
                           class="radio-page-play">
                           <img alt="{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}"
                                src="{{ asset('img/play-button-inside-a-circle.svg') }}">
@@ -167,7 +167,7 @@
                       <div class="ps-2" v-cloak>
                         <div
                           v-if="playing === PLAYER_STATE_STOPPED"
-                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
+                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
                           class="radio-page-play">
                           <div class="fs-2">&nbsp;{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}</div>
                         </div>

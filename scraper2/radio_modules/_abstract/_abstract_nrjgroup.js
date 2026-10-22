@@ -94,7 +94,6 @@ const format = async (dateObj, name) => {
     return prev;
   }, []);
 
-  console.log(await cleanedData[name]);
   return Promise.resolve(cleanedData[name]);
 };
 

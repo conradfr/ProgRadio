@@ -39,6 +39,7 @@ defmodule ProgRadioApi.Stream do
 
     field(:stream_song_code_name, :string)
     field(:song_data, :map)
+    field(:stream_data, :map)
 
     field(:popup, :boolean)
     field(:force_hls, :boolean)
