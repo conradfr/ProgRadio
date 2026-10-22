@@ -368,13 +368,13 @@ defmodule ProgRadioApi.SongServer do
     end
   end
 
-  %EventsourceEx.Message{
-    id: "1749399737229",
-    event: "message",
-    data:
-      "{\"mount\":\"s70bvdgqks8uv\",\"streamTitle\":\"Darren Styles, Dougal & Gammer - Party Don't Stop\"}",
-    dispatch_ts: ~U[2025-06-08 16:22:17.584931Z]
-  }
+#  %EventsourceEx.Message{
+#    id: "1749399737229",
+#    event: "message",
+#    data:
+#      "{\"mount\":\"s70bvdgqks8uv\",\"streamTitle\":\"Darren Styles, Dougal & Gammer - Party Don't Stop\"}",
+#    dispatch_ts: ~U[2025-06-08 16:22:17.584931Z]
+#  }
 
   # messages from the push client
   @impl true
@@ -382,6 +382,7 @@ defmodule ProgRadioApi.SongServer do
         %EventsourceEx.Message{} = push_event,
         %{name: name, song: last_song, db_data: db_data} = state
       ) do
+    IO.puts("#{inspect push_event}")
     {data, song} =
       case apply(state.module, :get_data, [name, push_event, state.last_data]) do
         nil ->
