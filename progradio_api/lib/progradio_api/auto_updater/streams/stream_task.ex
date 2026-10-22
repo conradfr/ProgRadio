@@ -30,52 +30,21 @@ defmodule ProgRadioApi.AutoUpdater.Streams.StreamTask do
     end)
   end
 
-  defp get_updated_url(%Stream{} = stream) when is_nil(stream.stream_auto_update) do
-    try do
-      url =
-        Req.get!(stream.website)
-        |> Map.get(:body)
-        |> Floki.parse_document!()
-        |> Floki.get_by_id("urladdress")
-        |> Floki.text()
-        |> String.trim()
-
-      case url do
-        nil -> {:error, nil}
-        "" -> {:error, nil}
-        _ -> {:ok, url}
-      end
-    rescue
-      e ->
-        Logger.warning("Auto-update stream (website): #{stream.id} - error", error: e)
-        Logger.debug(e)
-        {:error, nil}
+  defp get_updated_url(%Stream{website: website} = stream)
+       when is_nil(stream.stream_auto_update) and is_binary(website) do
+    cond do
+      String.contains?(website, ".radio12345.com") -> get_radio12345_url(stream, website)
+      String.contains?(website, "zeno.fm/radio/") -> get_zeno_url(stream, website)
+      true -> {:error, nil}
     end
   end
 
+  defp get_updated_url(%Stream{} = stream) when is_nil(stream.stream_auto_update),
+    do: {:error, nil}
+
   defp get_updated_url(%Stream{} = stream)
        when stream.stream_auto_update.type == "radio12345" do
-    try do
-      url =
-        stream.stream_auto_update.url
-        |> Req.get!()
-        |> Map.get(:body)
-        |> Floki.parse_document!()
-        |> Floki.get_by_id("urladdress")
-        |> Floki.text()
-        |> String.trim()
-
-      case url do
-        nil -> {:error, nil}
-        "" -> {:error, nil}
-        _ -> {:ok, url}
-      end
-    rescue
-      e ->
-        Logger.warning("Auto-update stream (website): #{stream.id} - error", error: e)
-        Logger.debug(e)
-        {:error, nil}
-    end
+    get_radio12345_url(stream, stream.stream_auto_update.url)
   end
 
   defp get_updated_url(%Stream{} = stream)
@@ -121,6 +90,50 @@ defmodule ProgRadioApi.AutoUpdater.Streams.StreamTask do
     rescue
       e ->
         Logger.warning("Auto-update stream (mixlr_json): #{stream.id} - error", error: e)
+        {:error, nil}
+    end
+  end
+
+  defp get_radio12345_url(%Stream{} = stream, url) do
+    try do
+      url =
+        url
+        |> Req.get!()
+        |> Map.get(:body)
+        |> Floki.parse_document!()
+        |> Floki.get_by_id("urladdress")
+        |> Floki.text()
+        |> String.trim()
+
+      case url do
+        nil -> {:error, nil}
+        "" -> {:error, nil}
+        _ -> {:ok, url}
+      end
+    rescue
+      e ->
+        Logger.warning("Auto-update stream (website): #{stream.id} - error", error: e)
+        Logger.debug(e)
+        {:error, nil}
+    end
+  end
+
+  # the stream url is in the nuxt payload, with escaped slashes: https://stream.zeno.fm/xxxx
+  defp get_zeno_url(%Stream{} = stream, url) do
+    try do
+      body =
+        url
+        |> Req.get!()
+        |> Map.get(:body)
+
+      case Regex.run(~r/https:\\u002F\\u002Fstream\.zeno\.fm\\u002F([a-z0-9]+)/i, body) do
+        [_, mount] -> {:ok, "https://stream.zeno.fm/" <> mount}
+        _ -> {:error, nil}
+      end
+    rescue
+      e ->
+        Logger.warning("Auto-update stream (zeno): #{stream.id} - error", error: e)
+        Logger.debug(e)
         {:error, nil}
     end
   end

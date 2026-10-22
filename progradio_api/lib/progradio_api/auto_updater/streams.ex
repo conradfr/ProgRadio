@@ -46,6 +46,7 @@ defmodule ProgRadioApi.AutoUpdater.Streams do
 
     streams = Repo.all(query)
 
+    # radio12345
     query =
       from(s in Stream,
         where:
@@ -56,6 +57,17 @@ defmodule ProgRadioApi.AutoUpdater.Streams do
 
     radio12345_streams = Repo.all(query)
 
-    streams ++ radio12345_streams
+    # zeno errors
+    query =
+      from(s in Stream,
+        where:
+          s.enabled == true and s.banned == false and s.closed == false and is_nil(s.redirect_to) and
+          fragment("? ilike '%zeno.fm/%'", s.website) and s.playing_error > 0,
+        preload: [:stream_auto_update]
+      )
+
+    zeno_streams = Repo.all(query)
+
+    streams ++ radio12345_streams ++ zeno_streams
   end
 end
