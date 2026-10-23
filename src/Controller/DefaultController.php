@@ -499,6 +499,8 @@ class DefaultController extends AbstractBaseController
         // So we do it manually here, oh well...
         $stream = null;
 
+        // NOTE : Redis cache on stream fetching has been tried and proved worse than just querying the DB in prod.
+
         try {
             $shortener = Shortener::make(
                 Dictionary::createUnmistakable()
@@ -516,10 +518,9 @@ class DefaultController extends AbstractBaseController
             throw new NotFoundHttpException('Radio not found');
         }
 
-        $slugger = new AsciiSlugger();
-
         // redirect non-fr stream seo pages to new host
-        if ($host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
+        if (!empty($shortener) && $host->isProgRadio($request) === true && $request->getLocale() !== 'fr') {
+            $slugger = new AsciiSlugger();
             $router->getContext()->setHost('www.' . Host::DATA['radioaddict']['domain']);
             $redirectUrl = $router->generate('streams_one_short', [
                 '_locale' => $request->getLocale(),
@@ -530,7 +531,8 @@ class DefaultController extends AbstractBaseController
             return $this->redirect($redirectUrl, 301);
         }
 
-        if ($stream->getRedirectToStream() !== null) {
+        if (!empty($shortener) && $stream->getRedirectToStream() !== null) {
+            $slugger = new AsciiSlugger();
             $shortId = $shortener->reduce($stream->getRedirectToStream()->getId()->toRfc4122());
 
             $redirectUrl = $router->generate('streams_one_short', [
