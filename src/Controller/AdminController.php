@@ -192,7 +192,7 @@ class AdminController extends AbstractBaseController
 
         if (!$streamOverloading) {
             $streamOverloading = new StreamOverloading();
-            $streamOverloading->setId($stream->getId());
+            $streamOverloading->setStream($stream);
         }
 
         $form = $this->createForm(StreamOverloadingType::class, $streamOverloading);
@@ -348,7 +348,7 @@ class AdminController extends AbstractBaseController
             $streamOverloading = $em->getRepository(StreamOverloading::class)->find($stream->getId());
             if (!$streamOverloading) {
                 $streamOverloading = new StreamOverloading();
-                $streamOverloading->setId($stream->getId());
+                $streamOverloading->setStream($stream);
                 $streamOverloading->setEnabled(true);
             }
 
@@ -430,11 +430,11 @@ class AdminController extends AbstractBaseController
     #[Route('/{_locale}/admin/stream_check_commit_ssl/{id}', name: 'admin_stream_check_commit_ssl')]
     public function streamCheckCommitSsl(Stream $stream, EntityManagerInterface $em): Response
     {
-        $streamOverloading = $stream->getStreamOverloading();
+        $streamOverloading = $em->getRepository(StreamOverloading::class)->find($stream->getId());
 
         if (!$streamOverloading) {
             $streamOverloading = new StreamOverloading();
-            $streamOverloading->setId($stream->getId());
+            $streamOverloading->setStream($stream);
             $streamOverloading->setEnabled(true);
 
             $em->persist($streamOverloading);
@@ -605,7 +605,7 @@ class AdminController extends AbstractBaseController
     public function deletePicture(Stream $stream, EntityManagerInterface $em, Request $request): Response
     {
         $streamOverloading = new StreamOverloading();
-        $streamOverloading->setId($stream->getId());
+        $streamOverloading->setStream($stream);
 
         $form = $this->createForm(StreamOverloadingType::class, $streamOverloading);
         $form->handleRequest($request);

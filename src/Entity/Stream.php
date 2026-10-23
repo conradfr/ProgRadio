@@ -20,8 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(name: 'name_idx', columns: ['name'])]
 #[ORM\Index(name: 'score_idx', columns: ['score'])]
 #[ORM\Index(name: 'countrycode_idx', columns: ['country_code'])]
-#[ORM\Index(name: 'stream_tags_idx', columns: ['tags'])]
-#[ORM\Index(name: 'stream_genres_idx', columns: ['genres'])]
 #[ORM\Index(name: 'stream_playing_error_index', columns: ['playing_error'])]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamRepository')]
 class Stream implements NormalizableInterface
@@ -143,15 +141,9 @@ class Stream implements NormalizableInterface
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $enabled = true;
 
-    #[ORM\OneToOne(targetEntity: StreamOverloading::class, fetch: "EAGER")]
-    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
-    private ?StreamOverloading $streamOverloading = null;
-
-    #[ORM\OneToOne(targetEntity: StreamCheck::class, fetch: "EAGER")]
-    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
-    private ?StreamCheck $streamCheck = null;
-
-    #[ORM\OneToOne(targetEntity: Stream::class)]
+    // StreamOverloading and StreamCheck share the stream id and own the relation (unidirectional):
+    // an inverse one-to-one here can't be lazy and would cost one query each per loaded stream
+    #[ORM\ManyToOne(targetEntity: Stream::class)]
     #[ORM\JoinColumn(name: 'redirect_to', referencedColumnName: 'id')]
     private ?Stream $redirectToStream = null;
 
@@ -367,26 +359,6 @@ class Stream implements NormalizableInterface
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
-    }
-
-    public function getStreamOverloading():? StreamOverloading
-    {
-        return $this->streamOverloading;
-    }
-
-    public function setStreamOverloading(StreamOverloading $streamOverloading): void
-    {
-        $this->streamOverloading = $streamOverloading;
-    }
-
-    public function getStreamCheck():? StreamCheck
-    {
-        return $this->streamCheck;
-    }
-
-    public function setStreamCheck(StreamCheck $streamCheck): void
-    {
-        $this->streamCheck = $streamCheck;
     }
 
     public function getRedirectToStream(): ?Stream

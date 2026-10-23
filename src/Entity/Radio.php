@@ -56,7 +56,7 @@ class Radio
     #[ORM\ManyToOne(targetEntity: 'Collection', inversedBy: 'radios', fetch: 'EAGER')]
     private ?Collection $collection = null;
 
-    #[ORM\Column(type: 'decimal', scale: 2, options: ['default' => 0])]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, options: ['default' => 0])]
     private ?string $share = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => true])]

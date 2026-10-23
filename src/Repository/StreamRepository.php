@@ -6,9 +6,12 @@ namespace App\Repository;
 
 use App\Entity\Radio;
 use App\Entity\Stream;
+use App\Entity\StreamCheck;
+use App\Entity\StreamOverloading;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
@@ -43,7 +46,7 @@ class StreamRepository extends ServiceEntityRepository
 
         $qb->select('s.id, s.name, s.playingError, s.streamUrl, s.countryCode, s.popup, s.playingErrorReason, s.forceHls, s.forceMpd, s.forceProxy, so.updatedAt, s.lastOverloadingOpen, s.checked')
             ->from(Stream::class, 's')
-            ->leftJoin('s.streamOverloading', 'so')
+            ->leftJoin(StreamOverloading::class, 'so', Join::WITH, 'so.stream = s')
             ->where('s.playingError >= :threshold and s.enabled = true')
             ->orderBy('s.playingError', 'DESC');
 
@@ -81,22 +84,40 @@ class StreamRepository extends ServiceEntityRepository
 
         // last country
 
-        $resultCountryLast = $this->getStreams($limitFourth, 0, $stream->getCountryCode(), 'last', excludedIds: $excludedIds);
+        // the excluded ids are filtered here instead of in the query: they are different on each stream page,
+        // so the query would be different too and its result cache would never be hit.
+        // Fixed row count for the same reason, enough to still have $limitFourth rows once the excluded ones are removed
+        // (at most $limitFourth * 2 + 1 excluded)
+        $lastRowCount = $limitFourth * 4;
+
+        $resultCountryLast = $this->getStreams($lastRowCount, 0, $stream->getCountryCode(), 'last');
+        $resultCountryLast = $this->excludeStreams($resultCountryLast, $excludedIds, $limitFourth);
         $excludedIds = array_merge($excludedIds, array_column($resultCountryLast, 'id'));
 
         // last all
 
-        $resultLast = $this->getStreams($limitFourth, 0, null, 'last', excludedIds: $excludedIds);
+        $resultLast = $this->getStreams($lastRowCount, 0, null, 'last');
+        $resultLast = $this->excludeStreams($resultLast, $excludedIds, $limitFourth);
 
-        // random
+        // random (one more row as the current stream is removed afterwards, same cache reason)
 
-        $qbRandom = $this->getMoreStreamQuery($stream->getId(), $limitFourth);
+        $qbRandom = $this->getMoreStreamQuery($limitFourth + 1);
         $resultRandom = $qbRandom->getQuery()->enableResultCache(self::CACHE_QUICK_TTL)->getResult();
+        $resultRandom = $this->excludeStreams($resultRandom, [$stream->getId()], $limitFourth, 'code_name');
 
         return array_merge($resultCountry, $resultCountryLast, $resultLast, $resultRandom);
     }
 
-    protected function getMoreStreamQuery(Uuid $id, int $limit) {
+    protected function excludeStreams(array $streams, array $excludedIds, int $limit, string $idKey = 'id'): array
+    {
+        $excludedIds = array_map(fn($id) => (string) $id, $excludedIds);
+
+        $streams = array_filter($streams, fn($stream) => !in_array((string) $stream[$idKey], $excludedIds, true));
+
+        return array_slice(array_values($streams), 0, $limit);
+    }
+
+    protected function getMoreStreamQuery(int $limit) {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('s.id as code_name, s.name as name, s.img, COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img, s.website')
@@ -104,13 +125,10 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radio', 'r')
             ->where("s.img is not null")
             ->andWhere("RANDOM() < 0.01")
-            ->andWhere('s.id != :id')
             ->andWhere('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL')
             ->groupBy('s.id, r.codeName, s.radioStreamCodeName')
             ->setMaxResults($limit)
             ->setParameter('null', null);
-
-        $qb->setParameter('id', $id);
 
         return $qb;
     }
@@ -586,7 +604,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('s');
         $qb->select('s.id, s.enabled, s.name, s.streamUrl, s.forceHls, s.forceMpd, s.forceProxy, s.website, s.countryCode, sc.checkedAt, sc.img as check_img, sc.streamUrl as check_stream, sc.website as check_website, sc.websiteSsl as check_ssl')
            ->where('sc.img = false or sc.website = false or sc.websiteSsl = false')
-           ->join('s.streamCheck', 'sc')
+           ->join(StreamCheck::class, 'sc', Join::WITH, 'sc.stream = s')
            ->orderBy('s.score', 'desc');
 
         return $this->paginator->paginate(

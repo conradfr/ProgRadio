@@ -6,17 +6,16 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table(name: '`stream_check`')]
 #[ORM\Entity(repositoryClass: 'App\Repository\StreamCheckRepository')]
 class StreamCheck
 {
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'NONE')]
-    private ?Uuid $id;
+    #[ORM\OneToOne(targetEntity: Stream::class)]
+    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
+    private Stream $stream;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $img = null;
@@ -35,12 +34,17 @@ class StreamCheck
 
     public function getId(): ?Uuid
     {
-        return $this->id;
+        return $this->stream->getId();
     }
 
-    public function setId(Uuid $id): void
+    public function getStream(): Stream
     {
-        $this->id = $id;
+        return $this->stream;
+    }
+
+    public function setStream(Stream $stream): void
+    {
+        $this->stream = $stream;
     }
 
     public function getImg(): ?bool

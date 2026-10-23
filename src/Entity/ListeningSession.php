@@ -12,10 +12,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table]
-#[ORM\Index(name: 'ls_radio_stream_idx', columns: ['radio_stream_id'])]
-#[ORM\Index(name: 'stream_idx', columns: ['stream_id'])]
 #[ORM\Index(name: 'listening_session_stream_start_idx', columns: ['stream_id', 'date_time_start'])]
-#[ORM\Index(name: 'date_time_start_idx', columns: ['date_time_start'])]
 #[ORM\Entity(repositoryClass: ListeningSessionRepository::class)]
 class ListeningSession
 {
@@ -65,26 +62,6 @@ class ListeningSession
     public function setId(Uuid $id): void
     {
         $this->id = $id;
-    }
-
-    public function getType(): ?string
-    {
-        if ($this->type === null) {
-            if ($this->radioStream !== null) {
-                return self::TYPE_RADIO;
-            }
-
-            if ($this->stream !== null) {
-                return self::TYPE_STREAM;
-            }
-        }
-
-        return $this->type;
-    }
-
-    public function setType(string $type): void
-    {
-        $this->type = $type;
     }
 
     public function getStream(): ?Stream

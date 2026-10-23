@@ -9,7 +9,6 @@ use App\Entity\Radio;
 use App\Entity\Stream;
 
 #[ORM\Table(name: '`users_streams_history`')]
-#[ORM\Index(name: 'idx_ur_last_listened_at', columns: ['last_listened_at'])]
 #[ORM\Entity(repositoryClass: 'App\Repository\UserStreamRepository')]
 class UserStream
 {

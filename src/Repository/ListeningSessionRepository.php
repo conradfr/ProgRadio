@@ -28,7 +28,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('s.id, s.radioStreamCodeName, s.name, r.codeName as codeNameRadio, c.id as c_id, c.codeName as c_codeName,'
-                . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
+                . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COUNT(ls.id) as total_sessions')
             ->from(Radio::class, 'r')
             ->innerJoin('r.collection', 'c')
             ->leftJoin('r.streams', 's')
@@ -50,7 +50,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('ls.source,'
-            . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
+            . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COUNT(ls.id) as total_sessions')
             ->from(ListeningSession::class, 'ls')
             ->join('ls.stream', 's')
             ->leftJoin('s.radio', 'r')
@@ -81,7 +81,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
 
         $qb->select('s.id, s.name, s.img, s.countryCode as country_code, r.codeName as radio_code_name, s.enabled, s.popup, CASE WHEN(rd.id is not null) THEN 1 ELSE 0 END as redirect_to,'
             . 'CASE WHEN s.streamUrl LIKE \'http://%\' THEN true ELSE false END AS is_http,'
-            . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
+            . 'COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COUNT(ls.id) as total_sessions')
             ->from(Stream::class, 's')
             ->leftJoin('s.redirectToStream', 'rd')
             ->leftJoin('s.radio', 'r')
@@ -100,20 +100,23 @@ class ListeningSessionRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    // Paris days from startDate to endDate (inclusive), converted to UTC bounds on the raw column
+    // so the (stream_id, date_time_start) and BRIN (date_time_start) indexes can be used
     protected function addDates(QueryBuilder $qb, \DateTime $startDate, ?\DateTime $endDate = null): void
     {
-        if ($endDate === null) {
-            $qb->where('DATE(AT_TIME_ZONE(AT_TIME_ZONE(ls.dateTimeStart, \'UTC\'), \'Europe/Paris\')) = DATE(:startDate)');
-            $qb->setParameter('startDate', $startDate);
-        } else {
-            $qb->where('(DATE(AT_TIME_ZONE(AT_TIME_ZONE(ls.dateTimeStart, \'UTC\'), \'Europe/Paris\')) >= DATE(:startDate)'
-                . ' AND DATE(AT_TIME_ZONE(AT_TIME_ZONE(ls.dateTimeStart, \'UTC\'), \'Europe/Paris\')) <= DATE(:endDate))');
+        $paris = new \DateTimeZone('Europe/Paris');
+        $utc = new \DateTimeZone('UTC');
 
-            $qb->setParameters(new ArrayCollection([
-                new Parameter('startDate', $startDate),
-                new Parameter('endDate', $endDate)
-            ]));
-        }
+        $start = new \DateTime($startDate->format('Y-m-d'), $paris);
+        $end = new \DateTime(($endDate ?? $startDate)->format('Y-m-d'), $paris);
+        $end->modify('+1 day');
+
+        $qb->where('ls.dateTimeStart >= :startDate AND ls.dateTimeStart < :endDate');
+
+        $qb->setParameters(new ArrayCollection([
+            new Parameter('startDate', $start->setTimezone($utc)->format('Y-m-d H:i:s')),
+            new Parameter('endDate', $end->setTimezone($utc)->format('Y-m-d H:i:s'))
+        ]));
     }
 
     protected function addCountryCode(QueryBuilder $qb, string $entityShorts, ?string $countyCode=null): void
@@ -208,7 +211,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('s.id, COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COALESCE(COUNT(DISTINCT ls.id), 0) as total_sessions')
+        $qb->select('s.id, COALESCE(SUM(EXTRACT(ls.dateTimeEnd, ls.dateTimeStart)), 0) as total_seconds, COUNT(ls.id) as total_sessions')
             ->from(Stream::class, 's')
             ->leftJoin('s.listeningSessions', 'ls')
             ->groupBy('s.id');

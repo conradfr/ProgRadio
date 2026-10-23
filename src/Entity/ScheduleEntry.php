@@ -11,10 +11,8 @@ use App\Entity\Radio;
 use App\Entity\Stream;
 
 #[ORM\Table]
-#[ORM\Index(name: 'starttime_idx', columns: ['date_time_start'])]
-#[ORM\Index(name: 'endtime_idx', columns: ['date_time_end'])]
 #[ORM\Index(name: 'idx_d7785d2c5b94add2', columns: ['radio_id'])]
-#[ORM\Index(name: 'stream_id_idx', columns: ['stream_id'])]
+#[ORM\Index(name: 'idx_schedule_entry_stream_date', columns: ['stream_id', 'date_time_start'])]
 #[ORM\Entity(repositoryClass: 'App\Repository\ScheduleEntryRepository')]
 class ScheduleEntry
 {

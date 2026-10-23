@@ -27,13 +27,13 @@
 {% endmacro %}
 
 {% macro streamPicture(stream) %}
-    {% if stream.radioStream.id is defined and stream.radioStream.id is not null %}
-        /img/radio/page/{{ stream.radioStream.radio.codeName }}.png
-    {% elseif stream.img is not null and stream.img != '' %}
-        /media/stream/{{ stream.img }}
-    {% else %}
-        /img/stream-placeholder.png
-    {% endif %}
+{%- if stream.ownLogo is defined and stream.ownLogo == true and stream.radioStreamCodeName is not null -%}
+    /img/radio/page/{{ stream.radioStream.radio.codeName }}.png
+{%- elseif stream.img is not null and stream.img != '' -%}
+    /media/stream/{{ stream.img }}
+{%- else -%}
+    /img/stream-placeholder.png
+{%- endif -%}
 {% endmacro %}
 
 {% block body %}

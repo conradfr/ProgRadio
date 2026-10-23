@@ -51,12 +51,14 @@ defmodule ProgRadioApi.Search do
 
     Meilisearch.Settings.FilterableAttributes.update(client, new_index, ["country_code"])
 
+    # sort right after words: otherwise an explicit sort only orders the hits within each
+    # typo/proximity/attribute bucket, and the order restarts at every bucket
     Meilisearch.Settings.RankingRules.update(client, new_index, [
       "words",
+      "sort",
       "typo",
       "proximity",
       "attribute",
-      "sort",
       "exactness"
     ])
 

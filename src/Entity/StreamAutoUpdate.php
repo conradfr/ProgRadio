@@ -14,7 +14,7 @@ class StreamAutoUpdate
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'StreamUpdate', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Stream $Stream = null;
 
