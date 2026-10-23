@@ -387,21 +387,21 @@
 }
 
 ul.pagination {
-
-li a {
-  cursor: default;
-}
-
-li.ellipsis {
-  padding-left: 32px;
-
-  & a:before {
-    content: "\2026";
-    font-size: 1.846rem;
-    position: absolute;
-    top: 0;
-    left: -25px;
-    color: var(--bs-body-color);
+  li a {
+    //cursor: default;
+    cursor: pointer;
   }
-}
+
+  li.ellipsis {
+    padding-left: 32px;
+
+    & a:before {
+      content: "\2026";
+      font-size: 1.846rem;
+      position: absolute;
+      top: 0;
+      left: -25px;
+      color: var(--bs-body-color);
+    }
+  }
 }

@@ -43,10 +43,10 @@ $pagination-bg:                     $primary !default;
 $pagination-hover-bg:               lighten($primary, 10%) !default;
 $pagination-disabled-bg:            darken($primary, 15%) !default;
 
-$radio-stream: #527491;
-$radio-stream-hover: $primary-source;
-$radio-stream-filter: invert(41%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(100%) contrast(89%);
-$radio-stream-filter-hover: invert(41%) sepia(98%) saturate(1173%) hue-rotate(185deg) brightness(99%) contrast(92%);
+$radio-stream: $primary-source;
+$radio-stream-hover: darken($primary-source, 10%);
+$radio-stream-filter: invert(41%) sepia(98%) saturate(1173%) hue-rotate(185deg) brightness(99%) contrast(92%);
+$radio-stream-filter-hover: invert(41%) sepia(24%) saturate(602%) hue-rotate(165deg) brightness(100%) contrast(89%);
 
 $player-color: $white;
 $player-link-color: mix($player-color, $player-background, 70%);
@@ -103,7 +103,7 @@ $program-container-color: darken($background-color, 35%);
 $program-container-none-bg: lighten($background-color, 3%);
 $schedule-display-color: darken($program-text-color, 25%);
 
-$streams-filter-search-close: $gray-800;
+$streams-filter-search-close: $gray-100;
 
 $stream-text-color: $white;
 $stream-play-color: darken($primary-source, 10%);
