@@ -22,16 +22,23 @@
 
             <h5>{{ 'page.stream.modification.radio'|trans }}: {{ stream.name }}</h5>
 
+          {% for label, messages in app.flashes %}
+            {% for message in messages %}
+              <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
+            {% endfor %}
+          {% endfor %}
+
+          <div class="my-4">
+              {{ form_start(duplicate_form) }}
+                  {{ form_widget(duplicate_form.Save) }}
+              {{ form_end(duplicate_form) }}
+          </div>
+
+          <hr />
+
             <div class="alert alert-info py-3 px-3 my-4">
                 {{ 'page.stream.modification.at_least_one'|trans }}
             </div>
-
-
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
-                {% endfor %}
-            {% endfor %}
 
             {{ form_start(form) }}
                 {{ form_errors(form) }}

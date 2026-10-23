@@ -22,7 +22,18 @@
         <div class="col-9">
             {% if stream_suggestion is defined and stream_suggestion is not empty %}
                 <h3>{{ stream_suggestion.stream.name }}</h3>
-                <div class="mb-4"><a target="_blank" href="{{ path('admin_overloading', {streamId: stream_suggestion.stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a></div>
+                <div class="mb-4">
+                  {{ stream_suggestion.stream.countryCode }}
+                  &nbsp;&nbsp;/&nbsp;&nbsp;
+                  <a target="_blank" href="{{ path('admin_overloading', {streamId: stream_suggestion.stream.id}) }}">{{ 'admin.stream_errors.edit'|trans }}</a>
+                  &nbsp;&nbsp;/&nbsp;&nbsp;
+                  <a target="_blank" href="{{ path('streams_one_short', {'shortId': stream_suggestion.stream.id|shortid, 'codename': stream_suggestion.stream.name|slug }) }}">{{ 'admin.stream_errors.view'|trans }}</a>
+                </div>
+              {% if stream_suggestion.duplicate %}
+                <div class="mb-5">
+                  {{ 'admin.suggestion.duplicate'|trans }}
+                </div>
+              {% endif %}
 
                 {% if stream_suggestion.name %}
                     <div class="mb-5">

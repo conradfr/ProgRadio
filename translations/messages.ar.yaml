@@ -200,6 +200,7 @@ page:
         modification:
             at_least_one: املأ حقلاً واحداً أو أكثر.
             comment: تعليق
+            duplicate: الإبلاغ عن هذه الإذاعة كمكررة
             img: "رابط الشعار (.jpg, .png, .gif)"
             name: الاسم
             radio: الراديو
@@ -430,3 +431,6 @@ admin:
         last_checked: تم الفحص
         view: عرض
         edit: تحرير
+
+    suggestion:
+        duplicate: تمت الإشارة إلى هذه الإذاعة كمكررة.

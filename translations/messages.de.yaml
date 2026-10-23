@@ -200,6 +200,7 @@ page:
         modification:
             at_least_one: Füllen Sie ein oder mehrere Felder aus.
             comment: Kommentar
+            duplicate: Diesen Sender als Duplikat melden
             img: Logo-URL  (.jpg, .png, .gif)
             name: Name
             radio: Radio
@@ -430,3 +431,6 @@ admin:
         last_checked: Geprüft
         view: Anzeigen
         edit: Bearbeiten
+
+    suggestion:
+        duplicate: Dieser Sender wurde als Duplikat gemeldet.

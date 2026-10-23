@@ -200,6 +200,7 @@ page:
         modification:
             at_least_one: "Bir veya daha fazla alanı doldurun."
             comment: "Yorum"
+            duplicate: "Bu radyoyu kopya olarak bildir"
             img: "Logo URL'si  (.jpg, .png, .gif)"
             name: "İsim"
             radio: "Radyo"
@@ -429,3 +430,6 @@ admin:
         last_checked: "Kontrol edildi"
         view: "Görüntüle"
         edit: "Düzenle"
+
+    suggestion:
+        duplicate: "Bu radyo kopya olarak bildirildi."

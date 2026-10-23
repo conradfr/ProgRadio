@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Form\StreamSuggestionDuplicateType;
 use App\Form\StreamSuggestionType;
 use App\Service\Favorites;
 use App\Service\Host;
@@ -951,6 +952,25 @@ class DefaultController extends AbstractBaseController
     #[Route('/{_locale}/streams/suggestion/{id}', name: 'streams_suggestion')]
     public function suggestion(Stream $stream, Request $request, EntityManagerInterface $em, TranslatorInterface $translator): Response
     {
+        $duplicateSuggestion = new StreamSuggestion();
+        $duplicateSuggestion->setStream($stream);
+
+        $duplicateForm = $this->createForm(StreamSuggestionDuplicateType::class, $duplicateSuggestion);
+        $duplicateForm->handleRequest($request);
+
+        if ($duplicateForm->isSubmitted() && $duplicateForm->isValid()) {
+            $duplicateSuggestion->setDuplicate(true);
+            $em->persist($duplicateSuggestion);
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                $translator->trans('page.stream.modification.success')
+            );
+
+            return $this->redirectToRoute('streams_suggestion', ['id' => $stream->getId()]);
+        }
+
         $streamSuggestion = new StreamSuggestion();
         $streamSuggestion->setStream($stream);
 
@@ -975,7 +995,8 @@ class DefaultController extends AbstractBaseController
             [
                 'stream' => $stream,
                 'stream_suggestion' => $streamSuggestion,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'duplicate_form' => $duplicateForm->createView()
             ]
         );
     }

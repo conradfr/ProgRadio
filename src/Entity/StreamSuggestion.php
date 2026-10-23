@@ -52,6 +52,9 @@ class StreamSuggestion
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $duplicate = null;
+
     public function getId(): int
     {
         return $this->id;
@@ -171,6 +174,18 @@ class StreamSuggestion
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function isDuplicate(): ?bool
+    {
+        return $this->duplicate;
+    }
+
+    public function setDuplicate(?bool $duplicate): static
+    {
+        $this->duplicate = $duplicate;
 
         return $this;
     }

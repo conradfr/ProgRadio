@@ -200,6 +200,7 @@ page:
         modification:
             at_least_one: Συμπληρώστε ένα ή περισσότερα πεδία.
             comment: Σχόλιο
+            duplicate: Αναφορά αυτού του σταθμού ως διπλότυπου
             img: URL λογότυπου  (.jpg, .png, .gif)
             name: Όνομα
             radio: Ραδιόφωνο
@@ -430,3 +431,6 @@ admin:
         last_checked: Ελέγχθηκε
         view: Προβολή
         edit: Επεξεργασία
+
+    suggestion:
+        duplicate: Αυτός ο σταθμός έχει επισημανθεί ως διπλότυπος.
