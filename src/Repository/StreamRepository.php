@@ -145,7 +145,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select("s.id as id, s.id as code_name, s.name, s.img, s.streamUrl as stream_url, s.tags, s.genres, s.language, s.countryCode as country_code, s.website, s.score as score, 'stream' as type, COALESCE(r.codeName) as radio_code_name, s.forceHls as force_hls, s.forceMpd as force_mpd, s.forceProxy as force_proxy, s.popup as popup,s.playingError as playing_error,"
-            . 'COALESCE(CASE WHEN(BOOL_AND(s.ownLogo) = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img,'
+            . 'COALESCE(CASE WHEN(s.ownLogo = TRUE) THEN s.radioStreamCodeName ELSE :null END, r.codeName) as img_alt, s.internalUseImg as internal_use_img,'
             . 'CASE WHEN(s.streamData IS NOT NULL) THEN TRUE ELSE FALSE END as is_stream_url_generated,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE) THEN TRUE ELSE FALSE END as current_song,'
             . 'CASE WHEN(ss.codeName IS NOT NULL and ss.enabled = TRUE and COALESCE(s.streamSongCodeName, s.streamUrl) IS NOT NULL) THEN CONCAT(ss.codeName, \'_\', COALESCE(s.streamSongCodeName, s.streamUrl)) ELSE s.radioStreamCodeName END as radio_stream_code_name')
@@ -153,7 +153,6 @@ class StreamRepository extends ServiceEntityRepository
             ->leftJoin('s.radio', 'r')
             ->leftJoin('s.streamSong', 'ss')
             ->where('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL')
-            ->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled')
             ->setMaxResults($limit)
             // needed as using NULL directly was not working, neither were hacks like NULLIF(1,1) or omitting the ELSE
             ->setParameter('null', null);
@@ -202,8 +201,6 @@ class StreamRepository extends ServiceEntityRepository
                     ->setParameter('user', $user);
             }
 
-            $qb->groupBy('s.id, s.streamUrl, r.codeName, s.radioStreamCodeName, ss.codeName, ss.enabled, sh.lastListenedAt');
-
             switch ($sort) {
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
@@ -218,17 +215,17 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addOrderBy('s.name', 'ASC');
                     break;
                 case 'popularity':
-                    $qb->addOrderBy('s.score', 'DESC');
+                    // id as tie-breaker: many streams share a score, without it the paging can repeat or skip some
+                    $qb->addOrderBy('s.score', 'DESC')
+                       ->addOrderBy('s.id', 'ASC');
                     break;
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
                     break;
                 case 'last':
-                    $qb->addSelect('MAX(s.lastListeningAt) as last_listen')
-                       //->distinct()
+                    $qb->addSelect('s.lastListeningAt as last_listen')
                        ->andWhere('s.lastListeningAt IS NOT NULL')
-                       ->groupBy('s.id, r.codeName, ss.codeName, ss.enabled, s.radioStreamCodeName, s.streamUrl, s.lastListeningAt')
-                       ->addOrderBy('MAX(s.lastListeningAt)', 'DESC');
+                       ->addOrderBy('s.lastListeningAt', 'DESC');
                     break;
             }
         }
@@ -321,7 +318,9 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addOrderBy('s.name', 'ASC');
                     break;
                 case 'popularity':
-                    $qb->addOrderBy('s.score', 'DESC');
+                    // id as tie-breaker: many streams share a score, without it the paging can repeat or skip some
+                    $qb->addOrderBy('s.score', 'DESC')
+                       ->addOrderBy('s.id', 'ASC');
                     break;
                 case 'random':
                     $qb->addOrderBy('RANDOM()');

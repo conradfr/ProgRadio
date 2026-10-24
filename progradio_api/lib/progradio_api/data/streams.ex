@@ -81,14 +81,6 @@ defmodule ProgRadioApi.Streams do
   def get_one(id) do
     base_query()
     |> where([s], s.id == ^id)
-    |> group_by([s, r, ss], [
-      s.id,
-      r.code_name,
-      ss.code_name,
-      ss.enabled,
-      s.radio_stream_code_name,
-      s.stream_url
-    ])
     |> Repo.one()
     |> img_to_full_url()
   end
@@ -422,7 +414,7 @@ defmodule ProgRadioApi.Streams do
           ),
         img_alt:
           fragment(
-            "COALESCE(CASE WHEN BOOL_AND(?) is TRUE THEN ? ELSE null END, ?)",
+            "COALESCE(CASE WHEN ? is TRUE THEN ? ELSE null END, ?)",
             s.own_logo,
             s.radio_stream_code_name,
             r.code_name
@@ -475,31 +467,18 @@ defmodule ProgRadioApi.Streams do
     query
   end
 
+  # no group_by: every join of base_query is to-one, and grouping would prevent the sorts
+  # from using the indexes (the whole table was aggregated then sorted to keep a page)
   defp add_sort(query, %{:sort => sort}) when is_binary(sort) do
     case sort do
       "name" ->
         query
         |> order_by([s], asc: s.name)
-        |> group_by([s, r, ss], [
-          s.id,
-          r.code_name,
-          ss.code_name,
-          ss.enabled,
-          s.radio_stream_code_name,
-          s.stream_url
-        ])
 
       "popularity" ->
+        # id as tie-breaker: many streams share a score, without it the paging can repeat or skip some
         query
-        |> order_by([s], desc: s.score)
-        |> group_by([s, r, ss], [
-          s.id,
-          r.code_name,
-          ss.code_name,
-          ss.enabled,
-          s.radio_stream_code_name,
-          s.stream_url
-        ])
+        |> order_by([s], desc: s.score, asc: s.id)
 
       "last" ->
         query
@@ -507,15 +486,7 @@ defmodule ProgRadioApi.Streams do
           [s, r, ss],
           fragment("? < now() at time zone 'utc' + interval '120 second'", s.last_listening_at)
         )
-        |> order_by([s, r, ss], desc: max(s.last_listening_at))
-        |> group_by([s, r, ss], [
-          s.id,
-          r.code_name,
-          ss.code_name,
-          ss.enabled,
-          s.radio_stream_code_name,
-          s.stream_url
-        ])
+        |> order_by([s, r, ss], desc: s.last_listening_at)
 
       "random" ->
         query
@@ -524,38 +495,14 @@ defmodule ProgRadioApi.Streams do
           s.playing_error < @error_random_cutoff and (is_nil(s.popup) or s.popup == false)
         )
         |> order_by(fragment("RANDOM()"))
-        |> group_by([s, r, ss], [
-          s.id,
-          r.code_name,
-          ss.code_name,
-          ss.enabled,
-          s.radio_stream_code_name,
-          s.stream_url
-        ])
 
       _ ->
         query
-        |> group_by([s, r, ss], [
-          s.id,
-          r.code_name,
-          ss.code_name,
-          ss.enabled,
-          s.radio_stream_code_name,
-          s.stream_url
-        ])
     end
   end
 
   defp add_sort(query, _) do
     query
-    |> group_by([s, r, ss], [
-      s.id,
-      r.code_name,
-      ss.code_name,
-      ss.enabled,
-      s.radio_stream_code_name,
-      s.stream_url
-    ])
   end
 
   defp add_text(query, %{:text => text}) when is_binary(text) do
