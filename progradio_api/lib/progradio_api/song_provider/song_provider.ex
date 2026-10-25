@@ -48,6 +48,7 @@ defmodule ProgRadioApi.SongProvider do
   ]
 
   @timeout 5_000
+  @max_body_size 1_048_576
 
   @cache_key_json_prefix "song_provider_json_"
   @cache_ttl_default_seconds 30
@@ -59,17 +60,51 @@ defmodule ProgRadioApi.SongProvider do
   end
 
   # when the status is needed (body not decoded)
+  # the body is collected by us so it can be capped: some urls end on the audio stream itself (an api url
+  # redirected to it for example), which would be downloaded endlessly as the receive timeout is per chunk
   def get_response(url) do
-    Req.get!(
-      url,
-      # connect timeout: the one of the pool
-      ReqUtils.get_song_options_for(url,
+    request =
+      url
+      |> ReqUtils.get_song_options_for(
         retry: false,
         decode_body: false,
         compressed: true,
-        receive_timeout: @timeout
+        receive_timeout: @timeout,
+        into: &collect_body/2
       )
-    )
+      |> Keyword.put(:url, url)
+      # connect timeout: the one of the pool
+      |> Req.new()
+      # the compressed option has no effect with into: header set and body decompressed by us
+      |> Req.Request.put_new_header("accept-encoding", "gzip")
+
+    {request, response} = Req.run!(request)
+
+    case Req.Steps.decompress_body({%{request | into: nil}, response}) do
+      {_request, %Req.Response{} = response} -> response
+      {_request, exception} -> raise exception
+    end
+  end
+
+  # stops on an audio/video stream (not on a playlist) or when the body gets too big,
+  # the (partial) body is then not what the caller expects and handled as such
+  defp collect_body({:data, data}, {request, response}) do
+    response = %{response | body: response.body <> data}
+
+    if audio_stream?(response) or byte_size(response.body) > @max_body_size,
+      do: {:halt, {request, response}},
+      else: {:cont, {request, response}}
+  end
+
+  defp audio_stream?(response) do
+    response
+    |> Req.Response.get_header("content-type")
+    |> Enum.any?(fn content_type ->
+      content_type = String.downcase(content_type)
+
+      String.starts_with?(content_type, ["audio/", "video/"]) and
+        not String.contains?(content_type, ["mpegurl", "scpls"])
+    end)
   end
 
   # todo revisit when Req 0.8 is out w/ native json support

@@ -382,7 +382,6 @@ defmodule ProgRadioApi.SongServer do
         %EventsourceEx.Message{} = push_event,
         %{name: name, song: last_song, db_data: db_data} = state
       ) do
-    IO.puts("#{inspect push_event}")
     {data, song} =
       case apply(state.module, :get_data, [name, push_event, state.last_data]) do
         nil ->
@@ -598,7 +597,7 @@ defmodule ProgRadioApi.SongServer do
               db_song_data
             ])
 
-          data = Task.await(task_data, @task_timeout)
+          data = await_or_kill(task_data)
 
           song =
             case data do
@@ -618,7 +617,7 @@ defmodule ProgRadioApi.SongServer do
                 task_song =
                   Task.Supervisor.async(TaskSupervisor, module, :get_song, [name, data, last_song])
 
-                Task.await(task_song, @task_timeout)
+                await_or_kill(task_song)
                 # apply(module, :get_song, [name, data])
             end
 
@@ -633,6 +632,16 @@ defmodule ProgRadioApi.SongServer do
       end)
 
     task.ref
+  end
+
+  # unlike Task.await, the task is killed on timeout: otherwise it keeps running (and downloading)
+  # after we gave up, as its caller exits normally (the timeout exit is caught)
+  defp await_or_kill(task) do
+    case Task.yield(task, @task_timeout) || Task.shutdown(task, :brutal_kill) do
+      {:ok, result} -> result
+      {:exit, reason} -> exit(reason)
+      nil -> exit({:timeout, task.mfa})
+    end
   end
 
   # song_data of the stream that started the server (the "url:" topic of the old channel has no db data)
