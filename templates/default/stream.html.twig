@@ -342,21 +342,27 @@
                 <div class="d-flex flex-wrap align-items-center">
                   <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
                      :href="encodeURI(`https://www.youtube.com/results?search_query=${song}`)">
-                  <span class="badge badge-inverse badge-link my-0">
-                    <i class="bi bi-youtube"></i><span>&nbsp;&nbsp;YouTube</span>
-                  </span>
-                  </a>&nbsp;
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-youtube"></i><span>&nbsp;&nbsp;YouTube</span>
+                    </span>
+                  </a>
                   <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
                      :href="encodeURI(`https://open.spotify.com/search/${song}`)">
-                  <span class="badge badge-inverse badge-link my-0">
-                    <i class="bi bi-spotify"></i><span>&nbsp;&nbsp;Spotify</span>
-                  </span>
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-spotify"></i><span>&nbsp;&nbsp;Spotify</span>
+                    </span>
                   </a>
                   <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
                      :href="encodeURI(`https://www.deezer.com/search/${song}`)">
-                  <span class="badge badge-inverse badge-link my-0">
-                    <i class="bi bi-boombox-fill"></i><span>&nbsp;&nbsp;Deezer</span>
-                  </span>
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-boombox-fill"></i><span>&nbsp;&nbsp;Deezer</span>
+                    </span>
+                  </a>
+                  <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
+                     :href="encodeURI(`https://music.apple.com/search?term=${song}`)">
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-apple-music"></i><span>&nbsp;&nbsp;iTunes</span>
+                    </span>
                   </a>
                   <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_amazon'|trans }}"
                      :href="encodeURI(`https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords=${song}`)">

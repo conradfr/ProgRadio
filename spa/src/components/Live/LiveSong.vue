@@ -8,7 +8,7 @@
         <strong>{{ $t('message.streaming.playing') }}:</strong>&nbsp;&nbsp;<span class="note-title">♫</span>&nbsp;{{ liveSongTitle }}&nbsp;&nbsp;
         <PlayerSaveSong v-if="userLogged" :stream="stream" />
       </div>
-      <song-links :title="liveSongTitle" />
+      <SongLinks :title="liveSongTitle" />
     </div>
   </div>
 </template>
