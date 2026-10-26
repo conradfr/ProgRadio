@@ -20,7 +20,7 @@
                 <SongLinks :title="song.title" additional-class="d-flex justify-content-center streaming-services" />
               </td>
               <td class="text-end pe-3" style="width: 13%;">
-                <a class="link-no-to-bold" @click="removeSong(index)" :title="$t('message.generic.delete')">
+                <a class="link-no-to-bold" :title="$t('message.generic.delete')" @click="removeSong(index)">
                   <i class="bi bi-trash3-fill link-danger"></i>&nbsp;&nbsp;
 <!--                  <span class="d-none d-sm-inline">-->
 <!--                    {{ $t('message.generic.delete') }}-->

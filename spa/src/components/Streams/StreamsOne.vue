@@ -31,7 +31,15 @@
                 &nbsp;-&nbsp;<a target="_blank" :href="`/${locale}/admin/overloading/${stream.code_name}`">Edit</a>
               </div>
             </div>
-            <h4 class="mb-4">{{ stream.name }}</h4>
+            <h4 :class="{
+              'mb-1': stream.slogan,
+              'mb-4': !stream.slogan
+              }">
+                {{ stream.name }}
+            </h4>
+            <div v-if="stream.slogan" class="text-truncate text-center text-sm-start mb-4">
+              {{ stream.slogan }}
+            </div>
 
             <div class="stream-page-stream mt-3 mb-5">
               <div class="radio-page-streams-one d-flex mb-4

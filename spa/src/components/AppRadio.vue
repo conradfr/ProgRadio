@@ -154,6 +154,29 @@ export default defineComponent({
     const app = document.getElementById('app')!;
     app.classList.remove('no-background');
   },
+  watch: {
+    // radio changes on param change (component reused) and once radios data is loaded
+    radio: {
+      handler(radio: Radio|null) {
+        this.headCleanup?.();
+        this.headCleanup = null;
+
+        if (radio === null) {
+          return;
+        }
+
+        const mainStream = find(radio.streams, (s: Stream) => s.is_main_radio === true);
+
+        this.headCleanup = setHeadTags([
+          ...canonicalHeadTags(mainStream?.language),
+          { tag: 'meta', attrs: { property: 'og:title', content: this.$t('message.radio_page.title', { radio: radio.name }) } },
+          { tag: 'meta', attrs: { property: 'og:url', content: removeUrlAnchor(window.location.href) } },
+          { tag: 'meta', attrs: { property: 'og:image', content: this.picture } },
+        ]);
+      },
+      immediate: true
+    }
+  },
   computed: {
     ...mapStores(useGlobalStore, useScheduleStore),
     ...mapState(useGlobalStore, ['isLoading']),
@@ -236,29 +259,6 @@ export default defineComponent({
       const valueString = this.date.toString();
 
       return valueString.charAt(0).toUpperCase() + valueString.slice(1);
-    }
-  },
-  watch: {
-    // radio changes on param change (component reused) and once radios data is loaded
-    radio: {
-      handler(radio: Radio|null) {
-        this.headCleanup?.();
-        this.headCleanup = null;
-
-        if (radio === null) {
-          return;
-        }
-
-        const mainStream = find(radio.streams, (s: Stream) => s.is_main_radio === true);
-
-        this.headCleanup = setHeadTags([
-          ...canonicalHeadTags(mainStream?.language),
-          { tag: 'meta', attrs: { property: 'og:title', content: this.$t('message.radio_page.title', { radio: radio.name }) } },
-          { tag: 'meta', attrs: { property: 'og:url', content: removeUrlAnchor(window.location.href) } },
-          { tag: 'meta', attrs: { property: 'og:image', content: this.picture } },
-        ]);
-      },
-      immediate: true
     }
   },
   methods: {

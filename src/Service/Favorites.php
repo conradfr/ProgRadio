@@ -33,7 +33,8 @@ class Favorites
     public static function getFavoriteSubRadios(Request $request): array
     {
         $favoritesRaw = $request->cookies->get(self::COOKIE_PREFIX . self::COOKIE_SUBRADIOS, '{}');
-        return json_decode($favoritesRaw, true);
+        $favorites = json_decode($favoritesRaw, true);
+        return is_array($favorites) ? $favorites : [];
     }
 
     public static function setFavoriteSubRadios(

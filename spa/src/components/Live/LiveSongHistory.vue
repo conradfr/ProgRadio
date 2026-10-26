@@ -1,13 +1,13 @@
 <template>
   <div v-if="liveSongHistory && liveSongHistory.length > 0" class="mb-4">
     <div class="mt-3 mb-3 d-flex align-items-center">
-      <h6 class="me-2 mb-0 collapsed cursor-pointer" data-bs-toggle="collapse" href="#historyDetails" aria-expanded="false">
+      <h6 class="me-2 mb-0 collapsed cursor-pointer" data-bs-toggle="collapse" href="#historyDetails"
+        aria-expanded="false">
         {{ $t('message.streaming.history') }}
         <i class="bi bi-caret-right-fill toggle-icon"></i>
       </h6>
-
     </div>
-    <div class="collapse mt-3" id="historyDetails">
+    <div id="historyDetails" class="collapse mt-3">
       <div v-for="entry in liveSongHistory" :key="entry" class="d-flex mb-3">
         <div class="me-3 history-song-cover">
           <img :src="entry[1]">
@@ -44,13 +44,13 @@ export default defineComponent({
   components: {
     SongLinks
   },
+  mixins: [formatDateTimeMixin],
   props: {
     stream: {
       type: Object as PropType<Stream>,
       required: true
     },
   },
-  mixins: [formatDateTimeMixin],
   computed: {
     ...mapState(usePlayerStore, ['songHistory']),
     liveSongHistory() {

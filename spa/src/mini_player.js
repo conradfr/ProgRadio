@@ -25,7 +25,6 @@ import {
   RADIOADDICT_AGENT,
   YOUTUBE_START_TIMEOUT_SECONDS
 } from './config/config.js';
-import StreamsApi from "@/api/StreamsApi.js";
 
 /* eslint-disable no-undef */
 
@@ -364,6 +363,7 @@ createApp({
     this.playerStart = new Date();
 
     if (options && options.is_stream_url_generated) {
+      // eslint-disable-next-line no-param-reassign
       streamingUrl = await getStreamUrl(codeName) || streamingUrl;
     }
 

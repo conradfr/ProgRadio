@@ -24,11 +24,13 @@ export default defineComponent({
     },
     radio: {
       type: Object as PropType<Radio>,
-      required: false
+      required: false,
+      default: null
     },
     show: {
       type: Object as PropType<Show>,
-      required: false
+      required: false,
+      default: null
     },
   },
   computed: {

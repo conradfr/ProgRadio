@@ -51,8 +51,8 @@
       v-if="userLogged && userIsAdmin"
       class="streams-one-admin-info cursor-pointer"
       style="margin-top: 2px"
-      data-bs-html="true"
       v-tooltip
+      data-bs-html="true"
       :title="adminInfoTooltip">
       <i class="bi bi-info-circle"></i>
     </div>

@@ -7,11 +7,11 @@ import {
   COOKIE_STREAM_FAVORITES
 } from '../config/config.js';
 
-const getCookieList = (key) => cookies.get(key, '').split('|').filter(item => item !== '');
+const getCookieList = key => cookies.get(key, '').split('|').filter(item => item !== '');
 
 const setCookieList = (key, list) => cookies.set(key, list.join('|'));
 
-const isFavorite = (streamId) => getCookieList(COOKIE_STREAM_FAVORITES).includes(streamId);
+const isFavorite = streamId => getCookieList(COOKIE_STREAM_FAVORITES).includes(streamId);
 
 /* Logged: the server toggles the stream and its radio.
    Non-logged: the favorites are kept in cookies, the radio attached to the stream (if any) follows the stream. */

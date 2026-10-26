@@ -201,6 +201,7 @@ export const usePlayerStore = defineStore('player', {
         const stream_data = await StreamsApi.getStreamUrl(stream.id);
         if (stream_data && stream_data.stream_url) {
           // new object: the stream may be non-reactive (markRaw list), mutating it wouldn't trigger the getters
+          // eslint-disable-next-line no-param-reassign
           stream = { ...stream, stream_url: stream_data.stream_url };
         }
       }
@@ -398,7 +399,7 @@ export const usePlayerStore = defineStore('player', {
 
       this.setPrevious({ stream: currentStream, radio: currentRadio });
     },
-    setPrevious({ stream, radio = null }: { stream: Stream, radio?: Radio | null }) {
+    setPrevious({ stream, _radio = null }: { stream: Stream, _radio?: Radio | null }) {
       if (!stream) {
         return;
       }

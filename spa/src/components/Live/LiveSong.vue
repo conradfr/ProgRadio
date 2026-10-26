@@ -5,7 +5,8 @@
     </div>
     <div class="d-flex flex-column justify-content-center flex-grow-1">
       <div class="mb-3 d-flex">
-        <strong>{{ $t('message.streaming.playing') }}:</strong>&nbsp;&nbsp;<span class="note-title">♫</span>&nbsp;{{ liveSongTitle }}&nbsp;&nbsp;
+        <strong>{{ $t('message.streaming.playing') }}:</strong>
+        &nbsp;&nbsp;<span class="note-title">♫</span>&nbsp;{{ liveSongTitle }}&nbsp;&nbsp;
         <PlayerSaveSong v-if="userLogged" :stream="stream" />
       </div>
       <SongLinks :title="liveSongTitle" />
@@ -46,16 +47,6 @@ export default defineComponent({
       iTunesCover: null
     }
   },
-  watch: {
-    // when the song has no cover we try to get one from iTunes
-    liveSongTitle: {
-      immediate: true,
-      handler() {
-        this.iTunesCover = null;
-        this.fetchITunesCover();
-      }
-    },
-  },
   mounted() {
     document.addEventListener('visibilitychange', this.visibilityChanged);
 
@@ -73,6 +64,16 @@ export default defineComponent({
         this.leaveSongChannel(this.stream.id);
       }
     }, 1000);
+  },
+  watch: {
+    // when the song has no cover we try to get one from iTunes
+    liveSongTitle: {
+      immediate: true,
+      handler() {
+        this.iTunesCover = null;
+        this.fetchITunesCover();
+      }
+    },
   },
   computed: {
     ...mapState(useUserStore, { userLogged: 'logged' }),
