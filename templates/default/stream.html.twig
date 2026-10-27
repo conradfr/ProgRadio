@@ -41,6 +41,10 @@
   {% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}{% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %} - {{ stream.slogan }}{% endif %}
 {% endmacro %}
 
+{% macro song_title(song) %}
+{{ song.artist }}{% if song.title is defined and song.title is not null %} - {{ song.title }}{% endif %}
+{% endmacro %}
+
 {% macro extractYouTubeIdAndProvideiFrame(url, stream_id) %}
   {% set youtube_id = url | replace({
     'https://youtu.be/': '',
@@ -326,14 +330,64 @@
 
         <!-- LIVE SONG -->
 
-        <div class="stream-block mb-2 mb-sm-3 p-3 rounded border" {% if song_history is not defined or song_history is empty %}v-if="song !== null"{% endif %}  v-scope v-cloak>
-          <div class="d-flex align-items-stretch" v-if="song !== null">
+        <div class="stream-block mb-2 mb-sm-3 p-3 rounded border" {% if (song is not defined or song is empty) and (song_history is not defined or song_history is empty) %}v-if="song !== null"{% endif %} v-scope>
+          {% if (song is defined and song is not empty) %}
+          <div class="d-flex align-items-stretch" v-if="!song">
+            <div class="me-3 live-song-cover text-start">
+              <img class="mx-auto" src="{% if song.cover_url is defined and song.cover_url is not null %}{{ song.cover_url }}{% else %}/img/stream-placeholder.png{% endif %}">
+            </div>
+            <div class="d-flex flex-column justify-content-sm-between justify-content-around pt-2 pb-0">
+              <div class="d-none d-sm-inline-flex align-items-center text-muted gap-2">
+                <span class="live-song-dot"></span> {{ 'page.stream.current_song'|trans }}
+              </div>
+              <div>
+                <span class="note-title">♫</span>&nbsp;{{ self.song_title(song) }}
+              </div>
+              <div class="stream-page-live-search stream-one-tags mt-2 mt-sm-0" v-if="song !== undefined && song !== null && song.trim() !== ''">
+                <div class="d-flex flex-wrap align-items-center">
+                  <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_youtube'|trans }}"
+                     href="https://www.youtube.com/results?search_query={{ self.song_title(song) }}">
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-youtube"></i><span>&nbsp;&nbsp;YouTube</span>
+                    </span>
+                  </a>
+                  <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_spotify'|trans }}"
+                     href="https://open.spotify.com/search/{{ self.song_title(song)|url_encode }}">
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-spotify"></i><span>&nbsp;&nbsp;Spotify</span>
+                    </span>
+                  </a>
+                  <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
+                     href="https://www.deezer.com/search/{{ self.song_title(song)|url_encode }}">
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-boombox-fill"></i><span>&nbsp;&nbsp;Deezer</span>
+                    </span>
+                  </a>
+                  <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_itunes'|trans }}"
+                     href="https://music.apple.com/search?term={{ self.song_title(song)|url_encode }}">
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-apple-music"></i><span>&nbsp;&nbsp;iTunes</span>
+                    </span>
+                  </a>
+                  <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_amazon'|trans }}"
+                     href="https://www.amazon.com/gp/search?ie=UTF8&linkCode=ur2&index=digital-music&keywords={{ self.song_title(song)|url_encode }}">
+                    <span class="badge badge-inverse badge-link my-0">
+                      <i class="bi bi-amazon"></i><span>&nbsp;&nbsp;Amazon</span>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="d-flex align-items-stretch" v-if="song !== null" v-cloak>
             <div  class="me-3 live-song-cover text-start">
               <img class="mx-auto" :src="cover || '/img/stream-placeholder.png'">
             </div>
-            <div class="d-flex flex-column justify-content-between pt-2 pb-0">
+            <div class="d-flex flex-column justify-content-sm-between justify-content-around pt-2 pb-0">
               <div class="d-none d-sm-inline-flex align-items-center text-muted gap-2">
-                <span class="live-song-dot"></span> Titre en cours
+                <span class="live-song-dot"></span> {{ 'page.stream.current_song'|trans }}
               </div>
               <div>
                 {% verbatim %}<span class="note-title">♫</span>&nbsp;{{ song }}{% endverbatim %}
@@ -358,7 +412,7 @@
                       <i class="bi bi-boombox-fill"></i><span>&nbsp;&nbsp;Deezer</span>
                     </span>
                   </a>
-                  <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_deezer'|trans }}"
+                  <a class="link-no-to-bold" target="_blank" title="{{ 'page.stream.find_itunes'|trans }}"
                      :href="encodeURI(`https://music.apple.com/search?term=${song}`)">
                     <span class="badge badge-inverse badge-link my-0">
                       <i class="bi bi-apple-music"></i><span>&nbsp;&nbsp;iTunes</span>

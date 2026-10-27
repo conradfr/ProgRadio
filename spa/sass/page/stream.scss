@@ -129,6 +129,8 @@
 }
 
 .live-song-cover {
+  min-height: 7.692rem;
+
   min-width: 5.769rem;
   max-width: 8.692rem;
 
@@ -137,6 +139,7 @@
   }
 
   @include media-breakpoint-down(sm) {
+    min-height: 5.769rem;
     width: 6.769rem;
 
     img {
@@ -151,8 +154,9 @@
   }
 }
 
+/*
 .mobile-ads {
   @include media-breakpoint-down(sm) {
     min-height: 280px;
   }
-}
+} */

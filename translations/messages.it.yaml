@@ -174,6 +174,8 @@ page:
         find_deezer: Cerca su Deezer
         find_spotify: Cerca su Spotify
         find_youtube: Cerca su Youtube
+        find_itunes: Cerca su iTunes
+        current_song: Titolo in corso
         history: 'Ultimi titoli'
         about: 'Informazioni sulla radio'
         more_information: 'Maggiori informazioni'

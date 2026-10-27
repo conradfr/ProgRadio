@@ -174,6 +174,8 @@ page:
         find_deezer: Find on Deezer
         find_spotify: Find on Spotify
         find_youtube: Find on Youtube
+        find_itunes: Find on iTunes
+        current_song: Current song
         history: 'Last songs'
         about: About the radio
         more_information: More information

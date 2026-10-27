@@ -174,6 +174,8 @@ page:
         find_deezer: Rechercher sur Deezer
         find_spotify: Rechercher sur Spotify
         find_youtube: Rechercher sur Youtube
+        find_itunes: Rechercher sur iTunes
+        current_song: Titre en cours
         history: 'Derniers titres'
         about: À propos de la radio
         schedule: Programmes

@@ -164,6 +164,8 @@ page:
         find_deezer: Zoeken op Deezer
         find_spotify: Zoeken op Spotify
         find_youtube: Zoeken op YouTube
+        find_itunes: Zoeken op iTunes
+        current_song: Huidig nummer
         history: 'Laatste nummers'
         about: 'Over de radiozender'
         more_information: 'Meer informatie'

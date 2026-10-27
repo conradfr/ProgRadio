@@ -174,6 +174,8 @@ page:
         find_deezer: Keresés a Deezeren
         find_spotify: Keresés a Spotifyon
         find_youtube: Keresés a YouTube-on
+        find_itunes: Keresés az iTunes-ban
+        current_song: Aktuális dal
         history: 'Utolsó dalok'
         about: 'A rádióról'
         more_information: 'További információk'
