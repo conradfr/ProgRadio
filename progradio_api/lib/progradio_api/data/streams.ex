@@ -261,7 +261,7 @@ defmodule ProgRadioApi.Streams do
 
   def reset_streaming_error(stream_id) when is_binary(stream_id) do
     stream_data =
-      if value = Cache.get(@cache_prefix_stream <> "error_" <> stream_id) do
+      if value = Cache.get!(@cache_prefix_stream <> "error_" <> stream_id) do
         value
       else
         stream_db = Repo.get(Stream, stream_id)

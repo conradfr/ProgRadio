@@ -97,7 +97,7 @@ defmodule ProgRadioApi.SongManager do
 
   @spec persistent_topic?(String.t()) :: boolean()
   def persistent_topic?(song_topic) do
-    case Cache.get(@persistent_topics_cache_key) do
+    case Cache.get!(@persistent_topics_cache_key) do
       %MapSet{} = topics -> MapSet.member?(topics, song_topic)
       _ -> false
     end

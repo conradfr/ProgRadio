@@ -1,6 +1,6 @@
 # --------------- BUILD ---------------
 
-FROM hexpm/elixir:1.20.4-erlang-29.1.1-ubuntu-jammy-20260810 AS builder
+FROM hexpm/elixir:1.20.4-erlang-29.1.2-ubuntu-jammy-20261020 AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive
 

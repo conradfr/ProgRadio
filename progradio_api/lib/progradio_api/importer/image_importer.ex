@@ -195,15 +195,7 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   end
 
   def list_stream_files(path) do
-    case Cache.has_key?(@ls_cache_key) do
-      true ->
-        Cache.get(@ls_cache_key)
-
-      false ->
-        files = File.ls!(path)
-        Cache.put(@ls_cache_key, files, ttl: @ls_cache_ttl)
-        files
-    end
+    Cache.get_or_store!(@ls_cache_key, fn -> File.ls!(path) end, ttl: @ls_cache_ttl)
   end
 
   defp pick_more_recent_image(filenames) when length(filenames) == 0, do: nil

@@ -8,19 +8,15 @@ defmodule ProgRadioApiWeb.ConfigController do
 
   def index(conn, _params) do
     server =
-      case Cache.get(@cache_key_server) do
-        nil ->
-          server =
-            ProgRadioApi.Importer.StreamsImporter.RadioBrowser.get_one_random_server()
-            |> Kernel.to_string()
-            |> then(fn x -> "https://" <> x end)
-
-          Cache.put(@cache_key_server, server, ttl: @cache_ttl_server)
-          server
-
-        server ->
-          server
-      end
+      Cache.get_or_store!(
+        @cache_key_server,
+        fn ->
+          ProgRadioApi.Importer.StreamsImporter.RadioBrowser.get_one_random_server()
+          |> Kernel.to_string()
+          |> then(fn x -> "https://" <> x end)
+        end,
+        ttl: @cache_ttl_server
+      )
 
     streams_proxy_url = Application.get_env(:progradio_api, :streams_proxy_url)
     streams_proxy_key = Redix.command!(:redix, ["LINDEX", "stream_proxy_keys", 0])

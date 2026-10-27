@@ -86,7 +86,8 @@ defmodule ProgRadioApiWeb.Telemetry do
       last_value("prog_radio_api.cache.stats.writes", tags: [:cache]),
       last_value("prog_radio_api.cache.stats.updates", tags: [:cache]),
       last_value("prog_radio_api.cache.stats.evictions", tags: [:cache]),
-      last_value("prog_radio_api.cache.stats.expirations", tags: [:cache])
+      last_value("prog_radio_api.cache.stats.expirations", tags: [:cache]),
+      last_value("prog_radio_api.cache.stats.deletions", tags: [:cache])
     ]
   end
 

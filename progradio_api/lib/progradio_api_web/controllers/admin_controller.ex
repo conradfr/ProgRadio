@@ -2,7 +2,7 @@ defmodule ProgRadioApiWeb.AdminController do
   import ProgRadioApiWeb.Utils.Controller, only: [send_error: 1]
   use ProgRadioApiWeb, :controller
   import Canada, only: [can?: 2]
-  import Ex2ms
+  use Nebulex.Adapters.Local.QueryHelper
 
   alias ProgRadioApi.Repo
   alias ProgRadioApi.{Cache, Search}
@@ -13,18 +13,12 @@ defmodule ProgRadioApiWeb.AdminController do
     with api_key when api_key != nil <- Map.get(conn.private, :api_key),
          true <- can?(api_key, manage(:admin)) do
       # TODO this is the first version / POC, move to own module later
-      spec =
-        fun do
-          {_, {"stream_", key}, value, _, _} -> {{"stream_", key}, value}
-        end
+      # select defaults to true, which is what delete_all needs to remove the entry
+      spec = match_spec(key: {"stream_", _})
+      spec_count = match_spec(key: {"stream_count_", _})
 
-      spec_count =
-        fun do
-          {_, {"stream_count_", key}, value, _, _} -> {{"stream_count_", key}, value}
-        end
-
-      Cache.delete_all(spec)
-      Cache.delete_all(spec_count)
+      Cache.delete_all!(query: spec)
+      Cache.delete_all!(query: spec_count)
 
       render(conn, "clear.json")
     else

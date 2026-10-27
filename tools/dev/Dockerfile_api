@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.20.4-erlang-29.1.1-ubuntu-jammy-20260810
+FROM hexpm/elixir:1.20.4-erlang-29.1.2-ubuntu-jammy-20261020
 #FROM elixir:latest
 
 ARG TZ=Europe/Paris

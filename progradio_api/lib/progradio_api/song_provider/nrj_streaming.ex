@@ -134,45 +134,35 @@ defmodule ProgRadioApi.SongProvider.Nrjstreaming do
   end
 
   defp get_onair(url, radio_id) do
-    case Cache.has_key?(@cache_key_onair_prefix <> radio_id) do
-      true ->
-        Cache.get(@cache_key_onair_prefix <> radio_id)
-
-      false ->
-        data =
-          url
-          |> SongProvider.get_json()
-
-        Cache.put(@cache_key_onair_prefix <> radio_id, data, ttl: @cache_key_onair_ttl)
-        data
-    end
+    Cache.get_or_store!(
+      @cache_key_onair_prefix <> radio_id,
+      fn -> SongProvider.get_json(url) end,
+      ttl: @cache_key_onair_ttl
+    )
   end
 
   defp get_stream_number(id, stream_url) do
-    case Cache.has_key?(@cache_key_stream_prefix <> id) do
-      true ->
-        Cache.get(@cache_key_stream_prefix <> id)
+    # nil (stream not found) is cached too
+    Cache.get_or_store!(
+      @cache_key_stream_prefix <> id,
+      fn ->
+        Enum.find_value(@urls, fn {radio_id, url} ->
+          case get_onair(url, radio_id) do
+            list when is_list(list) ->
+              Enum.find_value(list, fn entry ->
+                if Map.get(entry, "url_128k_mp3") == stream_url or
+                     Map.get(entry, "url_64k_aac") == stream_url or
+                     Map.get(entry, "url_hd_aac") == stream_url do
+                  {radio_id, entry["id"]}
+                end
+              end)
 
-      false ->
-        value =
-          Enum.find_value(@urls, fn {radio_id, url} ->
-            case get_onair(url, radio_id) do
-              list when is_list(list) ->
-                Enum.find_value(list, fn entry ->
-                  if Map.get(entry, "url_128k_mp3") == stream_url or
-                       Map.get(entry, "url_64k_aac") == stream_url or
-                       Map.get(entry, "url_hd_aac") == stream_url do
-                    {radio_id, entry["id"]}
-                  end
-                end)
-
-              _ ->
-                nil
-            end
-          end)
-
-        Cache.put(@cache_key_stream_prefix <> id, value, ttl: @cache_key_stream_ttl)
-        value
-    end
+            _ ->
+              nil
+          end
+        end)
+      end,
+      ttl: @cache_key_stream_ttl
+    )
   end
 end

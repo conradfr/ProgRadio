@@ -117,20 +117,26 @@ defmodule ProgRadioApi.SongProvider do
   def get_json_cached(url, ttl_seconds \\ @cache_ttl_default_seconds) do
     cache_key = @cache_key_json_prefix <> url
 
-    case Cache.get(cache_key) do
+    case Cache.get!(cache_key) do
       nil ->
-        Cache.transaction([keys: [cache_key]], fn ->
-          # another process may have fetched it while we were waiting for the lock
-          case Cache.get(cache_key) do
-            nil ->
-              data = get_json(url)
-              Cache.put(cache_key, data, ttl: :timer.seconds(ttl_seconds))
-              data
+        {:ok, data} =
+          Cache.transaction(
+            fn ->
+              # another process may have fetched it while we were waiting for the lock
+              case Cache.get!(cache_key) do
+                nil ->
+                  data = get_json(url)
+                  Cache.put(cache_key, data, ttl: :timer.seconds(ttl_seconds))
+                  data
 
-            data ->
-              data
-          end
-        end)
+                data ->
+                  data
+              end
+            end,
+            keys: [cache_key]
+          )
+
+        data
 
       data ->
         data

@@ -142,10 +142,8 @@ config :progradio_api, ProgRadioApi.Cache,
   max_size: 1_000_000,
   # Max 2 GB of memory
   allocated_memory: 4_000_000_000,
-  # GC min timeout: 10 sec
-  gc_cleanup_min_timeout: :timer.seconds(30),
-  # GC min timeout: 10 min
-  gc_cleanup_max_timeout: :timer.minutes(10)
+  # interval of the size and memory checks: 30 sec
+  gc_memory_check_interval: :timer.seconds(30)
 
 config :progradio_api, Oban,
   engine: Oban.Engines.Basic,

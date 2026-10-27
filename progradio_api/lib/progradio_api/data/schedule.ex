@@ -65,49 +65,36 @@ defmodule ProgRadioApi.Schedule do
 
   @spec schedule_of_radios_and_day(list(), String.t(), boolean) :: map()
   defp schedule_of_radios_and_day(radio_code_names, day, now) do
-    {radio_code_names_cached, radio_code_names_not_cached} =
-      radio_code_names_cached_or_not_for_day(radio_code_names, day, now)
+    # cache key => radio code name
+    cache_keys = Map.new(radio_code_names, &{get_cache_key(&1, day, now), &1})
 
+    # one batch lookup, only returns the keys present in the cache
     cached =
-      radio_code_names_cached
-      |> Enum.map(fn e ->
-        data = Cache.get(get_cache_key(e, day, now))
-        {e, data}
-      end)
-      |> Enum.into(%{})
-
-    cached_nil =
-      cached
-      |> Enum.filter(fn {_, e} ->
-        e == nil
-      end)
-      |> Enum.map(fn {code_name, _} ->
-        code_name
-      end)
+      [in: Map.keys(cache_keys)]
+      |> Cache.get_all!()
+      |> Enum.reject(fn {_key, data} -> data == nil end)
+      |> Map.new(fn {key, data} -> {Map.fetch!(cache_keys, key), data} end)
 
     not_cached =
-      case Kernel.length(radio_code_names_not_cached ++ cached_nil) do
-        0 ->
+      case Enum.reject(radio_code_names, &Map.has_key?(cached, &1)) do
+        [] ->
           %{}
 
-        _ ->
+        radio_code_names_not_cached ->
           result =
             day
             |> query(now)
-            |> where([se, r, sc], r.code_name in ^(radio_code_names_not_cached ++ cached_nil))
+            |> where([se, r, sc], r.code_name in ^radio_code_names_not_cached)
             |> Repo.all()
             |> format(day, now)
 
-          result
-          |> Enum.each(fn {k, e} when is_nil(e) == false and is_map(e) and map_size(e) > 0 ->
-            #            if now == false do
-            Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
-            #            end
+          Enum.each(result, fn
+            {k, e} when is_map(e) and map_size(e) > 0 ->
+              Cache.put(get_cache_key(k, day, now), e, ttl: get_cache_ttl(now))
 
-            fn {_k, _e} ->
+            # don't cache empty schedules
+            _ ->
               nil
-              # don't cache
-            end
           end)
 
           result
@@ -362,19 +349,6 @@ defmodule ProgRadioApi.Schedule do
       sections: [],
       unknown: true
     }
-  end
-
-  @spec radio_code_names_cached_or_not_for_day(list(), String.t(), boolean) :: tuple()
-  defp radio_code_names_cached_or_not_for_day(radio_code_names, day, now) do
-    cache_keys = Cache.all(nil, return: :key)
-
-    code_names_cached =
-      radio_code_names
-      |> Enum.filter(fn e ->
-        Enum.member?(cache_keys, get_cache_key(e, day, now))
-      end)
-
-    {code_names_cached, radio_code_names -- code_names_cached}
   end
 
   @spec radio_code_names_of_collection(String.t()) :: list()
