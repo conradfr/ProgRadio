@@ -4,10 +4,27 @@ defmodule ProgRadioApi.SongProvider.Tsfjazz do
 
   @behaviour ProgRadioApi.SongProvider
 
-  @impl true
-  def has_custom_refresh(_name), do: false
+  # delay added to the end of the song so the api has the next one
+  @refresh_delay_ms 2000
+  @refresh_min_ms 5000
 
   @impl true
+  def has_custom_refresh(_name), do: true
+
+  @impl true
+  def get_refresh(name, %{"start_time" => start_time, "duration" => duration}, default_refresh)
+      when is_integer(start_time) and is_integer(duration) and duration > 0 do
+    next_refresh = (start_time + duration) * 1000 - SongProvider.now_unix(:millisecond)
+
+    if next_refresh > 0 do
+      Logger.debug("Data provider - #{name} - next refresh: #{trunc(next_refresh / 1000)}s")
+      max(next_refresh + @refresh_delay_ms, @refresh_min_ms)
+    else
+      # song should be over, the api may lag behind
+      default_refresh
+    end
+  end
+
   def get_refresh(_name, _data, default_refresh), do: default_refresh
 
   @impl true
