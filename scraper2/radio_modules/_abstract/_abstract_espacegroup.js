@@ -1,7 +1,7 @@
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
+import cache from '../../lib/cache.js';
 
 const dayFr = {
   'lundi': 1,
@@ -14,22 +14,31 @@ const dayFr = {
 };
 
 let scraperConfig = {};
-let scrapedData = [];
+let scrapedData = {};
+
+// the sub radios of a radio are scraped concurrently, each one needs its own data
+// (sub radio code names already contain the radio prefix)
+const getKey = (name, subRadio) => subRadio || name;
+
+// through the fetcher, the cache makes the sub radios sharing an url (and the descriptions) a single request
+const fetchHtml = async (url) => {
+  const realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(url)}`;
+
+  const html = await cache.fetchUrl(realUrl, undefined, {
+    headers: {
+      'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
+    }
+  });
+
+  return cheerio.load(html);
+};
 
 const getDescription = async (url) => {
   try {
     logger.log('info', `fetching description ${url}`);
     let description = '';
 
-    const realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(url)}`
-
-    const response = await axios.get(realUrl, {
-      headers: {
-        'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
-      }
-    });
-
-    const $ = cheerio.load(response.data);
+    const $ = await fetchHtml(url);
     const data = $.extract({
       description: '.main-article p',
     });
@@ -45,8 +54,8 @@ const getDescription = async (url) => {
   }
 };
 
-const format = async (dateObj, name) => {
-  const cleanedData = await scrapedData[name].reduce(async function(prevP, entry){
+const format = async (dateObj, key) => {
+  const cleanedData = await scrapedData[key].reduce(async function(prevP, entry){
     const prev = await prevP;
     if (!entry.datetime_raw || !entry.title) {
       return prev;
@@ -133,21 +142,13 @@ const format = async (dateObj, name) => {
   return Promise.resolve(cleanedData);
 };
 
-const fetch = async (dateObj, name, url) => {
+const fetch = async (dateObj, key, url) => {
   dateObj.locale('fr');
 
-  logger.log('info', `fetching ${url}`);
+  logger.log('info', `fetching ${url} (${key})`);
 
   try {
-    let realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(url)}`
-
-    const response = await axios.get(realUrl, {
-      headers: {
-        'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
-      }
-    });
-
-    const $ = cheerio.load(response.data);
+    const $ = await fetchHtml(url);
     const data = $.extract({
       shows: [
         {
@@ -170,7 +171,7 @@ const fetch = async (dateObj, name, url) => {
     });
 
     if (data && data.shows) {
-      scrapedData[name] = data.shows;
+      scrapedData[key] = data.shows;
     }
   } catch (error) {
     logger.log('error fetching schedule');
@@ -179,16 +180,19 @@ const fetch = async (dateObj, name, url) => {
   return Promise.resolve(true);
 };
 
-const fetchAll = (dateObj, name, url) => {
-  return fetch(dateObj, name, url);
+const fetchAll = (dateObj, key, url) => {
+  return fetch(dateObj, key, url);
 };
 
-const getScrap = (dateObj, name, url, config) => {
+// subRadio is optional, the url can differ by sub radio
+const getScrap = (dateObj, name, url, config, subRadio = null) => {
+  const key = getKey(name, subRadio);
+
   scraperConfig = config;
-  scrapedData[name] = [];
-  return fetchAll(dateObj, name, url)
+  scrapedData[key] = [];
+  return fetchAll(dateObj, key, url)
     .then(async () => {
-      return await format(dateObj, name);
+      return await format(dateObj, key);
     });
 };
 

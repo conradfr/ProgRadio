@@ -40,12 +40,14 @@ const sweep = () => {
  * The promise is cached rather than the resolved body: concurrent callers then
  * await the same in-flight request instead of each firing their own, which is
  * where most of the duplication happens as radios are scraped in parallel.
+ *
+ * `options` are passed to axios (headers etc.), they are not part of the cache key.
  */
-const fetchUrl = async (url, ttl = defaultTtl) => {
+const fetchUrl = async (url, ttl = defaultTtl, options = {}) => {
   const seconds = getTtl(ttl);
 
   if (seconds <= 0) {
-    const response = await axios.get(url);
+    const response = await axios.get(url, options);
     return response.data;
   }
 
@@ -57,7 +59,7 @@ const fetchUrl = async (url, ttl = defaultTtl) => {
   }
 
   const entry = {
-    promise: axios.get(url).then((response) => response.data),
+    promise: axios.get(url, options).then((response) => response.data),
     expiresAt: Date.now() + (seconds * 1000)
   };
 
