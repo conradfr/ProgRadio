@@ -12,7 +12,7 @@
       <div v-if="radio" class="col-sm-7 col-12 mb-3">
         <div class="row">
           <div class="col-md-6 col-12 text-center text-sm-start">
-            <h4>{{ capitalizedDate }}</h4>
+            <h4>{{ radio.name }} - {{ capitalizedDate }}</h4>
           </div>
         </div>
 
