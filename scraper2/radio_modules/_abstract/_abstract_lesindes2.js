@@ -6,6 +6,39 @@ import cache from '../../lib/cache.js';
 
 let scrapedData = {};
 
+// "Avec Marie & Roberto", "avec Léo, Jade et Arthur", "AVEC OLIVIER LEROUX", "9H30 - 13H avec CYRILLE"
+// but not "Avec le reveil de Canal fm c'est ..." or "avec Flash Info chaque début d'heure"
+const regexpChapoHosts = /^(?:[0-9]{1,2}\s*[hH:]\s*[0-9]{0,2}\s*[-/]\s*[0-9]{1,2}\s*[hH:]\s*[0-9]{0,2}\s+)?avec\s+(.+?)[\s!.]*$/i;
+const hostConnectors = ['et', 'le', 'la', 'les', 'de', 'du', 'des'];
+
+const getHostsFromChapo = (chapo) => {
+  const match = (chapo || '').trim().match(regexpChapoHosts);
+
+  if (match === null) {
+    return null;
+  }
+
+  const words = match[1].replace(/[,&]/g, ' ').split(/\s+/).filter(word => word !== '');
+  const isName = word => /^(?:[ld]['’])?[\p{Lu}0-9]/u.test(word);
+  const names = words.filter(word => !hostConnectors.includes(word));
+
+  // a sentence, not a list of names
+  if (names.length === 0 || !names.every(isName)) {
+    return null;
+  }
+
+  // all caps: "OLIVIER LEROUX" -> "Olivier Leroux"
+  if (names.every(word => word === word.toUpperCase())) {
+    return match[1].split(' ').map(word => hostConnectors.includes(word.toLowerCase())
+      ? word.toLowerCase()
+      : word.charAt(0) + word.substring(1).toLowerCase()
+    ).join(' ');
+  }
+
+  // "la Team Toulouse FM" -> "La Team Toulouse FM"
+  return match[1].charAt(0).toUpperCase() + match[1].substring(1);
+};
+
 const fetchHtml = async (url) => {
   const html = await cache.fetchUrl(url);
   return cheerio.load(html);
@@ -101,7 +134,9 @@ const format = async (dateObj, name, description_prefix, hosts) => {
       endDateTime.add(1, 'days');
     }
 
-    let description = curr.chapo || '';
+    // the chapo is often only the hosts
+    const chapoHosts = getHostsFromChapo(curr.chapo);
+    let description = chapoHosts === null ? (curr.chapo || '') : '';
 
     let descriptionSupp = await fetchDesc(`${description_prefix}${curr.slug}`);
 
@@ -144,8 +179,8 @@ const format = async (dateObj, name, description_prefix, hosts) => {
     if (hosts !== false) {
       if (curr.animatorsNames !== undefined && curr.animatorsNames !== null && curr.animatorsNames.length > 0) {
         host = curr.animatorsNames.join(', ');
-      } else if (curr.chapo !== undefined && curr.chapo !== null && curr.chapo !== '' && curr.chapo !== description.substring(0, curr.chapo.length)) {
-        host = curr.chapo.substring(5);
+      } else if (chapoHosts !== null) {
+        host = chapoHosts;
       }
     }
 
@@ -153,7 +188,7 @@ const format = async (dateObj, name, description_prefix, hosts) => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': curr.title,
-      'description': description || null,
+      'description': description.trim() || null,
       'img': img,
       'host': host,
       'sections': []
