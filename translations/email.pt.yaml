@@ -22,7 +22,7 @@ email_change:
     subject: '%name% - Atualização por e-mail'
     header: Atualização por e-mail
     text_1: Uma solicitação para atualizar o e-mail de uma conta para %new_email% foi feita em %url%.
-    text_2:
+    text_2: Portanto, você não pode mais entrar com o identificador %old_email%.
     text_3: "Se você não iniciou, você pode cancelar esta solicitação clicando aqui (válido por 24h): %link%"
     text_4: Você também deve atualizar sua senha.
 

@@ -22,7 +22,7 @@ email_change:
     subject: '%name% - Aktualizacja e-mail'
     header: Aktualizacja e-mail
     text_1: Żądanie aktualizacji wiadomości e-mail konta do %new_email% zostało złożone na %url%.
-    tekst_2:
+    text_2: W związku z tym nie możesz już logować się za pomocą identyfikatora %old_email%.
     text_3: "Jeśli go nie zainicjowałeś, możesz anulować to żądanie klikając tutaj (ważne przez 24h): %link%"
     text_4: Powinieneś także zaktualizować swoje hasło.
 

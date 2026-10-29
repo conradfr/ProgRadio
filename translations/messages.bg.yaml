@@ -21,6 +21,8 @@ global:
         ru: Смотреть на русском
         he: הצג בעברית
         bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
 
 menu:
     account: Моят профил
@@ -79,6 +81,8 @@ menu:
         ua: Украйна
         bg: България
         il: Израел
+        dk: Дания
+        se: Швеция
 
     songs: Запазени песни
 
@@ -366,6 +370,8 @@ footer:
     ru: Русский
     he: עברית
     bg: Български
+    da: Dansk
+    sv: Svenska
 
 legal: 'Правна информация'
 

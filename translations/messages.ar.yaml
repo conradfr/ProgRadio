@@ -21,6 +21,8 @@ global:
         ru: Смотреть на русском
         he: הצג בעברית
         bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
 
 menu:
     account: حسابي
@@ -79,6 +81,8 @@ menu:
         ua: أوكرانيا
         bg: بلغاريا
         il: إسرائيل
+        dk: الدنمارك
+        se: السويد
 
     songs: العناوين المحفوظة
 
@@ -188,6 +192,7 @@ page:
         current_song: الأغنية الحالية
         history: 'آخر الأغاني'
         about: 'حول الإذاعة'
+        schedule: 'البرامج'
         more_information: 'مزيد من المعلومات'
         listeners: المستمعون
         play: 'استمع'
@@ -198,7 +203,7 @@ page:
         tags: العلامات
         share: مشاركة الراديو
         title: 'استمع إلى %radio% مباشرة'
-        title_country: '%radio% - %country% - الاستماع مباشرة'
+        title_country: '%radio% - استمع مباشرة ومجاناً'
         website: الموقع الإلكتروني
         banned: هذا الراديو محظور.
         closed: هذا الراديو مغلق.
@@ -366,6 +371,8 @@ footer:
     ru: Русский
     he: עברית
     bg: Български
+    da: Dansk
+    sv: Svenska
 
 legal: 'المعلومات القانونية'
 

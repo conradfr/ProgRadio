@@ -84,6 +84,8 @@ class DefaultController extends AbstractBaseController
                 'ru' => '/{_locale}/слушать-{codeName}-{subRadioCodeName}/программа-дня/{date?}',
                 'he' => '/{_locale}/האזנה-{codeName}-{subRadioCodeName}/תוכניות-היום/{date?}',
                 'bg' => '/{_locale}/слушай-{codeName}-{subRadioCodeName}/програма-за-деня/{date?}',
+                'da' => '/{_locale}/lyt-{codeName}-{subRadioCodeName}/dagens-program/{date?}',
+                'sv' => '/{_locale}/lyssna-{codeName}-{subRadioCodeName}/dagens-program/{date?}',
             ],
             name: 'radio_subradio',
             defaults: [
@@ -231,6 +233,8 @@ class DefaultController extends AbstractBaseController
                 'ru' => '/{_locale}/слушать-{codeName}-{subRadioCodeName}/{date?}',
                 'he' => '/{_locale}/האזנה-{codeName}-{subRadioCodeName}/{date?}',
                 'bg' => '/{_locale}/слушай-{codeName}-{subRadioCodeName}/{date?}',
+                'da' => '/{_locale}/lyt-{codeName}-{subRadioCodeName}/{date?}',
+                'sv' => '/{_locale}/lyssna-{codeName}-{subRadioCodeName}/{date?}',
             ],
             name: 'radio_subradio_legacy',
         )
@@ -301,6 +305,8 @@ class DefaultController extends AbstractBaseController
                 'ru' => '/{_locale}/слушать-{codeName}/программа-дня/{date?}',
                 'he' => '/{_locale}/האזנה-{codeName}/תוכניות-היום/{date?}',
                 'bg' => '/{_locale}/слушай-{codeName}/програма-за-деня/{date?}',
+                'da' => '/{_locale}/lyt-{codeName}/dagens-program/{date?}',
+                'sv' => '/{_locale}/lyssna-{codeName}/dagens-program/{date?}',
             ],
             name: 'radio',
             defaults: [
@@ -393,6 +399,8 @@ class DefaultController extends AbstractBaseController
                 'ru' => '/{_locale}/слушать-{codeName}/{date?}',
                 'he' => '/{_locale}/האזנה-{codeName}/{date?}',
                 'bg' => '/{_locale}/слушай-{codeName}/{date?}',
+                'da' => '/{_locale}/lyt-{codeName}/{date?}',
+                'sv' => '/{_locale}/lyssna-{codeName}/{date?}',
             ],
             name: 'radio_legacy',
         )
@@ -460,6 +468,8 @@ class DefaultController extends AbstractBaseController
                 'ru' => '/{_locale}/stream-{shortId}/null',
                 'he' => '/{_locale}/stream-{shortId}/null',
                 'bg' => '/{_locale}/stream-{shortId}/null',
+                'da' => '/{_locale}/stream-{shortId}/null',
+                'sv' => '/{_locale}/stream-{shortId}/null',
             ],
             name: 'streams_one_short_weird_404',
         )
@@ -494,6 +504,8 @@ class DefaultController extends AbstractBaseController
                 'ru' => '/{_locale}/stream-{shortId}/слушать-{codename}',
                 'he' => '/{_locale}/stream-{shortId}/האזנה-{codename}',
                 'bg' => '/{_locale}/stream-{shortId}/слушай-{codename}',
+                'da' => '/{_locale}/stream-{shortId}/lyt-{codename}',
+                'sv' => '/{_locale}/stream-{shortId}/lyssna-{codename}',
             ],
             name: 'streams_one_short',
             defaults: [
@@ -638,6 +650,8 @@ class DefaultController extends AbstractBaseController
                 'ru' => '/{_locale}/stream/{id}/слушать-{codename}',
                 'he' => '/{_locale}/stream/{id}/האזנה-{codename}',
                 'bg' => '/{_locale}/stream/{id}/слушай-{codename}',
+                'da' => '/{_locale}/stream/{id}/lyt-{codename}',
+                'sv' => '/{_locale}/stream/{id}/lyssna-{codename}',
             ],
             name: 'streams_one',
             defaults: [
@@ -680,7 +694,7 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/{_locale}/top/{countryCode}',
         name: 'streams_top',
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg'],
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg|da|sv'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'daily'
@@ -724,7 +738,7 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/{_locale}/last/{countryCode}',
         name: 'streams_last',
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg'],
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg|da|sv'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'daily'
@@ -768,7 +782,7 @@ class DefaultController extends AbstractBaseController
 
     #[Route('/{_locale}/top-genre/{genre}',
         name: 'streams_top_genre',
-        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg', 'genre' => '.+'],
+        requirements: ['_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg|da|sv', 'genre' => '.+'],
         defaults: [
             'priority' => '0.5',
             'changefreq' => 'daily'
@@ -1041,7 +1055,7 @@ class DefaultController extends AbstractBaseController
         Route('/locale-switch/to/{locale}',
             name: 'locale_switch',
             requirements: [
-                'locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg'
+                'locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg|da|sv'
             ]
         )
     ]
@@ -1111,7 +1125,7 @@ class DefaultController extends AbstractBaseController
             name: 'index_radio_addict_locale',
             requirements: [
                 'subdomain' => 'www|local',
-                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg'
+                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg|da|sv'
             ],
             defaults: [ 'subdomain' => 'www'],
             host: '{subdomain}.radio-addict.com',
@@ -1131,7 +1145,7 @@ class DefaultController extends AbstractBaseController
         Route('/{_locale}/',
             name: 'app',
             requirements: [
-                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg'
+                '_locale' => 'en|fr|es|de|pt|it|pl|el|ar|ro|hu|tr|nl|ru|he|bg|da|sv'
             ],
             defaults: [
                 'priority' => '1.0',

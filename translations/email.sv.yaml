@@ -1,0 +1,40 @@
+general:
+    hello: Hej,
+    sponsor: "<a href=\"https://stream-checker.radio-addict.com\">Stream Checker</a>: övervaka dina streams och få en varning direkt vid avbrott."
+
+signature:
+    regards: Med vänliga hälsningar,
+
+signup:
+    subject: '%name% - Registrering'
+    welcome: Välkommen!
+    text_1: Du är nu registrerad på %link%
+    text2: Om du hade favoritradiokanaler eller -streams är de nu sparade i ditt konto.
+
+reset:
+    subject: '%name% - Återställning av lösenord'
+    header: Återställning av lösenord
+    text_1: En begäran om att återställa lösenordet har gjorts på %url%
+    text_2: "Klicka på den här länken (giltig i 24 timmar) för att uppdatera ditt lösenord: %link%"
+    text_3: Om du inte själv har gjort den här begäran kan du bortse från detta e-postmeddelande.
+
+email_change:
+    subject: "%name% - Ändring av e-postadress"
+    header: Ändring av e-postadress
+    text_1: En begäran om att ändra e-postadressen till %new_email% har gjorts på %url%.
+    text_2: Du kan därför inte längre logga in med användarnamnet %old_email%.
+    text_3: "Om det inte var du kan du avbryta ändringen genom att klicka på den här länken (giltig i 24 timmar): %link%"
+    text_4: Vi rekommenderar också att du byter lösenord.
+
+password_update:
+    subject: '%name% - Ändring av lösenord'
+    header: Ändring av lösenord
+    text_1: Lösenordet för kontot som är kopplat till den här adressen har ändrats på %url%
+    text_2: "Om det inte var du kan du avbryta ändringen och välja ett nytt lösenord genom att klicka på den här länken (giltig i 24 timmar): %link%"
+
+stream_stats:
+    subject: Din radiostatistik
+    top_1: "Hej %user_email%"
+    top_2: "Här är statistiken för dina radiokanaler för föregående månad:"
+    disable: "Du kan avregistrera dig från det här e-postmeddelandet på sidan \"Mina radiokanaler\" i ditt konto."
+    stat: "<strong>%name%</strong>: %sessions% lyssningssessioner på totalt %time%"

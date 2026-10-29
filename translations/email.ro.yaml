@@ -22,7 +22,7 @@ email_change:
     subject: '%name% - Actualizare e-mail'
     header: Actualizare e-mail
     text_1: O solicitare de actualizare a e-mailului unui cont la %new_email% a fost făcută pe %url%.
-    text_2:
+    text_2: Prin urmare, nu vă mai puteți conecta cu identificatorul %old_email%.
     text_3: "Dacă nu ați inițiat-o, puteți anula această solicitare făcând clic aici (valabil 24 de ore): %link%"
     text_4: De asemenea, ar trebui să vă actualizați parola.
 

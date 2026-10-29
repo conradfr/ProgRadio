@@ -1,8 +1,8 @@
 {% set isProgRadioRequest = isProgRadio(app.request) %}
 {% set isDarkModeRequest = isDarkModeTime(app.request) %}
 {% set domainNameRequest = getDomainName(app.request) %}
-{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro','hu','tr','nl','ru','he','bg'] %}
-{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro', 'hu': 'hu', 'tr': 'tr', 'nl': 'nl', 'ru': 'ru','he': 'il', 'bg': 'bg'} %}
+{% set locales = ['fr', 'en', 'es', 'de', 'pt', 'it','pl','el', 'ar', 'ro','hu','tr','nl','ru','he','bg','da','sv'] %}
+{% set flags = {'fr': 'fr', 'en': 'gb', 'es': 'es', 'de': 'de', 'pt': 'pt', 'it': 'it', 'pl': 'pl', 'el': 'gr', 'ar': 'ma', 'ro': 'ro', 'hu': 'hu', 'tr': 'tr', 'nl': 'nl', 'ru': 'ru','he': 'il', 'bg': 'bg', 'da': 'dk', 'sv': 'se'} %}
 {# as this call his made a numerous place and seems expensive we put it as a global here #}
 {% set is_logged = is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 <!DOCTYPE html>
@@ -97,6 +97,10 @@
                   {% set canonical_locale = 'he' %}
                 {% elseif 'bulgarian' in stream.language %}
                   {% set canonical_locale = 'bg' %}
+                {% elseif 'danish' in stream.language %}
+                  {% set canonical_locale = 'da' %}
+                {% elseif 'swedish' in stream.language %}
+                  {% set canonical_locale = 'sv' %}
                 {% elseif (stream.language|length == 2 or (stream.language|length > 2 and stream.language|slice(2, 1) == ','))
                     and stream.language|slice(0, 2) in locales %}
                     {% set canonical_locale = stream.language|slice(0, 2) %}

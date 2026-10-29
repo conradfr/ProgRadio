@@ -1,0 +1,457 @@
+general:
+    main_description: Lyt online og se radioprogrammerne i Frankrig.
+    main_title_progradio: Alle radiosendeplaner, alle programmer og online lytning
+    main_title_radioaddict: Stream alle radiostationer i Frankrig og resten af verden!
+
+global:
+    switch:
+        es: Ver en español
+        en: View in English
+        fr: Voir en français
+        de: Auf Deutsch anzeigen
+        pt: Ver em português
+        it: Visualizza in italiano
+        pl: Zobacz po polsku
+        el: Προβολή στα ελληνικά
+        ar: عرض باللغة العربية
+        ro: Vezi în română
+        hu: Megtekintés magyarul
+        tr: Türkçe görüntüle
+        nl: Bekijk in het Nederlands
+        ru: Смотреть на русском
+        he: הצג בעברית
+        bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
+
+menu:
+    account: Min konto
+    admin:
+        dashboard: Dashboard
+        listening: Lytninger
+        overloading: Stream Overloading
+        playing_errors: Stream-fejl
+        check: Stream Check
+        shares: Markedsandele
+        suggestions: Stream-forslag
+        easyadmin: Easy Admin
+        actions: Admin
+    all: Alle franske radiostationer
+    app: Android-app
+    contact: Kontakt
+    faq: FAQ
+
+    favorites: Mine favoritter
+    favorites_menu:
+        all: Alle lande
+        be: Belgien
+        ch: Schweiz
+        fr: Frankrig
+        us: USA
+        mx: Mexico
+        co: Colombia
+        ar: Argentina
+        pe: Peru
+        de: Tyskland
+        at: Østrig
+        es: Spanien
+        pt: Portugal
+        br: Brasilien
+        ca: Canada
+        au: Australien
+        nz: New Zealand
+        gb: Storbritannien
+        ie: Irland
+        it: Italien
+        lu: Luxembourg
+        mc: Monaco
+        sm: San Marino
+        mt: Malta
+        va: Vatikanstaten
+        pl: Polen
+        gr: Grækenland
+        dz: Algeriet
+        ma: Marokko
+        tn: Tunesien
+        hu: Ungarn
+        tr: Tyrkiet
+        ro: Rumænien
+        nl: Nederlandene
+        ru: Rusland
+        ua: Ukraine
+        bg: Bulgarien
+        il: Israel
+        dk: Danmark
+        se: Sverige
+
+    songs: Gemte numre
+
+    home:
+        enable: Vælg som startside
+        disable: Fjern den personlige startside
+    logout: Log ud
+    menu: Menu
+    mode:
+        dark: Mørk tilstand
+        light: Lys tilstand
+    now: Lige nu
+    params: Indstillinger
+    plus: Mere
+    schedule: Programoversigt
+    signon: Log ind
+    signup: Opret en konto
+    streaming: Alle radiostationer
+    timer: Timer
+    title: Menu
+
+sponsor:
+    suggestion_page: "Er det din radiostation?<br>Overvåg %name% og få en advarsel ved længerevarende stilhed eller nedbrud.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Prøv StreamChecker fra Radio-Addict</a>"
+    streams_page: "Overvåg dine webradioer og få en advarsel ved nedbrud.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Prøv StreamChecker fra Radio-Addict</a>"
+    streams_page_edit: "Overvåg %name% og få en advarsel ved længerevarende stilhed eller nedbrud.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Prøv StreamChecker fra Radio-Addict</a>"
+    short: "Er det din radiostation? <a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Overvåg %name% med Stream-Checker</a>"
+
+page:
+    contact:
+        title: 'Kontakt'
+        email: 'E-mail'
+        message: 'Besked *'
+        name: 'Navn *'
+        send: 'Send'
+        sent: 'Din besked er blevet sendt.'
+        add_radio_1: Jeg vil gerne tilføje min (web)radio, hvordan gør jeg?
+        add_radio_2: 'Du har to muligheder:'
+        add_radio_3: Opret en konto, og tilføj din radiostation på din brugerside.
+        add_radio_4: 2/ Brug Radio-Browser API'et. For at indsende din radiostation dér, <a target="_blank" href="https://www.radio-browser.info/#/add">klik her</a>.
+
+    faq:
+        title: 'Ofte stillede spørgsmål'
+        page_title: 'FAQ - Radioprogrammer i Frankrig'
+        page_description: 'Spørgsmål om Programmes-Radio.com'
+
+    forgotten_password:
+        error: <strong>Der opstod en fejl.</strong><br>Hvis linket til nulstilling af adgangskoden er udløbet, så start forløbet forfra
+        click_here: klik her
+        done_title: Nulstilling af adgangskode
+        done: '<strong>Adgangskoden er blevet opdateret.</strong><br>Du kan logge ind ved at %link%klikke her%link_end%.'
+        page_title: Glemt adgangskode
+        success: Hvis der blev fundet en konto med e-mailen <strong>%email%</strong>, er der sendt en besked med et link til at nulstille adgangskoden.
+        submit: Send
+
+    login:
+        forgotten_password: Glemt adgangskode?
+        page_title: Log ind
+
+    now:
+        back: '← Gå til programoversigten'
+        no_schedule: <strong>Ups ...</strong> ingen programmer tilgængelige.
+        page_description: 'Hvad skal du lytte til lige nu?'
+        page_title: 'Programmer i radioen lige nu'
+        title: 'Lige nu i radioen'
+
+    radio:
+        advanced: Brug den avancerede afspiller<br>(webradioer, aktuelle numre ...)
+        back: '← Gå til programoversigten for alle radiostationer'
+        current: ↓ Gå til det aktuelle program
+        description: 'Programmerne på %radio% & online lytning'
+        goto_today: Se dagens programmer
+        goto_schedule: Se programoversigten
+        see_previous: Se tidligere programmer
+        more_radios: 'Flere radiostationer'
+        no_schedule: 'Programmer ikke tilgængelige.'
+        not_today: Du ser programmerne for en anden dag end i dag
+        play: 'Lyt til %radio%'
+        stop: 'Stop %radio%'
+        summary: 'Beskrivelse'
+        title: '%radio% - Programmer for %date%'
+        website: 'Hjemmeside'
+
+    registered:
+        page_title: Opret en konto
+        alert_1: Din konto er blevet oprettet!
+        alert_2: Hvis du havde radiostationer og streams som favoritter, er de automatisk blevet tilføjet til din konto.
+        what_now_question: Hvad vil du gøre nu?
+        what_now_choice1: Logge ind på min konto
+        what_now_choice2: Se radioprogrammerne
+        what_now_choice3: Lytte til radio via streaming
+
+    stream:
+        favorite:
+            add: 'Tilføj til favoritter'
+            remove: 'Fjern fra favoritter'
+        country: Land
+        description: 'Lyt til %radio% live og gratis'
+        disabled: 'Denne radiostation ser ud til at være inaktiv.'
+        discover: Opdag flere radiostationer, søg efter land og musikgenre ...
+        errors: 'Der er rapporteret afspilningsfejl for denne radiostation.'
+        find: Søg
+        find_amazon: Søg på Amazon
+        find_deezer: Søg på Deezer
+        find_spotify: Søg på Spotify
+        find_youtube: Søg på Youtube
+        find_itunes: Søg på iTunes
+        current_song: Aktuelt nummer
+        history: 'Seneste numre'
+        about: Om radiostationen
+        schedule: Programmer
+        more_information: Flere oplysninger
+        listeners: Lyttere
+        play: 'Lyt'
+        playing: Nummer
+        playing_error: Afspilningsfejl
+        stop: 'Stop'
+        suggested: Foreslåede radiostationer
+        tags: Tags
+        share: Del radiostationen
+        title: 'Lyt til %radio% live og gratis'
+        title_country: '%radio% - Lyt live og gratis'
+        website: Hjemmeside
+        banned: Denne radiostation er udelukket.
+        closed: Denne radiostation er lukket.
+        desc: 'Beskrivelse'
+        tagline: 'Slogan'
+        updated: 'Opdateret'
+        languages: 'Sprog'
+        popup: Et popup-vindue skal åbnes for at afspille denne radiostation.
+        advanced: Brug den avancerede afspiller<br>(lydstyrke, favoritter, historik ...)
+
+        modification:
+            at_least_one: Udfyld et eller flere felter.
+            comment: Kommentar
+            duplicate: Rapportér denne radiostation som en dublet
+            img: Logo-url (.jpg, .png, .gif)
+            name: Navn
+            radio: Radio
+            stream_url: Stream-url
+            success: Tak for dine forslag. De er blevet gemt og vil blive gennemgået meget snart.
+            suggest: Foreslå en opdatering
+            website: Hjemmeside
+            submit: Send
+
+        submission:
+            my_radios: Mine radiostationer
+            no_radios: Du har ingen radiostationer.
+            title_new: Tilføj en radiostation
+            title_edit: Rediger en radiostation
+            img: Logo-url (.jpg, .png, .gif)
+            img_file: "Logo (.jpg, .png, .gif, .webp, maks. 5 MB)"
+            name: Navn
+            radio: Radio
+            stream_url: Stream-url
+            slogan: Slogan
+            description: Beskrivelse
+            success_new: Din radiostation er blevet gemt og vil snart være tilgængelig.
+            success_edit: Din radiostation er blevet opdateret.
+            success_delete: Din radiostation er blevet slettet.
+            add: Tilføj en radiostation
+            edit: Rediger en radiostation
+            website: Hjemmeside
+            country: Land
+            language: Sprog
+            tags: Tags (med små bogstaver, adskilt af komma)
+            genres: Musikgenre (med små bogstaver, adskilt af komma)
+            submit: Send
+            delete: Slet
+            delete_confirm: Er du sikker på, at du vil slette denne radiostation? Handlingen kan ikke fortrydes.
+            duplicated: Denne radiostation findes allerede på siden. Din radiostation omdirigeres til <a target="_blank" href="%link%">%name%</a>.
+            stats_title: Statistik
+            stats_this_month: "%sessions% lyttesessioner med i alt %time% denne måned."
+            stats_last_month: "%sessions% lyttesessioner med i alt %time% sidste måned."
+            email_toggle: Modtag månedlig lyttestatistik pr. e-mail
+    top:
+        page_title: De mest populære radiostationer i %country%
+        description: 'Lyt til de bedste radiostationer fra %country%'
+        more: Se flere topradiostationer i %country%
+
+    last:
+        page_title: Senest aflyttede radiostationer i %country%
+        description: 'Lyt til de bedste radiostationer fra %country%'
+        more: Se flere nyligt aflyttede radiostationer i %country%
+
+    top_genre:
+        page_title: De mest populære %genre%-radiostationer
+        description: 'Lyt til de bedste %genre%-radiostationer'
+        more: Se flere topradiostationer inden for %genre%
+
+    user:
+        page_title: Opret en konto
+
+    account:
+        prefix: Min konto
+        menu:
+            email: E-mail
+            password: Adgangskode
+            preferences: Præferencer
+            delete: Sletning
+            streams: Mine radiostationer
+        email:
+            page_title: Skift min e-mail
+            info_1: Dette opdaterer den e-mail, du bruger til at logge ind på siden.
+            info_2: Der sendes en bekræftelse til både den gamle og den nye adresse.
+            success: E-mailadressen er blevet opdateret.
+            new_email: 'Ny e-mailadresse:'
+            new_email_placeholder: eksempel@email.com
+            update_btn: Opdater
+        password:
+            page_title: Skift min adgangskode
+            success: Adgangskoden er blevet opdateret.
+            update_btn: Opdater
+        preferences:
+            page_title: Præferencer
+            update_btn: Opdater
+            store_history: Gem historikken over afspillede radiostationer
+            reset_history: Slet min historik
+            reset_confirm: Er du sikker på, at du vil slette din historik?
+            reset_confirmed: Din historik er blevet slettet.
+        delete:
+            page_title: Sletning af konto
+            warning: Bemærk, at handlingen ikke kan fortrydes. Dine favoritter vil blive slettet
+            confirm: Er du sikker på, at du vil slette din konto?
+            delete_btn: Slet min konto
+        delete_confirm:
+            success: Din konto er blevet slettet.
+
+boxes:
+    already_account:
+        title: Har du allerede en konto?
+        content: Klik her for at logge ind
+
+    no_account:
+        title: Har du ikke en konto endnu?
+        content: Klik her for at oprette en
+
+    why_account:
+        title: Hvorfor oprette en konto?
+        content: "- Med en konto kan du få adgang til dine favoritradiostationer og -streams fra enhver browser og fra appen."
+        content2: "- Gem titlen på de numre, du lytter til."
+        content3: "- Se din historik (valgfrit)"
+        content4: "- Færre reklamer"
+
+registrationForm:
+    email: 'E-mail'
+    error:
+        captcha: 'Ugyldig captcha, prøv venligst igen.'
+        empty: 'Dette felt må ikke være tomt.'
+        password_min: 'Adgangskoden skal indeholde mindst 8 tegn.'
+        password: 'Adgangskoderne er ikke ens.'
+    captcha: 'Skriv bogstaverne og tallene nedenfor'
+    password: 'Adgangskode'
+    password_confirm: 'Bekræft adgangskode'
+    submit_create: 'Opret min konto'
+
+connectionForm:
+    already_logged: Du er i øjeblikket logget ind som %email%
+    logout: log ud
+    email: 'E-mail'
+    password: 'Adgangskode'
+    remember_me: 'Husk mig'
+    submit_connect: 'Log ind'
+
+updatePasswordForm:
+    new: Ny adgangskode
+    new_confirm: Bekræft ny adgangskode
+    error_not_same: Adgangskoderne er ikke ens.
+    error_not_empty: Dette felt må ikke være tomt.
+    error_length: Adgangskoden skal indeholde mindst 8 tegn.
+
+footer:
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Português
+    it: Italiano
+    pl: Polski
+    el: Ελληνικά
+    ar: العربية
+    ro: Română
+    hu: Magyar
+    tr: Türkçe
+    nl: Nederlands
+    ru: Русский
+    he: עברית
+    bg: Български
+    da: Dansk
+    sv: Svenska
+
+legal: 'Juridiske oplysninger'
+
+cookie:
+    accept: Ja
+    allow: Accepterer du personaliserede annoncer?
+    deny: Nej
+    disclaimer: (%name% sælger ikke sine besøgendes data)
+
+admin:
+    api:
+        flash:
+            success: Handling udført.
+            error: Der opstod en fejl.
+        cache:
+            title: Api - Cache
+            menu: Cache
+            clear_streams: Ryd stream-cachen
+        search:
+            title: Søgning
+            menu: Søgning
+            import: Importér
+
+    dashboard:
+        title: Dashboard
+        menu:
+            brief: Oversigt
+            table: Tabel
+        table:
+            shows: Programmer
+            sections: Indslag
+            stream_abbr: St.
+        accounts:
+            title: Konti
+            active: '%number% aktive konti'
+            email: e-mail
+            created_at: Oprettet
+            last: (%number% seneste)
+        no_schedule:
+            title: Radiostationer uden programmer i dag
+            all_ok: Alle radiostationer har programmer.
+        stream_errors:
+            title: Stream-fejl
+            error: Fejl for <strong>%number%</strong> check
+            link: link
+            no_errors: Alle streams virker
+        live_song_errors:
+            title: Fejl i aktuelt nummer
+            error: Fejl for <strong>%number%</strong> check
+            reset_all: reset all
+            link: link
+            no_errors: Ingen registrerede fejl
+
+    listening:
+        title: Lytninger
+        today: I dag
+        yesterday: I går
+        this_month: Denne måned
+        last_month: Sidste måned
+        ratings: Afstemninger
+
+    stream_errors:
+        title: Stream-fejl
+        name: Navn
+        errors: Fejl
+        view: Vis
+        edit: Edit
+        reset: Reset
+        reset_all: Reset alle
+
+    stream_check:
+        title: Check streams
+        img: Img
+        stream: Stream
+        website: Hjemmeside
+        ssl: SSL
+        commit: Commit
+        last_checked: Checked
+        view: Vis
+        edit: Edit
+
+    suggestion:
+        duplicate: Denne radiostation er markeret som en dublet.

@@ -21,6 +21,8 @@ global:
         ru: Смотреть на русском
         he: הצג בעברית
         bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
 
 menu:
     account: Contul meu
@@ -79,6 +81,8 @@ menu:
         ua: Ucraina
         bg: Bulgaria
         il: Israel
+        dk: Danemarca
+        se: Suedia
 
     songs: Titluri salvate
 
@@ -188,6 +192,7 @@ page:
         current_song: Piesa curentă
         history: 'Ultimele piese'
         about: 'Despre radio'
+        schedule: 'Programe'
         more_information: 'Mai multe informații'
         listeners: Ascultători
         play: 'Ascultă'
@@ -366,6 +371,8 @@ footer:
     ru: Русский
     he: עברית
     bg: Български
+    da: Dansk
+    sv: Svenska
 
 legal: 'Informații legale'
 

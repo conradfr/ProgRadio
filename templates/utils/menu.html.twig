@@ -207,6 +207,18 @@
             </li>
         {% endif %}
 
+      {% if app.request.locale == 'da' %}
+        <li>
+          <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/dk">{{ 'menu.favorites_menu.dk'|trans }}</a>
+        </li>
+      {% endif %}
+
+      {% if app.request.locale == 'sv' %}
+        <li>
+          <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/se">{{ 'menu.favorites_menu.se'|trans }}</a>
+        </li>
+      {% endif %}
+
         <li><hr class="dropdown-divider"></li>
         <li>
             <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/all">{{ 'menu.favorites_menu.all'|trans }}</a>

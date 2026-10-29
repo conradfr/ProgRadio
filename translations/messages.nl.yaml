@@ -20,6 +20,8 @@ global:
         ru: Смотреть на русском
         he: הצג בעברית
         bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
 menu:
     account: Mijn account
     admin:
@@ -76,6 +78,8 @@ menu:
         ua: Oekraïne
         bg: Bulgarije
         il: Israël
+        dk: Denemarken
+        se: Zweden
     songs: Opgeslagen Titels
     home:
         enable: Instellen als startpagina
@@ -176,6 +180,7 @@ page:
         current_song: Huidig nummer
         history: 'Laatste nummers'
         about: 'Over de radiozender'
+        schedule: "Programma's"
         more_information: 'Meer informatie'
         listeners: Luisteraars
         play: 'Luisteren'
@@ -341,6 +346,8 @@ footer:
     ru: Русский
     he: עברית
     bg: Български
+    da: Dansk
+    sv: Svenska
 
 legal: 'Juridische informatie'
 cookie:

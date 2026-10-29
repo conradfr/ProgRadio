@@ -15,7 +15,7 @@ const selectorFor = (t: HeadTag): string => {
 
 // this is duplicated logic from base.html.twig
 
-const LOCALES = ['fr', 'en', 'es', 'de', 'pt', 'it', 'pl', 'el', 'ar', 'ro', 'hu', 'tr', 'nl', 'ru', 'he', 'bg'];
+const LOCALES = ['fr', 'en', 'es', 'de', 'pt', 'it', 'pl', 'el', 'ar', 'ro', 'hu', 'tr', 'nl', 'ru', 'he', 'bg','da','sv'];
 
 // Stream language => canonical locale, first match wins (same order as templates/base.html.twig)
 const LANGUAGE_LOCALES: [string[], string][] = [
@@ -34,6 +34,8 @@ const LANGUAGE_LOCALES: [string[], string][] = [
   [['russian'], 'ru'],
   [['hebrew'], 'he'],
   [['bulgarian'], 'bg'],
+  [['danish'], 'da'],
+  [['swedish'], 'sv'],
 ];
 
 const canonicalLocale = (language?: string | null): string => {

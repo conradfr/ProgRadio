@@ -21,6 +21,8 @@ global:
         ru: Смотреть на русском
         he: הצג בעברית
         bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
 
 menu:
     account: "Hesabım"
@@ -79,6 +81,8 @@ menu:
         ua: "Ukrayna"
         bg: "Bulgaristan"
         il: "İsrail"
+        dk: Danimarka
+        se: İsveç
 
     songs: "Kaydedilmiş Başlıklar"
 
@@ -188,6 +192,7 @@ page:
         current_song: Çalan şarkı
         history: 'Son şarkılar'
         about: 'Radyo hakkında'
+        schedule: 'Yayın akışı'
         more_information: 'Daha fazla bilgi'
         listeners: "Dinleyiciler"
         play: "Dinle"
@@ -366,6 +371,8 @@ footer:
     ru: Русский
     he: עברית
     bg: Български
+    da: Dansk
+    sv: Svenska
 
 legal: "Yasal Bilgiler"
 

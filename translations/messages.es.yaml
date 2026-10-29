@@ -21,6 +21,8 @@ global:
         ru: Смотреть на русском
         he: הצג בעברית
         bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
 
 menu:
     account: Mi cuenta
@@ -79,6 +81,8 @@ menu:
         ua: Ucrania
         bg: Bulgaria
         il: Israel
+        dk: Dinamarca
+        se: Suecia
 
     songs: Títulos Guardados
 
@@ -188,6 +192,7 @@ page:
         current_song: Título actual
         history: 'Últimos títulos'
         about: 'Acerca de la radio'
+        schedule: 'Programación'
         more_information: 'Más información'
         listeners: Oyentes
         play: 'Escuchar'
@@ -366,6 +371,8 @@ footer:
     ru: Русский
     he: עברית
     bg: Български
+    da: Dansk
+    sv: Svenska
 
 legal: 'Aviso legal'
 

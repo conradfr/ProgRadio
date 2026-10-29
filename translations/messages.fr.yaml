@@ -21,6 +21,8 @@ global:
         ru: Смотреть на русском
         he: הצג בעברית
         bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
 
 menu:
     account: Mon compte
@@ -79,6 +81,8 @@ menu:
         ua: Ukraine
         bg: Bulgarie
         il: Israël
+        dk: Danemark
+        se: Suède
 
     songs: Titres Sauvegardés
 
@@ -366,6 +370,8 @@ footer:
     ru: Русский
     he: עברית
     bg: Български
+    da: Dansk
+    sv: Svenska
 
 legal: 'Mentions légales'
 

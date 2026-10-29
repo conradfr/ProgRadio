@@ -1,0 +1,457 @@
+general:
+    main_description: Lyssna online och se radioprogrammen i Frankrike.
+    main_title_progradio: Alla radiotablåer, alla program och lyssning online
+    main_title_radioaddict: Streama alla radiokanaler i Frankrike och resten av världen!
+
+global:
+    switch:
+        es: Ver en español
+        en: View in English
+        fr: Voir en français
+        de: Auf Deutsch anzeigen
+        pt: Ver em português
+        it: Visualizza in italiano
+        pl: Zobacz po polsku
+        el: Προβολή στα ελληνικά
+        ar: عرض باللغة العربية
+        ro: Vezi în română
+        hu: Megtekintés magyarul
+        tr: Türkçe görüntüle
+        nl: Bekijk in het Nederlands
+        ru: Смотреть на русском
+        he: הצג בעברית
+        bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
+
+menu:
+    account: Mitt konto
+    admin:
+        dashboard: Översikt
+        listening: Lyssningar
+        overloading: Stream Overloading
+        playing_errors: Streamfel
+        check: Stream Check
+        shares: Marknadsandelar
+        suggestions: Streamförslag
+        easyadmin: Easy Admin
+        actions: Admin
+    all: Alla franska radiokanaler
+    app: Android-app
+    contact: Kontakt
+    faq: FAQ
+
+    favorites: Mina favoriter
+    favorites_menu:
+        all: Alla länder
+        be: Belgien
+        ch: Schweiz
+        fr: Frankrike
+        us: USA
+        mx: Mexiko
+        co: Colombia
+        ar: Argentina
+        pe: Peru
+        de: Tyskland
+        at: Österrike
+        es: Spanien
+        pt: Portugal
+        br: Brasilien
+        ca: Kanada
+        au: Australien
+        nz: Nya Zeeland
+        gb: Storbritannien
+        ie: Irland
+        it: Italien
+        lu: Luxemburg
+        mc: Monaco
+        sm: San Marino
+        mt: Malta
+        va: Vatikanstaten
+        pl: Polen
+        gr: Grekland
+        dz: Algeriet
+        ma: Marocko
+        tn: Tunisien
+        hu: Ungern
+        tr: Turkiet
+        ro: Rumänien
+        nl: Nederländerna
+        ru: Ryssland
+        ua: Ukraina
+        bg: Bulgarien
+        il: Israel
+        dk: Danmark
+        se: Sverige
+
+    songs: Sparade låtar
+
+    home:
+        enable: Välj som startsida
+        disable: Ta bort den personliga startsidan
+    logout: Logga ut
+    menu: Meny
+    mode:
+        dark: Mörkt läge
+        light: Ljust läge
+    now: Just nu
+    params: Inställningar
+    plus: Mer
+    schedule: Programtablå
+    signon: Logga in
+    signup: Skapa ett konto
+    streaming: Alla radiokanaler
+    timer: Timer
+    title: Meny
+
+sponsor:
+    suggestion_page: "Är det din radiokanal?<br>Övervaka %name% och få en varning vid långvarig tystnad eller avbrott.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Prova StreamChecker från Radio-Addict</a>"
+    streams_page: "Övervaka dina webbradiokanaler och få en varning vid avbrott.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Prova StreamChecker från Radio-Addict</a>"
+    streams_page_edit: "Övervaka %name% och få en varning vid långvarig tystnad eller avbrott.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Prova StreamChecker från Radio-Addict</a>"
+    short: "Är det din radiokanal? <a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Övervaka %name% med Stream-Checker</a>"
+
+page:
+    contact:
+        title: 'Kontakt'
+        email: 'E-post'
+        message: 'Meddelande *'
+        name: 'Namn *'
+        send: 'Skicka'
+        sent: 'Ditt meddelande har skickats.'
+        add_radio_1: Jag vill lägga till min (webb)radio, hur gör jag?
+        add_radio_2: 'Du har två alternativ:'
+        add_radio_3: Skapa ett konto och lägg till din radiokanal på din användarsida.
+        add_radio_4: 2/ Använd Radio-Browsers API. För att skicka in din radiokanal där, <a target="_blank" href="https://www.radio-browser.info/#/add">klicka här</a>.
+
+    faq:
+        title: 'Vanliga frågor'
+        page_title: 'FAQ - Radioprogram i Frankrike'
+        page_description: 'Frågor om Programmes-Radio.com'
+
+    forgotten_password:
+        error: <strong>Ett fel uppstod.</strong><br>Om länken för att återställa lösenordet har gått ut, börja om från början
+        click_here: klicka här
+        done_title: Återställning av lösenord
+        done: '<strong>Lösenordet har uppdaterats.</strong><br>Du kan logga in genom att %link%klicka här%link_end%.'
+        page_title: Glömt lösenord
+        success: Om ett konto med e-postadressen <strong>%email%</strong> hittades har ett meddelande med en länk för att återställa lösenordet skickats till det.
+        submit: Skicka
+
+    login:
+        forgotten_password: Glömt lösenordet?
+        page_title: Logga in
+
+    now:
+        back: '← Gå till programtablån'
+        no_schedule: <strong>Hoppsan ...</strong> inga program tillgängliga.
+        page_description: 'Vad ska du lyssna på just nu?'
+        page_title: 'Program på radion just nu'
+        title: 'Just nu på radion'
+
+    radio:
+        advanced: Använd den avancerade spelaren<br>(webbradio, aktuella låtar ...)
+        back: '← Gå till programtablån för alla radiokanaler'
+        current: ↓ Gå till det pågående programmet
+        description: 'Programmen på %radio% & lyssning online'
+        goto_today: Se dagens program
+        goto_schedule: Se programtablån
+        see_previous: Se tidigare program
+        more_radios: 'Fler radiokanaler'
+        no_schedule: 'Program inte tillgängliga.'
+        not_today: Du tittar på programmen för en annan dag än i dag
+        play: 'Lyssna på %radio%'
+        stop: 'Stoppa %radio%'
+        summary: 'Beskrivning'
+        title: '%radio% - Program för %date%'
+        website: 'Webbplats'
+
+    registered:
+        page_title: Skapa ett konto
+        alert_1: Ditt konto har skapats!
+        alert_2: Om du hade radiokanaler och streams som favoriter har de automatiskt lagts till i ditt konto.
+        what_now_question: Vad vill du göra nu?
+        what_now_choice1: Logga in på mitt konto
+        what_now_choice2: Se radioprogrammen
+        what_now_choice3: Lyssna på radio via streaming
+
+    stream:
+        favorite:
+            add: 'Lägg till i favoriter'
+            remove: 'Ta bort från favoriter'
+        country: Land
+        description: 'Lyssna på %radio% live och gratis'
+        disabled: 'Den här radiokanalen verkar vara inaktiv.'
+        discover: Upptäck fler radiokanaler, sök efter land och musikgenre ...
+        errors: 'Uppspelningsfel har rapporterats för den här radiokanalen.'
+        find: Sök
+        find_amazon: Sök på Amazon
+        find_deezer: Sök på Deezer
+        find_spotify: Sök på Spotify
+        find_youtube: Sök på Youtube
+        find_itunes: Sök på iTunes
+        current_song: Aktuell låt
+        history: 'Senaste låtarna'
+        about: Om radiokanalen
+        schedule: Program
+        more_information: Mer information
+        listeners: Lyssnare
+        play: 'Lyssna'
+        playing: Låt
+        playing_error: Uppspelningsfel
+        stop: 'Stoppa'
+        suggested: Föreslagna radiokanaler
+        tags: Taggar
+        share: Dela radiokanalen
+        title: 'Lyssna på %radio% live och gratis'
+        title_country: '%radio% - Lyssna live och gratis'
+        website: Webbplats
+        banned: Den här radiokanalen är spärrad.
+        closed: Den här radiokanalen är nedlagd.
+        desc: 'Beskrivning'
+        tagline: 'Slogan'
+        updated: 'Uppdaterad'
+        languages: 'Språk'
+        popup: Ett popup-fönster måste öppnas för att spela den här radiokanalen.
+        advanced: Använd den avancerade spelaren<br>(volym, favoriter, historik ...)
+
+        modification:
+            at_least_one: Fyll i ett eller flera fält.
+            comment: Kommentar
+            duplicate: Rapportera den här radiokanalen som en dubblett
+            img: Logotyp-url (.jpg, .png, .gif)
+            name: Namn
+            radio: Radio
+            stream_url: Stream-url
+            success: Tack för dina förslag. De har sparats och kommer att granskas inom kort.
+            suggest: Föreslå en uppdatering
+            website: Webbplats
+            submit: Skicka
+
+        submission:
+            my_radios: Mina radiokanaler
+            no_radios: Du har inga radiokanaler.
+            title_new: Lägg till en radiokanal
+            title_edit: Redigera en radiokanal
+            img: Logotyp-url (.jpg, .png, .gif)
+            img_file: "Logotyp (.jpg, .png, .gif, .webp, max 5 MB)"
+            name: Namn
+            radio: Radio
+            stream_url: Stream-url
+            slogan: Slogan
+            description: Beskrivning
+            success_new: Din radiokanal har sparats och kommer snart att vara tillgänglig.
+            success_edit: Din radiokanal har uppdaterats.
+            success_delete: Din radiokanal har tagits bort.
+            add: Lägg till en radiokanal
+            edit: Redigera en radiokanal
+            website: Webbplats
+            country: Land
+            language: Språk
+            tags: Taggar (med små bokstäver, separerade med kommatecken)
+            genres: Musikgenre (med små bokstäver, separerade med kommatecken)
+            submit: Skicka
+            delete: Ta bort
+            delete_confirm: Är du säker på att du vill ta bort den här radiokanalen? Åtgärden kan inte ångras.
+            duplicated: Den här radiokanalen finns redan på webbplatsen. Din radiokanal omdirigeras till <a target="_blank" href="%link%">%name%</a>.
+            stats_title: Statistik
+            stats_this_month: "%sessions% lyssningssessioner på totalt %time% den här månaden."
+            stats_last_month: "%sessions% lyssningssessioner på totalt %time% förra månaden."
+            email_toggle: Få månatlig lyssningsstatistik via e-post
+    top:
+        page_title: De populäraste radiokanalerna i %country%
+        description: 'Lyssna på de bästa radiokanalerna från %country%'
+        more: Se fler topplistade radiokanaler i %country%
+
+    last:
+        page_title: Senast lyssnade radiokanaler i %country%
+        description: 'Lyssna på de bästa radiokanalerna från %country%'
+        more: Se fler nyligen lyssnade radiokanaler i %country%
+
+    top_genre:
+        page_title: De populäraste %genre%-radiokanalerna
+        description: 'Lyssna på de bästa %genre%-radiokanalerna'
+        more: Se fler topplistade radiokanaler inom %genre%
+
+    user:
+        page_title: Skapa ett konto
+
+    account:
+        prefix: Mitt konto
+        menu:
+            email: E-post
+            password: Lösenord
+            preferences: Inställningar
+            delete: Borttagning
+            streams: Mina radiokanaler
+        email:
+            page_title: Ändra min e-postadress
+            info_1: Detta uppdaterar den e-postadress du använder för att logga in på webbplatsen.
+            info_2: En bekräftelse skickas till både den gamla och den nya adressen.
+            success: E-postadressen har uppdaterats.
+            new_email: 'Ny e-postadress:'
+            new_email_placeholder: exempel@email.com
+            update_btn: Uppdatera
+        password:
+            page_title: Ändra mitt lösenord
+            success: Lösenordet har uppdaterats.
+            update_btn: Uppdatera
+        preferences:
+            page_title: Inställningar
+            update_btn: Uppdatera
+            store_history: Spara historiken över spelade radiokanaler
+            reset_history: Radera min historik
+            reset_confirm: Är du säker på att du vill radera din historik?
+            reset_confirmed: Din historik har raderats.
+        delete:
+            page_title: Borttagning av konto
+            warning: Observera att åtgärden inte kan ångras. Dina favoriter kommer att raderas
+            confirm: Är du säker på att du vill ta bort ditt konto?
+            delete_btn: Ta bort mitt konto
+        delete_confirm:
+            success: Ditt konto har tagits bort.
+
+boxes:
+    already_account:
+        title: Har du redan ett konto?
+        content: Klicka här för att logga in
+
+    no_account:
+        title: Har du inget konto än?
+        content: Klicka här för att registrera dig
+
+    why_account:
+        title: Varför registrera sig?
+        content: "- Med ett konto kommer du åt dina favoritradiokanaler och -streams från vilken webbläsare som helst och från appen."
+        content2: "- Spara titeln på låtarna du lyssnar på."
+        content3: "- Se din historik (valfritt)"
+        content4: "- Färre annonser"
+
+registrationForm:
+    email: 'E-post'
+    error:
+        captcha: 'Ogiltig captcha, försök igen.'
+        empty: 'Det här fältet får inte vara tomt.'
+        password_min: 'Lösenordet måste innehålla minst 8 tecken.'
+        password: 'Lösenorden matchar inte.'
+    captcha: 'Skriv bokstäverna och siffrorna nedan'
+    password: 'Lösenord'
+    password_confirm: 'Bekräfta lösenordet'
+    submit_create: 'Skapa mitt konto'
+
+connectionForm:
+    already_logged: Du är för närvarande inloggad som %email%
+    logout: logga ut
+    email: 'E-post'
+    password: 'Lösenord'
+    remember_me: 'Kom ihåg mig'
+    submit_connect: 'Logga in'
+
+updatePasswordForm:
+    new: Nytt lösenord
+    new_confirm: Bekräfta det nya lösenordet
+    error_not_same: Lösenorden matchar inte.
+    error_not_empty: Det här fältet får inte vara tomt.
+    error_length: Lösenordet måste innehålla minst 8 tecken.
+
+footer:
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Português
+    it: Italiano
+    pl: Polski
+    el: Ελληνικά
+    ar: العربية
+    ro: Română
+    hu: Magyar
+    tr: Türkçe
+    nl: Nederlands
+    ru: Русский
+    he: עברית
+    bg: Български
+    da: Dansk
+    sv: Svenska
+
+legal: 'Juridisk information'
+
+cookie:
+    accept: Ja
+    allow: Godkänner du personanpassade annonser?
+    deny: Nej
+    disclaimer: (%name% säljer inte sina besökares data)
+
+admin:
+    api:
+        flash:
+            success: Åtgärden är slutförd.
+            error: Ett fel uppstod.
+        cache:
+            title: Api - Cache
+            menu: Cache
+            clear_streams: Töm stream-cachen
+        search:
+            title: Sökning
+            menu: Sökning
+            import: Importera
+
+    dashboard:
+        title: Översikt
+        menu:
+            brief: Sammanfattning
+            table: Tabell
+        table:
+            shows: Program
+            sections: Inslag
+            stream_abbr: St.
+        accounts:
+            title: Konton
+            active: '%number% aktiva konton'
+            email: e-post
+            created_at: Skapad
+            last: (%number% senaste)
+        no_schedule:
+            title: Radiokanaler utan program i dag
+            all_ok: Alla radiokanaler har program.
+        stream_errors:
+            title: Streamfel
+            error: Fel för <strong>%number%</strong> check
+            link: länk
+            no_errors: Alla streams fungerar
+        live_song_errors:
+            title: Fel för aktuell låt
+            error: Fel för <strong>%number%</strong> check
+            reset_all: reset all
+            link: länk
+            no_errors: Inga registrerade fel
+
+    listening:
+        title: Lyssningar
+        today: I dag
+        yesterday: I går
+        this_month: Den här månaden
+        last_month: Förra månaden
+        ratings: Omröstningar
+
+    stream_errors:
+        title: Streamfel
+        name: Namn
+        errors: Fel
+        view: Visa
+        edit: Edit
+        reset: Reset
+        reset_all: Reset alla
+
+    stream_check:
+        title: Check streams
+        img: Img
+        stream: Stream
+        website: Webbplats
+        ssl: SSL
+        commit: Commit
+        last_checked: Checked
+        view: Visa
+        edit: Edit
+
+    suggestion:
+        duplicate: Den här radiokanalen är markerad som en dubblett.

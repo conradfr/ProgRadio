@@ -22,7 +22,7 @@ email_change:
     subject: '%name% - E-Mail-Aktualisierung'
     header: E-Mail-Aktualisierung
     text_1: Eine Anfrage zur Aktualisierung der E-Mail-Adresse eines Kontos auf %new_email% wurde auf %url% gestellt.
-    text_2:
+    text_2: Sie können sich daher nicht mehr mit dem Benutzernamen %old_email% anmelden.
     text_3: "Falls Sie sie nicht initiiert haben, können Sie diese Anfrage stornieren, indem Sie hier klicken (gültig für 24 Stunden): %link%"
     text_4: Du solltest auch dein Passwort aktualisieren.
 

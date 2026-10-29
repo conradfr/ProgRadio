@@ -18,6 +18,8 @@ defmodule ProgRadioApi.Cldr do
       "nl",
       "ru",
       "he",
-      "bg"
+      "bg",
+      "da",
+      "sv"
     ]
 end

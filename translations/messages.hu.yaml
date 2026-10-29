@@ -21,6 +21,8 @@ global:
         ru: Смотреть на русском
         he: הצג בעברית
         bg: Вижте на български
+        da: Se på dansk
+        sv: Visa på svenska
 
 menu:
     account: Fiókom
@@ -79,6 +81,8 @@ menu:
         ua: Ukrajna
         bg: Bulgária
         il: Izrael
+        dk: Dánia
+        se: Svédország
 
     songs: Mentett címkek
 
@@ -188,6 +192,7 @@ page:
         current_song: Aktuális dal
         history: 'Utolsó dalok'
         about: 'A rádióról'
+        schedule: 'Műsor'
         more_information: 'További információk'
         listeners: Hallgatók
         play: 'Hallgatás'
@@ -366,6 +371,8 @@ footer:
     ru: Русский
     he: עברית
     bg: Български
+    da: Dansk
+    sv: Svenska
 
 legal: 'Jogi információk'
 

@@ -73,11 +73,11 @@ class Category
 
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 100)]
-    private string $name_se;
+    private string $name_sv;
 
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 100)]
-    private string $name_dk;
+    private string $name_da;
 
     #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 100)]
@@ -245,24 +245,24 @@ class Category
         $this->name_nl = $name_nl;
     }
 
-    public function getNameSe(): string
+    public function getNameSv(): string
     {
-        return $this->name_se;
+        return $this->name_sv;
     }
 
-    public function setNameSe(string $name_se): void
+    public function setNameSv(string $name_sv): void
     {
-        $this->name_se = $name_se;
+        $this->name_sv = $name_sv;
     }
 
-    public function getNameDk(): string
+    public function getNameDa(): string
     {
-        return $this->name_dk;
+        return $this->name_da;
     }
 
-    public function setNameDk(string $name_dk): void
+    public function setNameDa(string $name_da): void
     {
-        $this->name_dk = $name_dk;
+        $this->name_da = $name_da;
     }
 
     public function getNameRo(): string

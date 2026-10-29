@@ -22,7 +22,7 @@ email_change:
     subject: '%name% - Email update'
     header: Email update
     text_1: A request to update an account's email to %new_email% has been made on %url%.
-    text_2:
+    text_2: You can therefore no longer log in with the username %old_email%.
     text_3: "If you didn't initiate it you can cancel this request by clicking here (valid for 24h) : %link%"
     text_4: You should also update your password.
 
