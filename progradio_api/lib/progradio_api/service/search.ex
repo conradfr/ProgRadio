@@ -51,12 +51,10 @@ defmodule ProgRadioApi.Search do
 
     Meilisearch.Settings.FilterableAttributes.update(client, new_index, ["country_code"])
 
-    # sort right after words: otherwise an explicit sort only orders the hits within each
-    # typo/proximity/attribute bucket, and the order restarts at every bucket
     Meilisearch.Settings.RankingRules.update(client, new_index, [
       "words",
-      "sort",
       "typo",
+      "sort",
       "proximity",
       "attribute",
       "exactness"
@@ -64,8 +62,9 @@ defmodule ProgRadioApi.Search do
 
     Meilisearch.Settings.TypeTolerance.update(client, new_index, %{
       enabled: true,
+      # no typo on short words (rva, nrj, fip ...): one typo on them matches too many streams
       minWordSizeForTypos: %{
-        oneTypo: 3,
+        oneTypo: 4,
         twoTypos: 7
       }
     })
