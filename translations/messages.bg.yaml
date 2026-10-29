@@ -1,0 +1,451 @@
+general:
+    main_description: Онлайн слушане и програми на радиостанциите във Франция.
+    main_title_progradio: Всички радиопрограми, всички предавания и онлайн слушане
+    main_title_radioaddict: Слушайте онлайн всички радиостанции във Франция и по света!
+
+global:
+    switch:
+        es: Ver en español
+        en: View in English
+        fr: Voir en français
+        de: Auf Deutsch anzeigen
+        pt: Ver em português
+        it: Visualizza in italiano
+        pl: Zobacz po polsku
+        el: Προβολή στα ελληνικά
+        ar: عرض باللغة العربية
+        ro: Vezi în română
+        hu: Megtekintés magyarul
+        tr: Türkçe görüntüle
+        nl: Bekijk in het Nederlands
+        ru: Смотреть на русском
+        he: הצג בעברית
+        bg: Вижте на български
+
+menu:
+    account: Моят профил
+    admin:
+        dashboard: Табло
+        listening: Слушания
+        overloading: Stream Overloading
+        playing_errors: Грешки в потоците
+        check: Stream Check
+        shares: Пазарни дялове
+        suggestions: Предложения за потоци
+        easyadmin: Easy Admin
+        actions: Админ
+    all: Всички френски радиостанции
+    app: Приложение за Android
+    contact: Контакт
+    faq: ЧЗВ
+
+    favorites: Моите любими
+    favorites_menu:
+        all: Всички държави
+        be: Белгия
+        ch: Швейцария
+        fr: Франция
+        us: САЩ
+        mx: Мексико
+        co: Колумбия
+        ar: Аржентина
+        pe: Перу
+        de: Германия
+        at: Австрия
+        es: Испания
+        pt: Португалия
+        br: Бразилия
+        ca: Канада
+        au: Австралия
+        nz: Нова Зеландия
+        gb: Великобритания
+        ie: Ирландия
+        it: Италия
+        lu: Люксембург
+        mc: Монако
+        sm: Сан Марино
+        mt: Малта
+        va: Ватикана
+        pl: Полша
+        gr: Гърция
+        dz: Алжир
+        ma: Мароко
+        tn: Тунис
+        hu: Унгария
+        tr: Турция
+        nl: Нидерландия
+        ro: Румъния
+        ru: Русия
+        ua: Украйна
+        bg: България
+        il: Израел
+
+    songs: Запазени песни
+
+    home:
+        enable: Задай като начална страница
+        disable: Премахни персонализираната начална страница
+    logout: Изход
+    menu: Меню
+    mode:
+        dark: Тъмен режим
+        light: Светъл режим
+    now: Сега в ефир
+    params: Настройки
+    plus: Още
+    schedule: Програма
+    signon: Вход
+    signup: Създай профил
+    streaming: Всички радиостанции
+    timer: Таймер
+    title: Меню
+
+sponsor:
+    suggestion_page: "Това вашата радиостанция ли е?<br>Наблюдавайте %name% и получавайте известие при продължителна тишина или прекъсване.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Изпробвайте StreamChecker от Radio-Addict</a>"
+    streams_page: "Наблюдавайте своите уеб радиа и получавайте известие при прекъсване.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">Изпробвайте StreamChecker от Radio-Addict</a>"
+    streams_page_edit: "Наблюдавайте %name% и получавайте известие при продължителна тишина или прекъсване.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Изпробвайте StreamChecker от Radio-Addict</a>"
+    short: "Това вашата радиостанция ли е? <a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">Наблюдавайте %name% със Stream-Checker</a>"
+
+page:
+    contact:
+        title: 'Контакт'
+        email: 'Имейл'
+        message: 'Съобщение *'
+        name: 'Име *'
+        send: 'Изпрати'
+        sent: 'Съобщението ви беше изпратено.'
+        add_radio_1: Искам да добавя своето (уеб) радио, как да го направя?
+        add_radio_2: 'Имате две възможности:'
+        add_radio_3: Създайте профил и добавете радиостанцията си в своето потребителско пространство.
+        add_radio_4: 2/ Използвайте API на Radio-Browser. За да добавите радиостанцията си там, <a target="_blank" href="https://www.radio-browser.info/#/add">натиснете тук</a>.
+
+    faq:
+        title: 'Често задавани въпроси'
+        page_title: 'ЧЗВ - Програмите на радиостанциите във Франция'
+        page_description: 'Въпроси за Programmes-Radio.com'
+
+    forgotten_password:
+        error: <strong>Възникна грешка.</strong><br>Ако линкът за възстановяване на паролата е изтекъл, моля, започнете отначало
+        click_here: натиснете тук
+        done_title: Нулиране на паролата
+        done: '<strong>Паролата беше обновена.</strong><br>Можете да влезете, %link%като натиснете тук%link_end%.'
+        page_title: Забравена парола
+        success: Ако бъде намерен профил с имейл <strong>%email%</strong>, на него е изпратено съобщение с линк за нулиране на паролата.
+        submit: Изпрати
+
+    login:
+        forgotten_password: Забравена парола?
+        page_title: Вход
+
+    now:
+        back: '← Към програмата'
+        no_schedule: <strong>Опа...</strong> няма налични предавания.
+        page_description: 'Какво да слушаме сега?'
+        page_title: 'Сега в ефир по радиото'
+        title: 'Сега в ефир по радиото'
+
+    radio:
+        advanced: Използвай разширения плейър<br>(уеб радиа, текущи песни...)
+        back: '← Към програмата на всички радиостанции'
+        current: ↓ Към текущото предаване
+        description: 'Програмата на радио %radio% и онлайн слушане'
+        goto_today: Виж днешната програма
+        goto_schedule: Виж програмата
+        see_previous: Виж предишните предавания
+        more_radios: 'Още радиостанции'
+        no_schedule: 'Програмата не е налична.'
+        not_today: Разглеждате програмата за ден, различен от днешния
+        play: 'Слушай %radio%'
+        stop: 'Спри %radio%'
+        summary: 'Описание'
+        title: '%radio% - Програма за %date%'
+        website: 'Уебсайт'
+
+    registered:
+        page_title: Създай профил
+        alert_1: Профилът ви беше създаден!
+        alert_2: Ако сте имали любими радиостанции и потоци, те бяха автоматично добавени към профила ви.
+        what_now_question: Какво искате да направите сега?
+        what_now_choice1: Да вляза в профила си
+        what_now_choice2: Да разгледам радиопрограмите
+        what_now_choice3: Да слушам радио онлайн
+
+    stream:
+        favorite:
+            add: 'Добави в любими'
+            remove: 'Премахни от любими'
+        country: Държава
+        description: 'Слушайте %radio% на живо и безплатно'
+        disabled: 'Тази радиостанция изглежда неактивна.'
+        discover: Открийте още радиостанции, търсете по държава и музикален стил...
+        errors: 'Има докладвани грешки при възпроизвеждането на тази радиостанция.'
+        find: Търси
+        find_amazon: Търси в Amazon
+        find_deezer: Търси в Deezer
+        find_spotify: Търси в Spotify
+        find_youtube: Търси в Youtube
+        find_itunes: Търси в iTunes
+        current_song: Текуща песен
+        history: 'Последни песни'
+        about: За радиостанцията
+        schedule: Програма
+        more_information: Повече информация
+        listeners: Слушатели
+        play: 'Слушай'
+        playing: Песен
+        playing_error: Грешка при възпроизвеждане
+        stop: 'Спри'
+        suggested: Препоръчани радиостанции
+        tags: Тагове
+        share: Сподели радиостанцията
+        title: 'Слушайте %radio% на живо и безплатно'
+        title_country: '%radio% - Слушайте на живо и безплатно'
+        website: Уебсайт
+        banned: Тази радиостанция е забранена.
+        closed: Тази радиостанция е закрита.
+        desc: 'Описание'
+        tagline: 'Слоган'
+        updated: 'Обновено'
+        languages: 'Езици'
+        popup: За да слушате тази радиостанция, трябва да се отвори изскачащ прозорец.
+        advanced: Използвай разширения плейър<br>(сила на звука, любими, история...)
+
+        modification:
+            at_least_one: Попълнете едно или повече полета.
+            comment: Коментар
+            duplicate: Отбележи тази радиостанция като дублирана
+            img: URL на логото (.jpg, .png, .gif)
+            name: Име
+            radio: Радио
+            stream_url: URL на потока
+            success: Благодарим за предложенията. Те бяха записани и ще бъдат прегледани скоро.
+            suggest: Предложи промяна
+            website: Уебсайт
+            submit: Изпрати
+
+        submission:
+            my_radios: Моите радиостанции
+            no_radios: Нямате радиостанции.
+            title_new: Добави радиостанция
+            title_edit: Редактирай радиостанция
+            img: URL на логото (.jpg, .png, .gif)
+            img_file: "Лого (.jpg, .png, .gif, .webp, до 5 MB)"
+            name: Име
+            radio: Радио
+            stream_url: URL на потока
+            slogan: Слоган
+            description: Описание
+            success_new: Радиостанцията ви беше записана и скоро ще бъде достъпна.
+            success_edit: Радиостанцията ви беше редактирана.
+            success_delete: Радиостанцията ви беше изтрита.
+            add: Добави радиостанция
+            edit: Редактирай радиостанция
+            website: Уебсайт
+            country: Държава
+            language: Език
+            tags: Тагове (с малки букви, разделени със запетая)
+            genres: Музикален стил (с малки букви, разделени със запетая)
+            submit: Изпрати
+            delete: Изтрий
+            delete_confirm: Сигурни ли сте, че искате да изтриете тази радиостанция? Това действие е необратимо.
+            duplicated: Тази радиостанция вече присъства в сайта. Вашата радиостанция е пренасочена към <a target="_blank" href="%link%">%name%</a>.
+            stats_title: Статистика
+            stats_this_month: "%sessions% сесии на слушане с обща продължителност %time% този месец."
+            stats_last_month: "%sessions% сесии на слушане с обща продължителност %time% миналия месец."
+            email_toggle: Получавай месечна статистика за слушанията по имейл
+    top:
+        page_title: 'Най-популярните радиостанции: %country%'
+        description: 'Слушайте най-добрите радиостанции: %country%'
+        more: 'Още топ радиостанции: %country%'
+
+    last:
+        page_title: 'Последно слушани радиостанции: %country%'
+        description: 'Слушайте най-добрите радиостанции: %country%'
+        more: 'Още наскоро слушани радиостанции: %country%'
+
+    top_genre:
+        page_title: 'Най-популярните радиостанции в стил %genre%'
+        description: 'Слушайте най-добрите радиостанции в стил %genre%'
+        more: 'Още топ радиостанции в стил %genre%'
+
+    user:
+        page_title: Създай профил
+
+    account:
+        prefix: Моят профил
+        menu:
+            email: Имейл
+            password: Парола
+            preferences: Предпочитания
+            delete: Изтриване
+            streams: Моите радиостанции
+        email:
+            page_title: Промяна на имейла
+            info_1: Това ще обнови имейла, който използвате за вход в сайта.
+            info_2: Потвърждение ще бъде изпратено на стария и на новия адрес.
+            success: Имейл адресът беше обновен.
+            new_email: 'Нов имейл адрес:'
+            new_email_placeholder: primer@email.com
+            update_btn: Обнови
+        password:
+            page_title: Промяна на паролата
+            success: Паролата беше обновена.
+            update_btn: Обнови
+        preferences:
+            page_title: Предпочитания
+            update_btn: Обнови
+            store_history: Запазвай историята на слушаните радиостанции
+            reset_history: Изтрий историята ми
+            reset_confirm: Сигурни ли сте, че искате да изтриете историята си?
+            reset_confirmed: Историята ви беше изтрита.
+        delete:
+            page_title: Изтриване на профила
+            warning: Внимание, това действие е необратимо. Любимите ви ще бъдат изтрити
+            confirm: Сигурни ли сте, че искате да изтриете профила си?
+            delete_btn: Изтрий профила ми
+        delete_confirm:
+            success: Профилът ви беше изтрит.
+
+boxes:
+    already_account:
+        title: Вече имате профил?
+        content: Натиснете тук, за да влезете
+
+    no_account:
+        title: Все още нямате профил?
+        content: Натиснете тук, за да се регистрирате
+
+    why_account:
+        title: Защо да се регистрирате?
+        content: "- Профилът ви дава достъп до любимите ви радиостанции и потоци от всеки браузър и от приложението."
+        content2: "- Запазвайте имената на песните, които слушате."
+        content3: "- Разглеждайте историята си (по избор)"
+        content4: "- По-малко реклами"
+
+registrationForm:
+    email: 'Имейл'
+    error:
+        captcha: 'Невалидна captcha, моля, опитайте отново.'
+        empty: 'Това поле не може да бъде празно.'
+        password_min: 'Паролата трябва да съдържа поне 8 знака.'
+        password: 'Паролите не съвпадат.'
+    captcha: 'Въведете буквите и цифрите, изписани по-долу'
+    password: 'Парола'
+    password_confirm: 'Потвърждение на паролата'
+    submit_create: 'Създай моя профил'
+
+connectionForm:
+    already_logged: В момента сте влезли като %email%
+    logout: изход
+    email: 'Имейл'
+    password: 'Парола'
+    remember_me: 'Запомни ме'
+    submit_connect: 'Вход'
+
+updatePasswordForm:
+    new: Нова парола
+    new_confirm: Потвърждение на новата парола
+    error_not_same: Паролите не съвпадат.
+    error_not_empty: Това поле не може да бъде празно.
+    error_length: Паролата трябва да съдържа поне 8 знака.
+
+footer:
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Português
+    it: Italiano
+    pl: Polski
+    el: Ελληνικά
+    ar: العربية
+    ro: Română
+    hu: Magyar
+    tr: Türkçe
+    nl: Nederlands
+    ru: Русский
+    he: עברית
+    bg: Български
+
+legal: 'Правна информация'
+
+cookie:
+    accept: Да
+    allow: Да се показват ли персонализирани реклами?
+    deny: Не
+    disclaimer: (%name% не продава данните на своите посетители)
+
+admin:
+    api:
+        flash:
+            success: Действието е изпълнено.
+            error: Възникна грешка.
+        cache:
+            title: Api - Кеш
+            menu: Кеш
+            clear_streams: Изчисти кеша на потоците
+        search:
+            title: Търсене
+            menu: Търсене
+            import: Импортирай
+
+    dashboard:
+        title: Табло
+        menu:
+            brief: Обобщение
+            table: Таблица
+        table:
+            shows: Предавания
+            sections: Рубрики
+            stream_abbr: Пот.
+        accounts:
+            title: Профили
+            active: '%number% активни профила'
+            email: email
+            created_at: Създаден
+            last: (последните %number%)
+        no_schedule:
+            title: Радиостанции без програма днес
+            all_ok: Всички радиостанции имат показана програма.
+        stream_errors:
+            title: Грешки в потоците
+            error: Грешки при <strong>%number%</strong> проверки
+            link: линк
+            no_errors: Всички потоци работят
+        live_song_errors:
+            title: Грешки при текущата песен
+            error: Грешки при <strong>%number%</strong> проверки
+            reset_all: reset all
+            link: линк
+            no_errors: Няма записани грешки
+
+    listening:
+        title: Слушания
+        today: Днес
+        yesterday: Вчера
+        this_month: Този месец
+        last_month: Миналия месец
+        ratings: Анкети
+
+    stream_errors:
+        title: Грешки в потоците
+        name: Име
+        errors: Грешки
+        view: Виж
+        edit: Edit
+        reset: Reset
+        reset_all: Нулирай всички
+
+    stream_check:
+        title: Check streams
+        img: Img
+        stream: Stream
+        website: Сайт
+        ssl: SSL
+        commit: Commit
+        last_checked: Checked
+        view: Виж
+        edit: Edit
+
+    suggestion:
+        duplicate: Тази радиостанция е отбелязана като дублирана.

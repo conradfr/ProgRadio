@@ -19,5 +19,8 @@ defmodule ProgRadioApi.Category do
     field(:name_nl, :string)
     field(:name_se, :string)
     field(:name_dk, :string)
+    field(:name_ru, :string)
+    field(:name_he, :string)
+    field(:name_bg, :string)
   end
 end

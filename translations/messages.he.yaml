@@ -1,0 +1,451 @@
+general:
+    main_description: האזנה אונליין ולוחות שידורים של תחנות הרדיו בצרפת.
+    main_title_progradio: כל לוחות השידורים, כל התוכניות והאזנה אונליין
+    main_title_radioaddict: האזנה אונליין לכל תחנות הרדיו בצרפת ובעולם!
+
+global:
+    switch:
+        es: Ver en español
+        en: View in English
+        fr: Voir en français
+        de: Auf Deutsch anzeigen
+        pt: Ver em português
+        it: Visualizza in italiano
+        pl: Zobacz po polsku
+        el: Προβολή στα ελληνικά
+        ar: عرض باللغة العربية
+        ro: Vezi în română
+        hu: Megtekintés magyarul
+        tr: Türkçe görüntüle
+        nl: Bekijk in het Nederlands
+        ru: Смотреть на русском
+        he: הצג בעברית
+        bg: Вижте на български
+
+menu:
+    account: החשבון שלי
+    admin:
+        dashboard: לוח בקרה
+        listening: האזנות
+        overloading: Stream Overloading
+        playing_errors: שגיאות שידור
+        check: Stream Check
+        shares: נתחי האזנה
+        suggestions: הצעות לשידורים
+        easyadmin: Easy Admin
+        actions: ניהול
+    all: כל תחנות הרדיו הצרפתיות
+    app: אפליקציית Android
+    contact: צור קשר
+    faq: שאלות נפוצות
+
+    favorites: המועדפים שלי
+    favorites_menu:
+        all: כל המדינות
+        be: בלגיה
+        ch: שווייץ
+        fr: צרפת
+        us: ארצות הברית
+        mx: מקסיקו
+        co: קולומביה
+        ar: ארגנטינה
+        pe: פרו
+        de: גרמניה
+        at: אוסטריה
+        es: ספרד
+        pt: פורטוגל
+        br: ברזיל
+        ca: קנדה
+        au: אוסטרליה
+        nz: ניו זילנד
+        gb: בריטניה
+        ie: אירלנד
+        it: איטליה
+        lu: לוקסמבורג
+        mc: מונקו
+        sm: סן מרינו
+        mt: מלטה
+        va: הוותיקן
+        pl: פולין
+        gr: יוון
+        dz: אלג'יריה
+        ma: מרוקו
+        tn: תוניסיה
+        hu: הונגריה
+        tr: טורקיה
+        nl: הולנד
+        ro: רומניה
+        ru: רוסיה
+        ua: אוקראינה
+        bg: בולגריה
+        il: ישראל
+
+    songs: שירים שמורים
+
+    home:
+        enable: הגדר כדף הבית
+        disable: הסר את דף הבית המותאם אישית
+    logout: התנתקות
+    menu: תפריט
+    mode:
+        dark: מצב כהה
+        light: מצב בהיר
+    now: עכשיו בשידור
+    params: הגדרות
+    plus: עוד
+    schedule: לוח שידורים
+    signon: התחברות
+    signup: יצירת חשבון
+    streaming: כל תחנות הרדיו
+    timer: טיימר
+    title: תפריט
+
+sponsor:
+    suggestion_page: "זו תחנת הרדיו שלך?<br>עקבו אחר %name% וקבלו התראה במקרה של שקט ממושך או תקלה.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">נסו את StreamChecker של Radio-Addict</a>"
+    streams_page: "עקבו אחר תחנות הרדיו האינטרנטיות שלכם וקבלו התראה במקרה של תקלה.<br><a href=\"https://stream-checker.radio-addict.com\" target=\"_blank\">נסו את StreamChecker של Radio-Addict</a>"
+    streams_page_edit: "עקבו אחר %name% וקבלו התראה במקרה של שקט ממושך או תקלה.<br><a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">נסו את StreamChecker של Radio-Addict</a>"
+    short: "זו תחנת הרדיו שלך? <a href=\"https://stream-checker.radio-addict.com?u=%url%\" target=\"_blank\">עקבו אחר %name% עם Stream-Checker</a>"
+
+page:
+    contact:
+        title: 'צור קשר'
+        email: 'אימייל'
+        message: 'הודעה *'
+        name: 'שם *'
+        send: 'שליחה'
+        sent: 'ההודעה שלך נשלחה.'
+        add_radio_1: אני רוצה להוסיף את תחנת הרדיו (האינטרנטית) שלי, איך עושים זאת?
+        add_radio_2: 'יש לך שתי אפשרויות:'
+        add_radio_3: צרו חשבון והוסיפו את תחנת הרדיו שלכם באזור האישי.
+        add_radio_4: 2/ השתמשו ב-API של Radio-Browser. כדי להגיש אליו את תחנת הרדיו שלכם, <a target="_blank" href="https://www.radio-browser.info/#/add">לחצו כאן</a>.
+
+    faq:
+        title: 'שאלות נפוצות'
+        page_title: 'שאלות נפוצות - לוחות השידורים של תחנות הרדיו בצרפת'
+        page_description: 'שאלות על Programmes-Radio.com'
+
+    forgotten_password:
+        error: <strong>אירעה שגיאה.</strong><br>אם הקישור לשחזור הסיסמה פג תוקף, אנא התחילו את התהליך מחדש
+        click_here: לחצו כאן
+        done_title: איפוס סיסמה
+        done: '<strong>הסיסמה עודכנה.</strong><br>ניתן להתחבר %link%בלחיצה כאן%link_end%.'
+        page_title: שכחתי סיסמה
+        success: אם נמצא חשבון עם האימייל <strong>%email%</strong>, נשלחה אליו הודעה עם קישור לאיפוס הסיסמה.
+        submit: שליחה
+
+    login:
+        forgotten_password: שכחת סיסמה?
+        page_title: התחברות
+
+    now:
+        back: '← ללוח השידורים'
+        no_schedule: <strong>אופס...</strong> אין תוכניות זמינות.
+        page_description: 'מה לשמוע עכשיו?'
+        page_title: 'עכשיו בשידור ברדיו'
+        title: 'עכשיו בשידור ברדיו'
+
+    radio:
+        advanced: שימוש בנגן המתקדם<br>(רדיו אינטרנטי, שירים בשידור...)
+        back: '← ללוח השידורים של כל תחנות הרדיו'
+        current: ↓ לתוכנית המשודרת כעת
+        description: 'לוח השידורים של %radio% והאזנה אונליין'
+        goto_today: לתוכניות של היום
+        goto_schedule: ללוח השידורים
+        see_previous: לתוכניות הקודמות
+        more_radios: 'עוד תחנות רדיו'
+        no_schedule: 'לוח השידורים אינו זמין.'
+        not_today: אתם צופים בלוח השידורים של יום אחר מהיום
+        play: 'האזנה ל-%radio%'
+        stop: 'עצירת %radio%'
+        summary: 'תיאור'
+        title: '%radio% - לוח שידורים ל-%date%'
+        website: 'אתר'
+
+    registered:
+        page_title: יצירת חשבון
+        alert_1: החשבון שלך נוצר!
+        alert_2: אם היו לך תחנות רדיו ושידורים מועדפים, הם נוספו אוטומטית לחשבון שלך.
+        what_now_question: מה תרצו לעשות עכשיו?
+        what_now_choice1: להתחבר לחשבון שלי
+        what_now_choice2: לעיין בלוחות השידורים
+        what_now_choice3: להאזין לרדיו אונליין
+
+    stream:
+        favorite:
+            add: 'הוספה למועדפים'
+            remove: 'הסרה מהמועדפים'
+        country: מדינה
+        description: 'האזינו ל-%radio% בשידור חי ובחינם'
+        disabled: 'נראה שתחנת רדיו זו אינה פעילה.'
+        discover: גלו עוד תחנות רדיו, חפשו לפי מדינה וסגנון מוזיקה...
+        errors: 'דווחו שגיאות השמעה בתחנת רדיו זו.'
+        find: חיפוש
+        find_amazon: חיפוש ב-Amazon
+        find_deezer: חיפוש ב-Deezer
+        find_spotify: חיפוש ב-Spotify
+        find_youtube: חיפוש ב-Youtube
+        find_itunes: חיפוש ב-iTunes
+        current_song: מתנגן עכשיו
+        history: 'שירים אחרונים'
+        about: על תחנת הרדיו
+        schedule: לוח שידורים
+        more_information: מידע נוסף
+        listeners: מאזינים
+        play: 'האזנה'
+        playing: שיר
+        playing_error: שגיאת השמעה
+        stop: 'עצירה'
+        suggested: תחנות רדיו מומלצות
+        tags: תגיות
+        share: שיתוף תחנת הרדיו
+        title: 'האזינו ל-%radio% בשידור חי ובחינם'
+        title_country: '%radio% - האזנה בשידור חי ובחינם'
+        website: אתר
+        banned: תחנת רדיו זו חסומה.
+        closed: תחנת רדיו זו נסגרה.
+        desc: 'תיאור'
+        tagline: 'סלוגן'
+        updated: 'עודכן'
+        languages: 'שפות'
+        popup: כדי להשמיע תחנת רדיו זו יש לפתוח חלון קופץ.
+        advanced: שימוש בנגן המתקדם<br>(עוצמת שמע, מועדפים, היסטוריה...)
+
+        modification:
+            at_least_one: יש למלא שדה אחד או יותר.
+            comment: הערה
+            duplicate: דיווח על תחנת רדיו זו ככפולה
+            img: כתובת הלוגו (.jpg, .png, .gif)
+            name: שם
+            radio: תחנת רדיו
+            stream_url: כתובת השידור
+            success: תודה על ההצעות. הן נשמרו וייבדקו בקרוב.
+            suggest: הצעת עדכון
+            website: אתר
+            submit: שליחה
+
+        submission:
+            my_radios: תחנות הרדיו שלי
+            no_radios: אין לך תחנות רדיו.
+            title_new: הוספת תחנת רדיו
+            title_edit: עריכת תחנת רדיו
+            img: כתובת הלוגו (.jpg, .png, .gif)
+            img_file: "לוגו (.jpg, .png, .gif, .webp, עד 5MB)"
+            name: שם
+            radio: תחנת רדיו
+            stream_url: כתובת השידור
+            slogan: סלוגן
+            description: תיאור
+            success_new: תחנת הרדיו שלך נשמרה ותהיה זמינה בקרוב.
+            success_edit: תחנת הרדיו שלך עודכנה.
+            success_delete: תחנת הרדיו שלך נמחקה.
+            add: הוספת תחנת רדיו
+            edit: עריכת תחנת רדיו
+            website: אתר
+            country: מדינה
+            language: שפה
+            tags: תגיות (באותיות קטנות, מופרדות בפסיקים)
+            genres: סגנונות מוזיקה (באותיות קטנות, מופרדים בפסיקים)
+            submit: שליחה
+            delete: מחיקה
+            delete_confirm: האם אתם בטוחים שברצונכם למחוק את תחנת הרדיו? לא ניתן לבטל פעולה זו.
+            duplicated: תחנת רדיו זו כבר קיימת באתר. תחנת הרדיו שלך מופנית אל <a target="_blank" href="%link%">%name%</a>.
+            stats_title: סטטיסטיקות
+            stats_this_month: "%sessions% האזנות בזמן כולל של %time% החודש."
+            stats_last_month: "%sessions% האזנות בזמן כולל של %time% בחודש שעבר."
+            email_toggle: קבלת סטטיסטיקות האזנה חודשיות באימייל
+    top:
+        page_title: 'תחנות הרדיו הפופולריות ביותר: %country%'
+        description: 'האזינו לתחנות הרדיו הטובות ביותר: %country%'
+        more: 'עוד תחנות רדיו מובילות: %country%'
+
+    last:
+        page_title: 'תחנות רדיו שהושמעו לאחרונה: %country%'
+        description: 'האזינו לתחנות הרדיו הטובות ביותר: %country%'
+        more: 'עוד תחנות רדיו שהושמעו לאחרונה: %country%'
+
+    top_genre:
+        page_title: 'תחנות הרדיו הפופולריות ביותר בסגנון %genre%'
+        description: 'האזינו לתחנות הרדיו הטובות ביותר בסגנון %genre%'
+        more: 'עוד תחנות רדיו מובילות בסגנון %genre%'
+
+    user:
+        page_title: יצירת חשבון
+
+    account:
+        prefix: החשבון שלי
+        menu:
+            email: אימייל
+            password: סיסמה
+            preferences: העדפות
+            delete: מחיקה
+            streams: תחנות הרדיו שלי
+        email:
+            page_title: שינוי האימייל שלי
+            info_1: פעולה זו תעדכן את האימייל המשמש להתחברות לאתר.
+            info_2: אישור יישלח לכתובת הישנה ולכתובת החדשה.
+            success: כתובת האימייל עודכנה.
+            new_email: 'כתובת אימייל חדשה:'
+            new_email_placeholder: example@email.com
+            update_btn: עדכון
+        password:
+            page_title: שינוי הסיסמה שלי
+            success: הסיסמה עודכנה.
+            update_btn: עדכון
+        preferences:
+            page_title: העדפות
+            update_btn: עדכון
+            store_history: שמירת היסטוריית תחנות הרדיו שהושמעו
+            reset_history: מחיקת ההיסטוריה שלי
+            reset_confirm: האם אתם בטוחים שברצונכם למחוק את ההיסטוריה?
+            reset_confirmed: ההיסטוריה שלך נמחקה.
+        delete:
+            page_title: מחיקת החשבון
+            warning: שימו לב, לא ניתן לבטל פעולה זו. המועדפים שלך יימחקו
+            confirm: האם אתם בטוחים שברצונכם למחוק את החשבון?
+            delete_btn: מחיקת החשבון שלי
+        delete_confirm:
+            success: החשבון שלך נמחק.
+
+boxes:
+    already_account:
+        title: כבר יש לך חשבון?
+        content: לחצו כאן כדי להתחבר
+
+    no_account:
+        title: עדיין אין לך חשבון?
+        content: לחצו כאן כדי להירשם
+
+    why_account:
+        title: למה להירשם?
+        content: "- חשבון מאפשר לכם לגשת לתחנות הרדיו והשידורים המועדפים מכל דפדפן ומהאפליקציה."
+        content2: "- שמירת שמות השירים שאתם מאזינים להם."
+        content3: "- צפייה בהיסטוריה שלכם (אופציונלי)"
+        content4: "- פחות פרסומות"
+
+registrationForm:
+    email: 'אימייל'
+    error:
+        captcha: 'קוד האימות שגוי, נסו שוב.'
+        empty: 'שדה זה אינו יכול להיות ריק.'
+        password_min: 'הסיסמה חייבת להכיל לפחות 8 תווים.'
+        password: 'הסיסמאות אינן תואמות.'
+    captcha: 'הקלידו את האותיות והספרות המופיעות למטה'
+    password: 'סיסמה'
+    password_confirm: 'אימות סיסמה'
+    submit_create: 'יצירת החשבון שלי'
+
+connectionForm:
+    already_logged: אתם מחוברים כעת בתור %email%
+    logout: התנתקות
+    email: 'אימייל'
+    password: 'סיסמה'
+    remember_me: 'זכור אותי'
+    submit_connect: 'התחברות'
+
+updatePasswordForm:
+    new: סיסמה חדשה
+    new_confirm: אימות הסיסמה החדשה
+    error_not_same: הסיסמאות אינן תואמות.
+    error_not_empty: שדה זה אינו יכול להיות ריק.
+    error_length: הסיסמה חייבת להכיל לפחות 8 תווים.
+
+footer:
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Português
+    it: Italiano
+    pl: Polski
+    el: Ελληνικά
+    ar: العربية
+    ro: Română
+    hu: Magyar
+    tr: Türkçe
+    nl: Nederlands
+    ru: Русский
+    he: עברית
+    bg: Български
+
+legal: 'מידע משפטי'
+
+cookie:
+    accept: כן
+    allow: לאשר פרסומות מותאמות אישית?
+    deny: לא
+    disclaimer: (%name% אינו מוכר את נתוני המבקרים שלו)
+
+admin:
+    api:
+        flash:
+            success: הפעולה הושלמה.
+            error: אירעה שגיאה.
+        cache:
+            title: Api - מטמון
+            menu: מטמון
+            clear_streams: ניקוי מטמון השידורים
+        search:
+            title: חיפוש
+            menu: חיפוש
+            import: ייבוא
+
+    dashboard:
+        title: לוח בקרה
+        menu:
+            brief: סיכום
+            table: טבלה
+        table:
+            shows: תוכניות
+            sections: פינות
+            stream_abbr: שד.
+        accounts:
+            title: חשבונות
+            active: '%number% חשבונות פעילים'
+            email: email
+            created_at: נוצר
+            last: (%number% אחרונים)
+        no_schedule:
+            title: תחנות רדיו ללא לוח שידורים היום
+            all_ok: לכל תחנות הרדיו מוצג לוח שידורים.
+        stream_errors:
+            title: שגיאות שידור
+            error: שגיאות ב-<strong>%number%</strong> בדיקות
+            link: קישור
+            no_errors: כל השידורים פועלים
+        live_song_errors:
+            title: שגיאות שיר נוכחי
+            error: שגיאות ב-<strong>%number%</strong> בדיקות
+            reset_all: reset all
+            link: קישור
+            no_errors: לא נרשמו שגיאות
+
+    listening:
+        title: האזנות
+        today: היום
+        yesterday: אתמול
+        this_month: החודש
+        last_month: החודש שעבר
+        ratings: סקרים
+
+    stream_errors:
+        title: שגיאות שידור
+        name: שם
+        errors: שגיאות
+        view: צפייה
+        edit: Edit
+        reset: Reset
+        reset_all: איפוס הכול
+
+    stream_check:
+        title: Check streams
+        img: Img
+        stream: Stream
+        website: אתר
+        ssl: SSL
+        commit: Commit
+        last_checked: Checked
+        view: צפייה
+        edit: Edit
+
+    suggestion:
+        duplicate: תחנת רדיו זו מסומנת ככפולה.

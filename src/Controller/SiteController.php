@@ -24,7 +24,7 @@ use App\Form\ContactType;
 
 class SiteController extends AbstractController
 {
-   final public const array LANG = ['fr', 'en', 'es', 'de', 'pt', 'it', 'pl', 'el', 'ar', 'ro', 'hu', 'tr', 'nl'];
+   final public const array LANG = ['fr', 'en', 'es', 'de', 'pt', 'it', 'pl', 'el', 'ar', 'ro', 'hu', 'tr', 'nl', 'ru', 'he', 'bg'];
 
     #[
         Route('/{_locale}/faq',

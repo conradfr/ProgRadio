@@ -126,7 +126,7 @@ config :icecast, adapter: Icecast.Adapter.Req
 
 config :progradio_api, ProgRadioApiWeb.Gettext,
   default_locale: "en",
-  locales: ~w(fr en es de pt it el pl ar hu tr)
+  locales: ~w(fr en es de pt it el pl ar ro hu tr nl ru he bg)
 
 config :ex_cldr,
   default_locale: "en",

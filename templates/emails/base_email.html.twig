@@ -1,4 +1,4 @@
-<html lang="{{ user_locale }}"{% if user_locale == "ar"%} dir="rtl"{% endif %}>
+<html lang="{{ user_locale }}"{% if app.request.locale in ["ar", "he"] %} dir="rtl"{% endif %}>
 <body>
 {% block content %}
 {% endblock %}

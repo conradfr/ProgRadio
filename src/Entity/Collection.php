@@ -88,6 +88,18 @@ class Collection
     private string $name_ro;
 
     #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_ru;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_he;
+
+    #[Groups(['export'])]
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $name_bg;
+
+    #[Groups(['export'])]
     #[ORM\Column(type: 'string', length: 25)]
     private ?string $shortName = null;
 
@@ -337,5 +349,35 @@ class Collection
     public function setNameRo(string $name_ro): void
     {
         $this->name_ro = $name_ro;
+    }
+
+    public function getNameRu(): string
+    {
+        return $this->name_ru;
+    }
+
+    public function setNameRu(string $name_ru): void
+    {
+        $this->name_ru = $name_ru;
+    }
+
+    public function getNameHe(): string
+    {
+        return $this->name_he;
+    }
+
+    public function setNameHe(string $name_he): void
+    {
+        $this->name_he = $name_he;
+    }
+
+    public function getNameBg(): string
+    {
+        return $this->name_bg;
+    }
+
+    public function setNameBg(string $name_bg): void
+    {
+        $this->name_bg = $name_bg;
     }
 }

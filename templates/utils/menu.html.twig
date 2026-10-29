@@ -36,7 +36,7 @@
         {% endif %}
         <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" class="nav-item">
             <a class="nav-link ps-3 py-1 spa-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">
-                &rarr; {{ collection.name_FR }}
+                &rarr; {{ collection["name_" ~ app.request.locale|upper] }}
             </a>
         </li>
     {% endfor %}
@@ -184,7 +184,26 @@
         {% if app.request.locale == 'nl' %}
             <li>
                 <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/nl">{{ 'menu.favorites_menu.nl'|trans }}</a>
-                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/be">{{ 'menu.favorites_menu.nl'|trans }}</a>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/be">{{ 'menu.favorites_menu.be'|trans }}</a>
+            </li>
+        {% endif %}
+
+        {% if app.request.locale == 'ru' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/ru">{{ 'menu.favorites_menu.ru'|trans }}</a>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/ua">{{ 'menu.favorites_menu.ua'|trans }}</a>
+            </li>
+        {% endif %}
+
+        {% if app.request.locale == 'he' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/il">{{ 'menu.favorites_menu.il'|trans }}</a>
+            </li>
+        {% endif %}
+
+        {% if app.request.locale == 'bg' %}
+            <li>
+                <a class="dropdown-item spa-link" href="{{ path('app') }}streaming/bg">{{ 'menu.favorites_menu.bg'|trans }}</a>
             </li>
         {% endif %}
 

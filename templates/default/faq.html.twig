@@ -12,7 +12,7 @@
     {% for collection in collections %}
         {% if collection.code_name != 'favorites' %}
             <p>
-                <a class="faq-collection-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">{{ collection.name_FR }}</a>:
+                <a class="faq-collection-link" href="{{ path('app') }}schedule/{{ collection.code_name }}">{{ collection["name_" ~ locale|upper] }}</a>:
 
                 {% for radioCodeName in collection.radios %}
                     {% if radios[radioCodeName] is defined  %}
@@ -533,6 +533,198 @@
                 '<p style="margin-top: 5px"><strong>Tüm ülkelerin en iyi radyo kanalları:</strong></p>',
                 countries.list(app.request.locale, 'top'),
                 '<p class="mt-4"><strong>Türe göre en popüler radyolar:</strong></p>',
+                genres.list()
+            ]
+        }
+    ],
+    "it": [
+        {
+            'question': "Che cos'è Programmes-Radio.com?",
+            'answer': [
+                "Programmes-Radio.com è un sito indipendente che raccoglie i palinsesti delle radio francesi e internazionali.",
+                "I dati vengono aggiornati ogni giorno a partire dai siti delle radio.",
+                "Puoi anche ascoltare in streaming qualsiasi radio cliccando sul suo logo."
+            ]
+        },
+        {
+            'question': "Come sono classificate le radio?",
+            'answer': [
+                "A seconda della categoria, la classifica si basa sull'ascolto cumulato dell'ultima rilevazione Médiamétrie oppure sull'ordine alfabetico."
+            ]
+        },
+        {
+            'question': "Alcune radio hanno una pubblicità all'avvio della riproduzione.",
+            'answer': [
+                "Queste pubblicità sono aggiunte dalle radio stesse e non da Programmes-Radio.com.",
+                "Il lettore di Programmes-Radio cerca di ridurre al minimo queste pubblicità quando passi da una radio all'altra o metti una radio in pausa.",
+                "In alcuni casi il blocco delle pubblicità può impedire la riproduzione della radio (esempio: RMC)."
+            ]
+        },
+        {
+            'question': "La mia radio preferita non c'è.",
+            'answer': [
+                "Aggiungiamo nuove radio man mano: indicaci nella pagina Contatto la radio che vorresti vedere aggiunta."
+            ]
+        },
+        {
+            'question': "Vorrei aggiungere la mia (web)radio, come faccio?",
+            'answer': [
+                'Una volta creato il tuo account, vai alla pagina \"Le mie radio\" per aggiungerla.',
+                'Se hai una radio con un palinsesto, scrivici tramite il modulo di contatto.'
+            ]
+        },
+        {
+            'question': "Elenco delle radio disponibili.",
+            'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">Puoi anche ascoltare radio di tutto il mondo nella <a href="' ~ path('app') ~ 'streaming">pagina streaming</a>, come ad esempio <a href="' ~ path('streams_one_short', {'shortId': '97d830f4-c35f-11e9-8502-52543be04c81'|shortid, 'codename': 'Alternative Radio'|slug }) ~ '">Alternative Radio</a> (Francia), <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Italia) o <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Germania).</p>',
+                '<p style="margin-top: 5px"><strong>Le migliori radio di tutti i paesi:</strong></p>',
+                countries.list(app.request.locale, 'top'),
+                '<p class="mt-4"><strong>Le radio più popolari per genere:</strong></p>',
+                genres.list()
+            ]
+        }
+    ],
+    "ru": [
+        {
+            'question': "Что такое Programmes-Radio.com?",
+            'answer': [
+                "Programmes-Radio.com — независимый сайт, на котором собраны программы передач французских и зарубежных радиостанций.",
+                "Данные ежедневно обновляются с сайтов радиостанций.",
+                "Вы также можете слушать онлайн любую радиостанцию, нажав на её логотип."
+            ]
+        },
+        {
+            'question': "Как упорядочены радиостанции?",
+            'answer': [
+                "В зависимости от категории радиостанции упорядочены по совокупной доле аудитории по данным последнего замера Médiamétrie или по алфавиту."
+            ]
+        },
+        {
+            'question': "У некоторых радиостанций в начале воспроизведения звучит реклама.",
+            'answer': [
+                "Эту рекламу добавляют сами радиостанции, а не Programmes-Radio.com.",
+                "Плеер Programmes-Radio старается свести эту рекламу к минимуму, когда вы переключаетесь между радиостанциями или ставите радио на паузу.",
+                "В некоторых случаях блокировщик рекламы может мешать воспроизведению радиостанции (например, RMC)."
+            ]
+        },
+        {
+            'question': "Здесь нет моей любимой радиостанции.",
+            'answer': [
+                "Радиостанции добавляются постепенно: сообщите нам на странице «Контакты», какую радиостанцию вы хотели бы видеть на сайте."
+            ]
+        },
+        {
+            'question': "Я хочу добавить свою (веб-)радиостанцию, как это сделать?",
+            'answer': [
+                'После создания аккаунта перейдите на страницу «Мои радиостанции», чтобы добавить её.',
+                'Если у вас радиостанция с программой передач, напишите нам через форму обратной связи.'
+            ]
+        },
+        {
+            'question': "Список доступных радиостанций.",
+            'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">Вы также можете слушать радиостанции со всего мира на <a href="' ~ path('app') ~ 'streaming">странице онлайн-радио</a>, например <a href="' ~ path('streams_one_short', {'shortId': '97d830f4-c35f-11e9-8502-52543be04c81'|shortid, 'codename': 'Alternative Radio'|slug }) ~ '">Alternative Radio</a> (Франция), <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Италия) или <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Германия).</p>',
+                '<p style="margin-top: 5px"><strong>Лучшие радиостанции всех стран:</strong></p>',
+                countries.list(app.request.locale, 'top'),
+                '<p class="mt-4"><strong>Самые популярные радиостанции по жанрам:</strong></p>',
+                genres.list()
+            ]
+        }
+    ],
+    "he": [
+        {
+            'question': "מה זה Programmes-Radio.com?",
+            'answer': [
+                "Programmes-Radio.com הוא אתר עצמאי שמרכז את לוחות השידורים של תחנות רדיו צרפתיות ובינלאומיות.",
+                "הנתונים מתעדכנים מדי יום מאתרי תחנות הרדיו.",
+                "אפשר גם להאזין אונליין לכל תחנת רדיו בלחיצה על הלוגו שלה."
+            ]
+        },
+        {
+            'question': "איך מסודרות תחנות הרדיו?",
+            'answer': [
+                "בהתאם לקטגוריה, הדירוג מבוסס על נתח ההאזנה המצטבר בסקר Médiamétrie האחרון, או על סדר אלפביתי."
+            ]
+        },
+        {
+            'question': "בחלק מתחנות הרדיו יש פרסומת בתחילת ההשמעה.",
+            'answer': [
+                "את הפרסומות האלה מוסיפות תחנות הרדיו עצמן, ולא Programmes-Radio.com.",
+                "הנגן של Programmes-Radio מנסה לצמצם את הפרסומות האלה כשאתם עוברים בין תחנות או עוצרים תחנה.",
+                "במקרים מסוימים חוסם פרסומות עלול למנוע את השמעת התחנה (לדוגמה: RMC)."
+            ]
+        },
+        {
+            'question': "תחנת הרדיו האהובה עליי לא מופיעה.",
+            'answer': [
+                "אנחנו מוסיפים תחנות רדיו בהדרגה. כתבו לנו בדף צור קשר איזו תחנה הייתם רוצים שנוסיף."
+            ]
+        },
+        {
+            'question': "אני רוצה להוסיף את תחנת הרדיו (האינטרנטית) שלי, איך עושים זאת?",
+            'answer': [
+                'לאחר יצירת החשבון, היכנסו לדף \"תחנות הרדיו שלי\" כדי להוסיף אותה.',
+                'אם יש לכם תחנת רדיו עם לוח שידורים, כתבו לנו דרך טופס יצירת הקשר.'
+            ]
+        },
+        {
+            'question': "רשימת תחנות הרדיו הזמינות.",
+            'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">אפשר גם להאזין לתחנות רדיו מכל העולם ב<a href="' ~ path('app') ~ 'streaming">דף השידורים החיים</a>, למשל <a href="' ~ path('streams_one_short', {'shortId': '97d830f4-c35f-11e9-8502-52543be04c81'|shortid, 'codename': 'Alternative Radio'|slug }) ~ '">Alternative Radio</a> (צרפת), <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (איטליה) או <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (גרמניה).</p>',
+                '<p style="margin-top: 5px"><strong>תחנות הרדיו המובילות בכל המדינות:</strong></p>',
+                countries.list(app.request.locale, 'top'),
+                '<p class="mt-4"><strong>תחנות הרדיו הפופולריות ביותר לפי סגנון:</strong></p>',
+                genres.list()
+            ]
+        }
+    ],
+    "bg": [
+        {
+            'question': "Какво е Programmes-Radio.com?",
+            'answer': [
+                "Programmes-Radio.com е независим сайт, който събира програмите на френски и международни радиостанции.",
+                "Данните се обновяват всеки ден от сайтовете на радиостанциите.",
+                "Можете също да слушате онлайн всяка радиостанция, като натиснете логото ѝ."
+            ]
+        },
+        {
+            'question': "Как са подредени радиостанциите?",
+            'answer': [
+                "В зависимост от категорията класирането се основава на кумулативния аудиторен дял от последното измерване на Médiamétrie или е по азбучен ред."
+            ]
+        },
+        {
+            'question': "Някои радиостанции пускат реклама в началото на слушането.",
+            'answer': [
+                "Тези реклами се добавят от самите радиостанции, а не от Programmes-Radio.com.",
+                "Плейърът на Programmes-Radio се опитва да намали тези реклами, когато превключвате между радиостанции или поставяте радио на пауза.",
+                "В някои случаи блокерът на реклами може да попречи на слушането на радиостанцията (например: RMC)."
+            ]
+        },
+        {
+            'question': "Любимата ми радиостанция липсва.",
+            'answer': [
+                "Добавяме радиостанции постепенно: напишете ни на страницата „Контакт“ коя радиостанция искате да бъде добавена."
+            ]
+        },
+        {
+            'question': "Искам да добавя своето (уеб) радио, как да го направя?",
+            'answer': [
+                'След като създадете профил, отидете на страницата „Моите радиостанции“, за да го добавите.',
+                'Ако имате радиостанция с програма, пишете ни чрез формата за контакт.'
+            ]
+        },
+        {
+            'question': "Списък на наличните радиостанции.",
+            'answer': [
+                self.radios_list(collections, radios, app.request.locale),
+                '<p style="margin-top: 5px">Можете също да слушате радиостанции от целия свят на <a href="' ~ path('app') ~ 'streaming">страницата за онлайн радио</a>, например <a href="' ~ path('streams_one_short', {'shortId': '97d830f4-c35f-11e9-8502-52543be04c81'|shortid, 'codename': 'Alternative Radio'|slug }) ~ '">Alternative Radio</a> (Франция), <a href="' ~ path('streams_one_short', {'shortId': 'c77c45c4-cf37-414c-ae34-868f7d9cd944'|shortid, 'codename': 'FUNKY RADIO - Only Funk Music (60\'s 70\'s)'|slug }) ~ '">Funky Radio</a> (Италия) или <a href="' ~ path('streams_one_short', {'shortId': '961635b3-0601-11e8-ae97-52543be04c81'|shortid, 'codename': 'Hirschmilch Radio Electronic'|slug }) ~ '">Hirschmilch Radio Electronic</a> (Германия).</p>',
+                '<p style="margin-top: 5px"><strong>Най-добрите радиостанции от всички държави:</strong></p>',
+                countries.list(app.request.locale, 'top'),
+                '<p class="mt-4"><strong>Най-популярните радиостанции по жанр:</strong></p>',
                 genres.list()
             ]
         }

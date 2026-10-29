@@ -5,18 +5,22 @@ general:
 
 global:
     switch:
-        es: "Ver en español"
-        en: "View in English"
-        fr: "Voir en français"
-        de: "Siehe Deutschland"
-        pt: "Veja em português"
-        it: "Vedi in italiano"
-        pl: "Zobacz polski"
-        el: "Δείτε στα ελληνικά"
-        ar: "انظر باللغة العربية"
-        ro: "Vezi în Roll"
-        hu: "Lásd Magyarországon"
-        tr: "Türkçe Görüntüle"
+        es: Ver en español
+        en: View in English
+        fr: Voir en français
+        de: Auf Deutsch anzeigen
+        pt: Ver em português
+        it: Visualizza in italiano
+        pl: Zobacz po polsku
+        el: Προβολή στα ελληνικά
+        ar: عرض باللغة العربية
+        ro: Vezi în română
+        hu: Megtekintés magyarul
+        tr: Türkçe görüntüle
+        nl: Bekijk in het Nederlands
+        ru: Смотреть на русском
+        he: הצג בעברית
+        bg: Вижте на български
 
 menu:
     account: "Hesabım"
@@ -69,6 +73,12 @@ menu:
         tn: "Tunus"
         hu: "Macaristan"
         tr: "Türkiye"
+        ro: "Romanya"
+        nl: "Hollanda"
+        ru: "Rusya"
+        ua: "Ukrayna"
+        bg: "Bulgaristan"
+        il: "İsrail"
 
     songs: "Kaydedilmiş Başlıklar"
 
@@ -340,18 +350,22 @@ updatePasswordForm:
     error_length: "Şifre en az 8 karakter içermelidir."
 
 footer:
-    es: "Español"
-    en: "English"
-    fr: "Français"
-    de: "Deutsch"
-    pt: "Portuguesa"
-    it: "Italiano"
-    pl: "Polskie"
-    el: "Ελληνικά"
-    ar: "عربي"
-    ro: "Român"
-    hu: "Magyarok"
-    tr: "Türkçe"
+    es: Español
+    en: English
+    fr: Français
+    de: Deutsch
+    pt: Português
+    it: Italiano
+    pl: Polski
+    el: Ελληνικά
+    ar: العربية
+    ro: Română
+    hu: Magyar
+    tr: Türkçe
+    nl: Nederlands
+    ru: Русский
+    he: עברית
+    bg: Български
 
 legal: "Yasal Bilgiler"
 
