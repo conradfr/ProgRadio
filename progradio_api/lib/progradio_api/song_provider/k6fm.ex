@@ -8,7 +8,7 @@ defmodule ProgRadioApi.SongProvider.K6fm do
   @stream_ids %{
     "k6fm_dijon" => "2174546520932614427",
     "k6fm_beaune" => "2174546520932614427",
-    "k6fm_talents" => "3220136225736368254",
+    "k6fm_talents" => "3220136225736368254"
   }
 
   @impl true

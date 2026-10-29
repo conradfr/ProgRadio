@@ -75,9 +75,7 @@ defmodule ProgRadioApiWeb.StreamController do
     with %Stream{} = stream when not is_nil(stream) <- Repo.get(Stream, id),
          stream_data when not is_nil(stream_data) <- Map.get(stream, :stream_data),
          stream_url when is_binary(stream_url) <- StreamUrl.get(stream_data) do
-      render(conn, "stream_url.json",
-        stream_url: stream_url
-      )
+      render(conn, "stream_url.json", stream_url: stream_url)
     else
       _ -> send_error(conn)
     end

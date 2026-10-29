@@ -62,7 +62,7 @@ defmodule ProgRadioApi.AutoUpdater.Streams do
       from(s in Stream,
         where:
           s.enabled == true and s.banned == false and s.closed == false and is_nil(s.redirect_to) and
-          fragment("? ilike '%zeno.fm/%'", s.website) and s.playing_error > 0,
+            fragment("? ilike '%zeno.fm/%'", s.website) and s.playing_error > 0,
         preload: [:stream_auto_update]
       )
 
