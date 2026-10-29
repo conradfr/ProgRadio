@@ -20,6 +20,13 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   # seconds
   @rsvg_timeout 10
 
+  # formats the browsers display, anything else (no extension, heic, avif ...) is saved as png:
+  # without extension imagemagick keeps the input format, an avif is then written as heic
+  @web_extensions [".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico"]
+
+  # image proxies (imgproxy for zeno ...) send avif when the Accept header is missing
+  @accept_header "image/webp,image/png,image/jpeg;q=0.9,*/*;q=0.8"
+
   @spec import(String.t(), map, struct) :: tuple
   def import(filename_or_base64, show, radio)
 
@@ -152,11 +159,12 @@ defmodule ProgRadioApi.Importer.ImageImporter do
     end
   end
 
-  defp import_stream_raster(url, filename) do
+  defp import_stream_raster(url, source_filename) do
+    filename = web_filename(source_filename)
     full_path = "#{Application.get_env(:progradio_api, :image_path)}#{@stream_folder}/#{filename}"
 
     full_path_temp =
-      "#{Application.get_env(:progradio_api, :image_path)}#{@temp_folder}/#{filename}"
+      "#{Application.get_env(:progradio_api, :image_path)}#{@temp_folder}/#{source_filename}"
 
     unless ImageCache.is_cached(full_path, false) do
       Logger.debug("Importing: #{url}")
@@ -219,6 +227,13 @@ defmodule ProgRadioApi.Importer.ImageImporter do
   end
 
   defp svg?(filename), do: filename |> Path.extname() |> String.downcase() == ".svg"
+
+  defp web_filename(filename) do
+    case filename |> Path.extname() |> String.downcase() do
+      extension when extension in @web_extensions -> filename
+      _ -> Path.rootname(filename) <> ".png"
+    end
+  end
 
   # rsvg-convert with -w/-h/-a covers the box instead of fitting in it, process/2 resizes it afterwards.
   # it does not load external resources (file:// or http) referenced in the svg.
@@ -336,22 +351,23 @@ defmodule ProgRadioApi.Importer.ImageImporter do
           _ -> URI.encode(url)
         end
 
+      # verify_none in default options for https: we have ssl errors that do not happen in a browser ...
+      options =
+        url_encoded
+        |> ReqUtils.get_options_for(
+          receive_timeout: 7500,
+          # the task timeout below would kill retries anyway
+          retry: false,
+          # keep the raw image bytes
+          decode_body: false
+        )
+        |> Keyword.update!(:headers, &(&1 ++ [{"Accept", @accept_header}]))
+
       # we put it in a task to have a timeout if we get a never-ending stream instead of an image
       http_task =
         Task.async(fn ->
           try do
-            Req.get(
-              url_encoded,
-              # verify_none in default options for https: we have ssl errors that do not happen in a browser ...
-              ReqUtils.get_options_for(
-                url_encoded,
-                receive_timeout: 7500,
-                # the task timeout below would kill retries anyway
-                retry: false,
-                # keep the raw image bytes
-                decode_body: false
-              )
-            )
+            Req.get(url_encoded, options)
           rescue
             _ ->
               Logger.warning("Error downloading image (rescue): #{url} to #{dest_path}")
