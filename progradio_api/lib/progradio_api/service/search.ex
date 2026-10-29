@@ -34,38 +34,51 @@ defmodule ProgRadioApi.Search do
     Meilisearch.Index.create(client, %{uid: index, primaryKey: "objectID"})
     Meilisearch.Index.create(client, %{uid: new_index, primaryKey: "objectID"})
 
-    # new index config
-
-    Meilisearch.Settings.SearchableAttributes.update(client, new_index, [
-      "name",
-      "tags",
-      "genres",
-      "slogan",
-      "language"
-    ])
-
-    Meilisearch.Settings.SortableAttributes.update(client, new_index, [
-      "name",
-      "score"
-    ])
-
-    Meilisearch.Settings.FilterableAttributes.update(client, new_index, ["country_code"])
-
-    Meilisearch.Settings.RankingRules.update(client, new_index, [
-      "words",
-      "typo",
-      "sort",
-      "proximity",
-      "attribute",
-      "exactness"
-    ])
-
-    Meilisearch.Settings.TypeTolerance.update(client, new_index, %{
-      enabled: true,
-      # no typo on short words (rva, nrj, fip ...): one typo on them matches too many streams
-      minWordSizeForTypos: %{
-        oneTypo: 4,
-        twoTypos: 7
+    # new index config, in one settings task (attributeRank/wordPosition require meilisearch >= 1.36)
+    Meilisearch.Settings.update(client, new_index, %{
+      # the order is used by attributeRank: a match in the name ranks before a match in the tags ...
+      searchableAttributes: [
+        "name",
+        "tags",
+        "genres",
+        "slogan",
+        "language"
+      ],
+      sortableAttributes: [
+        "name",
+        "score"
+      ],
+      # only "=" is used and no facet search: less to compute at indexing
+      filterableAttributes: [
+        %{
+          attributePatterns: ["country_code"],
+          features: %{
+            facetSearch: false,
+            filter: %{equality: true, comparison: false}
+          }
+        }
+      ],
+      facetSearch: false,
+      # attributeRank before sort: streams with the words in their name come before the ones
+      # having them only in their tags/genres/slogan, each group being sorted by popularity/name
+      rankingRules: [
+        "words",
+        "typo",
+        "attributeRank",
+        "sort",
+        "proximity",
+        "wordPosition",
+        "exactness"
+      ],
+      typoTolerance: %{
+        enabled: true,
+        # no typo on short words (rva, nrj, fip ...): one typo on them matches too many streams
+        minWordSizeForTypos: %{
+          oneTypo: 4,
+          twoTypos: 7
+        },
+        # numbers must match exactly: "100.3" is not "100.5"
+        disableOnNumbers: true
       }
     })
 

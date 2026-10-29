@@ -129,7 +129,7 @@ services:
 
 ###> meilisearch/search-bundle ###
   meilisearch:
-    image: getmeili/meilisearch:v1.12
+    image: getmeili/meilisearch:v1.56
     ports:
       - 7700:7700
     environment:
