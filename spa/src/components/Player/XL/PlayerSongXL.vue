@@ -123,11 +123,9 @@ export default defineComponent({
         return;
       }
 
-      console.log(this.stream);
-
       // @ts-expect-error defined on global scope
       // eslint-disable-next-line no-undef
-      if (this.stream.radio_code_name && isProgRadio) {
+      if (this.stream.radio_code_name && this.stream.is_sub_radio && isProgRadio) {
         this.$router.push({
           name: 'radio',
           params: { radio: this.stream.radio_code_name }

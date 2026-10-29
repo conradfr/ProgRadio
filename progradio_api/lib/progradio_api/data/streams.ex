@@ -670,6 +670,10 @@ defmodule ProgRadioApi.Streams do
         File.rm("#{Application.get_env(:progradio_api, :image_path)}stream/#{f}")
       end)
     end)
+
+    # the files are gone, img would otherwise point to a 404 instead of the placeholder
+    from(s in Stream, where: is_nil(s.redirect_to) != true and is_nil(s.img) != true)
+    |> Repo.update_all(set: [img: nil])
   end
 
   # ---------- CHECK ----------

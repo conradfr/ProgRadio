@@ -133,7 +133,8 @@
         ]
     },
     "conflict": {
-        "symfony/symfony": "*"
+        "symfony/symfony": "*",
+        "symfony/http-client": "7.4.22"
     },
     "extra": {
         "symfony": {
