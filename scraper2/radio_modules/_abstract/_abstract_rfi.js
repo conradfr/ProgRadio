@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
+import cache from '../../lib/cache.js';
 
 let scraperConfig = {};
 let scrapedData = [];
@@ -13,13 +14,14 @@ const getDescription = async (url) => {
   try {
     let realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(`https://www.rfi.fr${url}`)}`
 
-    const response = await axios.get(realUrl, {
+    // shows are repeated during the day and shared by the rfi radios
+    const html = await cache.fetchUrl(realUrl, undefined, {
       headers: {
         'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
       }
     });
 
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(html);
     const data = $.extract({
       description: '.o-podcast-about__chapo p',
       description2: '.o-podcast-about__description p',

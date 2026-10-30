@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
+import cache from '../../lib/cache.js';
 
 let scraperConfig = {};
 let scrapedData = [];
@@ -10,12 +11,12 @@ const fetchDesc = async (url) => {
   try {
     console.log(`fetching https://radiofuego.fr${url}`);
     const realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(`https://radiofuego.fr${url}`)}`
-    const response = await axios.get(realUrl, {
+    // shows are repeated during the day
+    const html = await cache.fetchUrl(realUrl, undefined, {
       headers: {
         'Authorization': `Bearer ${process.env.FETCHER_TOKEN || scraperConfig.fetcher_token}`
       }
     });
-    const html = response.data;
     const $ = cheerio.load(html);
     const data = $.extract({
       description: '.week-board__description',

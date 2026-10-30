@@ -120,7 +120,9 @@ const format = async dateObj => {
     container.sections.push({
       'date_time_start': entry.date_time_start,
       'title': entry.title,
-      'presenter': entry.host
+      'presenter': entry.host,
+      'description': entry.description,
+      'img': entry.img
     });
 
     return false;
@@ -151,7 +153,12 @@ const fetchTable = async (table, params) => {
 const fetchAll = async () => {
   const [shows, showHosts] = await Promise.all([
     fetchTable('shows', { select: '*', order: 'sort_order.asc' }),
+    // the hosts are a bonus, the grid can be done without them
     fetchTable('show_animateurs', { select: 'show_id,animateurs(name)' })
+      .catch(error => {
+        logger.log('warn', `radio_biarritz - hosts request failed (${error})`);
+        return [];
+      })
   ]);
 
   scrapedData.shows = shows;

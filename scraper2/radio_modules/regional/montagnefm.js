@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
+import cache from '../../lib/cache.js';
 
 let scraperConfig = {};
 let scrapedData = [];
@@ -11,9 +12,10 @@ const getHost = async (url) => {
     logger.log('info', `fetching host ${url}`);
     let host = null;
 
-    const response = await axios.get(url);
+    // shows are repeated during the day
+    const html = await cache.fetchUrl(url);
 
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(html);
     const data = $.extract({
       host: '.qt-item-member .qt-ellipsis.qt-title > .qt-text-shadow',
     });
