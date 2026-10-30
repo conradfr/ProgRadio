@@ -52,7 +52,7 @@ final class Version20261030191015 extends AbstractMigration
             [
                 'code_name' => 'occitanie',
                 'name' => $name . ' Occitanie',
-                'main' => 'true',
+                'main' => 'false',
                 'radio_id' => $radioId,
                 'sub_radio' => true,
                 'url' => 'https://sunyfunmsn.wanastream.com:9000/stream',
