@@ -188,7 +188,6 @@ final class Version20261029102800 extends AbstractMigration
                 );
             }
         }
-
     }
 
     public function down(Schema $schema): void
