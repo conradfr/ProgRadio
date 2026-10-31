@@ -1,5 +1,5 @@
 <template>
-  <div style="overflow: hidden; padding: calc(0 + var(--safe-area-inset-top)) 0 0 0 !important; direction:ltr/*rtl:ignore*/;"
+  <div style="overflow: hidden; direction:ltr/*rtl:ignore*/;"
      @keyup.f="keyupFav">
     <collection-switcher></collection-switcher>
     <timeline></timeline>

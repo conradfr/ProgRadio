@@ -88,7 +88,7 @@ export function setHeadTags(tags: HeadTag[]): () => void {
   const undo: Array<() => void> = [];
 
   tags.forEach((t) => {
-    const attrs = Object.entries(t.attrs).filter(([, v]) => v !== undefined) as [string, string][];
+    const attrs = Object.entries(t.attrs).filter((e): e is [string, string] => e[1] !== undefined);
     const existing = document.head.querySelector<HTMLElement>(selectorFor(t));
 
     if (existing) {

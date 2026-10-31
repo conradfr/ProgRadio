@@ -1,6 +1,6 @@
 // Adapted from spa userStore
 
-import cookies from '../utils/cookies.js';
+import cookies from '../utils/cookies';
 
 import {
   COOKIE_RADIO_FAVORITES,

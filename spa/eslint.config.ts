@@ -173,5 +173,15 @@ export default typescriptEslint.config(
                 },
             ],
         },
+    },
+    {
+        // HTML attribute values (svg paths, inline styles...) can't be broken like JS strings
+        files: ['**/*.vue'],
+        rules: {
+            '@stylistic/js/max-len': 'off',
+            'vue/max-len': ['error', {
+                code: 120, ignoreUrls: true, ignoreStrings: true, ignoreHTMLAttributeValues: true
+            }],
+        },
     }
 )

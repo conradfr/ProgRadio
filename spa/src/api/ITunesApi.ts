@@ -13,7 +13,7 @@ type ITunesResult = {
 };
 
 // searches in progress, so asking the cover and the link of a song at the same time does only one call
-const pending: Record<string, Promise<ITunesResult|null>> = {};
+const pending: Partial<Record<string, Promise<ITunesResult|null>>> = {};
 
 const fetchSong = async (song: string, cacheKey: string): Promise<ITunesResult|null> => {
   const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(song)}&entity=song&limit=1`);

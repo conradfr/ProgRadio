@@ -49,8 +49,8 @@
     </div>
     <div
       v-if="userLogged && userIsAdmin"
-      class="streams-one-admin-info cursor-pointer"
       v-tooltip
+      class="streams-one-admin-info cursor-pointer"
       style="margin-top: 2px"
       data-bs-html="true"
       :title="adminInfoTooltip">
