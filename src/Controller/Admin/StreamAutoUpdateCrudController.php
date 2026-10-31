@@ -7,6 +7,9 @@ namespace App\Controller\Admin;
 use App\Entity\StreamAutoUpdate;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
+/**
+ * @extends AbstractCrudController<StreamAutoUpdate>
+ */
 class StreamAutoUpdateCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

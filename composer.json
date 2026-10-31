@@ -41,7 +41,7 @@
         "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.3",
-        "easycorp/easyadmin-bundle": "^4.15.0",
+        "easycorp/easyadmin-bundle": "^5.0.0",
         "friendsofphp/proxy-manager-lts": "*",
         "gedmo/doctrine-extensions": "^3.0",
         "karser/karser-recaptcha3-bundle": "^0.1.22",

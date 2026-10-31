@@ -15,6 +15,7 @@ use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\ResultSetMapping;
+use SortDirection;
 
 class ListeningSessionRepository extends ServiceEntityRepository
 {
@@ -34,7 +35,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
             ->leftJoin('r.streams', 's')
             ->leftJoin('s.listeningSessions', 'ls')
             ->groupBy('s.id, r.codeName, c.id')
-            ->addOrderBy('total_seconds', 'DESC');
+            ->addOrderBy('total_seconds', SortDirection::Descending);
 
         $this->addDates($qb, $startDate, $endDate);
         $this->addCountryCode($qb, 'r', $countryCode);
@@ -55,7 +56,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
             ->join('ls.stream', 's')
             ->leftJoin('s.radio', 'r')
             ->groupBy('ls.source')
-            ->addOrderBy('total_seconds', 'DESC');
+            ->addOrderBy('total_seconds', SortDirection::Descending);
 
         $this->addDates($qb, $startDate, $endDate);
 
@@ -87,7 +88,7 @@ class ListeningSessionRepository extends ServiceEntityRepository
             ->leftJoin('s.radio', 'r')
             ->leftJoin('s.listeningSessions', 'ls')
             ->groupBy('s.id, r.codeName, rd.id')
-            ->addOrderBy('total_seconds', 'DESC');
+            ->addOrderBy('total_seconds', SortDirection::Descending);
 
         $this->addDates($qb, $startDate, $endDate);
         $this->addCountryCode($qb, 's', $countryCode);

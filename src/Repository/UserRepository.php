@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use SortDirection;
 
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
@@ -57,7 +58,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $qb = $this->createQueryBuilder('u')
             ->select('u.id, u.email, u.createdAt')
-            ->orderBy('u.createdAt', 'DESC')
+            ->orderBy('u.createdAt', SortDirection::Descending)
             ->setMaxResults($howMany);
 
         return $qb->getQuery()->getResult();

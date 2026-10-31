@@ -1732,7 +1732,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     remove_first_page_param?: bool|Param, // Default: false
  * }
  * @psalm-type TwigComponentConfig = array{
- *     defaults?: array<string, Param|string|array{ // Default: ["__deprecated__use_old_naming_behavior"]
+ *     defaults?: array<string, Param|string|array{ // Default: []
  *         template_directory?: scalar|Param|null, // Default: "components"
  *         name_prefix?: scalar|Param|null, // Default: ""
  *     }>,
@@ -1741,12 +1741,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: "%kernel.debug%"
  *         collect_components?: bool|Param, // Collect components instances // Default: true
  *     },
- *     controllers_json?: scalar|Param|null, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
  * }
  * @psalm-type SentryConfig = array{
  *     dsn?: scalar|Param|null, // If this value is not provided, the SDK will try to read it from the SENTRY_DSN environment variable. If that variable also does not exist, the SDK will not send any events.
  *     register_error_listener?: bool|Param, // Default: true
  *     register_error_handler?: bool|Param, // Default: true
+ *     register_monolog_handler?: bool|Param, // EXPERIMENT: automatically push a Sentry handler onto every Monolog channel (requires MonologBundle). // Default: false
  *     logger?: scalar|Param|null, // The service ID of the PSR-3 logger used to log messages coming from the SDK client. Be aware that setting the same logger of the application may create a circular loop when an event fails to be sent. // Default: null
  *     options?: array{
  *         integrations?: mixed, // Default: []

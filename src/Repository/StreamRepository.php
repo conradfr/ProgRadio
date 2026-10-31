@@ -19,6 +19,7 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Uuid;
+use SortDirection;
 
 /*
  @TODO reduce code duplication for queries
@@ -48,7 +49,7 @@ class StreamRepository extends ServiceEntityRepository
             ->from(Stream::class, 's')
             ->leftJoin(StreamOverloading::class, 'so', Join::WITH, 'so.stream = s')
             ->where('s.playingError >= :threshold and s.enabled = true')
-            ->orderBy('s.playingError', 'DESC');
+            ->orderBy('s.playingError', SortDirection::Descending);
 
         $qb->setParameter('threshold', $threshold);
 
@@ -206,18 +207,18 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addOrderBy('RANDOM()');
                     break;
                 default:
-                    $qb->addOrderBy('sh.lastListenedAt', 'DESC');
+                    $qb->addOrderBy('sh.lastListenedAt', SortDirection::Descending);
             }
         }
         else if ($sort !== null) {
             switch ($sort) {
                 case 'name':
-                    $qb->addOrderBy('s.name', 'ASC');
+                    $qb->addOrderBy('s.name', SortDirection::Ascending);
                     break;
                 case 'popularity':
                     // id as tie-breaker: many streams share a score, without it the paging can repeat or skip some
-                    $qb->addOrderBy('s.score', 'DESC')
-                       ->addOrderBy('s.id', 'ASC');
+                    $qb->addOrderBy('s.score', SortDirection::Descending)
+                       ->addOrderBy('s.id', SortDirection::Ascending);
                     break;
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
@@ -225,7 +226,7 @@ class StreamRepository extends ServiceEntityRepository
                 case 'last':
                     $qb->addSelect('s.lastListeningAt as last_listen')
                        ->andWhere('s.lastListeningAt IS NOT NULL')
-                       ->addOrderBy('s.lastListeningAt', 'DESC');
+                       ->addOrderBy('s.lastListeningAt', SortDirection::Descending);
                     break;
             }
         }
@@ -309,18 +310,18 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addOrderBy('RANDOM()');
                     break;
                 default:
-                    $qb->addOrderBy('sh.lastListenedAt', 'DESC');
+                    $qb->addOrderBy('sh.lastListenedAt', SortDirection::Descending);
             }
         }
         elseif ($sort !== null) {
             switch ($sort) {
                 case 'name':
-                    $qb->addOrderBy('s.name', 'ASC');
+                    $qb->addOrderBy('s.name', SortDirection::Ascending);
                     break;
                 case 'popularity':
                     // id as tie-breaker: many streams share a score, without it the paging can repeat or skip some
-                    $qb->addOrderBy('s.score', 'DESC')
-                       ->addOrderBy('s.id', 'ASC');
+                    $qb->addOrderBy('s.score', SortDirection::Descending)
+                       ->addOrderBy('s.id', SortDirection::Ascending);
                     break;
                 case 'random':
                     $qb->addOrderBy('RANDOM()');
@@ -329,7 +330,7 @@ class StreamRepository extends ServiceEntityRepository
                     $qb->addSelect('MAX(ls.dateTimeStart) as last_listen')
                         //->distinct()
                         ->leftJoin('s.listeningSessions', 'ls')
-                        ->addOrderBy('MAX(ls.dateTimeStart)', 'DESC');
+                        ->addOrderBy('MAX(ls.dateTimeStart)', SortDirection::Descending);
                     break;
             }
         }
@@ -490,7 +491,7 @@ class StreamRepository extends ServiceEntityRepository
             ->where('s.countryCode IS NOT NULL')
             ->andWhere('s.enabled = true and s.banned = false and s.closed = false and s.redirectToStream IS NULL')
             ->andWhere('s.countryCode <> \'\'')
-            ->orderBy('countryCode', 'ASC');
+            ->orderBy('countryCode', SortDirection::Ascending);
 
         $query = $qb->getQuery();
         $query->enableResultCache(self::CACHE_TTL);
@@ -604,7 +605,7 @@ class StreamRepository extends ServiceEntityRepository
         $qb->select('s.id, s.enabled, s.name, s.streamUrl, s.forceHls, s.forceMpd, s.forceProxy, s.website, s.countryCode, sc.checkedAt, sc.img as check_img, sc.streamUrl as check_stream, sc.website as check_website, sc.websiteSsl as check_ssl')
            ->where('sc.img = false or sc.website = false or sc.websiteSsl = false')
            ->join(StreamCheck::class, 'sc', Join::WITH, 'sc.stream = s')
-           ->orderBy('s.score', 'desc');
+           ->orderBy('s.score', SortDirection::Descending);
 
         return $this->paginator->paginate(
             $qb->getQuery(),

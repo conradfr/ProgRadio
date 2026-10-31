@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\ResultSetMapping;
+use SortDirection;
 
 class ScheduleEntryRepository extends EntityRepository
 {
@@ -182,8 +183,8 @@ EOT;
                 '(TIMEZONE(\'UTC\', se.dateTimeStart) >= :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeStart) < :datetime_end)'
                 . 'OR (TIMEZONE(\'UTC\', se.dateTimeEnd) > :datetime_start AND TIMEZONE(\'UTC\', se.dateTimeEnd) <= :datetime_end)')
             ->andWhere('r.active = :active')
-            ->addOrderBy('se.dateTimeStart', 'ASC')
-            ->addOrderBy('sc.dateTimeStart', 'ASC')
+            ->addOrderBy('se.dateTimeStart', SortDirection::Ascending)
+            ->addOrderBy('sc.dateTimeStart', SortDirection::Ascending)
         ;
 
         $qb->setParameters(new ArrayCollection([
@@ -238,10 +239,10 @@ EOT;
             ->andWhere('AT_TIME_ZONE(se.dateTimeEnd, \'UTC\') >= :datetime')
             ->andWhere('r.active = :active')
             ->andWhere('s.isMainRadio = TRUE AND s.enabled = TRUE')
-            ->addOrderBy('r.share', 'DESC')
-            ->addOrderBy('r.codeName', 'ASC')
-            ->addOrderBy('se.dateTimeStart', 'ASC')
-            ->addOrderBy('sc.dateTimeStart', 'ASC')
+            ->addOrderBy('r.share', SortDirection::Descending)
+            ->addOrderBy('r.codeName', SortDirection::Ascending)
+            ->addOrderBy('se.dateTimeStart', SortDirection::Ascending)
+            ->addOrderBy('sc.dateTimeStart', SortDirection::Ascending)
         ;
 
         $qb->setParameters(new ArrayCollection([

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use SortDirection;
 
 class StreamSongRepository extends EntityRepository
 {
@@ -15,8 +16,8 @@ class StreamSongRepository extends EntityRepository
             ->innerJoin('ss.streams', 's')
             ->where('ss.enabled = :active')
             ->andWhere('ss.retries > 0')
-            ->orderBy('ss.retries', 'DESC')
-            ->addOrderBy('s.score', 'DESC');
+            ->orderBy('ss.retries', SortDirection::Descending)
+            ->addOrderBy('s.score', SortDirection::Descending);
 
         $qb->setParameter('active', true);
 

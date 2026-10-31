@@ -9,6 +9,7 @@ use App\Entity\Stream;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Parameter;
+use SortDirection;
 
 class RadioRepository extends EntityRepository
 {
@@ -95,16 +96,16 @@ class RadioRepository extends EntityRepository
 
         $qb->select('r.id, r.codeName, r.name, r.share')
             ->from(Radio::class, 'r')
-            ->addOrderBy('r.share', 'DESC')
-            ->addOrderBy('r.codeName', 'ASC');
+            ->addOrderBy('r.share', SortDirection::Descending)
+            ->addOrderBy('r.codeName', SortDirection::Ascending);
 
         return $qb->getQuery()->getResult();
     }
 
     public function getMoreRadiosFrom(Radio $radio, bool $inverse=false, $max=self::DEFAULT_MORE_MAX): array
     {
-        $sort = random_int(0,1) === 1 ? 'DESC' : 'ASC';
-        $sort2 = random_int(0,1) === 1 ? 'DESC' : 'ASC';
+        $sort = random_int(0,1) === 1 ? SortDirection::Descending : SortDirection::Ascending;
+        $sort2 = random_int(0,1) === 1 ? SortDirection::Descending : SortDirection::Ascending;
         $equality = $inverse === false ? '=' : '!=';
 
         $qb = $this->getEntityManager()->createQueryBuilder();

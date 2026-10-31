@@ -9,6 +9,7 @@ use App\Entity\Radio;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
+use SortDirection;
 
 class CollectionRepository extends ServiceEntityRepository
 {
@@ -34,7 +35,7 @@ class CollectionRepository extends ServiceEntityRepository
             ->from(Collection::class, 'c')
             ->leftJoin('c.radios', 'r')
             ->groupBy('c.id, c.priority')
-            ->orderBy('c.priority', 'ASC');
+            ->orderBy('c.priority', SortDirection::Ascending);
 
         $query = $qb->getQuery();
         $query->enableResultCache( self::CACHE_COLLECTION_TTL, self::CACHE_COLLECTION_ID);
