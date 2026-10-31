@@ -10,8 +10,7 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
-    "format": "prettier --write src/",
-    "player": "vite build -c vite.player.config.ts"
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@growthbunker/vueflags": "github:razorness/vueflags#master",

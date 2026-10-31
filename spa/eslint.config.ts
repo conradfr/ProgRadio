@@ -24,7 +24,6 @@ export default typescriptEslint.config(
             '**/src/utils/petite-vue.es.js',
             '**/src/shims-vue.d.ts',
             'vite.config.ts',
-            'vite.player.config.ts',
             'eslint.config.ts',
             'public/**',
         ],
