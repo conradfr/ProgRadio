@@ -11,7 +11,7 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" role="navigation" style="direction:ltr/*rtl:ignore*/;">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app') }}{% if isProgRadioRequest == true %}schedule{% else %}streaming{% endif %}" onclick="return scrollToCursor();">
-            <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" alt="{{ domainNameRequest }}" class="d-inline-block align-text-top">{{ domainNameRequest }}</a>
+            <img src="{{ asset('img/logo.png') }}" srcset="{{ asset('img/logo.svg') }}" style="height: 1.846rem; width: 2.308rem;" alt="{{ domainNameRequest }}" class="d-inline-block align-text-top">{{ domainNameRequest }}</a>
 
         {# Favorites #}
         <div id="mobile-schedule-favorites-shortcut" class="d-block d-sm-none d-none">
