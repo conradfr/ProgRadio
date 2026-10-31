@@ -218,6 +218,7 @@ page:
             at_least_one: Wypełnij jedno lub więcej pól.
             comment: Komentarz
             duplicate: Zgłoś to radio jako duplikat
+            duplicate_confirm: "Czy na pewno chcesz zgłosić to radio jako duplikat?"
             img: URL logo  (.jpg, .png, .gif)
             name: Nazwa
             radio: Radio

@@ -218,6 +218,7 @@ page:
             at_least_one: Completează unul sau mai multe câmpuri.
             comment: Comentariu
             duplicate: Semnalează acest radio ca duplicat
+            duplicate_confirm: "Sigur doriți să semnalați acest radio ca duplicat?"
             img: URL logo  (.jpg, .png, .gif)
             name: Nume
             radio: Radio

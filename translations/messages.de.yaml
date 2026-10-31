@@ -218,6 +218,7 @@ page:
             at_least_one: Füllen Sie ein oder mehrere Felder aus.
             comment: Kommentar
             duplicate: Diesen Sender als Duplikat melden
+            duplicate_confirm: "Sind Sie sicher, dass Sie diesen Sender als Duplikat melden möchten?"
             img: Logo-URL  (.jpg, .png, .gif)
             name: Name
             radio: Radio

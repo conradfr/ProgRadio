@@ -6,7 +6,6 @@
 
 {% block head_supp %}
     {{ parent() }}
-
     <meta name="robots" content="noindex">
 {% endblock %}
 
@@ -29,16 +28,16 @@
           {% endfor %}
 
           <div class="my-4">
-              {{ form_start(duplicate_form) }}
+              {{ form_start(duplicate_form, {attr: {onsubmit: 'return confirm(' ~ ('page.stream.modification.duplicate_confirm'|trans|json_encode) ~ ');'}}) }}
                   {{ form_widget(duplicate_form.Save) }}
               {{ form_end(duplicate_form) }}
           </div>
 
           <hr />
 
-            <div class="alert alert-info py-3 px-3 my-4">
-                {{ 'page.stream.modification.at_least_one'|trans }}
-            </div>
+          <div class="alert alert-info py-3 px-3 my-4">
+              {{ 'page.stream.modification.at_least_one'|trans }}
+          </div>
 
             {{ form_start(form) }}
                 {{ form_errors(form) }}

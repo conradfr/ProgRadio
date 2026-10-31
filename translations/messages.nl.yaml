@@ -205,6 +205,7 @@ page:
             at_least_one: Vul een of meer velden in.
             comment: Opmerking
             duplicate: Deze radio als duplicaat melden
+            duplicate_confirm: "Weet u zeker dat u deze radio als duplicaat wilt melden?"
             img: Logo URL (.jpg, .png, .gif)
             name: Naam
             radio: Radio

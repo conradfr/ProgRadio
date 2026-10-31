@@ -218,6 +218,7 @@ page:
             at_least_one: Tölts ki egy vagy több mezőt.
             comment: Megjegyzés
             duplicate: A rádió jelentése duplikátumként
+            duplicate_confirm: "Biztosan duplikátumként szeretné jelenteni ezt a rádiót?"
             img: Logó URL  (.jpg, .png, .gif)
             name: Név
             radio: Rádió

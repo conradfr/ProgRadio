@@ -218,6 +218,7 @@ page:
             at_least_one: "Bir veya daha fazla alanı doldurun."
             comment: "Yorum"
             duplicate: "Bu radyoyu kopya olarak bildir"
+            duplicate_confirm: "Bu radyoyu kopya olarak bildirmek istediğinizden emin misiniz?"
             img: "Logo URL'si  (.jpg, .png, .gif)"
             name: "İsim"
             radio: "Radyo"

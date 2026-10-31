@@ -218,6 +218,7 @@ page:
             at_least_one: Remplir un champs ou plus.
             comment: Commentaire
             duplicate: Signaler cette radio comme étant dupliquée
+            duplicate_confirm: "Êtes-vous sûr de vouloir signaler cette radio comme dupliquée ?"
             img: Logo url (.jpg, .png, .gif)
             name: Nom
             radio: Radio

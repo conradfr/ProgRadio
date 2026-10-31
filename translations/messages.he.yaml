@@ -218,6 +218,7 @@ page:
             at_least_one: יש למלא שדה אחד או יותר.
             comment: הערה
             duplicate: דיווח על תחנת רדיו זו ככפולה
+            duplicate_confirm: "האם אתה בטוח שברצונך לדווח על תחנת רדיו זו ככפולה?"
             img: כתובת הלוגו (.jpg, .png, .gif)
             name: שם
             radio: תחנת רדיו

@@ -218,6 +218,7 @@ page:
             at_least_one: Fyll i ett eller flera fält.
             comment: Kommentar
             duplicate: Rapportera den här radiokanalen som en dubblett
+            duplicate_confirm: "Är du säker på att du vill rapportera den här radiokanalen som en dubblett?"
             img: Logotyp-url (.jpg, .png, .gif)
             name: Namn
             radio: Radio

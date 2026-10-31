@@ -46,7 +46,7 @@ final class Version20261030202514 extends AbstractMigration
                 'main' => 'true',
                 'radio_id' => $radioId,
                 'sub_radio' => true,
-                'url' => 'https://elise.wanastream.com:25000/stream',
+                'url' => 'https://lausannefm.ice.infomaniak.ch/lausannefm-high.mp3',
                 'id' => '532a0418-87c1-11e8-aa66-52543be04c81'
             ],
             [
@@ -55,7 +55,7 @@ final class Version20261030202514 extends AbstractMigration
                 'main' => 'false',
                 'radio_id' => $radioId,
                 'sub_radio' => false,
-                'url' => 'https://sunyfunmsn.wanastream.com:9000/stream',
+                'url' => 'https://webradio0004.ice.infomaniak.ch/webradio0004-128.mp3',
             ],
             [
                 'code_name' => 'version90s',
@@ -115,7 +115,7 @@ final class Version20261030202514 extends AbstractMigration
 
                 $this->connection->executeQuery(
                     "INSERT INTO stream (id, name, country_code, language, own_logo, stream_url, original_stream_url, internal_use_img, radio_id, is_main_radio, is_sub_radio, sub_radio_id, radio_stream_code_name, stream_song_id, stream_song_code_name, website) VALUES ('"
-                    . $streamId . "','" . $mainSubRadios[$i]['name'] . "','FR','french',FALSE,'" . $mainSubRadios[$i]['url'] . "','" . $mainSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $mainSubRadios[$i]['main'] . ", TRUE, " . ($i + $subRadioId) . ", '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] . "'," . ($streamSongId ?? 'NULL') . "," . ($streamSongId ? "'" . $mainSubRadios[$i]['code_name'] . "'" : 'NULL') . ", '" . $website . "');"
+                    . $streamId . "','" . $mainSubRadios[$i]['name'] . "','CH','french',FALSE,'" . $mainSubRadios[$i]['url'] . "','" . $mainSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $mainSubRadios[$i]['main'] . ", TRUE, " . ($i + $subRadioId) . ", '" . $prefix . '_' . $mainSubRadios[$i]['code_name'] . "'," . ($streamSongId ?? 'NULL') . "," . ($streamSongId ? "'" . $mainSubRadios[$i]['code_name'] . "'" : 'NULL') . ", '" . $website . "');"
                 );
             }
         }
@@ -130,7 +130,7 @@ final class Version20261030202514 extends AbstractMigration
 
                 $this->connection->executeQuery(
                     "INSERT INTO stream (id, name, country_code, language, own_logo, stream_url, original_stream_url, internal_use_img, radio_id, is_main_radio, is_sub_radio, sub_radio_id, radio_stream_code_name, stream_song_id, stream_song_code_name) VALUES ('"
-                    . $streamId . "','" . $otherSubRadios[$i]['name'] . "','FR','french',TRUE,'" . $otherSubRadios[$i]['url'] . "','" . $otherSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $otherSubRadios[$i]['main'] . ", FALSE, null, '" . $prefix . '_' . $otherSubRadios[$i]['code_name'] . "'," . ($streamSongId ?? 'NULL') . "," . ($streamSongId ? "'" . $otherSubRadios[$i]['code_name'] . "'" : 'NULL') . ");"
+                    . $streamId . "','" . $otherSubRadios[$i]['name'] . "','CH','french',TRUE,'" . $otherSubRadios[$i]['url'] . "','" . $otherSubRadios[$i]['url'] . "', false, " . $radioId . ',' . $otherSubRadios[$i]['main'] . ", FALSE, null, '" . $prefix . '_' . $otherSubRadios[$i]['code_name'] . "'," . ($streamSongId ?? 'NULL') . "," . ($streamSongId ? "'" . $otherSubRadios[$i]['code_name'] . "'" : 'NULL') . ");"
                 );
             }
         }

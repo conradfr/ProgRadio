@@ -111,16 +111,39 @@
                 <div class="mb-1"><strong>Original tags:</strong> {{ stream.originalTags }}</a></div>
             {% endif %}
 
-            <div class="mb-1"><strong>Country:</strong> {{ stream.countryCode }}</div>
-            <div class="mb-1"><strong>Website:</strong> <a target="_blank" href="{{ stream.website }}">{{ stream.website }}</a></div>
-            {% if stream.source is defined %}<div class="mb-1"><strong>Source:</strong> {{ stream.source }}</div>{% endif %}
-
-            <div class="mb-1"><strong>Enabled:</strong>
-                {% if stream.enabled == true %}Yes{% else %}No{% endif %}
+            <div class="mb-1">
+              <strong>Country:</strong>
+              <a target="_blank" href="{{ path('streaming_spa') }}/{{ stream.countryCode|lower }}">
+                {{ stream.countryCode }}
+              </a>
             </div>
 
-            <div class="mb-1"><strong>Banned :</strong>
-                {% if stream.banned == true %}Yes{% else %}No{% endif %}
+            <div class="mb-1">
+              <strong>Website:</strong>
+              <a target="_blank" href="{{ stream.website }}">
+                {{ stream.website }}
+              </a>
+            </div>
+
+            {% if stream.source is defined %}
+              <div class="mb-1">
+                <strong>Source:</strong>
+                {{ stream.source }}
+              </div>
+            {% endif %}
+
+            <div class="mb-1">
+              <strong>Enabled:</strong>
+                {% if stream.enabled == true %}
+                  <span class="text-success">Yes</span>
+                {% else %}
+                  <span class="text-warning">No</span>
+                {% endif %}
+            </div>
+
+            <div class="mb-1">
+              <strong>Banned :</strong>
+              {% if stream.banned == true %}Yes{% else %}No{% endif %}
             </div>
 
             {% if stream.img is defined and stream.img is not empty %}

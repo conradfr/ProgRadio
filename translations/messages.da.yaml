@@ -218,6 +218,7 @@ page:
             at_least_one: Udfyld et eller flere felter.
             comment: Kommentar
             duplicate: Rapportér denne radiostation som en dublet
+            duplicate_confirm: "Er du sikker på, at du vil rapportere denne radiostation som en dublet?"
             img: Logo-url (.jpg, .png, .gif)
             name: Navn
             radio: Radio

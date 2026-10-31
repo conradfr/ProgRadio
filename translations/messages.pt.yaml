@@ -218,6 +218,7 @@ page:
             at_least_one: Preencher um ou mais campos.
             comment: Comentário
             duplicate: Assinalar esta rádio como duplicada
+            duplicate_confirm: "Tem a certeza de que pretende assinalar esta rádio como duplicada?"
             img: URL do logo  (.jpg, .png, .gif)
             name: Nome
             radio: Rádio
