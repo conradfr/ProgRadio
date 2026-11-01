@@ -13,13 +13,24 @@ defmodule ProgRadioApi.EmailStatsSendWorker do
   def perform(%Oban.Job{args: args}) do
     Logger.debug("Email stats send worker")
 
+    stats = get_stats(args["stream_ids"])
+
+    if has_listening?(stats) do
+      send_stats(args["user_id"], format_stats(stats))
+    else
+      Logger.info("Email stats send worker: no listening, skipping user #{args["user_id"]}")
+    end
+
+    :ok
+  end
+
+  defp has_listening?(stats) do
+    Enum.any?(stats, fn e -> Decimal.gt?(e.total_seconds, 0) end)
+  end
+
+  defp send_stats(user_id, stats) do
     # kind of anti-spam detection prevention
     Process.sleep(@sleep_ms)
-
-    stats =
-      args["stream_ids"]
-      |> get_stats()
-      |> format_stats()
 
     # For now we use the main app to send mail
     webhook_url = Application.fetch_env!(:progradio_api, :webhook_url)
@@ -30,7 +41,7 @@ defmodule ProgRadioApi.EmailStatsSendWorker do
         json: %{
           event: "send_user_stream_stats",
           event_id: System.os_time(:microsecond) |> Integer.to_string(),
-          user_id: args["user_id"],
+          user_id: user_id,
           stats: stats
         },
         headers: [
@@ -39,8 +50,6 @@ defmodule ProgRadioApi.EmailStatsSendWorker do
         ]
       )
     )
-
-    :ok
   end
 
   defp get_stats(stream_ids) do
