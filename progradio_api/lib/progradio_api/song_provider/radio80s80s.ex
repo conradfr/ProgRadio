@@ -9,12 +9,15 @@ defmodule ProgRadioApi.SongProvider.Radio80s80s do
     "radio80s80s_inthemix" => 558,
     "radio80s80s_love" => 85,
     "radio80s80s_italo_disco" => 283,
+    "radio80s80s_italo_disco_mix" => 834,
     "radio80s80s_wave" => 284,
     "radio80s80s_dm" => 87,
     "radio80s80s_romantic_rock" => 792,
     "radio80s80s_maxis" => 596,
     "radio80s80s_funk_soul" => 517,
+    "radio80s80s_soul_ballads" => 840,
     "radio80s80s_rock" => 440,
+    "radio80s80s_yacht_rock" => 852,
     "radio80s80s_party" => 252,
     "radio80s80s_deutsch" => 618,
     "radio80s80s_dark_wave" => 672,
@@ -35,7 +38,9 @@ defmodule ProgRadioApi.SongProvider.Radio80s80s do
     "radio80s80s_bowie" => 84,
     "radio80s80s_prince" => 111,
     "radio80s80s_pop_stories" => 772,
-    "radio80s80s_summer" => 569
+    "radio80s80s_summer" => 569,
+    "radio80s80s_mv" => 568,
+    "radio80s80s_synthiepop" => 852
   }
 
   @impl true
