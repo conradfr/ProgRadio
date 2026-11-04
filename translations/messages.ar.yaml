@@ -259,6 +259,14 @@ page:
             stats_last_month: "%sessions% جلسة استماع بإجمالي %time% الشهر الماضي."
             email_toggle: استلام إحصائيات شهرية عبر البريد الإلكتروني
 
+    chat:
+      page_title: 'الدردشة: %radio%'
+      icon_title: 'غرفة الدردشة'
+      icon_title_new_messages: 'غرفة الدردشة (رسائل جديدة)'
+      message_placeholder: 'رسالة'
+      name: 'الاسم:'
+      send: 'إرسال'
+
     top:
         page_title: المحطات الإذاعية الأكثر شعبية في %country%
         description: 'استمع إلى أفضل المحطات الإذاعية في %country%'

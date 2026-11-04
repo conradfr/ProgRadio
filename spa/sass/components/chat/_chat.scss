@@ -1,0 +1,30 @@
+#chatModal {
+  .modal-header {
+    background-color: var(--progradio-player-background-xl);
+    color: var(--progradio-player-color);
+
+    .btn-close {
+      color: var(--progradio-player-color);
+    }
+
+    .player-playpause {
+      //height: calc($player-xl-height - $player-xl-padding);
+      //width: calc($player-xl-height - $player-xl-padding);
+
+      font-size: $icon-play-chat-size-sm;
+
+      &:hover:not(.player-playpause-disabled) {
+        color: var(--progradio-player-link-color);
+      }
+    }
+  }
+
+  .modal-body {
+    background-color: var(--progradio-background-color);
+  }
+
+  .chat-messages, .chat-participants, .chat-input {
+    background-color: var(--progradio-stream-block-background-color);
+  }
+}
+

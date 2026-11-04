@@ -10,6 +10,10 @@
   .radio-page-logo-container {
     // 9.615rem
     min-height: 8.923rem;
+
+    @include media-breakpoint-down(sm) {
+      min-height: 7.692rem;
+    }
   }
 
   .radio-page-logo {
@@ -18,7 +22,7 @@
 
     @include media-breakpoint-down(sm) {
       max-width: 110px;
-      max-height: 100px;
+      max-height: 90px;
     }
   }
 

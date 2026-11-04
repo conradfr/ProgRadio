@@ -47,6 +47,10 @@ export const LAST_RADIO_PLAYED = 'last_played_radio';
 export const PREV_STREAM_PLAYED = 'prev_stream_played';
 export const PREV_RADIO_PLAYED = 'prev_radio_played';
 
+export const CHAT_NAME_MAX_LENGTH = 30;
+// messages (and own message ctrls) kept on the client, the oldest are removed
+export const CHAT_MAX_MESSAGES = 200;
+
 export const COOKIE_PREFIX = 'progradio_v4';
 export const COOKIE_TTL = '31536000';
 export const COOKIE_PARAMS = {
@@ -76,6 +80,8 @@ export const COOKIE_PLAYER_FLUX = `${COOKIE_PREFIX}-player-flux`;
 export const COOKIE_PLAYER_FLUX_DURATION = `${COOKIE_PREFIX}-player-flux-duration`;
 export const COOKIE_REDUCED_PLAYER = `${COOKIE_PREFIX}-reduced-player`;
 export const COOKIE_TOOLTIP_SHOW_MS = 3500;
+
+export const COOKIE_CHAT_NAME = `${COOKIE_PREFIX}_chat_name`;
 
 export const TIMEZONE = 'Europe/Paris';
 

@@ -259,6 +259,14 @@ page:
             stats_last_month: "%sessions% sesiuni de ascultare pentru un total de %time% în luna trecută."
             email_toggle: Primește e-mail lunar cu statistici
 
+    chat:
+      page_title: 'Chat: %radio%'
+      icon_title: 'Cameră de chat'
+      icon_title_new_messages: 'Cameră de chat (mesaje noi)'
+      message_placeholder: 'Mesaj'
+      name: 'Nume:'
+      send: 'Trimite'
+
     top:
         page_title: Cele mai populare radiouri în %country%
         description: 'Ascultă cele mai bune radiouri din %country%'

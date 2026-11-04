@@ -1,35 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% import _self as self %}
+{% import 'utils/stream.html.twig' as stream_macros %}
 
 {% block canonical %}
 {% endblock %}
-
-{% macro picture(stream) %}{%- if stream.internalUseImg is defined and stream.internalUseImg == true and stream.img is not null -%}
-  media/stream/{{ stream.img }}
-{%- elseif stream.ownLogo is defined and stream.ownLogo == true and stream.radioStreamCodeName is not null -%}
-  img/radio/page/{{ stream.radioStreamCodeName }}.png
-{%- elseif stream.radio is defined and stream.radio is not null -%}
-  img/radio/page/{{ stream.radio.codeName }}.png
-{%- elseif stream.img_alt is defined and stream.img_alt is not null -%}
-  img/radio/page/{{ stream.img_alt }}.png
-{%- elseif stream.img is not null and stream.img != '' -%}
-  media/stream/{{ stream.img }}
-{%- else -%}
-  img/stream-placeholder.png
-{%- endif -%}{% endmacro %}
-
-{% macro topic(stream) %}song_next:{{ stream.id }}{% endmacro %}
-
-{% macro radioOrStreamId(stream) %}
-{% if stream.radio is defined and stream.radio is not null %}{{ stream.radio.codeName }}{% else %}{{ stream.id }}{% endif %}
-{% endmacro %}
-
-{% macro domain(url) %}
-{#- strip scheme, path/query/fragment, credentials, port and leading www. -#}
-{%- set host = url|default('')|trim|split('://')|last|trim('/', 'left')|split('/')|first|split('?')|first|split('#')|first|split('@')|last|split(':')|first|lower -%}
-{{- host starts with 'www.' ? host|slice(4) : host -}}
-{% endmacro %}
 
 {% macro title(stream) %}
 {% if stream.countryCode is not null and stream.countryCode != '' %}{{ 'page.stream.title_country'|trans({'%radio%': stream.name, '%country%': stream.getCountry(app.request.locale)}) }}{% else %}{{ 'page.stream.title'|trans({'%radio%': stream.name}) }}{% endif %}{% if stream.slogan is defined and stream.slogan is not null and stream.slogan != '' %} - {{ stream.slogan }}{% endif %} (http popup)
@@ -69,7 +44,7 @@
 
 {% block body_container %}
   {# preload() adds a Link header on every call, so it is called once for both (desktop/mobile) logos #}
-  {% set logo_url = preload(asset(self.picture(stream)), {as: 'image'}) %}
+  {% set logo_url = preload(asset(stream_macros.picture(stream)), {as: 'image'}) %}
   <div class="container-fluid stream-page stream-title stream-next" data-title="{{ self.title(stream) }}">
     <div class="row">
       <div class="col-12">
@@ -111,7 +86,7 @@
               {% if stream.website is defined and stream.website is not null %}
                 <a target="_blank" rel="nofollow" href="{{ stream.website }}">
         <span class="badge badge-inverse badge-link">
-          <i class="bi bi-globe"></i>&nbsp;&nbsp;{{ self.domain(stream.website) }}
+          <i class="bi bi-globe"></i>&nbsp;&nbsp;{{ stream_macros.domain(stream.website) }}
         </span>
                 </a>
               {% endif %}
@@ -139,11 +114,11 @@
                     {{ self.extractDailymotionIdAndProvideiFrame(stream.streamUrl) }}
                   {% else %}
                     <div class="radio-page-streams-one mb-1 mb-sm-2 d-flex align-items-center justify-content-center justify-content-sm-start"
-                         style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init({ topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', historyUrl: '{{- url('song_history', {'_locale': app.request.locale, 'stream': stream.id}) -}}'  })">
+                         style="min-height: 45px" @vue:mounted="$el.classList.remove('d-none'); init({ topic: '{{- stream_macros.topic(stream) -}}', radioOrStreamId: '{{- stream_macros.radioOrStreamId(stream) -}}', historyUrl: '{{- url('song_history', {'_locale': app.request.locale, 'stream': stream.id}) -}}'  })">
                       <div v-cloak>
                         <div
                           v-if="playing === PLAYER_STATE_STOPPED"
-                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
+                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- stream_macros.topic(stream) -}}', radioOrStreamId: '{{- stream_macros.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
                           class="radio-page-play">
                           <img alt="{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}"
                                src="{{ asset('img/play-button-inside-a-circle.svg') }}">
@@ -169,7 +144,7 @@
                       <div class="ps-2" v-cloak>
                         <div
                           v-if="playing === PLAYER_STATE_STOPPED"
-                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}', radioOrStreamId: '{{- self.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
+                          @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- stream_macros.topic(stream) -}}', radioOrStreamId: '{{- stream_macros.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})"
                           class="radio-page-play">
                           <div class="fs-2">&nbsp;{{ 'page.stream.play'|trans({'%radio%': stream.name}) }}</div>
                         </div>

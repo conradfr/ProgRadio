@@ -259,6 +259,14 @@ page:
             stats_last_month: "%sessions% Hörsitzungen für insgesamt %time% im letzten Monat."
             email_toggle: Monatliche Statistik-E-Mails erhalten
 
+    chat:
+      page_title: 'Chat: %radio%'
+      icon_title: 'Chatraum'
+      icon_title_new_messages: 'Chatraum (neue Nachrichten)'
+      message_placeholder: 'Nachricht'
+      name: 'Name:'
+      send: 'Senden'
+
     top:
         page_title: Die beliebtesten Radiosender in %country%
         description: 'Hören Sie die besten Radiosender in %country%'

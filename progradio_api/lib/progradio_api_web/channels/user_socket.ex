@@ -1,7 +1,7 @@
 defmodule ProgRadioApiWeb.UserSocket do
   use Phoenix.Socket, max_channels_per_transport: 5000
 
-  alias ProgRadioApiWeb.{SongChannel, SongNextChannel, ListenersChannel}
+  alias ProgRadioApiWeb.{SongChannel, SongNextChannel, ListenersChannel, ChatChannel}
 
   ## Channels
   channel "song:*", SongChannel
@@ -9,6 +9,8 @@ defmodule ProgRadioApiWeb.UserSocket do
   channel "url:*", SongChannel
 
   channel "listeners:*", ListenersChannel
+
+  channel "chat:*", ChatChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

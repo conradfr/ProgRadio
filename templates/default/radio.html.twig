@@ -1,8 +1,6 @@
 {% extends 'base_site.html.twig' %}
 
-{% import _self as self %}
-
-{% macro topic(sub_radio) %}song_next:{{ sub_radio.id }}{% endmacro %}
+{% import 'utils/stream.html.twig' as stream_macros %}
 
 {% block head_supp %}
     {{ parent() }}
@@ -43,7 +41,7 @@
                     <div class="radio-page-streams-one text-center mb-4 v-cloak">
                         <div
                             v-if="playing === PLAYER_STATE_STOPPED"
-                            @click="play('{{- sub_radio.streamUrl -}}', '{{- sub_radio.id -}}', {is_stream_url_generated: {{- sub_radio.is_stream_url_generated ? 'true' : 'false' -}}, topic: '{{- self.topic(sub_radio) -}}', radioOrStreamId: '{{- radio.codeName -}}' })"
+                            @click="play('{{- sub_radio.streamUrl -}}', '{{- sub_radio.id -}}', {is_stream_url_generated: {{- sub_radio.is_stream_url_generated ? 'true' : 'false' -}}, topic: '{{- stream_macros.topic(sub_radio) -}}', radioOrStreamId: '{{- radio.codeName -}}' })"
                             class="radio-page-play">
                             <img alt="{{ 'page.radio.play'|trans({'%radio%': radio.name}) }}"
                                  src="{{ asset('img/play-button-inside-a-circle.svg') }}">

@@ -248,3 +248,7 @@
         </a>
     </li>
 {% endmacro %}
+
+{% macro active(entry, route) %}
+    {{ entry == route ? 'class="nav-link active" aria-current="page"' : 'class="nav-link"' }}
+{% endmacro %}

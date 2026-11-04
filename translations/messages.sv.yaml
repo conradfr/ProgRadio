@@ -258,6 +258,15 @@ page:
             stats_this_month: "%sessions% lyssningssessioner på totalt %time% den här månaden."
             stats_last_month: "%sessions% lyssningssessioner på totalt %time% förra månaden."
             email_toggle: Få månatlig lyssningsstatistik via e-post
+
+    chat:
+      page_title: 'Chatt: %radio%'
+      icon_title: 'Chattrum'
+      icon_title_new_messages: 'Chattrum (nya meddelanden)'
+      message_placeholder: 'Meddelande'
+      name: 'Namn:'
+      send: 'Skicka'
+
     top:
         page_title: De populäraste radiokanalerna i %country%
         description: 'Lyssna på de bästa radiokanalerna från %country%'

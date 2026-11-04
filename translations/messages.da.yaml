@@ -258,6 +258,15 @@ page:
             stats_this_month: "%sessions% lyttesessioner med i alt %time% denne måned."
             stats_last_month: "%sessions% lyttesessioner med i alt %time% sidste måned."
             email_toggle: Modtag månedlig lyttestatistik pr. e-mail
+
+    chat:
+      page_title: 'Chat: %radio%'
+      icon_title: 'Chatrum'
+      icon_title_new_messages: 'Chatrum (nye beskeder)'
+      message_placeholder: 'Besked'
+      name: 'Navn:'
+      send: 'Send'
+
     top:
         page_title: De mest populære radiostationer i %country%
         description: 'Lyt til de bedste radiostationer fra %country%'

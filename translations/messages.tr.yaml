@@ -259,6 +259,14 @@ page:
             stats_last_month: "Geçen ay %sessions% dinleme oturumu toplam %time%."
             email_toggle: Aylık istatistik e-postaları al
 
+    chat:
+      page_title: 'Sohbet: %radio%'
+      icon_title: 'Sohbet odası'
+      icon_title_new_messages: 'Sohbet odası (yeni mesajlar)'
+      message_placeholder: 'Mesaj'
+      name: 'İsim:'
+      send: 'Gönder'
+
     top:
         page_title: "%country%'deki en popüler radyolar"
         description: "%country%'deki en iyi radyoları dinleyin"

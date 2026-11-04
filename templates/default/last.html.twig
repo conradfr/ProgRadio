@@ -1,6 +1,6 @@
 {% extends 'base_site.html.twig' %}
 
-{% import _self as self %}
+{% import 'utils/stream.html.twig' as stream_macros %}
 {% import "utils/countries.html.twig" as countries %}
 
 {% block bodyclasssupp %} body-app{% endblock %}
@@ -15,20 +15,6 @@
 
 {% block title %}{{ 'page.last.page_title'|trans({'%country%': country}) }}{% endblock %}
 {% block description %}{{ 'page.last.description'|trans({'%country%': country}) }}{% endblock %}
-
-{% macro picture(stream) %}{%- if stream.internal_use_img is defined and stream.internal_use_img == true and stream.img is not null %}
-media/stream/{{ stream.img }}
-{%- elseif stream.ownLogo is defined and stream.ownLogo == true and stream.radioStreamCodeName is not null %}
-img/radio/page/{{ stream.radio.codeName }}.png
-{%- elseif stream.img_alt is defined and stream.img_alt is not null %}
-img/radio/page/{{ stream.img_alt }}.png
-{%- elseif stream.img is not null and stream.img != '' %}
-media/stream/{{ stream.img }}
-{%- else %}
-img/stream-placeholder.png
-{% endif -%}{% endmacro %}
-
-{% macro topic(stream) %}song_next:{{ stream.id }}{% endmacro %}
 
 {% block body %}
 <h2 class="my-4 text-center">{{ 'page.last.page_title'|trans({'%country%': country}) }}</h2>
@@ -60,14 +46,14 @@ img/stream-placeholder.png
      'streams-one-play-active': '{{- stream.code_name -}}' === radioId,
      'streams-one-play-paused': playing === PLAYER_STATE_STOPPED && '{{- stream.code_name -}}' === radioId
                         }">
-                            <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
+                            <div class="streams-one-img" style="background-image: url({{ asset(stream_macros.picture(stream)) }})"
                                  v-if="playing === PLAYER_STATE_STOPPED || radioId !== '{{- stream.code_name }}'"
-                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, force_proxy: {{- stream.force_proxy ? 'true' : 'false' -}}, topic: '{{- self.topic(stream) -}}'})"
+                                 @click="play('{{- stream.stream_url -}}', '{{- stream.code_name -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.force_hls ? 'true' : 'false' -}}, force_mpd: {{- stream.force_mpd ? 'true' : 'false' -}}, force_proxy: {{- stream.force_proxy ? 'true' : 'false' -}}, topic: '{{- stream_macros.topic(stream) -}}'})"
                             >
                                 <div class="streams-one-img-play"></div>
                             </div>
 
-                            <div class="streams-one-img" style="background-image: url({{ asset(self.picture(stream)) }})"
+                            <div class="streams-one-img" style="background-image: url({{ asset(stream_macros.picture(stream)) }})"
                                  v-if="radioId === '{{- stream.code_name -}}' && playing !== PLAYER_STATE_STOPPED"
                                  @click="stop('{{- stream.stream_url -}}', '{{- stream.code_name -}}')">
                                 <div class="streams-one-img-play"></div>

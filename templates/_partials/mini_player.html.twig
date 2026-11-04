@@ -8,9 +8,9 @@
   const streamsProxyKey = '{{ streamsProxyKey() }}';
 </script>
 
-{# built from spa/src/mini_player.js as the "player" vite entry, served as a cached file instead of inline #}
+{# built from spa/src/mini_player.ts as the "player" vite entry, served as a cached file instead of inline #}
 {% if app.environment == 'dev' %}
-  <script type="module" src="http://localhost:8000/build/src/mini_player.js"></script>
+  <script type="module" src="http://localhost:8000/build/src/mini_player.ts"></script>
 {% endif %}
 
 {% if app.environment == 'prod' %}

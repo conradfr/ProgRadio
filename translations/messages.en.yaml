@@ -259,6 +259,14 @@ page:
             stats_last_month: "%sessions% listening sessions for a total of %time% last month."
             email_toggle: Receive monthly statistics email
 
+    chat:
+      page_title: 'Chat: %radio%'
+      icon_title: Chatroom
+      icon_title_new_messages: Chatroom (new messages)
+      message_placeholder: Message
+      name: 'Name:'
+      send: Send
+
     top:
         page_title: The most popular radios in %country%
         description: 'Listen to the most popular radios from %country%'

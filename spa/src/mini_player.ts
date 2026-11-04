@@ -1,10 +1,14 @@
-import { createApp } from './utils/petite-vue.es.js';
+import { createApp, nextTick } from './utils/petite-vue.es.js';
 import cookies from './utils/cookies';
-import { Socket } from '../js/phoenix';
+import { Socket, Presence } from '../js/phoenix';
 import noUiSlider from 'nouislider';
 
 import ITunesApi from './api/ITunesApi';
 import streamFavorite from './miniplayer/streamFavorite.js';
+
+import type { PlayOptions as SpaPlayOptions } from './types/play_options';
+import type { ChatMessage } from './types/chat_message';
+import type { ChatParticipant, ParticipantMeta } from './types/chat_participant';
 
 // from config
 import {
@@ -20,23 +24,107 @@ import {
   POPUP_SETTINGS,
   POPUP_URL_WILDCARD,
   COOKIE_VOLUME,
+  COOKIE_CHAT_NAME,
   SOURCE_INCREMENT_COUNT,
   PROGRADIO_AGENT,
   RADIOADDICT_AGENT,
-  YOUTUBE_START_TIMEOUT_SECONDS
+  YOUTUBE_START_TIMEOUT_SECONDS,
+  CHAT_NAME_MAX_LENGTH,
+  CHAT_MAX_MESSAGES
 } from './config/config.js';
 
-/* eslint-disable no-undef */
+// defined on the global scope by the twig layouts (base, _partials/mini_player, admin pages)
+declare const apiUrl: string;
+declare const isProgRadio: boolean;
+declare const popupUrl: string;
+declare const streamsProxy: string;
+declare const streamsProxyKey: string;
+declare const appWebSocket: boolean | undefined;
+declare const appSendStatistics: boolean | undefined;
+declare const appVolume: number | undefined;
+declare const sendGaEvent: (event: string, category: string, label: string | null, value: number) => void;
+
+// loaded dynamically by loadHls, loadDash and loadYoutubeApi, untyped
+declare const Hls: any;
+declare const dashjs: any;
+declare const YT: any;
+
+// bootstrap bundle loaded by base.html.twig
+declare const bootstrap: any;
+
+// window properties used by the player, kept local to not leak into the spa types
+interface MiniPlayerWindow extends Window {
+  audio?: HTMLMediaElement | null
+  YT?: any
+  onYouTubeIframeAPIReady?: () => void
+}
+
+const win = window as MiniPlayerWindow;
+
+// options of the init() call of the twig pages
+interface InitOptions {
+  song?: SongData['song']
+  topic?: string
+  radioOrStreamId?: string
+  historyUrl?: string
+}
+
+// options of the play() calls of the twig pages, the force_* ones are shared with the spa
+interface PlayOptions extends SpaPlayOptions {
+  popup?: boolean
+  is_stream_url_generated?: boolean
+  topic?: string
+  radioOrStreamId?: string
+  source?: string
+}
+
+interface FavoriteOptions {
+  streamId: string
+  radioCodeName: string | null
+  logged: boolean
+  favorite: boolean
+  loginUrl: string
+}
+
+// "playing" event of the song channels
+interface SongData {
+  song?: {
+    artist?: string | null
+    title?: string | null
+    cover_url?: string | null
+  } | null
+}
+
+// "counter_update" event of the listeners channels
+interface ListenersData {
+  listeners?: number | null
+}
+
+interface ListeningSessionData {
+  date_time_start: string
+  date_time_end: string
+  source: string
+  ctrl: number
+  ending?: boolean
+  stream_id?: string
+}
+
+interface ListeningSessionResponse {
+  id: string | null
+  date_time_start: string
+}
+
+type Channel = ReturnType<Socket['channel']>;
 
 const LISTENING_MIN_INTERVAL = LISTENING_SESSION_MIN_SECONDS * 1000;
 const LISTENING_INTERVAL = LISTENING_SESSION_INTERVAL_SECONDS * 1000;
 const YOUTUBE_START_TIMEOUT = YOUTUBE_START_TIMEOUT_SECONDS * 1000;
 
-// todo now that we removed the dynamic video tag, refactor the window.audio = elem.
+// todo now that we removed the dynamic video tag, refactor the win.audio = elem.
 
 /* we load the hls script dynamically once, reducing initial app load */
 const loadHls = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const hlsElem = document.getElementById('hls-script');
     if (hlsElem !== null) {
       resolve();
@@ -47,28 +135,28 @@ const loadHls = () => {
     hlsScript.type = 'text/javascript';
     hlsScript.id = 'hls-script';
     hlsScript.src = '/js/hls.light.min.js';
-    hlsScript.onload = resolve;
+    hlsScript.onload = () => resolve();
     hlsScript.onerror = reject;
     document.body.appendChild(hlsScript);
   });
 };
 
 /* we load the YouTube iframe api script dynamically once */
-let youtubeApiPromise = null;
+let youtubeApiPromise: Promise<void> | null = null;
 const loadYoutubeApi = () => {
   if (youtubeApiPromise !== null) {
     return youtubeApiPromise;
   }
 
-  youtubeApiPromise = new Promise((resolve, reject) => {
-    if (window.YT && window.YT.Player) {
+  youtubeApiPromise = new Promise<void>((resolve, reject) => {
+    if (win.YT && win.YT.Player) {
       resolve();
       return;
     }
 
     // called by the YouTube script once the api is usable
-    const previousCallback = window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady = () => {
+    const previousCallback = win.onYouTubeIframeAPIReady;
+    win.onYouTubeIframeAPIReady = () => {
       if (typeof previousCallback === 'function') {
         previousCallback();
       }
@@ -88,7 +176,7 @@ const loadYoutubeApi = () => {
 
 /* we load the dash script dynamically once, reducing initial app load */
 const loadDash = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise<boolean>((resolve, reject) => {
     const dashElem = document.getElementById('dash-script');
     if (dashElem !== null) {
       resolve(true);
@@ -99,13 +187,13 @@ const loadDash = () => {
     dashScript.type = 'text/javascript';
     dashScript.id = 'dash-script';
     dashScript.src = '/js/dash.all.min.js';
-    dashScript.onload = resolve;
+    dashScript.onload = () => resolve(true);
     dashScript.onerror = reject;
     document.body.appendChild(dashScript);
   });
 };
 
-const getStreamUrl = async (id) => {
+const getStreamUrl = async (id: string): Promise<string | null> => {
   const url = `https://${apiUrl}/stream_url/${id}`;
 
   return fetch(url)
@@ -118,7 +206,12 @@ const getStreamUrl = async (id) => {
     });
 };
 
-const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
+const updateListeningSession = (
+  radioId: string,
+  dateTimeStart: Date | null,
+  sessionId: string | null,
+  ending?: boolean
+): Promise<ListeningSessionResponse | null> | undefined => {
   if (dateTimeStart === undefined || dateTimeStart === null) {
     return;
   }
@@ -134,7 +227,7 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
     url += sessionId;
   }
 
-  const data = {
+  const data: ListeningSessionData = {
     date_time_start: dateTimeStart.toISOString(),
     date_time_end: dateTimeEnd.toISOString(),
     source: LISTENING_SESSION_SOURCE_SSR,
@@ -163,7 +256,7 @@ const updateListeningSession = (radioId, dateTimeStart, sessionId, ending) => {
     });
 };
 
-const sendPlayingError = (radioId, errorText) => {
+const sendPlayingError = (radioId: string | null, errorText?: string | null) => {
   // only streams
   if (!radioId || !radioId.includes('-')) {
     return;
@@ -171,7 +264,7 @@ const sendPlayingError = (radioId, errorText) => {
 
   const url = `https://${apiUrl}/stream_error/${radioId}`;
 
-  const params = {};
+  const params: { error?: string } = {};
 
   if (errorText) {
     params.error = errorText;
@@ -184,7 +277,7 @@ const sendPlayingError = (radioId, errorText) => {
   }).then(response => response.json());
 };
 
-const setPlayingAlertVisible = (visible) => {
+const setPlayingAlertVisible = (visible: boolean) => {
   const elem = document.getElementById('playing-alert');
 
   if (!elem) {
@@ -198,26 +291,27 @@ const setPlayingAlertVisible = (visible) => {
   }
 };
 
-const setAudioVolume = (volume) => {
+// volume: 0 to 10 (cookie, slider), as a string or a number
+const setAudioVolume = (volume?: number | string) => {
   if (volume) {
-    if (window.audio) {
-      window.audio.volume = volume / 10;
+    if (win.audio) {
+      win.audio.volume = Number(volume) / 10;
     }
     return;
   }
 
-  if (typeof appVolume !== 'undefined' && window.audio) {
-    window.audio.volume = appVolume;
+  if (typeof appVolume !== 'undefined' && win.audio) {
+    win.audio.volume = appVolume;
   }
 
   // default
-  if (window.audio) {
-    window.audio.volume = cookies.get(COOKIE_VOLUME, 10) / 10
+  if (win.audio) {
+    win.audio.volume = Number(cookies.get(COOKIE_VOLUME, 10)) / 10
   }
 };
 
-const setTitle = (song) => {
-  const elems = document.getElementsByClassName('stream-title');
+const setTitle = (song: string | null) => {
+  const elems = document.getElementsByClassName('stream-title') as HTMLCollectionOf<HTMLElement>;
   if (!elems || !elems[0] || !elems[0].dataset.title) {
     return;
   }
@@ -231,7 +325,7 @@ const setTitle = (song) => {
   document.title = `${title}${elems[0].dataset.title}`;
 };
 
-const incrementPlayCount = (stationUuid) => {
+const incrementPlayCount = (stationUuid: string | null) => {
   if (!stationUuid) {
     return;
   }
@@ -247,7 +341,7 @@ const incrementPlayCount = (stationUuid) => {
     .then((response) => {
       return response.json();
     })
-    .then((config) => {
+    .then((config: { radio_browser_url?: string } | null) => {
       if (config && config.radio_browser_url) {
         fetch(`${config.radio_browser_url}/json/url/${stationUuid}`, {
           headers: { 'User-Agent': isProgRadio ? PROGRADIO_AGENT : RADIOADDICT_AGENT }
@@ -259,30 +353,86 @@ const incrementPlayCount = (stationUuid) => {
     });
 };
 
+// ---------- CHAT ----------
+
+// encoded as the cookies util stores the raw value (a name can contain ";", spaces...)
+const getSavedName = (): string | null => {
+  const saved = cookies.get(COOKIE_CHAT_NAME);
+
+  if (!saved) {
+    return null;
+  }
+
+  try {
+    const name = decodeURIComponent(saved).trim().slice(0, CHAT_NAME_MAX_LENGTH);
+    return name !== '' ? name : null;
+  } catch (_e) {
+    return null;
+  }
+};
+
+const saveName = (name: string) => {
+  cookies.set(COOKIE_CHAT_NAME, encodeURIComponent(name));
+};
+
+// removes the oldest items (in place, to keep the reactivity) when over the limit
+const keepLast = <T>(list: T[], max: number) => {
+  if (list.length > max) {
+    list.splice(0, list.length - max);
+  }
+};
+
+// message datetime is UTC (ISO 8601), displayed in the browser timezone
+const formatTime = (datetime: string) => {
+  const date = new Date(datetime);
+
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 createApp({
-  hls: null,
-  dash: null,
-  socket: null,
-  socketTimer: null,
-  channels: {},
-  playing: PLAYER_STATE_STOPPED,
-  song: null,
-  cover: null,
-  listeners: null,
-  visibilityListeners: {},
-  lastUpdated: null,
-  radioId: null,
-  playingStart: null,
-  sessionId: null,
-  listeningInterval: null,
-  initOptions: null,
-  favorite: false,
-  favoriteOptions: null,
+  // config
   options: {
     webSocket: typeof appWebSocket !== 'undefined' ? appWebSocket : true,
     sendStatistics: typeof appSendStatistics !== 'undefined' ? appSendStatistics : true,
   },
-  init(options) {
+  // player
+  hls: null as any,
+  dash: null as any,
+  socket: null as Socket | null,
+  socketTimer: null as ReturnType<typeof setTimeout> | null,
+  channels: {} as Record<string, Channel>,
+  playing: PLAYER_STATE_STOPPED as number,
+  song: null as string | null,
+  cover: null as string | null,
+  listeners: null as number | null,
+  visibilityListeners: {} as Record<string, boolean>,
+  lastUpdated: null as Date | null,
+  radioId: null as string | null,
+  playingStart: null as Date | null,
+  sessionId: null as string | null,
+  listeningInterval: null as ReturnType<typeof setInterval> | null,
+  initOptions: null as InitOptions | null,
+  favorite: false,
+  favoriteOptions: null as FavoriteOptions | null,
+  // ----- chat -----
+  chatChannels: {} as Record<string, Channel>,
+  currentChatTopic: null as string | null,
+  modalShown: false as boolean,
+  hasNewMessages: false as boolean,
+  name: getSavedName() ?? `Anonymous${Math.floor(Math.random() * 1000)}`,
+  // presence key of the current user, sent by the server on join
+  presenceKey: null as string | null,
+  participants: [] as ChatParticipant[],
+  messages: [] as ChatMessage[],
+  // ctrls of the messages sent by this user (also used to know its own messages)
+  msgCtrls: [] as number[],
+  newMessage: '',
+  // actions
+  init(options?: InitOptions) {
     this.initOptions = options;
 
     if (options) {
@@ -297,15 +447,19 @@ createApp({
 
         if (options.radioOrStreamId && options.radioOrStreamId.trim() !== '') {
           this.joinChannel(`listeners:${options.radioOrStreamId.trim()}`);
+          // temp disable on radios
+          if (options.radioOrStreamId.trim().indexOf('-') > -1) {
+            this.joinChatChannel(`chat:${options.radioOrStreamId.trim()}`);
+          }
         }
       }, 50);
     }
 
     const slider = document.getElementById('volume-slider');
     if (slider) {
-      const volume = cookies.get(COOKIE_VOLUME, 10)
+      const volume = Number(cookies.get(COOKIE_VOLUME, 10));
       setAudioVolume(volume);
-      noUiSlider.create(slider, {
+      const volumeSlider = noUiSlider.create(slider, {
         start: volume,
         connect: 'lower',
         range: {
@@ -314,15 +468,15 @@ createApp({
         }
       });
 
-      slider.noUiSlider.on('update.one', (e) => {
-        const newVolume = parseFloat(e[0]).toFixed(2);
+      volumeSlider.on('update.one', (e: (number | string)[]) => {
+        const newVolume = parseFloat(String(e[0])).toFixed(2);
         cookies.set(COOKIE_VOLUME, newVolume);
         setAudioVolume(newVolume);
       });
     }
   },
   // options: { streamId, radioCodeName, logged, favorite (logged only, rendered by the server), loginUrl }
-  initFavorite(options) {
+  initFavorite(options: FavoriteOptions) {
     this.favoriteOptions = options;
     this.favorite = options.logged ? options.favorite : streamFavorite.isFavorite(options.streamId);
   },
@@ -330,7 +484,7 @@ createApp({
     this.favorite = !this.favorite;
     streamFavorite.toggle(this.favoriteOptions, this.favorite);
   },
-  async play(streamingUrl, codeName, options) {
+  async play(streamingUrl: string, codeName: string, options?: PlayOptions) {
     if (!options) {
       // eslint-disable-next-line no-param-reassign
       options = {};
@@ -360,7 +514,6 @@ createApp({
     this.playing = PLAYER_STATE_LOADING;
     this.radioId = codeName;
     this.sessionId = null;
-    this.playerStart = new Date();
 
     if (options && options.is_stream_url_generated) {
       // eslint-disable-next-line no-param-reassign
@@ -370,12 +523,12 @@ createApp({
     if (streamingUrl.indexOf('.m3u8') !== -1 || (options.force_hls && options.force_hls === true)) {
       loadHls().then(() => {
         if (Hls.isSupported()) {
-          window.audio = document.getElementById('videoplayer');
+          win.audio = document.getElementById('videoplayer') as HTMLMediaElement;
           this.hls = new Hls();
           // bind them together
-          this.hls.attachMedia(window.audio);
+          this.hls.attachMedia(win.audio);
 
-          this.hls.on(Hls.Events.ERROR, (_event, data) => {
+          this.hls.on(Hls.Events.ERROR, (_event: unknown, data: { fatal: boolean, details: string }) => {
             if (data.fatal) {
               this.stop();
               this.playingError(codeName, data.details);
@@ -387,7 +540,7 @@ createApp({
             this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
               setAudioVolume();
 
-              window.audio.play().then(() => {
+              win.audio?.play().then(() => {
                 this.playingStarted(
                   options.topic ? options.topic.trim() : null,
                   options.radioOrStreamId ? options.radioOrStreamId.trim() : null,
@@ -400,10 +553,10 @@ createApp({
       });
     } else if (streamingUrl.indexOf('.mpd') !== -1 || (options.force_mpd && options.force_mpd === true)) {
       loadDash().then(() => {
-        window.audio = document.getElementById('videoplayer');
+        win.audio = document.getElementById('videoplayer') as HTMLMediaElement;
 
         this.dash = dashjs.MediaPlayer().create();
-        this.dash.initialize(window.audio, streamingUrl, false);
+        this.dash.initialize(win.audio, streamingUrl, false);
 
         this.dash.on('error', () => {
           this.stop();
@@ -413,7 +566,7 @@ createApp({
         this.dash.on('canPlay', () => {
           setAudioVolume();
 
-          window.audio.play().then(() => {
+          win.audio?.play().then(() => {
             this.playingStarted(
               options.topic ? options.topic.trim() : null,
               options.radioOrStreamId ? options.radioOrStreamId.trim() : null,
@@ -433,12 +586,13 @@ createApp({
       const streamUrl = (streamingUrl.trim().substring(0, 5) !== 'https')
         ? `${streamsProxy}?k=${streamsProxyKey}&stream=${streamingUrl}` : streamingUrl; */
 
-      // window.audio = new Audio(`${streamUrl}`);
-      window.audio = document.getElementById('videoplayer');
-      window.audio.src = streamingUrl.trim();
+      // win.audio = new Audio(`${streamUrl}`);
+      const audio = document.getElementById('videoplayer') as HTMLMediaElement;
+      win.audio = audio;
+      audio.src = streamingUrl.trim();
       setAudioVolume();
 
-      window.audio.onerror = (error) => {
+      audio.onerror = (error) => {
         this.stop();
 
         // if stream failed and is http we try to switch to our https proxy
@@ -451,10 +605,11 @@ createApp({
           return;
         }
 
-        this.playingError(codeName, error.target.error.message || null);
+        const mediaError = typeof error !== 'string' ? (error.target as HTMLMediaElement | null)?.error : null;
+        this.playingError(codeName, mediaError?.message || null);
       };
 
-      window.audio.play().then(() => {
+      audio.play().then(() => {
         this.playingStarted(
           options.topic ? options.topic.trim() : null,
           options.radioOrStreamId ? options.radioOrStreamId.trim() : null,
@@ -466,8 +621,8 @@ createApp({
   stop() {
     // cleaning audio objects (and potentially recreating them afterward) is not really necessary
     // as we should have only one player and only one streaming source but let's do it anyway ...
-    if (window.audio !== undefined && window.audio !== null) {
-      window.audio.pause();
+    if (win.audio !== undefined && win.audio !== null) {
+      win.audio.pause();
     }
 
     if (this.listeningInterval !== null) {
@@ -485,10 +640,10 @@ createApp({
       this.dash = null;
     }
 
-    window.audio = null;
-    delete window.audio;
+    win.audio = null;
+    delete win.audio;
 
-    if (this.playing !== false && this.options.sendStatistics) {
+    if (this.playing === PLAYER_STATE_PLAYING && this.options.sendStatistics) {
       updateListeningSession(this.radioId, this.playingStart, this.sessionId, true);
       sendGaEvent('stop', 'SSR', this.radioId, 1);
     }
@@ -506,7 +661,7 @@ createApp({
       this.leaveChannels();
     }
   },
-  playingStarted(topic, radioOrStreamId, source) {
+  playingStarted(topic: string | null, radioOrStreamId: string | null, source: string | null) {
     this.playing = PLAYER_STATE_PLAYING;
     this.lastUpdated = new Date();
     this.playingStart = new Date();
@@ -515,7 +670,7 @@ createApp({
     if (this.options.sendStatistics) {
       setTimeout(() => {
         updateListeningSession(this.radioId, this.playingStart, this.sessionId)?.then((data) => {
-          if (data.id !== null) {
+          if (data && data.id !== null) {
             this.sessionId = data.id;
             this.playingStart = new Date(data.date_time_start);
           }
@@ -530,7 +685,7 @@ createApp({
 
       this.listeningInterval = setInterval(() => {
         updateListeningSession(this.radioId, this.playingStart, this.sessionId)?.then((data) => {
-          if (data.id !== null) {
+          if (data && data.id !== null) {
             this.sessionId = data.id;
             this.playingStart = new Date(data.date_time_start);
           }
@@ -548,7 +703,7 @@ createApp({
       }
     }
 
-    window.audio.addEventListener('timeupdate', () => {
+    win.audio?.addEventListener('timeupdate', () => {
       this.lastUpdated = new Date();
     });
 
@@ -562,11 +717,11 @@ createApp({
       }
     }, 500);
   },
-  initYoutube(el, streamId) {
+  initYoutube(el: HTMLElement, streamId: string) {
     loadYoutubeApi().then(() => {
       let errorSent = false;
       let hasPlayed = false;
-      let startTimer = null;
+      let startTimer: ReturnType<typeof setTimeout> | null = null;
 
       const clearStartTimer = () => {
         if (startTimer !== null) {
@@ -575,7 +730,7 @@ createApp({
         }
       };
 
-      const sendError = (errorText) => {
+      const sendError = (errorText: string) => {
         clearStartTimer();
 
         if (errorSent) {
@@ -593,7 +748,7 @@ createApp({
         events: {
           // an unavailable video can fail before we are listening to the player, so onError is never sent:
           // we check the (undocumented) video data once the player is ready
-          onReady: (event) => {
+          onReady: (event: any) => {
             const videoData = typeof event.target.getVideoData === 'function' ? event.target.getVideoData() : null;
 
             if (videoData && (videoData.isPlayable === false || videoData.errorCode)) {
@@ -601,11 +756,11 @@ createApp({
             }
           },
           // removed, private or not embeddable video
-          onError: (event) => {
+          onError: (event: { data: number }) => {
             sendError(`YouTube error ${event.data}`);
           },
           // offline live videos usually do not trigger an error, they just never start
-          onStateChange: (event) => {
+          onStateChange: (event: { data: number }) => {
             if (event.data === YT.PlayerState.PLAYING) {
               hasPlayed = true;
               clearStartTimer();
@@ -636,7 +791,7 @@ createApp({
       // api script blocked or unreachable: nothing to report
     });
   },
-  playingError(codeName, errorText) {
+  playingError(codeName: string, errorText?: string | null) {
     // the delay prevents sending an error when the user just click a link and goes to another page...
     setTimeout(
       () => {
@@ -659,7 +814,7 @@ createApp({
     if (!this.socket) {
       const opts = {
         heartbeatIntervalMs: WEBSOCKET_HEARTBEAT,
-        reconnectAfterMs: (tries) => {
+        reconnectAfterMs: (tries: number) => {
           if (tries >= WEBSOCKET_MAX_RETRIES) {
             return null;
           }
@@ -716,7 +871,7 @@ createApp({
       this.leaveChannel(topicName);
     }
   },
-  leaveChannel(channelTopic) {
+  leaveChannel(channelTopic: string) {
     if (!this.channels[channelTopic]) {
       return;
     }
@@ -729,7 +884,7 @@ createApp({
       this.disconnectSocket();
     }
   },
-  joinChannel(channelTopic) {
+  joinChannel(channelTopic: string) {
     if (!this.options.webSocket) {
       return;
     }
@@ -756,7 +911,7 @@ createApp({
     this.channels[channelTopic] = this.socket.channel(channelTopic, {});
 
     this.channels[channelTopic].join()
-      .receive('error', (_resp) => {
+      .receive('error', (_resp: unknown) => {
         if (channelTopic.startsWith('listeners:')) {
           this.listeners = null;
         } else {
@@ -779,7 +934,7 @@ createApp({
         // this.channels[topic] = null;
       });
 
-    this.channels[channelTopic].on('playing', (songData) => {
+    this.channels[channelTopic].on('playing', (songData: SongData) => {
       this.formatSong(songData);
       setTitle(this.song);
     });
@@ -824,8 +979,8 @@ createApp({
           // times are rendered in server timezone, display them in the visitor's one
           const timeFormat = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
           historyElem.querySelectorAll('.song-history-time').forEach((el) => {
-            const date = new Date(el.getAttribute('datetime'));
-            if (!isNaN(date)) {
+            const date = new Date(el.getAttribute('datetime') ?? '');
+            if (!Number.isNaN(date.getTime())) {
               // eslint-disable-next-line no-param-reassign
               el.textContent = timeFormat.format(date);
             }
@@ -834,7 +989,7 @@ createApp({
         .catch(() => {});
     });
 
-    this.channels[channelTopic].on('counter_update', (counterData) => {
+    this.channels[channelTopic].on('counter_update', (counterData: ListenersData) => {
       this.formatListeners(counterData);
     });
 
@@ -847,7 +1002,7 @@ createApp({
       setTitle(null);
     });
   },
-  formatSong(songData) {
+  formatSong(songData: SongData | null) {
     if (!songData || !songData.song) {
       this.song = null;
       this.cover = null;
@@ -903,12 +1058,185 @@ createApp({
       })
       .catch(() => {});
   },
-  formatListeners(listenersData) {
-    if (!listenersData || !listenersData.listeners || !listenersData.listeners === 0) {
+  formatListeners(listenersData: ListenersData | null) {
+    if (!listenersData || !listenersData.listeners) {
       this.listeners = null;
       return;
     }
 
     this.listeners = listenersData.listeners;
-  }
+  },
+  // chat
+  openChat(topic: string) {
+    const chatModal = document.getElementById('chatModal');
+    if (!chatModal) {
+      return;
+    }
+
+    const chatTopic = `chat:${topic}`;
+    // this.joinChatChannel(chatTopic);
+    // used by sendMessage() & updateName(), which do nothing without it
+    this.currentChatTopic = chatTopic;
+
+    // messages received while the modal was hidden: the list can't be scrolled until it is displayed
+    chatModal.addEventListener('shown.bs.modal', () => this.scrollChatToBottom(), { once: true });
+    // any dismiss: close button, Escape, backdrop click (fired once the hide transition is over).
+    // once: a new listener is added at each opening
+    chatModal.addEventListener('hidden.bs.modal', () => {
+      this.modalShown = false;
+      this.hasNewMessages = false;
+    }, { once: true });
+
+    // reuses the instance created by a previous click (or by data-bs-toggle), new Modal() doesn't show it
+    bootstrap.Modal.getOrCreateInstance(chatModal).show();
+    this.modalShown = true;
+    this.hasNewMessages = false;
+  },
+  leaveChatChannels() {
+    Object.keys(this.chatChannels).forEach((topicName) => {
+      this.leaveChatChannel(topicName);
+    });
+  },
+  leaveChatChannel(channelTopic: string) {
+    if (!this.chatChannels[channelTopic]) {
+      return;
+    }
+
+    this.chatChannels[channelTopic].leave();
+    delete this.chatChannels[channelTopic];
+
+    /* if (Object.keys(this.channels).length === 0) {
+      this.disconnectSocket();
+    } */
+  },
+  joinChatChannel(channelTopic: string) {
+    this.connectSocket();
+
+    // Channel already exists?
+    if (this.socket === null
+      || Object.prototype.hasOwnProperty.call(this.chatChannels, channelTopic)) {
+      return;
+    }
+
+    // params as a function so a rejoin (after a reconnection) sends the current name
+    const channel = this.socket.channel(channelTopic, () => ({ name: this.name }));
+    this.chatChannels[channelTopic] = channel;
+
+    // listens to "presence_state" & "presence_diff" sent by the server
+    const presence = new Presence(channel);
+    presence.onSync(() => {
+      // presence.js is untyped, list() returns the mapped array
+      const participants = presence.list(
+        (key: string, { metas }: { metas: ParticipantMeta[] }) => ({ key, name: metas[0].name })
+      ) as unknown as ChatParticipant[];
+
+      this.participants = participants.sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    channel.join()
+      .receive('ok', (resp: { key: string }) => {
+        this.presenceKey = resp.key;
+      })
+      .receive('error', () => {
+        // this.chatChannels[topic] = null;
+      })
+      .receive('timeout', () => {
+        // this.chatChannels[topic] = null;
+      });
+
+    channel.on('new:msg', (msgData: ChatMessage) => {
+      this.receiveMessage(msgData);
+    });
+  },
+  sendMessage() {
+    if (!this.name || this.name === '' || !this.currentChatTopic || !this.chatChannels[this.currentChatTopic]) {
+      return;
+    }
+
+    const msg = this.newMessage.trim();
+
+    if (msg === '') {
+      return;
+    }
+
+    // broadcast to everyone with the message, large range to avoid collisions between users
+    const ctrl = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+    this.msgCtrls.push(ctrl);
+    // same limit as the messages: the own messages still displayed always have their ctrl kept
+    keepLast(this.msgCtrls, CHAT_MAX_MESSAGES);
+
+    // displayed immediately, replaced by the channel one when (and if) it arrives
+    this.messages.push({
+      id: `${ctrl}`,
+      user: this.name,
+      msg,
+      datetime: new Date().toISOString(),
+      ctrl,
+    });
+    keepLast(this.messages, CHAT_MAX_MESSAGES);
+    this.scrollChatToBottom();
+
+    // the name is set by the server from the presence
+    this.chatChannels[this.currentChatTopic].push('new:msg', {
+      msg,
+      ctrl
+    });
+
+    this.newMessage = '';
+  },
+  // follows the last message, after the list has been rendered
+  scrollChatToBottom() {
+    nextTick(() => {
+      const list = document.querySelector<HTMLElement>('#chatModal .chat-messages');
+
+      if (list) {
+        list.scrollTop = list.scrollHeight;
+      }
+    });
+  },
+  receiveMessage(message: ChatMessage) {
+    // own message already displayed locally: replaced in place
+    if (this.isOwnMessage(message)) {
+      const localIndex = this.messages.findIndex(
+        (localMessage: ChatMessage) => localMessage.id === `${message.ctrl}`
+      );
+
+      if (localIndex !== -1) {
+        this.messages[localIndex] = message;
+        return;
+      }
+    }
+
+    this.messages.push(message);
+    if (!this.modalShown) {
+      this.hasNewMessages = true;
+    }
+    keepLast(this.messages, CHAT_MAX_MESSAGES);
+    this.scrollChatToBottom();
+  },
+  // exposed to the templates, which only see the app properties
+  formatTime,
+  isOwnMessage(message: ChatMessage) {
+    return this.msgCtrls.includes(message.ctrl);
+  },
+  updateName() {
+    const name = this.name.trim().slice(0, CHAT_NAME_MAX_LENGTH);
+
+    if (name === '') {
+      return;
+    }
+
+    saveName(name);
+
+    if (!this.currentChatTopic || !this.chatChannels[this.currentChatTopic]) {
+      return;
+    }
+
+    this.chatChannels[this.currentChatTopic].push('update:name', { name })
+      .receive('ok', (resp: { name: string }) => {
+        // the server may have altered it
+        this.name = resp.name;
+        saveName(resp.name);
+      });
+  },
 }).mount();

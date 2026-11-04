@@ -258,6 +258,15 @@ page:
             stats_this_month: "%sessions% האזנות בזמן כולל של %time% החודש."
             stats_last_month: "%sessions% האזנות בזמן כולל של %time% בחודש שעבר."
             email_toggle: קבלת סטטיסטיקות האזנה חודשיות באימייל
+
+    chat:
+      page_title: 'צ׳אט: %radio%'
+      icon_title: 'חדר צ׳אט'
+      icon_title_new_messages: 'חדר צ׳אט (הודעות חדשות)'
+      message_placeholder: 'הודעה'
+      name: 'שם:'
+      send: 'שליחה'
+
     top:
         page_title: 'תחנות הרדיו הפופולריות ביותר: %country%'
         description: 'האזינו לתחנות הרדיו הטובות ביותר: %country%'

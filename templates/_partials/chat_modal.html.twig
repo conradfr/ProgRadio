@@ -1,0 +1,113 @@
+{% import _self as self %}
+{% import 'utils/stream.html.twig' as stream_macros %}
+
+{% macro chat_title(stream) %}
+  {{ 'page.chat.page_title'|trans({'%radio%': stream.name}) }}
+{% endmacro %}
+
+<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content" v-scope>
+      <div class="modal-header justify-content-between align-items-center py-2">
+        <div class="flex-fill">
+          <h1 class="modal-title fs-5" id="chatModalLabel">{{ self.chat_title(stream) }}</h1>
+        </div>
+        <div class="d-flex justify-content-end align-items-center">
+          <div v-if="song" class="me-4">{% verbatim %}<span class="note-title">♫</span>&nbsp;{{ song }}{% endverbatim %}</div>
+          <div class="player-playpause me-4"
+            v-if="playing === PLAYER_STATE_STOPPED || playing === PLAYER_STATE_LOADING"
+            @click="play('{{- stream.streamUrl -}}', '{{- stream.id -}}', {is_stream_url_generated: {{- stream.is_stream_url_generated ? 'true' : 'false' -}}, popup: {{- stream.popup ? 'true' : 'false' -}}, force_hls: {{- stream.forceHls ? 'true' : 'false' -}}, force_mpd: {{- stream.forceMpd ? 'true' : 'false' -}}, force_proxy: {{- stream.forceProxy ? 'true' : 'false' -}}, topic: '{{- stream_macros.topic(stream) -}}', radioOrStreamId: '{{- stream_macros.radioOrStreamId(stream) -}}', source: '{{- stream.source -}}'})">
+            {% verbatim %}
+            <i v-if="playing !== PLAYER_STATE_LOADING"
+               class="bi"
+               :class="{
+                'bi-play-circle': playing === PLAYER_STATE_STOPPED,
+                'bi-pause-circle': playing !== PLAYER_STATE_STOPPED
+              }"></i>
+            <div
+              v-if="playing === PLAYER_STATE_LOADING"
+              class="spinner-border spinner-border-sm" role="status"
+              style="width: 1em; height: 1em;">
+              <span class="visually-hidden">Loading....</span>
+            </div>
+          </div>
+          {% endverbatim %}
+          <div class="player-playpause me-4"
+            v-if="playing === PLAYER_STATE_PLAYING"
+            @click="stop()">
+            {% verbatim %}
+            <i class="bi bi-pause-circle"></i>
+          </div>
+          {% endverbatim %}
+          <button type="button" class="btn-close" data-bs-theme="dark" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid gx-0 h-100 d-flex flex-column">
+          {# messages + participants #}
+          <div class="row gx-2 flex-grow-1 overflow-hidden mb-3" style="min-height: 0">
+            <div class="col-8 col-md-10 h-100">
+              <div class="chat-messages h-100 overflow-auto border rounded p-2">
+                <div class="chat-message mb-1">
+                  <span class="chat-message-body">(...)</span>
+                </div>
+                {% verbatim %}
+                <div v-for="message in messages" :key="message.id" class="chat-message mb-1">
+                  <span class="chat-message-time text-body-secondary small">{{ formatTime(message.datetime) }}</span>
+                  <strong class="chat-message-user" :class="{ 'text-primary': isOwnMessage(message) }">{{ message.user }}</strong>
+                  <span class="chat-message-body">{{ message.msg }}</span>
+                </div>
+                {% endverbatim %}
+              </div>
+            </div>
+
+            <div class="col-4 col-md-2 h-100">
+              <div class="chat-participants h-100 overflow-auto border rounded p-2">
+                {% verbatim %}
+                <!--          <div class="chat-participants-count text-body-secondary small mb-2">{{ participants.length }}</div>-->
+                <ul class="list-unstyled mb-0">
+                  <li v-for="participant in participants" :key="participant.key"
+                      class="chat-participant text-truncate"
+                      :class="{ 'fw-bold': participant.key === presenceKey }">{{ participant.name }}</li>
+                </ul>
+                {% endverbatim %}
+              </div>
+            </div>
+          </div>
+
+          {# message input + name input #}
+          <div class="row gx-2">
+            <div class="col-8 col-md-9">
+              <form class="chat-form" autocomplete="off" @submit.prevent="sendMessage()">
+                <div class="input-group">
+                  <input type="text" class="form-control chat-input ps-3" name="message" v-model="newMessage" maxlength="500"
+                    placeholder="{{ 'page.chat.message_placeholder'|trans }}" aria-label="{{ 'page.chat.send'|trans }}">
+                  <button class="btn btn-primary" type="submit" title="{{ 'page.chat.send'|trans }}">
+                    <i class="bi bi-send"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="col-4 col-md-3">
+              {# same gutter as the parent rows, label sized to its text #}
+              <div class="row gx-2">
+                <label for="inputName" class="d-none d-sm-block col-auto col-form-label ps-2">
+                  {{ 'page.chat.name'|trans }}
+                </label>
+                <div class="col ps-2">
+                  <input type="text" class="form-control chat-input ps-3" id="inputName"  v-model="name" @change="updateName()">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>

@@ -29,7 +29,7 @@ export default defineConfig({
         app: './src/app.ts',
 
         /* petite-vue mini player of the twig pages (_partials/mini_player.html.twig) */
-        player: './src/mini_player.js',
+        player: './src/mini_player.ts',
 
         /* you can also provide [s]css files */
         theme: './sass/main_global.scss'

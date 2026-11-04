@@ -259,6 +259,14 @@ page:
             stats_last_month: "%sessions% sesji słuchania na łączną liczbę %time% w zeszłym miesiącu."
             email_toggle: Odbieraj miesięczne statystyki e-mailem
 
+    chat:
+      page_title: 'Czat: %radio%'
+      icon_title: 'Pokój czatu'
+      icon_title_new_messages: 'Pokój czatu (nowe wiadomości)'
+      message_placeholder: 'Wiadomość'
+      name: 'Nazwa:'
+      send: 'Wyślij'
+
     top:
         page_title: Najpopularniejsze stacje radiowe w %country%
         description: 'Słuchaj najlepszych stacji radiowych w %country%'

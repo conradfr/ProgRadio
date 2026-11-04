@@ -258,6 +258,15 @@ page:
             stats_this_month: "Сеансов прослушивания в этом месяце: %sessions%, общее время: %time%."
             stats_last_month: "Сеансов прослушивания в прошлом месяце: %sessions%, общее время: %time%."
             email_toggle: Получать ежемесячную статистику прослушиваний по email
+
+    chat:
+      page_title: 'Чат: %radio%'
+      icon_title: 'Чат-комната'
+      icon_title_new_messages: 'Чат-комната (новые сообщения)'
+      message_placeholder: 'Сообщение'
+      name: 'Имя:'
+      send: 'Отправить'
+
     top:
         page_title: 'Самые популярные радиостанции: %country%'
         description: 'Слушайте лучшие радиостанции: %country%'

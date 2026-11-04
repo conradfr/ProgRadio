@@ -3,7 +3,6 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndesEvent do
 
   alias ProgRadioApi.SongProvider
 
-  @impl true
   def get_push_client_pid(url, name, %{} = stream_ids) do
     stream_id =
       name
@@ -23,7 +22,6 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndesEvent do
     end
   end
 
-  @impl true
   def get_data(name, %EventsourceEx.Message{} = push_event, last_data) do
     try do
       push_event.data
@@ -35,7 +33,6 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndesEvent do
     end
   end
 
-  @impl true
   def get_song(name, data, _last_song) do
     try do
       case data do

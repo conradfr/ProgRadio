@@ -259,6 +259,14 @@ page:
             stats_last_month: "%sessions% συνεδρίες ακρόασης για συνολικό χρόνο %time% τον προηγούμενο μήνα."
             email_toggle: Λήψη μηνιαίων στατιστικών μέσω email
 
+    chat:
+      page_title: 'Συνομιλία: %radio%'
+      icon_title: 'Αίθουσα συνομιλίας'
+      icon_title_new_messages: 'Αίθουσα συνομιλίας (νέα μηνύματα)'
+      message_placeholder: 'Μήνυμα'
+      name: 'Όνομα:'
+      send: 'Αποστολή'
+
     top:
         page_title: Οι πιο δημοφιλείς ραδιοφωνικοί σταθμοί σε %country%
         description: 'Ακούστε τους καλύτερους ραδιοφωνικούς σταθμούς σε %country%'

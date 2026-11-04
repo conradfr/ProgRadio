@@ -258,6 +258,15 @@ page:
             stats_this_month: "%sessions% сесии на слушане с обща продължителност %time% този месец."
             stats_last_month: "%sessions% сесии на слушане с обща продължителност %time% миналия месец."
             email_toggle: Получавай месечна статистика за слушанията по имейл
+
+    chat:
+      page_title: 'Чат: %radio%'
+      icon_title: 'Чат стая'
+      icon_title_new_messages: 'Чат стая (нови съобщения)'
+      message_placeholder: 'Съобщение'
+      name: 'Име:'
+      send: 'Изпрати'
+
     top:
         page_title: 'Най-популярните радиостанции: %country%'
         description: 'Слушайте най-добрите радиостанции: %country%'

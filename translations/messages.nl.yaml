@@ -245,6 +245,14 @@ page:
             stats_last_month: "%sessions% luistersessies voor een totaal van %time% vorige maand."
             email_toggle: Maandelijkse statistieken per e-mail ontvangen
 
+    chat:
+      page_title: 'Chat: %radio%'
+      icon_title: 'Chatroom'
+      icon_title_new_messages: 'Chatroom (nieuwe berichten)'
+      message_placeholder: 'Bericht'
+      name: 'Naam:'
+      send: 'Verzenden'
+
     top:
         page_title: De populairste radiozenders in %country%
         description: 'Luister naar de beste radiozenders van %country%'

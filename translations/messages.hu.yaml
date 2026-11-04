@@ -259,6 +259,14 @@ page:
             stats_last_month: "%sessions% hallgatási session %time% időtartamra a múlt hónapban."
             email_toggle: Havonta küldött statisztikai e-mailek fogadása
 
+    chat:
+      page_title: 'Csevegő: %radio%'
+      icon_title: 'Csevegőszoba'
+      icon_title_new_messages: 'Csevegőszoba (új üzenetek)'
+      message_placeholder: 'Üzenet'
+      name: 'Név:'
+      send: 'Küldés'
+
     top:
         page_title: A legnépszerűbb rádiók %country%-ban
         description: 'Hallgasd a legjobb rádiókat %country%-ban'

@@ -1,0 +1,130 @@
+defmodule ProgRadioApiWeb.ChatChannel do
+  import Ecto.Query, only: [from: 2]
+  use Phoenix.Channel
+  use Nebulex.Caching
+
+  alias ProgRadioApiWeb.Presence
+  alias ProgRadioApi.Repo
+  alias ProgRadioApi.Cache
+  alias ProgRadioApi.Stream
+  alias ProgRadioApi.Utils.ChatUtils
+
+  @cache_prefix_stream_exist "channel_chat_"
+  # 1h
+  @cache_ttl_ms 3_600_000
+
+  def join("chat:" <> stream_id, params, socket) do
+    case stream_exists?(stream_id) do
+      false ->
+        {:error, %{reason: "not available"}}
+
+      true ->
+        # presence key: unique per channel join, the same name can be used by several users
+        presence_key = Ecto.UUID.generate()
+
+        socket =
+          socket
+          |> assign(:presence_key, presence_key)
+          |> assign(:name, ChatUtils.sanitize_name(Map.get(params, "name")))
+          # timestamps (monotonic ms) of the last accepted messages, for the rate limit
+          |> assign(:msg_times, [])
+
+        send(self(), :after_join)
+        {:ok, %{key: presence_key}, socket}
+    end
+  end
+
+  def handle_info(:after_join, socket) do
+    # tracked on the channel topic, so joins/leaves are broadcast to clients as "presence_diff"
+    {:ok, _} =
+      Presence.track(socket, socket.assigns.presence_key, %{
+        name: socket.assigns.name,
+        online_at: System.system_time(:second)
+      })
+
+    push(socket, "presence_state", Presence.list(socket))
+    {:noreply, socket}
+  end
+
+  def handle_in("update:name", %{"name" => name}, socket) do
+    name = ChatUtils.sanitize_name(name)
+
+    {:ok, _} =
+      Presence.update(socket, socket.assigns.presence_key, fn meta ->
+        Map.put(meta, :name, name)
+      end)
+
+    {:reply, {:ok, %{name: name}}, assign(socket, :name, name)}
+  end
+
+  # Invalid, rate limited and filtered messages are all silently dropped: the sender
+  # already displays it locally, so they can't tell it hasn't been broadcast
+  def handle_in("new:msg", %{"msg" => msg, "ctrl" => ctrl}, socket)
+      when is_binary(msg) and is_integer(ctrl) do
+    msg = String.trim(msg)
+
+    with true <- ChatUtils.valid_msg?(msg),
+         {:ok, msg_times} <- ChatUtils.check_rate_limit(socket.assigns.msg_times) do
+      socket = assign(socket, :msg_times, msg_times)
+
+      # checked after the rate limit, so filtered messages are counted too
+      if ChatUtils.filtered?(socket.assigns.name, msg) do
+        emit_msg_telemetry(:filtered)
+      else
+        id = Ecto.UUID.generate()
+        datetime = DateTime.utc_now() |> DateTime.truncate(:second)
+
+        broadcast!(socket, "new:msg", %{
+          id: id,
+          user: socket.assigns.name,
+          msg: msg,
+          datetime: datetime,
+          ctrl: ctrl
+        })
+
+        emit_msg_telemetry(:sent)
+      end
+
+      {:noreply, socket}
+    else
+      false -> {:noreply, socket}
+      {:error, msg_times} ->
+        emit_msg_telemetry(:rate_limited)
+        {:noreply, assign(socket, :msg_times, msg_times)}
+    end
+  end
+
+  # malformed payload (only possible from a client not using the web app)
+  def handle_in("new:msg", _payload, socket), do: {:noreply, socket}
+
+#  # sent by song server (if already exists) when user join channel
+#  def handle_info({:push_song, event, song_data}, socket) do
+#    push(socket, event, song_data)
+#    {:noreply, socket}
+#  end
+
+  # ----- Internal -----
+
+  # one event, the outcome as a tag (see ProgRadioApiWeb.Telemetry metrics)
+  @spec emit_msg_telemetry(:sent | :filtered | :rate_limited) :: :ok
+  defp emit_msg_telemetry(status) do
+    :telemetry.execute([:prog_radio_api, :chat, :message], %{count: 1}, %{status: status})
+  end
+
+  @spec stream_exists?(String.t()) :: boolean()
+  @decorate cacheable(
+              cache: Cache,
+              key: "#{@cache_prefix_stream_exist}#{stream_id}",
+              opts: [ttl: @cache_ttl_ms]
+            )
+  defp stream_exists?(stream_id) when is_binary(stream_id) do
+    query =
+      from(s in Stream,
+        where:
+          s.banned != true and s.enabled == true and is_nil(s.redirect_to) and
+            s.id == ^stream_id
+      )
+
+    Repo.exists?(query)
+  end
+end

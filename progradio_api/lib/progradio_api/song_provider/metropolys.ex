@@ -1,6 +1,4 @@
 defmodule ProgRadioApi.SongProvider.Metropolys do
-  require Logger
-
   alias ProgRadioApi.SongProvider.GenericLesIndesEvent
 
   @behaviour ProgRadioApi.SongProviderPush

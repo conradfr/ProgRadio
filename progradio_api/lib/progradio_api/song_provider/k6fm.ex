@@ -1,6 +1,4 @@
 defmodule ProgRadioApi.SongProvider.K6fm do
-  require Logger
-
   alias ProgRadioApi.SongProvider.GenericLesIndesEvent
 
   @behaviour ProgRadioApi.SongProviderPush
