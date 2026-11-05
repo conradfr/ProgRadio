@@ -13,112 +13,118 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-8 col-12 offset-1 offset-sm-0 pb-3">
-        <div class="row">
-          <div class="col-12">
-            <div class="d-none d-md-block float-end cursor-pointer"
-              :title="$t('message.streaming.close')"
-              @click="quit">
-              <i class="bi bi-x-lg"></i>
+      <div class="col-sm-8 col-12 pb-3 stream-next">
+        <div class="stream-block mb-2 mb-sm-3 p-3 rounded border">
+          <div class="d-none d-md-block float-end cursor-pointer"
+               :title="$t('message.streaming.close')"
+               @click="quit">
+            <i class="bi bi-x-lg"></i>
+          </div>
+          <div class="d-none d-md-block float-end me-4">
+            <a v-if="!userLogged || !userIsAdmin" target="_blank" class="link-no-to-bold"
+               :href="`/${locale}/streams/suggestion/${stream.code_name}`">
+              {{ $t('message.streaming.suggest') }}
+            </a>
+            <div v-if="userLogged && userIsAdmin" class="text-end">
+              <a class="link-no-to-bold" @click="copyIdToClipboard">Copy id</a>
+              &nbsp;-&nbsp;<a target="_blank" :href="`/${locale}/admin/overloading/${stream.code_name}`">Edit</a>
             </div>
-            <div class="d-none d-md-block float-end me-4">
-              <a v-if="!userLogged || !userIsAdmin" target="_blank" class="link-no-to-bold"
-                 :href="`/${locale}/streams/suggestion/${stream.code_name}`">
-                {{ $t('message.streaming.suggest') }}
-              </a>
-              <div v-if="userLogged && userIsAdmin" class="text-end">
-                <a class="link-no-to-bold" @click="copyIdToClipboard">Copy id</a>
-                &nbsp;-&nbsp;<a target="_blank" :href="`/${locale}/admin/overloading/${stream.code_name}`">Edit</a>
-              </div>
-            </div>
-            <h4 :class="{
-              'mb-1': stream.slogan,
-              'mb-4': !stream.slogan
-              }">
-                {{ stream.name }}
-            </h4>
-            <div v-if="stream.slogan" class="text-truncate text-center text-sm-start mb-4">
-              {{ stream.slogan }}
-            </div>
+          </div>
+          <h4 :class="{
+          'mb-1': stream.slogan,
+          'mb-4': !stream.slogan
+          }">
+            {{ stream.name }}
+          </h4>
+          <div v-if="stream.slogan" class="text-truncate text-center text-sm-start mb-4">
+            {{ stream.slogan }}
+          </div>
 
-            <div class="stream-page-stream mt-3 mb-5">
-              <div class="radio-page-streams-one d-flex mb-4
-                align-items-center justify-content-center justify-content-sm-start">
-                <div>
-                  <div
-                    v-if="stream.code_name !== radioPlayingCodeName
-                      || playing === PlayerStatus.Stopped"
-                    class="radio-page-play"
-                    @click="playStop">
-                    <img :alt="$t('message.streaming.play', { radio: stream.name})" :src="playImage">
-                  </div>
-                  <div
-                    v-if="stream.code_name === radioPlayingCodeName && playing !== PlayerStatus.Stopped"
-                    class="radio-page-play"
-                    @click="playStop">
-                    <img :alt="$t('message.streaming.stop')" :src="pauseImage">
-                  </div>
+          <div class="stream-page-stream mt-3">
+            <div class="radio-page-streams-one d-flex
+              align-items-center justify-content-center justify-content-sm-start">
+              <div>
+                <div
+                  v-if="stream.code_name !== radioPlayingCodeName
+                    || playing === PlayerStatus.Stopped"
+                  class="radio-page-play"
+                  @click="playStop">
+                  <img :alt="$t('message.streaming.play', { radio: stream.name})" :src="playImage">
                 </div>
-
-                <div class="ps-2">
-                  <div
-                    v-if="stream.code_name !== radioPlayingCodeName || playing === PlayerStatus.Stopped"
-                    class="radio-page-play" @click="playStop">
-                    <div>{{ $t('message.streaming.play', { radio: stream.name}) }}</div>
-                  </div>
-                  <div
-                    v-if="stream.code_name === radioPlayingCodeName && playing !== PlayerStatus.Stopped"
-                    class="radio-page-play"
-                    @click="playStop">
-                    <div>{{ $t('message.streaming.stop') }}</div>
-                  </div>
+                <div
+                  v-if="stream.code_name === radioPlayingCodeName && playing !== PlayerStatus.Stopped"
+                  class="radio-page-play"
+                  @click="playStop">
+                  <img :alt="$t('message.streaming.stop')" :src="pauseImage">
                 </div>
               </div>
 
-              <live-song v-if="stream" :stream="stream"></live-song>
-              <live-listeners v-if="stream" :stream="stream"></live-listeners>
-              <live-song-history v-if="stream" :stream="stream"></live-song-history>
+              <div class="ps-2">
+                <div
+                  v-if="stream.code_name !== radioPlayingCodeName || playing === PlayerStatus.Stopped"
+                  class="radio-page-play" @click="playStop">
+                  <div>{{ $t('message.streaming.play', { radio: stream.name}) }}</div>
+                </div>
+                <div
+                  v-if="stream.code_name === radioPlayingCodeName && playing !== PlayerStatus.Stopped"
+                  class="radio-page-play"
+                  @click="playStop">
+                  <div>{{ $t('message.streaming.stop') }}</div>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div v-if="country" class="mb-3">
-              <strong>{{ $t('message.streaming.country') }}:</strong>&nbsp;
-              {{ country }}
-            </div>
+          <live-listeners v-if="stream" :stream="stream" class-name="mt-4"></live-listeners>
+        </div>
 
-            <div v-if="stream.website" class="mb-3">
-              <strong>{{ $t('message.streaming.website') }}:</strong>&nbsp;
-              <a target="_blank" :href="stream.website">{{ stream.website }}</a>
-            </div>
+        <div class="stream-block mb-2 mb-sm-3 p-3 pb-2 pb-sm-3 rounded border">
+          <live-song v-if="stream" :stream="stream" class-name=""></live-song>
+          <live-song-history v-if="stream" :stream="stream" class-name=""></live-song-history>
+        </div>
 
-            <div v-if="stream.description" class="mb-3">
-              {{ stream.description }}
-            </div>
+        <div v-if="locale !== 'fr' || (!isProgRadio || !userLogged)" class="pt-3 w-100">
+          <adsense mode="horizontal_fix"></adsense>
+        </div>
 
-            <div v-if="tags || genres" class="row">
-              <div class="col-12 col-sm-9">
-                <div class="stream-one-tags">
-                  <div class="d-flex flex-wrap">
-                    <span v-for="genre in genres" :key="genre"
+        <div class="stream-block mb-2 mb-sm-3 p-3 pb-2 pb-sm-3 rounded border">
+          <p><strong>{{ $t('message.streaming.about') }}</strong></p>
+
+          <div v-if="country" class="mb-3">
+            <strong>{{ $t('message.streaming.country') }}:</strong>&nbsp;
+            {{ country }}
+          </div>
+
+          <div v-if="stream.website" class="mb-3">
+            <strong>{{ $t('message.streaming.website') }}:</strong>&nbsp;
+            <a target="_blank" :href="stream.website">{{ stream.website }}</a>
+          </div>
+
+          <div v-if="stream.description" class="mb-3">
+            {{ stream.description }}
+          </div>
+
+          <div v-if="tags || genres" class="row">
+            <div class="col-12 col-sm-9">
+              <div class="stream-one-tags">
+                <div class="d-flex flex-wrap">
+                <span v-for="genre in genres" :key="genre"
                       class="badge badge-inverse"
                       @click="tagClick(genre)">
-                      <i class="bi bi-music-note"></i>&nbsp;{{ genre }}
-                    </span>
+                  <i class="bi bi-music-note"></i>&nbsp;{{ genre }}
+                </span>
 
-                    <span v-for="tag in tags" :key="tag"
-                      class="badge badge-inverse"
-                      @click="tagClick(tag)">
-                      #{{ tag }}
-                    </span>
-                  </div>
+                  <span v-for="tag in tags" :key="tag"
+                        class="badge badge-inverse"
+                        @click="tagClick(tag)">
+                  #{{ tag }}
+                </span>
                 </div>
               </div>
-            </div>
-
-            <div v-if="locale !== 'fr' || (!isProgRadio || !userLogged)" class="pt-3 px-3 w-100">
-              <adsense mode="horizontal_fix"></adsense>
             </div>
           </div>
         </div>
+
       </div>
       <!-- <div class="col-sm-2 col-12 text-center d-none d-sm-block"
         v-if="locale !== 'fr' || !isProgRadio || !userLogged">

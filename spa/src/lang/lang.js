@@ -182,6 +182,7 @@ export const messages = {
         title: 'Titres sauvegardés',
       },
       streaming: {
+        about: 'À propos de la radio',
         categories: {
           all_countries: 'Tous les pays',
           favorites: 'Favoris',
@@ -347,6 +348,7 @@ export const messages = {
         title: 'Saved songs',
       },
       streaming: {
+        about: 'About the radio',
         categories: {
           all_countries: 'All countries',
           favorites: 'Favorites',
@@ -512,6 +514,7 @@ export const messages = {
         title: 'Canciones guardadas',
       },
       streaming: {
+        about: 'Acerca de la radio',
         categories: {
           all_countries: 'Todos los países',
           favorites: 'Favoritos',
@@ -677,6 +680,7 @@ export const messages = {
         title: 'Gespeicherte Titel',
       },
       streaming: {
+        about: 'Über den Radiosender',
         categories: {
           all_countries: 'Alle Länder',
           favorites: 'Favoriten',
@@ -842,6 +846,7 @@ export const messages = {
         title: 'Faixas guardadas',
       },
       streaming: {
+        about: 'Sobre a rádio',
         categories: {
           all_countries: 'Todos os países',
           favorites: 'Favoritos',
@@ -1007,6 +1012,7 @@ export const messages = {
         title: 'Brani salvati',
       },
       streaming: {
+        about: 'Informazioni sulla radio',
         categories: {
           all_countries: 'Tutti i paesi',
           favorites: 'Preferiti',
@@ -1172,6 +1178,7 @@ export const messages = {
         title: 'Zapisane utwory',
       },
       streaming: {
+        about: 'O stacji radiowej',
         categories: {
           all_countries: 'Wszystkie kraje',
           favorites: 'Ulubione',
@@ -1337,6 +1344,7 @@ export const messages = {
         title: 'Αποθηκευμένα τραγούδια',
       },
       streaming: {
+        about: 'Σχετικά με τον σταθμό',
         categories: {
           all_countries: 'Όλες οι χώρες',
           favorites: 'Αγαπημένα',
@@ -1501,6 +1509,7 @@ export const messages = {
         title: 'الأغاني المحفوظة',
       },
       streaming: {
+        about: 'حول الإذاعة',
         categories: {
           all_countries: 'جميع البلدان',
           favorites: 'المفضلة',
@@ -1666,6 +1675,7 @@ export const messages = {
         title: 'Piese salvate',
       },
       streaming: {
+        about: 'Despre radio',
         categories: {
           all_countries: 'Toate țările',
           favorites: 'Favorite',
@@ -1831,6 +1841,7 @@ export const messages = {
         title: 'Mentett dalok',
       },
       streaming: {
+        about: 'A rádióról',
         categories: {
           all_countries: 'Minden ország',
           favorites: 'Kedvencek',
@@ -1996,6 +2007,7 @@ export const messages = {
         title: 'Kaydedilmiş şarkılar',
       },
       streaming: {
+        about: 'Radyo hakkında',
         categories: {
           all_countries: 'Tüm ülkeler',
           favorites: 'Favoriler',
@@ -2161,6 +2173,7 @@ export const messages = {
         title: 'Opgeslagen nummers',
       },
       streaming: {
+        about: 'Over de radiozender',
         categories: {
           all_countries: 'Alle landen',
           favorites: 'Favorieten',
@@ -2326,6 +2339,7 @@ export const messages = {
         title: 'Сохранённые треки',
       },
       streaming: {
+        about: 'О радиостанции',
         categories: {
           all_countries: 'Все страны',
           favorites: 'Избранное',
@@ -2491,6 +2505,7 @@ export const messages = {
         title: 'שירים שמורים',
       },
       streaming: {
+        about: 'על תחנת הרדיו',
         categories: {
           all_countries: 'כל המדינות',
           favorites: 'מועדפים',
@@ -2656,6 +2671,7 @@ export const messages = {
         title: 'Запазени песни',
       },
       streaming: {
+        about: 'За радиостанцията',
         categories: {
           all_countries: 'Всички държави',
           favorites: 'Любими',
@@ -2821,6 +2837,7 @@ export const messages = {
         title: 'Gemte numre',
       },
       streaming: {
+        about: 'Om radiostationen',
         categories: {
           all_countries: 'Alle lande',
           favorites: 'Favoritter',
@@ -2986,6 +3003,7 @@ export const messages = {
         title: 'Sparade låtar',
       },
       streaming: {
+        about: 'Om radiokanalen',
         categories: {
           all_countries: 'Alla länder',
           favorites: 'Favoriter',

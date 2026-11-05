@@ -1,5 +1,5 @@
 <template>
-  <div v-if="liveSongHistory && liveSongHistory.length > 0" class="mb-4">
+  <div v-if="liveSongHistory && liveSongHistory.length > 0" :class="className">
     <div class="mt-3 mb-3 d-flex align-items-center">
       <h6 class="me-2 mb-0 collapsed cursor-pointer" data-bs-toggle="collapse" href="#historyDetails"
         aria-expanded="false">
@@ -49,6 +49,11 @@ export default defineComponent({
     stream: {
       type: Object as PropType<Stream>,
       required: true
+    },
+    className: {
+      type: String,
+      required: false,
+      default: 'mb-4'
     },
   },
   computed: {

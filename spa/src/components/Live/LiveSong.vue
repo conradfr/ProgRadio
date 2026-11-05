@@ -1,5 +1,5 @@
 <template>
-  <div v-if="liveSongTitle" class="d-flex mt-4 mb-4">
+  <div v-if="liveSongTitle" class="d-flex" :class="className">
     <div v-if="liveSongCover" class="me-3 live-song-cover">
       <img :src="liveSongCover">
     </div>
@@ -38,7 +38,12 @@ export default defineComponent({
     stream: {
       type: Object as PropType<Stream>,
       required: true
-    }
+    },
+    className: {
+      type: String,
+      required: false,
+      default: 'mt-4 mb-4'
+    },
   },
   data(): {
     iTunesCover: string|null,

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="count && count > 0" class="mb-4">
+  <div v-if="count && count > 0" :class="className">
     <strong>{{ $t('message.streaming.listeners_title') }}:</strong>&nbsp;
     {{ $t('message.streaming.listeners', count) }}
   </div>
@@ -22,7 +22,12 @@ export default defineComponent({
     stream: {
       type: Object as PropType<Radio|Stream>,
       required: true
-    }
+    },
+    className: {
+      type: String,
+      required: false,
+      default: 'mb-4'
+    },
   },
   mounted() {
     setTimeout(() => {
