@@ -95,7 +95,8 @@ defmodule ProgRadioApi.MixProject do
       {:lazy_html, ">= 0.0.0", only: :test},
       {:igniter, "~> 0.6", only: [:dev, :test]},
       {:openai_ex, "~> 0.10.0"},
-      {:oban, "~> 2.19"}
+      {:oban, "~> 2.19"},
+      {:nimble_options, "1.1.1"}
     ]
   end
 
