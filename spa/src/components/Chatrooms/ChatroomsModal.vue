@@ -1,7 +1,7 @@
 <template>
   <div id="chatroomsModal" style="z-index:1300" class="modal fade"
     tabindex="-1" aria-labelledby="chatroomsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
+    <div class="modal-dialog modal-fullscreen-sm-down modal-lg modal-xl">
       <div class="modal-content">
         <div class="modal-header justify-content-between align-items-center py-2">
           <div class="flex-fill">

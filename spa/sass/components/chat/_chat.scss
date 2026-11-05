@@ -1,5 +1,13 @@
 // #chatModal: stream page (twig + petite-vue), #chatroomsModal: spa (ChatroomsModal.vue)
 #chatModal, #chatroomsModal {
+  @include media-breakpoint-up(md) {
+    .modal-content {
+      // the window height minus the dialog's top and bottom margins
+      height: calc(100vh - var(--bs-modal-margin) * 2);
+      height: calc(100dvh - var(--bs-modal-margin) * 2);
+    }
+  }
+
   .modal-header {
     background-color: var(--progradio-player-background-xl);
     color: var(--progradio-player-color);
