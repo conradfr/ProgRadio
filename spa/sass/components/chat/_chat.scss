@@ -1,4 +1,5 @@
-#chatModal {
+// #chatModal: stream page (twig + petite-vue), #chatroomsModal: spa (ChatroomsModal.vue)
+#chatModal, #chatroomsModal {
   .modal-header {
     background-color: var(--progradio-player-background-xl);
     color: var(--progradio-player-color);

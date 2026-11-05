@@ -128,6 +128,15 @@ export const messages = {
           title: 'Minuteur',
           tooltip: 'Cliquer ici pour activer le minuteur'
         },
+        chat: {
+          close: 'Fermer',
+          message_placeholder: 'Message',
+          name: 'Nom:',
+          page_title: 'Chat: {radio}',
+          send: 'Envoyer',
+          title: 'Chatroom',
+          title_new_messages: 'Chatroom (nouveaux messages)'
+        },
         video: {
           title: 'Player vidéo'
         },
@@ -283,6 +292,15 @@ export const messages = {
           set: 'Timer has been set to {minutes} minute(s)',
           title: 'Timer',
           tooltip: 'Click here to set the timer'
+        },
+        chat: {
+          close: 'Close',
+          message_placeholder: 'Message',
+          name: 'Name:',
+          page_title: 'Chat: {radio}',
+          send: 'Send',
+          title: 'Chatroom',
+          title_new_messages: 'Chatroom (new messages)'
         },
         video: {
           title: 'Video player'
@@ -440,6 +458,15 @@ export const messages = {
           title: 'Temporizador',
           tooltip: 'Haz clic aquí para activar el temporizador'
         },
+        chat: {
+          close: 'Cerrar',
+          message_placeholder: 'Mensaje',
+          name: 'Nombre:',
+          page_title: 'Chat: {radio}',
+          send: 'Enviar',
+          title: 'Sala de chat',
+          title_new_messages: 'Sala de chat (mensajes nuevos)'
+        },
         video: {
           title: 'Reproductor de video'
         },
@@ -595,6 +622,15 @@ export const messages = {
           set: 'Der Timer ist für 0 Minute aktiviert | Der Timer ist für {minutes} Minute aktiviert | Der Timer ist für {minutes} Minuten aktiviert',
           title: 'Timer',
           tooltip: 'Hier klicken, um den Timer zu aktivieren'
+        },
+        chat: {
+          close: 'Schließen',
+          message_placeholder: 'Nachricht',
+          name: 'Name:',
+          page_title: 'Chat: {radio}',
+          send: 'Senden',
+          title: 'Chatraum',
+          title_new_messages: 'Chatraum (neue Nachrichten)'
         },
         video: {
           title: 'Video-Player'
@@ -752,6 +788,15 @@ export const messages = {
           title: 'Temporizador',
           tooltip: 'Clique aqui para ativar o temporizador'
         },
+        chat: {
+          close: 'Fechar',
+          message_placeholder: 'Mensagem',
+          name: 'Nome:',
+          page_title: 'Chat: {radio}',
+          send: 'Enviar',
+          title: 'Sala de chat',
+          title_new_messages: 'Sala de chat (novas mensagens)'
+        },
         video: {
           title: 'Leitor de vídeo'
         },
@@ -907,6 +952,15 @@ export const messages = {
           set: 'Il timer è attivato per 0 minuto | Il timer è attivato per {minutes} minuto | Il timer è attivato per {minutes} minuti',
           title: 'Timer',
           tooltip: 'Clicca qui per attivare il timer'
+        },
+        chat: {
+          close: 'Chiudi',
+          message_placeholder: 'Messaggio',
+          name: 'Nome:',
+          page_title: 'Chat: {radio}',
+          send: 'Invia',
+          title: 'Chatroom',
+          title_new_messages: 'Chatroom (nuovi messaggi)'
         },
         video: {
           title: 'Lettore video'
@@ -1064,6 +1118,15 @@ export const messages = {
           title: 'Minutnik',
           tooltip: 'Kliknij tutaj, aby uruchomić minutnik'
         },
+        chat: {
+          close: 'Zamknij',
+          message_placeholder: 'Wiadomość',
+          name: 'Nazwa:',
+          page_title: 'Czat: {radio}',
+          send: 'Wyślij',
+          title: 'Pokój czatu',
+          title_new_messages: 'Pokój czatu (nowe wiadomości)'
+        },
         video: {
           title: 'Odtwarzacz wideo'
         },
@@ -1219,6 +1282,15 @@ export const messages = {
           set: 'Ο χρονόμετρος είναι ενεργοποιημένος για 0 λεπτό | Ο χρονόμετρος είναι ενεργοποιημένος για {minutes} λεπτό | Ο χρονόμετρος είναι ενεργοποιημένος για {minutes} λεπτά',
           title: 'Χρονόμετρος',
           tooltip: 'Κάντε κλικ εδώ για να ενεργοποιήσετε τον χρονόμετρο'
+        },
+        chat: {
+          close: 'Κλείσιμο',
+          message_placeholder: 'Μήνυμα',
+          name: 'Όνομα:',
+          page_title: 'Συνομιλία: {radio}',
+          send: 'Αποστολή',
+          title: 'Αίθουσα συνομιλίας',
+          title_new_messages: 'Αίθουσα συνομιλίας (νέα μηνύματα)'
         },
         video: {
           title: 'Παίκτης βίντεο'
@@ -1376,6 +1448,15 @@ export const messages = {
           title: 'المؤقت',
           tooltip: 'انقر هنا لتفعيل المؤقت'
         },
+        chat: {
+          close: 'إغلاق',
+          message_placeholder: 'رسالة',
+          name: 'الاسم:',
+          page_title: 'الدردشة: {radio}',
+          send: 'إرسال',
+          title: 'غرفة الدردشة',
+          title_new_messages: 'غرفة الدردشة (رسائل جديدة)'
+        },
         video: {
           title: 'مشغل الفيديو'
         },
@@ -1530,6 +1611,15 @@ export const messages = {
           set: 'Ceasul este activat pentru 0 minut | Ceasul este activat pentru {minutes} minut | Ceasul este activat pentru {minutes} minute',
           title: 'Ceas',
           tooltip: 'Faceți clic aici pentru a activa ceasul'
+        },
+        chat: {
+          close: 'Închide',
+          message_placeholder: 'Mesaj',
+          name: 'Nume:',
+          page_title: 'Chat: {radio}',
+          send: 'Trimite',
+          title: 'Cameră de chat',
+          title_new_messages: 'Cameră de chat (mesaje noi)'
         },
         video: {
           title: 'Player video'
@@ -1687,6 +1777,15 @@ export const messages = {
           title: 'Időzítő',
           tooltip: 'Kattintson ide az időzítő bekapcsolásához'
         },
+        chat: {
+          close: 'Bezárás',
+          message_placeholder: 'Üzenet',
+          name: 'Név:',
+          page_title: 'Csevegő: {radio}',
+          send: 'Küldés',
+          title: 'Csevegőszoba',
+          title_new_messages: 'Csevegőszoba (új üzenetek)'
+        },
         video: {
           title: 'Videó lejátszó'
         },
@@ -1842,6 +1941,15 @@ export const messages = {
           set: 'Zamanlayıcı 0 dakika için ayarlandı | Zamanlayıcı {minutes} dakika için ayarlandı | Zamanlayıcı {minutes} dakika için ayarlandı',
           title: 'Zamanlayıcı',
           tooltip: 'Zamanlayıcıyı etkinleştirmek için buraya tıklayın'
+        },
+        chat: {
+          close: 'Kapat',
+          message_placeholder: 'Mesaj',
+          name: 'İsim:',
+          page_title: 'Sohbet: {radio}',
+          send: 'Gönder',
+          title: 'Sohbet odası',
+          title_new_messages: 'Sohbet odası (yeni mesajlar)'
         },
         video: {
           title: 'Video oynatıcı'
@@ -1999,6 +2107,15 @@ export const messages = {
           title: 'Timer',
           tooltip: 'Klik hier om de timer te activeren'
         },
+        chat: {
+          close: 'Sluiten',
+          message_placeholder: 'Bericht',
+          name: 'Naam:',
+          page_title: 'Chat: {radio}',
+          send: 'Verzenden',
+          title: 'Chatroom',
+          title_new_messages: 'Chatroom (nieuwe berichten)'
+        },
         video: {
           title: 'Videospeler'
         },
@@ -2154,6 +2271,15 @@ export const messages = {
           set: 'Таймер установлен на 0 мин. | Таймер установлен на {minutes} мин. | Таймер установлен на {minutes} мин.',
           title: 'Таймер',
           tooltip: 'Нажмите здесь, чтобы включить таймер'
+        },
+        chat: {
+          close: 'Закрыть',
+          message_placeholder: 'Сообщение',
+          name: 'Имя:',
+          page_title: 'Чат: {radio}',
+          send: 'Отправить',
+          title: 'Чат-комната',
+          title_new_messages: 'Чат-комната (новые сообщения)'
         },
         video: {
           title: 'Видеоплеер'
@@ -2311,6 +2437,15 @@ export const messages = {
           title: 'טיימר',
           tooltip: 'לחצו כאן כדי להפעיל את הטיימר'
         },
+        chat: {
+          close: 'סגירה',
+          message_placeholder: 'הודעה',
+          name: 'שם:',
+          page_title: 'צ׳אט: {radio}',
+          send: 'שליחה',
+          title: 'חדר צ׳אט',
+          title_new_messages: 'חדר צ׳אט (הודעות חדשות)'
+        },
         video: {
           title: 'נגן וידאו'
         },
@@ -2466,6 +2601,15 @@ export const messages = {
           set: 'Таймерът е включен за 0 минути | Таймерът е включен за {minutes} минута | Таймерът е включен за {minutes} минути',
           title: 'Таймер',
           tooltip: 'Натиснете тук, за да включите таймера'
+        },
+        chat: {
+          close: 'Затвори',
+          message_placeholder: 'Съобщение',
+          name: 'Име:',
+          page_title: 'Чат: {radio}',
+          send: 'Изпрати',
+          title: 'Чат стая',
+          title_new_messages: 'Чат стая (нови съобщения)'
         },
         video: {
           title: 'Видео плейър'
@@ -2623,6 +2767,15 @@ export const messages = {
           title: 'Timer',
           tooltip: 'Klik her for at aktivere timeren'
         },
+        chat: {
+          close: 'Luk',
+          message_placeholder: 'Besked',
+          name: 'Navn:',
+          page_title: 'Chat: {radio}',
+          send: 'Send',
+          title: 'Chatrum',
+          title_new_messages: 'Chatrum (nye beskeder)'
+        },
         video: {
           title: 'Videoafspiller'
         },
@@ -2778,6 +2931,15 @@ export const messages = {
           set: 'Timern är inställd på 0 minuter | Timern är inställd på {minutes} minut | Timern är inställd på {minutes} minuter',
           title: 'Timer',
           tooltip: 'Klicka här för att aktivera timern'
+        },
+        chat: {
+          close: 'Stäng',
+          message_placeholder: 'Meddelande',
+          name: 'Namn:',
+          page_title: 'Chatt: {radio}',
+          send: 'Skicka',
+          title: 'Chattrum',
+          title_new_messages: 'Chattrum (nya meddelanden)'
         },
         video: {
           title: 'Videospelare'

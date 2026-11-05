@@ -33,6 +33,7 @@
           <PlayerSaveSong :stream="stream" />
           <PlayerFavorite v-if="stream" :isFavorite="isFavorite" :favoriteTitle="favoriteTitle"
             @favoriteToggle="() => favoriteToggle()" />
+          <PlayerChatXL v-if="stream" />
           <timer></timer>
           <PlayerOutputSelector v-if="!isSafari && !externalPlayer" :selectedDeviceId="deviceId" :asIcon="true"
             @changeOutput="(newDeviceId: string, stopIfPlaying: boolean) => changeDevice(newDeviceId, stopIfPlaying)"
@@ -126,6 +127,7 @@ import PlayerSongXL from './XL/PlayerSongXL.vue';
 import PlayerVolumeXL from './XL/PlayerVolumeXL.vue';
 import PlayerListenersXL from './XL/PlayerListenersXL.vue';
 import PlayerCountryXL from './XL/PlayerCountryXL.vue';
+import PlayerChatXL from './XL/PlayerChatXL.vue';
 
 /* we load the hls script dynamically once, reducing initial app load */
 const loadHls = () => {
@@ -195,6 +197,7 @@ export default defineComponent({
     PlayerCountryXL,
     PlayerFavorite,
     PlayerSaveSong,
+    PlayerChatXL,
     Timer,
     PlayerVolumeNavbar,
     PlayerOutputSelector,

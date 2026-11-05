@@ -31,7 +31,7 @@
   }
 
   @include media-breakpoint-down(sm) {
-    width: 85vw;
+    width: 87vw;
   }
 
   .player-header-xl {
@@ -93,7 +93,7 @@
     font-size: 1rem;
   }
 
-  .player-favorite, .player-add-song, .player-timer, .player-output-action {
+  .player-favorite, .player-add-song, .player-timer, .player-chat, .player-output-action {
     width: 31px;
     padding-top: 2px;
 
@@ -114,6 +114,11 @@
 
       i {
         font-size: $icon-size-hover-xl;
+      }
+
+      svg {
+        height: 1.846rem;
+        width: 1.846rem;
       }
     }
   }

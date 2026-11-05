@@ -1,5 +1,6 @@
 import { createApp, nextTick } from './utils/petite-vue.es.js';
 import cookies from './utils/cookies';
+import ChatUtils from './utils/chatUtils';
 import { Socket, Presence } from '../js/phoenix';
 import noUiSlider from 'nouislider';
 
@@ -24,7 +25,6 @@ import {
   POPUP_SETTINGS,
   POPUP_URL_WILDCARD,
   COOKIE_VOLUME,
-  COOKIE_CHAT_NAME,
   SOURCE_INCREMENT_COUNT,
   PROGRADIO_AGENT,
   RADIOADDICT_AGENT,
@@ -355,43 +355,8 @@ const incrementPlayCount = (stationUuid: string | null) => {
 
 // ---------- CHAT ----------
 
-// encoded as the cookies util stores the raw value (a name can contain ";", spaces...)
-const getSavedName = (): string | null => {
-  const saved = cookies.get(COOKIE_CHAT_NAME);
-
-  if (!saved) {
-    return null;
-  }
-
-  try {
-    const name = decodeURIComponent(saved).trim().slice(0, CHAT_NAME_MAX_LENGTH);
-    return name !== '' ? name : null;
-  } catch (_e) {
-    return null;
-  }
-};
-
-const saveName = (name: string) => {
-  cookies.set(COOKIE_CHAT_NAME, encodeURIComponent(name));
-};
-
-// removes the oldest items (in place, to keep the reactivity) when over the limit
-const keepLast = <T>(list: T[], max: number) => {
-  if (list.length > max) {
-    list.splice(0, list.length - max);
-  }
-};
-
-// message datetime is UTC (ISO 8601), displayed in the browser timezone
-const formatTime = (datetime: string) => {
-  const date = new Date(datetime);
-
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
-
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-};
+// helpers shared with the spa chat
+const { getSavedName, saveName, keepLast, formatTime } = ChatUtils;
 
 createApp({
   // config
