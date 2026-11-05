@@ -29,7 +29,9 @@ defmodule ProgRadioApi.ListeningSessions do
   # Legacy: kept for old mobile apps for now
   # TODO remove after some time
   def get_listening_session!(id, %{"code_name" => stream_id} = _attrs) do
-    with stream when not is_nil(stream) <- Repo.get(Stream, stream_id) do
+    with {:ok, _} <- Ecto.UUID.cast(id),
+         {:ok, stream_id} <- Ecto.UUID.cast(stream_id),
+         stream when not is_nil(stream) <- Repo.get(Stream, stream_id) do
       Repo.get_by(ListeningSession, id: id, stream_id: stream.id)
     else
       _ -> nil
@@ -42,11 +44,13 @@ defmodule ProgRadioApi.ListeningSessions do
   #              opts: [ttl: @cache_ttl]
   #            )
   def get_listening_session!(id, %{"stream_id" => stream_id} = _attrs) do
-    #    with stream when not is_nil(stream) <- Repo.get(Stream, stream_id) do
-    Repo.get_by(ListeningSession, id: id, stream_id: stream_id)
-    #    else
-    #      _ -> nil
-    #    end
+    # ids come from the client: a non uuid one would raise an Ecto.Query.CastError
+    with {:ok, id} <- Ecto.UUID.cast(id),
+         {:ok, stream_id} <- Ecto.UUID.cast(stream_id) do
+      Repo.get_by(ListeningSession, id: id, stream_id: stream_id)
+    else
+      _ -> nil
+    end
   end
 
   # find a session already created for the same stream / start / ip
@@ -113,16 +117,15 @@ defmodule ProgRadioApi.ListeningSessions do
   defp create_listening_session_of_stream(stream_id, attrs, remote_ip) do
     last_listening_at = DateTime.utc_now() |> DateTime.truncate(:second)
 
-    query = from(s in Stream, where: s.id == ^stream_id)
-
-    case Repo.update_all(query, set: [last_listening_at: last_listening_at]) do
-      {1, _} ->
-        %ListeningSession{stream_id: stream_id, ip_address: get_ip_as_binary(remote_ip)}
-        |> ListeningSession.changeset(attrs)
-        |> Repo.insert()
-
-      _ ->
-        {:error, nil}
+    # stream_id comes from the client: a non uuid one would raise an Ecto.Query.CastError
+    with {:ok, stream_id} <- Ecto.UUID.cast(stream_id),
+         query <- from(s in Stream, where: s.id == ^stream_id),
+         {1, _} <- Repo.update_all(query, set: [last_listening_at: last_listening_at]) do
+      %ListeningSession{stream_id: stream_id, ip_address: get_ip_as_binary(remote_ip)}
+      |> ListeningSession.changeset(attrs)
+      |> Repo.insert()
+    else
+      _ -> {:error, nil}
     end
   end
 

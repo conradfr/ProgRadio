@@ -59,6 +59,10 @@ defmodule ProgRadioApi.SongProvider.GenericWinradio do
       :error, _reason ->
         :error
 
+      # erlsom throws {:error, ~c"Malformed: ..."} on invalid/truncated xml, rescue doesn't catch it
+      {:error, _reason} ->
+        :error
+
       :exit, _ ->
         [:error, nil]
     end

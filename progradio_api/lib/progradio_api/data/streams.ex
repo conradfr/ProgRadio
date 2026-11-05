@@ -237,7 +237,8 @@ defmodule ProgRadioApi.Streams do
   # ---------- ERROR ----------
 
   def register_streaming_error(stream_id, reason \\ nil) when is_binary(stream_id) do
-    with %Stream{} = stream <- Repo.get(Stream, stream_id),
+    with {:ok, stream_id} <- Ecto.UUID.cast(stream_id),
+         %Stream{} = stream <- Repo.get(Stream, stream_id),
          true <- stream.enabled do
       # we insert a new entry or increase the count if already set for this stream
       on_conflict = [

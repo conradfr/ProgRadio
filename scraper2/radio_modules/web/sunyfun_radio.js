@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio';
 import moment from 'moment-timezone';
 import logger from '../../lib/logger.js';
 import cache from '../../lib/cache.js';
+import utils from '../../lib/utils.js';
 
 const dayFr = {
   1: 'lundi',
@@ -14,6 +15,9 @@ const dayFr = {
 };
 
 let scrapedData = {};
+
+// the www page_thumb filter is 128px wide: 2x for hidpi, with some margin.
+const IMG_MIN_WIDTH = 256;
 
 const format = async (dateObj, subRadio) => {
   dateObj.tz('Europe/Paris');
@@ -53,7 +57,10 @@ const format = async (dateObj, subRadio) => {
       'date_time_start': startDateTime.toISOString(),
       'date_time_end': endDateTime.toISOString(),
       'title': entry.title.trim(),
-      'img': entry.img ? entry.img.trim() : null,
+      // srcset only (wordpress sizes): without one, the src is the original upload, that can be
+      // huge (8334x8334) and too big for the www to make thumbnails of. No image then until
+      // the api resizes the imported images.
+      'img': utils.pickFromSrcset(entry.srcset, IMG_MIN_WIDTH),
     };
 
     prev.push(newEntry);
@@ -84,9 +91,9 @@ const fetch = async (dateObj, subRadio) => {
         value: {
           datetime_raw: '.proradio-itemmetas',
           title: 'h3 a',
-          img: {
+          srcset: {
             selector: 'img.proradio-post__thumb',
-            value: 'src'
+            value: 'srcset'
           },
         }
       }

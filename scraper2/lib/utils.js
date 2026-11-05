@@ -20,8 +20,33 @@ const sleep = (ms) => {
         setTimeout(resolve, ms);
     });
 }
+// Smallest image of a srcset ("url 100w, url 370w, ...") at least minWidth wide,
+// the largest one when none is, null when there's no usable candidate.
+// Candidates with a density descriptor ("2x") or none are ignored.
+const pickFromSrcset = (srcset, minWidth) => {
+    if (typeof srcset !== 'string' || srcset.trim() === '') {
+        return null;
+    }
+
+    const candidates = srcset.split(',')
+        .map((candidate) => {
+            const match = candidate.trim().match(/^(\S+)\s+(\d+)w$/);
+            return match ? { url: match[1], width: parseInt(match[2], 10) } : null;
+        })
+        .filter((candidate) => candidate !== null)
+        .sort((a, b) => a.width - b.width);
+
+    if (candidates.length === 0) {
+        return null;
+    }
+
+    const bigEnough = candidates.find((candidate) => candidate.width >= minWidth);
+    return (bigEnough || candidates[candidates.length - 1]).url;
+}
+
 export default {
     upperCaseWords,
     checkNested,
-    sleep
+    sleep,
+    pickFromSrcset
 };

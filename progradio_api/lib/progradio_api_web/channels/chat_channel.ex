@@ -14,23 +14,24 @@ defmodule ProgRadioApiWeb.ChatChannel do
   @cache_ttl_ms 3_600_000
 
   def join("chat:" <> stream_id, params, socket) do
-    case stream_exists?(stream_id) do
-      false ->
-        {:error, %{reason: "not available"}}
+    # uuid checked first: a non uuid id would raise an Ecto.Query.CastError,
+    # and it keeps random topics out of the stream_exists? cache
+    with {:ok, stream_id} <- Ecto.UUID.cast(stream_id),
+         true <- stream_exists?(stream_id) do
+      # presence key: unique per channel join, the same name can be used by several users
+      presence_key = Ecto.UUID.generate()
 
-      true ->
-        # presence key: unique per channel join, the same name can be used by several users
-        presence_key = Ecto.UUID.generate()
+      socket =
+        socket
+        |> assign(:presence_key, presence_key)
+        |> assign(:name, ChatUtils.sanitize_name(Map.get(params, "name")))
+        # timestamps (monotonic ms) of the last accepted messages, for the rate limit
+        |> assign(:msg_times, [])
 
-        socket =
-          socket
-          |> assign(:presence_key, presence_key)
-          |> assign(:name, ChatUtils.sanitize_name(Map.get(params, "name")))
-          # timestamps (monotonic ms) of the last accepted messages, for the rate limit
-          |> assign(:msg_times, [])
-
-        send(self(), :after_join)
-        {:ok, %{key: presence_key}, socket}
+      send(self(), :after_join)
+      {:ok, %{key: presence_key}, socket}
+    else
+      _ -> {:error, %{reason: "not available"}}
     end
   end
 

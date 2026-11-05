@@ -18,6 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Uid\Uuid;
 use SortDirection;
 
@@ -27,6 +28,8 @@ use SortDirection;
 class StreamRepository extends ServiceEntityRepository
 {
     protected const int CACHE_TTL = 21600; // six hours
+    // findOneBySlug(): number of streams whose name matches the slug pattern that are compared
+    private const int SLUG_MAX_CANDIDATES = 10;
     protected const int CACHE_QUICK_TTL = 30;
 
     protected const int DEFAULT_MORE_LIMIT = 21;
@@ -614,35 +617,66 @@ class StreamRepository extends ServiceEntityRepository
         );
     }
 
+    // There's no slug column: the slug is turned into a name pattern ("top-40" => "%top%40%"),
+    // which can match several streams ("European Hit Radio - Top 40" and "European Hit Radio - Top 40 RU").
+    // The one whose slugged name is the slug wins, the shortest name (closest match) otherwise.
     public function findOneBySlug(string $slug): ?Stream
     {
+        $namePattern = '%' . str_replace('-', '%', $slug) . '%';
+
         try {
-            $slugCleanedUp = '%' . str_replace('-', '%', $slug) . '%';
-
-            $qb = $this->getEntityManager()->createQueryBuilder();
-
-            $qb->select('s')
-                ->from(Stream::class, 's')
-                ->where('s.enabled = true and s.redirectToStream is null and s.banned = false and s.closed = false AND ILIKE(s.name, :name) = true')
-                ->setParameter('name', $slugCleanedUp);
-
-            $query = $qb->getQuery();
-            $query->enableResultCache(self::CACHE_TTL);
-
-            return $query->getOneOrNullResult();
+            $candidates = $this->findSlugCandidates($namePattern, true);
         } catch (\Exception $e) {
-            $qb = $this->getEntityManager()->createQueryBuilder();
-
-            $qb->select('s')
-                ->from(Stream::class, 's')
-                ->where('ILIKE(s.name, :name) = true')
-                ->setParameter('name', $slugCleanedUp);
-
-            $query = $qb->getQuery();
-            $query->enableResultCache(self::CACHE_TTL);
-
-            return $query->getOneOrNullResult();
+            $candidates = $this->findSlugCandidates($namePattern, false);
         }
+
+        return $this->pickSlugCandidate($candidates, $slug);
+    }
+
+    /**
+     * @return Stream[] shortest names first
+     */
+    private function findSlugCandidates(string $namePattern, bool $onlyAvailable): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('s')
+            ->from(Stream::class, 's')
+            ->where('ILIKE(s.name, :name) = true')
+            ->setParameter('name', $namePattern)
+            ->orderBy('LENGTH(s.name)', 'ASC')
+            ->addOrderBy('s.id', 'ASC')
+            ->setMaxResults(self::SLUG_MAX_CANDIDATES);
+
+        if ($onlyAvailable === true) {
+            $qb->andWhere('s.enabled = true and s.redirectToStream is null and s.banned = false and s.closed = false');
+        }
+
+        $query = $qb->getQuery();
+        $query->enableResultCache(self::CACHE_TTL);
+
+        return $query->getResult();
+    }
+
+    /**
+     * @param Stream[] $candidates shortest names first
+     */
+    private function pickSlugCandidate(array $candidates, string $slug): ?Stream
+    {
+        if (count($candidates) === 0) {
+            return null;
+        }
+
+        $slugger = new AsciiSlugger();
+        $slug = mb_strtolower($slug);
+
+        foreach ($candidates as $candidate) {
+            if ($slugger->slug($candidate->getName())->lower()->toString() === $slug) {
+                return $candidate;
+            }
+        }
+
+        return $candidates[0];
     }
 
     public function getGenres(): array

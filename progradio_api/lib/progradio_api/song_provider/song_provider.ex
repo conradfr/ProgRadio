@@ -1,4 +1,5 @@
 defmodule ProgRadioApi.SongProvider do
+  require Logger
   alias ProgRadioApi.Cache
   alias ProgRadioApi.Utils.ReqUtils
 
@@ -78,7 +79,16 @@ defmodule ProgRadioApi.SongProvider do
       # the compressed option has no effect with into: header set and body decompressed by us
       |> Req.Request.put_new_header("accept-encoding", "gzip")
 
-    {request, response} = Req.run!(request)
+    {request, response} =
+      try do
+        Req.run!(request)
+      rescue
+        # raised from Finch while following a redirect (Sentry PROGRADIO-API-14G), without
+        # anything telling which url: logged to find it, then reraised to keep the behaviour
+        e in ArgumentError ->
+          Logger.error("SongProvider.get_response ArgumentError for url: #{url}")
+          reraise e, __STACKTRACE__
+      end
 
     case Req.Steps.decompress_body({%{request | into: nil}, response}) do
       {_request, %Req.Response{} = response} -> response

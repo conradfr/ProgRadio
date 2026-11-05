@@ -181,6 +181,8 @@ defmodule ProgRadioApi.SongProvider.Securenetsystems do
     rescue
       _ -> nil
     catch
+      # erlsom throws {:error, ~c"Malformed: ..."} on invalid/truncated xml, rescue doesn't catch it
+      {:error, _reason} -> nil
       :exit, _ -> nil
     end
   end

@@ -1079,7 +1079,11 @@ createApp({
     this.currentChatTopic = chatTopic;
 
     // messages received while the modal was hidden: the list can't be scrolled until it is displayed
-    chatModal.addEventListener('shown.bs.modal', () => this.scrollChatToBottom(), { once: true });
+    chatModal.addEventListener('shown.bs.modal', () => {
+      this.scrollChatToBottom();
+      // autofocus has no effect in Bootstrap modals (it focuses the modal itself once shown)
+      chatModal.querySelector<HTMLInputElement>('input[name="message"]')?.focus();
+    }, { once: true });
     // any dismiss: close button, Escape, backdrop click (fired once the hide transition is over).
     // once: a new listener is added at each opening
     chatModal.addEventListener('hidden.bs.modal', () => {

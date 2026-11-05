@@ -46,6 +46,13 @@ defmodule ProgRadioApi.SongProvider.GenericLesIndes3 do
     end
   end
 
+  # stream code name not found in the radio ids list (get_id_from_list/2 returns nil):
+  # :error so the song server skips it, instead of a FunctionClauseError crashing the task
+  def get_data(_url, name, _radio_id) do
+    Logger.debug("Data provider - #{name}: no radio id")
+    :error
+  end
+
   def get_song(name, data, _last_song) do
     try do
       content = Map.get(data, "title", %{})
