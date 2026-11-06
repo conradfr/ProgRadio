@@ -54,7 +54,11 @@
                 </div>
                 {% verbatim %}
                 <div v-for="message in messages" :key="message.id" class="chat-message mb-1">
-                  <span class="chat-message-time text-body-secondary small">{{ formatTime(message.datetime) }}</span>
+                  <span class="chat-message-time text-body-secondary small">
+                    <time :datetime="message.datetime" :title="message.datetime">
+                        {{ formatTime(message.datetime) }}
+                    </time>
+                  </span>
                   <strong class="chat-message-user" :class="{ 'text-primary': isOwnMessage(message) }">{{ message.user }}</strong>
                   <span class="chat-message-body">{{ message.msg }}</span>
                 </div>

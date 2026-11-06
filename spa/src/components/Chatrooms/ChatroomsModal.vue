@@ -28,7 +28,11 @@
               <div class="col-8 col-md-10 h-100">
                 <div ref="messagesList" class="chat-messages h-100 overflow-auto border rounded p-2">
                   <div v-for="message in messages" :key="message.id" class="chat-message mb-1">
-                    <span class="chat-message-time text-body-secondary small">{{ formatTime(message.datetime) }}</span>
+                    <span class="chat-message-time text-body-secondary small">
+                      <time :datetime="message.datetime" :title="message.datetime">
+                        {{ formatTime(message.datetime) }}
+                      </time>
+                    </span>
                     {{ ' ' }}
                     <strong class="chat-message-user" :class="{ 'text-primary': isOwnMessage(message) }">
                       {{ message.user }}

@@ -73,10 +73,10 @@ defmodule ProgRadioApiWeb.Telemetry do
         description:
           "The time the connection spent waiting before being checked out for the query"
       ),
-
       counter("prog_radio_api.chat.message.count",
         tags: [:status],
-        description: "Chat messages broadcast (sent), dropped by the filter (filtered) or by the rate limit (rate_limited)"
+        description:
+          "Chat messages broadcast (sent), dropped by the filter (filtered) or by the rate limit (rate_limited)"
       ),
 
       # VM Metrics

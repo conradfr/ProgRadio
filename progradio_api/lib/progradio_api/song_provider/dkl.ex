@@ -27,7 +27,11 @@ defmodule ProgRadioApi.SongProvider.Dkl do
   @impl true
   def get_push_client_pid(name) do
     try do
-      GenericLesIndesEvent.get_push_client_pid("https://www.radiodkl.com/ws/metas?id=", name, @stream_ids)
+      GenericLesIndesEvent.get_push_client_pid(
+        "https://www.radiodkl.com/ws/metas?id=",
+        name,
+        @stream_ids
+      )
     rescue
       _ -> :error
     end
@@ -38,5 +42,4 @@ defmodule ProgRadioApi.SongProvider.Dkl do
 
   @impl true
   defdelegate get_song(name, data, last_song), to: GenericLesIndesEvent
-
 end

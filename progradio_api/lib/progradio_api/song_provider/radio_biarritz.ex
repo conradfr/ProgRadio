@@ -30,10 +30,10 @@ defmodule ProgRadioApi.SongProvider.RadioBiarritz do
   @impl true
   def get_data(name, _last_data, _db_song_data) do
     try do
-        "https://manager10.streamradio.fr:2190/api/v2/history/?limit=1&offset=0&server=1&format=json"
-        |> SongProvider.get_json()
-        |> Map.get("results", [])
-        |> List.first()
+      "https://manager10.streamradio.fr:2190/api/v2/history/?limit=1&offset=0&server=1&format=json"
+      |> SongProvider.get_json()
+      |> Map.get("results", [])
+      |> List.first()
     rescue
       _ ->
         Logger.debug("Data provider - #{name} (rks): data error rescue")

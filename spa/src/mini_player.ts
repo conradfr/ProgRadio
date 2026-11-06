@@ -1103,8 +1103,9 @@ createApp({
     });
 
     channel.join()
-      .receive('ok', (resp: { key: string }) => {
+      .receive('ok', (resp: { key: string, messages?: ChatMessage[] }) => {
         this.presenceKey = resp.key;
+        this.receiveHistory(resp.messages ?? []);
       })
       .receive('error', () => {
         // this.chatChannels[topic] = null;
@@ -1163,7 +1164,28 @@ createApp({
       }
     });
   },
+  // last messages of the chat, sent on join. Also on a rejoin after a reconnection:
+  // merged with the displayed ones, to keep them and get the ones missed meanwhile
+  receiveHistory(history: ChatMessage[]) {
+    const ids = new Set(this.messages.map((message: ChatMessage) => message.id));
+    const missing = history.filter((message: ChatMessage) => !ids.has(message.id));
+
+    if (missing.length === 0) {
+      return;
+    }
+
+    // sort is stable: the same datetime (server ones are truncated to the second) keeps the order
+    this.messages = [...missing, ...this.messages]
+      .sort((a, b) => Date.parse(a.datetime) - Date.parse(b.datetime));
+    keepLast(this.messages, CHAT_MAX_MESSAGES);
+    this.scrollChatToBottom();
+  },
   receiveMessage(message: ChatMessage) {
+    // already received with the history of the join
+    if (this.messages.some((localMessage: ChatMessage) => localMessage.id === message.id)) {
+      return;
+    }
+
     // own message already displayed locally: replaced in place
     if (this.isOwnMessage(message)) {
       const localIndex = this.messages.findIndex(

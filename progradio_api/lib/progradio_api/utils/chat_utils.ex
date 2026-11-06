@@ -66,10 +66,10 @@ defmodule ProgRadioApi.Utils.ChatUtils do
     # (a sentence end "fini. Info du jour" has none, and must not become "fini.info")
     dots_joined = String.replace(normalized, ~r/\s+\.\s*/u, ".")
 
+    # any domain followed by a path: "site.shop/promo"
     String.contains?(stripped, @link_markers) or
       domain?(stripped) or
       domain?(dots_joined) or
-      # any domain followed by a path: "site.shop/promo"
       Regex.match?(~r|[\p{L}\p{N}-]\.\p{L}{2,24}/|u, stripped)
   end
 

@@ -2,7 +2,8 @@ defmodule ProgRadioApi.Data.StreamUrl do
   require Logger
 
   def get(%{"type" => "location", "url" => url} = stream_data) when is_binary(url) do
-    IO.puts("#{inspect stream_data}")
+    IO.puts("#{inspect(stream_data)}")
+
     headers =
       case Map.get(stream_data, "referer") do
         referer when is_binary(referer) -> [referer: referer]
@@ -15,7 +16,7 @@ defmodule ProgRadioApi.Data.StreamUrl do
       {:ok, %Req.Response{status: status} = response} ->
         Req.cancel_async_response(response)
 
-        IO.puts("#{inspect Req.Response.get_header(response, "location")}")
+        IO.puts("#{inspect(Req.Response.get_header(response, "location"))}")
 
         case Req.Response.get_header(response, "location") do
           [location | _] when status in 300..399 ->
