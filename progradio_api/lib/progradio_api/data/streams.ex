@@ -748,10 +748,11 @@ defmodule ProgRadioApi.Streams do
 
   defp check_working(e) do
     try do
-      task = Task.async(fn -> ProgRadioApi.Checker.Streams.StreamTask.fetch(e) end)
+      task = Task.async(fn -> ProgRadioApi.Checker.Streams.StreamTask.check(e) end)
 
-      case Task.await(task) do
-        {:ok, _} -> :ok
+      # long enough for the hls playlist(s) + the stream requests
+      case Task.await(task, 30_000) do
+        :ok -> :ok
         _ -> :error
       end
     rescue

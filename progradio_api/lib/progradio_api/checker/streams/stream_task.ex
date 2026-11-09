@@ -9,13 +9,21 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
   def start_link(%Stream{} = stream) do
     Task.start_link(fn ->
       Logger.info("Checking: #{stream.id} (#{stream.stream_url})")
-      fetch(stream)
+      check(stream)
     end)
   end
 
   #  stream = ProgRadioApi.Repo.get(ProgRadioApi.Stream, "a93e7e66-836e-4077-bb4d-dc1124e68506")
-  # ProgRadioApi.Checker.Streams.StreamTask.fetch(stream)
+  # ProgRadioApi.Checker.Streams.StreamTask.check(stream)
 
+  # checks the stream then saves the result, returns :ok or [:error, reason]
+  def check(%Stream{} = stream) do
+    result = fetch(stream)
+    reset_errors_if_needed(stream, result == :ok)
+    result
+  end
+
+  # only checks the stream, returns :ok or [:error, reason]
   def fetch(stream, loop_count \\ 0)
 
   def fetch(%Stream{} = stream, loop_count) when loop_count > @max_redirects do
@@ -25,44 +33,38 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
 
   def fetch(%Stream{} = stream, loop_count) do
     try do
-      result =
-        case String.contains?(stream.stream_url, ".m3u8") do
-          true ->
-            stream.stream_url
-            |> request_file()
-            |> Map.get(:body)
-            |> HLS.parse()
-            |> Map.get(:lines)
-            |> Enum.find_value(fn
-              %HLS.M3ULine{type: :uri} = line ->
-                case String.contains?(line.value, ".m3u8") do
-                  true ->
-                    fetch(%{stream | stream_url: build_url(stream, line.value)}, loop_count + 1)
+      case String.contains?(stream.stream_url, ".m3u8") do
+        true ->
+          stream.stream_url
+          |> request_file()
+          |> Map.get(:body)
+          |> HLS.parse()
+          |> Map.get(:lines)
+          |> Enum.find_value(fn
+            %HLS.M3ULine{type: :uri} = line ->
+              case String.contains?(line.value, ".m3u8") do
+                true ->
+                  fetch(%{stream | stream_url: build_url(stream, line.value)}, loop_count + 1)
 
-                  false ->
-                    stream |> build_url(line.value) |> request_stream()
-                end
+                false ->
+                  stream |> build_url(line.value) |> request_stream()
+              end
 
-              _e ->
-                false
-            end)
+            _e ->
+              false
+          end)
 
-          false ->
-            request_stream(stream.stream_url)
-        end
-
-      case result do
-        :ok -> reset_errors_if_needed(stream, true)
-        _ -> reset_errors_if_needed(stream, false)
+        false ->
+          request_stream(stream.stream_url)
       end
     rescue
-      _e ->
+      e ->
         Logger.debug("Checking - #{stream.id} (#{stream.stream_url}) - rescue")
-        :ok
+        [:error, Map.get(e, :reason)]
     catch
       :exit, _ ->
         Logger.debug("Checking - #{stream.id} (#{stream.stream_url}) - catch")
-        :ok
+        [:error, nil]
     end
   end
 
@@ -148,19 +150,11 @@ defmodule ProgRadioApi.Checker.Streams.StreamTask do
     end
   end
 
-  defp build_url(%Stream{} = _stream, "http" <> _url_rest = url) do
-    url
-  end
-
-  defp build_url(%Stream{stream_url: base_url} = _stream = _args, url) do
+  # resolves absolute, root relative ("/path") and relative urls against the playlist url
+  defp build_url(%Stream{stream_url: base_url} = _stream, url) do
     base_url
-    |> String.trim_trailing("/")
-    |> String.split("/")
-    |> Enum.reverse()
-    |> Enum.drop(1)
-    |> Enum.reverse()
-    |> Enum.join("/")
-    |> then(&(&1 <> "/" <> String.trim_leading(url, "/")))
+    |> URI.merge(url)
+    |> URI.to_string()
   end
 
   # maybe this could be done on another stage
