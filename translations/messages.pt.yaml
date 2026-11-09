@@ -199,6 +199,7 @@ page:
         playing: Título
         playing_error: Erro de reprodução
         stop: 'Parar'
+        volume: Volume
         suggested: Rádios sugeridas
         tags: Tags
         share: Compartilhar a rádio

@@ -199,6 +199,7 @@ page:
         playing: Playing
         playing_error: Playing error (radio streaming may be unavailable)
         stop: 'Stop'
+        volume: Volume
         suggested: Suggested radios
         tags: Tags
         share: Share this radio

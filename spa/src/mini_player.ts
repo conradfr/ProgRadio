@@ -2,7 +2,6 @@ import { createApp, nextTick } from './utils/petite-vue.es.js';
 import cookies from './utils/cookies';
 import ChatUtils from './utils/chatUtils';
 import { Socket, Presence } from '../js/phoenix';
-import noUiSlider from 'nouislider';
 
 import ITunesApi from './api/ITunesApi';
 import streamFavorite from './miniplayer/streamFavorite.js';
@@ -420,23 +419,24 @@ createApp({
       }, 50);
     }
 
-    const slider = document.getElementById('volume-slider');
+    // native range input (0 to 10) rendered by the twig pages
+    const slider = document.getElementById('volume-slider') as HTMLInputElement | null;
     if (slider) {
+      // fill of the lower part of the track, see page/stream.scss
+      const setSliderFill = () => {
+        slider.style.setProperty('--volume', String(Number(slider.value) / 10));
+      };
+
       const volume = Number(cookies.get(COOKIE_VOLUME, 10));
       setAudioVolume(volume);
-      const volumeSlider = noUiSlider.create(slider, {
-        start: volume,
-        connect: 'lower',
-        range: {
-          'min': 0,
-          'max': 10
-        }
-      });
+      slider.value = String(volume);
+      setSliderFill();
 
-      volumeSlider.on('update.one', (e: (number | string)[]) => {
-        const newVolume = parseFloat(String(e[0])).toFixed(2);
+      slider.addEventListener('input', () => {
+        const newVolume = parseFloat(slider.value).toFixed(2);
         cookies.set(COOKIE_VOLUME, newVolume);
         setAudioVolume(newVolume);
+        setSliderFill();
       });
     }
   },

@@ -199,6 +199,7 @@ page:
         playing: Titre
         playing_error: Erreur de lecture
         stop: 'Stopper'
+        volume: Volume
         suggested: Radios suggérées
         tags: Tags
         share: Partager la radio

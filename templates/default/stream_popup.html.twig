@@ -155,7 +155,7 @@
                           <div class="fs-2">&nbsp;{{ 'page.stream.stop'|trans({'%radio%': stream.name}) }}</div>
                         </div>
                         <div id="volume-slider-wrapper" class="d-none d-sm-block ps-3 pt-2">
-                          <div id="volume-slider"></div>
+                          <input type="range" id="volume-slider" min="0" max="10" step="any" value="10" aria-label="{{ 'page.stream.volume'|trans }}">
                         </div>
                       </div>
                     </div>

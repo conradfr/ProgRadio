@@ -187,6 +187,7 @@ page:
         playing: Titel
         playing_error: Afspeelfout
         stop: 'Stoppen'
+        volume: Volume
         suggested: Aangeraden radiozenders
         tags: Tags
         share: Deel de radio

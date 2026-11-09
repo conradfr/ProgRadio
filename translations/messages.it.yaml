@@ -199,6 +199,7 @@ page:
         playing: Titolo
         playing_error: Errore di riproduzione
         stop: 'Ferma'
+        volume: Volume
         suggested: Radio suggerite
         tags: Tag
         share: Condividi la radio

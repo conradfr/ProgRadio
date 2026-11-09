@@ -199,6 +199,7 @@ page:
         playing: Título
         playing_error: Error de reproducción
         stop: 'Detener'
+        volume: Volumen
         suggested: Radios sugeridas
         tags: Etiquetas
         share: Compartir la radio
