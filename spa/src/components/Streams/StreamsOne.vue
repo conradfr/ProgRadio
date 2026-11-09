@@ -124,7 +124,6 @@
             </div>
           </div>
         </div>
-
       </div>
       <!-- <div class="col-sm-2 col-12 text-center d-none d-sm-block"
         v-if="locale !== 'fr' || !isProgRadio || !userLogged">
