@@ -12,6 +12,9 @@
       <SongLinks :title="liveSongTitle" />
     </div>
   </div>
+  <div v-else>
+    {{ $t('message.streaming.no_playing_title') }}
+  </div>
 </template>
 
 <script lang="ts">
