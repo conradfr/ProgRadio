@@ -3,3 +3,61 @@
   min-width: $width;
   max-width: $width;
 }
+
+// Native <input type="range">: rounded track filled up to the thumb center, round thumb.
+// --range-value (0 to 1) has to be set on the input for the filled part.
+// The length of the input is set by the caller. $vertical: min at the bottom.
+@mixin range-input($track, $thumb, $fill-color, $track-color, $thumb-color, $radius: $track * .5, $vertical: false) {
+  --range-value: 1;
+  --range-fill: calc(#{$thumb} / 2 + (100% - #{$thumb}) * var(--range-value));
+
+  $direction: to right;
+  @if $vertical {
+    $direction: to top;
+    writing-mode: vertical-lr;
+    direction: rtl;
+  }
+
+  display: block;
+  block-size: $thumb;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+
+  &::-webkit-slider-runnable-track {
+    block-size: $track;
+    border: none;
+    border-radius: $radius;
+    background: linear-gradient($direction, $fill-color var(--range-fill), $track-color var(--range-fill));
+  }
+
+  &::-moz-range-track {
+    block-size: $track;
+    border: none;
+    border-radius: $radius;
+    background: linear-gradient($direction, $fill-color var(--range-fill), $track-color var(--range-fill));
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    inline-size: $thumb;
+    block-size: $thumb;
+    margin-block-start: ($track - $thumb) * .5;
+    border: none;
+    border-radius: 50%;
+    box-shadow: none;
+    background: $thumb-color;
+  }
+
+  &::-moz-range-thumb {
+    inline-size: $thumb;
+    block-size: $thumb;
+    border: none;
+    border-radius: 50%;
+    box-shadow: none;
+    background: $thumb-color;
+  }
+}

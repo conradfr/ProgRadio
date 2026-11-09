@@ -13,7 +13,7 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 import type { PropType } from 'vue';
-import filter from 'lodash/filter';
+import { values } from '@/utils/collectionUtils';
 
 import type { Radio } from '@/types/radio';
 
@@ -38,7 +38,7 @@ export default defineComponent({
       return this.getSubRadio(this.radio.code_name);
     },
     webradioStreams() {
-      return filter(this.radio.streams, r => !r.is_sub_radio && r.code_name !== this.primaryStream.code_name);
+      return values(this.radio.streams).filter(r => !r.is_sub_radio && r.code_name !== this.primaryStream.code_name);
     },
   }
 });

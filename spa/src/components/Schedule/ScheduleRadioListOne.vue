@@ -46,7 +46,8 @@
         class="radio-submenu-entry radio-submenu-entry-secondary"
         :title="entry.name"
         @click="playStop(entry)">
-        <div class="radio-submenu-entry-secondary-logo" :style="styleObjectRadioStream(entry.radio_stream_code_name)">
+        <div class="radio-submenu-entry-secondary-logo"
+          :style="menuOpened ? styleObjectRadioStream(entry.radio_stream_code_name) : undefined">
           <div class="radio-logo-play"
             :class="{
               'radio-logo-play-active':
@@ -85,7 +86,7 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import { mapState, mapActions } from 'pinia';
-import filter from 'lodash/filter';
+import { values } from '@/utils/collectionUtils';
 
 import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/streams';
@@ -121,6 +122,8 @@ export default defineComponent({
   data(): {
     PlayerStatus: any,
     hover: boolean,
+    // logos of the secondary streams submenu are only loaded once it has been opened
+    menuOpened: boolean,
     hoverTimer: number|null,
     locale: string,
     styleObject: object,
@@ -128,6 +131,7 @@ export default defineComponent({
     return {
       PlayerStatus,
       hover: false,
+      menuOpened: false,
       hoverTimer: null,
       locale: this.$i18n.locale,
       styleObject: {
@@ -171,7 +175,7 @@ export default defineComponent({
     },
     subMenuStyleObjectStreams() {
       const nbOfItems = this.hasSubRadios ? 3 : 2;
-      let howManyStreams: any = filter(this.radio.streams,
+      let howManyStreams: any = values(this.radio.streams).filter(
         s => s.main === true || !s.is_sub_radio);
       howManyStreams = Object.keys(howManyStreams).length;
 
@@ -182,7 +186,7 @@ export default defineComponent({
       };
     },
     secondaryStreams() {
-      return filter(this.radio.streams, s => s.is_main_radio === false && !s.is_sub_radio);
+      return values(this.radio.streams).filter(s => s.is_main_radio === false && !s.is_sub_radio);
     },
     isFavorite() {
       return this.isRadioFavorite(this.radio.code_name);
@@ -288,6 +292,7 @@ export default defineComponent({
     },
     hoverOn() {
       this.hover = true;
+      this.menuOpened = true;
 
       if (this.hoverTimer !== null) {
         clearTimeout(this.hoverTimer);

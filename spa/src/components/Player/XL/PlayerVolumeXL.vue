@@ -9,22 +9,19 @@
             'bi-volume-down-fill': !muted && volume <= 4
           }"></i>
     </div>
-    <vue3-slider v-model="volumeSlider" color="#337ab7" track-color="#F9F9F9"
-      :handleScale="2.5" :alwaysShowHandle="true" />
+    <input v-model.number="volumeSlider" type="range" class="player-volume-range" min="0" max="100" step="1"
+      :style="{ '--range-value': volumeSlider / 100 }"
+      :aria-label="$t('message.player.volume')" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
-import slider from 'vue3-slider';
 
 import { usePlayerStore } from '@/stores/playerStore';
 
 export default defineComponent({
-  components: {
-    'vue3-slider': slider
-  },
   props: {
     muted: {
       type: Boolean,

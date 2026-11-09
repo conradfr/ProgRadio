@@ -1,0 +1,17 @@
+// <vue-flag> component (src/components/Utils/VueFlag.vue), sizes of the former vueflags library
+.vueflag {
+  display: inline-block;
+  user-select: none;
+}
+
+.vueflag--nano {
+  height: 10px;
+}
+
+.vueflag--micro {
+  height: 15px;
+}
+
+.vueflag--mini {
+  height: 20px;
+}

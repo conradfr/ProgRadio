@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { nextTick, markRaw } from 'vue';
-import find from 'lodash/find';
 
 import type { Countries } from '@/types/countries';
 import type { Stream } from '@/types/stream';
@@ -111,7 +110,8 @@ export const useStreamsStore = defineStore('streams', {
 
       return countriesOptions;
     },
-    getOneStream: state => (id: string): Stream|null => find(state.streamRadios, ['code_name', id]) || null,
+    getOneStream: state => (id: string): Stream|null => state.streamRadios
+      .find(stream => stream.code_name === id) || null,
     getCountryName: state => (key: string): string|null => state.countries[key] || null
   },
   actions: {
@@ -229,7 +229,8 @@ export const useStreamsStore = defineStore('streams', {
     countrySelection(country: countryObject|string) {
       // if country is just country_code
       if (typeof country === 'string') {
-        country = <countryObject>find(this.countriesOptions, ['code', country.toUpperCase()])
+        const countryCode = country.toUpperCase();
+        country = <countryObject>this.countriesOptions.find((option: countryObject) => option.code === countryCode)
           || { code: country, label: null };
       }
 

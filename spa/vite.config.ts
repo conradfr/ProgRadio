@@ -1,8 +1,23 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import symfonyPlugin from 'vite-plugin-symfony'
 import * as path from "node:path";
+
+// Bootstrap Icons subset (scripts/icons-subset.mjs): generated at dev server start and at build (not committed).
+// It scans ../templates and ../src, the docker build copies them next to /spa
+const iconsSubset: Plugin = {
+  name: 'icons-subset',
+  async buildStart() {
+    const { sourcesAvailable, generate } = await import('./scripts/icons-subset.mjs');
+
+    if (!sourcesAvailable()) {
+      this.error('../templates not found: the bootstrap icons subset can\'t be generated (see tools/docker/www/Dockerfile)');
+    }
+
+    await generate({ log: message => this.info(message) });
+  },
+};
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -16,8 +31,16 @@ export default defineConfig({
         },
       },
     }),
-    symfonyPlugin()
+    symfonyPlugin(),
+    iconsSubset,
   ],
+  define: {
+    // vue-i18n features not used by the app, removed from the bundle
+    // (composition api only, no <i18n-t> component or v-t directive)
+    __VUE_I18N_FULL_INSTALL__: 'false',
+    __VUE_I18N_LEGACY_API__: 'false',
+    __INTLIFY_PROD_DEVTOOLS__: 'false',
+  },
   build: {
     // generate .vite/manifest.json in outDir
     manifest: true,
@@ -46,9 +69,12 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      _: path.resolve(__dirname, "src")
-    },
+    alias: [
+      { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+      { find: '_', replacement: path.resolve(__dirname, "src") },
+      // a CommonJS dependency doing require('vue') would get the full build with the template compiler (~85 kB),
+      // the single file components only need the runtime
+      { find: /^vue$/, replacement: 'vue/dist/vue.runtime.esm-bundler.js' },
+    ],
   },
 })

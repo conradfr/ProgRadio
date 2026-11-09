@@ -17,8 +17,6 @@ let scrapedData = [];
 
 const fetchDesc = async (showId) => {
   try {
-    console.log(`fetching ${showId}`);
-
     const response = await axios.get(`https://radios-totolive.fr/api/page.php?page=emission&id=${showId}`);
     // the api returns a json with the page markup in the 'html' key
     const json = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;

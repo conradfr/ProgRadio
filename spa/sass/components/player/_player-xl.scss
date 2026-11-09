@@ -1,4 +1,5 @@
 @import "variables";
+@import "../../utils/mixins";
 
 @import "player-logo-xl";
 @import "player-info-xl";
@@ -133,6 +134,14 @@
 
   .player-volume-xl {
     width: 150px;
+
+    .player-volume-range {
+      @include range-input(6px, 15px, $player-volume-color, $player-volume-track-color, $player-volume-color);
+
+      flex: 1 1 auto;
+      min-width: 0;
+      cursor: pointer;
+    }
 
     @include media-breakpoint-down(sm) {
       display: none !important;

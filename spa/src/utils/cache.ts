@@ -120,7 +120,18 @@ const setSessionCache = (key: string, data: any, retry = true) => {
   }
 };
 
+// ---------- KEYS ----------
+
+// deterministic string of request params (object keys sorted), part of the cache keys
+const paramsKey = (params: unknown): string => String(JSON.stringify(
+  params,
+  (_key, value) => (value !== null && typeof value === 'object' && !Array.isArray(value)
+    ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : 1)))
+    : value)
+));
+
 export default {
+  paramsKey,
   hasCache,
   getCache,
   setCache,

@@ -22,8 +22,6 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import { mapState } from 'pinia';
 import { DateTime, Interval } from 'luxon';
-import find from 'lodash/find';
-import filter from 'lodash/filter';
 
 import {
   TIMEZONE,
@@ -31,6 +29,7 @@ import {
 } from '@/config/config';
 
 import type { Radio } from '@/types/radio';
+import { values } from '@/utils/collectionUtils';
 
 import { useScheduleStore } from '@/stores/scheduleStore';
 
@@ -56,7 +55,7 @@ export default defineComponent({
   computed: {
     ...mapState(useScheduleStore, ['cursorTime', 'schedule', 'getSubRadio']),
     primaryStream() {
-      return filter(this.radio.streams, r => r.is_main_radio === true)[0];
+      return values(this.radio.streams).filter(r => r.is_main_radio === true)[0];
     },
     picture() {
       return `${this.$CDN_BASE_URL}${THUMBNAIL_PAGE_PATH}${this.radio.code_name}.png`;
@@ -71,7 +70,7 @@ export default defineComponent({
         return null;
       }
 
-      return find(schedule, (program) => {
+      return values(schedule).find((program) => {
         return Interval.fromDateTimes(DateTime.fromISO(program.start_at).setZone(TIMEZONE),
           DateTime.fromISO(program.end_at).setZone(TIMEZONE)).contains(this.cursorTime);
       });

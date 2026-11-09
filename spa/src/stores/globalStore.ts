@@ -1,4 +1,3 @@
-import remove from 'lodash/remove';
 
 import { defineStore } from 'pinia';
 
@@ -61,7 +60,7 @@ export const useGlobalStore = defineStore('global', {
       this.toasts.push(toast);
     },
     toastConsumed(id: string) {
-      this.toasts = remove(this.toasts, (t: Toast) => t.id === id);
+      this.toasts = this.toasts.filter((t: Toast) => t.id !== id);
     }
   }
 });

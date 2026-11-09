@@ -1,5 +1,3 @@
-import findIndex from 'lodash/findIndex';
-import filter from 'lodash/filter';
 
 import { DateTime } from 'luxon';
 
@@ -51,12 +49,12 @@ const getNextRadio = (currentRadio: Radio|Stream, radios: Radio[], way: 'backwar
   }
 
   // remove radios without streaming
-  const radiosFiltered = filter(radios, r => r.streaming_enabled);
+  const radiosFiltered = radios.filter(r => r.streaming_enabled);
 
   if (radiosFiltered.length === 0) { return currentRadio; }
   if (radiosFiltered.length === 1) { return radiosFiltered[0]; }
 
-  const currentIndex = findIndex(radiosFiltered, r => r.code_name === currentRadio.code_name);
+  const currentIndex = radiosFiltered.findIndex(r => r.code_name === currentRadio.code_name);
 
   if (currentIndex === -1) {
     return radios[0];
@@ -82,7 +80,7 @@ const getNextStream = (currentStream: Stream, streams: Stream[], way: 'backward'
     return null;
   }
 
-  const currentIndex = findIndex(streams, s => s.code_name === currentStream.code_name);
+  const currentIndex = streams.findIndex(s => s.code_name === currentStream.code_name);
 
   if (currentIndex === -1) {
     return streams[0];

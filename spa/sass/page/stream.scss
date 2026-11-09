@@ -1,3 +1,5 @@
+@import "../utils/mixins";
+
 
 .stream-page {
   h4 {
@@ -71,59 +73,14 @@
     }
   }
 
-  // native range input, styled like the former nouislider one:
-  // 7px rounded track, lower part filled with $primary, 14px round thumb.
-  // --volume (0 to 1) is set by mini_player.ts, the fill ends at the thumb center
+  // native range input, styled like the former nouislider one.
+  // --range-value (0 to 1) is set by mini_player.ts
   #volume-slider {
-    --volume: 1;
-    --volume-thumb: 14px;
-    --volume-track: 7px;
-    --volume-fill: calc(var(--volume-thumb) / 2 + (100% - var(--volume-thumb)) * var(--volume));
+    @include range-input(7px, 14px, $primary, lighten($primary, 40%), lighten($primary, 10%), $radius: 4px);
 
-    display: block;
     width: 6.538rem;
-    height: var(--volume-thumb);
     // the track keeps the position of the former 7px high element
-    margin: calc((var(--volume-track) - var(--volume-thumb)) / 2) 0;
-    padding: 0;
-    background: transparent;
-    -webkit-appearance: none;
-    appearance: none;
-
-    &::-webkit-slider-runnable-track {
-      height: var(--volume-track);
-      border: none;
-      border-radius: 4px;
-      background: linear-gradient(to right, $primary var(--volume-fill), lighten($primary, 40%) var(--volume-fill));
-    }
-
-    &::-moz-range-track {
-      height: var(--volume-track);
-      border: none;
-      border-radius: 4px;
-      background: linear-gradient(to right, $primary var(--volume-fill), lighten($primary, 40%) var(--volume-fill));
-    }
-
-    &::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      height: var(--volume-thumb);
-      width: var(--volume-thumb);
-      margin-top: calc((var(--volume-track) - var(--volume-thumb)) / 2);
-      border: none;
-      border-radius: 9px;
-      box-shadow: none;
-      background: lighten($primary, 10%);
-    }
-
-    &::-moz-range-thumb {
-      height: var(--volume-thumb);
-      width: var(--volume-thumb);
-      border: none;
-      border-radius: 9px;
-      box-shadow: none;
-      background: lighten($primary, 10%);
-    }
+    margin: -3.5px 0;
   }
 
   // FAVORITES

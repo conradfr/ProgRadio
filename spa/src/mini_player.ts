@@ -424,7 +424,7 @@ createApp({
     if (slider) {
       // fill of the lower part of the track, see page/stream.scss
       const setSliderFill = () => {
-        slider.style.setProperty('--volume', String(Number(slider.value) / 10));
+        slider.style.setProperty('--range-value', String(Number(slider.value) / 10));
       };
 
       const volume = Number(cookies.get(COOKIE_VOLUME, 10));

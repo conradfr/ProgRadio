@@ -1,12 +1,5 @@
 import { toRaw } from 'vue';
 import { useWebWorkerFn } from '@vueuse/core';
-import sortBy from 'lodash/sortBy';
-import findIndex from 'lodash/findIndex';
-import find from 'lodash/find';
-
-import compose from 'lodash/fp/compose';
-import filter from 'lodash/fp/filter';
-import orderBy from 'lodash/fp/orderBy';
 
 import { DateTime } from 'luxon';
 
@@ -16,6 +9,8 @@ import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
 import type { ScheduleDisplay } from '@/types/schedule_display';
 import type { Program } from '@/types/program';
+
+import { values, orderBy, sortBy } from '@/utils/collectionUtils';
 
 import * as config from '@/config/config';
 
@@ -160,10 +155,7 @@ const rankCollection = (
   if (collectionCodeName === config.COLLECTION_ALL) {
     // eslint-disable-next-line @stylistic/js/max-len
     const collectionNotExcluded = (entry: Collection) => config.COLLECTION_EXCLUDED_FROM_ALL.indexOf(entry.code_name) === -1;
-    const collectionsOrdered = compose(
-      filter(collectionNotExcluded),
-      orderBy(['priority'], ['asc'])
-    )(collections);
+    const collectionsOrdered = sortBy(collections, 'priority').filter(collectionNotExcluded);
 
     return collectionsOrdered.reduce((acc: Radio[], entry: Collection) => {
       // eslint-disable-next-line @stylistic/js/max-len
@@ -172,8 +164,7 @@ const rankCollection = (
     }, []);
   }
 
-  const collection = <Collection>find(collections,
-    { code_name: collectionCodeName });
+  const collection = <Collection>values(collections).find(c => c.code_name === collectionCodeName);
 
   const { sort_field: sortField, sort_order: sortOrder } = collection;
 
@@ -181,17 +172,12 @@ const rankCollection = (
   const isCategoryExcluded = (entry: Radio) => categoriesExcluded.indexOf(entry.category) === -1;
   const isPreRollExcluded = (entry: Radio) => !(preRollExcluded && entry.has_preroll);
 
-  return compose(
-    filter(collectionHasRadio),
-    filter(isCategoryExcluded),
-    filter(isPreRollExcluded),
-    orderBy([sortField], [sortOrder])
-  )(radios);
+  return orderBy(radios, [sortField], [sortOrder])
+    .filter(entry => isPreRollExcluded(entry) && isCategoryExcluded(entry) && collectionHasRadio(entry));
 };
 
 /* eslint-disable arrow-parens */
-const getCollectionIndex = (codeName: string, collections: Collection[]) => findIndex(
-  collections,
+const getCollectionIndex = (codeName: string, collections: Collection[]) => collections.findIndex(
   (c) => c.code_name === codeName
 );
 
@@ -240,9 +226,7 @@ const getStreamFromCodeName = (streamCodeName: string|null, radio: Radio|Stream)
 
 const getMainSubRadio = (radioCodeName: string, radios: Record<string, Radio>): Stream => {
   // @ts-ignore
-  return find(radios[radioCodeName].streams, (v, _k) => {
-    return v.is_main_radio === true;
-  });
+  return values(radios[radioCodeName].streams).find(v => v.is_main_radio === true);
 };
 
 export default {

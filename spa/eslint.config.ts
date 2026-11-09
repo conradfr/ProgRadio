@@ -91,6 +91,9 @@ export default typescriptEslint.config(
             ],
             'no-unused-vars': 'off',
             'import/no-extraneous-dependencies': ['error', {devDependencies: true}],
+            // TypeScript (vue-tsc) already reports unresolved imports and, unlike the vite resolver,
+            // understands the package.json "exports" field (pinia 4 has no "main")
+            'import/no-unresolved': 'off',
             'import/extensions': 'off',
             'no-prototype-builtins': 'off',
             'vue/max-attributes-per-line': 'off',

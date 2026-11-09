@@ -9,7 +9,8 @@ let scrapedData = [];
 
 const fetchDesc = async (url) => {
   try {
-    console.log(`fetching https://radiofuego.fr${url}`);
+    logger.log('info', `fetching https://radiofuego.fr${url}`);
+
     const realUrl = `${process.env.FETCHER_URL || scraperConfig.fetcher_url}/fetch-html?url=${encodeURIComponent(`https://radiofuego.fr${url}`)}`
     // shows are repeated during the day
     const html = await cache.fetchUrl(realUrl, undefined, {

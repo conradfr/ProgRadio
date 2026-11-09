@@ -2,9 +2,11 @@
 
 FROM node:lts-alpine as buildjs
 
-WORKDIR /tmp
-COPY ./spa/package.json /tmp
-COPY ./spa/package-lock.json /tmp
+# same layout as the repository: the build scans ../templates and ../src for the
+# bootstrap icons used (spa/scripts/icons-subset.mjs generates the font & css subset)
+WORKDIR /build/spa
+COPY ./spa/package.json /build/spa
+COPY ./spa/package-lock.json /build/spa
 
 RUN apk update && \
     apk upgrade && \
@@ -12,15 +14,15 @@ RUN apk update && \
 
 RUN npm install
 
-RUN mkdir /tmp/public/
-RUN mkdir /tmp/public/assets/
-RUN mkdir /tmp/public/.vite/
+RUN mkdir -p /build/spa/public/assets/ /build/spa/public/.vite/
 
-COPY ./spa /tmp
+COPY ./templates /build/templates
+COPY ./src /build/src
+COPY ./spa /build/spa
 
 RUN npm run build
 
-RUN ls /tmp
+RUN ls /build/spa
 
 # --------------- PHP ---------------
 
@@ -197,8 +199,8 @@ ENV APP_ENV=${APP_ENV} \
 COPY --chown=www-data:www-data ./ /app/
 
 RUN mkdir -p ./public/build/assets/
-COPY --from=buildjs /tmp/public/build/assets/ ./public/build/assets/
-COPY --from=buildjs /tmp/public/build/.vite/ ./public/build/.vite/
+COPY --from=buildjs /build/spa/public/build/assets/ ./public/build/assets/
+COPY --from=buildjs /build/spa/public/build/.vite/ ./public/build/.vite/
 
 RUN rm -rf .env.*
 

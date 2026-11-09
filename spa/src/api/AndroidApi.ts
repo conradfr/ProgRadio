@@ -1,4 +1,4 @@
-import forEach from 'lodash/forEach';
+import { values } from '@/utils/collectionUtils';
 
 import {
   ANDROID_SONG_MIN_VERSION,
@@ -36,7 +36,7 @@ const getPictureUrl = (stream: Stream, radio: Radio|null = null, show: Program|n
 const formatRadios = (streams: Record<string, Stream>): Array<object> => {
   const streamsExport: Array<object> = [];
 
-  forEach(streams, (stream) => {
+  values(streams).forEach((stream) => {
     if (stream.stream_url) {
       const radioToExport: Record<string, any> = {
         codeName: stream.code_name,

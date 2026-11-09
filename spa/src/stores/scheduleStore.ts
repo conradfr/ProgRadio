@@ -1,11 +1,6 @@
 import { defineStore } from 'pinia';
 import { nextTick, shallowReactive, markRaw } from 'vue';
 import { DateTime, Interval } from 'luxon';
-import sortBy from 'lodash/sortBy';
-import find from 'lodash/find';
-import without from 'lodash/without';
-// @ts-ignore
-import hash from 'object-hash';
 
 import type { Category } from '@/types/category';
 import type { Collection } from '@/types/collection';
@@ -25,6 +20,7 @@ import typeUtils from '@/utils/typeUtils';
 import * as config from '@/config/config';
 import cache from '@/utils/cache';
 import cookies from '@/utils/cookies';
+import { values, sortBy } from '@/utils/collectionUtils';
 
 // import router from '../router/router';
 import ScheduleApi from '@/api/ScheduleApi';
@@ -127,7 +123,6 @@ export const useScheduleStore = defineStore('schedule', {
     },
     isFavorite: state => (radioCodeName: string) => state.collections[config.COLLECTION_FAVORITES] !== undefined
       && state.collections[config.COLLECTION_FAVORITES].radios.indexOf(radioCodeName) !== -1,
-    /* eslint-disable arrow-parens */
     displayCategoryFilter: state => state.categoryFilterFocus.icon
       || state.categoryFilterFocus.list || false,
     currentShowOnRadio(state: any) {
@@ -136,7 +131,7 @@ export const useScheduleStore = defineStore('schedule', {
         let currentShow = null;
 
         if (state.schedule[radioCodeName] && state.schedule[radioCodeName][subRadio.radio_stream_code_name]) {
-          currentShow = find(state.schedule[radioCodeName][subRadio.radio_stream_code_name], (show) => Interval
+          currentShow = values(state.schedule[radioCodeName][subRadio.radio_stream_code_name]).find(show => Interval
             .fromDateTimes(DateTime.fromISO(show.start_at).setZone(config.TIMEZONE),
               DateTime.fromISO(show.end_at).setZone(config.TIMEZONE)).contains(state.cursorTime));
         }
@@ -273,7 +268,7 @@ export const useScheduleStore = defineStore('schedule', {
       if (this.categoriesExcluded.indexOf(category) === -1) {
         this.categoriesExcluded.push(category);
       } else {
-        this.categoriesExcluded = without(this.categoriesExcluded, category);
+        this.categoriesExcluded = this.categoriesExcluded.filter((c: string) => c !== category);
       }
 
       setTimeout(() => {
@@ -386,8 +381,22 @@ export const useScheduleStore = defineStore('schedule', {
     getSchedule(params: any = {}) {
       const globalStore = useGlobalStore();
       const dateStr: string = this.cursorTime.toISODate();
+
+      // the api doesn't know the "all" (full day) and "favorites" (user radios) collections.
+      // Built before the cache key: ScheduleApi caches the response with the params it receives,
+      // the key used here to read the cache has to be the same
+      const apiParams = { ...params };
+      if (apiParams.collection === config.COLLECTION_FAVORITES || apiParams.collection === config.COLLECTION_ALL) {
+        if (apiParams.collection === config.COLLECTION_FAVORITES
+          && this.collections[config.COLLECTION_FAVORITES] !== undefined) {
+          apiParams.radios = [...this.collections[config.COLLECTION_FAVORITES].radios];
+        }
+
+        delete apiParams.collection;
+      }
+
       // TODO better manage collections vs full day cache
-      const cacheHash = `${dateStr}_${hash(params)}`;
+      const cacheHash = `${dateStr}_${cache.paramsKey(apiParams)}`;
 
       // if we have cache we display it immediately and then fetch an update silently
       if (cache.hasSessionCache(cacheHash)) {
@@ -396,58 +405,17 @@ export const useScheduleStore = defineStore('schedule', {
         globalStore.setLoading(true);
       }
 
-      if (params !== undefined && params !== null && params !== '') {
-        // api don't have user favorites access
-        /* eslint-disable no-param-reassign */
-        if (params.collection !== undefined
-          && (params.collection === config.COLLECTION_FAVORITES || (params.collection === config.COLLECTION_ALL))) {
-          if (params.collection === config.COLLECTION_FAVORITES) {
-            if (this.collections[config.COLLECTION_FAVORITES] !== undefined) {
-              params.radios = this.collections[config.COLLECTION_FAVORITES].radios;
-            }
+      setTimeout(
+        async () => {
+          const scheduleData = await ScheduleApi.getSchedule(dateStr, apiParams);
+          if (scheduleData !== null) {
+            this.updateSchedule(scheduleData);
           }
-          delete params.collection;
-        }
 
-        setTimeout(
-          async () => {
-            // params.now = true;
-            const scheduleData = await ScheduleApi.getSchedule(dateStr, params);
-            if (scheduleData !== null) {
-              this.updateSchedule(scheduleData);
-            }
-
-            globalStore.setLoading(false);
-
-            /* params.now = false;
-            scheduleData = await ScheduleApi.getSchedule(dateStr, params);
-            if (scheduleData !== null) {
-              this.updateSchedule(scheduleData);
-            } */
-          },
-          100
-        );
-      } else {
-        if (cache.hasSessionCache(cacheHash)) {
-          this.updateSchedule(cache.getSessionCache(cacheHash));
-        }
-
-        setTimeout(
-          async () => {
-            const scheduleData = await ScheduleApi.getSchedule(dateStr);
-            if (scheduleData !== null) {
-              this.updateSchedule(scheduleData);
-            }
-            globalStore.setLoading(false);
-
-            /* scheduleData = await ScheduleApi.getSchedule(dateStr);
-            if (scheduleData !== null) {
-              this.updateSchedule(scheduleData);
-            } */
-          },
-          100
-        );
-      }
+          globalStore.setLoading(false);
+        },
+        100
+      );
     },
     updateSchedule(schedule: Schedule) {
       // remove null schedules
@@ -470,6 +438,8 @@ export const useScheduleStore = defineStore('schedule', {
       const favoritesCollectionRadios = this.collections.favorites !== undefined
         ? this.collections.favorites.radios : [];
 
+      // the api response is adapted in place
+      /* eslint-disable no-param-reassign */
       for (const [key, data] of Object.entries(collections)) {
         if (key === config.COLLECTION_FAVORITES) {
           collections[config.COLLECTION_FAVORITES].radios = favoritesCollectionRadios;
@@ -477,6 +447,7 @@ export const useScheduleStore = defineStore('schedule', {
           collections[key] = shallowReactive(data);
         }
       }
+      /* eslint-enable no-param-reassign */
 
       this.collections = collections;
     },

@@ -2,11 +2,17 @@ import { createApp, markRaw } from 'vue';
 import { createPinia } from 'pinia';
 
 import VueGtag from 'vue-gtag';
-import VueFlags from '@growthbunker/vueflags';
 
 import App from './components/App.vue';
+import VueFlag from './components/Utils/VueFlag.vue';
 import router from './router/router.ts';
-import i18n from './lang/i18n';
+import i18n, { loadLocale } from './lang/i18n';
+
+// the messages of the current locale are a separate chunk: requested first, awaited before mounting.
+// If it fails english (fallback) is displayed
+// @ts-expect-error locale is defined on the global scope
+// eslint-disable-next-line no-undef
+const localeLoaded = loadLocale(locale).catch(() => {});
 
 const app = createApp(App);
 
@@ -32,11 +38,7 @@ app.use(VueGtag, {
   disableScriptLoad: true
 }, router);
 
-app.use(VueFlags, {
-  // Specify the path of the folder where the flags are stored.
-  // @ts-expect-error defined on global scope
-  // eslint-disable-next-line no-undef
-  iconPath: `${cdnBaseUrl}img/flags/`,
-});
+// used as <vue-flag> in the templates
+app.component('VueFlag', VueFlag);
 
-app.mount('#app');
+localeLoaded.then(() => app.mount('#app'));

@@ -92,6 +92,8 @@
 
 /spa/sr/utils/petite-vue.es.js
 /spa/public/build/*
+# bootstrap icons subset, generated at dev server start and build (spa/scripts/icons-subset.mjs)
+/spa/sass/icons/
 /public/phpinfo.php
 
 /public/js/bootstrap.bundle.min.js.map

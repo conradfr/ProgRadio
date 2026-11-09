@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { markRaw, nextTick, toRaw } from 'vue';
 import { DateTime } from 'luxon';
-import find from 'lodash/find';
+import { values } from '@/utils/collectionUtils';
 
 import type { Radio } from '@/types/radio';
 import type { Stream } from '@/types/stream';
@@ -831,7 +831,7 @@ export const usePlayerStore = defineStore('player', {
 
       let radio = null;
       let stream = streamsStore !== undefined
-        ? find(streamsStore.streamRadios, { code_name: radioCodeName }) : undefined;
+        ? streamsStore.streamRadios.find(s => s.code_name === radioCodeName) : undefined;
 
       if (!stream) {
         let found = false;
@@ -840,8 +840,7 @@ export const usePlayerStore = defineStore('player', {
         do {
           const radioStream = scheduleStore.radios[radios[i]]
           && scheduleStore.radios[radios[i]].streams
-            ? find(scheduleStore.radios[radios[i]].streams,
-              { code_name: radioCodeName }) : null;
+            ? values(scheduleStore.radios[radios[i]].streams).find(s => s.code_name === radioCodeName) : null;
 
           if (radioStream) {
             stream = radioStream;

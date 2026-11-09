@@ -70,8 +70,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapActions, mapState, mapStores } from 'pinia';
-import find from 'lodash/find';
-import orderBy from 'lodash/orderBy';
 import { DateTime } from 'luxon';
 
 import type { Stream } from '@/types/stream';
@@ -90,6 +88,7 @@ import {
 } from '@/config/config';
 
 import { canonicalHeadTags, setHeadTags, removeUrlAnchor } from '@/utils/headTags';
+import { values, orderBy } from '@/utils/collectionUtils';
 
 import type { Radio } from '@/types/radio';
 import type { Schedule } from '@/types/schedule';
@@ -101,7 +100,6 @@ import Adsense from './Utils/Adsense.vue';
 import LiveSong from './Live/LiveSong.vue';
 import LiveSongHistory from "./Live/LiveSongHistory.vue";
 import LiveListeners from './Live/LiveListeners.vue';
-import filter from "lodash/filter";
 
 export default defineComponent({
   components: {
@@ -165,7 +163,7 @@ export default defineComponent({
           return;
         }
 
-        const mainStream = find(radio.streams, (s: Stream) => s.is_main_radio === true);
+        const mainStream = values(radio.streams).find((s: Stream) => s.is_main_radio === true);
 
         this.headCleanup = setHeadTags([
           ...canonicalHeadTags(mainStream?.language),
@@ -191,7 +189,7 @@ export default defineComponent({
         return [];
       }
 
-      return filter(this.radio.streams, s => s.is_sub_radio);
+      return values(this.radio.streams).filter(s => s.is_sub_radio);
     },
     subRadio(): Stream|null {
       if (!this.radio) {
@@ -240,8 +238,7 @@ export default defineComponent({
       }
 
       // find first collection to have this radio
-      const collection = find(
-        this.collections,
+      const collection = values(this.collections).find(
         (c: Collection) => c.radios.indexOf(this.radio!.code_name) !== -1
       );
 

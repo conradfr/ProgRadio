@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
-import find from 'lodash/find';
+import { values } from '@/utils/collectionUtils';
 
 import {
   COOKIE_TOOLTIP_COLLECTION,
@@ -71,7 +71,7 @@ export default defineComponent({
         way
       );
 
-      const collection = find(this.collections, c => c.code_name === nextCollectionCodeName);
+      const collection = values(this.collections).find(c => c.code_name === nextCollectionCodeName);
       this.nextCollection = collection!.short_name;
     }
   }
