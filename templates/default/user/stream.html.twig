@@ -76,7 +76,7 @@
           </div>
         {% endif %}
 
-        <div class="my-4 alert alert-light">
+        <div class="mt-4 mb-3 alert alert-light">
           <p><strong>{{ 'page.stream.submission.stats_title'|trans }}</strong></p>
 
           {% if stats is defined and stats is not null %}
@@ -91,6 +91,36 @@
             {% if stats.this_month is null and stats.last_month is null %}
               n/a
             {% endif %}
+          {% endif %}
+        </div>
+
+        <div class="alert alert-light text-center mb-4" role="alert">
+          {% if edit == true and stream is defined and stream is not null and stream.name is not null and stream.streamUrl is not null %}
+            {{ 'sponsor.streams_page_edit'|trans({'%name%': stream.name, '%url%': stream.streamUrl|url_encode})|raw }} <i class="bi bi-box-arrow-up-right"></i>
+          {% else %}
+            {{ 'sponsor.streams_page'|trans|raw }}
+          {% endif %}
+
+          {% if check is defined and check is not null and check["status"] is defined %}
+            <div class="mt-2 d-flex justify-content-center align-items-start">
+              <div class="pe-3 fw-bold">{{ 'page.stream.submission.check.current_status'|trans }}</div>
+              {% if check["status"] == "ok" %}
+                <i class="bi bi-check-circle-fill text-success"></i>&nbsp;
+                <div class="text-success fw-bold">{{ 'page.stream.submission.check.working'|trans }}</div>
+              {% else %}
+                <div>
+                  <div class="text-danger"><i class="bi bi-x-circle-fill"></i>&nbsp;{{ 'page.stream.submission.check.not_working'|trans }}</div>
+                  <div class="mt-2">
+                    {{ 'page.stream.submission.check.error'|trans }}
+                    {% if check["error_txt"] is defined and check["error_txt"] is not null %}
+                      {{ check["error_txt"] }}
+                    {% else %}
+                      n/a
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
           {% endif %}
         </div>
       {% endif %}

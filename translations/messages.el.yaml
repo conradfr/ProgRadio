@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% συνεδρίες ακρόασης για συνολικό χρόνο %time% αυτό το μήνα."
             stats_last_month: "%sessions% συνεδρίες ακρόασης για συνολικό χρόνο %time% τον προηγούμενο μήνα."
             email_toggle: Λήψη μηνιαίων στατιστικών μέσω email
+            check:
+              current_status: 'Κατάσταση:'
+              working: Η ροή λειτουργεί
+              not_working: Η ροή δεν λειτουργεί
+              error: 'Σφάλμα:'
+              start_monitoring: Ξεκινήστε τώρα να παρακολουθείτε αυτή τη ροή δωρεάν!
+              create_account: Κάντε κλικ εδώ για να δημιουργήσετε τον λογαριασμό σας
 
     chat:
       page_title: 'Συνομιλία: %radio%'

@@ -14,6 +14,7 @@ use App\Form\UpdateEmailType;
 use App\Form\UpdatePasswordType;
 use App\Service\ApiClient;
 use App\Service\Host;
+use App\Service\StreamCheckerApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Meilisearch\Bundle\SearchService;
@@ -224,6 +225,7 @@ class UserController extends AbstractBaseController
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         SearchService $searchService,
+        StreamCheckerApiClient $streamCheckerApiClient,
         ApiClient $apiClient,
         #[Autowire('%kernel.project_dir%/public/media/upload')] string $uploadDir,
         ?Stream $stream = null
@@ -302,8 +304,10 @@ class UserController extends AbstractBaseController
         }
 
         $stats = null;
+        $check = null;
         if ($stream && $em->contains($stream)) {
             $stats = $em->getRepository(ListeningSession::class)->getStatsOfStream($stream);
+            $check = $streamCheckerApiClient->checkUrl($stream->getStreamUrl());
         }
 
         return $this->render('default/user/stream.html.twig',
@@ -311,7 +315,8 @@ class UserController extends AbstractBaseController
                 'edit' => $edit,
                 'stream' => $stream,
                 'form' => $form->createView(),
-                'stats' => $stats
+                'stats' => $stats,
+                'check' => $check
             ]
         );
     }

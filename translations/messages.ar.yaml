@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% جلسة استماع بإجمالي %time% هذا الشهر."
             stats_last_month: "%sessions% جلسة استماع بإجمالي %time% الشهر الماضي."
             email_toggle: استلام إحصائيات شهرية عبر البريد الإلكتروني
+            check:
+              current_status: 'الحالة:'
+              working: البث يعمل
+              not_working: البث لا يعمل
+              error: 'خطأ:'
+              start_monitoring: ابدأ بمراقبة هذا البث مجانًا الآن!
+              create_account: انقر هنا لإنشاء حسابك
 
     chat:
       page_title: 'الدردشة: %radio%'

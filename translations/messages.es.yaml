@@ -259,6 +259,13 @@ page:
             stats_this_month: "%sessions% sesiones de escucha para un total de %time% este mes."
             stats_last_month: "%sessions% sesiones de escucha para un total de %time% el mes pasado."
             email_toggle: Recibir correo electrónico con estadísticas mensuales
+            check:
+              current_status: 'Estado:'
+              working: El stream funciona
+              not_working: El stream no funciona
+              error: 'Error:'
+              start_monitoring: ¡Empieza a monitorizar este stream gratis ahora mismo!
+              create_account: Haz clic aquí para crear tu cuenta
 
     chat:
       page_title: 'Chat: %radio%'

@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% האזנות בזמן כולל של %time% החודש."
             stats_last_month: "%sessions% האזנות בזמן כולל של %time% בחודש שעבר."
             email_toggle: קבלת סטטיסטיקות האזנה חודשיות באימייל
+            check:
+              current_status: 'סטטוס:'
+              working: השידור פועל
+              not_working: השידור אינו פועל
+              error: 'שגיאה:'
+              start_monitoring: התחילו לנטר את השידור הזה בחינם עכשיו!
+              create_account: לחצו כאן כדי ליצור את החשבון שלכם
 
     chat:
       page_title: 'צ׳אט: %radio%'

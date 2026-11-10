@@ -245,6 +245,13 @@ page:
             stats_this_month: "%sessions% luistersessies voor een totaal van %time% deze maand."
             stats_last_month: "%sessions% luistersessies voor een totaal van %time% vorige maand."
             email_toggle: Maandelijkse statistieken per e-mail ontvangen
+            check:
+              current_status: 'Status:'
+              working: De stream werkt
+              not_working: De stream werkt niet
+              error: 'Fout:'
+              start_monitoring: Begin nu gratis met het monitoren van deze stream!
+              create_account: Klik hier om je account aan te maken
 
     chat:
       page_title: 'Chat: %radio%'

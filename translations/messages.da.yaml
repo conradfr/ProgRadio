@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% lyttesessioner med i alt %time% denne måned."
             stats_last_month: "%sessions% lyttesessioner med i alt %time% sidste måned."
             email_toggle: Modtag månedlig lyttestatistik pr. e-mail
+            check:
+              current_status: 'Status:'
+              working: Streamen virker
+              not_working: Streamen virker ikke
+              error: 'Fejl:'
+              start_monitoring: Begynd at overvåge denne stream gratis lige nu!
+              create_account: Klik her for at oprette din konto
 
     chat:
       page_title: 'Chat: %radio%'

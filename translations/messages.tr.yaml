@@ -258,6 +258,13 @@ page:
             stats_this_month: "Bu ay %sessions% dinleme oturumu toplam %time%."
             stats_last_month: "Geçen ay %sessions% dinleme oturumu toplam %time%."
             email_toggle: Aylık istatistik e-postaları al
+            check:
+              current_status: 'Durum:'
+              working: Yayın çalışıyor
+              not_working: Yayın çalışmıyor
+              error: 'Hata:'
+              start_monitoring: Bu yayını hemen ücretsiz izlemeye başlayın!
+              create_account: Hesabınızı oluşturmak için buraya tıklayın
 
     chat:
       page_title: 'Sohbet: %radio%'

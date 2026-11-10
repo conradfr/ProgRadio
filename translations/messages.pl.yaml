@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% sesji słuchania na łączną liczbę %time% w tym miesiącu."
             stats_last_month: "%sessions% sesji słuchania na łączną liczbę %time% w zeszłym miesiącu."
             email_toggle: Odbieraj miesięczne statystyki e-mailem
+            check:
+              current_status: 'Status:'
+              working: Strumień działa
+              not_working: Strumień nie działa
+              error: 'Błąd:'
+              start_monitoring: Zacznij monitorować ten strumień za darmo już teraz!
+              create_account: Kliknij tutaj, aby utworzyć konto
 
     chat:
       page_title: 'Czat: %radio%'

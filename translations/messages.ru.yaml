@@ -258,6 +258,13 @@ page:
             stats_this_month: "Сеансов прослушивания в этом месяце: %sessions%, общее время: %time%."
             stats_last_month: "Сеансов прослушивания в прошлом месяце: %sessions%, общее время: %time%."
             email_toggle: Получать ежемесячную статистику прослушиваний по email
+            check:
+              current_status: 'Статус:'
+              working: Поток работает
+              not_working: Поток не работает
+              error: 'Ошибка:'
+              start_monitoring: Начните бесплатно отслеживать этот поток прямо сейчас!
+              create_account: Нажмите здесь, чтобы создать аккаунт
 
     chat:
       page_title: 'Чат: %radio%'

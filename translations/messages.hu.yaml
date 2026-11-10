@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% hallgatási session %time% időtartamra ebben a hónapban."
             stats_last_month: "%sessions% hallgatási session %time% időtartamra a múlt hónapban."
             email_toggle: Havonta küldött statisztikai e-mailek fogadása
+            check:
+              current_status: 'Állapot:'
+              working: A stream működik
+              not_working: A stream nem működik
+              error: 'Hiba:'
+              start_monitoring: Kezdje el ingyenesen figyelni ezt a streamet most!
+              create_account: Kattintson ide a fiókja létrehozásához
 
     chat:
       page_title: 'Csevegő: %radio%'

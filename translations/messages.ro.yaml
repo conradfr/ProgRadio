@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% sesiuni de ascultare pentru un total de %time% în această lună."
             stats_last_month: "%sessions% sesiuni de ascultare pentru un total de %time% în luna trecută."
             email_toggle: Primește e-mail lunar cu statistici
+            check:
+              current_status: 'Stare:'
+              working: Streamul funcționează
+              not_working: Streamul nu funcționează
+              error: 'Eroare:'
+              start_monitoring: Începe să monitorizezi gratuit acest stream chiar acum!
+              create_account: Fă clic aici pentru a-ți crea contul
 
     chat:
       page_title: 'Chat: %radio%'

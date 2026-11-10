@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% сесии на слушане с обща продължителност %time% този месец."
             stats_last_month: "%sessions% сесии на слушане с обща продължителност %time% миналия месец."
             email_toggle: Получавай месечна статистика за слушанията по имейл
+            check:
+              current_status: 'Статус:'
+              working: Потокът работи
+              not_working: Потокът не работи
+              error: 'Грешка:'
+              start_monitoring: Започнете да наблюдавате този поток безплатно още сега!
+              create_account: Кликнете тук, за да създадете своя акаунт
 
     chat:
       page_title: 'Чат: %radio%'

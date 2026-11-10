@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% lyssningssessioner på totalt %time% den här månaden."
             stats_last_month: "%sessions% lyssningssessioner på totalt %time% förra månaden."
             email_toggle: Få månatlig lyssningsstatistik via e-post
+            check:
+              current_status: 'Status:'
+              working: Strömmen fungerar
+              not_working: Strömmen fungerar inte
+              error: 'Fel:'
+              start_monitoring: Börja övervaka den här strömmen gratis redan nu!
+              create_account: Klicka här för att skapa ditt konto
 
     chat:
       page_title: 'Chatt: %radio%'

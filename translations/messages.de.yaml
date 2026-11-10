@@ -258,6 +258,13 @@ page:
             stats_this_month: "%sessions% Hörsitzungen für insgesamt %time% in diesem Monat."
             stats_last_month: "%sessions% Hörsitzungen für insgesamt %time% im letzten Monat."
             email_toggle: Monatliche Statistik-E-Mails erhalten
+            check:
+              current_status: 'Status:'
+              working: Der Stream funktioniert
+              not_working: Der Stream funktioniert nicht
+              error: 'Fehler:'
+              start_monitoring: Überwachen Sie diesen Stream jetzt kostenlos!
+              create_account: Klicken Sie hier, um Ihr Konto zu erstellen
 
     chat:
       page_title: 'Chat: %radio%'
