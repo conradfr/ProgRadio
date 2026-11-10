@@ -206,6 +206,9 @@ defmodule ProgRadioApi.Importer.ImageImporter do
     Cache.get_or_store!(@ls_cache_key, fn -> File.ls!(path) end, ttl: @ls_cache_ttl)
   end
 
+  # after files were deleted, so that list_stream_files/1 doesn't return them anymore
+  def clear_stream_files_cache(), do: Cache.delete(@ls_cache_key)
+
   defp pick_more_recent_image(filenames) when length(filenames) == 0, do: nil
   defp pick_more_recent_image(filenames) when length(filenames) == 1, do: hd(filenames)
 

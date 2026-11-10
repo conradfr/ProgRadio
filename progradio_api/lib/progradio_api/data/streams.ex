@@ -654,28 +654,95 @@ defmodule ProgRadioApi.Streams do
 
   # ---------- CLEAN ----------
 
-  # only executed manually
-  def delete_img_of_duplicates() do
-    query =
-      from s in Stream,
-        select: s.id,
-        where: is_nil(s.redirect_to) != true and is_nil(s.img) != true
+  @doc """
+  Deletes the image files of redirected streams (duplicates) and sets their img to nil.
+  Only executed manually, from iex: `ProgRadioApi.Streams.delete_img_of_duplicates()`.
+  Prints its progress, `dry_run: true` only reports what would be deleted.
+  """
+  def delete_img_of_duplicates(opts \\ []) do
+    dry_run = Keyword.get(opts, :dry_run, false)
+    folder = "#{Application.get_env(:progradio_api, :image_path)}stream/"
 
-    query
-    |> Repo.all()
-    |> Enum.each(fn s ->
-      "#{Application.get_env(:progradio_api, :image_path)}stream/"
-      |> ImageImporter.list_stream_files()
-      |> Enum.filter(fn f -> String.starts_with?(f, s) == true end)
-      |> Enum.each(fn f ->
-        File.rm("#{Application.get_env(:progradio_api, :image_path)}stream/#{f}")
+    ids =
+      from(s in Stream, select: s.id, where: not is_nil(s.redirect_to) and not is_nil(s.img))
+      |> Repo.all()
+
+    total = length(ids)
+
+    # fresh listing, not the cached one of ImageImporter.list_stream_files/1 (6 hours ttl).
+    # Files are named "<stream id>_<hash>_<name>" or "<stream id>.<ext>", ids are uuids (36 chars)
+    files = File.ls!(folder)
+    files_by_id = Enum.group_by(files, &String.slice(&1, 0, 36))
+
+    IO.puts(
+      "#{if dry_run, do: "[dry run] ", else: ""}#{total} redirected streams with an image, " <>
+        "#{length(files)} files in #{folder}"
+    )
+
+    progress_every = max(div(total, 20), 1)
+    initial = %{streams_with_files: 0, files: 0, bytes: 0, errors: 0}
+
+    stats =
+      ids
+      |> Enum.with_index(1)
+      |> Enum.reduce(initial, fn {id, index}, acc ->
+        acc =
+          case Map.get(files_by_id, id) do
+            nil ->
+              acc
+
+            stream_files ->
+              acc = %{acc | streams_with_files: acc.streams_with_files + 1}
+              Enum.reduce(stream_files, acc, &delete_stream_file(folder <> &1, dry_run, &2))
+          end
+
+        if rem(index, progress_every) == 0 or index == total do
+          IO.puts(
+            "  #{index}/#{total} streams (#{div(index * 100, total)}%): #{acc.files} files, " <>
+              "#{format_bytes(acc.bytes)}, #{acc.errors} errors"
+          )
+        end
+
+        acc
       end)
-    end)
 
     # the files are gone, img would otherwise point to a 404 instead of the placeholder
-    from(s in Stream, where: is_nil(s.redirect_to) != true and is_nil(s.img) != true)
-    |> Repo.update_all(set: [img: nil])
+    {updated, _} =
+      if dry_run or total == 0 do
+        {0, nil}
+      else
+        ImageImporter.clear_stream_files_cache()
+        from(s in Stream, where: s.id in ^ids) |> Repo.update_all(set: [img: nil])
+      end
+
+    IO.puts(
+      "#{if dry_run, do: "[dry run] would have deleted", else: "Deleted"} #{stats.files} files " <>
+        "(#{format_bytes(stats.bytes)}) of #{stats.streams_with_files}/#{total} streams, " <>
+        "#{stats.errors} errors, #{updated} streams img set to nil"
+    )
+
+    Map.merge(stats, %{streams: total, updated: updated})
   end
+
+  defp delete_stream_file(path, dry_run, acc) do
+    size =
+      case File.stat(path) do
+        {:ok, %File.Stat{size: size}} -> size
+        _ -> 0
+      end
+
+    case if(dry_run, do: :ok, else: File.rm(path)) do
+      :ok ->
+        %{acc | files: acc.files + 1, bytes: acc.bytes + size}
+
+      {:error, reason} ->
+        IO.puts("  error deleting #{path}: #{inspect(reason)}")
+        %{acc | errors: acc.errors + 1}
+    end
+  end
+
+  defp format_bytes(bytes) when bytes >= 1_048_576, do: "#{Float.round(bytes / 1_048_576, 1)} MB"
+  defp format_bytes(bytes), do: "#{Float.round(bytes / 1024, 1)} KB"
 
   # ---------- CHECK ----------
 
