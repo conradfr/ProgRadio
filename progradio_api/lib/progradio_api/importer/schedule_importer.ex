@@ -51,7 +51,7 @@ defmodule ProgRadioApi.Importer.ScheduleImporter do
     messages
     |> Enum.each(fn m ->
       Cache.delete(@cache_prefix <> Date.to_iso8601(m.data.date) <> "_" <> m.data.radio_name)
-      ScheduleCache.remove(m.data.date, m.data.radio_name)
+      ScheduleCache.remove(m.data.date, m.data.radio_name, m.data.stream_code_name)
     end)
 
     # delete redis data entries

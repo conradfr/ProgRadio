@@ -9,70 +9,55 @@ defmodule ProgRadioApi.Importer.ScheduleCache do
   alias ProgRadioApi.Repo
   alias ProgRadioApi.Radio
 
-  @cache_schedule_prefix "cache_schedule_"
+  # The Symfony "cache.schedule" pool has a fixed namespace (config/services.yaml) and its RedisAdapter
+  # stores keys as "<namespace>:<key>", so the full keys are known: no KEYS scan of the whole database
+  @cache_namespace "schedule:"
   @cache_schedule_day_format "%Y-%m-%d"
 
   @doc """
-  Remove cache entries containing this specific radio: full schedule, collection & radio
+  Remove cache entries containing this specific radio: full schedule, collection, radio & sub radio
+  (keys built like ScheduleManager::getKey() in the Symfony app)
   """
-  @spec remove(Date.t() | any, String.t() | any) :: tuple
-  def remove(date, radio_name)
+  @spec remove(Date.t() | any, String.t() | any, String.t() | nil) :: tuple
+  def remove(date, radio_name, stream_code_name \\ nil)
 
-  def remove(date, radio_name) when date == nil or radio_name == nil do
+  def remove(date, radio_name, _stream_code_name) when date == nil or radio_name == nil do
     {:ok, 0}
   end
 
-  def remove(date, radio_name) do
+  def remove(date, radio_name, stream_code_name) do
     radio =
       Repo.get_by(Radio, code_name: radio_name)
       |> Repo.preload([:collection])
 
-    keys_deleted_sum =
+    keys =
       [
         get_key(date),
+        get_key(date, radio.collection.code_name),
         get_key(date, radio_name),
-        get_key(date, radio.collection.code_name)
+        stream_code_name && get_key(date, radio_name <> "_" <> stream_code_name)
       ]
-      |> Enum.reduce(0, fn key, acc ->
-        case find_cache_key(key) do
-          nil ->
-            acc
+      |> Enum.reject(&is_nil/1)
+      |> Enum.map(&(@cache_namespace <> &1))
 
-          cache_key ->
-            case Redix.command(:redix, ["DEL", cache_key]) do
-              {:ok, num} ->
-                Logger.debug("Redis cache: #{num} entries deleted")
-                acc + num
+    case Redix.command(:redix, ["DEL" | keys]) do
+      {:ok, num} ->
+        Logger.debug("Redis cache: #{num} entries deleted")
+        {:ok, num}
 
-              {:error, _reason} ->
-                acc
-            end
-        end
-      end)
-
-    {:ok, keys_deleted_sum}
+      {:error, _reason} ->
+        {:ok, 0}
+    end
   end
 
-  @spec get_key(Date.t(), String.t()) :: String.t()
+  @spec get_key(Date.t(), String.t() | nil) :: String.t()
   defp get_key(date, suffix \\ nil)
 
   defp get_key(date, suffix) when suffix == nil or suffix == "" do
-    @cache_schedule_prefix <> Calendar.strftime(date, @cache_schedule_day_format)
+    Calendar.strftime(date, @cache_schedule_day_format)
   end
 
   defp get_key(date, suffix) do
     get_key(date) <> "_" <> suffix
-  end
-
-  # As we rely on the Symfony cache we don't know the full keys because of the calculated namespace,
-  # So we look it up here based on the rest of the key
-  @spec find_cache_key(String.t()) :: String.t() | nil
-  defp find_cache_key(pattern) do
-    {:ok, keys} = Redix.command(:redix, ["KEYS", "*:" <> pattern <> "*"])
-
-    case Kernel.length(keys) do
-      0 -> nil
-      _ -> List.first(keys)
-    end
   end
 end

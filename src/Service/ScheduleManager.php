@@ -15,7 +15,6 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class ScheduleManager
 {
-    protected const string CACHE_SCHEDULE_PREFIX = 'cache_schedule_';
     public const int CACHE_SCHEDULE_TTL = 604800; // in seconds = one week
 
     protected const string CACHE_KEY_DAY_FORMAT = 'Y-m-d';
@@ -25,11 +24,14 @@ class ScheduleManager
     }
 
     /*
+    * Keys are namespaced by the cache.schedule pool ("schedule:" in redis), also built by the api
+    * (progradio_api ScheduleCache) to delete them after an import.
+    * ----
     * Basically there would be a bug is any radio would have the same name as a collection
     */
     protected static function getKey(ScheduleResource $scheduleResource): string
     {
-        $key = self::CACHE_SCHEDULE_PREFIX . $scheduleResource->getDateTime()->format(self::CACHE_KEY_DAY_FORMAT);
+        $key = $scheduleResource->getDateTime()->format(self::CACHE_KEY_DAY_FORMAT);
 
         if ($scheduleResource->getType() !== null) {
             $key .= '_' . $scheduleResource->getValue();
