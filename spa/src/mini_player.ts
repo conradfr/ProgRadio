@@ -1,6 +1,7 @@
 import { createApp, nextTick } from './utils/petite-vue.es.js';
 import cookies from './utils/cookies';
 import ChatUtils from './utils/chatUtils';
+import SocketUtils from './utils/socketUtils';
 import { Socket, Presence } from '../js/phoenix';
 
 import ITunesApi from './api/ITunesApi';
@@ -16,7 +17,6 @@ import {
   LISTENING_SESSION_INTERVAL_SECONDS,
   LISTENING_SESSION_SOURCE_SSR,
   WEBSOCKET_DISCONNECT_AFTER,
-  WEBSOCKET_MAX_RETRIES,
   WEBSOCKET_HEARTBEAT,
   PLAYER_STATE_LOADING,
   PLAYER_STATE_PLAYING,
@@ -777,21 +777,21 @@ createApp({
     }
 
     if (!this.socket) {
+      const backoff = SocketUtils.createReconnectBackoff(() => {
+        if (this.socket) {
+          this.socket.disconnect();
+        }
+      });
+
       const opts = {
         heartbeatIntervalMs: WEBSOCKET_HEARTBEAT,
-        reconnectAfterMs: (tries: number) => {
-          if (tries >= WEBSOCKET_MAX_RETRIES) {
-            return null;
-          }
-
-          // eslint-disable-next-line @stylistic/js/max-len
-          return [1000, 5000, 10000, 15000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000][tries - 1] || 30000;
-        }
+        reconnectAfterMs: backoff.reconnectAfterMs
       };
 
       this.socket = new Socket(`wss://${apiUrl}/socket`, opts);
 
       this.socket.onOpen(() => {
+        backoff.onOpen();
         this.setSocketTimer();
       });
 

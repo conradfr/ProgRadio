@@ -23,6 +23,7 @@ import cache from '@/utils/cache';
 import i18n from '@/lang/i18n';
 import typeUtils from '@/utils/typeUtils';
 import PlayerUtils from '@/utils/PlayerUtils';
+import SocketUtils from '@/utils/socketUtils';
 import ScheduleUtils from '@/utils/ScheduleUtils';
 import StreamsApi from '@/api/StreamsApi';
 import AndroidApi from '@/api/AndroidApi';
@@ -462,17 +463,15 @@ export const usePlayerStore = defineStore('player', {
     },
     connectSocket() {
       if (!this.socket) {
-        const opts = {
-
-          heartbeatIntervalMs: config.WEBSOCKET_HEARTBEAT,
-          reconnectAfterMs: (tries: number) => {
-            if (tries >= config.WEBSOCKET_MAX_RETRIES) {
-              return null;
-            }
-
-            // eslint-disable-next-line @stylistic/js/max-len
-            return [1000, 5000, 10000, 15000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000][tries - 1] || 30000;
+        const backoff = SocketUtils.createReconnectBackoff(() => {
+          if (this.socket) {
+            this.socket.disconnect();
           }
+        });
+
+        const opts = {
+          heartbeatIntervalMs: config.WEBSOCKET_HEARTBEAT,
+          reconnectAfterMs: backoff.reconnectAfterMs
         };
 
         // @ts-expect-error apiUrl is defined on the global scope
@@ -480,19 +479,16 @@ export const usePlayerStore = defineStore('player', {
         this.socket = new Socket(`wss://${apiUrl}/socket`, opts);
 
         this.socket.onOpen(() => {
+          backoff.onOpen();
           this.setSocketTimer();
 
-          // restore channels
+          // restore channels that are wanted but not subscribed.
+          // Channels already subscribed are rejoined by phoenix.js itself, and the ref counts
+          // must not be incremented here: no join call matches it, so they would never be left
           Object.entries(this.channelsRefCount).forEach(
             ([key, value]) => {
               if ((value as number) > 0) {
-                const topicName = PlayerUtils.extractTopicName(key);
-
-                if (topicName) {
-                  this.joinChannel(key, topicName);
-                } else {
-                  this.joinChannel(key);
-                }
+                this.subscribeChannel(key, PlayerUtils.extractTopicName(key));
               }
             }
           );
@@ -574,6 +570,10 @@ export const usePlayerStore = defineStore('player', {
         [topicName]: refCount
       };
 
+      return this.subscribeChannel(topicName, innerName);
+    },
+    // creates and joins the channel if not existing, without touching its ref count
+    subscribeChannel(topicName: string, innerName: string|null = null) {
       // Channel already exists?
       if (Object.prototype.hasOwnProperty.call(this.channels, topicName)) {
         return false;

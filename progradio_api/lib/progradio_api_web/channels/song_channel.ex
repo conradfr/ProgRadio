@@ -1,6 +1,6 @@
 defmodule ProgRadioApiWeb.SongChannel do
   import Ecto.Query, only: [from: 2, dynamic: 2]
-  use Phoenix.Channel
+  use Phoenix.Channel, log_join: :debug
   use Nebulex.Caching
 
   alias ProgRadioApiWeb.Presence

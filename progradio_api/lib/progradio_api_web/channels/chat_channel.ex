@@ -1,6 +1,6 @@
 defmodule ProgRadioApiWeb.ChatChannel do
   import Ecto.Query, only: [from: 2]
-  use Phoenix.Channel
+  use Phoenix.Channel, log_join: :debug
   use Nebulex.Caching
 
   require Logger

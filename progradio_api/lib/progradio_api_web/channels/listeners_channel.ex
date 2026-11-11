@@ -1,5 +1,5 @@
 defmodule ProgRadioApiWeb.ListenersChannel do
-  use Phoenix.Channel
+  use Phoenix.Channel, log_join: :debug
 
   alias ProgRadioApi.ListenersCounter
 

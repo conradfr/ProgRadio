@@ -2,7 +2,7 @@
 # with progressive rollout
 defmodule ProgRadioApiWeb.SongNextChannel do
   import Ecto.Query, only: [from: 2]
-  use Phoenix.Channel
+  use Phoenix.Channel, log_join: :debug
   use Nebulex.Caching
 
   alias ProgRadioApiWeb.Presence

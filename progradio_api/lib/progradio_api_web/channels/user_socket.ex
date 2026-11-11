@@ -1,5 +1,8 @@
 defmodule ProgRadioApiWeb.UserSocket do
-  use Phoenix.Socket, max_channels_per_transport: 5000
+  # socket connections and channel joins are numerous: not logged in prod (info level)
+  # connections are numerous: logged at debug level so not in prod (info level),
+  # channel joins too (log_join option of each channel)
+  use Phoenix.Socket, max_channels_per_transport: 5000, log: :debug
 
   alias ProgRadioApiWeb.{SongChannel, SongNextChannel, ListenersChannel, ChatChannel}
 
